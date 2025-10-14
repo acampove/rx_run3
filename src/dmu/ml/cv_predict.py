@@ -79,7 +79,7 @@ class CVPredict:
         friend_preffix.branch_name -> friend_preffix_branch_name
         '''
         l_col = [ col for col in rdf.GetColumnNames() ]
-        l_col = [ col         for col in l_col if '.' in col  ]
+        l_col = [ col for col in l_col if '.' in col  ]
 
         if len(l_col) == 0:
             return rdf
