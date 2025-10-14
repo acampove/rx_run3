@@ -45,15 +45,13 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
     l_fpath = _paths_from_friend_dir(frnd_dir=frnd_dir)
     d_sample= {}
     for fpath in l_fpath:
-        sample, trigger = dut.info_from_path(path=fpath)
-        sample          = aput.name_from_lower_case(sample)
+        sample, _ = dut.info_from_path(path=fpath)
+        sample    = aput.name_from_lower_case(sample)
         if not sample.startswith('DATA'):
             event_type= aput.read_event_type(nickname=sample)
             sample    = f'{sample} ({event_type})'
 
-        if   not info.is_ee(trigger=trigger) and 'brem_track_2' in fpath:
-            d_sample[sample] = 0
-        elif sample not in d_sample:
+        if sample not in d_sample:
             d_sample[sample] = _stat_from_path(fpath=fpath, kind=kind)
         else:
             d_sample[sample]+= _stat_from_path(fpath=fpath, kind=kind) 
