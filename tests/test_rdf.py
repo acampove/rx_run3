@@ -47,5 +47,9 @@ def test_range() -> None:
 def test_report() -> None:
     rdf = RDataFrame()
     rdf.Report()
+# ----------------------
+def test_snapshot() -> None:
+    rdf = RDataFrame()
+    rdf.Snapshot('tree', 'file.root')
 
 
