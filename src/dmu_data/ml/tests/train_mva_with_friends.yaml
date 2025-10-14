@@ -12,13 +12,13 @@ dataset:
   define :
     r : z + x
   nan :
-    x   : -3
-    y.y : -3
+    x : -3
+    y : -3
 training :
     nfold    : 3
     features :
       - x
-      - y.y
+      - y
       - r
     rdm_stat : 1
     hyper    :
@@ -30,7 +30,7 @@ training :
       subsample         : 0.8
       learning_rate     : 0.1
 saving:
-    output : /tmp/tests/dmu/ml/train_mva_dotted
+    output : /tmp/tests/dmu/ml/train_mva_with_friends
 plotting:
     roc     :
         min : [0.0, 0.0]
