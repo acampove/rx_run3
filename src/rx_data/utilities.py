@@ -9,7 +9,7 @@ from pathlib      import Path
 import ap_utilities.decays.utilities as aput
 import pandas                        as pnd
 
-from ROOT                   import RDataFrame # type: ignore
+from ROOT                   import RDF # type: ignore
 from dmu.logging.log_store  import LogStore
 
 log   = LogStore.add_logger('rx_data:utilities')
@@ -25,8 +25,8 @@ class Data:
     dt_rgx  = r'(data_\d{2}_.*c\d)_(Hlt2RD_.*(?:EE|MuMu|misid|cal|MVA|LL|DD))_?(\d{3}_\d{3}|[a-z0-9]{10})?\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
 # ------------------------------------------
-def rdf_is_mc(rdf : RDataFrame) -> bool:
     l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+def rdf_is_mc(rdf : RDF.RNode) -> bool:
     for col in l_col:
         if col.endswith('_TRUEID'):
             return True
@@ -105,7 +105,7 @@ def _info_from_data_path(path : Path) -> tuple[str,str]:
 
     return sample, line
 # ---------------------------------
-def df_from_rdf(rdf : RDataFrame, drop_nans : bool) -> pnd.DataFrame:
+def df_from_rdf(rdf : RDF.RNode, drop_nans : bool) -> pnd.DataFrame:
     '''
     Parameters
     ------------------
@@ -148,7 +148,7 @@ def df_from_rdf(rdf : RDataFrame, drop_nans : bool) -> pnd.DataFrame:
 
     raise ValueError('Columns with object type')
 # ------------------------------------------
-def _preprocess_rdf(rdf: RDataFrame) -> RDataFrame:
+def _preprocess_rdf(rdf: RDF.RNode) -> RDF.RNode:
     rdf = _preprocess_lepton(rdf, 'L1')
     rdf = _preprocess_lepton(rdf, 'L2')
 
@@ -161,7 +161,7 @@ def _preprocess_rdf(rdf: RDataFrame) -> RDataFrame:
 
     return rdf
 # ------------------------------------------
-def _preprocess_lepton(rdf : RDataFrame, lep : str) -> None:
+def _preprocess_lepton(rdf : RDF.RNode, lep : str) -> RDF.RNode:
     # Make brem flag an int (will make things easier later)
     rdf = rdf.Redefine(f'{lep}_HASBREMADDED'        , f'int({lep}_HASBREMADDED)')
     # If there is no brem, make energy zero
