@@ -5,6 +5,8 @@ This module contains the MVACalculator class
 import os
 import re
 import glob
+from typing import overload, Literal
+
 import joblib
 import numpy
 import pandas as pnd
@@ -251,7 +253,11 @@ class MVACalculator:
 
         return {'cmb' : d_path_cmb, 'prc' : d_path_prc}
     # ----------------------------------------
-    def get_rdf(self, kind : str = 'root') -> RDF.RNode|pnd.DataFrame:
+    @overload
+    def get_rdf(self, kind: Literal["root"  ]) -> RDF.RNode: ...
+    @overload
+    def get_rdf(self, kind: Literal["pandas"]) -> pnd.DataFrame: ...
+    def get_rdf(self, kind) -> RDF.RNode|pnd.DataFrame:
         '''
         Parameters
         ----------------
