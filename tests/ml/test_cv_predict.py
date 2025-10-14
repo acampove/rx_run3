@@ -26,6 +26,7 @@ def initialize():
     '''
     LogStore.set_level('dmu:ml:cv_predict', 10)
     LogStore.set_level('dmu:ml:utilities' , 10)
+    LogStore.set_level('dmu:testing:utilities', 10)
     LogStore.set_level('dmu:ml:train_mva' , 20)
 #--------------------------------------------------------------------
 def _check_probabilities(arr_prb : numpy.ndarray, has_negative : bool) -> None:
@@ -44,6 +45,19 @@ def _check_probabilities(arr_prb : numpy.ndarray, has_negative : bool) -> None:
         assert n_below >  0
     else:
         assert n_below == 0
+#--------------------------------------------------------------------
+def test_dotted_columns():
+    '''
+    Tests with input data, where columns have dots in names
+    '''
+    rdf_sig    = ut.get_rdf(kind='sig', dotted=True)
+    rdf_bkg    = ut.get_rdf(kind='bkg', dotted=True)
+    with LogStore.level('dmu:ml:train_mva', 10):
+        l_model, _ = ut.get_models(rdf_sig, rdf_bkg, name='train_mva_dotted')
+
+    rdf     = ut.get_rdf(kind='sig', dotted=True)
+    cvp     = CVPredict(models=l_model, rdf=rdf)
+    cvp.predict()
 #--------------------------------------------------------------------
 def test_non_overlap():
     '''
