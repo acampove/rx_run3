@@ -20,6 +20,7 @@ class Data:
     user     = os.environ['USER']
     tmp_path = f'/tmp/{user}/rx_data/jobs/friend_trees'
     cfg_name = ''
+    project  = ''
     wildcard = '*' # by default do all files
     exclude  = []
     only     = None
@@ -30,6 +31,7 @@ class Data:
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script meant to steer calculation of friend trees in HTCondor at IHEP')
     parser.add_argument('-c', '--config' , type=str , help='Name of config file, e.g. rk_nopid', required=True)
+    parser.add_argument('-p', '--project', type=str , help='Name of project, e.g. rk', required=True)
     parser.add_argument('-e', '--exclude', nargs='+', help='List of names of friend trees to exclude', default=[])
     parser.add_argument('-o', '--only'   , type=str , help='Name the the only friend tree')
     parser.add_argument('-w', '--wcard'  , type=str , help='Wildcard to match files', default=Data.wildcard)
@@ -38,6 +40,7 @@ def _parse_args() -> None:
     args = parser.parse_args()
 
     Data.cfg_name = args.config
+    Data.project  = args.project
     Data.exclude  = args.exclude
     Data.only     = args.only
     Data.dry_run  = args.dry_run
@@ -68,7 +71,7 @@ def _get_commands(kind : str) -> list[str]:
 
     l_line = []
     for part in range(npart):
-        line = f'branch_calculator -k {kind} -P {Data.cfg_name} -v {version} -w "{Data.wildcard}" -p {part} {npart} -b'
+        line = f'branch_calculator -k {kind} -P {Data.project} -v {version} -w "{Data.wildcard}" -p {part} {npart} -b'
         if Data.dry_run:
             line = line + ' -d'
 
