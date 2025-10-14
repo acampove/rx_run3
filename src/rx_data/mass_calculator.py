@@ -229,8 +229,8 @@ class MassCalculator:
         '''
         log.debug('Getting pandas dataframe from ROOT dataframe')
 
-        l_col = [ name.c_str() for name in self._rdf.GetColumnNames() ]
-        l_col = [ name         for name in l_col if self._is_valid_column(name=name) ]
+        l_col = [ name for name in self._rdf.GetColumnNames() ]
+        l_col = [ name for name in l_col if self._is_valid_column(name=name) ]
 
         data  = self._rdf.AsNumpy(l_col)
         df    = pnd.DataFrame(data)
