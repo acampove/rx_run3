@@ -16,6 +16,7 @@ from dmu.ml.cv_predict     import CVClassifier, CVPredict
 from dmu.logging.log_store import LogStore
 from dmu.generic           import version_management as vman
 from rx_selection          import selection          as sel
+from rx_common             import info
 
 log = LogStore.add_logger('rx_data:mva_calculator')
 #---------------------------------
@@ -56,6 +57,7 @@ class MVACalculator:
         # Above high data should use high MVA
         self._default_q2  = 'central' # Any entry not in [low, central, high] bins will go to this bin for prediction
         self._version     = version
+        self._project     = info.project_from_trigger(trigger=trigger, lower_case=True)
         self._l_model     : list[CVClassifier]
         self._dry_run     = dry_run
     #---------------------------------
@@ -199,7 +201,7 @@ class MVACalculator:
         -------------
         Path to directory with latest version
         '''
-        root_path    = f'{self._ana_dir}/mva/{kind}'
+        root_path    = f'{self._ana_dir}/mva/{self._project}/{kind}'
         latest_path  = vman.get_last_version(dir_path=root_path, version_only=False)
         version_name = os.path.basename(latest_path)
         if not re.match(r'^v\d+\.\d+$', version_name):
@@ -223,7 +225,7 @@ class MVACalculator:
         '''
         if self._version != 'latest':
             log.warning(f'Picking up version {self._version} instead of latest')
-            path = f'{self._ana_dir}/mva/{kind}/{self._version}/{q2bin}'
+            path = f'{self._ana_dir}/mva/{self._project}/{kind}/{self._version}/{q2bin}'
         else:
             path = self._get_latest_version(q2bin=q2bin, kind=kind)
 
