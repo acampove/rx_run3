@@ -430,7 +430,12 @@ def main():
 
     l_path       = _get_paths()
     Data.out_dir = _get_out_dir()
-    log.info('Processing paths')
+    npath        = len(l_path)
+
+    log.info(f'Processing {npath} paths')
+    for path in l_path:
+        log.debug(f'   {path}')
+
     if Data.dry:
         log.warning('This is a dry run')
 
