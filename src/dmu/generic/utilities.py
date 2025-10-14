@@ -137,6 +137,7 @@ def load_from_wcard(
     wcard = files(package).joinpath(fwcard)
     wcard = str(wcard)
     l_path= glob.glob(wcard)
+    l_path= sorted(l_path)
 
     if not l_path:
         raise ValueError(f'No files found in: {wcard}')
