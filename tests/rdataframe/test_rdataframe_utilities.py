@@ -20,6 +20,20 @@ log=LogStore.add_logger('dmu:test:rdataframe:utilities')
 def _initialize():
     LogStore.set_level('dmu:rdataframe:utilities', 10)
 # -------------------------------------------------
+@pytest.mark.parametrize('entries', [0, 10])
+def test_columns_from_rdf(entries):
+    '''
+    Tests columns_from_rdf
+    '''
+    rdf = RDataFrame(entries)
+    rdf = rdf.Define('a', '1')
+    rdf = rdf.Define('b', '2')
+
+    l_col = ut.columns_from_rdf(rdf=rdf)
+
+    assert l_col == ['a', 'b']
+    assert all(type(name) is str for name in l_col)
+# -------------------------------------------------
 @pytest.mark.parametrize('itry', [1, 2])
 def test_add_column(itry):
     '''

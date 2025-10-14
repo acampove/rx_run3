@@ -25,6 +25,21 @@ class Data:
     l_good_type = [int, numpy.bool_, numpy.int32, numpy.uint32, numpy.int64, numpy.uint64, numpy.float32, numpy.float64]
     d_cast_type = {'bool': numpy.int32}
 # ---------------------------------------------------------------------
+def columns_from_rdf(rdf : RDF.RNode) -> list[str]:
+    '''
+    Parameters
+    --------------
+    rdf: ROOT dataframe
+
+    Returns
+    --------------
+    List of columns
+    '''
+
+    l_str = [ name.c_str() for name in rdf.GetColumnNames() ]
+
+    return l_str
+# ---------------------------------------------------------------------
 def add_column(rdf : RDataFrame, arr_val : Union[numpy.ndarray,None], name : str, d_opt : Union[dict,None] = None):
     '''
     Will take a dataframe, an array of numbers and a string
