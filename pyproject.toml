@@ -33,7 +33,7 @@ tqdm           = '*'
 omegaconf      = '*'
 toml           = '*'
 uproot         = '*'
-numpy          = '*'
+numpy          = '<=2.2' # Numba requires this
 matplotlib     = '*'
 mplhep         = '*'
 pandas         = '*'
