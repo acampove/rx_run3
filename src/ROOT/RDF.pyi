@@ -1,6 +1,7 @@
 
 from typing import Self, overload
 import numpy
+import pandas as pnd
 
 class RResultPtr:
     def GetValue(self) -> int: ...
@@ -28,3 +29,4 @@ class Experimental:
 
 
 def FromNumpy(data : dict[str,numpy.ndarray]) -> RNode: ...
+def FromPandas(df : pnd.DataFrame) -> RNode: ...
