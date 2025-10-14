@@ -42,9 +42,9 @@ class SWPCalculator:
 
         self._use_ss : bool
     #---------------------------------
-    def _pnd_from_root(self, rdf : RDataFrame) -> pnd.DataFrame:
-        s_col_all = { name.c_str() for name in rdf.GetColumnNames() }
-        s_col     = { name         for name in s_col_all if self._pick_column(name) }
+    def _pnd_from_root(self, rdf : RDF.RNode) -> pnd.DataFrame:
+        s_col_all = { name for name in rdf.GetColumnNames() }
+        s_col     = { name for name in s_col_all if self._pick_column(name) }
 
         ncol  = len(s_col)
         log.debug(f'Using {ncol} columns for dataframe')
@@ -204,7 +204,7 @@ class SWPCalculator:
         self,
         preffix      : str,
         progress_bar : bool = False,
-        use_ss       : bool = False) -> RDataFrame:
+        use_ss       : bool = False) -> RDF.RNode:
         '''
         Parameters:
         ------------------
