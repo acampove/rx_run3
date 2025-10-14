@@ -158,10 +158,10 @@ def get_file_with_trees(path : str) -> TFile:
     return TFile(path)
 # -------------------------------
 def get_models(
-        rdf_sig : RDataFrame,
-        rdf_bkg : RDataFrame,
-        name    : str        = 'train_mva',
-        out_dir : str | None = None) -> tuple[list[CVClassifier], float]:
+    rdf_sig : RDF.RNode,
+    rdf_bkg : RDF.RNode,
+    name    : str        = 'train_mva',
+    out_dir : str | None = None) -> tuple[list[CVClassifier], float]:
     '''
     Will train and return models together with the AUC in a tuple
 
