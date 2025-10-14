@@ -194,6 +194,8 @@ class CVPredict:
                 l_missing_feature.append(feature)
 
         if l_missing_feature:
+            for column in self._l_column:
+                log.info(column)
             raise ValueError('At least one column is missing')
 
         data = self._rdf.AsNumpy(features)
