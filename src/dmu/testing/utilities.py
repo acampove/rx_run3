@@ -19,6 +19,7 @@ import yaml
 from dmu.ml.train_mva      import TrainMva
 from dmu.ml.cv_classifier  import CVClassifier
 from dmu.logging.log_store import LogStore
+from .rdf_with_friend      import rdf_with_friend
 
 log = LogStore.add_logger('dmu:testing:utilities')
 # -------------------------------
@@ -64,7 +65,7 @@ def get_rdf(
     repeated          : bool            = False,
     nentries          : int             = 3_000,
     use_preffix       : bool            = False,
-    dotted            : bool            = False,
+    with_friend       : bool            = False,
     columns_with_nans : list[str]|None  = None):
     '''
     Return ROOT dataframe with toy data
@@ -98,9 +99,6 @@ def get_rdf(
         log.error(f'Invalid kind: {kind}')
         raise ValueError
 
-    if dotted:
-        d_data['y.y'] = d_data.pop('y')
-
     df = pnd.DataFrame(d_data)
 
     if repeated:
@@ -109,7 +107,10 @@ def get_rdf(
     if columns_with_nans is not None:
         df = _add_nans(df, columns=columns_with_nans)
 
-    rdf = RDF.FromPandas(df)
+    if with_friend:
+        rdf = rdf_with_friend(df=df, branch='y')
+    else:
+        rdf = RDF.FromPandas(df)
 
     return rdf
 # -------------------------------
