@@ -4,7 +4,6 @@ Module with TrainMva class
 
 import os
 import copy
-import json
 import math
 
 from contextlib import contextmanager
@@ -22,11 +21,13 @@ from sklearn.metrics         import roc_curve, auc
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.ensemble        import GradientBoostingClassifier
 
-from ROOT import RDataFrame, RDF # type: ignore
+from ROOT import RDF # type: ignore
 
 import dmu.ml.utilities         as ut
 import dmu.pdataframe.utilities as put
 import dmu.plotting.utilities   as plu
+import dmu.generic.utilities    as gut
+import dmu.rdataframe.utilities as rut
 
 from dmu.ml.cv_diagnostics   import CVDiagnostics
 from dmu.ml.cv_classifier    import CVClassifier as cls
@@ -234,10 +235,9 @@ class TrainMva:
             try:
                 rdf = rdf.Define(name, expr)
             except TypeError as exc:
-                l_col = [ name for name in rdf.GetColumnNames() ]
+                l_col = rut.columns_from_rdf(rdf=rdf)
                 branch_list = 'found_branches.txt'
-                with open(branch_list, 'w', encoding='utf-8') as ifile:
-                    json.dump(l_col, ifile, indent=2)
+                gut.dump_text(lines=l_col, path=branch_list, exists_ok=True)
 
                 raise TypeError(f'Branches found were dumped to {branch_list}') from exc
 
@@ -727,7 +727,6 @@ class TrainMva:
         cvd = CVDiagnostics(models=models, rdf=rdf, cfg=cfg_diag)
         cvd.run()
     # ---------------------------------------------
-    #
     # Hyperparameter optimization
     # ---------------------------------------------
     def _objective(self, trial, kfold : StratifiedKFold) -> float:
