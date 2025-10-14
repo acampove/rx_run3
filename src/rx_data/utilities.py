@@ -25,8 +25,8 @@ class Data:
     dt_rgx  = r'(data_\d{2}_.*c\d)_(Hlt2RD_.*(?:EE|MuMu|misid|cal|MVA|LL|DD))_?(\d{3}_\d{3}|[a-z0-9]{10})?\.root'
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
 # ------------------------------------------
-    l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
 def rdf_is_mc(rdf : RDF.RNode) -> bool:
+    l_col = [ name for name in rdf.GetColumnNames() ]
     for col in l_col:
         if col.endswith('_TRUEID'):
             return True
@@ -117,7 +117,7 @@ def df_from_rdf(rdf : RDF.RNode, drop_nans : bool) -> pnd.DataFrame:
     Pandas dataframe with contents of ROOT dataframe
     '''
     rdf    = _preprocess_rdf(rdf)
-    l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name.c_str()) ]
+    l_col  = [ name for name in rdf.GetColumnNames() if _pick_column(name) ]
     d_data = rdf.AsNumpy(l_col)
     df     = pnd.DataFrame(d_data)
 
