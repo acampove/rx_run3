@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pandas            as pnd
 
 from scipy.stats             import kendalltau
-from ROOT                    import RDataFrame, RDF
+from ROOT                    import RDF
 from dmu.ml.cv_classifier    import CVClassifier
 from dmu.ml.cv_predict       import CVPredict
 from dmu.logging.log_store   import LogStore
@@ -28,7 +28,7 @@ class CVDiagnostics:
     Will calculate correlations between features + signal probability and some external target variable specified in the config
     '''
     # -------------------------
-    def __init__(self, models : list[CVClassifier], rdf : RDataFrame, cfg : dict):
+    def __init__(self, models : list[CVClassifier], rdf : RDF.RNode, cfg : dict):
         self._l_model = models
         self._cfg     = cfg
         self._rdf     = rdf
@@ -61,7 +61,7 @@ class CVDiagnostics:
 
         return d_lab
     # -------------------------
-    def _add_columns(self, rdf : RDataFrame) -> RDataFrame:
+    def _add_columns(self, rdf : RDF.RNode) -> RDF.RNode:
         cfg    = self._l_model[0].cfg
         d_def  = cfg['dataset']['define']
         for var, expr in d_def.items():
