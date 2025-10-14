@@ -41,17 +41,16 @@ definitions:
     nbrem             : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2) # Will use the new definition of brem
     <<: *common
   MM:
-    Jpsi_Mass                    : Jpsi_M # For electrons brem correction makes no sense, so name brem corrected = original
-    B_M_brem_track_2             : B_M
-    B_PT_brem_track_2            : B_PT
-    B_Mass                       : B_M
-    nbrem                        : '0'
-    L1_PT_brem_track_2           : L1_PT           # These are needed by classifier prediction
-    L2_PT_brem_track_2           : L2_PT           # classifier will be trained on brem corrected electron
     B_DIRA_OWNPV_brem_track_2    : B_DIRA_OWNPV    # and expects brem corrected features in muon trees
+    B_M_brem_track_2             : B_M
+    B_Mass                       : B_M
     B_PT_brem_track_2            : B_PT
     Jpsi_DIRA_OWNPV_brem_track_2 : Jpsi_DIRA_OWNPV
+    Jpsi_Mass                    : Jpsi_M # For electrons brem correction makes no sense, so name brem corrected = original
     Jpsi_PT_brem_track_2         : Jpsi_PT
+    L1_PT_brem_track_2           : L1_PT           # These are needed by classifier prediction
+    L2_PT_brem_track_2           : L2_PT           # classifier will be trained on brem corrected electron
+    nbrem                        : '0'
     <<: *common
   MCDT:
     EE:
