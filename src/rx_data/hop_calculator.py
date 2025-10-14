@@ -5,7 +5,7 @@ import math
 from typing import Union
 
 import numpy
-from ROOT                   import RDataFrame, RDF  # type: ignore
+from ROOT                   import RDF  # type: ignore
 from ROOT.Math              import LorentzVector, XYZVector # type: ignore
 from dmu.logging.log_store  import LogStore
 from rx_common              import info
@@ -23,7 +23,7 @@ class HOPCalculator:
     # -------------------------------
     def __init__(
         self, 
-        rdf    : RDataFrame,
+        rdf    : RDF.RNode,
         trigger: str):
         '''
         Parameters
@@ -152,7 +152,7 @@ class HOPCalculator:
 
         return l_alpha, l_mass
     # -------------------------------
-    def get_rdf(self, preffix : str) -> RDataFrame:
+    def get_rdf(self, preffix : str) -> RDF.RNode:
         '''
         Parameters
         ----------------
