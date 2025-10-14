@@ -9,7 +9,7 @@ from dmu.logging.log_store import LogStore
 log=LogStore.add_logger('dmu:tests:rdf_with_friend')
 # ----------------------------------
 class Sample(BaseModel):
-    trees : list[Path] = []
+    trees : list[str ] = []
     files : list[Path] = []
 
 class Spec(BaseModel):
@@ -34,7 +34,7 @@ def _make_file(df : pnd.DataFrame, name : str) -> Path:
 
     return path
 # ----------------------------------
-def _get_json_path(main : str, friend : str) -> Path:
+def _get_json_path(main : Path, friend : Path) -> Path:
     spc = Spec()
     spc.samples['main'] = Sample(trees = ['tree'], files = [main  ])
     spc.friends['bfrn'] = Sample(trees = ['tree'], files = [friend])
