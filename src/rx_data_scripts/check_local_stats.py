@@ -11,6 +11,7 @@ from ap_utilities.decays   import utilities          as aput
 from dmu.generic           import version_management as vmn
 from dmu.logging.log_store import LogStore
 from rx_data               import utilities          as dut
+from rx_common             import info
 
 log=LogStore.add_logger('rx_data:check_local_stats')
 # --------------------------------------
@@ -43,13 +44,15 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
     l_fpath = _paths_from_friend_dir(frnd_dir=frnd_dir)
     d_sample= {}
     for fpath in l_fpath:
-        sample, _ = dut.info_from_path(path=fpath)
-        sample    = aput.name_from_lower_case(sample)
+        sample, trigger = dut.info_from_path(path=fpath)
+        sample          = aput.name_from_lower_case(sample)
         if not sample.startswith('DATA'):
             event_type= aput.read_event_type(nickname=sample)
             sample    = f'{sample} ({event_type})'
 
-        if sample not in d_sample:
+        if   not info.is_ee(trigger=trigger) and 'brem_track_2' in fpath:
+            d_sample[sample] = 0
+        elif sample not in d_sample:
             d_sample[sample] = _stat_from_path(fpath=fpath, kind=kind)
         else:
             d_sample[sample]+= _stat_from_path(fpath=fpath, kind=kind) 
