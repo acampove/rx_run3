@@ -84,7 +84,7 @@ class CVDiagnostics:
     # -------------------------
     def _get_arrays(self) -> dict[str, NPA]:
         rdf   = self._add_columns(self._rdf)
-        l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+        l_col = [ name for name in rdf.GetColumnNames() ]
 
         missing= False
         l_var  = self._l_feat + [self._target]
