@@ -299,7 +299,7 @@ def _get_swap_rdf(rdf : RDF.RNode, trigger : str) -> RDF.RNode:
 
     raise ValueError(f'Invalid kind: {Data.kind}')
 # ---------------------------------
-def _split_rdf(rdf : RDataFrame) -> list[RDataFrame]:
+def _split_rdf(rdf : RDF.RNode) -> list[RDF.RNode]:
     nentries = rdf.Count().GetValue()
     l_size   = range(0, nentries, Data.chunk_size)
 
