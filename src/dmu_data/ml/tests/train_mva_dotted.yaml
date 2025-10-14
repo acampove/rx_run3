@@ -10,10 +10,10 @@ style: &sty
 
 dataset:
   define :
-  r   : z + x
-  nan :
-  x   : -3
-  y   : -3
+    r   : z + x
+    nan :
+    x   : -3
+    y.y : -3
 training :
   nfold    : 3
   features :
