@@ -110,6 +110,7 @@ def get_rdf(
     if with_friend:
         rdf = rdf_with_friend(df=df, branch='y')
     else:
+        log.debug('Not using friend trees to build dataframe')
         rdf = RDF.FromPandas(df)
 
     return rdf
