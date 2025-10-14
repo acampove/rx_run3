@@ -90,7 +90,7 @@ class TrainMva:
     def _get_extra_columns(self, rdf : RDF.RNode, df : pnd.DataFrame) -> list[str]:
         d_plot = self._cfg['plotting']['features']['plots']
         l_expr = list(d_plot)
-        l_rdf  = [ name.c_str() for name in rdf.GetColumnNames() ]
+        l_rdf  = [ name for name in rdf.GetColumnNames() ]
 
         l_extr = []
         for expr in l_expr:
@@ -234,7 +234,7 @@ class TrainMva:
             try:
                 rdf = rdf.Define(name, expr)
             except TypeError as exc:
-                l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
+                l_col = [ name for name in rdf.GetColumnNames() ]
                 branch_list = 'found_branches.txt'
                 with open(branch_list, 'w', encoding='utf-8') as ifile:
                     json.dump(l_col, ifile, indent=2)
