@@ -37,7 +37,7 @@ def _make_file(df : pnd.DataFrame, name : str) -> Path:
 def _get_json_path(main : Path, friend : Path) -> Path:
     spc = Spec()
     spc.samples['main'] = Sample(trees = ['tree'], files = [main  ])
-    spc.friends['bfrn'] = Sample(trees = ['tree'], files = [friend])
+    spc.friends['f']    = Sample(trees = ['tree'], files = [friend])
 
     json_path= Path('/tmp/spec.json')
     with open(json_path, 'w', encoding='utf-8') as ofile:
@@ -53,6 +53,12 @@ def rdf_with_friend(df : pnd.DataFrame, branch : str) -> RDF.RNode:
     json_path  = _get_json_path(main=path_main, friend=path_friend)
 
     rdf = RDF.Experimental.FromSpec(str(json_path))
+
+    log.info(30 * '-')
+    log.info('Using the following columns:')
+    log.info(30 * '-')
+    for name in rdf.GetColumnNames():
+        log.info(name)
 
     return rdf
 # ----------------------------------
