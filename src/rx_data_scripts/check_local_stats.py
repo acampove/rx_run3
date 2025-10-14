@@ -139,7 +139,7 @@ def _update_sizes(data : dict[str,dict[str,int]], sizes : dict[str,int]) -> dict
 
     sizes: Dictionary with:
         Key  : Sample nickname
-        value: Current friend tree size
+        value: main tree size
 
     Returns
     -------------
