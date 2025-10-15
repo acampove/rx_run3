@@ -121,6 +121,7 @@ def _get_df() -> pnd.DataFrame:
         frnd = os.path.basename(frnd_dir)
         data[frnd] = _get_friend_stats(frnd_dir=frnd_dir, kind='number')
 
+    data['Sizes'] = {}
     for frnd_dir in l_frnd_dir:
         frnd = os.path.basename(frnd_dir)
         size = _get_friend_stats(frnd_dir=frnd_dir, kind='size')
@@ -149,9 +150,11 @@ def _update_sizes(data : dict[str,dict[str,int]], sizes : dict[str,int]) -> dict
     -------------
     data dictionary with updated sizes
     '''
-    data['Sizes'] = {}
     for identifier, size in sizes.items():
-        data['Sizes'][identifier] = size 
+        if identifier not in data['Sizes']:
+            data['Sizes'][identifier] = 0
+
+        data['Sizes'][identifier] += size 
         chan = identifier.split('/')[0]
         if chan == 'MM':
             continue
