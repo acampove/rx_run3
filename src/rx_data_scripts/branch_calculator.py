@@ -82,9 +82,10 @@ def _parse_args() -> None:
     LogStore.set_level('rx_data:mis_calculator'     , Data.lvl)
     LogStore.set_level('rx_data:swp_calculator'     , Data.lvl)
     LogStore.set_level('rx_data:hop_calculator'     , Data.lvl)
+    LogStore.set_level('dmu:ml:cv_predict'          , Data.lvl)
     LogStore.set_level('rx_data:rdf_getter'         ,       30)
 
-    if Data.lvl < 20:
+    if Data.lvl < 10:
         LogStore.set_level('rx_data:rdf_getter', Data.lvl)
 # ---------------------------------
 def _get_path_size(path : str) -> int:
