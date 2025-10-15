@@ -344,9 +344,19 @@ class CVPredict:
         arr_keep = None
         arr_skip = None
         if self._index_skip in df_ft.attrs:
+            log.debug('Filtering dataframe by index')
+            ninit    = len(df_ft)
             arr_skip = df_ft.attrs[self._index_skip]
             df_ft    = df_ft.drop(arr_skip)
             arr_keep = df_ft.index.to_numpy()
+            nfnal    = len(df_ft)
+
+            if nfnal == 0:
+                raise ValueError(f'Index skipping produced empty dataset: {ninit} -> {nfnal}')
+            else:
+                log.info(f'Index skipping: {ninit} -> {nfnal}')
+        else:
+            log.debug('Not filtering dataframe by index')
 
         arr_sig_prb  = self._predict_signal_probabilities(
             model = model,
