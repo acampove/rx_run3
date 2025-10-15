@@ -44,9 +44,6 @@ def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 # -------------------------------
-def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
-    size = len(df) * 0.2
-    size = math.floor(size)
 def _add_nans(
     df      : pnd.DataFrame, 
     fraction: float,
@@ -62,16 +59,17 @@ def _add_nans(
     -----------------
     Dataframe with NaNs added
     '''
+    ntot= len(df)
+    nnan= math.ceil(ntot * fraction)
 
-    l_col       = df.columns.tolist()
-    l_col_index = [ l_col.index(column) for column in columns ]
+    for col in columns:
+        arr_val = df[col].to_numpy()
+        arr_ind = numpy.random.choice(ntot, nnan, replace=False)
+        arr_val[arr_ind] = numpy.nan
 
-    log.debug(f'Replacing randomly with {size} NaNs')
-    for _ in range(size):
-        irow = numpy.random.randint(0, df.shape[0])      # Random row index
-        icol = numpy.random.choice(l_col_index)      # Random column index
+        df[col] = arr_val
 
-        df.iat[irow, icol] = numpy.nan
+    log.debug(f'Replacing randomly with {nnan} NaNs')
 
     return df
 # -------------------------------
