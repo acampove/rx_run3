@@ -46,6 +46,20 @@ def _check_probabilities(arr_prb : numpy.ndarray, has_negative : bool) -> None:
     else:
         assert n_below == 0
 #--------------------------------------------------------------------
+def test_all_nans():
+    '''
+    Tests prediction of dataset where all entries contain a NaN
+    '''
+    rdf_sig    = ut.get_rdf(kind='sig')
+    rdf_bkg    = ut.get_rdf(kind='bkg')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+
+    with LogStore.level('dmu:testing:utilities', 10):
+        rdf = ut.get_rdf(kind='sig', columns_with_nans=['z'], nan_fraction=1.0)
+
+    cvp= CVPredict(models=l_model, rdf=rdf)
+    cvp.predict()
+#--------------------------------------------------------------------
 def test_with_friend_trees():
     '''
     Tests training when a dataframe build with friend trees is used
