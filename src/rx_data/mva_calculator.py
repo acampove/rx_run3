@@ -156,7 +156,11 @@ class MVACalculator:
             log.warning(f'Using {nentries} ones for dry run MVA scores')
             arr_prb = numpy.ones(nentries)
         else:
-            arr_prb = cvp.predict()
+            try:
+                arr_prb = cvp.predict()
+            except ValueError as exc:
+                rdf.Display().Print()
+                raise ValueError(f'Prediction failed for {q2bin} bin with {nentries} entries') from exc
 
         arr_ind = rdf.AsNumpy(['index'])['index']
         arr_res = numpy.column_stack((arr_ind, arr_prb))
