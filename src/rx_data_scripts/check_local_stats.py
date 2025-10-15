@@ -101,7 +101,10 @@ def _paths_from_friend_dir(frnd_dir : str) -> list[str]:
     l_fpath  = [ fpath for fpath in l_fpath if _allowed_path(fpath = fpath) ]
     npath    = len(l_fpath)
 
-    log.debug(f'Found {npath} for friend {frnd_dir}')
+    log.debug(50 * '-')
+    log.debug(f'{"Friend":<30}{frnd_dir}')
+    log.debug(f'{"Paths":<30}{npath}')
+    log.debug(f'{"Wildcard":<30}{fpath_wc}')
     if len(l_fpath) == 0:
         raise ValueError(f'No file found in {fpath_wc}')
 
