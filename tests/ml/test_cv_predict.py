@@ -46,6 +46,19 @@ def _check_probabilities(arr_prb : numpy.ndarray, has_negative : bool) -> None:
     else:
         assert n_below == 0
 #--------------------------------------------------------------------
+def test_unused_fold():
+    '''
+    Tests prediction of dataset where fold's model cannot be used for any
+    candidate because all candidates were used in training of model
+    '''
+    rdf_sig    = ut.get_rdf(kind='sig')
+    rdf_bkg    = ut.get_rdf(kind='bkg')
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    rdf        = rdf_sig.Range(3)
+
+    cvp= CVPredict(models=l_model, rdf=rdf)
+    cvp.predict()
+#--------------------------------------------------------------------
 def test_all_nans():
     '''
     Tests prediction of dataset where all entries contain a NaN
