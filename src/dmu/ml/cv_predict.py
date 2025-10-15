@@ -349,8 +349,8 @@ class CVPredict:
             arr_keep = df_ft.index.to_numpy()
 
         arr_sig_prb  = self._predict_signal_probabilities(
-                model = model,
-                df_ft = df_ft)
+            model = model,
+            df_ft = df_ft)
 
         if arr_skip is None:
             return arr_sig_prb
