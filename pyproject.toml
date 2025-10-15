@@ -2,15 +2,11 @@
 name        = 'rx_classifier'
 version     = '0.0.2'
 dependencies= [
-'data_manipulation_utilities',
 'mplhep',
 'matplotlib',
 'numpy',
 'joblib',
 'PyYAML',
-'rx_data',
-'rx_efficiencies',
-'rx_selection',
 ]
 
 [project.optional-dependencies]
