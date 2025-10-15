@@ -161,12 +161,41 @@ def _update_sizes(data : dict[str,dict[str,int]], sizes : dict[str,int]) -> dict
 
     return data
 # --------------------------------------
+def _colorize(row : pnd.Series) -> pnd.Series:
+    '''
+    Parameters
+    -------------
+    row: Pandas series with statistics
+
+    Returns
+    -------------
+    Series with colors
+    '''
+    try:
+        expected = row['main']
+    except KeyError:
+        raise KeyError(f'Cannot get main from: {row}')
+
+    excluded = {'Size [Mb]', 'main'}
+    colored  = row.copy()
+
+    for col in row.index:
+        if col in excluded:
+            continue
+
+        val = tut.numeric_from_series(row, col, float)
+        if not math.isnan(val) and val != expected:
+            colored[col] = f'{Fore.RED}{val}{Style.RESET_ALL}'
+
+    return colored
+# --------------------------------------
 def main():
     '''
     Starts here
     '''
     _parse_args()
     df = _get_df()
+    df = df.apply(_colorize, axis=1)
     df = df.sort_index()
 
     pnd.set_option('display.max_rows'    , None)
