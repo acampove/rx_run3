@@ -75,9 +75,7 @@ def _paths_from_friend_dir(frnd_dir : str) -> list[str]:
     -------------
     List of ROOT files
     '''
-    fpath_wc = f'{frnd_dir}/*.root'
     vers_dir = vmn.get_last_version(frnd_dir, version_only=False)
-
     fpath_wc = f'{vers_dir}/*.root'
     l_fpath  = glob.glob(fpath_wc)
     if len(l_fpath) == 0:
