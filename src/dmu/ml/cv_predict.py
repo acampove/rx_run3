@@ -281,9 +281,22 @@ class CVPredict:
 
         return numpy.array(l_prob)
     # --------------------------------------------
-    def _evaluate_model(self, model : CVClassifier, df_ft : pnd.DataFrame) -> dict[str, float]:
+    def _evaluate_model(
+        self, 
+        model : CVClassifier, 
+        df_ft : pnd.DataFrame) -> dict[str, float]:
         '''
-        Evaluate the dataset for one of the folds, by taking the model and the full dataset
+        Parameters:
+        ------------------------
+        model: Model used to predict probability for samples not involved in the model training
+        df_ft: Dataframe with features, whose probabilities have to be predicted
+
+        Returns
+        ------------------------
+        Dictionary with:
+
+        Key  : Hash representing the features
+        Value: Probability
         '''
         s_dat_hash : set[str] = set(df_ft.index)
         s_mod_hash : set[str] = model.hashes
