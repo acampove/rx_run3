@@ -27,7 +27,10 @@ class Data:
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to print statistics on files stored in cluster')
     parser.add_argument('-p', '--project', type=str, help='Path to file storing lists of samples', required=True)
+    parser.add_argument('-l', '--log_lvl', type=int, help='Logging level', default=20)
     args = parser.parse_args()
+
+    LogStore.set_level('rx_data:check_local_stats', args.log_lvl)
 
     Data.project = args.project
 # --------------------------------------
@@ -78,6 +81,9 @@ def _paths_from_friend_dir(frnd_dir : str) -> list[str]:
     vers_dir = vmn.get_last_version(frnd_dir, version_only=False)
     fpath_wc = f'{vers_dir}/*.root'
     l_fpath  = glob.glob(fpath_wc)
+    npath    = len(l_fpath)
+
+    log.debug(f'Found {npath} for friend {frnd_dir}')
     if len(l_fpath) == 0:
         raise ValueError(f'No file found in {fpath_wc}')
 
