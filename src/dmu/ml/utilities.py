@@ -15,10 +15,9 @@ log = LogStore.add_logger('dmu:ml:utilities')
 # Patch dataframe with features
 # ---------------------------------------------
 def tag_nans(
-        df      : pnd.DataFrame,
-        indexes : str) -> pnd.DataFrame:
+    df      : pnd.DataFrame,
+    indexes : str) -> pnd.DataFrame:
     '''
-
     Parameters
     ----------------
     df      : Pandas dataframe
