@@ -46,26 +46,26 @@ def _check_probabilities(arr_prb : numpy.ndarray, has_negative : bool) -> None:
     else:
         assert n_below == 0
 #--------------------------------------------------------------------
-def test_unused_fold():
+def test_unused_fold(tmp_dir):
     '''
     Tests prediction of dataset where fold's model cannot be used for any
     candidate because all candidates were used in training of model
     '''
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
-    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
     rdf        = rdf_sig.Range(3)
 
     cvp= CVPredict(models=l_model, rdf=rdf)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_all_nans():
+def test_all_nans(tmp_dir):
     '''
     Tests prediction of dataset where all entries contain a NaN
     '''
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
-    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
 
     with LogStore.level('dmu:testing:utilities', 10):
         rdf = ut.get_rdf(kind='sig', columns_with_nans=['z'], nan_fraction=1.0)
@@ -73,7 +73,7 @@ def test_all_nans():
     cvp= CVPredict(models=l_model, rdf=rdf)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_with_friend_trees():
+def test_with_friend_trees(tmp_dir):
     '''
     Tests training when a dataframe build with friend trees is used
     '''
@@ -82,25 +82,25 @@ def test_with_friend_trees():
         rdf_bkg    = ut.get_rdf(kind='bkg', with_friend=True)
 
     with LogStore.level('dmu:ml:train_mva', 10):
-        l_model, _ = ut.get_models(rdf_sig, rdf_bkg, name='train_mva_with_friends')
+        l_model, _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir, name='train_mva_with_friends')
 
     rdf     = ut.get_rdf(kind='sig', with_friend=True)
     cvp     = CVPredict(models=l_model, rdf=rdf)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_non_overlap():
+def test_non_overlap(tmp_dir):
     '''
     Tests prediction when input dataset is different from training one
     '''
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
-    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
 
     rdf     = ut.get_rdf(kind='sig')
     cvp     = CVPredict(models=l_model, rdf=rdf)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_overlap():
+def test_overlap(tmp_dir):
     '''
     Tests prediction when input dataset is same as training one
     '''
@@ -108,12 +108,12 @@ def test_overlap():
 
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
-    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    l_model, _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
 
     cvp     = CVPredict(models=l_model, rdf=rdf_sig)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_patch():
+def test_patch(tmp_dir):
     '''
     Prediction with training and application datasets where all NaNs are cleaned
     '''
@@ -124,7 +124,7 @@ def test_patch():
 
     rdf_sig     = ut.get_rdf(kind='sig', columns_with_nans=['y'])
     rdf_bkg     = ut.get_rdf(kind='bkg', repeated=True)
-    l_model , _ = ut.get_models(rdf_sig, rdf_bkg)
+    l_model , _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
 
     log.info('Predicting')
 
@@ -134,7 +134,7 @@ def test_patch():
 
     _check_probabilities(arr_prb, has_negative=False)
 #--------------------------------------------------------------------
-def test_partial_patch():
+def test_partial_patch(tmp_dir):
     '''
     Test with input and prediction datasets partially cleaned
     '''
@@ -142,7 +142,7 @@ def test_partial_patch():
 
     rdf_sig    = ut.get_rdf(kind='sig', columns_with_nans=['x', 'y'])
     rdf_bkg    = ut.get_rdf(kind='bkg', repeated=True)
-    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    l_model , _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
 
     log.info('Predicting')
 
@@ -175,7 +175,7 @@ def test_sample_def():
             rdf    =rdf)
     cvp.predict()
 #--------------------------------------------------------------------
-def test_skip_mva_prediction():
+def test_skip_mva_prediction(tmp_dir):
     '''
     Tests skipping the reading of scores for candidates
     with the skip_mva_prediction branch set to 1
@@ -186,7 +186,7 @@ def test_skip_mva_prediction():
     rdf_bkg    = ut.get_rdf(kind='bkg')
 
     skip_col   = 'skip_mva_prediction'
-    l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
+    l_model , _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
 
     rdf     = ut.get_rdf(kind='sig')
     rdf     = rdf.Define(skip_col, 'rdfentry_ % 2')
