@@ -23,6 +23,7 @@ class Data:
     Class used to share attributes
     '''
     project : str
+    s_exclusion_substrings : set[str] = {'MVA_cal'}
 # --------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to print statistics on files stored in cluster')
@@ -68,6 +69,22 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
 
     return d_sample
 # ----------------------
+def _allowed_path(fpath : str) -> bool:
+    '''
+    Parameters
+    -------------
+    fpath: Path to ROOT file
+
+    Returns
+    -------------
+    True if allowed
+    '''
+    for excl in Data.s_exclusion_substrings:
+        if excl in fpath:
+            return False
+
+    return True
+# ----------------------
 def _paths_from_friend_dir(frnd_dir : str) -> list[str]:
     '''
     Parameters
@@ -81,6 +98,7 @@ def _paths_from_friend_dir(frnd_dir : str) -> list[str]:
     vers_dir = vmn.get_last_version(frnd_dir, version_only=False)
     fpath_wc = f'{vers_dir}/*.root'
     l_fpath  = glob.glob(fpath_wc)
+    l_fpath  = [ fpath for fpath in l_fpath if _allowed_path(fpath = fpath) ]
     npath    = len(l_fpath)
 
     log.debug(f'Found {npath} for friend {frnd_dir}')
@@ -116,6 +134,9 @@ def _get_df() -> pnd.DataFrame:
     Returns dataframe with friend trees as columns
     Samples as the index and the number of files in the cells
     '''
+    if Data.s_exclusion_substrings:
+        log.warning(f'Using exclusion substrings: {Data.s_exclusion_substrings}')
+
     ana_dir   = os.environ['ANADIR']
     root_path = f'{ana_dir}/Data/{Data.project}'
     l_frnd_dir= glob.glob(f'{root_path}/*')
