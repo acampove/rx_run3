@@ -309,9 +309,9 @@ class CVPredict:
         return d_prob
     # --------------------------------------------
     def _predict_signal_probabilities(
-            self,
-            model : CVClassifier,
-            df_ft : pnd.DataFrame) -> numpy.ndarray:
+        self,
+        model : CVClassifier,
+        df_ft : pnd.DataFrame) -> numpy.ndarray:
         '''
         Takes model and features dataframe, returns array of signal probabilities
         '''
