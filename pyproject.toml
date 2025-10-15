@@ -5,10 +5,7 @@ readme      = 'README.md'
 dependencies= [
 'matplotlib',
 'pandas',
-'data-manipulation-utilities',
 'numpy',
-'rx_data',
-'rx_selection',
 'zfit',
 'jacobi',
 'pandas']
