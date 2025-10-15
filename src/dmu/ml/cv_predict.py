@@ -352,7 +352,8 @@ class CVPredict:
             nfnal    = len(df_ft)
 
             if nfnal == 0:
-                raise ValueError(f'Index skipping produced empty dataset: {ninit} -> {nfnal}')
+                log.warning(f'Index skipping produced empty dataset {ninit} -> {nfnal} returning dummy scores: {self._dummy_score}')
+                return numpy.array(ninit * [self._dummy_score])
             else:
                 log.info(f'Index skipping: {ninit} -> {nfnal}')
         else:
