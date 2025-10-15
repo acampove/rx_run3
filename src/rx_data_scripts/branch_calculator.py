@@ -226,6 +226,10 @@ def _process_rdf(
         rdf=rdf.Define('fake_column', '1')
 
         return rdf
+    else:
+        log.info(30 * '-')
+        log.info(f'Found {nentries} in: {path}')
+        log.info(30 * '-')
 
     msc = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = msc.get_rdf()
