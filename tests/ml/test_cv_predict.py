@@ -104,8 +104,6 @@ def test_overlap(tmp_dir):
     '''
     Tests prediction when input dataset is same as training one
     '''
-    LogStore.set_level('dmu:ml:cv_predict', 10)
-
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
     l_model, _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
@@ -117,11 +115,6 @@ def test_patch(tmp_dir):
     '''
     Prediction with training and application datasets where all NaNs are cleaned
     '''
-    log.info('')
-
-    LogStore.set_level('dmu:ml:cv_predict', 10)
-    LogStore.set_level('dmu:ml:train_mva' , 20)
-
     rdf_sig     = ut.get_rdf(kind='sig', columns_with_nans=['y'])
     rdf_bkg     = ut.get_rdf(kind='bkg', repeated=True)
     l_model , _ = ut.get_models(rdf_sig, rdf_bkg, out_dir=tmp_dir)
@@ -157,10 +150,6 @@ def test_sample_def():
     Tests prediction when a features is the result of a definition
     that is different for different samples
     '''
-
-    LogStore.set_level('dmu:ml:cv_predict', 10)
-    LogStore.set_level('dmu:ml:train_mva' , 10)
-
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
     l_model, _ = ut.get_models(
@@ -180,8 +169,6 @@ def test_skip_mva_prediction(tmp_dir):
     Tests skipping the reading of scores for candidates
     with the skip_mva_prediction branch set to 1
     '''
-    LogStore.set_level('dmu:ml:cv_predict', 10)
-
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
 
