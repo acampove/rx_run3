@@ -89,7 +89,6 @@ def _stat_from_path(fpath : str, kind : str) -> int:
     fpath : Path to file
     kind  : Property of path
 
-
     Returns
     -------------
     Size in Mb
