@@ -47,15 +47,15 @@ def _get_friend_stats(frnd_dir : str, kind : str) -> dict[str,int]:
     for fpath in l_fpath:
         sample, trigger = dut.info_from_path(path=fpath)
         sample          = aput.name_from_lower_case(sample)
-        trigger         = trigger.lstrip('Hlt2RD_')
+        chan            = info.channel_from_trigger(trigger=trigger)
 
         if not sample.startswith('DATA'):
             event_type= aput.read_event_type(nickname=sample)
-            identifier = f'{sample}/{trigger}/{event_type}'
+            identifier = f'{chan}/{sample}/{event_type}'
         else:
-            identifier = f'{sample}/{trigger}'
+            identifier = f'{chan}/{sample}'
 
-        if sample not in d_sample:
+        if identifier not in d_sample:
             d_sample[identifier] = _stat_from_path(fpath=fpath, kind=kind)
         else:
             d_sample[identifier]+= _stat_from_path(fpath=fpath, kind=kind) 
