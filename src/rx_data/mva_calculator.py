@@ -106,6 +106,13 @@ class MVACalculator:
         log.debug(f'{q2bin:<10}{q2_cut}')
         rdf = rdf.Filter(q2_cut, 'q2')
 
+        nentries = rdf.Count().GetValue()
+
+        if nentries == 0:
+            log.warning(f'Found {nentries} entries for {q2bin} bin')
+        else:
+            log.debug(f'Found {nentries} entries for {q2bin} bin')
+
         return rdf
     # ----------------------------------------
     def _q2_scores(
