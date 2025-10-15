@@ -79,6 +79,7 @@ def get_rdf(
     nentries          : int             = 3_000,
     use_preffix       : bool            = False,
     with_friend       : bool            = False,
+    nan_fraction      : float           = 0.2,
     columns_with_nans : list[str]|None  = None):
     '''
     Return ROOT dataframe with toy data
@@ -87,6 +88,7 @@ def get_rdf(
     repeated          : Will add repeated rows
     nentries          : Number of rows
     dotted            : Will use columns with dots in name
+    nan_fraction      : When columns_with_nans is used, this is the fraction of rows with NaNs, default 0.2
     columns_with_nans : List of column names in [w, y, z]
     '''
     # Needed for a specific test
@@ -118,7 +120,7 @@ def get_rdf(
         df = _double_data(df)
 
     if columns_with_nans is not None:
-        df = _add_nans(df, columns=columns_with_nans)
+        df = _add_nans(df, columns=columns_with_nans, fraction=nan_fraction)
 
     if with_friend:
         rdf = rdf_with_friend(df=df, branch='y')
