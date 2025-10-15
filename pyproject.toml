@@ -9,20 +9,17 @@ packages     = [
 {include='rx_plotter_scripts', from='src'}]
 
 [tool.poetry.dependencies]
-python                     = '>=3.10,<3.13'
-apd                        = '*'
-hist                       = '*'
-boost-histogram            = '*'
-mplhep                     = '*'
-matplotlib                 = '*'
-pandas                     = '*'
-numpy                      = '*'
-omegaconf                  = '*'
-formulate                  = '*'
-data-manipulation-utilities= {version = '*', allow-prereleases=true}
-rx-selection               = {version = '*', allow-prereleases=true}
-rx-data                    = {version = '*', allow-prereleases=true}
-pytest                     = {version = '*', optional         =true}
+python           = '>=3.10,<3.13'
+apd              = '*'
+hist             = '*'
+boost-histogram  = '*'
+mplhep           = '*'
+matplotlib       = '*'
+pandas           = '*'
+numpy            = '*'
+omegaconf        = '*'
+formulate        = '*'
+pytest           = {version = '*', optional         =true}
 
 [build-system]
 requires      = [
