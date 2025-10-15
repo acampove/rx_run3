@@ -344,7 +344,7 @@ class CVPredict:
         arr_keep = None
         arr_skip = None
         if self._index_skip in df_ft.attrs:
-            log.debug('Filtering dataframe by index')
+            log.debug(f'Filtering dataframe by index: {self._index_skip}')
             ninit    = len(df_ft)
             arr_skip = df_ft.attrs[self._index_skip]
             df_ft    = df_ft.drop(arr_skip)
