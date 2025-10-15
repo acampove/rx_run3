@@ -4,14 +4,10 @@ description = 'Project used to calculate fully hadronic misid shapes'
 version     = '0.0.1'
 readme      = 'README.md'
 dependencies= [
-'data_manipulation_utilities',
 'PyYAML',
-'rx_data',
-'rx_pid',
 'mplhep',
 'pyarrow',
 'boost-histogram',
-'rx_selection',
 ]
 
 [project.optional-dependencies]
