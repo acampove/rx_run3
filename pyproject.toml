@@ -7,9 +7,6 @@ dependencies= [
 'tqdm',
 'apd',
 'omegaconf',
-'data_manipulation_utilities',
-'ap_utilities',
-'rx_data',
 ]
 
 [project.optional-dependencies]
