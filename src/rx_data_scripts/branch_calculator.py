@@ -75,8 +75,14 @@ def _parse_args() -> None:
     Data.wild_card = args.wc
     Data.chunk_size= args.chunk
 
-    LogStore.set_level('rx_data:branch_calculator', Data.lvl)
-    LogStore.set_level('rx_data:rdf_getter'       ,       30)
+    LogStore.set_level('rx_data:mass_bias_corrector', Data.lvl)
+    LogStore.set_level('rx_data:branch_calculator'  , Data.lvl)
+    LogStore.set_level('rx_data:mass_calculator'    , Data.lvl)
+    LogStore.set_level('rx_data:mva_calculator'     , Data.lvl)
+    LogStore.set_level('rx_data:mis_calculator'     , Data.lvl)
+    LogStore.set_level('rx_data:swp_calculator'     , Data.lvl)
+    LogStore.set_level('rx_data:hop_calculator'     , Data.lvl)
+    LogStore.set_level('rx_data:rdf_getter'         ,       30)
 
     if Data.lvl < 20:
         LogStore.set_level('rx_data:rdf_getter', Data.lvl)
@@ -228,7 +234,7 @@ def _process_rdf(
         return rdf
     else:
         log.info(30 * '-')
-        log.info(f'Found {nentries} in: {path}')
+        log.info(f'Found {nentries} entries in: {path}')
         log.info(30 * '-')
 
     msc = MisCalculator(rdf=rdf, trigger=trigger)
