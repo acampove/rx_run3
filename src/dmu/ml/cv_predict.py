@@ -302,6 +302,9 @@ class CVPredict:
         s_mod_hash : set[str] = model.hashes
 
         s_dif_hash = s_dat_hash - s_mod_hash
+        if not s_dif_hash:
+            log.warning(f'All {len(s_dat_hash)} were used to train fold, skipping prediction')
+            return dict()
 
         ndif = len(s_dif_hash)
         ndat = len(s_dat_hash)
