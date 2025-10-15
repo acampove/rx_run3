@@ -133,5 +133,10 @@ class CVClassifier(GradientBoostingClassifier):
         if not on_training_ok:
             self._check_hashes(X)
 
+        if len(X) == 0:
+            raise ValueError('Found empty dataset')
+        else:
+            log.debug(f'Passing to scikit-learn {len(X)} samples to predict')
+
         return super().predict_proba(X)
 # ---------------------------------------

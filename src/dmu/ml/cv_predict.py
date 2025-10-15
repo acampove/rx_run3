@@ -315,6 +315,12 @@ class CVPredict:
         '''
         Takes model and features dataframe, returns array of signal probabilities
         '''
+        nentries = len(df_ft)
+        if nentries == 0:
+            raise ValueError('Found empty dataset')
+        else:
+            log.debug(f'Will run prediction with {nentries} entries')
+
         if self._non_overlapping_hashes(model, df_ft):
             log.debug('No intersecting hashes found between model and data')
             arr_prb = model.predict_proba(df_ft)
