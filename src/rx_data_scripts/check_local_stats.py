@@ -184,8 +184,16 @@ def _colorize(row : pnd.Series) -> pnd.Series:
             continue
 
         val = tut.numeric_from_series(row, col, float)
-        if not math.isnan(val) and val != expected:
+        if val == expected:
+            continue
+
+        if math.isnan(val):
+            continue
+
+        if val > expected:
             colored[col] = f'{Fore.RED}{val}{Style.RESET_ALL}'
+        else:
+            colored[col] = f'{Fore.BLUE}{val}{Style.RESET_ALL}'
 
     return colored
 # --------------------------------------
