@@ -156,7 +156,7 @@ def _update_sizes(data : dict[str,dict[str,int]], sizes : dict[str,int]) -> dict
         if chan == 'MM':
             continue
 
-        if 'identifier' not in data['brem_track_2']:
+        if identifier not in data['brem_track_2']:
             data['brem_track_2'][identifier] = 0
 
     return data
@@ -183,7 +183,7 @@ def _colorize(row : pnd.Series) -> pnd.Series:
         if col in excluded:
             continue
 
-        val = tut.numeric_from_series(row, col, float)
+        val : float = tut.numeric_from_series(row, col, float)
         if val == expected:
             continue
 
