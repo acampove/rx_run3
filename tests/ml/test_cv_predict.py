@@ -65,8 +65,6 @@ def test_non_overlap():
     '''
     Tests prediction when input dataset is different from training one
     '''
-
-    LogStore.set_level('dmu:ml:cv_predict', 10)
     rdf_sig    = ut.get_rdf(kind='sig')
     rdf_bkg    = ut.get_rdf(kind='bkg')
     l_model, _ = ut.get_models(rdf_sig, rdf_bkg)
