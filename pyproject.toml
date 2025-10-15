@@ -15,10 +15,9 @@ uproot  = '*'
 vector  = '*'
 pyarrow = '*'
 numpy   = '*'
-dask                        = {version = '*', extras=['distributed']} 
-data-manipulation-utilities = {version = '*', allow-prereleases=true}
-pytest                      = {version = '*',       optional = true }
-torch                       = {version = '*',       optional = true }
+dask    = {version = '*', extras=['distributed']} 
+pytest  = {version = '*',       optional = true }
+torch   = {version = '*',       optional = true }
 
 [tool.poetry.extras]
 dev  = ['pytest']
