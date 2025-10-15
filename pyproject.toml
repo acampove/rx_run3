@@ -6,10 +6,7 @@ dependencies= [
 'numpy',
 'pandas',
 'mplhep',
-'matplotlib',
-'data-manipulation-utilities',
-'rx_data',
-'rx_selection']
+'matplotlib']
 
 [project.optional-dependencies]
 dev  = ['pytest']
