@@ -47,6 +47,21 @@ def _double_data(df_1 : pnd.DataFrame) -> pnd.DataFrame:
 def _add_nans(df : pnd.DataFrame, columns : list[str]) -> pnd.DataFrame:
     size = len(df) * 0.2
     size = math.floor(size)
+def _add_nans(
+    df      : pnd.DataFrame, 
+    fraction: float,
+    columns : list[str]) -> pnd.DataFrame:
+    '''
+    Parameters
+    -----------------
+    df      : Dataframe with data to train/test in tests
+    fraction: Fraction of entries that will be randomly assigned NaNs
+    columns : List of columns where NaNs will be injected
+
+    Returns
+    -----------------
+    Dataframe with NaNs added
+    '''
 
     l_col       = df.columns.tolist()
     l_col_index = [ l_col.index(column) for column in columns ]
