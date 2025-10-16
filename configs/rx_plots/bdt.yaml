@@ -1,20 +1,44 @@
-args:
-  #- {sample : Bd_Kstee_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : low    }
-  #- {sample : Bd_Kstee_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : central}
-  #- {sample : Bd_Kstee_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : high   }
-  # ------------
-  #- {sample : Bd_JpsiKst_ee_eq_DPC        , trigger : Hlt2RD_B0ToKpPimEE_MVA, q2bin : jpsi   }
-  # ------------
-  - {sample : Bu_Kee_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : low    }
-  - {sample : Bu_Kee_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : central}
-  - {sample : Bu_Kee_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : high   }
+# This config will steer the plots checking the effect of several MVA working points
+# on different samples, which have otherwise gone through the full selection
 
-  - {sample : Bu_Kmumu_eq_btosllball05_DPC, trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : low    }
-  - {sample : Bu_Kmumu_eq_btosllball05_DPC, trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : central}
-  - {sample : Bu_Kmumu_eq_btosllball05_DPC, trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : high   }
+args:
+  - {sample : DATA_24*                      , trigger : Hlt2RD_BuToKpMuMu_MVA    , q2bin : low    }
+  - {sample : DATA_24*                      , trigger : Hlt2RD_BuToKpMuMu_MVA    , q2bin : central}
+  - {sample : DATA_24*                      , trigger : Hlt2RD_BuToKpMuMu_MVA    , q2bin : high   }
+
+  - {sample : DATA_24*                      , trigger : Hlt2RD_BuToKpEE_MVA      , q2bin : low    }
+  - {sample : DATA_24*                      , trigger : Hlt2RD_BuToKpEE_MVA      , q2bin : central}
+  - {sample : DATA_24*                      , trigger : Hlt2RD_BuToKpEE_MVA      , q2bin : high   }
   # ------------
-  - {sample : Bu_JpsiK_ee_eq_DPC          , trigger : Hlt2RD_BuToKpEE_MVA   , q2bin : jpsi   }
-  - {sample : Bu_JpsiK_mm_eq_DPC          , trigger : Hlt2RD_BuToKpMuMu_MVA , q2bin : jpsi   }
+  - {sample : DATA_24*                      , trigger : Hlt2RD_B0ToKpPimMuMu_MVA , q2bin : low    }
+  - {sample : DATA_24*                      , trigger : Hlt2RD_B0ToKpPimMuMu_MVA , q2bin : central}
+  - {sample : DATA_24*                      , trigger : Hlt2RD_B0ToKpPimMuMu_MVA , q2bin : high   }
+
+  - {sample : DATA_24*                      , trigger : Hlt2RD_B0ToKpPimEE_MVA   , q2bin : low    }
+  - {sample : DATA_24*                      , trigger : Hlt2RD_B0ToKpPimEE_MVA   , q2bin : central}
+  - {sample : DATA_24*                      , trigger : Hlt2RD_B0ToKpPimEE_MVA   , q2bin : high   }
+  # ------------
+  - {sample : Bd_Kstmumu_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimMuMu_MVA , q2bin : low    }
+  - {sample : Bd_Kstmumu_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimMuMu_MVA , q2bin : central}
+  - {sample : Bd_Kstmumu_eq_btosllball05_DPC, trigger : Hlt2RD_B0ToKpPimMuMu_MVA , q2bin : high   }
+
+  - {sample : Bd_Kstee_eq_btosllball05_DPC  , trigger : Hlt2RD_B0ToKpPimEE_MVA   , q2bin : low    }
+  - {sample : Bd_Kstee_eq_btosllball05_DPC  , trigger : Hlt2RD_B0ToKpPimEE_MVA   , q2bin : central}
+  - {sample : Bd_Kstee_eq_btosllball05_DPC  , trigger : Hlt2RD_B0ToKpPimEE_MVA   , q2bin : high   }
+  # ------------
+  - {sample : Bu_Kmumu_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpMuMu_MVA    , q2bin : low    }
+  - {sample : Bu_Kmumu_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpMuMu_MVA    , q2bin : central}
+  - {sample : Bu_Kmumu_eq_btosllball05_DPC  , trigger : Hlt2RD_BuToKpMuMu_MVA    , q2bin : high   }
+
+  - {sample : Bu_Kee_eq_btosllball05_DPC    , trigger : Hlt2RD_BuToKpEE_MVA      , q2bin : low    }
+  - {sample : Bu_Kee_eq_btosllball05_DPC    , trigger : Hlt2RD_BuToKpEE_MVA      , q2bin : central}
+  - {sample : Bu_Kee_eq_btosllball05_DPC    , trigger : Hlt2RD_BuToKpEE_MVA      , q2bin : high   }
+  # ------------
+  - {sample : Bu_JpsiK_mm_eq_DPC            , trigger : Hlt2RD_BuToKpMuMu_MVA    , q2bin : jpsi   }
+  - {sample : Bu_JpsiK_ee_eq_DPC            , trigger : Hlt2RD_BuToKpEE_MVA      , q2bin : jpsi   }
+  # ------------
+  - {sample : Bd_JpsiKst_mm_eq_DPC          , trigger : Hlt2RD_B0ToKpPimMuMu_MVA , q2bin : jpsi   }
+  - {sample : Bd_JpsiKst_ee_eq_DPC          , trigger : Hlt2RD_B0ToKpPimEE_MVA   , q2bin : jpsi   }
 output:
   - bmass.png
   - bmass_brem_track_2.png
