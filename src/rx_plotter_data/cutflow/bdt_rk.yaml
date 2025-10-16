@@ -30,25 +30,47 @@ general:
 selection :
   bdt     : (1) 
   mass      : (1)
-cmb : &cuts
-  None      : (1)
-  cmb > 0.6 : mva_cmb > 0.6
-  cmb > 0.8 : mva_cmb > 0.8
-  cmb > 0.95: mva_cmb > 0.95
-  prc > 0.2 : mva_cmb > 0.95 && mva_prc > 0.2
-  prc > 0.4 : mva_cmb > 0.95 && mva_prc > 0.4
-  prc > 0.6 : mva_cmb > 0.95 && mva_prc > 0.6
 cutflow:
   low :
-    <<: *cuts
+    None      : (1)
+    cmb > 0.3 : mva_cmb > 0.3
+    cmb > 0.5 : mva_cmb > 0.5
+    cmb > 0.6 : mva_cmb > 0.6
+    prc > 0.3 : mva_cmb > 0.6 && mva_prc > 0.3
+    prc > 0.5 : mva_cmb > 0.6 && mva_prc > 0.5
+    prc > 0.6 : mva_cmb > 0.6 && mva_prc > 0.6
   central:
-    <<: *cuts
+    None      : (1)
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    cmb > 0.95: mva_cmb > 0.95
+    prc > 0.2 : mva_cmb > 0.95 && mva_prc > 0.2
+    prc > 0.4 : mva_cmb > 0.95 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.95 && mva_prc > 0.6
   jpsi:
-    <<: *cuts
+    None      : (1)
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    cmb > 0.95: mva_cmb > 0.95
+    prc > 0.2 : mva_cmb > 0.95 && mva_prc > 0.2
+    prc > 0.4 : mva_cmb > 0.95 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.95 && mva_prc > 0.6
   psi2:
-    <<: *cuts
+    None      : (1)
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    cmb > 0.95: mva_cmb > 0.95
+    prc > 0.2 : mva_cmb > 0.95 && mva_prc > 0.2
+    prc > 0.4 : mva_cmb > 0.95 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.95 && mva_prc > 0.6
   high:
-    <<: *cuts
+    None      : (1)
+    cmb > 0.4 : mva_cmb > 0.4
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    prc > 0.4 : mva_cmb > 0.8 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.8 && mva_prc > 0.6
+    prc > 0.8 : mva_cmb > 0.8 && mva_prc > 0.8
 saving:
   plt_dir : cutflow/bdt
 plots:
