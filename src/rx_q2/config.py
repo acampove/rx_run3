@@ -29,10 +29,10 @@ class Input(BaseModel):
     '''
     Class meant to represent input section of config
     '''
-    year      : list[str]
-    trigger   : list[str]
-    brem      : list[int]
-    cali      : list[str]
+    nent      : int
+    year      : str
+    trigger   : str
+    brem      : int
     samples   : Samples
     selection : dict[str,str]
 #-------------------
@@ -55,6 +55,6 @@ class Config(BaseModel):
     ana_dir  = Path(os.environ['ANADIR'])
 
     cfg_vers : str
+    syst     : str
     input    : Input
-    syst     : list[str]
     fitting  : Fitting
