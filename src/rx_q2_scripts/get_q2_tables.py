@@ -31,60 +31,47 @@ from dmu.logging.log_store   import LogStore
 
 from rx_selection            import selection as sel
 from rx_data.rdf_getter      import RDFGetter
+from rx_q2.config            import Config
 
 Parameters=dict[str,tuple[float,float]]
 
 log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
-class Data:
-    '''
-    Data class
-    '''
+@cache
+def _load_config() -> Config:
+    parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
+    parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
+    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True)
+    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True)
+    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True)
+    parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True)
+    parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1) 
+    parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        , default='nom')
+    parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20   )
+    parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
+    parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action ='store_true')
+    args = parser.parse_args()
+
+    input            = {}
+    input['nent']    = args.nent
+    input['year']    = args.year
+    input['trigger'] = args.trig
+    input['brem']    = args.brem
+    input['block']   = 'all' if args.block == -1 else str(args.block)
+    input['kind']    = args.kind
+    input['logl']    = args.logl
+    input['nentries']= args.nent
+    input['skip_fit']= args.skip_fit
+
+    data = gut.load_data(package='rx_q2_data', fpath=f'config/{args.vers}.yaml')
+    data['ana_dir'] = os.environ['ANADIR']
+    data['vers'   ] = args.vers
+    data['syst'   ] = args.syst
+    data['input'  ].update(input)
+
     zfit.settings.changed_warnings.hesse_name = False
 
-    gut.TIMER_ON = True
-    ana_dir      = os.environ['ANADIR']
-    out_dir      : str
-
-    l_year       : list[str]
-    l_trig       : list[str]
-    l_brem       : list[str]
-    l_syst       : list[str]
-    l_kind       : list[str]
-    l_cali       : list[str]
-    d_sel        : dict[str,str]
-    d_samp       : dict[str,str]
-    obs_range    : list[float]
-    d_obs_range  : dict[str,list[float]]
-
-    trig         : str
-    year         : str
-    brem         : str
-    block        : str
-    nentries     : int
-    skip_fit     : bool
-    nevs_data    : int
-    cal_sys      : str
-    out_vers     : str
-    cfg_vers     : str = 'v2'
-
-    j_mass       : str
-    weights      : str
-    nbins        : int
-    obs          : zobs
-    sig_pdf_splt : zpdf
-    sig_pdf_merg : zpdf
-    bkg_pdf      : zpdf
-    l_pdf        : list[str]
-    d_sim_par    : dict[str,tuple[float,float]]
-    cfg_sim_fit  : dict
-#-------------------
-def _load_config() -> dict:
-    cfg_path = files('rx_q2_data').joinpath(f'config/{Data.cfg_vers}.yaml')
-    cfg_path = str(cfg_path)
-    cfg      = gut.load_json(cfg_path)
-
-    return cfg
+    return Config(**data)
 #-------------------
 def _set_vars():
     cfg         = _load_config()
@@ -444,41 +431,6 @@ def _make_table():
 
     _fit(d_fix=d_fix_par)
 #-------------------
-@cache
-def _load_config() -> Config:
-    parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
-    parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
-    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True)
-    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True)
-    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True)
-    parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True)
-    parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1) 
-    parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        , default='nom')
-    parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20   )
-    parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
-    parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action ='store_true')
-    args = parser.parse_args()
-
-    input            = {}
-    input['nent']    = args.nent
-    input['year']    = args.year
-    input['trigger'] = args.trig
-    input['brem']    = args.brem
-    input['block']   = 'all' if args.block == -1 else str(args.block)
-    input['kind']    = args.kind
-    input['logl']    = args.logl
-    input['nentries']= args.nent
-    input['skip_fit']= args.skip_fit
-
-    data = gut.load_data(package='rx_q2_data', fpath=f'config/{args.vers}.yaml')
-    data['ana_dir'] = os.environ['ANADIR']
-    data['vers'   ] = args.vers
-    data['syst'   ] = args.syst
-    data['input'  ].update(input)
-
-    zfit.settings.changed_warnings.hesse_name = False
-
-    return Config(**data)
 #-------------------
 @gut.timeit
 def main():
