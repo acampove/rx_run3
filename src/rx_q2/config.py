@@ -1,11 +1,9 @@
 '''
 Module containing Conf class
 '''
-import os
 from pathlib        import Path
 from typing         import Any
 
-from dmu.stats.zfit import zfit
 from pydantic       import BaseModel
 
 from dmu.logging.log_store import LogStore
@@ -51,9 +49,7 @@ class Config(BaseModel):
     '''
     Class meant to hold configuration
     '''
-    zfit.settings.changed_warnings.hesse_name = False
-    ana_dir  = Path(os.environ['ANADIR'])
-
+    ana_dir  : Path
     cfg_vers : str
     syst     : str
     input    : Input
