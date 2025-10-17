@@ -1,53 +1,60 @@
 '''
 Module containing Conf class
 '''
+import os
+from pathlib        import Path
+from typing         import Any
 
-from pydantic import BaseModel
+from dmu.stats.zfit import zfit
+from pydantic       import BaseModel
 
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('rx_q2:config')
+#-------------------
+class MCFit(BaseModel):
+    '''
+    Class holding configuration needed for MC fits
+    '''
+    strategy : dict[str,dict[str,Any]]
+#-------------------
+class Samples(BaseModel):
+    '''
+    Class meant to represent sample information
+    '''
+    sim : str
+    dat : str
+#-------------------
+class Input(BaseModel):
+    '''
+    Class meant to represent input section of config
+    '''
+    year      : list[str]
+    trigger   : list[str]
+    brem      : list[int]
+    cali      : list[str]
+    samples   : Samples
+    selection : dict[str,str]
+#-------------------
+class Fitting(BaseModel):
+    '''
+    Class used to store fitting configuration
+    '''
+    ranges    : dict[int,list[int]]
+    mass      : str
+    weights   : str
+    binning   : dict[str,int]
+    model     : dict[str,list[int]]
+    simulation: MCFit
 #-------------------
 class Config(BaseModel):
     '''
-    Data class
+    Class meant to hold configuration
     '''
     zfit.settings.changed_warnings.hesse_name = False
-    ana_dir        = Path(os.environ['ANADIR'])
-    cfg_vers : str = 'v2'
-    gut.TIMER_ON   = True
+    ana_dir  = Path(os.environ['ANADIR'])
 
-    out_dir      : str
-    logl         : int
-    kind         : str
-    syst         : str
-
-    l_year       : list[str]
-    l_trig       : list[str]
-    l_brem       : list[str]
-    l_syst       : list[str]
-    l_kind       : list[str]
-    l_cali       : list[str]
-    d_sel        : dict[str,str]
-    d_samp       : dict[str,str]
-    obs_range    : list[float]
-    d_obs_range  : dict[str,list[float]]
-
-    trig         : str
-    year         : str
-    brem         : str
-    block        : str
-    nentries     : int
-    skip_fit     : bool
-    nevs_data    : int
-    cal_sys      : str
-    out_vers     : str
-
-    j_mass       : str
-    weights      : str
-    nbins        : int
-    obs          : zobs
-    sig_pdf_splt : zpdf
-    sig_pdf_merg : zpdf
-    bkg_pdf      : zpdf
-    l_pdf        : list[str]
-    d_sim_par    : dict[str,tuple[float,float]]
-    cfg_sim_fit  : dict
-
+    cfg_vers : str
+    input    : Input
+    syst     : list[str]
+    fitting  : Fitting
