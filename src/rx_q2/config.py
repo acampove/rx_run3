@@ -27,10 +27,11 @@ class Input(BaseModel):
     '''
     Class meant to represent input section of config
     '''
-    nent      : int
+    nentries  : int
     year      : str
     trigger   : str
     brem      : int
+    kind      : str     # dat or sim, used to pick from Samples below
     samples   : Samples
     selection : dict[str,str]
 #-------------------
@@ -42,7 +43,7 @@ class Fitting(BaseModel):
     mass      : str
     weights   : str
     binning   : dict[str,int]
-    model     : dict[str,list[int]]
+    model     : dict[str,list[str]]
     simulation: MCFit
 #-------------------
 class Config(BaseModel):
@@ -50,7 +51,7 @@ class Config(BaseModel):
     Class meant to hold configuration
     '''
     ana_dir  : Path
-    cfg_vers : str
+    vers     : str
     syst     : str
     input    : Input
     fitting  : Fitting
