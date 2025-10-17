@@ -444,30 +444,41 @@ def _make_table():
 
     _fit(d_fix=d_fix_par)
 #-------------------
-def _get_args():
+@cache
+def _load_config() -> Config:
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
-    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True, choices=Data.l_trig)
-    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True, choices=Data.l_year)
-    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True, choices=Data.l_brem)
-    parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1   , choices=[0, 1, 2, 12, 3, 4, 5, 6, 7, 8, 78, -1])
-    parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        ,                choices=Data.l_syst)
-    parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True, choices=Data.l_kind)
-    parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20    ,choices=[10, 20, 30])
+    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True)
+    parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True)
+    parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True)
+    parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True)
+    parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1) 
+    parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        , default='nom')
+    parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20   )
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
-    parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action='store_true')
+    parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action ='store_true')
     args = parser.parse_args()
 
-    Data.trig     = args.trig
-    Data.year     = args.year
-    Data.brem     = args.brem
-    Data.block    = 'all' if args.block == -1 else str(args.block)
-    Data.syst     = args.syst
-    Data.kind     = args.kind
-    Data.logl     = args.logl
-    Data.out_vers = args.vers
-    Data.nentries = args.nent
-    Data.skip_fit = args.skip_fit
+    input            = {}
+    input['nent']    = args.nent
+    input['year']    = args.year
+    input['trigger'] = args.trig
+    input['brem']    = args.brem
+    input['block']   = 'all' if args.block == -1 else str(args.block)
+    input['kind']    = args.kind
+    input['logl']    = args.logl
+    input['nentries']= args.nent
+    input['skip_fit']= args.skip_fit
+
+    data = gut.load_data(package='rx_q2_data', fpath=f'config/{args.vers}.yaml')
+    data['ana_dir'] = os.environ['ANADIR']
+    data['vers'   ] = args.vers
+    data['syst'   ] = args.syst
+    data['input'  ].update(input)
+
+    zfit.settings.changed_warnings.hesse_name = False
+
+    return Config(**data)
 #-------------------
 @gut.timeit
 def main():
