@@ -1,14 +1,4 @@
 input:
-  year:    # Supported years
-    - 2024
-  trigger:
-    - Hlt2RD_BuToKpEE_MVA
-  brem:   # Supported brem categories
-    - 0
-    - 1
-    - 2
-  cali:
-    - 000
   samples: # Supported samples
     sim : Bu_JpsiK_ee_eq_DPC
     dat : DATA*
