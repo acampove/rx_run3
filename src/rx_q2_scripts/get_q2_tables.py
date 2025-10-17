@@ -4,7 +4,7 @@ Script needed to calculate smearing factors for q2 distribution
 
 import os
 import argparse
-from importlib.resources import files
+from functools import cache
 
 import hist
 import numpy
@@ -12,16 +12,14 @@ import mplhep
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
-import ROOT # ROOT import has to be before zfit ones to avoid crash due to ROOT -> tensorflow issue
-from ROOT import RDataFrame
+from ROOT                   import RDF # type: ignore
+from dmu.stats.zfit         import zfit
+from zfit.pdf               import BasePDF   as zpdf
+from zfit.data              import Data      as zdata
+from zfit.interface         import ZfitSpace as zobs
+from zfit.result            import FitResult as zres
 
-import zfit
-from zfit.core.data         import Data       as zdata
-from zfit.core.basepdf      import BasePDF    as zpdf
-from zfit.core.interfaces   import ZfitSpace  as zobs
-from zfit.result            import FitResult  as zres
-
-import dmu.generic.utilities as gut
+from dmu.generic             import utilities        as gut
 from dmu.stats               import utilities        as sut
 from dmu.stats.fitter        import Fitter
 from dmu.stats.parameters    import ParameterLibrary as PL
