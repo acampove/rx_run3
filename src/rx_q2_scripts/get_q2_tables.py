@@ -95,20 +95,21 @@ def _set_pdf_pars(pdf : zpdf, d_val : Parameters) -> None:
         log.info(f'{name:<20}{"->":<10}{val:<10.3}')
 #-------------------
 def _get_sig_pdf() -> zpdf:
-    for pdf_name in Data.l_pdf:
-        PL.set_values(kind=pdf_name, parameter='mu', val=3000, low=2800, high=3300)
-        PL.set_values(kind=pdf_name, parameter='sg', val= 100, low=  10, high= 200)
+    cfg = _load_config()
+    for pdf_name in cfg.fitting.model.pdfs:
+        PL.values(kind=pdf_name, parameter='mu', val=3000, low=2800, high=3300)
+        PL.values(kind=pdf_name, parameter='sg', val= 100, low=  10, high= 200)
 
         if pdf_name == 'cbr':
-            PL.set_values(kind=pdf_name, parameter='nc', val= 3, low= 0.1, high= 10)
+            PL.values(kind=pdf_name, parameter='nc', val= 3, low= 0.1, high= 10)
 
         if pdf_name == 'dscb':
-            PL.set_values(kind=pdf_name, parameter='nr', val= 3, low= 0.1, high=128)
+            PL.values(kind=pdf_name, parameter='nr', val= 3, low= 0.1, high=128)
 
     mod     = ModelFactory(
     preffix = 'q2_smearing',
-    obs     = Data.obs,
-    l_pdf   = Data.l_pdf,
+    obs     = cfg.obs,
+    l_pdf   = cfg.fitting.model.pdfs,
     l_shared= ['mu', 'sg'],
     l_float = ['mu', 'sg'])
     pdf     = mod.get_pdf()
