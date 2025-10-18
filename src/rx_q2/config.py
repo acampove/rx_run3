@@ -26,7 +26,7 @@ class Samples(BaseModel):
     rk_ee  : dict[str,str]
     rkst_ee: dict[str,str]
     #-------------------
-    def __getitem__(self, name : str) -> str:
+    def __getitem__(self, name : str) -> dict[str,str]:
         if not hasattr(self, name):
             raise AttributeError(f'Samples class has no {name} attribute')
 
@@ -38,11 +38,11 @@ class Input(BaseModel):
     '''
     nentries  : int
     year      : str
-    trigger   : str
     brem      : int
     block     : str
     kind      : str     # dat or sim, used to pick from Samples below
     samples   : Samples
+    trigger   : dict[str,str]
     selection : dict[str,str]
 #-------------------
 class Plotting(BaseModel):
@@ -135,8 +135,10 @@ class Config(BaseModel):
     @property
     def out_dir(self) -> Path:
         ana_dir = Path(os.environ['ANADIR'])
+        trigger = self.input.trigger[self.project]
+
         path_1  = f'q2/fits/{self.vers}/{self.input.kind}'
-        path_2  = f'{self.input.trigger}_{self.input.year}'
+        path_2  = f'{trigger}_{self.input.year}'
         path_3  = f'{self.input.brem}_{self.input.block}_{self.syst}'
 
         out_dir = ana_dir / path_1 / path_2 / path_3
