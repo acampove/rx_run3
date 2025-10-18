@@ -111,11 +111,28 @@ def _get_sig_pdf() -> zpdf:
 #-------------------
 @cache
 def _get_full_pdf() -> zpdf:
+    cfg = _load_config()
     sig = _get_sig_pdf()
     nsg = zfit.Parameter('nsg', 10_000, 100, 2_000_000)
     sig = sig.create_extended(nsg, name='Signal')
 
-    return sig
+    if cfg.input.kind == 'sim':
+        return sig
+
+    bkg = _get_bkg_pdf()
+    pdf = zfit.pdf.SumPDF([bkg, sig])
+
+    return pdf 
+#-------------------
+def _get_bkg_pdf() -> zpdf:
+    cfg = _load_config()
+    lam = zfit.Parameter('lam', 0.0, -0.01, 0)
+    bkg = zfit.pdf.Exponential(lam=lam, obs=cfg.obs, name='')
+
+    nbk = zfit.Parameter('nbk', 10, 1, 100_000)
+    bkg = bkg.create_extended(nbk, name='Combinatorial')
+
+    return bkg
 #-------------------
 def _fix_pdf(pdf : zpdf, d_fix : Parameters | None) -> zpdf:
     '''
