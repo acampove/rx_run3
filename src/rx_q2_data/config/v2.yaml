@@ -20,13 +20,13 @@ syst:
 fitting:
   ranges : # Fitting ranges for each brem category
     0 :
-      - 2500
+      - 2200
       - 3300
     1 :
-      - 2500
-      - 3800
+      - 2000
+      - 4000
     2 :
-      - 2500
+      - 2200
       - 3800
   mass    : Jpsi_M_brem_track_2 # Observable to be fitted
   weights : weight
