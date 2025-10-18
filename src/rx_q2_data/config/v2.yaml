@@ -3,9 +3,7 @@ input:
     sim : Bu_JpsiK_ee_eq_DPC
     dat : DATA*
   selection:
-    psi_vt: B_const_mass_M > 5180
-    mass  : (1)
-    q2    : (1)
+    mass  : (1) 
 syst:
     - nom
 fitting:
