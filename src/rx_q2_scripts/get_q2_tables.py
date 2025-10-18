@@ -5,6 +5,8 @@ Script needed to calculate smearing factors for q2 distribution
 import os
 import argparse
 from functools import cache
+from pathlib   import Path
+from typing    import Mapping, Any
 
 import hist
 import numpy
@@ -16,7 +18,6 @@ from ROOT                   import RDF # type: ignore
 from dmu.stats.zfit         import zfit
 from zfit.pdf               import BasePDF   as zpdf
 from zfit.data              import Data      as zdata
-from zfit.interface         import ZfitSpace as zobs
 from zfit.result            import FitResult as zres
 
 from dmu.generic             import utilities        as gut
