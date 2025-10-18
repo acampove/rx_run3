@@ -202,7 +202,8 @@ def _fit(d_fix : Parameters | None = None)-> Parameters | None:
         log.warning('Skipping fit')
         return None
 
-    res=obj.fit(cfg=cfg.fitting.simulation.model_dump())
+    res=obj.fit(cfg=cfg.fitting[kind].model_dump())
+
     if res is None:
         _plot_fit(dat, pdf, res)
 
