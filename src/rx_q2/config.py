@@ -13,7 +13,7 @@ from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_q2:config')
 #-------------------
-class MCFit(BaseModel):
+class FitConfig(BaseModel):
     '''
     Class holding configuration needed for MC fits
     '''
@@ -63,7 +63,8 @@ class Fitting(BaseModel):
     weights   : str
     plotting  : Plotting 
     model     : FitModel
-    simulation: MCFit
+    sim       : FitConfig 
+    dat       : FitConfig 
     skip      : bool
 #-------------------
 class Config(BaseModel):
