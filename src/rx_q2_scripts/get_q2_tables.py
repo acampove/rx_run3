@@ -230,10 +230,10 @@ def _fit(d_fix : Parameters | None = None)-> Parameters | None:
 #-------------------
 def _get_data(pdf : zpdf, kind : str) -> zdata:
     cfg       = _load_config()
-    data_path = cfg.out_dir / 'data.json'
+    data_path = cfg.out_dir / 'data.parquet'
     if data_path.exists(): 
         log.warning(f'Data found, loading from: {data_path}')
-        df  = pnd.read_json(data_path)
+        df  = pnd.read_parquet(data_path)
         # TODO: Here the weights need to be put back, once the bug in zfit be fixed
         dat = zfit.data.Data.from_pandas(df, obs=cfg.obs)
         if not isinstance(dat, zdata):
@@ -245,7 +245,7 @@ def _get_data(pdf : zpdf, kind : str) -> zdata:
     rdf     = _get_rdf(kind=kind)
     d_data  = rdf.AsNumpy([cfg.fitting.mass, cfg.fitting.weights])
     df      = pnd.DataFrame(d_data)
-    df.to_json(data_path) # Caching now will avoid redoing this if fit fails
+    df.to_parquet(data_path) # Caching now will avoid redoing this if fit fails
 
     obs     = pdf.space
     # TODO: Here the weights need to be put back, once the bug in zfit be fixed
