@@ -57,7 +57,6 @@ def _load_config() -> Config:
     input['brem']    = args.brem
     input['block']   = 'all' if args.block == -1 else str(args.block)
     input['kind']    = args.kind
-    input['logl']    = args.logl
     input['nentries']= args.nent
     input['skip_fit']= args.skip_fit
 
@@ -65,6 +64,7 @@ def _load_config() -> Config:
     data['ana_dir'] = os.environ['ANADIR']
     data['vers'   ] = args.vers
     data['syst'   ] = args.syst
+    data['logl'   ] = args.logl
     data['input'  ].update(input)
 
     zfit.settings.changed_warnings.hesse_name = False
