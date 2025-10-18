@@ -69,29 +69,9 @@ def _load_config() -> Config:
 
     zfit.settings.changed_warnings.hesse_name = False
 
-    return Config(**data)
-#-------------------
-def _set_vars():
-    cfg         = _load_config()
-    Data.l_syst = cfg['syst']
-    d_input     = cfg['input'  ]
-    d_fitting   = cfg['fitting']
+    cfg = Config(**data)
 
-    Data.l_pdf  = d_fitting['model']['pdfs']
-    Data.l_year = [ str(year) for year in d_input['year'] ]
-    Data.l_brem = [ str(brem) for brem in d_input['brem'] ]
-    Data.l_trig = d_input['trigger']
-    Data.l_cali = d_input['cali']
-    Data.d_samp = d_input['samples']
-    Data.l_kind = list(Data.d_samp)
-    Data.d_sel  = d_input['selection']
-
-    Data.nbins       = d_fitting['binning']['nbins']
-    Data.cfg_sim_fit = d_fitting['simulation']
-    Data.j_mass      = d_fitting['mass']
-    Data.weights     = d_fitting['weights']
-
-    Data.d_obs_range = { str(brem) : val for brem, val in d_fitting['ranges'].items() }
+    return cfg
 #-------------------
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
