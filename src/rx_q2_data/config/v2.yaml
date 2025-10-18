@@ -21,7 +21,7 @@ fitting:
       - 3800
   mass    : Jpsi_M_brem_track_2 # Observable to be fitted
   weights : weight
-  binning :
+  plotting:
     nbins : 60
   model:
     pdfs:
