@@ -20,6 +20,7 @@ from zfit.pdf               import BasePDF   as zpdf
 from zfit.data              import Data      as zdata
 from zfit.result            import FitResult as zres
 
+from dmu.rdataframe          import utilities        as rut
 from dmu.generic             import utilities        as gut
 from dmu.stats               import utilities        as sut
 from dmu.stats.fitter        import Fitter
@@ -376,15 +377,32 @@ def _get_rdf(kind : str) -> RDF.RNode:
 
     d_sel = sel.selection(trigger=cfg.input.trigger, q2bin='jpsi', process=sample)
     d_sel.update(cfg.input.selection)
+
     for cut_name, cut_value in d_sel.items():
         log.debug(f'{cut_name:<20}{cut_value}')
         rdf = rdf.Filter(cut_value, cut_name)
 
+    rep = rdf.Report()
     if log.getEffectiveLevel() == 10:
-        rep = rdf.Report()
         rep.Print()
 
+    _save_cutflow(rep=rep, cuts=d_sel, kind=kind)
+
     return rdf
+# ----------------------
+def _save_cutflow(rep : RDF.RCutFlowReport , cuts : dict[str,str], kind : str) -> None:
+    '''
+    Parameters
+    -------------
+    rep : Cutflow report
+    cuts: Dictionary with cuts
+    kind: dat or sim
+    '''
+    cfg = _load_config()
+    df  = rut.rdf_report_to_df(rep)
+
+    df.to_markdown(cfg.out_dir / f'{kind}_cutflow.md')
+    gut.dump_json(data=cuts, path=cfg.out_dir / f'{kind}_selection.yaml')
 #-------------------
 def _make_table():
     cfg = _load_config()
