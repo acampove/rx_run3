@@ -115,7 +115,7 @@ def _get_full_pdf() -> zpdf:
 
     return sig
 #-------------------
-def _fix_pdf(pdf : zpdf, d_fix : Parameters) -> zpdf:
+def _fix_pdf(pdf : zpdf, d_fix : Parameters | None) -> zpdf:
     '''
     This will take a PDF and a dictionary of paramters
     It will fix the PDF parameters according to dictionary
@@ -150,38 +150,57 @@ def _get_pdf(kind : str) -> zpdf:
 
     raise NotImplementedError(f'Cannot get PDF for: {kind}')
 #-------------------
-def _par_val_from_dict(d_par : dict) -> tuple[float,float]:
+def _par_val_from_dict(d_par : Mapping[str, Mapping[str,Any]]) -> tuple[float,float]:
     value = d_par['value']
+    if not isinstance(value, float):
+        raise TypeError(f'Value is not a float but {value}, result was likely not frozen')
+
     if 'hesse' not in d_par:
-        return value, None
+        return value, -1 
 
     error = d_par['hesse']['error']
+    if not isinstance(error, float):
+        raise TypeError(f'Expected a float as the error, got: {error}')
 
     return value, error
 #-------------------
 def _get_pars(res : zres) -> Parameters:
-    try:
-        d_par = { name : _par_val_from_dict(d_val) for name, d_val in res.params.items() }
-    except Exception as exc:
-        log.info(res)
-        log.info(res.params)
-        raise ValueError('Cannot extract parameters') from exc
+    '''
+    Parameters
+    -------------------
+    res: Fit result after freezing
+
+    Returns
+    -------------------
+    Dictionary with:
+
+    Key  : Parameter name
+    Value: Tuple with value and error
+    '''
+    d_par = dict()
+    for par, d_val in res.params.items():
+        name = par.name
+        if not isinstance(name, str):
+            raise ValueError(f'Parameter name not a string, but: {name}')
+
+        d_par[name] = _par_val_from_dict(d_val)
 
     return d_par
 #-------------------
-def _fit(d_fix : Parameters = None)-> Parameters:
+def _fit(d_fix : Parameters | None = None)-> Parameters | None:
+    cfg = _load_config()
     kind= 'sim' if d_fix is None else 'dat'
-
     pdf = _get_pdf(kind)
     dat = _get_data(pdf, kind)
     pdf = _fix_pdf(pdf, d_fix)
-    obj = Fitter(pdf, dat)
 
-    if Data.skip_fit:
+    obj = Fitter(pdf=pdf, data=dat)
+
+    if cfg.fitting.skip:
         log.warning('Skipping fit')
         return None
 
-    res=obj.fit(cfg=Data.cfg_sim_fit)
+    res=obj.fit(cfg=cfg.fitting.simulation.model_dump())
     if res is None:
         _plot_fit(dat, pdf, res)
 
@@ -203,44 +222,62 @@ def _fit(d_fix : Parameters = None)-> Parameters:
 
     d_par = _get_pars(res)
 
-    sut.save_fit(data=dat, model=pdf, res=res, fit_dir=Data.out_dir)
+    sut.save_fit(data=dat, model=pdf, res=res, fit_dir=cfg.out_dir, plt_cfg={})
 
     return d_par
 #-------------------
 def _get_data(pdf : zpdf, kind : str) -> zdata:
-    data_path = f'{Data.out_dir}/data.json'
-    if os.path.isfile(data_path):
+    cfg       = _load_config()
+    data_path = cfg.out_dir / 'data.json'
+    if data_path.exists(): 
         log.warning(f'Data found, loading from: {data_path}')
         df  = pnd.read_json(data_path)
         # TODO: Here the weights need to be put back, once the bug in zfit be fixed
-        dat = zfit.data.Data.from_pandas(df, obs=Data.obs)
+        dat = zfit.data.Data.from_pandas(df, obs=cfg.obs)
+        if not isinstance(dat, zdata):
+            str_type = str(type(dat))
+            raise ValueError(f'Data is of the wrong type: {str_type}')
 
         return dat
 
     rdf     = _get_rdf(kind=kind)
-    d_data  = rdf.AsNumpy([Data.j_mass, Data.weights])
+    d_data  = rdf.AsNumpy([cfg.fitting.mass, cfg.fitting.weights])
     df      = pnd.DataFrame(d_data)
     df.to_json(data_path) # Caching now will avoid redoing this if fit fails
 
     obs     = pdf.space
     # TODO: Here the weights need to be put back, once the bug in zfit be fixed
     dat     = zfit.Data.from_pandas(obs=obs, df=df)
+    if not isinstance(dat, zdata):
+        str_type = str(type(dat))
+        raise ValueError(f'Data is of the wrong type: {str_type}')
 
-    _plot_data(df, obs, kind)
+    _plot_data(df, kind)
 
     return dat
 #-------------------
 def _plot_data(
-        df         : pnd.DataFrame,
-        obs        : zobs,
-        kind       : str) -> None:
+    df         : pnd.DataFrame,
+    kind       : str) -> None:
+    '''
+    Parameters
+    --------------
+    df  : DataFrame with fitted data
+    kind: Name of plot, i.e. {kind}.png
+    '''
+    cfg     = _load_config()
+    arr_mas = df[cfg.fitting.mass   ].to_numpy()
+    arr_wgt = df[cfg.fitting.weights].to_numpy()
 
-    arr_mas = df[Data.j_mass ].to_numpy()
-    arr_wgt = df[Data.weights].to_numpy()
-
-    [[lower]], [[upper]] = obs.limits
+    [[lower]], [[upper]] = cfg.obs.limits
     _, ax     = plt.subplots(figsize=(15, 10))
-    data_hist = hist.Hist.new.Regular(Data.nbins, lower, upper, name='', underflow=False, overflow=False)
+    data_hist = hist.Hist.new.Regular(
+        cfg.fitting.plotting.nbins, 
+        lower, 
+        upper, 
+        name     ='', 
+        underflow=False, 
+        overflow =False)
     data_hist = data_hist.Weight()
     data_hist.fill(arr_mas, weight=arr_wgt)
 
@@ -254,7 +291,7 @@ def _plot_data(
 
     title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}'
 
-    plt_path = f'{Data.out_dir}/{kind}.png'
+    plt_path = cfg.out_dir / f'{kind}.png'
 
     log.info(f'Saving to: {plt_path}')
     plt.title(title)
@@ -267,10 +304,12 @@ def _add_q2_region_lines(obj : ZFitPlotter) -> None:
     axis.axvline(x=3600, c='red', ls=':')
 #-------------------
 def _get_text(data : zdata) -> tuple[str,str]:
-    nentries= data.nevents.numpy()
+    nentries= data.num_entries.numpy()
     text    = f'Candidates={nentries}'
     l_part  = []
-    for name, value in Data.d_sel.items():
+    cfg     = _load_config()
+
+    for name, value in cfg.input.selection.items():
         l_part.append(f'{name}: {value}')
 
     title = '; '.join(l_part)
@@ -278,34 +317,41 @@ def _get_text(data : zdata) -> tuple[str,str]:
     return text, title
 #-------------------
 def _get_naming() -> dict[str,str]:
-    if Data.kind == 'dat':
+    cfg  = _load_config()
+    kind = cfg.input.kind
+
+    if kind == 'dat':
         return {
                 'Data'   : 'Data',
                 'Signal' : 'PDF',
                 }
 
-    if Data.kind == 'sim':
+    if kind == 'sim':
         return {
                 'Data'   : 'Simulation',
                 'dscb_1' : 'PDF',
                 }
 
-    raise NotImplementedError(f'Invalid sample: {Data.kind}')
+    raise NotImplementedError(f'Invalid sample: {kind}')
 #-------------------
 def _plot_fit(
-        dat        : zdata,
-        pdf        : zpdf,
-        res        : zres) -> None:
-    obj=ZFitPlotter(data=dat, model=pdf, result=res)
+    dat        : zdata,
+    pdf        : zpdf,
+    res        : zres) -> None:
+    '''
+    Function in charge of plotting fit from data and model
+    '''
+    cfg = _load_config()
+    obj = ZFitPlotter(data=dat, model=pdf, result=res)
     for yscale in ['log', 'linear']:
         for add_pars in ['pars', 'no_pars']:
             pars  = None if add_pars == 'no_pars' else 'all'
             text, title = _get_text(data = dat)
 
             obj.plot(
-                    nbins     = Data.nbins,
+                    nbins     = cfg.fitting.plotting.nbins,
                     d_leg     = _get_naming(),
-                    plot_range= Data.obs_range,
+                    plot_range= cfg.obs_range,
                     yscale    = yscale,
                     ext_text  = text,
                     add_pars  = pars)
@@ -315,24 +361,21 @@ def _plot_fit(
             obj.axs[0].set_title(title)
             obj.axs[0].axhline(y=0, c='gray')
 
-            plot_path = f'{Data.out_dir}/{add_pars}_{yscale}.png'
+            plot_path = cfg.out_dir / f'{add_pars}_{yscale}.png'
             log.info(f'Saving to: {plot_path}')
             plt.savefig(plot_path)
             plt.close()
 #-------------------
-def _get_fix_pars() -> Parameters:
-    d_par = Data.d_sim_par
-    d_fix = { key : val for key, val in d_par.items() if ('mu' not in key) and ('sg' not in key) }
-
-    return d_fix
-#-------------------
-def _get_rdf(kind : str) -> RDataFrame:
+def _get_rdf(kind : str) -> RDF.RNode:
     log.info(f'Getting data for: {kind}')
-    sample = Data.d_samp[kind]
-    gtr    = RDFGetter(sample=sample, trigger=Data.trig)
-    rdf    = gtr.get_rdf()
 
-    d_sel = sel.selection(trigger=Data.trig, q2bin='jpsi', process=sample)
+    cfg    = _load_config()
+    sample = cfg.input.samples[kind]
+    gtr    = RDFGetter(sample=sample, trigger=cfg.input.trigger)
+    rdf    = gtr.get_rdf(per_file=False)
+
+    d_sel = sel.selection(trigger=cfg.input.trigger, q2bin='jpsi', process=sample)
+    d_sel.update(cfg.input.selection)
     for cut_name, cut_value in d_sel.items():
         log.debug(f'{cut_name:<20}{cut_value}')
         rdf = rdf.Filter(cut_value, cut_name)
@@ -344,27 +387,26 @@ def _get_rdf(kind : str) -> RDataFrame:
     return rdf
 #-------------------
 def _make_table():
-    if Data.kind == 'sim':
+    cfg = _load_config()
+    if cfg.input.kind == 'sim':
         log.info('Running simulation fit')
         _fit(d_fix=None)
         return
 
     log.info('Running data fit')
-    dat_par_path   = f'{Data.out_dir}/parameters.json'
-    sim_par_path   = dat_par_path.replace('/dat/', '/sim/')
-    Data.d_sim_par = gut.load_json(sim_par_path)
-    d_fix_par      = _get_fix_pars()
+    dat_par_path   = cfg.out_dir / 'parameters.json'
+    sim_par_path   = Path(str(dat_par_path).replace('/dat/', '/sim/'))
+
+    d_sim_par      = gut.load_json(sim_par_path)
+    d_fix_par      = { key : val for key, val in d_sim_par.items() if ('mu' not in key) and ('sg' not in key) }
 
     _fit(d_fix=d_fix_par)
 #-------------------
 #-------------------
-@gut.timeit
 def main():
     '''
-    Start here
+    Entry point
     '''
-    _set_vars()
-    _get_args()
     _initialize()
     _make_table()
 #-------------------
