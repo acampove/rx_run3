@@ -372,8 +372,9 @@ def _get_rdf(kind : str) -> RDF.RNode:
     log.info(f'Getting data for: {kind}')
 
     cfg    = _load_config()
-    sample = cfg.input.samples[kind]
-    gtr    = RDFGetter(sample=sample, trigger=cfg.input.trigger)
+    sample = cfg.input.samples[cfg.project][kind]
+    trigger= cfg.input.trigger[cfg.project]
+    gtr    = RDFGetter(sample=sample, trigger=trigger)
     rdf    = gtr.get_rdf(per_file=False)
 
     d_sel = sel.selection(trigger=cfg.input.trigger, q2bin='jpsi', process=sample)
