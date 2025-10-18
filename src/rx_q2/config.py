@@ -33,9 +33,16 @@ class Input(BaseModel):
     year      : str
     trigger   : str
     brem      : int
+    block     : str
     kind      : str     # dat or sim, used to pick from Samples below
     samples   : Samples
     selection : dict[str,str]
+#-------------------
+class FitModel(BaseModel):
+    '''
+    Class meant to represent a fitting model
+    '''
+    pdfs : list[str]
 #-------------------
 class Fitting(BaseModel):
     '''
@@ -45,15 +52,43 @@ class Fitting(BaseModel):
     mass      : str
     weights   : str
     binning   : dict[str,int]
-    model     : dict[str,list[str]]
+    model     : FitModel
     simulation: MCFit
 #-------------------
 class Config(BaseModel):
     '''
     Class meant to hold configuration
     '''
+    logl     : int
     ana_dir  : Path
     vers     : str
     syst     : str
     input    : Input
     fitting  : Fitting
+    #-------------------
+    @computed_field
+    @property
+    def out_dir(self) -> Path:
+        ana_dir = Path(os.environ['ANADIR'])
+        path_1  = f'q2/fits/{self.vers}/{self.input.kind}'
+        path_2  = f'{self.input.trigger}_{self.input.year}'
+        path_3  = f'{self.input.brem}_{self.input.block}_{self.syst}'
+
+        out_dir = ana_dir / path_1 / path_2 / path_3
+
+        return out_dir
+    #-------------------
+    @computed_field
+    @property
+    def obs(self) -> zobs:
+        '''
+        Observable used in fit
+        '''
+        brem = self.input.brem
+        rng  = self.fitting.ranges[brem]
+        name = self.fitting.mass
+
+        low, high = rng
+
+        return zfit.Space(name, limits=(low, high))
+#-------------------
