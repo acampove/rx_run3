@@ -58,7 +58,7 @@ class Fitting(BaseModel):
     '''
     Class used to store fitting configuration
     '''
-    ranges    : dict[int,list[float]]
+    ranges    : dict[str,dict[int,list[float]]]
     mass      : str
     weights   : str
     plotting  : Plotting 
@@ -112,8 +112,9 @@ class Config(BaseModel):
     @computed_field
     @property
     def obs_range(self) -> tuple[float,float]:
+        project     = self.project
         brem        = self.input.brem
-        rng         = self.fitting.ranges[brem]
+        rng         = self.fitting.ranges[project][brem]
         [low, high] = rng
 
         return low, high
