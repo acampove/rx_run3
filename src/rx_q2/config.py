@@ -25,6 +25,12 @@ class Samples(BaseModel):
     '''
     sim : str
     dat : str
+    #-------------------
+    def __getitem__(self, name : str) -> str:
+        if not hasattr(self, name):
+            raise AttributeError(f'Samples class has no {name} attribute')
+
+        return getattr(self, name)
 #-------------------
 class Input(BaseModel):
     '''
