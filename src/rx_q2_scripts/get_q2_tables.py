@@ -59,7 +59,8 @@ def _load_config() -> Config:
     input['block']   = 'all' if args.block == -1 else str(args.block)
     input['kind']    = args.kind
     input['nentries']= args.nent
-    input['skip_fit']= args.skip_fit
+
+    fitting          = {'skip' : args.skip_fit}
 
     data = gut.load_data(package='rx_q2_data', fpath=f'config/{args.vers}.yaml')
     data['ana_dir'] = os.environ['ANADIR']
@@ -67,6 +68,7 @@ def _load_config() -> Config:
     data['syst'   ] = args.syst
     data['logl'   ] = args.logl
     data['input'  ].update(input)
+    data['fitting'].update(fitting)
 
     zfit.settings.changed_warnings.hesse_name = False
 
