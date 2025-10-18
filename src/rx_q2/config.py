@@ -67,6 +67,29 @@ class Config(BaseModel):
     input    : Input
     fitting  : Fitting
     #-------------------
+    @model_validator(mode='after')
+    def _update_selection(self) -> Self:
+        '''
+        Updates input.selection dictionary
+        '''
+        self.input.selection['block'] = self._get_block_cut()
+
+        return self
+    #-------------------
+    def _get_block_cut(self) -> str:
+        block = self.input.block
+
+        if block == 'all':
+            return '(1)'
+
+        if block == '12':
+            return '(block == 1) || (block == 2)'
+
+        if block == '78':
+            return '(block == 7) || (block == 8)'
+
+        return f'block == {block}'
+    #-------------------
     @computed_field
     @property
     def out_dir(self) -> Path:
