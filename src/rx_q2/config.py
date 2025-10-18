@@ -99,6 +99,7 @@ class Config(BaseModel):
         path_3  = f'{self.input.brem}_{self.input.block}_{self.syst}'
 
         out_dir = ana_dir / path_1 / path_2 / path_3
+        out_dir.mkdir(parents=True, exist_ok=True)
 
         return out_dir
     #-------------------
