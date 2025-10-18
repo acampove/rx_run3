@@ -75,30 +75,8 @@ def _load_config() -> Config:
 #-------------------
 def _initialize():
     plt.style.use(mplhep.style.LHCb2)
-    d_cut={'nbrem' : f'nbrem == {Data.brem}'}
+    cfg = _load_config()
 
-    if   Data.block == 'all':
-        d_cut['block'] =  '(1)'
-    elif Data.block == '12':
-        d_cut['block'] =  '(block == 1) || (block == 2)'
-    elif Data.block == '78':
-        d_cut['block'] =  '(block == 7) || (block == 8)'
-    else:
-        d_cut['block'] = f'block == {Data.block}'
-
-    d_cut.update(Data.d_sel)
-    sel.set_custom_selection(d_cut = d_cut)
-
-    Data.obs_range= Data.d_obs_range[Data.brem]
-    Data.obs      = zfit.Space(Data.j_mass, limits=Data.obs_range)
-
-    LogStore.set_level('dmu:statistics:fitter', Data.logl)
-    LogStore.set_level('dmu:stats:utilities'  , Data.logl)
-    LogStore.set_level('rx_q2:get_q2_tables'  , Data.logl)
-    LogStore.set_level('rx_data:rdf_getter'   , Data.logl)
-
-    Data.out_dir = f'{Data.ana_dir}/q2/fits/{Data.out_vers}/{Data.kind}/{Data.trig}_{Data.year}_{Data.brem}_{Data.block}_{Data.syst}'
-    os.makedirs(Data.out_dir, exist_ok=True)
 #-------------------
 def _set_pdf_pars(pdf : zpdf, d_val : Parameters) -> None:
     '''
