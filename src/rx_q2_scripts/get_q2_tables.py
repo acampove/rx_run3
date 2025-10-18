@@ -14,11 +14,11 @@ import mplhep
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
-from ROOT                   import RDF # type: ignore
-from dmu.stats.zfit         import zfit
-from zfit.pdf               import BasePDF   as zpdf
-from zfit.data              import Data      as zdata
-from zfit.result            import FitResult as zres
+from ROOT                    import RDF # type: ignore
+from dmu.stats.zfit          import zfit
+from zfit.pdf                import BasePDF   as zpdf
+from zfit.data               import Data      as zdata
+from zfit.result             import FitResult as zres
 
 from dmu.rdataframe          import utilities        as rut
 from dmu.generic             import utilities        as gut
