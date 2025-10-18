@@ -39,6 +39,9 @@ class Input(BaseModel):
     samples   : Samples
     selection : dict[str,str]
 #-------------------
+class Plotting(BaseModel):
+    nbins : int
+#-------------------
 class FitModel(BaseModel):
     '''
     Class meant to represent a fitting model
@@ -52,9 +55,10 @@ class Fitting(BaseModel):
     ranges    : dict[int,list[int]]
     mass      : str
     weights   : str
-    binning   : dict[str,int]
+    plotting  : Plotting 
     model     : FitModel
     simulation: MCFit
+    skip      : bool
 #-------------------
 class Config(BaseModel):
     '''
