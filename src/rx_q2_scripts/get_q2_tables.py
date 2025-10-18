@@ -376,8 +376,9 @@ def _get_rdf(kind : str) -> RDF.RNode:
     trigger= cfg.input.trigger[cfg.project]
     gtr    = RDFGetter(sample=sample, trigger=trigger)
     rdf    = gtr.get_rdf(per_file=False)
+    trigger= cfg.input.trigger[cfg.project]
 
-    d_sel = sel.selection(trigger=cfg.input.trigger, q2bin='jpsi', process=sample)
+    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel.update(cfg.input.selection)
 
     for cut_name, cut_value in d_sel.items():
