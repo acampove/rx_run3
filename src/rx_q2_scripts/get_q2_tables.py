@@ -116,35 +116,13 @@ def _get_sig_pdf() -> zpdf:
 
     return pdf
 #-------------------
-def _get_bkg_pdf() -> zpdf:
-    if hasattr(Data, 'bkg_pdf'):
-        return Data.bkg_pdf
-
-    lam = zfit.Parameter('lam', 0.0, -0.01, +0.01)
-    bkg = zfit.pdf.Exponential(lam=lam, obs=Data.obs, name='')
-
-    nbk = zfit.Parameter('nbk', 10, 1, 10_000)
-    bkg = bkg.create_extended(nbk, name='Combinatorial')
-
-    Data.bkg_pdf = bkg
-
-    return bkg
-#-------------------
-def _get_full_pdf():
+@cache
+def _get_full_pdf() -> zpdf:
     sig = _get_sig_pdf()
     nsg = zfit.Parameter('nsg', 10_000, 100, 2_000_000)
     sig = sig.create_extended(nsg, name='Signal')
 
     return sig
-
-    bkg = _get_bkg_pdf()
-    pdf = zfit.pdf.SumPDF([sig, bkg], name='Model')
-
-    log.debug(f'Signal    : {sig}')
-    log.debug(f'Background: {bkg}')
-    log.debug(f'Model     : {pdf}')
-
-    return pdf
 #-------------------
 def _fix_pdf(pdf : zpdf, d_fix : Parameters) -> zpdf:
     '''
