@@ -86,7 +86,9 @@ class Config(BaseModel):
         '''
         Updates input.selection dictionary
         '''
+        log.debug('Updating selection')
         self.input.selection['block'] = self._get_block_cut()
+        self.input.selection['brem' ] = self._get_brem_cut()
 
         return self
     #-------------------
@@ -98,6 +100,21 @@ class Config(BaseModel):
         [low, high] = rng
 
         return low, high
+    # ----------------------
+    def _get_brem_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        E.g. nbrem == 2
+        '''
+        brem = self.input.brem
+        if brem == -1:
+            return 'nbrem == (1)'
+
+        if brem in [0, 1, 2]:
+            return f'nbrem == {brem}'
+
+        raise ValueError(f'Invalid brem value: {brem}')
     #-------------------
     def _get_block_cut(self) -> str:
         block = self.input.block
