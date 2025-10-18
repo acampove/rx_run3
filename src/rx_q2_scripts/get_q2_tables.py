@@ -73,6 +73,7 @@ def _load_config() -> Config:
 
     zfit.settings.changed_warnings.hesse_name = False
 
+    log.debug('Creating configuration')
     cfg = Config(**data)
 
     return cfg
@@ -402,7 +403,7 @@ def _save_cutflow(rep : RDF.RCutFlowReport , cuts : dict[str,str], kind : str) -
     df  = rut.rdf_report_to_df(rep)
 
     df.to_markdown(cfg.out_dir / f'{kind}_cutflow.md')
-    gut.dump_json(data=cuts, path=cfg.out_dir / f'{kind}_selection.yaml')
+    gut.dump_json(data=cuts, path=cfg.out_dir / f'{kind}_selection.yaml', exists_ok=True)
 #-------------------
 def _make_table():
     cfg = _load_config()
