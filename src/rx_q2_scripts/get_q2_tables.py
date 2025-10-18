@@ -191,7 +191,7 @@ def _get_pars(res : zres) -> Parameters:
 #-------------------
 def _fit(d_fix : Parameters | None = None)-> Parameters | None:
     cfg = _load_config()
-    kind= 'sim' if d_fix is None else 'dat'
+    kind= cfg.input.kind 
     pdf = _get_pdf(kind)
     dat = _get_data(pdf, kind)
     pdf = _fix_pdf(pdf, d_fix)
