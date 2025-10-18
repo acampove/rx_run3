@@ -41,7 +41,7 @@ log=LogStore.add_logger('rx_q2:get_q2_tables')
 def _load_config() -> Config:
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
-    parser.add_argument('-t', '--trig' , type =str, help='Trigger'                                     , required=True)
+    parser.add_argument('-p', '--proj' , type =str, help='Project', choices=['rk', 'rkst']             , required=True)
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True)
     parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True)
@@ -55,7 +55,6 @@ def _load_config() -> Config:
     input            = {}
     input['nent']    = args.nent
     input['year']    = args.year
-    input['trigger'] = args.trig
     input['brem']    = args.brem
     input['block']   = 'all' if args.block == -1 else str(args.block)
     input['kind']    = args.kind
@@ -68,6 +67,7 @@ def _load_config() -> Config:
     data['vers'   ] = args.vers
     data['syst'   ] = args.syst
     data['logl'   ] = args.logl
+    data['project'] = args.proj
     data['input'  ].update(input)
     data['fitting'].update(fitting)
 
