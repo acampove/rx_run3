@@ -12,7 +12,7 @@ input:
       sim : Bd_JpsiKst_ee_eq_DPC
       dat : DATA*
   selection:
-    bdt     : (1) 
+    bdt     : mva_cmb > 0.5 
     psi_vt  : B_const_mass_M > 5180 # This removes the psi2S contamination
     q2      : (1)
     mass    : (1) 
@@ -26,10 +26,10 @@ fitting:
         - 3300
       1 :
         - 2500
-        - 3300
+        - 3500
       2 :
         - 2500
-        - 3300
+        - 3500
     rkst_ee:
       0 :
         - 2000
@@ -50,7 +50,7 @@ fitting:
   sim:
     strategy :
       retry  :
-        ntries        : 4
+        ntries        : 8
         pvalue_thresh : 0.05
         ignore_status : true
   dat:
