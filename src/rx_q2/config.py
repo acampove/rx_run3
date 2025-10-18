@@ -59,6 +59,7 @@ class Fitting(BaseModel):
     Class used to store fitting configuration
     '''
     ranges    : dict[int,list[int]]
+    obs_range : tuple[float,float]
     mass      : str
     weights   : str
     plotting  : Plotting 
@@ -85,6 +86,16 @@ class Config(BaseModel):
         Updates input.selection dictionary
         '''
         self.input.selection['block'] = self._get_block_cut()
+
+        return self
+    #-------------------
+    @model_validator(mode='after')
+    def _set_obs_range(self) -> Self:
+        brem      = self.input.brem
+        rng       = self.fitting.ranges[brem]
+        low, high = rng
+
+        self.fitting.obs_range = low, high
 
         return self
     #-------------------
