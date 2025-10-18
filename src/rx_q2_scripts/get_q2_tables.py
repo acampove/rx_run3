@@ -248,7 +248,7 @@ def _fit(d_fix : Parameters | None = None)-> Parameters | None:
 #-------------------
 def _get_data(pdf : zpdf, kind : str) -> zdata:
     cfg       = _load_config()
-    data_path = cfg.out_dir / 'data.parquet'
+    data_path = cfg.out_dir / '.data.parquet'
     if data_path.exists(): 
         log.warning(f'Data found, loading from: {data_path}')
         df  = pnd.read_parquet(data_path)
