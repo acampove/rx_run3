@@ -132,11 +132,7 @@ class Config(BaseModel):
         '''
         Observable used in fit
         '''
-        brem = self.input.brem
-        rng  = self.fitting.ranges[brem]
         name = self.fitting.mass
 
-        low, high = rng
-
-        return zfit.Space(name, limits=(low, high))
+        return zfit.Space(name, limits=self.fitting.obs_range)
 #-------------------
