@@ -23,8 +23,8 @@ class Samples(BaseModel):
     '''
     Class meant to represent sample information
     '''
-    sim : str
-    dat : str
+    rk_ee  : dict[str,str]
+    rkst_ee: dict[str,str]
     #-------------------
     def __getitem__(self, name : str) -> str:
         if not hasattr(self, name):
@@ -74,6 +74,7 @@ class Config(BaseModel):
         arbitrary_types_allowed = True,
         frozen                  = True)
 
+    project  : str
     logl     : int
     ana_dir  : Path
     vers     : str
