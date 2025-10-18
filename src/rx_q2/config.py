@@ -66,6 +66,21 @@ class Fitting(BaseModel):
     sim       : FitConfig 
     dat       : FitConfig 
     skip      : bool
+    # ----------------------
+    def __getitem__(self, kind : str) -> FitConfig:
+        '''
+        Parameters
+        -------------
+        kind: I.e. sim or dat
+
+        Returns
+        -------------
+        Fitting configuration
+        '''
+        if kind not in ['sim', 'dat']:
+            raise ValueError(f'Invalid kind: {kind}')
+
+        return getattr(self, kind)
 #-------------------
 class Config(BaseModel):
     '''
