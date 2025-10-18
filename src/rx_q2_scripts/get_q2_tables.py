@@ -80,22 +80,10 @@ def _initialize():
     plt.style.use(mplhep.style.LHCb2)
     cfg = _load_config()
 
-#-------------------
-def _set_pdf_pars(pdf : zpdf, d_val : Parameters) -> None:
-    '''
-    This function takes pad and dictionary of parameters
-    sets PDF parameter values according to dictionary
-    '''
-    l_par    = list(pdf.get_params(floating=True)) + list(pdf.get_params(floating=False))
-    log.info('Setting initial values:')
-    for par in l_par:
-        name = par.name
-        if name not in d_val:
-            continue
-
-        val  = d_val[name]
-        par.set_value(val)
-        log.info(f'{name:<20}{"->":<10}{val:<10.3}')
+    LogStore.set_level('dmu:statistics:fitter', cfg.logl)
+    LogStore.set_level('dmu:stats:utilities'  , cfg.logl)
+    LogStore.set_level('rx_q2:get_q2_tables'  , cfg.logl)
+    LogStore.set_level('rx_data:rdf_getter'   , cfg.logl)
 #-------------------
 def _get_sig_pdf() -> zpdf:
     cfg = _load_config()
