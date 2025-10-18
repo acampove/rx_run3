@@ -2,14 +2,14 @@ input:
   trigger:
     rk_ee   : Hlt2RD_BuToKpEE_MVA
     rk_mm   : Hlt2RD_BuToKpMuMu_MVA
-    rkst_ee : Hlt2RD_B0ToKstEE_MVA
-    rkst_mm : Hlt2RD_B0ToKstMuMu_MVA
+    rkst_ee : Hlt2RD_B0ToKpPimEE_MVA
+    rkst_mm : Hlt2RD_B0ToKpPimMuMu_MVA
   samples: # Supported samples
     rk_ee:
       sim : Bu_JpsiK_ee_eq_DPC
       dat : DATA*
     rkst_ee:
-      sim : B0_JpsiKst_ee_eq_DPC
+      sim : Bd_JpsiKst_ee_eq_DPC
       dat : DATA*
   selection:
     psi_vt: B_const_mass_M > 5180 # This removes the psi2S contamination
