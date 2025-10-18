@@ -5,7 +5,7 @@ import os
 from typing         import Self
 from pathlib        import Path
 from typing         import Any
-from pydantic       import BaseModel, computed_field, model_validator
+from pydantic       import BaseModel, computed_field, model_validator, ConfigDict
 
 from dmu.stats.zfit        import zfit
 from zfit.interface        import ZfitSpace as zobs
@@ -60,6 +60,8 @@ class Config(BaseModel):
     '''
     Class meant to hold configuration
     '''
+    model_config = ConfigDict(frozen=True)
+
     logl     : int
     ana_dir  : Path
     vers     : str
