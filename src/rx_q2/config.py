@@ -2,9 +2,10 @@
 Module containing Conf class
 '''
 import os
+from typing         import Self
 from pathlib        import Path
 from typing         import Any
-from pydantic       import BaseModel, computed_field
+from pydantic       import BaseModel, computed_field, model_validator
 
 from dmu.stats.zfit        import zfit
 from zfit.interface        import ZfitSpace as zobs
