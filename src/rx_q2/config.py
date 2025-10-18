@@ -58,8 +58,7 @@ class Fitting(BaseModel):
     '''
     Class used to store fitting configuration
     '''
-    ranges    : dict[int,list[int]]
-    obs_range : tuple[float,float]
+    ranges    : dict[int,list[float]]
     mass      : str
     weights   : str
     plotting  : Plotting 
@@ -71,7 +70,9 @@ class Config(BaseModel):
     '''
     Class meant to hold configuration
     '''
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(
+        arbitrary_types_allowed = True,
+        frozen                  = True)
 
     logl     : int
     ana_dir  : Path
@@ -89,15 +90,14 @@ class Config(BaseModel):
 
         return self
     #-------------------
-    @model_validator(mode='after')
-    def _set_obs_range(self) -> Self:
-        brem      = self.input.brem
-        rng       = self.fitting.ranges[brem]
-        low, high = rng
+    @computed_field
+    @property
+    def obs_range(self) -> tuple[float,float]:
+        brem        = self.input.brem
+        rng         = self.fitting.ranges[brem]
+        [low, high] = rng
 
-        self.fitting.obs_range = low, high
-
-        return self
+        return low, high
     #-------------------
     def _get_block_cut(self) -> str:
         block = self.input.block
@@ -134,5 +134,5 @@ class Config(BaseModel):
         '''
         name = self.fitting.mass
 
-        return zfit.Space(name, limits=self.fitting.obs_range)
+        return zfit.Space(name, limits=self.obs_range)
 #-------------------
