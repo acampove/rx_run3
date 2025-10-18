@@ -35,9 +35,15 @@ fitting:
   model:
     pdfs:
       - dscb 
-  simulation:
+  sim:
     strategy :
       retry  :
         ntries        : 4
+        pvalue_thresh : 0.05
+        ignore_status : true
+  dat:
+    strategy :
+      retry  :
+        ntries        : 1
         pvalue_thresh : 0.05
         ignore_status : true
