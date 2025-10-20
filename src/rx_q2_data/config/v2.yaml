@@ -59,8 +59,7 @@ fitting:
   plotting:
     nbins : 60
   model:
-    pdfs:
-      - dscb 
+    pdfs: [dscb]
   sim:
     strategy :
       retry  :
@@ -70,6 +69,6 @@ fitting:
   dat:
     strategy :
       retry  :
-        ntries        : 1
+        ntries        : 3
         pvalue_thresh : 0.05
         ignore_status : true
