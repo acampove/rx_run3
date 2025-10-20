@@ -9,13 +9,14 @@ from pathlib               import Path
 
 import law
 from law.parameter         import Parameter
-from omegaconf             import DictConfig, OmegaConf
+import luigi
+from omegaconf             import DictConfig, ListConfig, OmegaConf
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_orchestration:q2_scales')
 # -------------------------------------
-class FitTask(law.Task):
+class Fit(law.Task):
     config_string : str = Parameter() # type: ignore
     kind          : str = Parameter() # type: ignore
     # -------------------------------------
@@ -65,18 +66,18 @@ class FitTask(law.Task):
         l_output = [ law.LocalFileTarget(out_dir / name) for name in cfg.outputs ]
 
         nout = len(l_output)
-        log.info(f'Using {nout} outputs')
+        log.debug(f'Using {nout} outputs')
         for output in l_output:
             log.debug(output)
 
         return l_output
     # -------------------------------------
-    def requires(self):
+    def requires(self) -> law.Task | None:
         '''
         Defines the sets of tasks in the workflow
         '''
         if self.kind == 'dat':
-            return FitTask(config_string = self.config_string, kind='sim')
+            return Fit(config_string = self.config_string, kind='sim')
     # -------------------------------------
     def run(self):
         '''
@@ -88,7 +89,7 @@ class FitTask(law.Task):
         cfg = self._get_config() 
         runner(args=cfg.args)
 # -------------------------------------
-class WrapFits(law.WrapperTask):
+class Fits(law.WrapperTask):
     '''
     This class takes care of steering the workflow
     '''
@@ -119,11 +120,53 @@ class WrapFits(law.WrapperTask):
         '''
         Defines the sets of tasks in the workflow
         '''
-        cfg = gut.load_conf(package='configs', fpath='rx_q2/scales.yaml')
+        cfg = gut.load_conf(package='configs', fpath='rx_q2/fits.yaml')
 
         log.info(20 * '-')
-        l_settings = WrapFits.get_settings(cfg=cfg)
-        return [ FitTask(config_string = settings, kind='dat') for settings in l_settings ]
+        l_settings = Fits.get_settings(cfg=cfg)
+        return [ Fit(config_string = settings, kind='dat') for settings in l_settings ]
+# -------------------------------------
+class Scale(law.Task):
+    '''
+    This task calculates the scales for a given project
+    '''
+    args    : dict[str,str] = luigi.DictParameter(default={})
+    outputs : list[str]     = luigi.ListParameter(default=[])
+
+    def requires(self) -> law.Task:
+        return Fits()
+
+    def output(self) -> list[law.LocalFileTarget]:
+        return [ law.LocalFileTarget(out_dir) for out_dir in self.outputs ]
+
+    def run(self):
+        from rx_q2_scripts.dump_q2_ratios import main as runner
+
+        data = { key : val for key, val in self.args.items() }
+        args = OmegaConf.create(data)
+
+        runner(args=args)
+# -------------------------------------
+class Scales(law.WrapperTask):
+    '''
+    Task in charge of calculating scales and resolutions
+    from fit parameters
+    '''
+    # --------------------------------
+    def _get_outputs(self, args : DictConfig, names : ListConfig) -> list[str]:
+        ana_dir = os.environ['ANADIR']
+
+        return [ f'{ana_dir}/q2/fits/{args.vers}/plots/{args.project}/{name}' for name in names ]
+    # --------------------------------
+    def requires(self):
+        cfg     = gut.load_conf(package='configs', fpath='rx_q2/scales.yaml')
+        l_scale = []
+        for args in cfg.args:
+            outputs = self._get_outputs(args=args, names=cfg.outputs)
+            scl     = Scale(args=args, outputs=outputs)
+            l_scale.append(scl)
+
+        return l_scale
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to steer mass scales and resolutions measurements')
@@ -134,7 +177,7 @@ def _parse_args() -> None:
 # ----------------------
 def main():
     _parse_args()
-    law.run(argv=['WrapFits', '--workers', '8', '--log-level', 'INFO'])
+    law.run(argv=['Scales', '--workers', '8', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()
