@@ -11,6 +11,12 @@ input:
     rkst_ee:
       sim : Bd_JpsiKst_ee_eq_DPC
       dat : DATA*
+    rk_mm:
+      sim : Bu_JpsiK_mm_eq_DPC
+      dat : DATA*
+    rkst_mm:
+      sim : Bd_JpsiKst_mm_eq_DPC
+      dat : DATA*
   selection:
     bdt     : mva_cmb > 0.5 
     psi_vt  : B_const_mass_M > 5180 # This removes the psi2S contamination
@@ -40,6 +46,14 @@ fitting:
       2 :
         - 2000
         - 4000
+    rk_mm:
+      0 :
+        - 2950
+        - 3250
+    rkst_mm:
+      0 :
+        - 2950
+        - 3250
   mass    : Jpsi_M_brem_track_2 # Observable to be fitted
   weights : weight
   plotting:

@@ -25,6 +25,8 @@ class Samples(BaseModel):
     '''
     rk_ee  : dict[str,str]
     rkst_ee: dict[str,str]
+    rk_mm  : dict[str,str]
+    rkst_mm: dict[str,str]
     #-------------------
     def __getitem__(self, name : str) -> dict[str,str]:
         if not hasattr(self, name):
