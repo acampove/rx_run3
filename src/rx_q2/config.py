@@ -36,7 +36,6 @@ class Input(BaseModel):
     '''
     Class meant to represent input section of config
     '''
-    nentries  : int
     year      : str
     brem      : int
     block     : str
@@ -152,10 +151,8 @@ class Config(BaseModel):
     @property
     def out_dir(self) -> Path:
         ana_dir = Path(os.environ['ANADIR'])
-        trigger = self.input.trigger[self.project]
-
         path_1  = f'q2/fits/{self.vers}/{self.input.kind}'
-        path_2  = f'{trigger}_{self.input.year}'
+        path_2  = f'{self.project}_{self.input.year}'
         path_3  = f'{self.input.brem}_{self.input.block}_{self.syst}'
 
         out_dir = ana_dir / path_1 / path_2 / path_3
