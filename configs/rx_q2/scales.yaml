@@ -1,6 +1,36 @@
 args:
+  - {vers : v2, year : '2024', block : '1', proj : rkst_ee, brem : 0} 
   - {vers : v2, year : '2024', block : '1', proj : rkst_ee, brem : 1} 
-
+  - {vers : v2, year : '2024', block : '1', proj : rkst_ee, brem : 2} 
+  # ----------
+  - {vers : v2, year : '2024', block : '2', proj : rkst_ee, brem : 0} 
+  - {vers : v2, year : '2024', block : '2', proj : rkst_ee, brem : 1} 
+  - {vers : v2, year : '2024', block : '2', proj : rkst_ee, brem : 2} 
+  # ----------
+  - {vers : v2, year : '2024', block : '5', proj : rkst_ee, brem : 0} 
+  - {vers : v2, year : '2024', block : '5', proj : rkst_ee, brem : 1} 
+  - {vers : v2, year : '2024', block : '5', proj : rkst_ee, brem : 2} 
+  # ----------
+  - {vers : v2, year : '2024', block : '6', proj : rkst_ee, brem : 0} 
+  - {vers : v2, year : '2024', block : '6', proj : rkst_ee, brem : 1} 
+  - {vers : v2, year : '2024', block : '6', proj : rkst_ee, brem : 2} 
+  # ----------
+  # ----------
+  - {vers : v2, year : '2024', block : '1', proj : rk_ee  , brem : 0} 
+  - {vers : v2, year : '2024', block : '1', proj : rk_ee  , brem : 1} 
+  - {vers : v2, year : '2024', block : '1', proj : rk_ee  , brem : 2} 
+  # ----------
+  - {vers : v2, year : '2024', block : '2', proj : rk_ee  , brem : 0} 
+  - {vers : v2, year : '2024', block : '2', proj : rk_ee  , brem : 1} 
+  - {vers : v2, year : '2024', block : '2', proj : rk_ee  , brem : 2} 
+  # ----------
+  - {vers : v2, year : '2024', block : '5', proj : rk_ee  , brem : 0} 
+  - {vers : v2, year : '2024', block : '5', proj : rk_ee  , brem : 1} 
+  - {vers : v2, year : '2024', block : '5', proj : rk_ee  , brem : 2} 
+  # ----------
+  - {vers : v2, year : '2024', block : '6', proj : rk_ee  , brem : 0} 
+  - {vers : v2, year : '2024', block : '6', proj : rk_ee  , brem : 1} 
+  - {vers : v2, year : '2024', block : '6', proj : rk_ee  , brem : 2} 
 outputs:
   - fit_linear.png
   - fit_log.png
