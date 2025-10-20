@@ -1,0 +1,18 @@
+args:
+  - {version : v2, year : 2024, block : 5, proj : rkst_ee, brem : 1} 
+
+outputs:
+  - fit_linear.png
+  - fit_log.png
+  - fit.pkl
+  - no_pars_linear.png
+  - no_pars_log.png
+  - parameters.json
+  - parameters.yaml
+  - pars_linear.png
+  - pars_log.png
+  - post_fit.tex
+  - post_fit.txt
+  - sim_cutflow.md
+  - sim.png
+  - sim_selection.yaml
