@@ -343,7 +343,7 @@ def apply_full_selection(
     process  : str,
     trigger  : str,
     ext_cut  : str|None = None,
-    uid      : str|None = None) -> RDataFrame:
+    uid      : str|None = None) -> RDF.RNode:
     '''
     Will apply full selection on dataframe.
     IMPORTANT: This HAS to be done lazily or else the rest of the code will be slowed down.
