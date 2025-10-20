@@ -520,6 +520,7 @@ class Fitter:
     def _plot_data(self, nll : Loss) -> None:
         data = nll.data[0]
         arr  = data.to_numpy()
+        arr  = arr[~numpy.isnan(arr)]
 
         rms  = numpy.std(arr)
         mean = numpy.mean(arr)
