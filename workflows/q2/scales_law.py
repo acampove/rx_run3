@@ -37,11 +37,10 @@ class FitTask(law.Task):
             raise ValueError('cfg not a DictConfig')
 
         self._cfg                     = cfg
-        self._cfg['args']['kind']     = self._kind 
+        self._cfg['args']['kind']     = self.kind 
         self._cfg['args']['syst']     = 'nom' 
         self._cfg['args']['logl']     = 20 
-        self._cfg['args']['nent']     = -1 
-        self._cfg['args']['skip_fit'] = True 
+        self._cfg['args']['skip_fit'] = False 
 
         return self._cfg
     # -------------------------------------
@@ -57,7 +56,7 @@ class FitTask(law.Task):
         ana_dir = Path(os.environ['ANADIR'])
 
         path_1  = f'q2/fits/{args.vers}/{args.kind}'
-        path_2  = f'{args.trig}_{args.year}'
+        path_2  = f'{args.proj}_{args.year}'
         path_3  = f'{args.brem}_{args.block}_{args.syst}'
 
         out_dir = ana_dir / path_1 / path_2 / path_3
@@ -76,8 +75,8 @@ class FitTask(law.Task):
         '''
         Defines the sets of tasks in the workflow
         '''
-        if self._kind == 'dat':
-            yield FitTask(config_string = self.config_string, kind='sim')
+        if self.kind == 'dat':
+            return FitTask(config_string = self.config_string, kind='sim')
     # -------------------------------------
     def run(self):
         '''
@@ -87,7 +86,7 @@ class FitTask(law.Task):
         from rx_q2_scripts.get_q2_tables import main as runner
 
         cfg = self._get_config() 
-        runner(cfg=cfg)
+        runner(cfg=cfg.args)
 # -------------------------------------
 class WrapFits(law.WrapperTask):
     '''
@@ -124,8 +123,7 @@ class WrapFits(law.WrapperTask):
 
         log.info(20 * '-')
         l_settings = WrapFits.get_settings(cfg=cfg)
-        for settings in l_settings:
-            yield FitTask(config_string = settings, kind='dat')
+        return [ FitTask(config_string = settings, kind='dat') for settings in l_settings ]
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to steer mass scales and resolutions measurements')
