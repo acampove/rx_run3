@@ -7,13 +7,15 @@ import re
 import glob
 import math
 import argparse
-from typing import Callable
+from typing  import Callable, Any
+from pathlib import Path
 
 import mplhep
 import jacobi
 import matplotlib.pyplot     as plt
 import pandas                as pnd
-import dmu.generic.utilities as gut
+
+from dmu.generic           import utilities        as gut
 from matplotlib.axes       import Axes
 from dmu.logging.log_store import LogStore
 
@@ -23,24 +25,35 @@ class Data:
     '''
     Data class
     '''
-    regex   = r'Hlt2RD_BuToKpEE_MVA_2024_(\d)_(\d)_nom'
-    inp_dir : str
+    regex   = r'(\d)_(\d)_nom'
+    inp_dir : Path 
+    out_dir : Path 
     version : str
 
     plt.style.use(mplhep.style.LHCb2)
 #-------------------------------------
-def _parse_args():
+def _parse_args() -> argparse.Namespace:
+    projects = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
+
     parser = argparse.ArgumentParser(description='Used to create pandas dataframe with information from fits needed to smear q2')
-    parser.add_argument('-v', '--vers', type=str, help='Version'        , required=True)
+    parser.add_argument('-v', '--vers'   , type=str, help='Version', required=True)
+    parser.add_argument('-p', '--project', type=str, help='Version', required=True, choices=projects)
+    parser.add_argument('-y', '--year'   , type=str, help='Version', default='2024')
     args = parser.parse_args()
 
     Data.version = args.vers
+
+    return args
 #-------------------------------------
-def _initialize():
-    ana_dir      = os.environ['ANADIR']
-    Data.inp_dir = f'{ana_dir}/q2/fits/{Data.version}'
+def _initialize(args : argparse.Namespace):
+    ana_dir      = Path(os.environ['ANADIR'])
+
+    Data.inp_dir = ana_dir / f'q2/fits/{Data.version}'
+    Data.out_dir = ana_dir / f'q2/fits/{Data.version}/plots/{args.project}'
+
+    Data.out_dir.mkdir(parents=True, exist_ok=True)
 #-------------------------------------
-def _row_from_path(path : str) -> list[float]:
+def _row_from_path(path : str) -> list[Any]:
     data = gut.load_json(path)
 
     [[mu_val, mu_err]] = [ val for name, val in data.items() if name.startswith('mu_')]
@@ -62,15 +75,24 @@ def _brem_block_from_path(path : str) -> tuple[str,str]:
 
     return brem, block
 #-------------------------------------
-def _get_df(sample : str) -> pnd.DataFrame:
-    path_wc = f'{Data.inp_dir}/{sample}/*/parameters.json'
+def _get_df(
+    sample : str,
+    project: str,
+    year   : str) -> pnd.DataFrame:
+    '''
+    Arguments
+    --------------
+    sample : dat or sim
+    project: e.g. rk_ee
+    year   : 2024
+    '''
+    path_wc = f'{Data.inp_dir}/{sample}/{project}_{year}/*/parameters.json'
     l_path  = glob.glob(path_wc)
     nfiles  = len(l_path)
 
     df = pnd.DataFrame(columns=['mu_val', 'mu_err', 'sg_val', 'sg_err', 'brem', 'block'])
     if nfiles == 0:
         raise ValueError(f'Cannot find any parameters file in: {path_wc}')
-
 
     log.info(f'Found {nfiles} parameters files')
     for path in l_path:
@@ -109,21 +131,35 @@ def _scales_from_df(df : pnd.DataFrame) -> pnd.DataFrame:
 
     return df
 #-------------------------------------
-def _get_scale(df : pnd.DataFrame, name : str, fun : Callable) -> dict[str:float]:
+def _get_scale(
+    df   : pnd.DataFrame, 
+    name : str, 
+    fun  : Callable) -> dict[str,list[float]]:
+    '''
+    Parameters
+    ------------------
+    df  : Dataframe with mass scales and resolutions
+    name: Variable whose 
+    fun : Function used to calculate scale or resolution
+
+    Returns
+    ------------------
+    Dictionary mapping:
+
+    key  : Name of scale/resolution
+    value: Numerical value
+    '''
     df_dat  = df[df['sample'] == 'dat']
     df_sim  = df[df['sample'] == 'sim']
 
-    dat_val = float(df_dat[f'{name}_val'])
-    dat_err = float(df_dat[f'{name}_err'])
+    dat_val, dat_err = _get_entry(name=name, df=df_dat)
+    sim_val, sim_err = _get_entry(name=name, df=df_sim)
 
-    sim_val = float(df_sim[f'{name}_val'])
-    sim_err = float(df_sim[f'{name}_err'])
-
-    cov     = [
+    cov : list[list[float]] = [
             [dat_err ** 2,            0],
             [0           , sim_err ** 2]]
 
-    val, var = jacobi.propagate(fun, [dat_val, sim_val], cov)
+    val, var = jacobi.propagate(fun, [dat_val, sim_val], cov) # type: ignore
     val      = float(val)
     err      = math.sqrt(var)
 
@@ -134,19 +170,43 @@ def _get_scale(df : pnd.DataFrame, name : str, fun : Callable) -> dict[str:float
         log.warning('-----------------')
 
     return {f's{name}_val' : [val], f's{name}_err' : [err]}
+# ----------------------
+def _get_entry(name : str, df : pnd.DataFrame) -> tuple[float,float]:
+    '''
+    Parameters
+    -------------
+    name: Quantity associated to column, e.g. mu, sg
+    df  : DataFrame with scales and resolutions
+
+    Returns
+    -------------
+    Tuple with value and error
+    '''
+    if len(df) != 1:
+        log.error(df)
+        raise ValueError('Expected one and only one row')
+
+    try:
+        val = df[f'{name}_val'].iloc[0]
+        err = df[f'{name}_err'].iloc[0]
+    except Exception:
+        log.error(df)
+        raise ValueError(f'Cannot find value or error of {name}')
+
+    return val, err
 #-------------------------------------
 def _plot_df(
-        df       : pnd.DataFrame,
-        quantity : str,
-        brem     : str,
-        ax       : Axes) -> Axes:
+    df       : pnd.DataFrame,
+    quantity : str,
+    brem     : str,
+    ax       : Axes) -> Axes:
 
     if brem == 0 and quantity == 'ssg':
         return ax
 
-    color = {0 : '#1f77b4', 1 : '#ff7f0e', 2 : '#2ca02c'}[brem]
-    val = f'{quantity}_val'
-    err = f'{quantity}_err'
+    color = {'0' : '#1f77b4', '1' : '#ff7f0e', '2' : '#2ca02c'}[brem]
+    val   = f'{quantity}_val'
+    err   = f'{quantity}_err'
 
     ax.fill_between(
         df['block'],
@@ -162,7 +222,8 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
     _, ax = plt.subplots(figsize=(15, 10))
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem)
-        ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
+        brem    = str(brem)
+        ax      = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
 
     ax.legend()
 
@@ -175,14 +236,15 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
         plt.ylim(1.0, 1.5)
 
     plt.grid()
-    plt.savefig(f'{Data.inp_dir}/{quantity}.png')
+    plt.savefig(f'{Data.out_dir}/{quantity}.png')
     plt.close()
 #-------------------------------------
 def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
     _, ax = plt.subplots(figsize=(15, 10))
     for brem, df_brem in df.groupby('brem'):
+        brem    = str(brem)
         df_brem = _reorder_blocks(df = df_brem)
-        ax = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
+        ax      = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
 
     ax.legend()
 
@@ -197,11 +259,13 @@ def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
         plt.ylim(0.0, 100)
 
     plt.grid()
-    plt.savefig(f'{Data.inp_dir}/{quantity}_{kind}.png')
+    plt.savefig(f'{Data.out_dir}/{quantity}_{kind}.png')
     plt.close()
 #-------------------------------------
 def _plot(df : pnd.DataFrame):
     for kind, df_kind in df.groupby('sample'):
+        kind = str(kind)
+
         _plot_variables(df=df_kind, quantity='mu', kind = kind)
         _plot_variables(df=df_kind, quantity='sg', kind = kind)
 
@@ -213,9 +277,9 @@ def main():
     '''
     Starts here
     '''
-    _parse_args()
-    _initialize()
-    out_path = f'{Data.inp_dir}/parameters.json'
+    args = _parse_args()
+    _initialize(args=args)
+    out_path = f'{Data.out_dir}/parameters.json'
     if os.path.isfile(out_path):
         log.warning(f'Dataframe already found, reusing: {out_path}')
         df = pnd.read_json(out_path)
@@ -226,12 +290,13 @@ def main():
     log.info('Dataframe already not found, making it')
     l_df = []
     for sample in ['dat', 'sim']:
-        df           = _get_df(sample=sample)
+        df           = _get_df(sample=sample, project=args.project, year=args.year)
         df['sample'] = sample
         l_df.append(df)
 
     df=pnd.concat(l_df, axis=0, ignore_index=True)
     df.to_json(out_path, indent=2)
+
     _plot(df=df)
 #-------------------------------------
 if __name__ == '__main__':
