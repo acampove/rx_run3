@@ -411,11 +411,11 @@ def _get_rdf(kind : str) -> RDF.RNode:
     if log.getEffectiveLevel() == 10:
         rep.Print()
 
-    _save_cutflow(rep=rep, cuts=d_sel, kind=kind)
+    _save_cutflow(rep=rep, cuts=d_sel)
 
     return rdf
 # ----------------------
-def _save_cutflow(rep : RDF.RCutFlowReport , cuts : dict[str,str], kind : str) -> None:
+def _save_cutflow(rep : RDF.RCutFlowReport , cuts : dict[str,str]) -> None:
     '''
     Parameters
     -------------
@@ -426,8 +426,8 @@ def _save_cutflow(rep : RDF.RCutFlowReport , cuts : dict[str,str], kind : str) -
     cfg = _load_config()
     df  = rut.rdf_report_to_df(rep)
 
-    df.to_markdown(cfg.out_dir / f'{kind}_cutflow.md')
-    gut.dump_json(data=cuts, path=cfg.out_dir / f'{kind}_selection.yaml', exists_ok=True)
+    df.to_markdown(cfg.out_dir / 'cutflow.md')
+    gut.dump_json(data=cuts, path=cfg.out_dir / 'selection.yaml', exists_ok=True)
 #-------------------
 def _make_table():
     cfg = _load_config()
