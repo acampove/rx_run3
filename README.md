@@ -39,3 +39,15 @@ trains the classifiers, the config is in:
 
 `configs/rx_classifier/train.yaml`
 
+### Mass scales and resolutions
+
+For this run:
+
+```
+scales_law
+```
+
+the config is in:
+
+`configs/rx_q2/scales.yaml`
+
