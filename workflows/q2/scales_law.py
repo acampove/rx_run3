@@ -86,7 +86,7 @@ class FitTask(law.Task):
         from rx_q2_scripts.get_q2_tables import main as runner
 
         cfg = self._get_config() 
-        runner(cfg=cfg.args)
+        runner(args=cfg.args)
 # -------------------------------------
 class WrapFits(law.WrapperTask):
     '''
