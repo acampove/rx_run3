@@ -40,9 +40,10 @@ _ARGS : argparse.Namespace | DictConfig | None = None
 log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
 def _parse_args() -> argparse.Namespace:
+    projects = ['rk_ee', 'rkst_ee', 'rk_mm', 'rkst_mm']
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
-    parser.add_argument('-p', '--proj' , type =str, help='Project', choices=['rk_ee', 'rkst_ee']       , required=True)
+    parser.add_argument('-p', '--proj' , type =str, help='Project', choices=projects                   , required=True)
     parser.add_argument('-y', '--year' , type =str, help='Year'                                        , required=True)
     parser.add_argument('-b', '--brem' , type =str, help='Brem category'                               , required=True)
     parser.add_argument('-k', '--kind' , type =str, help='Kind of sample'                              , required=True)
