@@ -13,6 +13,7 @@ from pathlib import Path
 import mplhep
 import jacobi
 import matplotlib.pyplot     as plt
+from omegaconf import DictConfig
 import pandas                as pnd
 
 from dmu.generic           import utilities        as gut
@@ -28,9 +29,6 @@ class Data:
     regex   = r'(\d)_(\d)_nom'
     inp_dir : Path 
     out_dir : Path 
-    version : str
-
-    plt.style.use(mplhep.style.LHCb2)
 #-------------------------------------
 def _parse_args() -> argparse.Namespace:
     projects = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
@@ -41,17 +39,17 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('-y', '--year'   , type=str, help='Version', default='2024')
     args = parser.parse_args()
 
-    Data.version = args.vers
-
     return args
 #-------------------------------------
-def _initialize(args : argparse.Namespace):
+def _initialize(args : argparse.Namespace | DictConfig):
     ana_dir      = Path(os.environ['ANADIR'])
 
-    Data.inp_dir = ana_dir / f'q2/fits/{Data.version}'
-    Data.out_dir = ana_dir / f'q2/fits/{Data.version}/plots/{args.project}'
+    Data.inp_dir = ana_dir / f'q2/fits/{args.vers}'
+    Data.out_dir = ana_dir / f'q2/fits/{args.vers}/plots/{args.project}'
 
     Data.out_dir.mkdir(parents=True, exist_ok=True)
+
+    plt.style.use(mplhep.style.LHCb2)
 #-------------------------------------
 def _row_from_path(path : str) -> list[Any]:
     data = gut.load_json(path)
@@ -273,11 +271,12 @@ def _plot(df : pnd.DataFrame):
     _plot_scales(df=df_scale, quantity='ssg')
     _plot_scales(df=df_scale, quantity='smu')
 #-------------------------------------
-def main():
+def main(args : DictConfig | argparse.Namespace | None = None):
     '''
     Starts here
     '''
-    args = _parse_args()
+    args = _parse_args() if args is None else args
+
     _initialize(args=args)
     out_path = f'{Data.out_dir}/parameters.json'
     if os.path.isfile(out_path):
