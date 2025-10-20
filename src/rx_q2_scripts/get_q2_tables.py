@@ -14,6 +14,7 @@ import mplhep
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
+from omegaconf               import DictConfig
 from ROOT                    import RDF # type: ignore
 from dmu.stats.zfit          import zfit
 from zfit.pdf                import BasePDF   as zpdf
@@ -34,11 +35,11 @@ from rx_data.rdf_getter      import RDFGetter
 from rx_q2.config            import Config
 
 Parameters=dict[str,tuple[float,float]]
+_ARGS : argparse.Namespace | DictConfig | None = None
 
 log=LogStore.add_logger('rx_q2:get_q2_tables')
 #-------------------
-@cache
-def _load_config() -> Config:
+def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Used to produce q2 smearing factors systematic tables')
     parser.add_argument('-v', '--vers' , type =str, help='Version, used for naming of output directory', required=True)
     parser.add_argument('-p', '--proj' , type =str, help='Project', choices=['rk_ee', 'rkst_ee']       , required=True)
@@ -51,6 +52,12 @@ def _load_config() -> Config:
     parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action ='store_true')
     args = parser.parse_args()
+
+    return args
+#-------------------
+@cache
+def _load_config() -> Config:
+    args = _parse_args() if _ARGS is None else _ARGS
 
     input            = {}
     input['nent']    = args.nent
