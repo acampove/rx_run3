@@ -401,7 +401,6 @@ def _get_rdf(kind : str) -> RDF.RNode:
     trigger= cfg.input.trigger[cfg.project]
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
-    d_sel.update(cfg.input.selection)
 
     for cut_name, cut_value in d_sel.items():
         log.debug(f'{cut_name:<20}{cut_value}')
@@ -446,15 +445,17 @@ def _make_table():
     _fit(d_fix=d_fix_par)
 #-------------------
 #-------------------
-def main(cfg : DictConfig | None = None):
+def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
     global _ARGS
-    _ARGS = cfg
+    _ARGS = args 
     _initialize()
 
-    _make_table()
+    cfg = _load_config()
+    with sel.custom_selection(d_sel = cfg.input.selection):
+        _make_table()
 #-------------------
 if __name__ == '__main__':
     main()
