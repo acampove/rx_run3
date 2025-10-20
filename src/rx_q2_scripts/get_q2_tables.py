@@ -449,11 +449,14 @@ def _make_table():
     _fit(d_fix=d_fix_par)
 #-------------------
 #-------------------
-def main():
+def main(cfg : DictConfig | None = None):
     '''
     Entry point
     '''
+    global _ARGS
+    _ARGS = cfg
     _initialize()
+
     _make_table()
 #-------------------
 if __name__ == '__main__':
