@@ -45,3 +45,13 @@ smeared_mass = obj.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=original_ma
 
 This will smear the mass for a given block and brem category. The object should be reused
 for all the candidates and declared only once.
+
+# Visualizing scales and resolutions
+
+The script collecting all the numbers should be run with:
+
+```bash
+dump_q2_ratios -v v2 -p rk_ee
+```
+
+for instance.
