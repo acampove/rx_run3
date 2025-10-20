@@ -7,6 +7,7 @@ import os
 import re
 import pickle
 from typing     import Union, Mapping, Any, cast
+from pathlib    import Path
 
 import yaml
 import numpy
@@ -357,7 +358,7 @@ def save_fit(
     data    : zdata,
     model   : zpdf|zmod|None,
     res     : zres|None,
-    fit_dir : str,
+    fit_dir : str|Path,
     plt_cfg : DictConfig|dict|None,
     d_const : dict[str,tuple[float,float]]|None = None) -> None:
     '''
@@ -375,6 +376,11 @@ def save_fit(
 
     if isinstance(plt_cfg, dict):
         plt_cfg = OmegaConf.create(plt_cfg)
+
+    # TODO: This needs to work the other way around
+    # the whole code dowstream needs to use Path
+    if isinstance(fit_dir, Path):
+        fit_dir = str(fit_dir)
 
     _save_fit_plot(data=data, model=model, cfg=plt_cfg, fit_dir=fit_dir)
     _save_result(fit_dir=fit_dir, res=res)
@@ -456,11 +462,11 @@ def _save_result(fit_dir : str, res : zres|None) -> None:
 
     opath  = f'{fit_dir}/parameters.json'
     log.debug(f'Saving parameters to: {opath}')
-    gut.dump_json(d_par, opath)
+    gut.dump_json(data = d_par, path = opath, exists_ok = True)
 
     opath  = f'{fit_dir}/parameters.yaml'
     log.debug(f'Saving parameters to: {opath}')
-    gut.dump_json(d_par, opath)
+    gut.dump_json(data = d_par, path = opath, exists_ok = True)
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
