@@ -277,18 +277,15 @@ def _get_data(pdf : zpdf, kind : str) -> zdata:
         str_type = str(type(dat))
         raise ValueError(f'Data is of the wrong type: {str_type}')
 
-    _plot_data(df, kind)
+    _plot_data(df)
 
     return dat
 #-------------------
-def _plot_data(
-    df         : pnd.DataFrame,
-    kind       : str) -> None:
+def _plot_data(df : pnd.DataFrame) -> None:
     '''
     Parameters
     --------------
     df  : DataFrame with fitted data
-    kind: Name of plot, i.e. {kind}.png
     '''
     cfg     = _load_config()
     arr_mas = df[cfg.fitting.mass   ].to_numpy()
@@ -316,7 +313,7 @@ def _plot_data(
 
     title=f'Entries={arr_wgt.size:.0f}; Sum={numpy.sum(arr_wgt):.0f}'
 
-    plt_path = cfg.out_dir / f'{kind}.png'
+    plt_path = cfg.out_dir / 'unfitted_dataset.png'
 
     log.info(f'Saving to: {plt_path}')
     plt.title(title)
