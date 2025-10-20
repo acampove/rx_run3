@@ -134,7 +134,7 @@ def _parse_args() -> None:
 # ----------------------
 def main():
     _parse_args()
-    law.run(argv=['WrapFits', '--workers', '8', '--log-level', 'INFO'])
+    law.run(argv=['WrapFits', '--workers', '12', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()
