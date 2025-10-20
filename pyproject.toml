@@ -34,6 +34,7 @@ omegaconf      = '*'
 toml           = '*'
 uproot         = '*'
 numpy          = '<=2.2' # Numba requires this
+jinja2         = '*'     # To deal with pandas to latex tables styling
 matplotlib     = '*'
 mplhep         = '*'
 pandas         = '*'
