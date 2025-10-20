@@ -9,11 +9,12 @@ from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:pdataframe:utilities')
 # -------------------------------------
-def df_to_tex(df         : pnd.DataFrame,
-              path       : str,
-              hide_index : bool         = True,
-              d_format   : dict[str,str]= None,
-              **kwargs   : str       ) -> None:
+def df_to_tex(
+    df         : pnd.DataFrame,
+    path       : str,
+    hide_index : bool                 = True,
+    d_format   : dict[str,str] | None = None,
+    **kwargs   : str               ) -> None:
     '''
     Saves pandas dataframe to latex
 
