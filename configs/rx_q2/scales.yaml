@@ -1,5 +1,5 @@
 args:
-  - {version : v2, year : 2024, block : 5, proj : rkst_ee, brem : 1} 
+  - {vers : v2, year : '2024', block : '1', proj : rkst_ee, brem : 1} 
 
 outputs:
   - fit_linear.png
@@ -13,6 +13,5 @@ outputs:
   - pars_log.png
   - post_fit.tex
   - post_fit.txt
-  - sim_cutflow.md
-  - sim.png
-  - sim_selection.yaml
+  - cutflow.md
+  - selection.yaml
