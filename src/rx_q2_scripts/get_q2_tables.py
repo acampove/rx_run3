@@ -49,7 +49,6 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument('-B', '--block', type =int, help='Block, by default -1, all'                   , default=-1) 
     parser.add_argument('-x', '--syst' , type =str, help='Systematic variabion'                        , default='nom')
     parser.add_argument('-l', '--logl' , type =int, help='Logging level'                               , default=20   )
-    parser.add_argument('-e', '--nent' , type =int, help='Number of entries to run over, for tests'    , default=-1)
     parser.add_argument('--skip_fit'   , help='Will not fit, just plot the model'                      , action ='store_true')
     args = parser.parse_args()
 
@@ -60,12 +59,10 @@ def _load_config() -> Config:
     args = _parse_args() if _ARGS is None else _ARGS
 
     input            = {}
-    input['nent']    = args.nent
     input['year']    = args.year
     input['brem']    = args.brem
     input['block']   = 'all' if args.block == -1 else str(args.block)
     input['kind']    = args.kind
-    input['nentries']= args.nent
 
     fitting          = {'skip' : args.skip_fit}
 
