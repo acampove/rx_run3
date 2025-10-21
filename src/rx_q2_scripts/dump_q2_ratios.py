@@ -29,6 +29,7 @@ class ScalesConf(BaseModel):
     Class storing configuration
     '''
     model_config = ConfigDict(frozen=True)
+    jpsi_mass : float
 
     mm   : dict[str,list[float]]
     ee   : dict[str,list[float]]
@@ -282,12 +283,12 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
     ax.legend()
 
     cfg = _load_config()
-    if quantity == 'dm':
+    if quantity == 'smu':
         plt.ylabel(r'$\Delta\mu$[MeV]')
         rng = cfg.get_range(var='smu')
         plt.ylim(rng)
 
-    if quantity == 'ss':
+    if quantity == 'ssg':
         plt.ylabel(r'$s_{\sigma}$')
         rng = cfg.get_range(var='ssg')
         plt.ylim(rng)
@@ -310,7 +311,7 @@ def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
     cfg = _load_config()
     if quantity == 'mu':
         plt.ylabel(f'$\\mu^{{{name}}}$[MeV]')
-        ax.axhline(y=3096, color='black', linestyle=':', label='PDG')
+        ax.axhline(y=cfg.jpsi_mass, color='black', linestyle=':', label='PDG')
 
         rng = cfg.get_range(var='mu')
         plt.ylim(rng)
