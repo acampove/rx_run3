@@ -13,14 +13,53 @@ from pathlib import Path
 import mplhep
 import jacobi
 import matplotlib.pyplot     as plt
-from omegaconf import DictConfig
 import pandas                as pnd
 
+from omegaconf             import DictConfig
+from functools             import cache
+from pydantic              import BaseModel, ConfigDict
 from dmu.generic           import utilities        as gut
 from matplotlib.axes       import Axes
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
+#-------------------------------------
+class ScalesConf(BaseModel):
+    '''
+    Class storing configuration
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    mm   : dict[str,list[float]]
+    ee   : dict[str,list[float]]
+
+    vers : str
+    year : str
+    proj : str
+    # ------------------------------
+    def get_range(self, var : str) -> tuple[float,float]:
+        '''
+        Parameters
+        -----------------
+        var: Variable name, e.g. mu, sg, dm, ss
+
+        Returns
+        -----------------
+        Y axis range for plot
+        '''
+        if   self.proj.endswith('_mm'):
+            data = self.mm
+        elif self.proj.endswith('_ee'):
+            data = self.ee
+        else:
+            raise ValueError(f'Invalid project: {self.proj}')
+
+        if var not in data:
+            raise ValueError(f'Invalid variable: {var}')
+
+        [low, high] = data[var]
+
+        return low, high
 #-------------------------------------
 class Data:
     '''
@@ -29,23 +68,40 @@ class Data:
     regex   = r'(\d)_(\d)_nom'
     inp_dir : Path 
     out_dir : Path 
-#-------------------------------------
-def _parse_args() -> argparse.Namespace:
-    projects = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
+    args    : DictConfig | None = None
+# ----------------------
+@cache
+def _load_config() -> ScalesConf:
+    '''
+    Returns
+    -------------
+    config class
+    '''
+    if Data.args: 
+        args = Data.args
+    else:
+        projects = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
 
-    parser = argparse.ArgumentParser(description='Used to create pandas dataframe with information from fits needed to smear q2')
-    parser.add_argument('-v', '--vers'   , type=str, help='Version', required=True)
-    parser.add_argument('-p', '--project', type=str, help='Version', required=True, choices=projects)
-    parser.add_argument('-y', '--year'   , type=str, help='Version', default='2024')
-    args = parser.parse_args()
+        parser = argparse.ArgumentParser(description='Used to create pandas dataframe with information from fits needed to smear q2')
+        parser.add_argument('-v', '--vers'   , type=str, help='Version', required=True)
+        parser.add_argument('-p', '--project', type=str, help='Version', required=True, choices=projects)
+        parser.add_argument('-y', '--year'   , type=str, help='Version', default='2024')
+        args = parser.parse_args()
 
-    return args
+    data         = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
+    data['vers'] = args.vers
+    data['year'] = args.year
+    data['proj'] = args.project
+
+    cfg  = ScalesConf(**data)
+
+    return cfg 
 #-------------------------------------
-def _initialize(args : argparse.Namespace | DictConfig):
+def _initialize(cfg : ScalesConf):
     ana_dir      = Path(os.environ['ANADIR'])
 
-    Data.inp_dir = ana_dir / f'q2/fits/{args.vers}'
-    Data.out_dir = ana_dir / f'q2/fits/{args.vers}/plots/{args.project}'
+    Data.inp_dir = ana_dir / f'q2/fits/{cfg.vers}'
+    Data.out_dir = ana_dir / f'q2/fits/{cfg.vers}/plots/{cfg.proj}'
 
     Data.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -225,13 +281,16 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
 
     ax.legend()
 
-    if quantity == 'smu':
+    cfg = _load_config()
+    if quantity == 'dm':
         plt.ylabel(r'$\Delta\mu$[MeV]')
-        plt.ylim(-50, +50)
+        rng = cfg.get_range(var='smu')
+        plt.ylim(rng)
 
-    if quantity == 'ssg':
+    if quantity == 'ss':
         plt.ylabel(r'$s_{\sigma}$')
-        plt.ylim(1.0, 1.5)
+        rng = cfg.get_range(var='ssg')
+        plt.ylim(rng)
 
     plt.grid()
     plt.savefig(f'{Data.out_dir}/{quantity}.png')
@@ -248,15 +307,21 @@ def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
 
     name = {'dat' : 'Data', 'sim' : 'MC'}[kind]
 
+    cfg = _load_config()
     if quantity == 'mu':
         plt.ylabel(f'$\\mu^{{{name}}}$[MeV]')
-        plt.ylim(3000, 3100)
+        ax.axhline(y=3096, color='black', linestyle=':', label='PDG')
+
+        rng = cfg.get_range(var='mu')
+        plt.ylim(rng)
 
     if quantity == 'sg':
         plt.ylabel(f'$\\sigma^{{{name}}}$[MeV]')
-        plt.ylim(0.0, 100)
+        rng = cfg.get_range(var='sg')
+        plt.ylim(rng)
 
     plt.grid()
+    plt.legend()
     plt.savefig(f'{Data.out_dir}/{quantity}_{kind}.png')
     plt.close()
 #-------------------------------------
@@ -271,13 +336,15 @@ def _plot(df : pnd.DataFrame):
     _plot_scales(df=df_scale, quantity='ssg')
     _plot_scales(df=df_scale, quantity='smu')
 #-------------------------------------
-def main(args : DictConfig | argparse.Namespace | None = None):
+def main(args : DictConfig | None = None):
     '''
     Starts here
     '''
-    args = _parse_args() if args is None else args
+    Data.args = args
 
-    _initialize(args=args)
+    cfg = _load_config()
+    _initialize(cfg=cfg)
+
     out_path = f'{Data.out_dir}/parameters.json'
     if os.path.isfile(out_path):
         log.warning(f'Dataframe already found, reusing: {out_path}')
@@ -289,7 +356,7 @@ def main(args : DictConfig | argparse.Namespace | None = None):
     log.info('Dataframe already not found, making it')
     l_df = []
     for sample in ['dat', 'sim']:
-        df           = _get_df(sample=sample, project=args.project, year=args.year)
+        df           = _get_df(sample=sample, project=cfg.proj, year=cfg.year)
         df['sample'] = sample
         l_df.append(df)
 
