@@ -130,8 +130,8 @@ class Scale(law.Task):
     '''
     This task calculates the scales for a given project
     '''
-    args    : dict[str,str] = luigi.DictParameter(default={})
-    outputs : list[str]     = luigi.ListParameter(default=[])
+    args    : dict[str,str] = luigi.DictParameter(default={}) # type: ignore
+    outputs : list[str]     = luigi.ListParameter(default=[]) # type: ignore
 
     def requires(self) -> law.Task:
         return Fits()
