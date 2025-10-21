@@ -6,6 +6,8 @@ import json
 import argparse
 from functools             import cache
 from pathlib               import Path
+from importlib.resources   import files
+from .dependencies         import Dependencies
 
 import law
 from law.parameter         import Parameter
@@ -126,24 +128,31 @@ class Fits(law.WrapperTask):
         l_settings = Fits.get_settings(cfg=cfg)
         return [ Fit(config_string = settings, kind='dat') for settings in l_settings ]
 # -------------------------------------
-class Scale(law.Task):
+class Scale(law.Task, Dependencies):
     '''
     This task calculates the scales for a given project
     '''
-    args    : dict[str,str] = luigi.DictParameter(default={}) # type: ignore
-    outputs : list[str]     = luigi.ListParameter(default=[]) # type: ignore
-
+    args         : dict[str,str] = luigi.DictParameter(default={}) # type: ignore
+    outputs      : list[str]     = luigi.ListParameter(default=[]) # type: ignore
+    dependencies : tuple         = law.Parameter()                 # type: ignore
+    # ----------------------
     def requires(self) -> law.Task:
         return Fits()
-
+    # ----------------------
     def output(self) -> list[law.LocalFileTarget]:
-        return [ law.LocalFileTarget(out_dir) for out_dir in self.outputs ]
+        l_path    = [ law.LocalFileTarget(out_dir) for out_dir in self.outputs ]
+        hash_path = law.LocalFileTarget(self.hash_path)
+        l_path.append(hash_path)
 
+        return l_path
+    # ----------------------
     def run(self):
         from rx_q2_scripts.dump_q2_ratios import main as runner
 
         data = { key : val for key, val in self.args.items() }
         args = OmegaConf.create(data)
+
+        self._touch_hash()
 
         runner(args=args)
 # -------------------------------------
@@ -159,11 +168,13 @@ class Scales(law.WrapperTask):
         return [ f'{ana_dir}/q2/fits/{args.vers}/plots/{args.project}/{name}' for name in names ]
     # --------------------------------
     def requires(self):
+        cfg_path= files('rx_q2_data').joinpath('plots/scales.yaml')
         cfg     = gut.load_conf(package='configs', fpath='rx_q2/scales.yaml')
+
         l_scale = []
         for args in cfg.args:
             outputs = self._get_outputs(args=args, names=cfg.outputs)
-            scl     = Scale(args=args, outputs=outputs)
+            scl     = Scale(args=args, outputs=outputs, dependencies=[cfg_path])
             l_scale.append(scl)
 
         return l_scale
