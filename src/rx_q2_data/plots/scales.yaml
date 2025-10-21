@@ -1,3 +1,5 @@
+# This is a configuration file controlling the way the scales plots are made
+
 mm:
   mu  : [3090, 3100]
   sg  : [  10,   20]
