@@ -35,7 +35,7 @@ class and thus:
 For fits to data do:
 
 ```bash
-fit_rx_data -c rare/electron -q central -C 0.5 -P 0.5
+fit_rx_reso -c rare/electron -q central -C 0.5 -P 0.5
 ```
 
 to use the configuration in `src/fitter_data/rare/electron/data.yaml`
