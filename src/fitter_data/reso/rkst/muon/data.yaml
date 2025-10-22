@@ -1,8 +1,8 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
-trigger          : Hlt2RD_BuToKpMuMu_MVA 
-output_directory : reso/muon/data
+trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
+output_directory : reso/rkst/muon/data
 model:
   yields    : model/yields/reso_muon.yaml
   observable:
@@ -27,5 +27,5 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   nbins   : 50
   stacked : True
   d_leg :
-    jpsi          : $B^+\to J/\psi(\to \mu^+\mu^-) K^+$ 
+    jpsi          : $B^0\to J/\psi(\to \mu^+\mu^-) K^{*0}(\to K^+\pi^-)$ 
     combinatorial : Combinatorial
