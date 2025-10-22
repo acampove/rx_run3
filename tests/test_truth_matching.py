@@ -29,6 +29,8 @@ l_sample_kstee = [
     'Bs_JpsiX_ee_eq_JpsiInAcc',
     # ----
     'Bd_Kstee_eq_btosllball05_DPC',
+    'Bd_JpsiKst_ee_eq_DPC',
+    'Bs_JpsiKst_ee_eq_DPC',
 ]
 
 l_sample_kpmm = [
@@ -44,7 +46,11 @@ l_sample_kstmm = [
     'Bs_JpsiX_mm_eq_JpsiInAcc',
     # ----
     'Bd_Kstmumu_eq_btosllball05_DPC',
+    'Bd_JpsiKst_mm_eq_DPC',
+    'Bs_JpsiKst_mm_eq_DPC',
 ]
+
+log=LogStore.add_logger('rx_selection:test_truth_matching')
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -52,6 +58,7 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('rx_data:rdf_getter', 40)
+    LogStore.set_level('rx_selection:truth_matching', 10)
 # --------------------------
 @pytest.mark.parametrize('sample', [
     'Bu_Kee_eq_btosllball05_DPC',
