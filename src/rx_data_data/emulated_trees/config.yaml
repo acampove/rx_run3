@@ -1,0 +1,15 @@
+# This is a config meant to specify how to emulate a sample
+
+Bs_JpsiKst_mm_eq_DPC : 
+  sample : Bs_JpsiKst_mm_eq_DPC
+  redefine : &red
+    B_M                  : B_M                  + 87.23
+    B_Mass               : B_Mass               + 87.23
+    B_M_brem_track_2     : B_M_brem_track_2     + 87.23
+    B_const_mass_psi2S_M : B_const_mass_psi2S_M + 87.23
+
+Bs_JpsiKst_ee_eq_DPC :
+  sample : Bs_JpsiKst_ee_eq_DPC
+  redefine : &red
+    <<: *red
+
