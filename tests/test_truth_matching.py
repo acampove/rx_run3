@@ -68,7 +68,7 @@ def test_nopid(sample : str):
     Tests truth matching for noPID samples
     '''
     trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='nopid')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample, kind='bukll')
@@ -87,7 +87,7 @@ def test_bukee(sample : str):
     Tests truth matching
     '''
     trigger = 'Hlt2RD_BuToKpEE_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample, kind='bukll')
@@ -107,7 +107,7 @@ def test_bukmm(sample : str):
     Tests truth matching
     '''
     trigger = 'Hlt2RD_BuToKpMuMu_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample, kind='bukll')
@@ -142,7 +142,7 @@ def test_bdkstmm(sample : str):
     return
 
     trigger = 'Hlt2RD_B0ToKpPimMuMu_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis='rx')
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
     ini = rdf.Count().GetValue()
