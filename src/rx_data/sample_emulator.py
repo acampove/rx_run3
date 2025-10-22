@@ -2,6 +2,8 @@
 Module holding SampleEmulator class
 '''
 
+from ROOT                  import RDF # type: ignore
+
 from dmu.generic.utilities import load_conf
 from dmu.logging.log_store import LogStore
 
@@ -42,3 +44,18 @@ class SampleEmulator:
 
         return new_sample
     # ---------------------
+    def post_process(self, rdf : RDF.RNode) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT dataFrame
+
+        Returns
+        -------------
+        Dataframe after redefinitions, etc
+        '''
+        for key, val in self._cfg[self._sample].redefine.items():
+            rdf = rdf.Redefine(key, val)
+
+        return rdf
+# ----------------------
