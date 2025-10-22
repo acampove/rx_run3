@@ -230,7 +230,7 @@ class BaseFitter:
         plt_cfg['ext_text'] = text
 
         sel_path = f'{out_path}/selection.yaml'
-        gut.dump_json(cut_cfg, sel_path)
+        gut.dump_json(cut_cfg, sel_path, exists_ok=True)
 
         sut.save_fit(
             data   = data,
