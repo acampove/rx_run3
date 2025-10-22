@@ -53,7 +53,7 @@ class SimFitter(BaseFitter, Cache):
         '''
         BaseFitter.__init__(self)
         log.info(20 * '-')
-        log.info(f'Fitting {name}')
+        log.info(f'Fitting {component}/{name}')
         log.info(20 * '-')
 
         self._sample    = DecayNames.sample_from_decay(component, fall_back='NA')
