@@ -89,6 +89,11 @@ jpsi_ee_kstzero : '({b_is_bzero}) && ({lep_are_electrons} && {ll_is_jpsi} && {le
 11144002        : '({b_is_bzero}) && ({lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
 jpsi_mm_kstzero : '({b_is_bzero}) && ({lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
 
+# Bs -> Jpsi(mm) Kst(Kpi)
+13444001             : '({b_is_bstrn}) && ({lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
+# Bs -> Jpsi(ee) Kst(Kpi)
+Bs_JpsiKst_ee_eq_DPC : '({b_is_bstrn}) && ({lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
+
 # Bd -> psi2(mm) Kst(Kpi)
 11144011        : '({b_is_bzero}) && ({lep_are_muons}     && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {had_from_kstzero})'
 
