@@ -84,7 +84,7 @@ class DataPreprocessor(Cache):
             wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
             rdf_uid  = self._rdf_uid)
     # ------------------------
-    def _get_rdf(self, cut : dict[str,str]|None) -> tuple[RDataFrame, dict[str,str], pnd.DataFrame]:
+    def _get_rdf(self, cut : dict[str,str]|None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
         -------------------
@@ -100,8 +100,7 @@ class DataPreprocessor(Cache):
         log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}/{self._project}')
         gtr = RDFGetter(
             sample  =self._sample,
-            trigger =self._trigger,
-            analysis=self._project)
+            trigger =self._trigger)
 
         rdf = gtr.get_rdf(per_file=False)
         uid = gtr.get_uid()
