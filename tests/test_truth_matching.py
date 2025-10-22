@@ -132,6 +132,8 @@ def test_bdkstee(sample : str):
     fin = rdf.Count().GetValue()
 
     assert 20 * fin > ini
+
+    log.info(f'eff={fin/ini=:.3f}')
 # --------------------------
 @pytest.mark.parametrize('sample', l_sample_kstmm)
 def test_bdkstmm(sample : str):
@@ -139,7 +141,6 @@ def test_bdkstmm(sample : str):
     Tests truth matching
     '''
     cut = tm.get_truth(sample, kind='bdkstll')
-    return
 
     trigger = 'Hlt2RD_B0ToKpPimMuMu_MVA'
     gtr = RDFGetter(sample=sample, trigger=trigger)
@@ -150,4 +151,5 @@ def test_bdkstmm(sample : str):
     fin = rdf.Count().GetValue()
 
     assert 20 * fin > ini
+    log.info(f'eff={fin/ini=:.3f}')
 # --------------------------
