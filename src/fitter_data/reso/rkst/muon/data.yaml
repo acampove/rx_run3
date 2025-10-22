@@ -17,9 +17,9 @@ model:
         - 5180 
         - 5700
   components:
-    combinatorial : reso/muon/combinatorial.yaml
-    jpsi          : reso/muon/jpsi.yaml
-    #psi2          : reso/muon/psi2.yaml
+    combinatorial : reso/rkst/muon/combinatorial.yaml
+    jpsi          : reso/rkst/muon/jpsi.yaml
+    psi2          : reso/rkst/muon/psi2.yaml
   constraints:
     yields : []
 fit: {}
