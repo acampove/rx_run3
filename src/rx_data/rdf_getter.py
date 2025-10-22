@@ -20,6 +20,7 @@ from dmu.logging.log_store import LogStore
 from omegaconf             import DictConfig, OmegaConf
 from rx_common             import info
 from rx_data.path_splitter import PathSplitter
+from rx_data.sample_emulator import SampleEmulator
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
@@ -80,7 +81,8 @@ class RDFGetter:
 
         log.debug(f'Process identifier: {RDFGetter._identifier}')
 
-        self._sample          = sample
+        self._emulator        = SampleEmulator(sample=sample)
+        self._sample          = self._emulator.get_sample_name()
         self._trigger         = trigger
         self._tree_name       = tree
 
@@ -858,7 +860,7 @@ class RDFGetter:
 
         self._rdf = self._rdf_from_conf(fpath='joint_files', conf_path=conf_path)
 
-        return self._rdf
+        return self._emulator.post_process(rdf=self._rdf)
     # ---------------------------------------------------
     def get_uid(self) -> str:
         '''
