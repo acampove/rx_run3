@@ -1,14 +1,11 @@
 '''
 Module holding DataPreprocessor class
 '''
-from typing  import cast
-
 import numpy
 import pandas   as pnd
 from omegaconf                import DictConfig, OmegaConf
-from ROOT                     import RDataFrame # type: ignore
+from ROOT                     import RDF # type: ignore
 from dmu.workflow.cache       import Cache
-from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities  as sut
 from dmu.generic              import utilities  as gut
 from dmu.rdataframe           import utilities  as rut
