@@ -3,15 +3,12 @@ categories:
   main:
     model :
       - dscb
+      - gauss
 sample        : Bd_JpsiKst_mm_eq_DPC
 shared        : []
 float         :
   - mu
   - sg
-  - al
-  - ar
-  - nl
-  - nr
 reparametrize : {}
 fix           : {}
 fit:
