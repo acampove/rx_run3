@@ -9,6 +9,7 @@ from typing import Any
 from dmu.stats.zfit         import zfit
 from omegaconf              import DictConfig
 from dmu.logging.log_store  import LogStore
+from rx_common              import info
 from zfit                   import Space      as zobs
 
 log=LogStore.add_logger('rx_fitter::fit_config')
@@ -164,10 +165,10 @@ class FitConfig:
         -------------
         Cut on nbrem, normally exclude brem 0 for electron and do nothing for muon
         '''
-        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpEE_MVA':
+        if info.is_ee(trigger = self.fit_cfg.trigger):
             return 'nbrem != 0'
 
-        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpMuMu_MVA':
+        if info.is_mm(trigger = self.fit_cfg.trigger):
             return 'nbrem == 0'
 
         raise ValueError(f'Invalid trigger: {self.fit_cfg.trigger}')
@@ -179,13 +180,7 @@ class FitConfig:
         -------------
         True if using electron trigger, false otherwise
         '''
-        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpEE_MVA':
-            return True 
-
-        if self.fit_cfg.trigger == 'Hlt2RD_BuToKpMuMu_MVA':
-            return False 
-
-        raise ValueError(f'Invalid trigger: {self.fit_cfg.trigger}')
+        return info.is_ee(self.fit_cfg.trigger)
     # ----------------------
     @cached_property
     def fit_name(self) -> str:
