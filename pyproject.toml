@@ -1,64 +1,41 @@
-[project]
-name            = 'rx_fitter'
-description     = 'Framework used to handle fits to data and simulation'
-readme          = 'README.md'
-dynamic         = ['version']
-requires-python = '>=3.10, <3.13'
-dependencies    = [
-    'omegaconf',
-    'numpy',
-    'seaborn',
-    'mplhep',
-    'matplotlib',
-    'python-slugify',
-    'zfit',
+[tool.poetry]
+name        = 'rx_fitter'
+version     = '0.0.1'
+description = 'Framework used to handle fits to data and simulation'
+readme      = 'README.md'
+authors     = []
+license     = ''
+packages    = [
+    { include = 'fitter'       , from = 'src' },
+    { include = 'fitter_data'  , from = 'src' },
+    { include = 'fitter_schema', from = 'src' },
 ]
+include = ['src/fitter_data/**/*.yaml']
 
 [tool.poetry.dependencies]
-rx-data                     = {version = '>=0.0.0', allow-prereleases = true}
-rx-selection                = {version = '>=0.0.0', allow-prereleases = true}
-data-manipulation-utilities = {version = '>=0.0.0', allow-prereleases = true}
+python         = '>=3.10,<3.13'
+omegaconf      = '*'
+numpy          = '*'
+seaborn        = '*'
+mplhep         = '*'
+matplotlib     = '*'
+python-slugify = '*'
+zfit           = '*'
 
-[project.scripts]
-fit_rx_rare  = 'fitter_scripts.fit_rx_rare:main'
-fit_rx_reso  = 'fitter_scripts.fit_rx_reso:main'
-fit_grid     = 'fitter_scripts.fit_grid:main'
-navigate_fits= 'fitter_scripts.navigate_fits:main'
-validate_cmb = 'fitter_scripts.validate_cmb:main'
-plot_toys    = 'fitter_scripts.plot_toys:main'
+[tool.poetry.scripts]
+fit_rx_rare    = 'fitter_scripts.fit_rx_rare:main'
+fit_rx_reso    = 'fitter_scripts.fit_rx_reso:main'
+fit_grid       = 'fitter_scripts.fit_grid:main'
+navigate_fits  = 'fitter_scripts.navigate_fits:main'
+validate_cmb   = 'fitter_scripts.validate_cmb:main'
+plot_toys      = 'fitter_scripts.plot_toys:main'
 summarize_toys = 'fitter_scripts.summarize_toys:main'
 
-[project.optional-dependencies]
-dev = ['pytest']
-
-[tool.poetry]
-package-mode = true
-packages     = [
-    {include = 'fitter',        from = 'src'},
-    {include = 'fitter_data',   from = 'src'},
-    {include = 'fitter_schema', from = 'src'},
-]
-include      = [
-    "src/fitter_data/**/*.yaml"
-]
-version = '0.0.1'
+[tool.poetry.group.dev.dependencies]
+pytest = '*'
 
 [build-system]
 requires = [
     'poetry-core>=1.0.0',
-    'poetry-dynamic-versioning>=1.0.0'
+    'poetry-dynamic-versioning>=1.0.0',
 ]
-build-backend = 'poetry_dynamic_versioning.backend'
-
-[tool.poetry-dynamic-versioning]
-enable       = true
-vcs          = 'git'
-style        = 'pep440'
-pattern      = 'default-unprefixed'
-format-jinja = """
-{%- if distance == 0 -%}
-{{ base }}
-{%- else -%}
-{{ serialize_pep440(bump_version(base), dev=distance) }}
-{%- endif -%}
-"""
