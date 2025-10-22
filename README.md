@@ -92,6 +92,21 @@ In the case of the MVA friend trees the branches added would be `mva.mva_cmb` an
 
 Thus, one can easily extend the ntuples with extra branches without remaking them.
 
+# Sample emulation
+
+Certain samples are not available, but they can be _emulated_ from
+existing ones. E.g. $B_s \to J/\psi K^*$ can be obtained through 
+$B_d \to J/\psi K^*$. This is configured in `rx_data_data/emulated_trees/config.yaml`
+as:
+
+```yaml
+Bs_JpsiKst_mm_eq_DPC :          # This is the sample needed
+  sample : Bd_JpsiKst_mm_eq_DPC # It will be replaced by this
+    redefine :                  # where the changes will be in this section
+    B_M    : B_M    + 87.23
+    B_Mass : B_Mass + 87.23
+```
+
 # Branches
 
 The list of branches is:
