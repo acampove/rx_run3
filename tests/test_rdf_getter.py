@@ -1060,17 +1060,39 @@ def test_full_selection_muon(sample : str, q2bin : str, trigger : str):
 
     _print_dotted_branches(rdf)
 # --------------------------
-@pytest.mark.parametrize('sample, trigger', 
+@pytest.mark.parametrize('target, source, trigger', 
                          [
-                         ('Bs_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-                         ('Bs_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  )])
-def test_emulated_samples(sample : str, trigger : str):
+                         ('Bs_JpsiKst_mm_eq_DPC', 'Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+                         ('Bs_JpsiKst_ee_eq_DPC', 'Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  )])
+def test_emulated_samples(
+    target  : str, 
+    source  : str, 
+    trigger : str,
+    tmp_path):
     '''
     Test sample emulation, e.g.
 
     B0 -> Jpsi K* => Bs -> Jpsi K*
     '''
     with RDFGetter.max_entries(value=-1):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
+        gtr_1   = RDFGetter(sample=target, trigger=trigger)
+        rdf_tar = gtr_1.get_rdf(per_file=False)
 
+        gtr_2   = RDFGetter(sample=source, trigger=trigger)
+        rdf_src = gtr_2.get_rdf(per_file=False)
+
+    log.info(f'Saving validation plots in: {tmp_path}')
+
+    _validate_emulation(src = rdf_src, tar = rdf_tar, path = tmp_path)
+# --------------------------
+def _validate_emulation(src : RDF.RNode, tar : RDF.RNode, path) -> None:
+    for var_name in ['B_M', 'B_Mass']:
+        arr_src = src.AsNumpy([var_name])[var_name]
+        arr_tar = tar.AsNumpy([var_name])[var_name]
+
+        plt.hist(arr_src, bins=60, range=(5000, 6000), histtype='step', label='Original')
+        plt.hist(arr_tar, bins=60, range=(5000, 6000), histtype='step', label='Emulated')
+
+        plt.legend()
+        plt.savefig(path / f'{var_name}.png')
+        plt.close()
