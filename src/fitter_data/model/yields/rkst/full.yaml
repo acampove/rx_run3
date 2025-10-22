@@ -1,0 +1,22 @@
+# This config file defines the yields and the relationships between them
+# For the combined fit of RK and RK*
+
+nBuKee:
+  val : 1
+  min : 0
+  max : 10
+RK:
+  val : 1.0
+  min : 0.8
+  max : 1.2
+iCK:
+  val : 1.0
+  min : 1.0
+  max : 1.0
+nBdKstee:
+  scl : [nBuKee]
+  val : 0
+  min : 0
+  max : 1
+nBuKmm:
+  alias : [iCK, RK, nBuKee]

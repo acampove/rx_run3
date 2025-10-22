@@ -1,0 +1,16 @@
+# This config file defines the yields and the relationships between them
+# For the fit of the resonant muon channel 
+yields: &yields
+  val : 0
+  min : 0
+  max : 1000000
+# -------------------------
+yld_bsjpsikst_brem_000:
+  <<: *yields
+yld_combinatorial_brem_000:
+  <<: *yields
+yld_jpsi_brem_000:
+  <<: *yields
+yld_psi2_brem_000:
+  <<: *yields
+# -------------------------
