@@ -54,6 +54,9 @@ class SampleEmulator:
         -------------
         Dataframe after redefinitions, etc
         '''
+        if self._sample not in self._cfg:
+            return rdf
+
         for key, val in self._cfg[self._sample].redefine.items():
             rdf = rdf.Redefine(key, val)
 
