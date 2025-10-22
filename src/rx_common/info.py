@@ -38,11 +38,24 @@ def channel_from_trigger(trigger : str) -> str:
 # ---------------------------------
 def is_ee(trigger : str) -> bool:
     '''
-    Given Hlt2 trigger name, it will tell if it belongs to
-    muon or electron channel
+    Given Hlt2 trigger name, it will tell if it belongs to electron sample
     '''
 
     return channel_from_trigger(trigger) == 'EE'
+# ---------------------------------
+def is_mm(trigger : str) -> bool:
+    '''
+    Given Hlt2 trigger name, it will tell if it belongs to muon sample
+    '''
+
+    return channel_from_trigger(trigger) == 'MM'
+# ---------------------------------
+def is_em(trigger : str) -> bool:
+    '''
+    Given Hlt2 trigger name, it will tell if it belongs to electron-muon sample
+    '''
+
+    return channel_from_trigger(trigger) == 'MM'
 # ---------------------------------
 def project_from_trigger(trigger : str, lower_case : bool) -> str:
     '''
