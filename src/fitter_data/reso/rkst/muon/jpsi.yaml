@@ -1,4 +1,4 @@
-output_directory : reso/muon/jpsi
+output_directory : reso/rkst/muon/jpsi
 categories:
   main:
     model :
