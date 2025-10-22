@@ -144,7 +144,6 @@ def main():
     with ExitStack() as stack:
         stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
         stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
-        stack.enter_context(RDFGetter.identifier(value=cfg.fit_name))
         stack.enter_context(Cache.turn_off_cache(val=[]))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
         stack.enter_context(sel.custom_selection(d_sel=overriding_selection))
