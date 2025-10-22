@@ -57,6 +57,10 @@ def get_truth(arg : int|str, kind : str) -> str:
     if event_type not in yrs:
         raise KeyError(f'Could not find event type {event_type} in config')
 
-    return yrs[event_type]
+    requirement = yrs[event_type]
+
+    log.debug(f'Using truth matching: {requirement}')
+
+    return requirement
 # ----------------------------------------------------------
 
