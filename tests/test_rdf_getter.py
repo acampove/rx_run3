@@ -1059,3 +1059,18 @@ def test_full_selection_muon(sample : str, q2bin : str, trigger : str):
     assert nentries > 0
 
     _print_dotted_branches(rdf)
+# --------------------------
+@pytest.mark.parametrize('sample, trigger', 
+                         [
+                         ('Bs_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+                         ('Bs_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  )])
+def test_emulated_samples(sample : str, trigger : str):
+    '''
+    Test sample emulation, e.g.
+
+    B0 -> Jpsi K* => Bs -> Jpsi K*
+    '''
+    with RDFGetter.max_entries(value=-1):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
+
