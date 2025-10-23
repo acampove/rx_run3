@@ -57,8 +57,30 @@ class ScaleCombiner:
         Dataframe with combination
         '''
         log.info('Combining measurements')
+    def _validate(self, l_df : list[pnd.DataFrame]) -> None:
+        '''
+        Validates dataframes
 
-        return l_df[0] 
+        Parameters
+        -------------
+        l_df: List of dataframes with scales to combine
+        '''
+        nmeas = len(l_df)
+        if nmeas != 2:
+            raise ValueError(f'Can only combine two measurements, found {nmeas}')
+
+        log.info(f'Combining {nmeas} measurements')
+
+        nrows = { len(df)         for df in l_df }
+        ncols = { len(df.columns) for df in l_df }
+
+        if len(nrows) != 1:
+            raise ValueError(f'Multiple sizes for dataframes: {nrows}')
+
+        if len(ncols) != 1:
+            raise ValueError(f'Multiple sizes for dataframes: {ncols}')
+
+        log.debug(f'All dataframes have same number of rows/columns: {nrows}/{ncols}')
     # ----------------------
     def _save_combination(
         self, 
@@ -92,7 +114,9 @@ class ScaleCombiner:
         measurements: List of strings with names of directories with measurements to combine, e.g. rk_ee
         '''
         l_df = [ self._get_dataframes(measurement=measurement) for measurement in measurements ]
-        df   = self._combine(l_df = l_df)
+        self._validate(l_df = l_df)
+
+        df   = self._combine(df_1=l_df[0], df_2=l_df[1])
 
         self._save_combination(name=name, df=df)
 # -------------------------------------
