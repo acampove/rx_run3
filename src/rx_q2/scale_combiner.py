@@ -56,16 +56,26 @@ class ScaleCombiner:
         return df
     # ----------------------
     def _combine(self, l_df : list[pnd.DataFrame]) -> pnd.DataFrame:
+    def _combine(
+        self, 
+        df_1 : pnd.DataFrame,
+        df_2 : pnd.DataFrame) -> pnd.DataFrame:
         '''
         Parameters
         -------------
-        l_df: List of dataframes with scales to be combined
+        df_1/2 : Dataframes with scales that need to be combined
 
         Returns
         -------------
         Dataframe with combination
         '''
-        log.info('Combining measurements')
+        ncol   = len(df_1.columns)
+        df_tmp = pnd.concat([df_1, df_2], axis=1)
+
+        df_combined = df_tmp.apply(self._combine_measurement, axis=1, args=(ncol,))
+
+        return df_combined 
+    # ----------------------
     def _validate(self, l_df : list[pnd.DataFrame]) -> None:
         '''
         Validates dataframes
