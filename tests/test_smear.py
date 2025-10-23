@@ -3,12 +3,12 @@ Script used to test Q2Smear
 '''
 import os
 
-import tqdm
 import numpy
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 from dmu.logging.log_store    import LogStore
+from dmu.generic              import typing_utilities as tut
 from rx_q2.q2smear_corrector import Q2SmearCorrector
 
 log  = LogStore.add_logger('rx_q2:test_q2smear_corrector')
@@ -23,7 +23,10 @@ class Data:
     os.makedirs(out_dir, exist_ok=True)
 # -------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_q2:q2smear_corrector'     , 20)
     LogStore.set_level('rx_q2:test_q2smear_corrector', 10)
 # -------------------------------------------
