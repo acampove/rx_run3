@@ -17,12 +17,14 @@ pydantic   = "*"
 pandas     = "*"
 numpy      = "*"
 zfit       = "*"
+typer      = "*"
 jacobi     = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 
 [tool.poetry.scripts]
+rx_q2              = "rx_q2.cli:app"
 calculate_brem     = "rx_q2_scripts.calculate_brem:main"
 check              = "rx_q2_scripts.check:main"
 compare_q2         = "rx_q2_scripts.compare_q2:main"
