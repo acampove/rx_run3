@@ -35,3 +35,7 @@ train_law   = 'workflows.classification.train_law:main'
 # Mass scales and resolutions
 # ----------------
 scales_law  = 'workflows.q2.scales_law:main'
+# ----------------
+# Fits
+# ----------------
+reso_fits_law = 'workflows.fits.reso_fits_law:main'
