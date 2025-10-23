@@ -36,7 +36,5 @@ summarize_toys = 'fitter_scripts.summarize_toys:main'
 pytest = '*'
 
 [build-system]
-requires = [
-    'poetry-core>=1.0.0',
-    'poetry-dynamic-versioning>=1.0.0',
-]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
