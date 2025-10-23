@@ -21,8 +21,8 @@ class Q2SmearCorrector:
         '''
         No arguments needed, inputs will be passed to `get_mass`
         '''
-        self._mass_ee_pdg = 3096.9
-        log.debug(f'Using Jpsi PDG mass: {self._mass_ee_pdg:.2f}')
+        self._jpsi_pdg_mass = 3096.9
+        log.debug(f'Using Jpsi PDG mass: {self._jpsi_pdg_mass:.2f}')
 
         self._df = self._get_scales()
     # ------------------------------------
@@ -75,7 +75,7 @@ class Q2SmearCorrector:
         mu_mc = self._read_quantity(nbrem=nbrem, block=block, kind='mu_mc')
         reso  = self._read_quantity(nbrem=nbrem, block=block, kind= 'reso')
         scale = self._read_quantity(nbrem=nbrem, block=block, kind='scale')
-        mass  = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - self._mass_ee_pdg)
+        mass  = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - self._jpsi_pdg_mass)
 
         log.debug(f'{jpsi_mass_reco:20.0f}{"->:<20"}{mass:<20.0f}')
 
