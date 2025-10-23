@@ -779,6 +779,21 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
 
     return cfg
 # ----------------------
+def to_float(val : Any) -> float:
+    '''
+    Parameters
+    -------------
+    val: Object to transform/check into a float 
+
+    Returns
+    -------------
+    Float version of val, if it can be obtained
+    '''
+    if not isinstance(val, (float, numpy.floating)):
+        raise ValueError(f'Value not floating: {val}')
+
+    return float(val)
+# ----------------------
 def val_from_zres(res : zres, name : str) -> float:
     '''
     Parameters
@@ -793,7 +808,8 @@ def val_from_zres(res : zres, name : str) -> float:
     for par, d_val in res.params.items():
         par_name = par if isinstance(par, str) else par.name
         if par_name == name:
-            return d_val['value']
+            val = d_val['value']
+            return to_float(val=val)
 
     log.info(res)
     raise ValueError(f'Cannot find parameter: {name}')
