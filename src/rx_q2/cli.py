@@ -17,8 +17,8 @@ def combine_scales(version : str) -> None:
     '''
     log.info(f'Combining scales for version: {version}')
     cmb = ScaleCombiner(version=version)
-    cmb.combine(measurements=['rk_ee', 'rkst_ee'])
-    cmb.combine(measurements=['rk_mm', 'rkst_mm'])
+    cmb.combine(name = 'parameters_ee.json', measurements=['rk_ee', 'rkst_ee'])
+    cmb.combine(name = 'parameters_mm.json', measurements=['rk_mm', 'rkst_mm'])
 # ----------------------
 @app.command()
 def dummy() -> None:
