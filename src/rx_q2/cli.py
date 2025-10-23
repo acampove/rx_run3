@@ -1,0 +1,28 @@
+'''
+This script is meant to be the entry point for all the functionalities
+provided by this project
+'''
+
+import typer
+from dmu.logging.log_store import LogStore
+from rx_q2                 import ScaleCombiner
+
+app = typer.Typer(help=__doc__)
+log = LogStore.add_logger('rx_q2:cli')
+# ----------------------
+@app.command()
+def combine_scales(version : str) -> None:
+    '''
+    version: Version of fits
+    '''
+    log.info(f'Combining scales for version: {version}')
+    cmb = ScaleCombiner(version=version)
+    cmb.combine(measurements=['rk_ee', 'rkst_ee'])
+    cmb.combine(measurements=['rk_mm', 'rkst_mm'])
+# ----------------------
+@app.command()
+def dummy() -> None:
+    pass
+# ----------------------
+if __name__ == '__main__':
+    app()
