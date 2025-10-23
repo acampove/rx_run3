@@ -56,11 +56,11 @@ class Q2SmearCorrector:
         raise NotImplementedError(f'Invalid quantity: {kind}')
     # ------------------------------------
     def get_mass(
-            self,
-            nbrem          : int,
-            block          : int,
-            jpsi_mass_true : float,
-            jpsi_mass_reco : float) -> float:
+        self,
+        nbrem          : int,
+        block          : int,
+        jpsi_mass_true : float,
+        jpsi_mass_reco : float) -> float:
         '''
         Parameters:
         ---------------
