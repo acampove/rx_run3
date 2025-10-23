@@ -1,15 +1,16 @@
 '''
 Script used to test Q2Smear
 '''
-import os
 
 import numpy
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
+
+from pathlib                  import Path
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import typing_utilities as tut
-from rx_q2.q2smear_corrector import Q2SmearCorrector
+from rx_q2.q2smear_corrector  import Q2SmearCorrector
 
 log  = LogStore.add_logger('rx_q2:test_q2smear_corrector')
 # -------------------------------------------
@@ -18,9 +19,6 @@ class Data:
     Data class
     '''
     nentries = 10_000
-    out_dir  = '/tmp/tests/rx_q2/smear'
-
-    os.makedirs(out_dir, exist_ok=True)
 # -------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -30,14 +28,17 @@ def initialize():
     LogStore.set_level('rx_q2:q2smear_corrector'     , 20)
     LogStore.set_level('rx_q2:test_q2smear_corrector', 10)
 # -------------------------------------------
-def _plot_masses(df : pnd.DataFrame, name : str) -> None:
+def _plot_masses(
+    df       : pnd.DataFrame, 
+    dir_path : Path,
+    name     : str) -> None:
     log.info('Plotting')
 
     ax=None
     ax=df.plot.hist(y='reco_mass', range=[2000, 3500], bins=60, alpha=0.3      , ax=ax)
     ax=df.plot.hist(y='mass_smr' , range=[2000, 3500], bins=60, histtype='step', ax=ax)
 
-    plt.savefig(f'{Data.out_dir}/{name}.png')
+    plt.savefig(dir_path / f'{name}.png')
     plt.close()
 # -------------------------------------------
 def _get_df(uniform : bool = True) -> pnd.DataFrame:
@@ -73,7 +74,7 @@ def _correct_q2(row : pnd.Series, corrector : Q2SmearCorrector) -> float:
     return corrector.get_mass(**args)
 # -------------------------------------------
 @pytest.mark.parametrize('is_uniform', [True, False])
-def test_simple(is_uniform : bool):
+def test_simple(is_uniform : bool, tmp_path):
     '''
     Checks if the input is wrong
     '''
@@ -81,5 +82,5 @@ def test_simple(is_uniform : bool):
     df             = _get_df(uniform = is_uniform)
     df['mass_smr'] = df.apply(_correct_q2, args=(obj,), axis=1)
 
-    _plot_masses(df=df, name = f'simple_{is_uniform}')
+    _plot_masses(df=df, name = f'simple_{is_uniform}', dir_path=tmp_path)
 # -------------------------------------------
