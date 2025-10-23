@@ -44,7 +44,16 @@ class ScaleCombiner:
 
         log.info(f'Getting dataframe for: {measurement}')
 
-        return pnd.read_json(jsn_path)
+        df = pnd.read_json(jsn_path)
+        df = df.sort_values(by=['brem', 'block', 'sample'])
+        df = df.reset_index(drop=True)
+
+        log.warning('Dropping blocks 7 and 8')
+        df = df[~df['block'].isin([7, 8])]
+
+        log.debug(df)
+
+        return df
     # ----------------------
     def _combine(self, l_df : list[pnd.DataFrame]) -> pnd.DataFrame:
         '''
