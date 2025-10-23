@@ -77,7 +77,7 @@ class ScaleCombiner:
 
         log.info(f'Saving combination to: {jsn_path}')
 
-        df.to_json(jsn_path)
+        df.to_json(jsn_path, indent=2)
     # ----------------------
     def combine(
         self, 
