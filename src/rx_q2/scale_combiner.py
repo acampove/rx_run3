@@ -2,12 +2,17 @@
 Module holding ScaleCombiner class
 '''
 import os
+import math
+from typing import Final
 import pandas as pnd
 from pathlib import Path
 
 from dmu.logging.log_store import LogStore
+from dmu.generic           import typing_utilities as tut
 
 log=LogStore.add_logger('rx_q2:scale_combiner')
+
+QUANTITIES : Final[list[str]] = ['mu', 'sg']
 # -------------------------------------
 class ScaleCombiner:
     '''
