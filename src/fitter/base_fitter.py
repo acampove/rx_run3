@@ -11,8 +11,7 @@ from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
 from zfit.result              import FitResult  as zres
 from zfit.data                import Data       as zdata
-from zfit.interface           import ZfitPDF    as zpdf
-from zfit.interface           import ZfitModel  as zmod
+from zfit.pdf                 import BasePDF    as zpdf
 
 log=LogStore.add_logger('fitter:base_fitter')
 # ------------------------
@@ -204,7 +203,7 @@ class BaseFitter:
         cut_cfg  : DictConfig,
         plt_cfg  : DictConfig,
         out_path : str,
-        model    : zpdf|zmod|None,
+        model    : zpdf|None,
         res      : zres|None,
         data     : zdata,
         d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
