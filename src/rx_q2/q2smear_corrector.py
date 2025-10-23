@@ -1,6 +1,7 @@
 '''
 Module containing Q2SmearCalculator class
 '''
+
 import os
 import pandas as pnd
 from dmu.logging.log_store          import LogStore
@@ -10,10 +11,10 @@ log = LogStore.add_logger('rx_q2:q2smear_corrector')
 # ------------------------------------
 class Q2SmearCorrector:
     '''
-    Class intended to operate only on simulated datasets from the electron channel to:
+    Class intended to operate only on simulated datasets from the electron or muon channel to:
 
     - Read mass scales and resolutions
-    - Calculated smeared masses
+    - Calculate smeared and scaled masses
     - Returns smeared mass for each unsmeared mass, block and brem 
     '''
     # ------------------------------------
