@@ -104,7 +104,6 @@ def _fit_electron(cfg : FitConfig) -> None:
         cfg.replace(substring='brem_001', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
-    cfg.fit_cfg.output_directory = 'reso/electron/data'
     with GofCalculator.disabled(value=True):
         ftr = DataFitter(
             name = cfg.q2bin,
@@ -121,7 +120,6 @@ def _fit_muon(cfg : FitConfig) -> None:
     cfg.replace(substring='brem_000', value=cfg.name)
     d_nll[cfg.name] = _get_nll(cfg=cfg)
 
-    cfg.fit_cfg.output_directory = 'reso/muon/data'
     with GofCalculator.disabled(value=True):
         ftr = DataFitter(
             name = cfg.q2bin,
