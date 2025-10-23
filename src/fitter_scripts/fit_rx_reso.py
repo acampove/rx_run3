@@ -128,11 +128,11 @@ def _fit_muon(cfg : FitConfig) -> None:
             cfg  = cfg.fit_cfg)
         ftr.run(kind='zfit')
 # ----------------------
-def main():
+def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
-    cfg = _parse_args()
+    cfg = _parse_args(args=args) 
 
     overriding_selection = {
         'mass'  : '(1)',
