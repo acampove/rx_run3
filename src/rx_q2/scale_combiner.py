@@ -60,7 +60,59 @@ class ScaleCombiner:
 
         return df
     # ----------------------
-    def _combine(self, l_df : list[pnd.DataFrame]) -> pnd.DataFrame:
+    def _combine_quantity(
+        self, 
+        name  : str, 
+        row_1 : pnd.Series, 
+        row_2 : pnd.Series) -> tuple[float,float]:
+        '''
+        Parameters
+        ------------------
+        name   : Name of quantity in rows that needs to be averaged
+        row_1/2: Pandas series representing candidate
+
+        Returns
+        ------------------
+        Tuple with value and error of combined quantity
+        '''
+        val_1 = tut.numeric_from_series(row_1, f'{name}_val', float)
+        val_2 = tut.numeric_from_series(row_2, f'{name}_val', float)
+
+        var_1 = tut.numeric_from_series(row_1, f'{name}_err', float) ** 2
+        var_2 = tut.numeric_from_series(row_2, f'{name}_err', float) ** 2
+
+        den   = 1 / var_1 + 1 / var_2
+
+        avg   = (val_1 / var_1 + val_2 / var_2) / den 
+        err   = 1 / math.sqrt(den)
+
+        return avg, err
+    # ----------------------
+    def _combine_measurement(
+        self, 
+        row  : pnd.Series, 
+        ncol : int) -> pnd.Series:
+        '''
+        Parameters
+        -------------
+        ncol: Number of columns in dataframes to combine
+
+        Returns
+        -------------
+        row resulting from combination
+        '''
+        row_1 = row[:ncol]
+        row_2 = row[ncol:]
+        row_3 = row_1.copy()
+
+        for quantity in QUANTITIES:
+            val, err = self._combine_quantity(name=quantity, row_1=row_1, row_2=row_2)
+
+            row_3[f'{quantity}_val'] = val
+            row_3[f'{quantity}_err'] = err 
+
+        return row_3
+    # ----------------------
     def _combine(
         self, 
         df_1 : pnd.DataFrame,
