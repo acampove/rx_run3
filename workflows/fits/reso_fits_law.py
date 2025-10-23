@@ -56,7 +56,7 @@ class Fit(law.Task):
         cmb_wp = args.mva_cmb * 100
         prc_wp = args.mva_prc * 100
 
-        return f'{cmb_wp:.0f}_{prc_wp:.0f}'
+        return f'{cmb_wp:03.0f}_{prc_wp:03.0f}'
     # -------------------------------------
     def output(self) -> list[law.LocalFileTarget]:
         '''
