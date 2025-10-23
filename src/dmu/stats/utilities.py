@@ -27,7 +27,6 @@ import tensorflow as tf
 from omegaconf        import OmegaConf, DictConfig
 from zfit.data        import Data          as zdata
 from zfit.interface   import ZfitSpace     as zobs
-from zfit.pdf         import BasePDF       as zmod
 from zfit.param       import Parameter     as zpar
 from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.pdf         import BasePDF       as zpdf
@@ -211,7 +210,7 @@ def _is_par_blinded(name : str, l_blind : list[str]) -> bool:
     return False
 #-------------------------------------------------------
 def _get_pars(
-    pdf   : zpdf|zmod,
+    pdf   : zpdf,
     blind : None|list[str]) -> tuple[list, list]:
     '''
     Parameters
@@ -241,7 +240,7 @@ def _get_pars(
     return l_par_flt, l_par_fix
 #-------------------------------------------------------
 def _get_messages(
-    pdf       : zpdf|zmod,
+    pdf       : zpdf,
     l_par_flt : list,
     l_par_fix : list,
     d_const   : None|dict[str,tuple[float,float]] = None) -> list[str]:
@@ -273,7 +272,7 @@ def _get_messages(
     return l_msg
 #-------------------------------------------------------
 def print_pdf(
-    pdf      : zpdf|zmod,
+    pdf      : zpdf,
     d_const  : None|dict[str,tuple[float, float]] = None,
     txt_path : str|None                           = None,
     level    : int                                = 20,
@@ -356,7 +355,7 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
 #---------------------------------------------
 def save_fit(
     data    : zdata,
-    model   : zpdf|zmod|None,
+    model   : zpdf|None,
     res     : zres|None,
     fit_dir : str|Path,
     plt_cfg : DictConfig|dict|None,
@@ -398,7 +397,7 @@ def save_fit(
 # ----------------------
 def _save_fit_plot(
     data   : zdata, 
-    model  : zpdf|zmod|None, 
+    model  : zpdf|None, 
     fit_dir: str,
     cfg    : DictConfig) -> None:
     '''
