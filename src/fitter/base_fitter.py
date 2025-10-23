@@ -34,11 +34,11 @@ class BaseFitter:
         self._sig_yld : str = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
     # ------------------------
     def _fit(
-            self,
-            cfg   : DictConfig,
-            data  : zdata,
-            model : zpdf,
-            d_cns : dict[str,tuple[float,float]]|None = None) -> zres:
+        self,
+        cfg   : DictConfig,
+        data  : zdata,
+        model : zpdf,
+        d_cns : dict[str,tuple[float,float]]|None = None) -> zres:
         '''
         Parameters
         --------------------
