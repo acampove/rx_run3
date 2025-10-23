@@ -1,0 +1,16 @@
+args:
+  - {block : 12, fit_cfg : reso/rkst/muon, q2bin : psi2, mva_cmb : 0.5, mva_prc : 0.5} 
+outputs:
+  - data.json
+  - fit_linear.png
+  - fit_log.png
+  - fit.pkl
+  - parameters.json
+  - parameters.yaml
+  - post_fit.tex
+  - post_fit.txt
+  - selection.yaml
+
+
+
+
