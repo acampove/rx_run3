@@ -343,13 +343,13 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
 
         log.debug(f'{name:<20}{value:<20.3f}{error}')
 
-        if value is None:
+        if not isinstance(value, (float, numpy.floating)):
             raise ValueError(f'No value found for parameter {name}')
 
-        if error is None:
+        if not isinstance(value, (float, numpy.floating)):
             raise ValueError(f'No value found for parameter {name}')
 
-        d_par[name] = float(value), float(error)
+        d_par[name] = value, error
 
     return d_par
 #---------------------------------------------
