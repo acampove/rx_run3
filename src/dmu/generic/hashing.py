@@ -5,6 +5,7 @@ Module with functions needed to provide hashes
 import os
 import hashlib
 from typing  import Any
+from pathlib import Path
 
 import pandas as pnd
 from dmu.logging.log_store import LogStore
@@ -40,7 +41,7 @@ def hash_object(obj : Any) -> str:
 
     return value
 # ------------------------------------
-def hash_file(path : str) -> str:
+def hash_file(path : str | Path) -> str:
     '''
     Parameters
     ----------------
@@ -50,6 +51,9 @@ def hash_file(path : str) -> str:
     ----------------
     A string representing the hash
     '''
+    if isinstance(path, Path):
+        path = str(path)
+
     if not os.path.isfile(path):
         raise FileNotFoundError(f'Cannot find: {path}')
 
