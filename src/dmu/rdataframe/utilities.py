@@ -164,8 +164,8 @@ def random_filter(rdf : RDF.RNode, entries : int) -> RDF.RNode:
     return rdf
 # ---------------------------------------------------------------------
 def rdf_to_df(
-        rdf     : RDataFrame,
-        columns : list[str]) -> pnd.DataFrame:
+    rdf     : RDataFrame | RDF.RNode,
+    columns : list[str]) -> pnd.DataFrame:
     '''
     Parameters
     ---------------
