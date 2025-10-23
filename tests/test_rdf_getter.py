@@ -1086,13 +1086,25 @@ def test_emulated_samples(
     _validate_emulation(src = rdf_src, tar = rdf_tar, path = tmp_path)
 # --------------------------
 def _validate_emulation(src : RDF.RNode, tar : RDF.RNode, path) -> None:
-    for var_name in ['B_M', 'B_Mass']:
+    for var_name in ['B_M', 'B_Mass', 'q2']:
         arr_src = src.AsNumpy([var_name])[var_name]
         arr_tar = tar.AsNumpy([var_name])[var_name]
 
-        plt.hist(arr_src, bins=60, range=(5000, 6000), histtype='step', label='Original')
-        plt.hist(arr_tar, bins=60, range=(5000, 6000), histtype='step', label='Emulated')
+        if var_name in ['B_M', 'B_Mass']:
+            plt.hist(arr_src, bins=60, range=(5000, 6000), histtype='step', label='Original')
+            plt.hist(arr_tar, bins=60, range=(5000, 6000), histtype='step', label='Emulated')
+        else:
+            arr_src = arr_src / 1000_000
+            arr_tar = arr_tar / 1000_000
 
+            plt.hist(arr_src, bins=100, range=(0, 22), histtype='step', label='Original')
+            plt.hist(arr_tar, bins=100, range=(0, 22), histtype='step', label='Emulated')
+
+        nentries = len(arr_src)
+
+        plt.title(f'Entries: {nentries}')
         plt.legend()
+        if var_name == 'q2':
+            plt.yscale('log')
         plt.savefig(path / f'{var_name}.png')
         plt.close()
