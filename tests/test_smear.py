@@ -41,10 +41,16 @@ def _plot_masses(
     plt.savefig(dir_path / f'{name}.png')
     plt.close()
 # -------------------------------------------
-def _get_df(uniform : bool = True) -> pnd.DataFrame:
+def _get_df(uniform : bool, channel : str) -> pnd.DataFrame:
     df             = pnd.DataFrame()
-    df['nbrem']    = numpy.random.choice([0, 1, 2], Data.nentries)
-    df['block']    = numpy.random.choice(range(9) , Data.nentries)
+    if   channel == 'ee':
+        df['nbrem'] = numpy.random.choice([0, 1, 2], Data.nentries)
+    elif channel == 'mm':
+        df['nbrem'] = numpy.random.choice([0]      , Data.nentries)
+    else:
+        raise ValueError(f'Invalid channel: {channel}')
+
+    df['block']    = numpy.random.choice(range(1, 7) , Data.nentries)
 
     if uniform:
         df['true_mass'] = numpy.random.uniform(1800, 3700, Data.nentries)
