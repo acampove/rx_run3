@@ -43,6 +43,7 @@ class TemporalTau(Temporal):
 SameVectorType = typing.TypeVar('SameVectorType', bound='VectorProtocol')
 
 class VectorProtocol:
+    def __add__(self, other: VectorProtocol) -> VectorProtocol: ...
     @property
     def lib(self) -> Module: ...
     ProjectionClass2D: type[VectorProtocolPlanar]
