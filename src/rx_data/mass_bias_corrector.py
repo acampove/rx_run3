@@ -48,7 +48,7 @@ class MassBiasCorrector:
         '''
         Parameters
         --------------
-        rdf                  : ROOT dataframe
+        df                   : Pandas dataframe
         trigger              : Hlt2 trigger name
         skip_correction      : Will do everything but not correction. Needed to check that only the correction is changing data.
         nthreads             : Number of processes to use 
@@ -95,7 +95,7 @@ class MassBiasCorrector:
         row : Row in pandas dataframe
         '''
         if self._skip_correction:
-            log.debug('Skipping correction for {name}')
+            log.debug(f'Skipping correction for {name}')
             return row
 
         row = self._ebc.correct(row, name=name, kind=self._ecorr_kind)
@@ -140,6 +140,7 @@ class MassBiasCorrector:
             h2 = self._build_4dvec(particle='H2', row=row, mass=PIMASS)
 
             hd = h1 + h2
+            hd = cast(v4d, hd)
         else:
             raise ValueError(f'Invalid project: {self._project}')
 
@@ -192,7 +193,7 @@ class MassBiasCorrector:
     def _calculate_dira(
         self,
         row      : pnd.Series,
-        momentum : v3d,
+        momentum : VectorProtocolSpatial,
         particle : str) -> float:
         '''
         Recalculates dira with brem corrected momentum
