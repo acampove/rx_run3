@@ -80,12 +80,13 @@ def _correct_q2(row : pnd.Series, corrector : Q2SmearCorrector) -> float:
     return corrector.get_mass(**args)
 # -------------------------------------------
 @pytest.mark.parametrize('is_uniform', [True, False])
-def test_simple(is_uniform : bool, tmp_path):
+@pytest.mark.parametrize('channel'   , ['ee',  'mm'])
+def test_simple(is_uniform : bool, channel : str, tmp_path):
     '''
     Checks if the input is wrong
     '''
-    obj            = Q2SmearCorrector()
-    df             = _get_df(uniform = is_uniform)
+    obj            = Q2SmearCorrector(channel=channel)
+    df             = _get_df(uniform = is_uniform, channel = channel)
     df['mass_smr'] = df.apply(_correct_q2, args=(obj,), axis=1)
 
     _plot_masses(df=df, name = f'simple_{is_uniform}', dir_path=tmp_path)
