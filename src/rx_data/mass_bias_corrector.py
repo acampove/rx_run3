@@ -64,7 +64,8 @@ class MassBiasCorrector:
         self._ebc             = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
         self._ecorr_kind      = ecorr_kind
 
-        self._qsq_corr   = Q2SmearCorrector()
+        channel               = info.channel_from_trigger(trigger=trigger)
+        self._qsq_corr        = Q2SmearCorrector(channel=channel)
         self._project : Final[str] = info.project_from_trigger(trigger=self._trigger, lower_case=True)
 
         log.info(f'Using project: {self._project}')
