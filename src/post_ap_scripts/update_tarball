@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -eou pipefail
 #--------------------------------
 display_help()
 {
@@ -9,12 +10,15 @@ display_help()
     echo "-v: Version of tarball, optional, if not passed, wont upload it"
     echo "-i: This will force the script to install this version, e.g. 0.2.4" 
     echo "-u: With 1 will force updating tarball if found in the grid, default is 0"
+    echo "-d: If 1, it will do a dry run (skip upload), default 0" 
 }
 #--------------------------------
 get_args()
 {
     UPDATE=0
-    while getopts :hf:v:i:u: option; do 
+    DRY=0
+    POSA_VERS="latest"
+    while getopts :hf:v:i:u:d: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -31,6 +35,7 @@ get_args()
             v)  VENV_VERS=${OPTARG};;
             i)  POSA_VERS=${OPTARG};;
             u)  UPDATE=${OPTARG};;
+            d)  DRY=${OPTARG};;
         esac
     done
 }
