@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 GITROOT=ssh://git@gitlab.cern.ch:7999/rx_run3
 #--------------------------
 display_help()
@@ -126,10 +128,10 @@ update()
         pull_project $REMOTE $BRANCH $PROJECT
         if   [[ $INSTALL -eq 1 ]];then
             echo "Installing in editable mode"
-            pip install -q -e .
+            uv pip install -q -e .
         elif [[ $INSTALL -eq 2 ]];then
             echo "Installing in non-editable mode"
-            pip install -q .
+            uv pip install -q .
         fi
         push_project $REMOTE $BRANCH $PROJECT
     elif [[ "$KIND" == "push" ]];then
@@ -138,10 +140,10 @@ update()
         pull_project $REMOTE $BRANCH $PROJECT
         if [[ $INSTALL -eq 1 ]];then
             echo "Installing in editable mode"
-            pip install -q -e .
+            uv pip install -q -e .
         elif [[ $INSTALL -eq 2 ]];then
             echo "Installing in non-editable mode"
-            pip install -q .
+            uv pip install -q .
         fi
     else
         echo "Invalid kind of update: $KIND"
