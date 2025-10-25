@@ -61,6 +61,9 @@ class MassBiasCorrector:
         self._skip_correction = skip_correction
         self._nproc           = nthreads
 
+        if self._skip_correction:
+            log.warning('Skipping correction')
+
         self._ebc             = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
         self._ecorr_kind      = ecorr_kind
 
@@ -96,7 +99,6 @@ class MassBiasCorrector:
         row : Row in pandas dataframe
         '''
         if self._skip_correction:
-            log.debug(f'Skipping correction for {name}')
             return row
 
         row = self._ebc.correct(row, name=name, kind=self._ecorr_kind)
