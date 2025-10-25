@@ -250,20 +250,12 @@ def test_simple(sample : str, trigger : str):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'simple/{trigger}', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-@pytest.mark.parametrize('sample', [
-    'DATA_24_MagDown_24c2',
-    'DATA_24_MagDown_24c3',
-    'DATA_24_MagDown_24c4',
-    'DATA_24_MagUp_24c2' ,
-    'DATA_24_MagUp_24c3' ,
-    'DATA_24_MagUp_24c4' ])
-def test_medium_input(trigger : str, sample : str):
+@pytest.mark.parametrize('sample, trigger', _SAMPLES_DATA) 
+def test_medium_input(sample : str, trigger : str):
     '''
     Medium input
     '''
     kind    = 'brem_track_2'
-    nproc   = 10
 
     with RDFGetter.max_entries(100_000):
         rdf_org = _get_rdf(sample=sample, trigger=trigger)
@@ -271,15 +263,13 @@ def test_medium_input(trigger : str, sample : str):
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
-    with Client(n_workers=nproc):
-        cor   = MassBiasCorrector(
-            df        = df_org, 
-            is_mc     = is_mc,
-            trigger   = trigger,
-            nthreads  = nproc, 
-            ecorr_kind= kind)
+    cor   = MassBiasCorrector(
+        df        = df_org, 
+        is_mc     = is_mc,
+        trigger   = trigger,
+        ecorr_kind= kind)
 
-        df_cor  = cor.get_df()
+    df_cor  = cor.get_df()
 
     rdf_cor = RDF.FromPandas(df_cor)
 
