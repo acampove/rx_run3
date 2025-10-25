@@ -391,36 +391,54 @@ def test_add_smearing(sample : str, trigger : str):
     '''
     Checks that smearing of q2 was added on top of correction for electron samples
     '''
-    is_mc   = sample.startswith('DATA_')
+    is_mc   = not sample.startswith('DATA_')
+    with RDFGetter.max_entries(value=10000):
+        rdf_org = _get_rdf(
+            is_mc   = is_mc, 
+            sample  = sample,
+            trigger = trigger)
 
-    rdf_org = _get_rdf(is_mc=is_mc, trigger=trigger)
+    rdf_org = rdf_org.Filter('block <= 6')
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
-    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
-    cor     = MassBiasCorrector(
+    cor_1   = MassBiasCorrector(
         df        =df_org, 
         trigger   =trigger,
         is_mc     =is_mc,
-        nthreads  =10, 
-        ecorr_kind=kind)
+        nthreads  =1, 
+        skip_correction=True,
+        ecorr_kind='brem_track_2')
 
-    df_cor = cor.get_df()
+    cor_2   = MassBiasCorrector(
+        df        =df_org, 
+        trigger   =trigger,
+        is_mc     =is_mc,
+        nthreads  =1, 
+        skip_correction=False,
+        ecorr_kind='brem_track_2')
+
+    df_unc = cor_1.get_df()
+    rdf_unc= RDF.FromPandas(df_unc)
+
+    df_cor = cor_2.get_df()
     rdf_cor= RDF.FromPandas(df_cor)
+
     _check_output_columns(rdf_cor)
 
     # Only electron has to be brem corrected
-    _check_corrected(must_be_corrected=info.is_ee(trigger), rdf=rdf_cor, name='Jpsi_M', kind = 'brem_track_2')
-    _check_corrected(must_be_corrected=info.is_ee(trigger), rdf=rdf_cor, name=   'B_M', kind = 'brem_track_2')
+    changed_jpsi = _check_corrected(rdf_unc=rdf_unc, rdf_cor=rdf_cor, must_be_corrected=info.is_ee(trigger), name='Jpsi_M')
+    changed_b    = _check_corrected(rdf_unc=rdf_unc, rdf_cor=rdf_cor, must_be_corrected=info.is_ee(trigger), name=   'B_M')
+    assert changed_b == changed_jpsi
 
     # Only MC has to be smeared
-    _check_corrected(must_be_corrected=is_mc              , rdf=rdf_cor, name='Jpsi_M', kind = 'smr')
-    _check_corrected(must_be_corrected=is_mc              , rdf=rdf_cor, name=   'B_M', kind = 'smr')
+    _check_smeared(rdf=rdf_cor, must_be_smeared=is_mc, name='Jpsi_M')
+    _check_smeared(rdf=rdf_cor, must_be_smeared=is_mc, name=   'B_M')
 
     rdf_smr = rdf_cor.Redefine('Jpsi_M', 'Jpsi_M_smr')
     rdf_smr = rdf_smr.Redefine(   'B_M',    'B_M_smr')
 
     sample  = 'mc' if is_mc else 'data'
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor, 'Smeared' : rdf_smr}
+    d_rdf   = {'Uncorrected' : rdf_unc, 'Corrected' : rdf_cor, 'Smeared' : rdf_smr}
     _compare_masses(d_rdf = d_rdf, test_name = f'add_smearing_{sample}', correction = sample)
 # ----------------------
 def _check_corrected(
