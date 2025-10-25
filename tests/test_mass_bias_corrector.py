@@ -305,20 +305,20 @@ def test_isinner(sample : str, trigger : str, is_inner : bool):
 
     _compare_masses(d_rdf, f'is_inner_{is_inner}/{trigger}', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-@pytest.mark.parametrize('kind', ['brem_track_2'])
+@pytest.mark.parametrize('sample, trigger', _SAMPLES_EE) 
 @pytest.mark.parametrize('nbrem', [1, 2])
 @pytest.mark.parametrize('npvs' , [1, 3, 5, 7])
 def test_nbrem_npvs(
-    nbrem  : int, 
-    npvs   : int, 
     trigger: str,
-    kind   : str):
+    sample : str,
+    nbrem  : int, 
+    npvs   : int):
     '''
     Split by brem and nPVs
     '''
-    with RDFGetter.max_entries(value=30_000):
-        rdf_org = _get_rdf(npvs=npvs, trigger=trigger)
+    kind = 'brem_track_2'
+    with RDFGetter.max_entries(value=100_000):
+        rdf_org = _get_rdf(npvs=npvs, sample=sample, trigger=trigger)
 
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
@@ -327,7 +327,6 @@ def test_nbrem_npvs(
         df      =df_org, 
         trigger =trigger,
         is_mc   =is_mc,
-        nthreads=Data.nthreads, 
         ecorr_kind=kind)
 
     df_cor  = cor.get_df()
