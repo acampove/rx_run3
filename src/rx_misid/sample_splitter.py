@@ -5,7 +5,7 @@ Module holding SampleSplitter class
 import numpy
 import pandas as pnd
 
-from ROOT                   import RDataFrame # type: ignore
+from ROOT                   import RDF # type: ignore
 from omegaconf              import DictConfig, OmegaConf
 from dmu.logging.log_store  import LogStore
 from dmu.rdataframe         import utilities as rut
@@ -28,7 +28,7 @@ class SampleSplitter(Wcache):
     # --------------------------------
     def __init__(
         self,
-        rdf      : RDataFrame,
+        rdf      : RDF.RNode,
         cfg      : DictConfig):
         '''
         Parameters
