@@ -11,6 +11,7 @@ display_help()
     echo "-i: This will force the script to install this version, e.g. 0.2.4" 
     echo "-u: With 1 will force updating tarball if found in the grid, default is 0"
     echo "-d: If 1, it will do a dry run (skip upload), default 0" 
+    echo "-V: This will turn on verbose messages with 1"
 }
 #--------------------------------
 get_args()
@@ -18,7 +19,8 @@ get_args()
     UPDATE=0
     DRY=0
     POSA_VERS="latest"
-    while getopts :hf:v:i:u:d: option; do 
+    VERBOSE=0
+    while getopts :hf:v:i:u:d:V: option; do 
         case "${option}" in
             h)  
                 display_help
@@ -36,8 +38,13 @@ get_args()
             i)  POSA_VERS=${OPTARG};;
             u)  UPDATE=${OPTARG};;
             d)  DRY=${OPTARG};;
+            V)  VERBOSE=${OPTARG};;
         esac
     done
+
+    if [[ $VERBOSE -eq 1 ]];then
+        set -x
+    fi
 }
 #--------------------------------
 check()
