@@ -26,7 +26,7 @@ class Data:
     mc_rgx  = r'mc_.*_\d{8}_(.*)_(\w+RD_.*)_(\d{3}_\d{3}|\w{10}).root'
 # ------------------------------------------
 def rdf_is_mc(rdf : RDF.RNode) -> bool:
-    l_col = [ name for name in rdf.GetColumnNames() ]
+    l_col = [ name.c_str() for name in rdf.GetColumnNames() ]
     for col in l_col:
         if col.endswith('_TRUEID'):
             return True
@@ -105,7 +105,9 @@ def _info_from_data_path(path : Path) -> tuple[str,str]:
 
     return sample, line
 # ---------------------------------
-def df_from_rdf(rdf : RDF.RNode, drop_nans : bool) -> pnd.DataFrame:
+def df_from_rdf(
+    rdf       : RDF.RNode, 
+    drop_nans : bool) -> pnd.DataFrame:
     '''
     Parameters
     ------------------
@@ -117,7 +119,7 @@ def df_from_rdf(rdf : RDF.RNode, drop_nans : bool) -> pnd.DataFrame:
     Pandas dataframe with contents of ROOT dataframe
     '''
     rdf    = _preprocess_rdf(rdf)
-    l_col  = [ name for name in rdf.GetColumnNames() if _pick_column(name) ]
+    l_col  = [ name.c_str() for name in rdf.GetColumnNames() if _pick_column(name=name.c_str()) ]
     d_data = rdf.AsNumpy(l_col)
     df     = pnd.DataFrame(d_data)
 
@@ -156,7 +158,7 @@ def _preprocess_rdf(rdf: RDF.RNode) -> RDF.RNode:
     # Hadrons have bool columns that need to be casted as int
     # Hadrons are needed to build corrected B meson
     for hadron in ['H', 'H1', 'H2']:
-        if any(column.startswith(f'{hadron}_') for column in columns):
+        if any(column.c_str().startswith(f'{hadron}_') for column in columns):
             rdf = _preprocess_lepton(rdf, hadron)
 
     return rdf
