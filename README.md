@@ -1,5 +1,26 @@
 [TOC]
 
+# TLDR
+
+To submit the jobs do:
+
+```bash
+# A virtual environment as shown below
+micromamba activate post_ap
+
+# This should allow access to shell with Ganga
+# .ganga.py has to have the path to site-packages added
+# to python path as shown below
+post_shell
+
+# Create proxy with 100 hours validity
+lhcb-proxy-init -v 100:00
+
+# Submit job "data_2024" with configuration in v1.yaml. The job name in dirac will be
+# filter_001.
+job_filter_ganga -n filter_001 -p rx_2024 -s data_2024 -c rk/v1.yaml -b Dirac -v 037
+```
+
 # Description
 
 This project is used to:
