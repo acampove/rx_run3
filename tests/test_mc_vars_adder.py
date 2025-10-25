@@ -110,14 +110,15 @@ def test_add_to_gen():
     '''
     Tests addition of columns to MCDT
     '''
+    sample  = 'mc_24_w41_42_magup_sim10f_11154001_bd_jpsikst_ee_eq_dpc_tuple'
 
     rdf_gen = _get_rdf(kind='gen', with_block=False)
     rdf_rec = _get_rdf(kind='rec', with_block=True)
 
     obj = MCVarsAdder(
-            sample_name = Data.sam,
-            rdf_rec     = rdf_rec,
-            rdf_gen     = rdf_gen)
+        sample_name = sample,
+        rdf_rec     = rdf_rec,
+        rdf_gen     = rdf_gen)
     rdf_gen = obj.get_rdf()
 
     arr_gen_blk = rdf_gen.AsNumpy([      'block'])[      'block']
