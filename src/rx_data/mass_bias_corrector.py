@@ -97,7 +97,18 @@ class MassBiasCorrector:
         -------------------
         name: Name of particle, e.g. L1
         row : Row in pandas dataframe
+
+        Returns
+        -------------------
+        Series representing corrected (uncorrected) electron (muon)
         '''
+        lep_id = tut.numeric_from_series(row=row, name=f'{name}_ID', numeric=int)
+        if abs(lep_id) == 13:
+            return row
+
+        if abs(lep_id) != 11:
+            raise ValueError(f'Unexpected lepton ID: {lep_id}')
+
         if self._skip_correction:
             return row
 
