@@ -8,7 +8,7 @@ update_python_path()
 {
     CURRENT_PATH=$(pip show $CONDA_DEFAULT_ENV | grep Location | awk -F ': ' '{print $2}')
     if [[ ! -d $CURRENT_PATH ]];then
-        echo "Cannot find current python path at: $CURRENT_PATH"
+        echo "Cannot find current python path at: \"$CURRENT_PATH\""
         exit 1
     fi
 
