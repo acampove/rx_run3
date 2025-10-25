@@ -7,7 +7,6 @@ import mplhep
 import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
-from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 from _pytest.config        import Config
 from rx_data.rdf_getter    import RDFGetter
@@ -34,14 +33,6 @@ def pytest_configure(config : Config):
     LogStore.set_level('rx_data:rdf_getter'               , 10)
     LogStore.set_level('rx_selection:selection'           , 30)
     LogStore.set_level('dmu:ml:cv_predict'                , 30)
-# ------------------------------
-@pytest.fixture(scope="session", autouse=True)
-def set_max_entries():
-    """
-    Applies RDFGetter.max_entries(1000) for the entire test session.
-    """
-    with RDFGetter.max_entries(value=1000):
-        yield
 # -----------------------------------------------
 @pytest.fixture
 def only_main():
@@ -50,18 +41,6 @@ def only_main():
     """
     with RDFGetter.only_friends(s_friend=set()):
         yield
-# -----------------------------------------------
-@pytest.fixture(autouse=True)
-def rdf_getter_configuration():
-    '''
-    This will configure RDFGetter for tests
-    '''
-    plt.style.use(mplhep.style.LHCb2)
-
-    with RDFGetter.max_entries(value=1000):
-        yield
-
-    gut.TIMER_ON = True
 # -----------------------------------------------
 @pytest.fixture(scope='session')
 def out_dir() -> str:
