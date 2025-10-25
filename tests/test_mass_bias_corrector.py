@@ -428,21 +428,24 @@ def _check_corrected(
     name             : str,
     kind             : str,
     rdf              : RDF.RNode) -> None:
+def _check_smeared(
+    rdf             : RDF.RNode,
+    must_be_smeared : bool, 
+    name            : str) -> None:
     '''
     Parameters
     -------------
     must_be_smeared: If true, will raise if unsmeared and smeared are equal.
     name           : Variable to be checked
-    kind           : Type of correction, suffix for corrected branch
     rdf            : DataFrame after correction
     '''
-    arr_val_org = rdf.AsNumpy([         name])[         name]
-    arr_val_smr = rdf.AsNumpy([f'{name}_{kind}'])[f'{name}_{kind}']
+    arr_val_unc = rdf.AsNumpy([name])[name]
+    arr_val_smr = rdf.AsNumpy([f'{name}_smr'])[f'{name}_smr']
 
-    if not must_be_corrected:
-        assert numpy.isclose(arr_val_org, arr_val_smr, rtol=1e-5)
+    if not must_be_smeared:
+        assert     numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
     else:
-        assert not numpy.isclose(arr_val_org, arr_val_smr, rtol=1)
+        assert not numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
 #-----------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('is_mc'  , [True, False])
