@@ -7,6 +7,15 @@ styling: &style
     linestyle: '-'
     alpha    : 0.3
     color    : gray
+  cmb > 0.3:
+    histtype : step
+    linestyle: ':'
+  cmb > 0.4:
+    histtype : step
+    linestyle: ':'
+  cmb > 0.5:
+    histtype : step
+    linestyle: ':'
   cmb > 0.6:
     histtype : step
     linestyle: ':'
@@ -19,10 +28,19 @@ styling: &style
   prc > 0.2:
     histtype : step
     linestyle: '-'
+  prc > 0.3:
+    histtype : step
+    linestyle: '-'
   prc > 0.4:
     histtype : step
     linestyle: '-'
+  prc > 0.5:
+    histtype : step
+    linestyle: '-'
   prc > 0.6:
+    histtype : step
+    linestyle: '-'
+  prc > 0.8:
     histtype : step
     linestyle: '-'
 general:
