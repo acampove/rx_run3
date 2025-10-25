@@ -77,7 +77,7 @@ def _load_conf() -> dict:
 
     return cfg
 #-----------------------------------------
-def _clean_rdf(rdf : RDataFrame, name : str) -> RDataFrame:
+def _clean_rdf(rdf : RDF.RNode, name : str) -> RDF.RNode:
     if name == 'Original':
         rdf = rdf.Define('Jpsi_M_smr', 'Jpsi_M')
 
@@ -90,7 +90,7 @@ def _clean_rdf(rdf : RDataFrame, name : str) -> RDataFrame:
     return rdf
 #-----------------------------------------
 def _compare_masses(
-    d_rdf      : dict[str,RDataFrame], 
+    d_rdf      : dict[str, RDF.RNode], 
     test_name  : str, 
     correction : str,
     skip_jpsi  : bool=False) -> None:
@@ -118,7 +118,7 @@ def _compare_masses(
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 #-----------------------------------------
-def _check_input_columns(rdf : RDataFrame) -> None:
+def _check_input_columns(rdf : RDF.RNode) -> None:
     l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
 
     l_track_brem = [ name for name in l_colname if name.endswith('BREMTRACKBASEDENERGY') ]
@@ -150,7 +150,7 @@ def _get_rdf(
     npvs     : None|int  = None,
     bdt      : None|str  = None,
     sample   : None|str  = None,
-    is_mc    : bool      = False) -> RDataFrame:
+    is_mc    : bool      = False) -> RDF.RNode:
     '''
     Return ROOT dataframe needed for test
     '''
