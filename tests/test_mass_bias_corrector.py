@@ -9,12 +9,13 @@ import copy
 from importlib.resources import files
 from pathlib             import Path
 
-from distributed import Client
+import yaml
+import numpy
 import mplhep
 import pytest
-import yaml
 import matplotlib.pyplot as plt
 
+from distributed                 import Client
 from ROOT                        import RDataFrame, RDF # type: ignore
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
