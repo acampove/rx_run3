@@ -251,13 +251,14 @@ class MassBiasCorrector:
         return smeared
     # ------------------------------------------
     def _calculate_correction(self, row : pnd.Series) -> pnd.Series:
-        row  = self._correct_electron('L1', row)
-        row  = self._correct_electron('L2', row)
+        row_cor = row
+        row_cor = self._correct_electron('L1', row_cor)
+        row_cor = self._correct_electron('L2', row_cor)
 
         # NOTE: The variable calculation has to be done on the row AFTER the correction
-        row  = self._calculate_variables(row)
+        row_cor = self._calculate_variables(row_cor)
 
-        return row
+        return row_cor
     # ------------------------------------------
     def _add_suffix(self, df : pnd.DataFrame, suffix : str|None):
         if suffix is None:
