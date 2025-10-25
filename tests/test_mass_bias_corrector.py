@@ -210,13 +210,15 @@ def _check_size(rdf_org : RDF.RNode, rdf_cor : RDF.RNode) -> None:
 
     log.info(f'Sizes agree at: {in_size}')
 #-----------------------------------------
-@pytest.mark.parametrize('kind'   , ['brem_track_2'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_simple(kind : str, trigger : str):
+@pytest.mark.parametrize('sample, trigger', _SAMPLES_EE)
+def test_simple(sample : str, trigger : str):
     '''
     Simplest test
     '''
-    rdf_org = _get_rdf(trigger=trigger)
+    kind    = 'brem_track_2'
+    with RDFGetter.max_entries(value = 10_000):
+        rdf_org = _get_rdf(sample = sample, trigger = trigger)
+
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
@@ -224,7 +226,6 @@ def test_simple(kind : str, trigger : str):
         df        = df_org, 
         is_mc     = is_mc,
         trigger   = trigger,
-        nthreads  = 6, 
         ecorr_kind= kind)
 
     df_cor = cor.get_df()
