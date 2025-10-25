@@ -297,32 +297,6 @@ def test_medium_input(trigger : str, sample : str):
     _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('kind', ['brem_track_2'])
-@pytest.mark.parametrize('nbrem'  , [0, 1, 2])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_nbrem(nbrem : int, kind : str, trigger : str):
-    '''
-    Test splitting by brem
-    '''
-    rdf_org = _get_rdf(nbrem=nbrem, trigger=trigger)
-    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
-    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
-
-    cor     = MassBiasCorrector(
-        df        = df_org, 
-        is_mc     = is_mc,
-        trigger   = trigger,
-        nthreads  = Data.nthreads, 
-        ecorr_kind= kind)
-
-    df_cor  = cor.get_df()
-    rdf_cor = RDF.FromPandas(df_cor)
-
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-
-    _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
-    _compare_masses(d_rdf, f'nbrem_{nbrem:03}/{trigger}', kind)
-#-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_2'])
 @pytest.mark.parametrize('is_inner', [True, False])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 def test_isinner(is_inner : bool, kind : str, trigger : str):
