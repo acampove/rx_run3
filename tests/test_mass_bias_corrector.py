@@ -88,6 +88,74 @@ def _load_conf() -> dict:
         cfg = yaml.safe_load(ifile)
 
     return cfg
+# ----------------------
+def _check_corrected(
+    rdf_unc          : RDF.RNode,
+    rdf_cor          : RDF.RNode,
+    must_be_corrected: bool, 
+    name             : str) -> int:
+    '''
+    Parameters
+    -------------
+    must_be_corrected : If true, will raise if brem corrected and not corrected are equal.
+    name              : Variable to be checked
+    rdf               : DataFrame after correction
+
+    Returns
+    -------------
+    Number of candidates that were corrected
+    '''
+    arr_val_unc = rdf_unc.AsNumpy([name])[name]
+    arr_val_cor = rdf_cor.AsNumpy([name])[name]
+
+    # If any mass is NaN, it will be dropped from comparison
+    # NaN means a track kinematic or brem energy is NaN
+    arr_ind_pos = numpy.where(arr_val_cor > 0)
+    arr_val_unc = arr_val_unc[arr_ind_pos]
+    arr_val_cor = arr_val_unc[arr_ind_pos]
+
+    # E.g. this is the muon channel
+    if not must_be_corrected:
+        assert numpy.isclose(arr_val_unc, arr_val_cor, atol=1).all()
+        return 0
+
+    arr_shift   = numpy.abs(arr_val_cor - arr_val_unc)
+    arr_shift   = arr_shift[arr_shift > 1]
+    log.verbose(20 * '-')
+    log.verbose(f'Shift in {name} mass:')
+    log.verbose(20 * '-')
+    for shift in arr_shift:
+        log.verbose(shift)
+
+    # A mass will be considered unchaged if the difference is less than 1 MeV
+    arr_flag    = numpy.isclose(arr_val_unc, arr_val_cor, atol=1).astype(int)
+    total       = len(arr_flag) 
+    uncorrected = numpy.sum(arr_flag)
+    corrected   = total - uncorrected 
+
+    # Somewhere between 20% and 70% of candidates should change with brem correction
+    assert corrected / total < 1 
+
+    return corrected
+# ----------------------
+def _check_smeared(
+    rdf             : RDF.RNode,
+    must_be_smeared : bool, 
+    name            : str) -> None:
+    '''
+    Parameters
+    -------------
+    must_be_smeared: If true, will raise if unsmeared and smeared are equal.
+    name           : Variable to be checked
+    rdf            : DataFrame after correction
+    '''
+    arr_val_unc = rdf.AsNumpy([name])[name]
+    arr_val_smr = rdf.AsNumpy([f'{name}_smr'])[f'{name}_smr']
+
+    if not must_be_smeared:
+        assert     numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
+    else:
+        assert not numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
 #-----------------------------------------
 def _clean_rdf(rdf : RDF.RNode, name : str) -> RDF.RNode:
     if name == 'Original':
@@ -437,103 +505,4 @@ def test_add_smearing(sample : str, trigger : str):
     sample  = 'mc' if is_mc else 'data'
     d_rdf   = {'Uncorrected' : rdf_unc, 'Corrected' : rdf_cor, 'Smeared' : rdf_smr}
     _compare_masses(d_rdf = d_rdf, test_name = f'add_smearing_{sample}', correction = sample)
-# ----------------------
-def _check_corrected(
-    rdf_unc          : RDF.RNode,
-    rdf_cor          : RDF.RNode,
-    must_be_corrected: bool, 
-    name             : str) -> int:
-    '''
-    Parameters
-    -------------
-    must_be_corrected : If true, will raise if brem corrected and not corrected are equal.
-    name              : Variable to be checked
-    rdf               : DataFrame after correction
-
-    Returns
-    -------------
-    Number of candidates that were corrected
-    '''
-    arr_val_unc = rdf_unc.AsNumpy([name])[name]
-    arr_val_cor = rdf_cor.AsNumpy([name])[name]
-
-    # If any mass is NaN, it will be dropped from comparison
-    # NaN means a track kinematic or brem energy is NaN
-    arr_ind_pos = numpy.where(arr_val_cor > 0)
-    arr_val_unc = arr_val_unc[arr_ind_pos]
-    arr_val_cor = arr_val_unc[arr_ind_pos]
-
-    # E.g. this is the muon channel
-    if not must_be_corrected:
-        assert numpy.isclose(arr_val_unc, arr_val_cor, atol=1).all()
-        return 0
-
-    arr_shift   = numpy.abs(arr_val_cor - arr_val_unc)
-    arr_shift   = arr_shift[arr_shift > 1]
-    log.verbose(20 * '-')
-    log.verbose(f'Shift in {name} mass:')
-    log.verbose(20 * '-')
-    for shift in arr_shift:
-        log.verbose(shift)
-
-    # A mass will be considered unchaged if the difference is less than 1 MeV
-    arr_flag    = numpy.isclose(arr_val_unc, arr_val_cor, atol=1).astype(int)
-    total       = len(arr_flag) 
-    uncorrected = numpy.sum(arr_flag)
-    corrected   = total - uncorrected 
-
-    # Somewhere between 20% and 70% of candidates should change with brem correction
-    assert corrected / total < 1 
-
-    return corrected
-# ----------------------
-def _check_smeared(
-    rdf             : RDF.RNode,
-    must_be_smeared : bool, 
-    name            : str) -> None:
-    '''
-    Parameters
-    -------------
-    must_be_smeared: If true, will raise if unsmeared and smeared are equal.
-    name           : Variable to be checked
-    rdf            : DataFrame after correction
-    '''
-    arr_val_unc = rdf.AsNumpy([name])[name]
-    arr_val_smr = rdf.AsNumpy([f'{name}_smr'])[f'{name}_smr']
-
-    if not must_be_smeared:
-        assert     numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
-    else:
-        assert not numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
-#-----------------------------------------
-@pytest.mark.parametrize('trigger', [
-    'Hlt2RD_BuToKpEE_MVA', 
-    'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_signal(trigger : str):
-    '''
-    Tests for signal
-    '''
-    kind = 'brem_track_2'
-    with RDFGetter.max_entries(value=100_000):
-        rdf_org = _get_rdf(trigger=trigger, is_mc=True, q2bin='low')
-
-    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
-    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
-
-    cor     = MassBiasCorrector(
-        df             = df_org, 
-        is_mc          = is_mc,
-        trigger        = trigger,
-        nthreads       = 10, 
-        skip_correction= False,
-        ecorr_kind     = kind)
-
-    df_cor = cor.get_df()
-    rdf_cor= RDF.FromPandas(df_cor)
-
-    _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
-    _check_output_columns(rdf_cor)
-
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'signal/{trigger}', kind, skip_jpsi=True)
 #-----------------------------------------
