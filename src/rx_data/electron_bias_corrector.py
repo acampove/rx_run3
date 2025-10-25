@@ -63,12 +63,12 @@ class ElectronBiasCorrector:
         py = self._attr_from_row(row, f'{self._name}_{kind}PY')
         pz = self._attr_from_row(row, f'{self._name}_{kind}PZ')
 
-        e_3d = v3d(px=px, py=py, pz=pz)
+        e_3d = vector.obj(px=px, py=py, pz=pz)
         pt   = e_3d.pt
         eta  = e_3d.eta
         phi  = e_3d.phi
 
-        e_4d = v4d(pt=pt, eta=eta, phi=phi, mass=self._mass)
+        e_4d = vector.obj(pt=pt, eta=eta, phi=phi, mass=_ELECTRON_MASS)
         e_4d = e_4d.to_pxpypzenergy()
         e_4d = cast(v4d, e_4d)
 
@@ -227,7 +227,7 @@ class ElectronBiasCorrector:
         eta = e_track.eta
         phi = e_track.phi
 
-        gamma  = v4d(pt=1, eta=eta, phi=phi, m=0)
+        gamma  = vector.obj(pt=1.0, eta=eta, phi=phi, mass=0.0)
         factor = brem_energy / gamma.e
 
         px     = factor * gamma.px
@@ -235,7 +235,7 @@ class ElectronBiasCorrector:
         pz     = factor * gamma.pz
         e      = factor * gamma.e
 
-        gamma  = v4d(px=px, py=py, pz=pz, e=e)
+        gamma  = vector.obj(px=px, py=py, pz=pz, e=e)
 
         self._brem_status = 1
         self._check_massless_brem(gamma)
