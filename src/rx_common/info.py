@@ -2,7 +2,7 @@
 This script contains functions needed to get information on samples
 '''
 
-from dmu.generic            import utilities  as gut
+from dmu.generic import utilities  as gut
 
 _triggers = gut.load_data(package='rx_common_data', fpath='triggers.yaml')
 
