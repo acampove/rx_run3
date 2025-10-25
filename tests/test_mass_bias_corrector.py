@@ -28,17 +28,23 @@ from rx_data.mass_bias_corrector import MassBiasCorrector
 
 log=LogStore.add_logger('rx_data:test_mass_bias_corrector')
 
-_SAMPLES = [
+_SAMPLES_MM = [
     ('Bu_JpsiK_mm_eq_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
-    ('Bu_JpsiK_ee_eq_DPC'  , 'Hlt2RD_BuToKpEE_MVA'     ),
-    ('Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-    ('Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    ('Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
     #----------------
     ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpEE_MVA'     ),
     ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+]
+
+_SAMPLES_EE = [
+    ('Bu_JpsiK_ee_eq_DPC'  , 'Hlt2RD_BuToKpEE_MVA'     ),
+    ('Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    #----------------
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpEE_MVA'     ),
     ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimEE_MVA'  )
 ]
+
+_SAMPLES = _SAMPLES_MM + _SAMPLES_EE
 #-----------------------------------------
 class Data:
     '''
