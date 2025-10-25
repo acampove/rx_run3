@@ -59,19 +59,24 @@ check()
 check_existing()
 {
     LFN=$1
-    echo "Checking for existing TARBALL"
+    echo "Checking for existing TARBALL for: \"$LFN\""
 
-    dirac-dms-lfn-replicas $LFN > /dev/null
-    if   [[ $? -eq 0 ]] && [[ $UPDATE -eq 1 ]];then
+    if ! lb-dirac dirac-dms-lfn-replicas $LFN > /dev/null 2>&1;then
+        code=1
+    else
+        code=0
+    fi
+
+    if   [[ $code -eq 0 ]] && [[ $UPDATE -eq 1 ]];then
         echo "LFN found, removing: \"$LFN\""
-        dirac-dms-remove-files $LFN
-    elif [[ $? -eq 0 ]] && [[ $UPDATE -eq 0 ]];then
+        lb-dirac dirac-dms-remove-files $LFN
+    elif [[ $code -eq 0 ]] && [[ $UPDATE -eq 0 ]];then
         echo "LFN found: \"$LFN\""
         exit 1
-    elif [[ $? -ne 0 ]];then
+    elif [[ $code -ne 0 ]];then
         echo "No replica found for \"$LFN\""
     else
-        echo "Replica finding process exited with status $? and the updating flag was $UPDATE"
+        echo "Replica finding process exited with status $code and the updating flag was $UPDATE"
         exit 1
     fi
 }
@@ -92,9 +97,9 @@ upload()
 
     echo "Uploading tarball for $TARGET"
     if [[ $DRY -eq 0 ]];then
-        lb-dirac bash -c "dirac-dms-add-file $TARGET $SOURCE CERN-USER"
+        lb-dirac dirac-dms-add-file $TARGET $SOURCE CERN-USER
     else
-        lb-dirac bash -c "echo This is DIRAC, uploading as \"$TARGET\" file \"$SOURCE\" to CERN-USER"
+        lb-dirac echo "This is DIRAC, uploading as \"$TARGET\" file \"$SOURCE\" to CERN-USER"
     fi
 }
 #--------------------------------
