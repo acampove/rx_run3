@@ -279,14 +279,16 @@ def test_medium_input(sample : str, trigger : str):
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_2'])
+@pytest.mark.parametrize('sample, trigger', _SAMPLES_EE) 
 @pytest.mark.parametrize('is_inner', [True, False])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_isinner(is_inner : bool, kind : str, trigger : str):
+def test_isinner(sample : str, trigger : str, is_inner : bool):
     '''
     Test splitting detector region
     '''
-    rdf_org = _get_rdf(is_inner = is_inner, trigger = trigger)
+    kind    = 'brem_track_2'
+    with RDFGetter.max_entries(value = 100_000):
+        rdf_org = _get_rdf(is_inner = is_inner, sample = sample, trigger = trigger)
+
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
@@ -294,7 +296,6 @@ def test_isinner(is_inner : bool, kind : str, trigger : str):
         df        = df_org, 
         is_mc     = is_mc,
         trigger   = trigger,
-        nthreads  = Data.nthreads, 
         ecorr_kind= kind)
 
     df_cor  = cor.get_df()
