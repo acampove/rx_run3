@@ -767,14 +767,10 @@ class RDFGetter:
             return rdf
 
         log.debug(f'Filtering for a range of {nent} entries')
-        # Append information on transformations
-        # done to dataframe in order to calculate
-        # hash properly
-        nlow = ntot - nent
-        self._d_info['range'] = nlow, ntot 
-        rdf  = rdf.Range(nlow, ntot)
+        self._d_info['range'] = 0, nent 
+        rdf  = rdf.Range(0, nent)
 
-        log.warning(f'Picking up range: [{nlow}, {ntot}] ')
+        log.warning(f'Picking up range: [{0}, {nent}] ')
 
         return rdf
     # ---------------------------------------------------
