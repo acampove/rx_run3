@@ -359,15 +359,14 @@ def test_suffix(kind : str, trigger : str):
 
     _check_output_columns(rdf_cor)
 #-----------------------------------------
-@pytest.mark.parametrize('nbrem', [0, 1])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
-def test_brem_threshold(nbrem : int, brem_energy_threshold: float, trigger : str):
+def test_brem_threshold(brem_energy_threshold: float, trigger : str):
     '''
-    Test splitting by brem
+    Vary energy threhold of brem photon needed to be added
     '''
     with RDFGetter.max_entries(value=50_000):
-        rdf_org = _get_rdf(nbrem=nbrem, trigger=trigger)
+        rdf_org = _get_rdf(trigger=trigger)
 
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
@@ -385,7 +384,7 @@ def test_brem_threshold(nbrem : int, brem_energy_threshold: float, trigger : str
 
     d_rdf  = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
-    _compare_masses(d_rdf, f'brem_{nbrem:03}/{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
+    _compare_masses(d_rdf, f'{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 def test_add_smearing(sample : str, trigger : str):
