@@ -146,28 +146,17 @@ def _check_output_columns(rdf : RDF.RNode) -> None:
 #-----------------------------------------
 def _get_rdf(
     trigger  : str,
+    sample   : str,
     q2bin    : str       = 'jpsi',
-    nbrem    : None|int  = None,
     is_inner : None|bool = None,
     npvs     : None|int  = None,
     bdt      : None|str  = None,
-    sample   : None|str  = None,
     is_mc    : bool      = False) -> RDF.RNode:
     '''
     Return ROOT dataframe needed for test
-    '''
-    project = info.project_from_trigger(trigger=trigger, lower_case=True)
-    if isinstance(sample, str):
-        pass
-    elif not is_mc:
-        sample = 'DATA_24_*'
-    elif   is_mc and project == 'rkst':
-        sample = 'Bd_Kstee_eq_btosllball05_DPC'
-    elif   is_mc and project == 'rk':
-        sample = 'Bu_Kee_eq_btosllball05_DPC'
-    else:
-        raise ValueError(f'Invalid project: {project}')
 
+    nbrem : E.g. 0, 1, 2
+    '''
     with RDFGetter.exclude_friends(names=['brem_track_2']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -191,10 +180,6 @@ def _get_rdf(
     for name, cut in d_sel.items():
         log.debug(f'{name:<20}{cut}')
         rdf = rdf.Filter(cut, name)
-
-    if nbrem    is not None:
-        brem_cut = f'nbrem == {nbrem}' if nbrem in [0,1] else f'nbrem >= {nbrem}'
-        rdf = rdf.Filter(brem_cut)
 
     if is_inner is not None and     is_inner:
         rdf = rdf.Filter('L1_BREMHYPOAREA == 2 && L2_BREMHYPOAREA == 2')
@@ -334,7 +319,7 @@ def test_nbrem_npvs(
     Split by brem and nPVs
     '''
     with RDFGetter.max_entries(value=30_000):
-        rdf_org = _get_rdf(nbrem=nbrem, npvs=npvs, trigger=trigger)
+        rdf_org = _get_rdf(npvs=npvs, trigger=trigger)
 
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
