@@ -27,6 +27,10 @@ EMASS  :Final[float] = 0.511
 KMASS  :Final[float] = 493.6
 PIMASS :Final[float] = 137.57
 # ------------------------------------------
+class InvalidID(Exception):
+    def __init__(self, message : str) -> None:
+        super().__init__(message)
+# ------------------------------------------
 class MassBiasCorrector:
     '''
     Class meant to correct B mass without DTF constraint
@@ -107,7 +111,7 @@ class MassBiasCorrector:
             return row
 
         if abs(lep_id) != 11:
-            raise ValueError(f'Unexpected lepton ID: {lep_id}')
+            raise InvalidID(f'Unexpected lepton ID: {lep_id}')
 
         if self._skip_correction:
             return row
