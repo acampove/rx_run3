@@ -59,11 +59,11 @@ class MassBiasCorrector:
         brem_energy_threshold: Lowest energy that an ECAL cluster needs to have to be considered a photon, used as argument of ElectronBiasCorrector, default 0 (MeV)
         ecorr_kind           : Kind of correction to be added to electrons, [ecalo_bias, brem_track]
         '''
-        self._df              = df
-        self._is_mc           = is_mc 
-        self._trigger         = trigger
-        self._skip_correction = skip_correction
-        self._nproc           = nthreads
+        self._df : Final[pnd.DataFrame] = df
+        self._is_mc                     = is_mc 
+        self._trigger                   = trigger
+        self._skip_correction           = skip_correction
+        self._nproc                     = nthreads
 
         if self._skip_correction:
             log.warning('Skipping correction')
