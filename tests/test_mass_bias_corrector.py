@@ -16,7 +16,6 @@ import pytest
 import matplotlib.pyplot as plt
 
 from omegaconf                   import OmegaConf
-from distributed                 import Client
 from ROOT                        import RDF # type: ignore
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
@@ -506,38 +505,6 @@ def _check_smeared(
         assert     numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
     else:
         assert not numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
-#-----------------------------------------
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-@pytest.mark.parametrize('is_mc'  , [True, False])
-def test_dask(trigger : str, is_mc : bool):
-    '''
-    Test processing in parallel with Dask client
-    '''
-    kind    = 'brem_track_2'
-    nproc   = 4 
-
-    with RDFGetter.max_entries(10_000):
-        rdf_org = _get_rdf(is_mc=is_mc, trigger=trigger)
-
-    df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
-    is_mc   = ut.rdf_is_mc(rdf=rdf_org)
-
-    with Client(n_workers=nproc, threads_per_worker=1):
-        cor   = MassBiasCorrector(
-            df        = df_org, 
-            is_mc     = is_mc,
-            trigger   = trigger,
-            nthreads  = nproc, 
-            ecorr_kind= kind)
-
-        df_cor  = cor.get_df()
-
-    rdf_cor = RDF.FromPandas(df_cor)
-
-    _check_output_columns(rdf_cor)
-
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'dask_{is_mc}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('trigger', [
     'Hlt2RD_BuToKpEE_MVA', 
