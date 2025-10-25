@@ -84,7 +84,11 @@ upload()
     check_existing $TARGET
 
     echo "Uploading tarball for $TARGET"
-    dirac-dms-add-file $TARGET $SOURCE CERN-USER
+    if [[ $DRY -eq 0 ]];then
+        lb-dirac bash -c "dirac-dms-add-file $TARGET $SOURCE CERN-USER"
+    else
+        lb-dirac bash -c "echo This is DIRAC, uploading as \"$TARGET\" file \"$SOURCE\" to CERN-USER"
+    fi
 }
 #--------------------------------
 initialize()
@@ -92,13 +96,21 @@ initialize()
     mkdir -p /tmp/logs/post_ap
     LOGPATH="/tmp/logs/post_ap/update_tarball.log"
 
-    echo "Initialling"
+    echo "Initializing"
 
-    which lb-conda-dev        >> $LOGPATH 2>&1
-    check "No lb-conda-dev found"
+    if command -v lb-conda-dev >/dev/null 2>&1;then
+        echo "lb-conda-dev found"
+    else
+        echo "lb-conda-dev missing"
+        exit 1
+    fi
 
-    dirac-proxy-info          >> $LOGPATH 2>&1
-    check "Invalid grid proxy, or cannot access dirac-proxy-info"
+    if command -v lb-dirac >/dev/null 2>&1;then
+        echo "lb-dirac found"
+    else
+        echo "lb-dirac missing"
+        exit 1 
+    fi
 
     if [[ -z $VENVS ]];then
         echo "VENVS environment variable not set"
@@ -121,7 +133,7 @@ make_tarball()
     rm -rf dchecks.tar
 
     if [[ ! -f $VENVS/dcheck/run ]];then
-        echo "Environment not found, creating it"
+        echo "Environment not found, creating it in $PWD"
         lb-conda-dev virtual-env default dcheck
     else
         echo "Environment found, updating tarball"
@@ -142,7 +154,7 @@ install_pkg()
     NAME=$1
     VERS=$2
 
-    if [[ -z $VERS ]];then
+    if [[ "$VERS" == "latest" ]];then
         echo "Installing latest version of $NAME"
         pip install $NAME        >> $LOGPATH 2>&1
     else
