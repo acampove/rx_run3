@@ -102,8 +102,10 @@ def _compare_masses(
     '''
     d_rdf = { name : _clean_rdf(rdf, name) for name, rdf in d_rdf.items() }
 
-    cfg = _load_conf()
-    cfg = copy.deepcopy(cfg)
+    dat = _load_conf()
+    dat = copy.deepcopy(dat)
+    cfg = OmegaConf.create(dat)
+
     plt_dir = f'{Data.plt_dir}/{test_name}'
 
     cfg['saving'] = {'plt_dir' : plt_dir}
