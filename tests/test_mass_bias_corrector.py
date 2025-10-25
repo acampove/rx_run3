@@ -43,6 +43,19 @@ _SAMPLES_EE = [
     ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpEE_MVA'     ),
     ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimEE_MVA'  )
 ]
+_SAMPLES_DATA = [
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    #----------------
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpEE_MVA'     ),
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    #----------------
+    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
+    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    #----------------
+    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_BuToKpEE_MVA'     ),
+    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_B0ToKpPimEE_MVA'  )
+]
 
 _SAMPLES = _SAMPLES_MM + _SAMPLES_EE
 #-----------------------------------------
