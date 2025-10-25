@@ -171,12 +171,6 @@ def _get_rdf(
     d_sel['mass'] = '(1)' if is_mc       else 'B_const_mass_M > 5160'
     d_sel['bdt']  = '(1)' if bdt is None else bdt
 
-    # We run over 1000 entries to speed up tests
-    # Those are from pre-UT data, which the block
-    # requirement removes. Need to drop that requirement
-    if not is_mc:
-        del d_sel['block']
-
     for name, cut in d_sel.items():
         log.debug(f'{name:<20}{cut}')
         rdf = rdf.Filter(cut, name)
