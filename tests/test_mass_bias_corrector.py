@@ -336,13 +336,15 @@ def test_nbrem_npvs(
 
     _compare_masses(d_rdf, f'brem_npvs_{nbrem}_{npvs}/{trigger}', kind)
 #-----------------------------------------
-@pytest.mark.parametrize('kind', ['brem_track_2'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_suffix(kind : str, trigger : str):
+@pytest.mark.parametrize('sample, trigger', _SAMPLES) 
+def test_suffix(sample : str, trigger : str):
     '''
     Tests that output dataframe has columns with suffix added
     '''
-    rdf_org = _get_rdf(trigger=trigger)
+    kind = 'brem_track_2'
+    with RDFGetter.max_entries(value = 10_000):
+        rdf_org = _get_rdf(sample=sample, trigger=trigger)
+
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
@@ -350,21 +352,20 @@ def test_suffix(kind : str, trigger : str):
         df      =df_org, 
         trigger =trigger,
         is_mc   =is_mc,
-        nthreads=Data.nthreads, 
         ecorr_kind=kind)
     df_cor = cor.get_df(suffix=kind)
     rdf_cor= RDF.FromPandas(df_cor)
 
     _check_output_columns(rdf_cor)
 #-----------------------------------------
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 @pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
-def test_brem_threshold(brem_energy_threshold: float, trigger : str):
+def test_brem_threshold(sample:str, trigger : str, brem_energy_threshold: float):
     '''
     Vary energy threhold of brem photon needed to be added
     '''
     with RDFGetter.max_entries(value=50_000):
-        rdf_org = _get_rdf(trigger=trigger)
+        rdf_org = _get_rdf(sample=sample, trigger=trigger)
 
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
@@ -373,7 +374,6 @@ def test_brem_threshold(brem_energy_threshold: float, trigger : str):
         df        =df_org, 
         trigger   =trigger,
         is_mc     =is_mc,
-        nthreads  =Data.nthreads, 
         brem_energy_threshold=brem_energy_threshold)
 
     df_cor = cor.get_df()
