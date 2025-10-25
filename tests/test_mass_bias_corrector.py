@@ -87,6 +87,12 @@ def _compare_masses(
     test_name  : str, 
     correction : str,
     skip_jpsi  : bool=False) -> None:
+    '''
+    d_rdf     : Dictionary with corrected and original dataframes
+    test_name : Used for output path
+    correction: Correction name, used for title
+    skip_jpsi : If false, will plot Jpsi_M distributin
+    '''
     d_rdf = { name : _clean_rdf(rdf, name) for name, rdf in d_rdf.items() }
 
     cfg = _load_conf()
@@ -117,7 +123,7 @@ def _check_input_columns(rdf : RDataFrame) -> None:
 
     log.info(f'Found: {l_track_brem}')
 #-----------------------------------------
-def _check_output_columns(rdf : RDataFrame) -> None:
+def _check_output_columns(rdf : RDF.RNode) -> None:
     l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
     ncol = len(l_colname)
     if ncol != 20:
