@@ -458,6 +458,12 @@ def _check_corrected(
     arr_val_unc = rdf_unc.AsNumpy([name])[name]
     arr_val_cor = rdf_cor.AsNumpy([name])[name]
 
+    # If any mass is NaN, it will be dropped from comparison
+    # NaN means a track kinematic or brem energy is NaN
+    arr_ind_pos = numpy.where(arr_val_cor > 0)
+    arr_val_unc = arr_val_unc[arr_ind_pos]
+    arr_val_cor = arr_val_unc[arr_ind_pos]
+
     # E.g. this is the muon channel
     if not must_be_corrected:
         assert numpy.isclose(arr_val_unc, arr_val_cor, atol=1).all()
