@@ -15,8 +15,9 @@ import mplhep
 import pytest
 import matplotlib.pyplot as plt
 
+from omegaconf                   import OmegaConf
 from distributed                 import Client
-from ROOT                        import RDataFrame, RDF # type: ignore
+from ROOT                        import RDF # type: ignore
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_common                   import info
