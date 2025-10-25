@@ -3,8 +3,6 @@ Module with test for MatrixPlotter class
 '''
 
 import numpy
-import matplotlib.pyplot as plt
-
 from dmu.plotting.matrix   import MatrixPlotter
 from dmu.logging.log_store import LogStore
 
@@ -65,4 +63,3 @@ def test_correlations():
     mat = numpy.corrcoef(data, rowvar=True)
     obj = MatrixPlotter(mat=mat, cfg=cfg)
     obj.plot()
-    plt.show()
