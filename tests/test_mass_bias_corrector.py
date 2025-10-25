@@ -424,10 +424,48 @@ def test_add_smearing(sample : str, trigger : str):
     _compare_masses(d_rdf = d_rdf, test_name = f'add_smearing_{sample}', correction = sample)
 # ----------------------
 def _check_corrected(
+    rdf_unc          : RDF.RNode,
+    rdf_cor          : RDF.RNode,
     must_be_corrected: bool, 
-    name             : str,
-    kind             : str,
-    rdf              : RDF.RNode) -> None:
+    name             : str) -> int:
+    '''
+    Parameters
+    -------------
+    must_be_corrected : If true, will raise if brem corrected and not corrected are equal.
+    name              : Variable to be checked
+    rdf               : DataFrame after correction
+
+    Returns
+    -------------
+    Number of candidates that were corrected
+    '''
+    arr_val_unc = rdf_unc.AsNumpy([name])[name]
+    arr_val_cor = rdf_cor.AsNumpy([name])[name]
+
+    # E.g. this is the muon channel
+    if not must_be_corrected:
+        assert numpy.isclose(arr_val_unc, arr_val_cor, atol=1).all()
+        return 0
+
+    arr_shift   = numpy.abs(arr_val_cor - arr_val_unc)
+    arr_shift   = arr_shift[arr_shift > 1]
+    log.verbose(20 * '-')
+    log.verbose(f'Shift in {name} mass:')
+    log.verbose(20 * '-')
+    for shift in arr_shift:
+        log.verbose(shift)
+
+    # A mass will be considered unchaged if the difference is less than 1 MeV
+    arr_flag    = numpy.isclose(arr_val_unc, arr_val_cor, atol=1).astype(int)
+    total       = len(arr_flag) 
+    uncorrected = numpy.sum(arr_flag)
+    corrected   = total - uncorrected 
+
+    # Somewhere between 20% and 70% of candidates should change with brem correction
+    assert corrected / total < 1 
+
+    return corrected
+# ----------------------
 def _check_smeared(
     rdf             : RDF.RNode,
     must_be_smeared : bool, 
