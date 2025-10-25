@@ -1,8 +1,6 @@
 '''
 Module containing tests for MCVarsAdder class
 '''
-# pylint: disable=no-member
-
 import numpy
 import pytest
 from ROOT                    import RDataFrame
