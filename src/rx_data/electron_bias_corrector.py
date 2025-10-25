@@ -6,7 +6,6 @@ from typing                 import Final, cast
 
 import pandas as pnd
 import vector
-from vector                 import MomentumObject3D as v3d
 from vector                 import MomentumObject4D as v4d
 from dmu.logging.log_store  import LogStore
 
@@ -28,13 +27,15 @@ class ElectronBiasCorrector:
         - Optionally, rescale energy of electron based on measurement of "mu" through the momentum closure.
     '''
     # ---------------------------------
-    def __init__(self, skip_correction : bool = False, brem_energy_threshold : float = 300):
+    def __init__(
+        self, 
+        skip_correction       : bool  = False, 
+        brem_energy_threshold : float = 300):
         '''
         skip_correction: If true, will not correct electrons, but run all the code up to the last stage, default False
         brem_energy_threshold: Energy deposits in ECAL will be considered brem if their energy is above this value, default 300 MeV
         '''
         self._skip_correction = skip_correction
-        self._mass            = 0.511
         self._min_brem_energy = brem_energy_threshold
         self._bcor            = BremBiasCorrector()
         self._name      : str
