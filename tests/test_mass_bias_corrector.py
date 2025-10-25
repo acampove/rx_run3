@@ -162,7 +162,6 @@ def _get_rdf(
     with RDFGetter.exclude_friends(names=['brem_track_2']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
-        rdf = rdf.Define('nbrem', 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)')
 
     d_sel = sel.selection(
         trigger = trigger, 
