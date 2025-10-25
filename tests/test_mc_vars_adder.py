@@ -61,10 +61,9 @@ class Data:
     '''
     Class used to hold shared attributes
     '''
-    ngen    = 30
-    nrec    = 14
+    ngen    = 1000
+    nrec    = 1000
     rng     = numpy.random.default_rng(seed=10)
-    sam     = 'mc_24_w31_34_magup_sim10d_11102005_bd_kplpimn_eq_cpv2017_dpc_tuple'
     arr_bpt = rng.uniform(0, 10_000, ngen)
 # -------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
