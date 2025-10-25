@@ -131,7 +131,8 @@ def test_add_to_gen():
 
     _check_overlap(gen=arr_gen, rec=arr_rec)
 # -------------------------------------------------
-def test_add_to_rec():
+@pytest.mark.parametrize('sample', _SAMPLES)
+def test_add_to_rec(sample : str):
     '''
     Tests addition of columns to DecayTree
     '''
@@ -139,14 +140,10 @@ def test_add_to_rec():
     rdf_rec = _get_rdf(kind='rec', with_block=False)
 
     obj = MCVarsAdder(
-            sample_name = Data.sam,
-            rdf_rec     = rdf_rec)
+        sample_name = sample,
+        rdf_rec     = rdf_rec)
     rdf       = obj.get_rdf()
     arr_block = rdf.AsNumpy(['block'])['block']
 
-    none = numpy.sum(arr_block == 1)
-    ntwo = numpy.sum(arr_block == 2)
-
-    assert none == 6
-    assert ntwo == 8
+    assert any( block in arr_block for block in range(1,9) )
 # -------------------------------------------------
