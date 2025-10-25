@@ -420,13 +420,13 @@ def test_brem_threshold(nbrem : int, brem_energy_threshold: float, trigger : str
 
     _compare_masses(d_rdf, f'brem_{nbrem:03}/{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
 #-----------------------------------------
-@pytest.mark.parametrize('kind' , ['brem_track_2'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-@pytest.mark.parametrize('is_mc', [True, False])
-def test_add_smearing(kind : str, is_mc : bool, trigger : str):
+@pytest.mark.parametrize('sample, trigger', _SAMPLES) 
+def test_add_smearing(sample : str, trigger : str):
     '''
-    Checks that smearing of q2 was added on top of correction
+    Checks that smearing of q2 was added on top of correction for electron samples
     '''
+    is_mc   = sample.startswith('DATA_')
+
     rdf_org = _get_rdf(is_mc=is_mc, trigger=trigger)
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
@@ -442,12 +442,41 @@ def test_add_smearing(kind : str, is_mc : bool, trigger : str):
     rdf_cor= RDF.FromPandas(df_cor)
     _check_output_columns(rdf_cor)
 
+    # Only electron has to be brem corrected
+    _check_corrected(must_be_corrected=info.is_ee(trigger), rdf=rdf_cor, name='Jpsi_M', kind = 'brem_track_2')
+    _check_corrected(must_be_corrected=info.is_ee(trigger), rdf=rdf_cor, name=   'B_M', kind = 'brem_track_2')
+
+    # Only MC has to be smeared
+    _check_corrected(must_be_corrected=is_mc              , rdf=rdf_cor, name='Jpsi_M', kind = 'smr')
+    _check_corrected(must_be_corrected=is_mc              , rdf=rdf_cor, name=   'B_M', kind = 'smr')
+
     rdf_smr = rdf_cor.Redefine('Jpsi_M', 'Jpsi_M_smr')
     rdf_smr = rdf_smr.Redefine(   'B_M',    'B_M_smr')
 
     sample  = 'mc' if is_mc else 'data'
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor, 'Smeared' : rdf_smr}
-    _compare_masses(d_rdf, f'add_smearing_{sample}', kind)
+    _compare_masses(d_rdf = d_rdf, test_name = f'add_smearing_{sample}', correction = sample)
+# ----------------------
+def _check_corrected(
+    must_be_corrected: bool, 
+    name             : str,
+    kind             : str,
+    rdf              : RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    must_be_smeared: If true, will raise if unsmeared and smeared are equal.
+    name           : Variable to be checked
+    kind           : Type of correction, suffix for corrected branch
+    rdf            : DataFrame after correction
+    '''
+    arr_val_org = rdf.AsNumpy([         name])[         name]
+    arr_val_smr = rdf.AsNumpy([f'{name}_{kind}'])[f'{name}_{kind}']
+
+    if not must_be_corrected:
+        assert numpy.isclose(arr_val_org, arr_val_smr, rtol=1e-5)
+    else:
+        assert not numpy.isclose(arr_val_org, arr_val_smr, rtol=1)
 #-----------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('is_mc'  , [True, False])
