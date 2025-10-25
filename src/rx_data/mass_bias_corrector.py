@@ -161,25 +161,25 @@ class MassBiasCorrector:
         # PIDe
         # ProbNNe
         d_data = {
-                'B_M'    : bmass,
-                'Jpsi_M' : jmass,
-                # --------------
-                'B_PT'   : bp.pt,
-                'Jpsi_PT': jp.pt,
-                # --------------
-                'L1_PX'  : row.L1_PX,
-                'L1_PY'  : row.L1_PY,
-                'L1_PZ'  : row.L1_PZ,
-                'L1_PT'  : row.L1_PT,
-                # --------------
-                'L2_PX'  : row.L2_PX,
-                'L2_PY'  : row.L2_PY,
-                'L2_PZ'  : row.L2_PZ,
-                'L2_PT'  : row.L2_PT,
-                # --------------
-                'L1_HASBREMADDED' : row.L1_HASBREMADDED,
-                'L2_HASBREMADDED' : row.L2_HASBREMADDED,
-                }
+            'B_M'    : bmass,
+            'Jpsi_M' : jmass,
+            # --------------
+            'B_PT'   : bp.pt,
+            'Jpsi_PT': jp.pt,
+            # --------------
+            'L1_PX'  : row.L1_PX,
+            'L1_PY'  : row.L1_PY,
+            'L1_PZ'  : row.L1_PZ,
+            'L1_PT'  : row.L1_PT,
+            # --------------
+            'L2_PX'  : row.L2_PX,
+            'L2_PY'  : row.L2_PY,
+            'L2_PZ'  : row.L2_PZ,
+            'L2_PT'  : row.L2_PT,
+            # --------------
+            'L1_HASBREMADDED' : row.L1_HASBREMADDED,
+            'L2_HASBREMADDED' : row.L2_HASBREMADDED,
+            }
 
         d_data['Jpsi_M_smr'] = self._smear_mass(row, particle='Jpsi', reco=jmass)
         d_data[   'B_M_smr'] = self._smear_mass(row, particle=   'B', reco=bmass)
