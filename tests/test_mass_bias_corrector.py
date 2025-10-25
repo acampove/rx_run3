@@ -26,6 +26,18 @@ from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
 
 log=LogStore.add_logger('rx_data:test_mass_bias_corrector')
+
+_SAMPLES = [
+    ('Bu_JpsiK_mm_eq_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
+    ('Bu_JpsiK_ee_eq_DPC'  , 'Hlt2RD_BuToKpEE_MVA'     ),
+    ('Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    #----------------
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpEE_MVA'     ),
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimEE_MVA'  )
+]
 #-----------------------------------------
 class Data:
     '''
