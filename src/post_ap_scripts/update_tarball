@@ -151,7 +151,6 @@ make_tarball()
         echo "Environment found, updating tarball"
     fi
 
-    source dcheck/bin/activate
     install_pkg post_ap $POSA_VERS
 
     tar -czf dcheck.tar dcheck
@@ -168,16 +167,16 @@ install_pkg()
 
     if [[ "$VERS" == "latest" ]];then
         echo "Installing latest version of $NAME"
-        pip install $NAME        >> $LOGPATH 2>&1
+        $VENVS/dcheck/run pip install $NAME        >> $LOGPATH 2>&1
     else
         echo "Installing $VERS version of $NAME"
-        pip install $NAME==$VERS >> $LOGPATH 2>&1
+        $VENVS/dcheck/run pip install $NAME==$VERS >> $LOGPATH 2>&1
     fi
 
     check "Installation of $NAME"
-
-    VERSION=$(pip show $NAME | grep Version)
-    echo "Installed $NAME: $VERSION"
+    echo "-----------------"
+    $VENVS/dcheck/run pip show $NAME
+    echo "-----------------"
 }
 #--------------------------------
 get_args "$@"
