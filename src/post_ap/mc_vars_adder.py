@@ -35,7 +35,7 @@ class MCVarsAdder:
         self._sample_name     = sample_name
         self._rdf_rec         = rdf_rec
         self._rdf_gen         = rdf_gen
-        self._regex           = r'mc_\d{2}_(w\d{2}_\d{2})_.*'
+        self._regex           = r'mc_\d{2}_(w\d{2}_\d{2}|w\d{2})_mag.*'
         self._branch_id       = 'branch_id'
         self._block_name      = 'block'
         self._unmatched_trees = False
