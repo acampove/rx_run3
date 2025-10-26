@@ -1,22 +1,13 @@
 '''
-Module holding FCopy class and FCopyConf
+Module holding FCopy class
 '''
 import shutil
 import subprocess
 
 from pathlib               import Path
-from typing                import Final
-from pydantic              import BaseModel
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:fsystem:fcopy')
-# ----------------------
-class FCopyConf(BaseModel):
-    '''
-    Class meant to store configuration for FCopy
-    '''
-    source : str = ''
-    target : str = ''
 # ----------------------
 class FCopy:
     '''
@@ -24,19 +15,30 @@ class FCopy:
 
     - Checking that the server and local machine are suitable
     - Talking to rsync
+
+    Usage:
+
+    fcp = FCopy(source='userA@serverA', target='userB@serverB')
+    fcp.copy(source='/home/userA/path/file1', target='/home/userB/path/file1') 
+
+    Will copy a file given the paths, from one server to another.
+
+    The connection must be possible without passwords, i.e. with key pairs
     '''
     # ----------------------
-    def __init__(self, cfg : FCopyConf = FCopyConf()):
+    def __init__(self, source :  str = '', target : str = ''):
         '''
         Parameters
         -------------
         cfg: Instance of FCopyConf storing configuration
         '''
-        self._cfg : Final[FCopyConf] = cfg
+        self._source = source
+        self._target = target 
+
         self._check_utility(name='rsync')
         self._check_utility(name='ssh'  )
-        self._check_remote(server=self._cfg.source)
-        self._check_remote(server=self._cfg.target)
+        self._check_remote(server=self._source)
+        self._check_remote(server=self._target)
     # ----------------------
     def _check_remote(self, server : str, timeout : int = 10) -> None:
         '''
@@ -91,22 +93,22 @@ class FCopy:
         -------------
         String with full path to server or local
         '''
-        if not self._cfg.source and not self._cfg.target:
+        if not self._source and not self._target:
             return str(path)
 
-        if     is_source and not self._cfg.source:
+        if     is_source and not self._source:
             if not path.exists():
                 raise FileNotFoundError(f'Source \"{path}\" missing')
 
             return str(path)
 
-        if not is_source and not self._cfg.target:
+        if not is_source and not self._target:
             return str(path)
 
         if is_source:
-            return f'{self._cfg.source}:{path}'
+            return f'{self._source}:{path}'
         else:
-            return f'{self._cfg.target}:{path}'
+            return f'{self._target}:{path}'
     # ----------------------
     def copy(self, source : Path, target : Path) -> bool:
         '''
