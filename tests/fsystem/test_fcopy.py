@@ -50,15 +50,14 @@ def _make_paths(
 
     return l_path
 # ----------------------
-def test_simple(tmp_path) -> None:
+def test_local(tmp_path) -> None:
     '''
+    Test for transfer between two local paths
     '''
     l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
     l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
 
-    cfg = FCopyConf(server='localhost')
-    fcp = FCopy(cfg=cfg)
-
+    fcp = FCopy()
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
 # ----------------------
