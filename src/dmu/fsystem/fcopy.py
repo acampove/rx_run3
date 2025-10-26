@@ -52,14 +52,19 @@ class FCopy:
             result = subprocess.run(
                 ['ssh', '-o', f'ConnectTimeout={timeout}', 
                  '-o', 'BatchMode=yes',
-                 '-o', 'StrictHostKeyChecking=no', server, 'exit'],
-                capture_output=True,
-                timeout       =timeout + 1)
+                 '-o', 'StrictHostKeyChecking=no', server, 
+                 '/bin/true'],
+                capture_output= True,
+                timeout       = timeout)
         except subprocess.TimeoutExpired:
             raise ValueError(f'Timeout, cannot access: {server}')
 
-        if result.returncode != 0:
-            raise ValueError(f'Error, cannot access: {server}')
+        code = result.returncode
+        if code != 0:
+            log.info(result.stdout)
+            log.error(result.stderr)
+
+            raise ValueError(f'Error {code}, cannot access: {server}')
     # ----------------------
     def _check_utility(self, name : str) -> None:
         '''
