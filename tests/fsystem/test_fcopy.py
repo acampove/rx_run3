@@ -47,7 +47,7 @@ def test_simple(tmp_path) -> None:
     l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
     l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
 
-    cfg = FCopyConf(host='localhost')
+    cfg = FCopyConf(server='localhost')
     fcp = FCopy(cfg=cfg)
 
     for source, target in zip(l_source, l_target):

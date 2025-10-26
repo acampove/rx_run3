@@ -14,7 +14,7 @@ class FCopyConf(BaseModel):
     '''
     Class meant to store configuration for FCopy
     '''
-    host : str
+    server : str
 # ----------------------
 class FCopy:
     '''
