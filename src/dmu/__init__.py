@@ -1,3 +1,3 @@
-from .fsystem.copy import FCopy
+from .fsystem.fcopy import FCopy, FCopyConf
 
-__all__ = ['FCopy']
+__all__ = ['FCopy', 'FCopyConf']
