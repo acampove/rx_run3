@@ -26,7 +26,7 @@ class FCopy:
     - Talking to rsync
     '''
     # ----------------------
-    def __init__(self, cfg : FCopyConf):
+    def __init__(self, cfg : FCopyConf = FCopyConf()):
         '''
         Parameters
         -------------
