@@ -1,8 +1,8 @@
-output_directory : /reso/electron/ccbar/brem_xxx
+output_directory : /reso/rkst/muon/ccbar/brem_xxx
 ccbar_samples:
-  - Bd_JpsiX_ee_eq_JpsiInAcc
-  - Bu_JpsiX_ee_eq_JpsiInAcc
-  - Bs_JpsiX_ee_eq_JpsiInAcc
+  - Bd_JpsiX_mm_eq_JpsiInAcc
+  - Bu_JpsiX_mm_eq_JpsiInAcc
+  - Bs_JpsiX_mm_eq_JpsiInAcc
 weights:
   dec : 1
   sam : 1
