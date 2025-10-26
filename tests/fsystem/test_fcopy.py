@@ -61,3 +61,14 @@ def test_local(tmp_path) -> None:
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
 # ----------------------
+def test_remote_target(tmp_path) -> None:
+    '''
+    Test for transfer between from remote server
+    '''
+    l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
+    l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
+
+    cfg = FCopyConf(target='acampove@localhost')
+    fcp = FCopy(cfg=cfg)
+    for source, target in zip(l_source, l_target):
+        fcp.copy(source=source, target=target)
