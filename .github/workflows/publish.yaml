@@ -1,83 +1,76 @@
-name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
+name: Publish DMU to PyPI
 on: push
 jobs:
   build:
-    name   : Build distribution
+    name: Build & Test
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Set up micromamba
-      uses: mamba-org/setup-micromamba@v1
-      with:
-        micromamba-version: 'latest'
-        environment-name: myenv
-        create-args: >-
-          python=3.12
-          gxx
-          root
-        channels: conda-forge
-        init-shell: bash
-    - name: Define output directory
-      run: |
-        ANADIR=$PWD/output
-        echo  "ANADIR=$PWD/output" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-        mkdir -p $ANADIR
-    #-----------
-    - name: Cache dependencies installed with poetry
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cache/pypoetry
-          ~/.cache/pip
-        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-poetry-
-    #-----------
-    - name: Install pypa/build
-      run: >-
-        micromamba run -n myenv  python3 -m
-        pip install
-        poetry
-        build
-    #-----------
-    - name: Install project dependencies
-      run: |
-        micromamba run -n myenv poetry install --extras 'fit ml dev'
-    #-----------
-    - name: Test
-      run: |
-        micromamba run -n myenv pytest -n 5 tests
-    #-----------
-    - name: Build a binary wheel and a source tarball
-      run:  micromamba run -n myenv python3 -m build
-    #-----------
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-  #--------------------
+      - name: Set up micromamba
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: latest
+          environment-name: myenv
+          create-args: >-
+            python=3.12
+            root
+          channels: conda-forge
+          init-shell: bash
+
+      - name: Define output directory
+        run: |
+          ANADIR=$PWD/output
+          echo "ANADIR=$ANADIR" >> "$GITHUB_ENV"
+          mkdir -p "$ANADIR"
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/uv
+          key: ${{ runner.os }}-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}
+
+      - name: Install uv
+        run: micromamba run -n myenv pip install uv
+
+      - name: Install project (with extras)
+        run: micromamba run -n myenv uv pip install -e ".[fit,ml,dev]"
+
+      - name: Run tests
+        run: micromamba run -n myenv pytest -n 5 tests
+
+      - name: Build wheel and sdist
+        run: micromamba run -n myenv uv build
+
+      - name: Store distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
   publish-to-pypi:
-    name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
-    needs:
-    - build
+    name: Publish Python 🐍 distribution 📦 to PyPI
+    needs: [build]
     runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/data-manipulation-utilities
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
+      id-token: write  # Mandatory for trusted publishing
+
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
