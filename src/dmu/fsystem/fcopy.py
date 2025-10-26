@@ -1,11 +1,11 @@
 '''
 Module holding FCopy class and FCopyConf
 '''
+import shutil
 import subprocess
 
 from pathlib               import Path
 from typing                import Final
-from joblib.logger import shutil
 from pydantic              import BaseModel
 from dmu.logging.log_store import LogStore
 
@@ -15,7 +15,8 @@ class FCopyConf(BaseModel):
     '''
     Class meant to store configuration for FCopy
     '''
-    server : str
+    source : str = ''
+    target : str = ''
 # ----------------------
 class FCopy:
     '''
