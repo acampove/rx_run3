@@ -5,6 +5,7 @@ import subprocess
 
 from pathlib               import Path
 from typing                import Final
+from joblib.logger import shutil
 from pydantic              import BaseModel
 from dmu.logging.log_store import LogStore
 
@@ -31,6 +32,17 @@ class FCopy:
         cfg: Instance of FCopyConf storing configuration
         '''
         self._cfg : Final[FCopyConf] = cfg
+        self._check_rsync()
+    # ----------------------
+    def _check_rsync(self) -> None:
+        '''
+        Check if rsync is available
+        '''
+        path = shutil.which('rsync')
+        if path is None:
+            raise ValueError('rsync not found')
+
+        log.debug(f'rsync found at: {path}')
     # ----------------------
     def copy(self, source : Path, target : Path) -> bool:
         '''
