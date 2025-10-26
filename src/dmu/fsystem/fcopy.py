@@ -1,6 +1,8 @@
 '''
 Module holding FCopy class and FCopyConf
 '''
+import subprocess
+
 from pathlib               import Path
 from typing                import Final
 from pydantic              import BaseModel
@@ -45,6 +47,13 @@ class FCopy:
         log.debug(source)
         log.debug('--->')
         log.debug(target)
+
+        if self._cfg.server == 'localhost':
+            commands = ['rsync', '-a', source, target]
+        else:
+            raise NotImplementedError(f'Invalid server: {self._cfg.server}')
+
+        subprocess.run(commands)
 
         return True
 # ----------------------
