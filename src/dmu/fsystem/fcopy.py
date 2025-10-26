@@ -33,7 +33,8 @@ class FCopy:
         cfg: Instance of FCopyConf storing configuration
         '''
         self._cfg : Final[FCopyConf] = cfg
-        self._check_rsync()
+        self._check_utility(name='rsync')
+        self._check_utility(name='ssh'  )
         self._check_remote(path=self._cfg.source)
         self._check_remote(path=self._cfg.target)
     # ----------------------
@@ -48,15 +49,19 @@ class FCopy:
 
         log.debug(f'Checking availability of server: {path}')
     # ----------------------
-    def _check_rsync(self) -> None:
+    def _check_utility(self, name : str) -> None:
         '''
-        Check if rsync is available
-        '''
-        path = shutil.which('rsync')
-        if path is None:
-            raise ValueError('rsync not found')
+        Check if utility is available
 
-        log.debug(f'rsync found at: {path}')
+        Parameters
+        ----------------
+        name: Name of utility, e.g. rsync
+        '''
+        path = shutil.which(name)
+        if path is None:
+            raise ValueError(f'Utility \"{name}\" not found')
+
+        log.debug(f'Utility \"{name}\" found at: {path}')
     # ----------------------
     def _get_path(self, path : Path, is_source : bool) -> str:
         '''
