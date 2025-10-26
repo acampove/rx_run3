@@ -45,7 +45,7 @@ jobs:
         run: micromamba run -n myenv uv pip install -e ".[fit,ml,dev]"
 
       - name: Run tests
-        run: micromamba run -n myenv pytest tests
+        run: micromamba run -n myenv pytest -n 5 tests
 
       - name: Build wheel and sdist
         run: micromamba run -n myenv uv build
