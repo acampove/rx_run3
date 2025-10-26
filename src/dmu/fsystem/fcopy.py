@@ -35,19 +35,31 @@ class FCopy:
         self._cfg : Final[FCopyConf] = cfg
         self._check_utility(name='rsync')
         self._check_utility(name='ssh'  )
-        self._check_remote(path=self._cfg.source)
-        self._check_remote(path=self._cfg.target)
+        self._check_remote(server=self._cfg.source)
+        self._check_remote(server=self._cfg.target)
     # ----------------------
-    def _check_remote(self, path : str) -> None:
+    def _check_remote(self, server : str, timeout : int = 10) -> None:
         '''
         Parameters
         -------------
-        path: String representing server, if empty, its local
+        path   : String representing server, if empty, its local
+        timeout: Number of seconds to wait when accessing server
         '''
-        if not path:
+        if not server:
             return
 
-        log.debug(f'Checking availability of server: {path}')
+        try:
+            result = subprocess.run(
+                ['ssh', '-o', f'ConnectTimeout={timeout}', 
+                 '-o', 'BatchMode=yes',
+                 '-o', 'StrictHostKeyChecking=no', server, 'exit'],
+                capture_output=True,
+                timeout       =timeout + 1)
+        except subprocess.TimeoutExpired:
+            raise ValueError(f'Timeout, cannot access: {server}')
+
+        if result.returncode != 0:
+            raise ValueError(f'Error, cannot access: {server}')
     # ----------------------
     def _check_utility(self, name : str) -> None:
         '''
