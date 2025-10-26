@@ -51,7 +51,7 @@ jobs:
     #-----------
     - name: Test
       run: |
-        micromamba run -n myenv pytest tests
+        micromamba run -n myenv pytest -n 5 tests
     #-----------
     - name: Build a binary wheel and a source tarball
       run:  micromamba run -n myenv python3 -m build
