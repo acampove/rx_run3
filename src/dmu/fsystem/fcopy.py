@@ -34,6 +34,19 @@ class FCopy:
         '''
         self._cfg : Final[FCopyConf] = cfg
         self._check_rsync()
+        self._check_remote(path=self._cfg.source)
+        self._check_remote(path=self._cfg.target)
+    # ----------------------
+    def _check_remote(self, path : str) -> None:
+        '''
+        Parameters
+        -------------
+        path: String representing server, if empty, its local
+        '''
+        if not path:
+            return
+
+        log.debug(f'Checking availability of server: {path}')
     # ----------------------
     def _check_rsync(self) -> None:
         '''
