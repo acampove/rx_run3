@@ -42,7 +42,7 @@ jobs:
         run: micromamba run -n myenv pip install uv
 
       - name: Install project (with extras)
-        run: micromamba run -n myenv uv pip install -e ".[fit,ml,dev]"
+        run: micromamba run -n myenv uv pip install -e ".[fit,ml,dev,parallel]"
 
       - name: Run tests
         run: micromamba run -n myenv pytest -n 5 tests
