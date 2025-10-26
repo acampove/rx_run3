@@ -47,7 +47,5 @@ include = [
   "src/dmu_data/**/*.txt",
 ]
 
-sources = ["src"]
-
 [tool.hatch.build.targets.wheel]
-packages = ["dmu", "dmu_data"]
+packages = ["src/dmu", "src/dmu_data"]
