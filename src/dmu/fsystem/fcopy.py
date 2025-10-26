@@ -61,10 +61,9 @@ class FCopy:
         log.debug('--->')
         log.debug(target)
 
-        if self._cfg.server == 'localhost':
-            commands = ['rsync', '-a', source, target]
-        else:
-            raise NotImplementedError(f'Invalid server: {self._cfg.server}')
+        spath    = self._get_path(source, is_source= True)
+        tpath    = self._get_path(target, is_source=False)
+        commands = ['rsync', '-a', spath, tpath]
 
         subprocess.run(commands)
 
