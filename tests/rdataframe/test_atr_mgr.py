@@ -27,5 +27,5 @@ def test_dump():
     rdf.l_data  = [1, 2, 3]
 
     obj = AtrMgr(rdf)
-    obj.to_json('/tmp/atr_mgr/test_dump/data.json')
+    obj.to_json('/tmp/atr_mgr/test_dump/data.json', exists_ok=True)
 #--------------------------------

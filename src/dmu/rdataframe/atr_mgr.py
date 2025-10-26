@@ -65,7 +65,7 @@ class AtrMgr:
 
         return rdf
     #------------------------
-    def to_json(self, json_path : str) -> None:
+    def to_json(self, json_path : str, exists_ok) -> None:
         '''
         Saves the attributes inside current instance to JSON. Takes JSON path as argument
         '''
@@ -75,5 +75,5 @@ class AtrMgr:
         t_type   = (list, str, int, float)
         d_fl_atr = { key : val for key, val in self.d_in_atr.items() if isinstance(val, t_type) and isinstance(key, t_type) }
 
-        gut.dump_json(d_fl_atr, json_path)
+        gut.dump_json(d_fl_atr, json_path, exists_ok=exists_ok)
 #------------------------

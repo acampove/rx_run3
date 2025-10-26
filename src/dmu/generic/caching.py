@@ -28,7 +28,7 @@ def cache_data(obj : Any, hash_obj : Any) -> None:
 
     val  = hashing.hash_object(hash_obj)
     path = f'/tmp/dmu/cache/{val}.json'
-    gut.dump_json(obj, path)
+    gut.dump_json(obj, path, exists_ok=True)
 # ----------------------
 def load_cached(hash_obj : Any, on_fail : Any = None) -> Any:
     '''
