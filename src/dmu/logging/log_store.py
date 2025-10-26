@@ -43,7 +43,6 @@ class LogStore:
     '''
     Class used to make loggers, set log levels, print loggers, e.g. interface to logging, etc.
     '''
-    #pylint: disable = invalid-name
     d_logger      : dict[str,Logger] = {}
     d_levels      : dict[str,   int] = {}
     log_level     = logging.INFO
