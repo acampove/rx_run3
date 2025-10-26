@@ -39,15 +39,7 @@ compare_classifiers = 'dmu_scripts.ml.compare_classifiers:main'
 requires      = ['hatchling']
 build-backend = 'hatchling.build'
 
-[tool.hatch.build]
-include = [
-  'src/dmu_data/**/*.yaml',
-  'src/dmu_data/**/*.toml',
-  'src/dmu_data/**/*.json',
-  'src/dmu_data/**/*.txt',
-]
-
+[tool.hatch.build.targets.wheel]
+sources  = ['src']
 packages = ['src/dmu', 'src/dmu_data']
 
-[tool.hatch.build.targets.wheel]
-packages = ['dmu', 'dmu_data']
