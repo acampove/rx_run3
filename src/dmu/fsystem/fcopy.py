@@ -45,6 +45,34 @@ class FCopy:
 
         log.debug(f'rsync found at: {path}')
     # ----------------------
+    def _get_path(self, path : Path, is_source : bool) -> str:
+        '''
+        Parameters
+        -------------
+        path     : Path in server, e.g. /home/user/file.p
+        is_source: If true, this is where the file will be copied from
+
+        Returns
+        -------------
+        String with full path to server or local
+        '''
+        if not self._cfg.source and not self._cfg.target:
+            return str(path)
+
+        if     is_source and not self._cfg.source:
+            if not path.exists():
+                raise FileNotFoundError(f'Source \"{path}\" missing')
+
+            return str(path)
+
+        if not is_source and not self._cfg.target:
+            return str(path)
+
+        if is_source:
+            return f'{self._cfg.source}:{path}'
+        else:
+            return f'{self._cfg.target}:{path}'
+    # ----------------------
     def copy(self, source : Path, target : Path) -> bool:
         '''
         Parameters
