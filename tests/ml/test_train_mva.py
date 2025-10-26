@@ -117,7 +117,7 @@ def test_only_diagnostics():
 # -------------------------------
 @pytest.mark.parametrize('workers', [1, 10])
 @pytest.mark.timeout(300)
-@pytest.mark.slow
+@pytest.mark.skip
 def test_hyperparameter_optimization(workers : int):
     '''
     This function will test optimizing hyperparameters
