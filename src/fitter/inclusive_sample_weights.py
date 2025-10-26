@@ -89,9 +89,30 @@ class Reader:
     #---------------------------
     @lru_cache(maxsize=10)
     def _get_st_wgt(self, proc : str) -> float:
+        '''
+        Parameters
+        ---------------
+        proc: Name of process
+
+        Returns
+        ---------------
+        Weight representing statistics of sample, i.e. number of events in MCDecayTree
+        Three samples have same size, will use 1 for now
+        '''
+        _ = proc
+
         return 1
     #---------------------------
     def _get_weight(self, row : pnd.Series) -> float:
+        '''
+        Parameters
+        --------------
+        row: Row representing an event
+
+        Returns
+        --------------
+        Product of statistics, hadronization fraction and branching fraction weights
+        '''
         w1 = self._get_st_wgt(row.proc)
         w2 = self._get_hd_wgt(row.proc)
         w3 = self._get_br_wgt(row.proc)
