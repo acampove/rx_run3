@@ -1,79 +1,53 @@
-[tool.poetry]
-name           = 'data-manipulation-utilities'
-description    = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
-version        = '0.3.0'
-readme         = 'README.md'
-package-mode   = true 
-packages       = [
-{include='dmu',      from='src'},
-{include='dmu_data', from='src'}]
+[project]
+name = "data-manipulation-utilities"
+version = "0.3.0"
+description = "Project storing utilities needed to reduce boilerplate code when analyzing data"
+readme = "README.md"
+requires-python = ">=3.10, <3.13"
+dependencies = [
+    "PyYAML",
+    "scipy",
+    "awkward",
+    "tqdm",
+    "omegaconf",
+    "toml",
+    "uproot",
+    "numpy<=2.2",
+    "jinja2",
+    "matplotlib",
+    "mplhep",
+    "pandas",
+    "awkward-pandas",
+    "dask[dataframe,distributed]",
+    "hist[plot]",
+]
 
-[[tool.poetry.include]]
-path = "src/dmu_data/**/*.yaml"
-format = "wheel"
+[project.optional-dependencies]
+ml = ["scikit-learn", "joblib", "optuna"]
+fit = ["zfit", "tensorflow"]
+dev = ["pytest", "pytest-xdist", "pandas-stubs", "memory-profiler"]
 
-[[tool.poetry.include]]
-path = "src/dmu_data/**/*.toml"
-format = "wheel"
-
-[[tool.poetry.include]]
-path = "src/dmu_data/**/*.json"
-format = "wheel"
-
-[[tool.poetry.include]]
-path = "src/dmu_data/**/*.txt"
-format = "wheel"
-
-[tool.poetry.dependencies]
-python         = '>=3.10, <3.13'
-PyYAML         = '*'
-scipy          = '*'
-awkward        = '*'
-tqdm           = '*'
-omegaconf      = '*'
-toml           = '*'
-uproot         = '*'
-numpy          = '<=2.2' # Numba requires this
-jinja2         = '*'     # To deal with pandas to latex tables styling
-matplotlib     = '*'
-mplhep         = '*'
-pandas         = '*'
-awkward-pandas = '*'
-dask           = {version='*',      extras  =['dataframe','distributed']}
-hist           = {version='*',      extras  =['plot']}
-scikit-learn   = {version='*',      optional=true}
-joblib         = {version='*',      optional=true}
-optuna         = {version='*',      optional=true}
-
-[tool.poetry.extras]
-fit  = ['zfit', 'tensorflow']
-ml   = ['scikit-learn', 'joblib', 'optuna']
-dev  = ['pytest', 'pytest-xdist', 'pandas-stubs', 'memory-profiler']
+[project.scripts]
+transform_text = "dmu_scripts.text.transform_text:main"
+coned = "dmu_scripts.ssh.coned:main"
+check_truth = "dmu_scripts.physics.check_truth:main"
+print_trees = "dmu_scripts.rfile.print_trees:main"
+compare_root_files = "dmu_scripts.rfile.compare_root_files:main"
+compare_classifiers = "dmu_scripts.ml.compare_classifiers:main"
 
 [build-system]
-requires      = [
-    'poetry-core>=1.0.0',
-    'poetry-dynamic-versioning>=1.0.0'
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+  "src/dmu_data/**/*.yaml",
+  "src/dmu_data/**/*.toml",
+  "src/dmu_data/**/*.json",
+  "src/dmu_data/**/*.txt",
 ]
-build-backend = 'poetry_dynamic_versioning.backend'
 
-[tool.poetry-dynamic-versioning]
-enable       = true
-vcs          = 'git'
-style        = 'pep440'
-pattern      = 'default-unprefixed'
-format-jinja = """
-{%- if distance == 0 -%}
-{{ base }}
-{%- else -%}
-{{ serialize_pep440(bump_version(base), dev=distance) }}
-{%- endif -%}
-"""
+sources = ["src"]
 
-[tool.poetry.scripts]
-transform_text       ='dmu_scripts.text.transform_text:main'
-coned                ='dmu_scripts.ssh.coned:main'
-check_truth          ='dmu_scripts.physics.check_truth:main'
-print_trees          ='dmu_scripts.rfile.print_trees:main'
-compare_root_files   ='dmu_scripts.rfile.compare_root_files:main'
-compare_classifiers  ='dmu_scripts.ml.compare_classifiers:main'
+[tool.hatch.build.targets.wheel]
+packages = ["dmu", "dmu_data"]
