@@ -23,7 +23,10 @@ class Data:
     out_dir = '/tmp/tests/fitter/prec'
 #-----------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_fitter:inclusive_decay_weights' , 10)
     LogStore.set_level('rx_fitter:inclusive_sample_weights', 10)
     LogStore.set_level('rx_fitter:prec'                    , 10)
