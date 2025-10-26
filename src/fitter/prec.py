@@ -6,6 +6,7 @@ import copy
 import json
 import pprint
 from contextlib import contextmanager
+from pathlib    import Path
 
 import numpy
 import slugify
@@ -20,8 +21,7 @@ from dmu.stats.utilities    import is_pdf_usable
 from dmu.stats              import utilities as sut
 from dmu.workflow.cache     import Cache
 
-from zfit.interface        import ZfitParameter as zpar
-from zfit.pdf              import BasePDF          as zpdf
+from zfit.pdf              import BasePDF       as zpdf
 from zfit.interface        import ZfitSpace     as zobs
 from rx_selection          import selection     as sel
 from rx_data.rdf_getter    import RDFGetter
@@ -683,7 +683,7 @@ class PRec(Cache):
     def plot_pdf(
         pdf     : zpdf|None,
         name    : str,
-        out_dir : str,
+        out_dir : str|Path,
         title   : str        = '',
         maxy    : float|None = None) -> None:
         '''
