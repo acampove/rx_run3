@@ -7,7 +7,7 @@ import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                            import RDataFrame
+from ROOT                            import RDF
 from dmu.logging.log_store           import LogStore
 from rx_data.rdf_getter              import RDFGetter
 from fitter.inclusive_decays_weights import Reader
@@ -26,7 +26,7 @@ class Data:
 
     out_dir = '/tmp/tests/fitter/inclusive_decays_weights'
 #-----------------------------------------------
-def _rdf_to_idf(rdf : RDataFrame) -> pnd.DataFrame:
+def _rdf_to_idf(rdf : RDF.RNode) -> pnd.DataFrame:
     rdf   =rdf.Define('mass', 'B_const_mass_M')
     v_name=rdf.GetColumnNames()
     l_name=[ name.c_str() for name in v_name ]
@@ -41,7 +41,7 @@ def _rdf_to_idf(rdf : RDataFrame) -> pnd.DataFrame:
 def _get_df(sample : str, trigger : str) -> pnd.DataFrame:
     with RDFGetter.max_entries(10_000):
         gtr = RDFGetter(sample = sample, trigger = trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file=False)
 
     df  = _rdf_to_idf(rdf)
 
