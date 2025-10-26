@@ -21,9 +21,9 @@ class Reader:
         self._fu      = 0.408
         self._fs      = 0.100
 
-        self._bu_proc = 'Bu_JpsiX_ee_eq_JpsiInAcc'
-        self._bd_proc = 'Bd_JpsiX_ee_eq_JpsiInAcc'
-        self._bs_proc = 'Bs_JpsiX_ee_eq_JpsiInAcc'
+        self._bu_proc = ['Bu_JpsiX_ee_eq_JpsiInAcc', 'Bu_JpsiX_mm_eq_JpsiInAcc']
+        self._bd_proc = ['Bd_JpsiX_ee_eq_JpsiInAcc', 'Bd_JpsiX_mm_eq_JpsiInAcc']
+        self._bs_proc = ['Bs_JpsiX_ee_eq_JpsiInAcc', 'Bs_JpsiX_mm_eq_JpsiInAcc']
     #---------------------------
     @lru_cache(maxsize=10)
     def _get_br_wgt(self, proc : str) -> float:
@@ -44,13 +44,13 @@ class Reader:
         #0.1077  MyJ/psi    Myphi        PVV_CPLH 0.02 1 Hp pHp Hz pHz Hm pHm;
         #--------------------------------------------
 
-        if proc == self._bu_proc:
+        if proc in self._bu_proc:
             return pu.get_bf('B+ --> J/psi(1S) K+') / 0.1596
 
-        if proc == self._bd_proc:
+        if proc in self._bd_proc:
             return pu.get_bf('B0 --> J/psi(1S) K*(892)0') / 0.1920
 
-        if proc == self._bs_proc:
+        if proc in self._bs_proc:
             return pu.get_bf('B_s()0 --> J/psi(1S) phi') / 0.1077
 
         raise ValueError(f'Invalid process {proc}')
@@ -62,10 +62,10 @@ class Reader:
         '''
         log.info(f'Getting hadronization weights for sample {proc}')
 
-        if proc in [self._bu_proc, self._bd_proc]:
+        if proc in self._bu_proc + self._bd_proc:
             return self._fu
 
-        if proc == self._bs_proc:
+        if proc in self._bs_proc:
             return self._fs
 
         raise ValueError(f'Invalid process: {proc}')
