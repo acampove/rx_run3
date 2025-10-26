@@ -2,12 +2,21 @@
 Script with tests for FCopy class
 '''
 
+import pytest
+
 from pathlib import Path
 from dmu     import FCopy, FCopyConf
 
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test_fcopy')
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:fsystem:fcopy', 10)
 # ----------------------
 def _make_paths(
     dir       : Path, 
