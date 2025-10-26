@@ -34,14 +34,14 @@ def initialize():
 
     plt.style.use(mplhep.style.LHCb2)
 #-----------------------------------------------
-def test_electron(tmp_path : Path):
+@pytest.mark.parametrize('trig', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+def test_electron(tmp_path : Path, trig : str):
     '''
     Simplest test in electron channel
     '''
     q2bin  = 'jpsi'
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
     mass   = 'B_const_mass_M'
-    label  = r'$M_{DTF}(K^+e^+e^-)$'
+    label  = r'$M_{DTF}$'
 
     l_samp = [
         'Bu_JpsiX_ee_eq_JpsiInAcc',
@@ -58,14 +58,14 @@ def test_electron(tmp_path : Path):
 
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
 #-----------------------------------------------
-def test_muon(tmp_path : Path):
+@pytest.mark.parametrize('trig', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
+def test_muon(tmp_path : Path, trig : str):
     '''
     Simplest test in electron channel
     '''
     q2bin  = 'jpsi'
-    trig   = 'Hlt2RD_BuToKpMuMu_MVA'
     mass   = 'B_const_mass_M'
-    label  = r'$M_{DTF}(K^+\mu^+\mu^-)$'
+    label  = r'$M_{DTF}$'
 
     l_samp = [
         'Bu_JpsiX_mm_eq_JpsiInAcc',
@@ -77,8 +77,8 @@ def test_muon(tmp_path : Path):
     test = f'reso/{q2bin}'
     with RDFGetter.max_entries(value = 100_000):
         d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-        pdf_1=obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
+        obp_1= PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf_1= obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
 #-----------------------------------------------
