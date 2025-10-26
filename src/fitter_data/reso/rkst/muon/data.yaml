@@ -17,6 +17,7 @@ model:
         - 5180 
         - 5700
   components:
+    ccbar         : reso/rkst/muon/ccbar.yaml
     combinatorial : reso/rkst/muon/combinatorial.yaml
     bsjpsikst     : reso/rkst/muon/bsjpsikst.yaml
     jpsi          : reso/rkst/muon/jpsi.yaml
