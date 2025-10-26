@@ -5,7 +5,7 @@ Script with tests for FCopy class
 import pytest
 
 from pathlib import Path
-from dmu     import FCopy, FCopyConf
+from dmu     import FCopy
 
 from dmu.logging.log_store import LogStore
 
@@ -63,12 +63,22 @@ def test_local(tmp_path) -> None:
 # ----------------------
 def test_remote_target(tmp_path) -> None:
     '''
-    Test for transfer between from remote server
+    Files are in a local server, copy them remotely 
     '''
     l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
     l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
 
-    cfg = FCopyConf(target='acampove@localhost')
-    fcp = FCopy(cfg=cfg)
+    fcp = FCopy(target='acampove@localhost')
+    for source, target in zip(l_source, l_target):
+        fcp.copy(source=source, target=target)
+# ----------------------
+def test_remote_source(tmp_path) -> None:
+    '''
+    Files are in a remote server, copy them locally
+    '''
+    l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
+    l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
+
+    fcp = FCopy(source='acampove@localhost')
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
