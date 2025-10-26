@@ -6,6 +6,7 @@ import mplhep
 import pytest
 import matplotlib.pyplot as plt
 
+from pathlib                import Path
 from dmu.stats.fitter       import Fitter
 from dmu.stats              import utilities as sut
 from dmu.stats.zfit         import zfit
@@ -32,6 +33,30 @@ def initialize():
     LogStore.set_level('rx_fitter:prec'                    , 10)
 
     plt.style.use(mplhep.style.LHCb2)
+#-----------------------------------------------
+def test_electron(tmp_path : Path):
+    '''
+    Simplest test in electron channel
+    '''
+    q2bin  = 'jpsi'
+    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    mass   = 'B_const_mass_M'
+    label  = r'$M_{DTF}(K^+e^+e^-)$'
+
+    l_samp = [
+        'Bu_JpsiX_ee_eq_JpsiInAcc',
+        'Bd_JpsiX_ee_eq_JpsiInAcc',
+        'Bs_JpsiX_ee_eq_JpsiInAcc']
+
+    obs=zfit.Space(label, limits=(4500, 6900))
+
+    test = f'reso/{q2bin}'
+    with RDFGetter.max_entries(value = 100_000):
+        d_wgt= {'dec' : 1, 'sam' : 1}
+        obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf_1=obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
+
+        PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
 #-----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'jpsi', 'psi2', 'high'])
 def test_reso(q2bin : str):
