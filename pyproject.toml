@@ -1,9 +1,9 @@
 [project]
 name = "data-manipulation-utilities"
-version = "0.3.0"
+version = "0.3.1"
 description = "Project storing utilities needed to reduce boilerplate code when analyzing data"
 readme = "README.md"
-requires-python = "==3.12.11"
+requires-python = ">=3.10,<3.14"
 dependencies = [
     "PyYAML",
     "scipy",

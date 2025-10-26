@@ -4,7 +4,7 @@ Module with unit tests for testing/utilities.py functions
 # pylint: disable=no-name-in-module
 
 import pytest
-from ROOT import RDataFrame
+from ROOT import RDF
 
 import dmu.testing.utilities as ut
 
@@ -16,8 +16,8 @@ log = LogStore.add_logger('dmu:tests:test_utilities')
 def _initialize():
     LogStore.set_level('dmu:testing:utilities', 10)
 # ----------------------------------------------
-def _check_rdf(rdf : RDataFrame) -> None:
-    if not isinstance(rdf, RDataFrame):
+def _check_rdf(rdf : RDF.RNode) -> None:
+    if not isinstance(rdf, RDF.RNode):
         kind = str(type(rdf))
         log.error(f'Object is not a dataframe but: {kind}')
         raise ValueError
