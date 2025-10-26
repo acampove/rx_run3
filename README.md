@@ -4,9 +4,28 @@
 
 These are tools that can be used for different data analysis tasks.
 
-# GIT
+# Networking 
 
-## Pushing
+## Transferring data through SSH
+
+A small wrapper to rsync is show below:
+
+````python
+from dmu import FCopy
+
+fcp = FCopy(source='userA@serverA', target='userB@serverB')
+fcp.copy(source='/home/userA/path/file1', target='/home/userB/path/file1') 
+````
+
+This will copy a file given the paths, from one server to another.
+
+- The connection must be possible without passwords, i.e. with key pairs
+- By default source and target in initializer are empty strings and the
+files are assumed to be local
+
+One instance of `FCopy` is meant to be used to transfer multiple files.
+
+## Publishing packages
 
 From the root directory of a version controlled project (i.e. a directory with the `.git` subdirectory)
 using a `pyproject.toml` file, run:
