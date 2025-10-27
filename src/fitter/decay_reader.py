@@ -80,8 +80,6 @@ class DecayReader:
 
         Numbers were changed from that version, need further discussion and checks 
         '''
-        log.warning('Using modified (from RX) corrections for Psi2S -> Jpsi fractions')
-
         for bid in  self._l_bid:
             flg_1 = l1.match_upstream( self._Psi2_id, bid)
             flg_2 = l2.match_upstream( self._Psi2_id, bid)
