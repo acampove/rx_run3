@@ -6,7 +6,7 @@ Module with Reader class
 import pandas as pnd
 from fitter.pchain         import PChain
 from dmu.logging.log_store import LogStore
-from fitter.decay_reader   import KLLDecayReader
+from fitter.decay_reader   import KLLDecayReader, KPiLLDecayReader
 
 log = LogStore.add_logger('rx_fitter:inclusive_decays_weights')
 #---------------------------
@@ -36,12 +36,16 @@ def _get_reader(project : str, row : pnd.Series) -> KLLDecayReader:
     -------------------
     Reader to extract candidate weigth
     '''
-    p1_ch = _get_chain('L1', row)
-    p2_ch = _get_chain('L2', row)
+    l1 = _get_chain('L1', row)
+    l2 = _get_chain('L2', row)
 
-    if project == 'rk':
-        p3_ch = _get_chain( 'H', row)
-        obj   = KLLDecayReader(p1_ch, p2_ch, p3_ch)
+    if   project == 'rk':
+        kp = _get_chain( 'H', row)
+        obj= KLLDecayReader(l1=l1, l2=l2, kp=kp)
+    elif project == 'rkst':
+        kp = _get_chain('H1', row)
+        pi = _get_chain('H2', row)
+        obj= KPiLLDecayReader(l1=l1, l2=l2, kp=kp, pi=pi)
     else:
         raise NotImplementedError(f'Invalid project: {project}')
 
