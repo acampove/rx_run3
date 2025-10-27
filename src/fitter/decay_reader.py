@@ -162,45 +162,32 @@ class DecayReader:
             return ( 5.90E-4/ 1.2700E-3 ) / (0.07610/ 0.1850) #1.13
 
         return 1.0
-#---------------------------
-class KLLDecayReader(DecayReader):
-    '''
-    Class used to retrieve decay weights for KLL candidates
-    '''
     #---------------------------
-    def __init__(self, l1 : PChain, l2 : PChain, kp : PChain):
-        super().__init__()
-        self._l_chain = [l1, l2, kp]
-
-        self._l1 = l1
-        self._l2 = l2
-        self._kp = kp
-    #---------------------------
-    def _get_kp_wgt(self) -> float:
+    def _get_kp_wgt(self, kp : PChain) -> float:
         '''
         Returns correction weights for branching fraction associated
         to kaon chain
         '''
         weight = 1.0
-        if self._kp.match_decay( [self._Pi_id, self._KS_id             ]):
+        if kp.match_decay( [self._Pi_id, self._KS_id             ]):
             weight *= 0.5
 
-        if self._kp.match_decay( [self._Kp_id, self._Ph_id, self._Bd_id]):
+        if kp.match_decay( [self._Kp_id, self._Ph_id, self._Bd_id]):
             weight *= 0.5/0.9974
 
-        if self._kp.match_decay( [self._Kp_id, self._Ph_id, self._Bu_id]):
+        if kp.match_decay( [self._Kp_id, self._Ph_id, self._Bu_id]):
             weight *= 0.5/0.7597
 
-        if self._kp.match_decay( [self._Pi_id, self._Et_id] ):
+        if kp.match_decay( [self._Pi_id, self._Et_id] ):
             weight *= 0.28/0.4
 
-        if self._kp.match_decay( [self._Kp_id, self._Ks_id] ):
+        if kp.match_decay( [self._Kp_id, self._Ks_id] ):
             weight *= 0.66 / 0.7993
 
-        if self._kp.match_decay( [self._Kp_id, self._Kst_c] ):
+        if kp.match_decay( [self._Kp_id, self._Kst_c] ):
             weight *= 0.33 / 0.4993
 
-        if self._kp.match_decay( [self._Kp_id, self._K_2_1430_c]):
+        if kp.match_decay( [self._Kp_id, self._K_2_1430_c]):
             weight *= 0.1670/0.2485
 
         return weight
