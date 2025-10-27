@@ -25,6 +25,7 @@ from zfit.pdf              import BasePDF       as zpdf
 from zfit.interface        import ZfitSpace     as zobs
 from rx_selection          import selection     as sel
 from rx_data.rdf_getter    import RDFGetter
+from rx_common             import info
 from ROOT                  import RDataFrame # type: ignore
 
 from fitter.inclusive_decays_weights import read_weight 
@@ -208,7 +209,8 @@ class PRec(Cache):
 
         if   dec == 1:
             log.debug(f'Adding decay weights to: {sample}')
-            df['wgt_dec'] = df.apply(read_weight, args=(self._trig,), axis=1)
+            project       = info.project_from_trigger(trigger=self._trig, lower_case=True)
+            df['wgt_dec'] = df.apply(read_weight, args=(project,), axis=1)
         elif dec == 0:
             log.warning(f'Not using decay weights in: {sample}')
             df['wgt_dec'] = 1.
