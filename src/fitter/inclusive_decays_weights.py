@@ -13,7 +13,15 @@ class Reader:
     '''
     Class used to attach decay weights to dataframe of inclusive decays
     '''
-    def __init__(self, l1, l2, kp):
+    #---------------------------
+    def __init__(
+        self, 
+        l1 : PChain, 
+        l2 : PChain, 
+        kp : PChain):
+        '''
+        Takes particle chain instances
+        '''
         self._l1_ch = l1
         self._l2_ch = l2
         self._kp_ch = kp
