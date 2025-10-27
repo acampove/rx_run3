@@ -76,16 +76,16 @@ class Reader:
     def _get_jpsi_wgt(self) -> float:
         weight = 1.0
         for bid in  self._l_bid:
-            flg_1 = self._l1_ch.MatchUpstream( self._Ps_id, bid)
-            flg_2 = self._l2_ch.MatchUpstream( self._Ps_id, bid)
+            flg_1 = self._l1_ch.match_upstream( self._Ps_id, bid)
+            flg_2 = self._l2_ch.match_upstream( self._Ps_id, bid)
 
             if not flg_1 and not flg_2:
                 continue
 
-            flg_3 = self._l1_ch.MatchMother(self._Jp_id)
-            flg_4 = self._l2_ch.MatchMother(self._Jp_id)
-            flg_5 = self._l1_ch.MatchMother(self._Ps_id)
-            flg_6 = self._l2_ch.MatchMother(self._Ps_id)
+            flg_3 = self._l1_ch.match_mother(self._Jp_id)
+            flg_4 = self._l2_ch.match_mother(self._Jp_id)
+            flg_5 = self._l1_ch.match_mother(self._Ps_id)
+            flg_6 = self._l2_ch.match_mother(self._Ps_id)
 
             if   flg_3 or flg_4:
                 #weight = 0.6254 / ( 1-0.1741) #0.75
@@ -98,22 +98,22 @@ class Reader:
     #---------------------------
     def _get_brfrac_corr(self) -> float:
         weight= 1
-        flg_1 = self._l1_ch.MatchUpstream(self._Ps_id, self._Bd_id)
-        flg_2 = self._l2_ch.MatchUpstream(self._Ps_id, self._Bd_id)
+        flg_1 = self._l1_ch.match_upstream(self._Ps_id, self._Bd_id)
+        flg_2 = self._l2_ch.match_upstream(self._Ps_id, self._Bd_id)
         if flg_1 or flg_2:
             weight = 1.17
 
-        flg_1 = self._l1_ch.MatchUpstream(self._Ps_id, self._Bu_id)
-        flg_2 = self._l2_ch.MatchUpstream(self._Ps_id, self._Bu_id)
+        flg_1 = self._l1_ch.match_upstream(self._Ps_id, self._Bu_id)
+        flg_2 = self._l2_ch.match_upstream(self._Ps_id, self._Bu_id)
         if flg_1 or flg_2:
             weight = 1.35
 
         return weight
     #---------------------------
     def _either_track_has(self, pid : int) -> bool:
-        flg_l1 = self._l1_ch.HasInChain(pid)
-        flg_l2 = self._l2_ch.HasInChain(pid)
-        flg_kp = self._kp_ch.HasInChain(pid)
+        flg_l1 = self._l1_ch.has_in_chain(pid)
+        flg_l2 = self._l2_ch.has_in_chain(pid)
+        flg_kp = self._kp_ch.has_in_chain(pid)
 
         return flg_l1 or flg_l2 or flg_kp
     #---------------------------
@@ -139,25 +139,25 @@ class Reader:
     #---------------------------
     def _get_kst_wgt(self) -> float:
         weight = 1.0
-        if self._kp_ch.MatchDecay( [self._Pi_id, self._KS_id             ]):
+        if self._kp_ch.match_decay( [self._Pi_id, self._KS_id             ]):
             weight *= 0.5
 
-        if self._kp_ch.MatchDecay( [self._Kp_id, self._Ph_id, self._Bd_id]):
+        if self._kp_ch.match_decay( [self._Kp_id, self._Ph_id, self._Bd_id]):
             weight *= 0.5/0.9974
 
-        if self._kp_ch.MatchDecay( [self._Kp_id, self._Ph_id, self._Bu_id]):
+        if self._kp_ch.match_decay( [self._Kp_id, self._Ph_id, self._Bu_id]):
             weight *= 0.5/0.7597
 
-        if self._kp_ch.MatchDecay( [self._Pi_id, self._Et_id] ):
+        if self._kp_ch.match_decay( [self._Pi_id, self._Et_id] ):
             weight *= 0.28/0.4
 
-        if self._kp_ch.MatchDecay( [self._Kp_id, self._Ks_id] ):
+        if self._kp_ch.match_decay( [self._Kp_id, self._Ks_id] ):
             weight *= 0.66 / 0.7993
 
-        if self._kp_ch.MatchDecay( [self._Kp_id, self._Kst_c] ):
+        if self._kp_ch.match_decay( [self._Kp_id, self._Kst_c] ):
             weight *= 0.33 / 0.4993
 
-        if self._kp_ch.MatchDecay( [self._Kp_id, self._K_2_1430_c]):
+        if self._kp_ch.match_decay( [self._Kp_id, self._K_2_1430_c]):
             weight *= 0.1670/0.2485
 
         return weight
