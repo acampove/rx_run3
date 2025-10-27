@@ -21,9 +21,17 @@ _SAMPLES = [
     ('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
     ('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
     # -------------
-    #('Bu_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
-    #('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
-    #('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    ('Bu_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    ('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    ('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    # -------------
+    ('Bu_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_BuToKpMuMu_MVA'),
+    ('Bd_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_BuToKpMuMu_MVA'),
+    ('Bs_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_BuToKpMuMu_MVA'),
+    # -------------
+    ('Bu_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('Bd_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('Bs_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
 ]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
