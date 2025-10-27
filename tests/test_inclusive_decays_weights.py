@@ -7,24 +7,24 @@ import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                            import RDF
+from pathlib                         import Path
+from ROOT                            import RDF # type: ignore
 from dmu.logging.log_store           import LogStore
 from rx_data.rdf_getter              import RDFGetter
+from rx_common                       import info
 from fitter.inclusive_decays_weights import Reader
 
 log=LogStore.add_logger('fitter:test_inclusive_decays_weights')
-#-----------------------------------------------
-class Data:
-    '''
-    Data class
-    '''
-    l_sample = [
-        ('Bu_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
-        ('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
-        ('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
-        ]
 
-    out_dir = '/tmp/tests/fitter/inclusive_decays_weights'
+_SAMPLES = [
+    ('Bu_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
+    ('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
+    ('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
+    # -------------
+    #('Bu_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    #('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    #('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+]
 #-----------------------------------------------
 def _rdf_to_idf(rdf : RDF.RNode) -> pnd.DataFrame:
     rdf   =rdf.Define('mass', 'B_const_mass_M')
