@@ -586,6 +586,33 @@ class KPiLLDecayReader(DecayReader):
     
         return 1.0 
     # ----------------------
+    def _get_bsks_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        The Bs -> Ks Kst0 J/Psi(Psi) is simulated with a PHSP model, however the Kst0 peaking structure is fully in the B.R.
+        Moreover the B.R> is off by a factor 2 since it uses only KS ( the dec fraction ). We must scale the B.R. by a factor 2x .
+        '''
+        if not self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Bs_id]):
+            return 1.0
+
+        if not self._pi.match_decay(l_dec_id=[self._Pion_id , self._Bs_id]):
+            return 1.0
+
+        l1_jpsi_bs = self._l1.match_upstream(daughter_id=self._Jpsi_id, mother_id=self._Bs_id)
+        l2_jpsi_bs = self._l2.match_upstream(daughter_id=self._Jpsi_id, mother_id=self._Bs_id)
+
+        if l1_jpsi_bs or l2_jpsi_bs:
+            return ( 9.2e-4 / 1.08e-3 ) / ( 0.0427 / 0.1077 ) * 3
+
+        l1_psi2_bs = self._l1.match_upstream(daughter_id=self._Psi2_id, mother_id=self._Bs_id)
+        l2_psi2_bs = self._l2.match_upstream(daughter_id=self._Psi2_id, mother_id=self._Bs_id)
+
+        if l1_psi2_bs or l2_psi2_bs:
+            return 2.0 * 3.0
+
+        return 1.0
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
@@ -603,10 +630,11 @@ class KPiLLDecayReader(DecayReader):
         wt_k2z    = self._get_k2z_weight()
         wt_k1z    = self._get_k1z_weight()
         wt_k14c   = self._get_k14c_weight()
+        wt_bsks   = self._get_bsks_weight()
 
         wt  = wt_common * wt_phi * wt_kshort * wt_eta 
         wt *= wt_kstar * wt_k10 * wt_k1c * wt_k2c * wt_k2z * wt_k1z
-        wt *= wt_k14c
+        wt *= wt_k14c * wt_bsks
 
         return wt
 #---------------------------
