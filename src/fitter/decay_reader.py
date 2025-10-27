@@ -276,7 +276,14 @@ class KPiLLDecayReader(DecayReader):
         self._l2 = l2
         self._kp = kp
         self._pi = pi
-    #---------------------------
+    # ----------------------
     def get_weight(self) -> float:
-        return 1
+        '''
+        Returns
+        -------------
+        Weight needed to correct for branching fraction bug in cocktail sample
+        '''
+        wt = self._get_common_weights(l1=self._l1, l2=self._l2, kp=self._kp)
+
+        return wt
 #---------------------------
