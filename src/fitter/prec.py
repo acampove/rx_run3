@@ -27,7 +27,7 @@ from rx_selection          import selection     as sel
 from rx_data.rdf_getter    import RDFGetter
 from ROOT                  import RDataFrame # type: ignore
 
-from fitter.inclusive_decays_weights import Reader as inclusive_decays_weights
+from fitter.inclusive_decays_weights import read_weight 
 from fitter.inclusive_sample_weights import Reader as inclusive_sample_weights
 
 log=LogStore.add_logger('fitter:prec')
@@ -208,7 +208,7 @@ class PRec(Cache):
 
         if   dec == 1:
             log.debug(f'Adding decay weights to: {sample}')
-            df['wgt_dec'] = df.apply(inclusive_decays_weights.read_weight, args=('L1', 'L2', 'H'), axis=1)
+            df['wgt_dec'] = df.apply(read_weight, args=(self._trig,), axis=1)
         elif dec == 0:
             log.warning(f'Not using decay weights in: {sample}')
             df['wgt_dec'] = 1.
