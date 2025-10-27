@@ -26,7 +26,7 @@ from zfit.interface        import ZfitSpace     as zobs
 from rx_selection          import selection     as sel
 from rx_data.rdf_getter    import RDFGetter
 from rx_common             import info
-from ROOT                  import RDataFrame # type: ignore
+from ROOT                  import RDF # type: ignore
 
 from fitter.inclusive_decays_weights import read_weight 
 from fitter.inclusive_sample_weights import Reader as inclusive_sample_weights
@@ -122,9 +122,9 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def _filter_rdf(
         self,
-        rdf    : RDataFrame,
+        rdf    : RDF.RNode,
         uid    : str,
-        sample : str) -> tuple[RDataFrame,str]:
+        sample : str) -> tuple[RDF.RNode,str]:
         '''
         Parameters
         -----------------
@@ -148,7 +148,7 @@ class PRec(Cache):
 
         return rdf, uid
     #-----------------------------------------------------------
-    def _get_samples_rdf(self) -> tuple[dict[str,RDataFrame],str]:
+    def _get_samples_rdf(self) -> tuple[dict[str,RDF.RNode],str]:
         '''
         IMPORTANT: This method has to run dataframe creation lazily
 
