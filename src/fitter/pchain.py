@@ -55,7 +55,7 @@ class PChain:
         True if particles match this decay
         '''
         if len(l_dec_id) == 1:
-            return self._TID ==  abs(l_dec_id[0])
+            return self._TID == abs(l_dec_id[0])
 
         if len(l_dec_id) == 2:
             return self._TID == abs(l_dec_id[0]) and self._MOTHER_TID == abs(l_dec_id[1])
