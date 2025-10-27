@@ -244,7 +244,7 @@ class KPiLLDecayReader(DecayReader):
     '''
     Class used to retrieve decay weights for KPILL candidates
     '''
-    #---------------------------
+    # ----------------------
     def __init__(
         self, 
         l1 : PChain, 
@@ -306,6 +306,20 @@ class KPiLLDecayReader(DecayReader):
 
         return 1.0
     # ----------------------
+    def _get_eta_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        Weight associated to decay chains with eta mesons
+        '''
+        cond_kp = self._kp.match_decay(l_dec_id = [self._Pion_id, self._Eta_id])
+        cond_pi = self._pi.match_decay(l_dec_id = [self._Pion_id, self._Eta_id])
+
+        if cond_kp or cond_pi:
+            return 0.28 / 0.4
+
+        return 1.0
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
@@ -315,8 +329,9 @@ class KPiLLDecayReader(DecayReader):
         wt_common = self._get_common_weights(l1=self._l1, l2=self._l2, kp=self._kp)
         wt_phi    = self._get_phi_weight()
         wt_kshort = self._get_kshort_weight()
+        wt_eta    = self._get_eta_weight()
 
-        wt = wt_common * wt_phi * wt_kshort
+        wt = wt_common * wt_phi * wt_kshort * wt_eta
 
         return wt
 #---------------------------
