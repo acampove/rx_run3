@@ -442,11 +442,11 @@ class PRec(Cache):
 
         log.debug(f'Building PDF with {nentries:.0f} entries for {component_name}')
 
-        pdf          = self._pdf_from_df(df=df, mass=mass, **kwargs)
-        pdf.arr_mass = arr_mass
-        pdf.arr_wgt  = arr_wgt
-        pdf.arr_sam  = df['wgt_sam'].to_numpy()
-        pdf.arr_dec  = df['wgt_dec'].to_numpy()
+        pdf = self._pdf_from_df(df=df, mass=mass, **kwargs)
+        setattr(pdf, 'arr_mass',                 arr_mass)
+        setattr(pdf, 'arr_wgt' ,                 arr_wgt )
+        setattr(pdf, 'arr_sam' , df['wgt_sam'].to_numpy())
+        setattr(pdf, 'arr_dec' , df['wgt_dec'].to_numpy())
 
         if not is_pdf_usable(pdf):
             log.warning(f'PDF {component_name} is not usable')
@@ -543,8 +543,8 @@ class PRec(Cache):
         ccbar stuff together
         '''
         obs = pdf.space
-        wgt = pdf.arr_wgt
-        mas = pdf.arr_mass
+        wgt = getattr(pdf,  'arr_wgt')
+        mas = getattr(pdf, 'arr_mass')
 
         return self._yield_from_arrays(arr_mass=mas, arr_weight=wgt, obs=obs)
     #-----------------------------------------------------------
@@ -592,15 +592,15 @@ class PRec(Cache):
             log.warning('No PDF can be built with dataset')
             return None
 
-        l_arr_mass   = [ pdf.arr_mass for pdf in l_pdf ]
-        l_arr_wgt    = [ pdf.arr_wgt  for pdf in l_pdf ]
-        l_arr_sam    = [ pdf.arr_sam  for pdf in l_pdf ]
-        l_arr_dec    = [ pdf.arr_dec  for pdf in l_pdf ]
+        l_arr_mass   = [ getattr(pdf, 'arr_mass') for pdf in l_pdf ]
+        l_arr_wgt    = [ getattr(pdf, 'arr_wgt' ) for pdf in l_pdf ]
+        l_arr_sam    = [ getattr(pdf, 'arr_sam' ) for pdf in l_pdf ]
+        l_arr_dec    = [ getattr(pdf, 'arr_dec' ) for pdf in l_pdf ]
 
-        pdf.arr_mass = numpy.concatenate(l_arr_mass)
-        pdf.arr_wgt  = numpy.concatenate(l_arr_wgt )
-        pdf.arr_dec  = numpy.concatenate(l_arr_dec )
-        pdf.arr_sam  = numpy.concatenate(l_arr_sam )
+        setattr(pdf, 'arr_mass', numpy.concatenate(l_arr_mass))
+        setattr(pdf, 'arr_wgt' , numpy.concatenate(l_arr_wgt ))
+        setattr(pdf, 'arr_dec' , numpy.concatenate(l_arr_dec ))
+        setattr(pdf, 'arr_sam' , numpy.concatenate(l_arr_sam ))
 
         return pdf
     #-----------------------------------------------------------
@@ -681,10 +681,10 @@ class PRec(Cache):
             log.warning(f'PDF {name} not build, not plotting')
             return
 
-        arr_mass = pdf.arr_mass
-        arr_wgt  = pdf.arr_wgt
-        arr_sam  = pdf.arr_sam
-        arr_dec  = pdf.arr_dec
+        arr_mass = getattr(pdf, 'arr_mass')
+        arr_wgt  = getattr(pdf, 'arr_wgt' )
+        arr_sam  = getattr(pdf, 'arr_sam' )
+        arr_dec  = getattr(pdf, 'arr_dec' )
 
         obj = ZFitPlotter(data=arr_mass, model=pdf, weights=arr_wgt)
         obj.plot(stacked=True)
