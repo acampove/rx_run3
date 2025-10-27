@@ -68,13 +68,20 @@ class DecayReader:
         '''
         Parameters
         ----------------
-        l1/2_ch: Particle chain associated to L1/2 lepton
+        l1/2: Particle chain associated to L1/2 lepton
 
         Returns
         ----------------
         Weight associated to branching ratio corrections for leptons decay chain
+
+        Taken from:
+
+        https://gitlab.cern.ch/LHCb-RD/ewp-rkstz/-/blob/master/analysis/kernel/src/XJPsRescaler.cpp#L645
+
+        Numbers were changed from that version, need further discussion and checks 
         '''
-        weight = 1.0
+        log.warning('Using modified (from RX) corrections for Psi2S -> Jpsi fractions')
+
         for bid in  self._l_bid:
             flg_1 = l1.match_upstream( self._Psi2_id, bid)
             flg_2 = l2.match_upstream( self._Psi2_id, bid)
@@ -85,16 +92,14 @@ class DecayReader:
             l1_from_jp = l1.match_mother(self._Jpsi_id)
             l2_from_jp = l2.match_mother(self._Jpsi_id)
             if   l1_from_jp or l2_from_jp:
-                #weight = 0.6254 / ( 1-0.1741) #0.75
-                weight = 0.958
+                return 0.958 # Was 0.75
 
             l1_from_ps = l1.match_mother(self._Psi2_id)
             l2_from_ps = l2.match_mother(self._Psi2_id)
             if l1_from_ps or l2_from_ps:
-                # TODO: Changed from 7.58 in RX code
-                weight = 0.771
+                return 0.771 # Was 7.58
 
-        return weight
+        return 1.0 
     #---------------------------
     def _get_psi2_wgt(self, l1 : PChain, l2 : PChain) -> float:
         '''
