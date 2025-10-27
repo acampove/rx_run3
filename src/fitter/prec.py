@@ -257,7 +257,7 @@ class PRec(Cache):
         if (v1 not in [0, 1]) or (v2 not in [0, 1]):
             raise ValueError(f'Invalid weight values: {v1}, {v2}')
     #-----------------------------------------------------------
-    def _check_valid(self, var, l_var, name):
+    def _check_valid(self, var : str, l_var : list[str], name : str):
         if var not in l_var:
             log.error(f'Value for {name}, {var}, is not valid')
             raise ValueError
@@ -596,7 +596,7 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def get_sum(self, mass : str, name='unnamed', **kwargs) -> zpdf|None:
+    def get_sum(self, mass : str, name : str = 'unnamed', **kwargs) -> zpdf|None:
         '''Provides extended PDF that is the sum of multiple KDEs representing PRec background
 
         Parameters:
