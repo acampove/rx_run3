@@ -61,7 +61,7 @@ class PRec(Cache):
 
         self._name     : str
         self._d_fstat  = {}
-        d_rdf, uid     = self._get_samples_rdf()
+        d_rdf, uid     = self.__get_samples_rdf()
         self._d_rdf    = d_rdf
 
         self._d_match         = self._get_match_str()
@@ -69,8 +69,8 @@ class PRec(Cache):
         self._min_entries     = 40 # Will not build KDE if fewer entries than this are found
         self._min_isj_entries = 500 #if Fewer entries than this, switch from ISJ to FFT
 
-        self._check_valid(self._q2bin, ['low', 'central', 'jpsi', 'psi2', 'high'], 'q2bin')
-        self._check_weights()
+        self.__check_valid(self._q2bin, ['low', 'central', 'jpsi', 'psi2', 'high'], 'q2bin')
+        self.__check_weights()
 
         # This should be usable to make hashes
         # backlashes and dollar signs are not hashable in strings
@@ -82,7 +82,7 @@ class PRec(Cache):
             d_wg     = d_weight,
             d_match  = d_hash_match)
     #-----------------------------------------------------------
-    def _get_df(self) -> dict[str,pnd.DataFrame]:
+    def __get_df(self) -> dict[str,pnd.DataFrame]:
         '''
         Returns
         -------------------
@@ -93,10 +93,10 @@ class PRec(Cache):
             Key  : Name of component
             Value: Dataframe with entries for only that component
         '''
-        d_df = self._get_samples_df()
-        d_df = { sample : self._add_dec_weights(sample, df) for sample, df in d_df.items() }
+        d_df = self.__get_samples_df()
+        d_df = { sample : self.__add_dec_weights(sample, df) for sample, df in d_df.items() }
         df   = pnd.concat(d_df.values(), axis=0)
-        df   = self._add_sam_weights(df)
+        df   = self.__add_sam_weights(df)
 
         if len(df) == 0:
             return {}
@@ -108,7 +108,7 @@ class PRec(Cache):
 
         return d_df
     #-----------------------------------------------------------
-    def _need_var(self, name : str) -> bool:
+    def __need_var(self, name : str) -> bool:
         needed = False
 
         if name.endswith('ID'):
@@ -119,7 +119,7 @@ class PRec(Cache):
 
         return needed
     #-----------------------------------------------------------
-    def _filter_rdf(
+    def __filter_rdf(
         self,
         rdf    : RDF.RNode,
         uid    : str,
@@ -147,7 +147,7 @@ class PRec(Cache):
 
         return rdf, uid
     #-----------------------------------------------------------
-    def _get_samples_rdf(self) -> tuple[dict[str,RDF.RNode],str]:
+    def __get_samples_rdf(self) -> tuple[dict[str,RDF.RNode],str]:
         '''
         IMPORTANT: This method has to run dataframe creation lazily
 
@@ -167,14 +167,14 @@ class PRec(Cache):
             gtr        = RDFGetter(sample=sample, trigger=self._trig)
             rdf        = gtr.get_rdf(per_file=False)
             uid        = gtr.get_uid()
-            rdf, uid   = self._filter_rdf(rdf=rdf, sample=sample, uid=uid)
+            rdf, uid   = self.__filter_rdf(rdf=rdf, sample=sample, uid=uid)
 
             d_rdf[sample] = rdf
             full_uid     += uid
 
         return d_rdf, full_uid
     #-----------------------------------------------------------
-    def _get_samples_df(self) -> dict[str,pnd.DataFrame]:
+    def __get_samples_df(self) -> dict[str,pnd.DataFrame]:
         '''
         Returns
         ------------------
@@ -191,7 +191,7 @@ class PRec(Cache):
             rep = rdf.Report()
             rep.Print()
 
-            l_var      = [ name.c_str() for name in rdf.GetColumnNames() if self._need_var( name.c_str() )]
+            l_var      = [ name.c_str() for name in rdf.GetColumnNames() if self.__need_var( name.c_str() )]
             data       = rdf.AsNumpy(l_var)
             df         = pnd.DataFrame(data)
             df['proc'] = sample
@@ -200,7 +200,7 @@ class PRec(Cache):
 
         return d_df
     #-----------------------------------------------------------
-    def _add_dec_weights(self, sample : str, df : pnd.DataFrame) -> pnd.DataFrame:
+    def __add_dec_weights(self, sample : str, df : pnd.DataFrame) -> pnd.DataFrame:
         if len(df) == 0:
             return df
 
@@ -222,7 +222,7 @@ class PRec(Cache):
 
         return df
     #-----------------------------------------------------------
-    def _add_sam_weights(self, df : pnd.DataFrame) -> pnd.DataFrame:
+    def __add_sam_weights(self, df : pnd.DataFrame) -> pnd.DataFrame:
         if len(df) == 0:
             return df
 
@@ -244,7 +244,7 @@ class PRec(Cache):
 
         return df
     #-----------------------------------------------------------
-    def _check_weights(self):
+    def __check_weights(self):
         try:
             [(k1, v1), (k2, v2)] = self._d_wg.items()
         except:
@@ -257,7 +257,7 @@ class PRec(Cache):
         if (v1 not in [0, 1]) or (v2 not in [0, 1]):
             raise ValueError(f'Invalid weight values: {v1}, {v2}')
     #-----------------------------------------------------------
-    def _check_valid(self, var : str, l_var : list[str], name : str):
+    def __check_valid(self, var : str, l_var : list[str], name : str):
         if var not in l_var:
             log.error(f'Value for {name}, {var}, is not valid')
             raise ValueError
@@ -629,7 +629,7 @@ class PRec(Cache):
 
         log.info(f'Recalculating, cached data not found in: {self._out_path}')
 
-        d_df = self._get_df()
+        d_df = self.__get_df()
         pdf  = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
 
         # Save dataframes before caching
