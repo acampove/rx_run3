@@ -292,6 +292,20 @@ class KPiLLDecayReader(DecayReader):
 
         return 1.0
     # ----------------------
+    def _get_kshort_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        Weights correcting chains with Kshort decays
+        '''
+        if self._pi.match_decay(l_dec_id = [self._Pion_id, self._KShort_id]):
+            return 0.5
+
+        if self._kp.match_decay(l_dec_id = [self._Pion_id, self._KShort_id]):
+            return 0.5
+
+        return 1.0
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
@@ -300,8 +314,9 @@ class KPiLLDecayReader(DecayReader):
         '''
         wt_common = self._get_common_weights(l1=self._l1, l2=self._l2, kp=self._kp)
         wt_phi    = self._get_phi_weight()
+        wt_kshort = self._get_kshort_weight()
 
-        wt = wt_common * wt_phi
+        wt = wt_common * wt_phi * wt_kshort
 
         return wt
 #---------------------------
