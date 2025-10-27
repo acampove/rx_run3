@@ -89,13 +89,26 @@ class PChain:
 
         return flag
     #----------------------------------------------------
-    def match_upstream(self, IDFirstDau, HeadPart) -> bool:
+    def match_upstream(self, daughter_id, mother_id) -> bool:
+        '''
+        Parameters
+        ---------------
+        x_id: PDG id of particle
+
+        Returns
+        ---------------
+        True if decay chain contains particle and daughter with IDs passed
+        Also true if daughter is great grand mother in chain
+        '''
         flag = False
-        if  self._MOTHER_TID   == IDFirstDau and self._GMOTHER_TID  == HeadPart:
+
+        if  self._MOTHER_TID   == daughter_id and self._GMOTHER_TID  == mother_id:
             flag = True
-        if  self._GMOTHER_TID  == IDFirstDau and self._GGMOTHER_TID == HeadPart:
+
+        if  self._GMOTHER_TID  == daughter_id and self._GGMOTHER_TID == mother_id:
             flag = True
-        if  self._GGMOTHER_TID == IDFirstDau:
+
+        if  self._GGMOTHER_TID == daughter_id:
             flag = True
 
         return flag
