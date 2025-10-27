@@ -98,5 +98,5 @@ def test_simple(sample : str, trigger : str, tmp_path : Path):
     project      = info.project_from_trigger(trigger=trigger, lower_case=True)
     df['weight'] = df.apply(read_weight, args=(project,), axis=1)
 
-    _plot_mass(df, sample, 'simple', tmp_path = tmp_path)
+    _plot_mass(df, sample, f'{sample}_{trigger}', tmp_path = tmp_path)
 #-----------------------------------------------
