@@ -10,7 +10,7 @@ from fitter.decay_reader   import KLLDecayReader
 
 log = LogStore.add_logger('rx_fitter:inclusive_decays_weights')
 
-_READERS = dict()
+_READERS : dict[str,KLLDecayReader] = dict()
 #---------------------------
 def _get_chain(name, row : pnd.Series) -> PChain:
     '''
@@ -71,3 +71,4 @@ def read_weight(row : pnd.Series, project : str) -> float:
     wgt = rdr.get_weight()
 
     return wgt
+#---------------------------
