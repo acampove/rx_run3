@@ -522,14 +522,6 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def _print_cutflow(self) -> None:
-        log.debug('-' * 50)
-        log.debug(f'{"Cut":<30}{"Total":<20}{"Passed":<20}')
-        log.debug('-' * 50)
-        for cut, (inum, fnum) in self._d_fstat.items():
-            log.debug(f'{cut:<30}{inum:<20}{fnum:<20}')
-        log.debug('-' * 50)
-    #-----------------------------------------------------------
     def _yield_in_range(self, pdf : zpdf) -> float:
         '''
         Parameters
