@@ -47,7 +47,11 @@ def _get_df(sample : str, trigger : str) -> pnd.DataFrame:
 
     return df
 #-----------------------------------------------
-def _plot_mass(df : pnd.DataFrame, sample : str, test : str):
+def _plot_mass(
+    df       : pnd.DataFrame, 
+    sample   : str, 
+    test     : str, 
+    tmp_path : Path):
     _, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
     ax1.hist(df.mass, bins=50, range=[4500, 6000], histtype='step', density=True, label='Unweighted', )
     ax1.hist(df.mass, bins=50, range=[4500, 6000], histtype='step', density=True, label='Weighted'  , weights=df.weight)
@@ -62,10 +66,10 @@ def _plot_mass(df : pnd.DataFrame, sample : str, test : str):
 
     ax2.hist(df.weight, bins=50, edgecolor='black')
 
-    out_dir = f'{Data.out_dir}/{test}'
+    out_dir = tmp_path / test
     os.makedirs(out_dir, exist_ok=True)
 
-    out_path = f'{out_dir}/{sample}.png'
+    out_path = out_dir / f'{sample}.png'
 
     plt.savefig(out_path)
     plt.close()
