@@ -35,7 +35,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
     if args is None:
         parser = argparse.ArgumentParser(description='Script used to fit RX data')
         parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[12,3,4,5,6,78], default=-1)
-        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/electron'       , required=True)
+        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. reso/rkst/electron'  , required=True)
         parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =  '')
         parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
         parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                               , default =1)
