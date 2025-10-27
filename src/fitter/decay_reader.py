@@ -17,14 +17,14 @@ class DecayReader:
         '''
         Takes particle chain instances
         '''
-        self._Jp_id = 443
-        self._Ps_id = 100443
-        self._Pi_id = 211
-        self._Ph_id = 333
-        self._Et_id = 221
-        self._Ks_id = 313
-        self._Kp_id = 321
-        self._KS_id = 310
+        self._Jpsi_id   = 443
+        self._Psi2_id   = 100443
+        self._Pion_id   = 211
+        self._Phi_id    = 333
+        self._Eta_id    = 221
+        self._Kstar_id  = 313
+        self._Kplus_id  = 321
+        self._KShort_id = 310
 
         self._Bd_id = 511
         self._Bu_id = 521
@@ -44,11 +44,11 @@ class DecayReader:
         self._K0         = 311
         self._KLong      = 130
         self._Pi0        = 111
-        self._M          = 13
-        self._E          = 11
+        self._Muon       = 13
+        self._Electron   = 11
         self._Tau        = 15
-        self._P          = 2212
-        self._N          = 2112
+        self._Proton     = 2212
+        self._Neutron    = 2112
         self._Eta_prime  = 331
         self._Rho0       = 113
         self._Rho_c      = 213
