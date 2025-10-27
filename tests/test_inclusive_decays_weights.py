@@ -12,7 +12,7 @@ from ROOT                            import RDF # type: ignore
 from dmu.logging.log_store           import LogStore
 from rx_data.rdf_getter              import RDFGetter
 from rx_common                       import info
-from fitter.inclusive_decays_weights import Reader
+from fitter.inclusive_decays_weights import read_weight 
 
 log=LogStore.add_logger('fitter:test_inclusive_decays_weights')
 
@@ -25,6 +25,13 @@ _SAMPLES = [
     #('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
     #('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
 ]
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('fitter:decay_reader', 5)
 #-----------------------------------------------
 def _rdf_to_idf(rdf : RDF.RNode) -> pnd.DataFrame:
     rdf   =rdf.Define('mass', 'B_const_mass_M')
@@ -39,10 +46,8 @@ def _rdf_to_idf(rdf : RDF.RNode) -> pnd.DataFrame:
     return df
 #-----------------------------------------------
 def _get_df(sample : str, trigger : str) -> pnd.DataFrame:
-    with RDFGetter.max_entries(10_000):
-        gtr = RDFGetter(sample = sample, trigger = trigger)
-        rdf = gtr.get_rdf(per_file=False)
-
+    gtr = RDFGetter(sample = sample, trigger = trigger)
+    rdf = gtr.get_rdf(per_file=False)
     df  = _rdf_to_idf(rdf)
 
     return df
@@ -79,9 +84,11 @@ def test_simple(sample : str, trigger : str, tmp_path : Path):
     '''
     Simplest test of addition of weights
     '''
-    df           = _get_df(sample, trigger)
+    with RDFGetter.max_entries(10):
+        df = _get_df(sample, trigger)
+
     project      = info.project_from_trigger(trigger=trigger, lower_case=True)
-    df['weight'] = df.apply(Reader.read_weight, args=(project,), axis=1)
+    df['weight'] = df.apply(read_weight, args=(project,), axis=1)
 
     _plot_mass(df, sample, 'simple', tmp_path = tmp_path)
 #-----------------------------------------------
