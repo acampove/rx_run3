@@ -34,7 +34,7 @@ class DecayReader:
         self._Bc         = 541
         self._Lb         = 5122
         self._L0         = 3122
-        self._Kst_c      = 323
+        self._Kst_c_id   = 323
         self._K_1_1270_z = 10313
         self._K_1_1270_c = 10323
         self._K_2_1430_c = 325
@@ -184,7 +184,7 @@ class DecayReader:
         if kp.match_decay( [self._Kplus_id, self._Kstar_id] ):
             weight *= 0.66 / 0.7993
 
-        if kp.match_decay( [self._Kplus_id, self._Kst_c] ):
+        if kp.match_decay( [self._Kplus_id, self._Kst_c_id] ):
             weight *= 0.33 / 0.4993
 
         if kp.match_decay( [self._Kplus_id, self._K_2_1430_c]):
@@ -335,12 +335,12 @@ class KPiLLDecayReader(DecayReader):
         if self._pi.match_decay(l_dec_id=[self._Pion_id, self._KShort_id, self._Kstar_id]):
             return 0.33 / 0.20
 
-        kst_c_pi_1 = self._pi.match_decay(l_dec_id=[self._Pion_id,                  self._Kst_c])
-        kst_c_pi_2 = self._pi.match_decay(l_dec_id=[self._Pion_id, self._KShort_id, self._Kst_c])
+        kst_c_pi_1 = self._pi.match_decay(l_dec_id=[self._Pion_id,                  self._Kst_c_id])
+        kst_c_pi_2 = self._pi.match_decay(l_dec_id=[self._Pion_id, self._KShort_id, self._Kst_c_id])
         if kst_c_pi_1 or kst_c_pi_2:
             return 0.66 / 0.4993
 
-        if self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kst_c]):
+        if self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kst_c_id]):
             return 0.33 / 0.4993
 
         return 1.0
