@@ -165,8 +165,9 @@ class DecayReader:
 #---------------------------
 class KLLDecayReader(DecayReader):
     '''
-    Class used to attach decay weights for KLL signal candidates
+    Class used to retrieve decay weights for KLL candidates
     '''
+    #---------------------------
     def __init__(self, l1 : PChain, l2 : PChain, kp : PChain):
         super().__init__()
         self._l_chain = [l1, l2, kp]
