@@ -91,7 +91,7 @@ class DecayReader:
             l1_from_ps = l1.match_mother(self._Ps_id)
             l2_from_ps = l2.match_mother(self._Ps_id)
             if l1_from_ps or l2_from_ps:
-                #weight = 1.3200 / 0.1741 #7.58
+                # TODO: Changed from 7.58 in RX code
                 weight = 0.771
 
         return weight
