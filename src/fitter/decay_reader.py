@@ -205,23 +205,27 @@ class KLLDecayReader(DecayReader):
 
         return weight
     #---------------------------
-    def get_weight(self) -> float:
+    def _get_common_weights(
+        self,
+        l1 : PChain,
+        l2 : PChain,
+        kp : PChain) -> float:
         '''
-        Returns:
-
-        wt (float): Weight for candidate
+        Returns
+        ----------------
+        Weight for both k+ll and k+pi-ll candidates
         '''
-        w1 = self._get_jpsi_wgt(l1=self._l1, l2=self._l2)
-        w2 = self._get_psi2_wgt(l1=self._l1, l2=self._l2)
+        w1 = self._get_jpsi_wgt(l1=l1, l2=l2)
+        w2 = self._get_psi2_wgt(l1=l1, l2=l2)
         w3 = self._get_psi2_over_jpsi()
-        w4 = self._get_kp_wgt()
+        w4 = self._get_kp_wgt(kp=kp)
         wt = w1 * w2 * w3 * w4
 
         log.verbose('-----------------------------')
         log.verbose(f'Jpsi wgt:           {w1:.3f}')
         log.verbose(f'psi2 wgt:           {w2:.3f}')
         log.verbose(f'Psi2 over Jpsi wgt: {w3:.3f}')
-        log.verbose(f'Kplus wgt:          {w4:.3f}')
+        log.verbose(f'Kstar wgt:          {w4:.3f}')
         log.verbose(f'Total wgt:          {wt:.3f}')
 
         return wt
