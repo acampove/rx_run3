@@ -399,14 +399,14 @@ class PRec(Cache):
 
         l_d_sel   = [ sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample) for sample in self._l_sample ]
         l_element = [
-                swgt,
-                self._trig,
-                self._q2bin,
-                mass,
-                scwg,           # Stringified keyword arguments
-                self._l_sample, # ccbar cocktail sample names
-                l_d_sel,        # list of selections, one for each ccbar cocktail sample
-                cut]
+            swgt,
+            self._trig,
+            self._q2bin,
+            mass,
+            scwg,           # Stringified keyword arguments
+            self._l_sample, # ccbar cocktail sample names
+            l_d_sel,        # list of selections, one for each ccbar cocktail sample
+            cut]
 
         hsh  = hashing.hash_object(l_element)
 
