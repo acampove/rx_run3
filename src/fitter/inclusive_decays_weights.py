@@ -213,15 +213,15 @@ class Reader:
         -------------------
         wgt (float): Weight for candidate associated to input row
         '''
-        if project == 'rk':
-            p1_ch = Reader.get_chain('L1', row)
-            p2_ch = Reader.get_chain('L2', row)
-            p3_ch = Reader.get_chain( 'H', row)
+        p1_ch = Reader.get_chain('L1', row)
+        p2_ch = Reader.get_chain('L2', row)
 
-            obj = Reader(p1_ch, p2_ch, p3_ch)
-            wgt = obj.get_weight()
+        if project == 'rk':
+            p3_ch = Reader.get_chain( 'H', row)
+            obj   = Reader(p1_ch, p2_ch, p3_ch)
         else:
             raise NotImplementedError(f'Invalid project: {project}')
 
+        wgt = obj.get_weight()
         return wgt
 #---------------------------
