@@ -379,6 +379,40 @@ class KPiLLDecayReader(DecayReader):
 
         return 1.0
     # ----------------------
+    def _get_k1c_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        Weight for chains with K_1_1270_c
+        '''
+        if self._pi.match_decay(l_dec_id=[self._Pion_id, self._Rho_c, self._K_1_1270_c]):
+            return 0.2800 / 0.1838
+
+        if self._pi.match_decay(l_dec_id=[self._Pion_id, self._Rho0 , self._K_1_1270_c]):
+            return 0.1400 / 0.1838
+
+        pi_kst_k1c_1 = self._pi.match_decay(l_dec_id=[self._Pion_id , self._Kstar_id, self._K_1_1270_c])
+        k_kst_k1c_1  = self._kp.match_decay(l_dec_id=[self._Pion_id , self._Kstar_id, self._K_1_1270_c])
+        pi_k1c_2     = self._pi.match_decay(l_dec_id=[self._Pion_id ,                 self._K_1_1270_c])
+        k_kst_k1c_2  = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kstar_id, self._K_1_1270_c])
+
+        if (pi_kst_k1c_1 and k_kst_k1c_1) or (pi_k1c_2 and k_kst_k1c_2):
+            return 0.1067 / 0.1166
+
+        pi_omega_k1c = self._pi.match_decay(l_dec_id=[self._Pion_id , self._Omega, self._K_1_1270_c])
+        k_k1c_1      = self._kp.match_decay(l_dec_id=[self._Kplus_id,              self._K_1_1270_c])
+
+        if pi_omega_k1c and k_k1c_1:
+            return 0.1100 / 0.1440
+
+        pi_k1c_3     = self._pi.match_decay(l_dec_id=[self._Pion_id , self._K_1_1270_c])
+        k_k1c_2      = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._K_1_1270_c])
+
+        if pi_k1c_3 and k_k1c_2:
+            return 0.1444 / 0.1895
+
+        return 1.0
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
@@ -391,8 +425,9 @@ class KPiLLDecayReader(DecayReader):
         wt_eta    = self._get_eta_weight()
         wt_kstar  = self._get_kstar_weight()
         wt_k10    = self._get_k10_weight()
+        wt_k1c    = self._get_k1c_weight()
 
-        wt = wt_common * wt_phi * wt_kshort * wt_eta * wt_kstar * wt_k10
+        wt = wt_common * wt_phi * wt_kshort * wt_eta * wt_kstar * wt_k10 * wt_k1c
 
         return wt
 #---------------------------
