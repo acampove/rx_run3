@@ -276,8 +276,8 @@ class KPiLLDecayReader(DecayReader):
         if self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Phi_id, self._Bu_id]):
             return 0.5 / 0.7597
 
-        rho0_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Phi_id)
-        rhoc_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Phi_id)
+        rho0_upstream = self._pi.match_upstream(daughter_id = self._Rho0 , mother_id= self._Phi_id)
+        rhoc_upstream = self._pi.match_upstream(daughter_id = self._Rho_c, mother_id= self._Phi_id)
         is_pion       = self._pi.match_id(iD = self._Pion_id)
         weight        = 0.0425 / 0.0665
 
