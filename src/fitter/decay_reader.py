@@ -500,6 +500,46 @@ class KPiLLDecayReader(DecayReader):
     
         return 1.0
     # ----------------------
+    def _get_k1z_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        Weight for chains with K_1_1400_z
+        '''
+        k_kstc_k1_1400_z  = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kst_c_id, self._K_1_1400_z])
+        pi_k1_1400_z      = self._pi.match_decay(l_dec_id=[self._Pion_id ,                 self._K_1_1400_z])
+        pi_kstc_k1_1400_z = self._pi.match_decay(l_dec_id=[self._Pion_id , self._Kst_c_id, self._K_1_1400_z])
+        if k_kstc_k1_1400_z and (pi_k1_1400_z or pi_kstc_k1_1400_z):
+            return 0.6300 / 0.5849
+    
+        k_k1_1400_z        = self._kp.match_decay(l_dec_id=[self._Kplus_id,                self._K_1_1400_z])
+        pi_rho_c_k1_1400_z = self._pi.match_decay(l_dec_id=[self._Pion_id , self._Rho_c,   self._K_1_1400_z])
+        if k_k1_1400_z and pi_rho_c_k1_1400_z:
+            return 0.0200 / 0.0278
+    
+        k_kst_k1_1400_z  = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kstar_id, self._K_1_1400_z])
+        pi_kst_k1_1400_z = self._pi.match_decay(l_dec_id=[self._Pion_id , self._Kstar_id, self._K_1_1400_z])
+        if k_kst_k1_1400_z and pi_kst_k1_1400_z:
+            return 0.3100 / 0.3594
+    
+        if not (self._kp.match_mother(  self._K_1_1400_z) or
+                self._kp.match_gmother( self._K_1_1400_z) or
+                self._kp.match_ggmother(self._K_1_1400_z)):
+    
+            pi_rho0_k1_1400_z   = self._pi.match_decay(l_dec_id=[self._Pion_id, self._Rho0     , self._K_1_1400_z])
+            pi_kshort_k1_1400_z = self._pi.match_decay(l_dec_id=[self._Pion_id, self._KShort_id, self._K_1_1400_z])
+            if pi_rho0_k1_1400_z or pi_kshort_k1_1400_z:
+                return 0.0100 / 0.0070
+    
+            pi_omega_k1_1400_z = self._pi.match_decay(l_dec_id=[self._Pion_id, self._Omega, self._K_1_1400_z])
+            if pi_omega_k1_1400_z or pi_kshort_k1_1400_z:
+                return 0.0100 / 0.0069
+    
+            if self._pi.match_decay(l_dec_id=[self._Pion_id, self._K_1_1400_z]):
+                return 0.0133 / 0.0093
+    
+        return 1.0 
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
@@ -515,8 +555,9 @@ class KPiLLDecayReader(DecayReader):
         wt_k1c    = self._get_k1c_weight()
         wt_k2c    = self._get_k2c_weight()
         wt_k2z    = self._get_k2z_weight()
+        wt_k1z    = self._get_k1z_weight()
 
-        wt = wt_common * wt_phi * wt_kshort * wt_eta * wt_kstar * wt_k10 * wt_k1c * wt_k2c * wt_k2z
+        wt = wt_common * wt_phi * wt_kshort * wt_eta * wt_kstar * wt_k10 * wt_k1c * wt_k2c * wt_k2z * wt_k1z
 
         return wt
 #---------------------------
