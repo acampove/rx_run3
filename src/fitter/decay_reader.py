@@ -214,13 +214,14 @@ class KLLDecayReader(DecayReader):
         w2 = self._get_psi2_wgt(l1=self._l1, l2=self._l2)
         w3 = self._get_psi2_over_jpsi()
         w4 = self._get_kp_wgt()
-
-        log.verbose(f'Jpsi wgt: {w1:.3f}')
-        log.verbose(f'psi2 wgt: {w1:.3f}')
-        log.verbose(f'Psi2 over Jpsi wgt: {w1:.3f}')
-        log.verbose(f'Kplus wgt: {w1:.3f}')
-
         wt = w1 * w2 * w3 * w4
+
+        log.verbose('-----------------------------')
+        log.verbose(f'Jpsi wgt:           {w1:.3f}')
+        log.verbose(f'psi2 wgt:           {w2:.3f}')
+        log.verbose(f'Psi2 over Jpsi wgt: {w3:.3f}')
+        log.verbose(f'Kplus wgt:          {w4:.3f}')
+        log.verbose(f'Total wgt:          {wt:.3f}')
 
         return wt
 #---------------------------
