@@ -345,6 +345,40 @@ class KPiLLDecayReader(DecayReader):
 
         return 1.0
     # ----------------------
+    def _get_k10_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        Weight associated to chains with 
+        '''
+        kplus_k1_rho = self._pi.match_decay(l_dec_id=[self._Pion_id, self._Rho_c, self._K_1_1270_z])
+        k_k1         = self._kp.match_decay(l_dec_id=[self._Kplus_id,             self._K_1_1270_z])
+        if k_k1 and kplus_k1_rho:
+            return 0.2800 / 0.3796
+
+        if self._pi.match_decay(l_dec_id=[self._Pion_id, self._Rho0, self._K_1_1270_z]):
+            return 0.1400 / 0.0949
+
+        pi_k1     = self._pi.match_decay(l_dec_id=[self._Pion_id,                  self._K_1_1270_z])
+        k_kstc_k1 = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kst_c_id, self._K_1_1270_z])
+        if pi_k1 and k_kstc_k1:
+            return 0.1067 / 0.0965
+
+        k_k1_2    = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._K_1_1270_z])
+        pi_k1_2   = self._pi.match_decay(l_dec_id=[self._Pion_id , self._K_1_1270_z])
+        if k_k1_2 and pi_k1_2:
+            return 0.1244 / 0.1686
+
+        k_kst_k1  = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kstar_id, self._K_1_1270_z])
+        pi_kst_k1 = self._pi.match_decay(l_dec_id=[self._Pion_id , self._Kstar_id, self._K_1_1270_z])
+        if k_kst_k1 and pi_kst_k1:
+            return 0.0533 / 0.0602
+
+        if self._pi.match_decay(l_dec_id=[self._Pion_id, self._Omega, self._K_1_1270_z]):
+            return 0.1100 / 0.0744
+
+        return 1.0
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
@@ -356,8 +390,9 @@ class KPiLLDecayReader(DecayReader):
         wt_kshort = self._get_kshort_weight()
         wt_eta    = self._get_eta_weight()
         wt_kstar  = self._get_kstar_weight()
+        wt_k10    = self._get_k10_weight()
 
-        wt = wt_common * wt_phi * wt_kshort * wt_eta * wt_kstar
+        wt = wt_common * wt_phi * wt_kshort * wt_eta * wt_kstar * wt_k10
 
         return wt
 #---------------------------
