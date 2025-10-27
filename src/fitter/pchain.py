@@ -89,7 +89,7 @@ class PChain:
 
         return flag
     #----------------------------------------------------
-    def match_upstream(self, daughter_id, mother_id) -> bool:
+    def match_upstream(self, daughter_id : int, mother_id : int) -> bool:
         '''
         Parameters
         ---------------
