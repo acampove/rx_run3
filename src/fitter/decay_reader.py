@@ -264,13 +264,44 @@ class KPiLLDecayReader(DecayReader):
         self._kp = kp
         self._pi = pi
     # ----------------------
+    def _get_phi_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        Weight correcting branching fraction in chains with phi decays
+        '''
+        if self._kp.match_decay(l_dec_id=[self._Kp_id, self._Ph_id, self._Bd_id]):
+            return 0.5 / 0.9974
+
+        if self._kp.match_decay(l_dec_id=[self._Kp_id, self._Ph_id, self._Bu_id]):
+            return 0.5 / 0.7597
+
+        rho0_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Ph_id)
+        rhoc_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Ph_id)
+        is_pion       = self._pi.match_id(iD = self._Pi_id)
+        weight        = 0.0425 / 0.0665
+
+        if rho0_upstream and is_pion: 
+            return weight 
+
+        if rhoc_upstream and is_pion: 
+            return weight 
+
+        if self._pi.match_decay(l_dec_id=[self._Pi_id, self._Ph_id]):
+            return weight
+
+        return 1.0
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
         -------------
         Weight needed to correct for branching fraction bug in cocktail sample
         '''
-        wt = self._get_common_weights(l1=self._l1, l2=self._l2, kp=self._kp)
+        wt_common = self._get_common_weights(l1=self._l1, l2=self._l2, kp=self._kp)
+        wt_phi    = self._get_phi_weight()
+
+        wt = wt_common * wt_phi
 
         return wt
 #---------------------------
