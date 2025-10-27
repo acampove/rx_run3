@@ -226,3 +226,30 @@ class KLLDecayReader(DecayReader):
 
         return wt
 #---------------------------
+class KPiLLDecayReader(DecayReader):
+    '''
+    Class used to retrieve decay weights for KPILL candidates
+    '''
+    #---------------------------
+    def __init__(
+        self, 
+        l1 : PChain, 
+        l2 : PChain, 
+        kp : PChain,
+        pi : PChain):
+        '''
+        Parameters
+        --------------
+        PChain instances for final state tracks
+        '''
+        super().__init__()
+        self._l_chain = [l1, l2, kp, pi]
+
+        self._l1 = l1
+        self._l2 = l2
+        self._kp = kp
+        self._pi = pi
+    #---------------------------
+    def get_weight(self) -> float:
+        return 1
+#---------------------------
