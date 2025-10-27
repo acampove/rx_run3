@@ -74,13 +74,14 @@ def _plot_mass(
     plt.savefig(out_path)
     plt.close()
 #-----------------------------------------------
-@pytest.mark.parametrize('sample, trigger', Data.l_sample)
-def test_simple(sample : str, trigger : str):
+@pytest.mark.parametrize('sample, trigger', _SAMPLES)
+def test_simple(sample : str, trigger : str, tmp_path : Path):
     '''
     Simplest test of addition of weights
     '''
     df           = _get_df(sample, trigger)
-    df['weight'] = df.apply(Reader.read_weight, args=('L1', 'L2', 'H'), axis=1)
+    project      = info.project_from_trigger(trigger=trigger, lower_case=True)
+    df['weight'] = df.apply(Reader.read_weight, args=(project,), axis=1)
 
-    _plot_mass(df, sample, 'simple')
+    _plot_mass(df, sample, 'simple', tmp_path = tmp_path)
 #-----------------------------------------------
