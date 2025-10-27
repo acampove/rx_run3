@@ -320,6 +320,31 @@ class KPiLLDecayReader(DecayReader):
 
         return 1.0
     # ----------------------
+    def _get_kstar_weight(self) -> float:
+        '''
+        Returns
+        -------------
+        Weight associated to chains containing Kstar
+        '''
+        kplus_kstart_kp = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kstar_id])
+        kplus_kstart_pi = self._pi.match_decay(l_dec_id=[self._Kplus_id, self._Kstar_id])
+
+        if kplus_kstart_kp or kplus_kstart_pi:
+            return 0.66 / 0.7993
+
+        if self._pi.match_decay(l_dec_id=[self._Pion_id, self._KShort_id, self._Kstar_id]):
+            return 0.33 / 0.20
+
+        kst_c_pi_1 = self._pi.match_decay(l_dec_id=[self._Pion_id,                  self._Kst_c])
+        kst_c_pi_2 = self._pi.match_decay(l_dec_id=[self._Pion_id, self._KShort_id, self._Kst_c])
+        if kst_c_pi_1 or kst_c_pi_2:
+            return 0.66 / 0.4993
+
+        if self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kst_c]):
+            return 0.33 / 0.4993
+
+        return 1.0
+    # ----------------------
     def get_weight(self) -> float:
         '''
         Returns
@@ -330,8 +355,9 @@ class KPiLLDecayReader(DecayReader):
         wt_phi    = self._get_phi_weight()
         wt_kshort = self._get_kshort_weight()
         wt_eta    = self._get_eta_weight()
+        wt_kstar  = self._get_kstar_weight()
 
-        wt = wt_common * wt_phi * wt_kshort * wt_eta
+        wt = wt_common * wt_phi * wt_kshort * wt_eta * wt_kstar
 
         return wt
 #---------------------------
