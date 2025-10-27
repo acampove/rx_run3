@@ -76,20 +76,20 @@ class DecayReader:
         '''
         weight = 1.0
         for bid in  self._l_bid:
-            flg_1 = l1.match_upstream( self._Ps_id, bid)
-            flg_2 = l2.match_upstream( self._Ps_id, bid)
+            flg_1 = l1.match_upstream( self._Psi2_id, bid)
+            flg_2 = l2.match_upstream( self._Psi2_id, bid)
 
             if not flg_1 and not flg_2:
                 continue
 
-            l1_from_jp = l1.match_mother(self._Jp_id)
-            l2_from_jp = l2.match_mother(self._Jp_id)
+            l1_from_jp = l1.match_mother(self._Jpsi_id)
+            l2_from_jp = l2.match_mother(self._Jpsi_id)
             if   l1_from_jp or l2_from_jp:
                 #weight = 0.6254 / ( 1-0.1741) #0.75
                 weight = 0.958
 
-            l1_from_ps = l1.match_mother(self._Ps_id)
-            l2_from_ps = l2.match_mother(self._Ps_id)
+            l1_from_ps = l1.match_mother(self._Psi2_id)
+            l2_from_ps = l2.match_mother(self._Psi2_id)
             if l1_from_ps or l2_from_ps:
                 # TODO: Changed from 7.58 in RX code
                 weight = 0.771
@@ -108,13 +108,13 @@ class DecayReader:
         when they come directly from a Psi2S
         '''
         weight= 1
-        flg_1 = l1.match_upstream(self._Ps_id, self._Bd_id)
-        flg_2 = l2.match_upstream(self._Ps_id, self._Bd_id)
+        flg_1 = l1.match_upstream(self._Psi2_id, self._Bd_id)
+        flg_2 = l2.match_upstream(self._Psi2_id, self._Bd_id)
         if flg_1 or flg_2:
             weight = 1.17
 
-        flg_1 = l1.match_upstream(self._Ps_id, self._Bu_id)
-        flg_2 = l2.match_upstream(self._Ps_id, self._Bu_id)
+        flg_1 = l1.match_upstream(self._Psi2_id, self._Bu_id)
+        flg_2 = l2.match_upstream(self._Psi2_id, self._Bu_id)
         if flg_1 or flg_2:
             weight = 1.35
 
@@ -144,7 +144,7 @@ class DecayReader:
         Returns correction factor for branching fractions
         associated to psi2S chain
         '''
-        flg_ps = self._either_track_has(self._Ps_id)
+        flg_ps = self._either_track_has(self._Psi2_id)
         if not flg_ps:
             return 1.0
 
@@ -169,25 +169,25 @@ class DecayReader:
         to kaon chain
         '''
         weight = 1.0
-        if kp.match_decay( [self._Pi_id, self._KS_id             ]):
+        if kp.match_decay( [self._Pion_id, self._KShort_id             ]):
             weight *= 0.5
 
-        if kp.match_decay( [self._Kp_id, self._Ph_id, self._Bd_id]):
+        if kp.match_decay( [self._Kplus_id, self._Phi_id, self._Bd_id]):
             weight *= 0.5/0.9974
 
-        if kp.match_decay( [self._Kp_id, self._Ph_id, self._Bu_id]):
+        if kp.match_decay( [self._Kplus_id, self._Phi_id, self._Bu_id]):
             weight *= 0.5/0.7597
 
-        if kp.match_decay( [self._Pi_id, self._Et_id] ):
+        if kp.match_decay( [self._Pion_id, self._Eta_id] ):
             weight *= 0.28/0.4
 
-        if kp.match_decay( [self._Kp_id, self._Ks_id] ):
+        if kp.match_decay( [self._Kplus_id, self._Kstar_id] ):
             weight *= 0.66 / 0.7993
 
-        if kp.match_decay( [self._Kp_id, self._Kst_c] ):
+        if kp.match_decay( [self._Kplus_id, self._Kst_c] ):
             weight *= 0.33 / 0.4993
 
-        if kp.match_decay( [self._Kp_id, self._K_2_1430_c]):
+        if kp.match_decay( [self._Kplus_id, self._K_2_1430_c]):
             weight *= 0.1670/0.2485
 
         return weight
@@ -270,15 +270,15 @@ class KPiLLDecayReader(DecayReader):
         -------------
         Weight correcting branching fraction in chains with phi decays
         '''
-        if self._kp.match_decay(l_dec_id=[self._Kp_id, self._Ph_id, self._Bd_id]):
+        if self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Phi_id, self._Bd_id]):
             return 0.5 / 0.9974
 
-        if self._kp.match_decay(l_dec_id=[self._Kp_id, self._Ph_id, self._Bu_id]):
+        if self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Phi_id, self._Bu_id]):
             return 0.5 / 0.7597
 
-        rho0_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Ph_id)
-        rhoc_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Ph_id)
-        is_pion       = self._pi.match_id(iD = self._Pi_id)
+        rho0_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Phi_id)
+        rhoc_upstream = self._pi.match_upstream(daughter_id = self._Rho0, mother_id= self._Phi_id)
+        is_pion       = self._pi.match_id(iD = self._Pion_id)
         weight        = 0.0425 / 0.0665
 
         if rho0_upstream and is_pion: 
@@ -287,7 +287,7 @@ class KPiLLDecayReader(DecayReader):
         if rhoc_upstream and is_pion: 
             return weight 
 
-        if self._pi.match_decay(l_dec_id=[self._Pi_id, self._Ph_id]):
+        if self._pi.match_decay(l_dec_id=[self._Pion_id, self._Phi_id]):
             return weight
 
         return 1.0
