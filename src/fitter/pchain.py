@@ -19,19 +19,23 @@ class PChain:
         self._GMOTHER_TID  = gmid
         self._GGMOTHER_TID = ggmid
     #----------------------------------
-    def ID(self):
+    @property
+    def id(self) -> int:
         return self._TID
 
-    def MID(self):
+    @property
+    def mother_id(self) -> int:
         return self._MOTHER_TID
 
-    def GMID(self):
+    @property
+    def gmother_id(self) -> int:
         return self._GMOTHER_TID
 
-    def GGMID(self):
+    @property
+    def ggmother_id(self) -> int:
         return self._GGMOTHER_TID
     #----------------------------------------------------
-    def MatchDecay(self, l_dec_id):
+    def match_decay(self, l_dec_id):
         if len(l_dec_id) == 1:
             return self._TID ==      l_dec_id[0]
         if len(l_dec_id) == 2:
@@ -43,7 +47,7 @@ class PChain:
 
         return False
     #----------------------------------------------------
-    def HasInChain(self, ID):
+    def has_in_chain(self, ID):
         _return = False
 
         if self._MOTHER_TID   == ID:
@@ -55,7 +59,7 @@ class PChain:
 
         return _return
     #----------------------------------------------------
-    def MatchUpstream(self, IDFirstDau, HeadPart):
+    def match_upstream(self, IDFirstDau, HeadPart):
         _return = False
         if  self._MOTHER_TID   == IDFirstDau and self._GMOTHER_TID  == HeadPart:
             _return = True
@@ -66,15 +70,15 @@ class PChain:
 
         return _return
     #----------------------------------------------------
-    def MatchID(self, iD):
+    def match_id(self, iD):
         return self._TID == abs(iD)
 
-    def MatchMother(self, iD):
+    def match_mother(self, iD):
         return self._MOTHER_TID == abs(iD)
 
-    def MatchGMother(self, iD):
+    def match_gmother(self, iD):
         return self._GMOTHER_TID == abs(iD)
 
-    def MatchGGMother(self, iD):
+    def match_ggmother(self, iD):
         return self._GGMOTHER_TID == abs(iD)
 #----------------------------------------------------
