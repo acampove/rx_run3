@@ -31,7 +31,7 @@ def initialize():
     '''
     This will run before any test
     '''
-    LogStore.set_level('fitter:decay_reader', 5)
+    LogStore.set_level('fitter:decay_reader', 10)
 #-----------------------------------------------
 def _rdf_to_idf(rdf : RDF.RNode) -> pnd.DataFrame:
     rdf   =rdf.Define('mass', 'B_const_mass_M')
@@ -84,7 +84,7 @@ def test_simple(sample : str, trigger : str, tmp_path : Path):
     '''
     Simplest test of addition of weights
     '''
-    with RDFGetter.max_entries(10):
+    with RDFGetter.max_entries(100_000):
         df = _get_df(sample, trigger)
 
     project      = info.project_from_trigger(trigger=trigger, lower_case=True)
