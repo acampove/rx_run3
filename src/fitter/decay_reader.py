@@ -548,8 +548,7 @@ class KPiLLDecayReader(DecayReader):
         '''
         k_kst_k1_1400_c  = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kstar_id, self._K_1_1400_c])
         pi_kst_k1_1400_c = self._pi.match_decay(l_dec_id=[self._Pion_id , self._Kstar_id, self._K_1_1400_c])
-        pi_kst_only      = self._pi.match_decay(l_dec_id=[                self._Kstar_id                  ])
-        if k_kst_k1_1400_c and (pi_kst_k1_1400_c or pi_kst_only):
+        if k_kst_k1_1400_c and pi_kst_k1_1400_c:
             return 0.6300 / 0.6714
     
         k_kstc_k1_1400_c  = self._kp.match_decay(l_dec_id=[self._Kplus_id, self._Kst_c_id, self._K_1_1400_c])
