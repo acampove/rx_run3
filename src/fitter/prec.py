@@ -3,7 +3,6 @@ Module containing PRec
 '''
 import os
 import copy
-import json
 import pprint
 from contextlib import contextmanager
 from pathlib    import Path
@@ -389,28 +388,6 @@ class PRec(Cache):
         self._d_fstat[cut] = inum, fnum
 
         return df
-    #-----------------------------------------------------------
-    def _get_identifier(self, mass : str, cut : str, **kwargs) -> str:
-        cwargs = copy.deepcopy(kwargs)
-        del cwargs['obs']
-
-        swgt = json.dumps(self._d_wg , sort_keys=True)
-        scwg = json.dumps(cwargs     , sort_keys=True)
-
-        l_d_sel   = [ sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample) for sample in self._l_sample ]
-        l_element = [
-            swgt,
-            self._trig,
-            self._q2bin,
-            mass,
-            scwg,           # Stringified keyword arguments
-            self._l_sample, # ccbar cocktail sample names
-            l_d_sel,        # list of selections, one for each ccbar cocktail sample
-            cut]
-
-        hsh  = hashing.hash_object(l_element)
-
-        return hsh
     #-----------------------------------------------------------
     def _path_from_identifier(self, identifier : str) -> str:
         dir_path = '/tmp/cache/prec'
