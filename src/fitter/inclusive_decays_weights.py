@@ -118,6 +118,10 @@ class Reader:
         return flg_l1 or flg_l2 or flg_kp
     #---------------------------
     def _get_psi_over_jpsi(self) -> float:
+        '''
+        Returns correction factor for branching fractions
+        associated to psi2S chain
+        '''
         flg_ps = self._either_track_has(self._Ps_id)
         if not flg_ps:
             return 1.0
@@ -138,6 +142,10 @@ class Reader:
         return 1.0
     #---------------------------
     def _get_kst_wgt(self) -> float:
+        '''
+        Returns correction weights for branching fraction associated
+        to kaon chain
+        '''
         weight = 1.0
         if self._kp_ch.match_decay( [self._Pi_id, self._KS_id             ]):
             weight *= 0.5
