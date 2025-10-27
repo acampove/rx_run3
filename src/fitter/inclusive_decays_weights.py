@@ -9,8 +9,6 @@ from dmu.logging.log_store import LogStore
 from fitter.decay_reader   import KLLDecayReader
 
 log = LogStore.add_logger('rx_fitter:inclusive_decays_weights')
-
-_READERS : dict[str,KLLDecayReader] = dict()
 #---------------------------
 def _get_chain(name, row : pnd.Series) -> PChain:
     '''
@@ -38,9 +36,6 @@ def _get_reader(project : str, row : pnd.Series) -> KLLDecayReader:
     -------------------
     Reader to extract candidate weigth
     '''
-    if project in _READERS:
-        return _READERS[project]
-
     p1_ch = _get_chain('L1', row)
     p2_ch = _get_chain('L2', row)
 
@@ -49,8 +44,6 @@ def _get_reader(project : str, row : pnd.Series) -> KLLDecayReader:
         obj   = KLLDecayReader(p1_ch, p2_ch, p3_ch)
     else:
         raise NotImplementedError(f'Invalid project: {project}')
-
-    _READERS[project] = obj
 
     return obj
 #---------------------------
