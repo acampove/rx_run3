@@ -184,25 +184,28 @@ class Reader:
         return chain
     #---------------------------
     @staticmethod
-    def read_weight(row : pnd.Series, p1 : str, p2 : str, p3 : str) -> float:
+    def read_weight(row : pnd.Series, project : str) -> float:
         '''
         This method will return the BR weights
 
         Parameters
         -------------------
-        row: Row in pandas dataframe holding PDG id information for the three particles.
-        pX: Name of particle in dataframe, e.g. L1, L2, H
+        row    : Row in pandas dataframe holding PDG id information for the three particles.
+        project: rk, rkst, etc, used to pick particles
 
         Returns
         -------------------
         wgt (float): Weight for candidate associated to input row
         '''
-        p1_ch = Reader.get_chain(p1, row)
-        p2_ch = Reader.get_chain(p2, row)
-        p3_ch = Reader.get_chain(p3, row)
+        if project == 'rk':
+            p1_ch = Reader.get_chain('L1', row)
+            p2_ch = Reader.get_chain('L2', row)
+            p3_ch = Reader.get_chain( 'H', row)
 
-        obj = Reader(p1_ch, p2_ch, p3_ch)
-        wgt = obj.get_weight()
+            obj = Reader(p1_ch, p2_ch, p3_ch)
+            wgt = obj.get_weight()
+        else:
+            raise NotImplementedError(f'Invalid project: {project}')
 
         return wgt
 #---------------------------
