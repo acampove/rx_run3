@@ -532,7 +532,7 @@ class KPiLLDecayReader(DecayReader):
                 return 0.0100 / 0.0070
     
             pi_omega_k1_1400_z = self._pi.match_decay(l_dec_id=[self._Pion_id, self._Omega, self._K_1_1400_z])
-            if pi_omega_k1_1400_z or pi_kshort_k1_1400_z:
+            if pi_omega_k1_1400_z:
                 return 0.0100 / 0.0069
     
             if self._pi.match_decay(l_dec_id=[self._Pion_id, self._K_1_1400_z]):
