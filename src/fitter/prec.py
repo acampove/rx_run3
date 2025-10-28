@@ -307,14 +307,14 @@ class PRec(Cache):
         return d_match
     #-----------------------------------------------------------
     def __get_match_str_jpsi(self) -> dict[str,str]:
+        bs          = '(abs(B_TRUEID) == 531)'
         bd          = '(abs(B_TRUEID) == 511)'
         bp          = '(abs(B_TRUEID) == 521)'
-        bs          = '(abs(B_TRUEID) == 531)'
 
         d_cut                                  = {}
+        d_cut[r'$B_s\to c\bar{c}(\to ee)H_s$'] = bs
         d_cut[r'$B_d\to c\bar{c}(\to ee)H_s$'] = bd
         d_cut[r'$B^+\to c\bar{c}(\to ee)H_s$'] = bp
-        d_cut[r'$B_s\to c\bar{c}(\to ee)H_s$'] = bs
 
         return d_cut
     #-----------------------------------------------------------
