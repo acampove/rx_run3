@@ -12,6 +12,10 @@ not_fail_moth_2   : 'TMath::Abs(Jpsi_MC_MOTHER_ID) != 0 && TMath::Abs(H1_MC_MOTH
 not_fail          : '{not_fail_lep} && {not_fail_mes} && {not_fail_moth_1} && {not_fail_moth_2}' 
 not_reso_ee       : '({jpsi_ee_kstzero}) == 0 && ({psi2_ee_kstzero}) == 0'
 not_reso_mm       : '({jpsi_mm_kstzero}) == 0 && ({psi2_mm_kstzero}) == 0'
+
+not_reso_ee_swap  : '({jpsi_ee_kstzero_swap}) == 0 && ({psi2_ee_kstzero_swap}) == 0'
+not_reso_mm_swap  : '({jpsi_mm_kstzero_swap}) == 0 && ({psi2_mm_kstzero_swap}) == 0'
+
 ll_mother         : '(({ll_is_jpsi} && {lep_from_jpsi}) || ({ll_is_psi2} && {lep_from_psi2}))'
 # ----------
 h1_is_pion        : 'TMath::Abs(H1_TRUEID)       == 211' 
@@ -47,6 +51,7 @@ h2_from_lambd     : 'TMath::Abs(H2_MC_MOTHER_ID) == 5122'
 h2_from_k1plus    : 'TMath::Abs(H2_MC_MOTHER_ID) == 10323'
 
 had_are_kpi       : '{h1_is_kaon}      && {h2_is_pion}'
+had_are_pik       : '{h1_is_pion}      && {h2_is_kaon}'
 had_from_kstzero  : '{h1_from_kstzero} && {h2_from_kstzero}'
 had_from_k1plus   : '{h1_from_k1plus}  && {h2_from_k1plus}'
 
@@ -54,25 +59,25 @@ hh_is_k1plus      : 'TMath::Abs(Kst_TRUEID)       == 10323'
 hh_is_kstzero     : 'TMath::Abs(Kst_TRUEID)       == 313'
 hh_from_bzero     : 'TMath::Abs(Kst_MC_MOTHER_ID) == 511'
 #-------------------------------------------------------------
-# Inclusive
+# Inclusive (should we require hadronic tracks to be K pi ?)
 #-------------------------------------------------------------
 # BdXcHs_ee
-11453001 : '{lep_are_electrons} && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_ee}'
+11453001 : '{lep_are_electrons} && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_ee} && {not_reso_ee_swap}'
 # B+XcHs_ee
-12952000 : '{lep_are_electrons} && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_ee}'
+12952000 : '{lep_are_electrons} && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_ee} && {not_reso_ee_swap}'
 # BsXcHs_ee
-13454001 : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_ee}'
+13454001 : '{lep_are_electrons} && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_ee} && {not_reso_ee_swap}'
 # LbXcHs_ee
-15454101 : '{lep_are_electrons} && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_ee}'
+15454101 : '{lep_are_electrons} && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_ee} && {not_reso_ee_swap}'
 
 # BdXcHs_mm
-11442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_mm}'
+11442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bzero} && {not_fail} && {not_reso_mm} && {not_reso_mm_swap}'
 # B+XcHs_mm
-12442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_mm}'
+12442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bplus} && {not_fail} && {not_reso_mm} && {not_reso_mm_swap}'
 # BsXcHs_mm
-13442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_mm}'
+13442001 : '{lep_are_muons}     && {ll_mother} && {b_is_bstrn} && {not_fail} && {not_reso_mm} && {not_reso_mm_swap}'
 # LbXcHs_mm
-15442001 : '{lep_are_muons}     && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_mm}'
+15442001 : '{lep_are_muons}     && {ll_mother} && {b_is_lambd} && {not_fail} && {not_reso_mm} && {not_reso_mm_swap}'
 #-------------------------------------------------------------
 # Resonant
 #-------------------------------------------------------------
@@ -93,6 +98,11 @@ psi2_mm_kstzero      : '{b_is_bzero} && {lep_are_muons}     && {ll_is_psi2} && {
 # Bd -> psi2(ee) Kst(Kpi)
 11154011             : '{b_is_bzero} && {lep_are_electrons} && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 psi2_ee_kstzero      : '{b_is_bzero} && {lep_are_electrons} && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+
+jpsi_mm_kstzero_swap : '{b_is_bzero} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_pik} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+jpsi_ee_kstzero_swap : '{b_is_bzero} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_pik} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+psi2_mm_kstzero_swap : '{b_is_bzero} && {lep_are_muons}     && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_pik} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+psi2_ee_kstzero_swap : '{b_is_bzero} && {lep_are_electrons} && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_pik} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 #-------------------------------------------------------------
 # Background for resonant
 #-------------------------------------------------------------
