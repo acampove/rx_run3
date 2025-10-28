@@ -619,7 +619,7 @@ class KPiLLDecayReader(DecayReader):
         -------------
         Weight needed to correct for branching fraction bug in cocktail sample
         '''
-        wt_common = self._get_common_weights(l1=self._l1, l2=self._l2, kp=self._kp)
+        wt_common = self._get_common_weights(l1=self._l1, l2=self._l2)
         wt_phi    = self._get_phi_weight()
         wt_kshort = self._get_kshort_weight()
         wt_eta    = self._get_eta_weight()
