@@ -18,6 +18,8 @@ from dmu.logging.log_store  import LogStore
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.stats.utilities    import is_pdf_usable
 from dmu.stats              import utilities as sut
+from dmu.rdataframe         import utilities as rut
+from dmu.generic            import utilities as gut
 from dmu.workflow.cache     import Cache
 
 from zfit.pdf              import BasePDF       as zpdf
@@ -61,6 +63,7 @@ class PRec(Cache):
 
         self._name     : str
         self._d_fstat  = {}
+        self._cut_info : dict[str, tuple[RDF.RCutFlowReport, dict[str,str]]] = {}
         d_rdf, uid     = self.__get_samples_rdf()
         self._d_rdf    = d_rdf
 
@@ -143,9 +146,32 @@ class PRec(Cache):
         for name, expr in d_sel.items():
             rdf = rdf.Filter(expr, name)
 
+        rep = rdf.Report()
+
+        self._cut_info[sample] = rep, d_sel
+
         uid = hashing.hash_object([uid, d_sel])
 
         return rdf, uid
+    # ----------------------
+    def __save_cutflow(
+        self, 
+        report    : RDF.RCutFlowReport, 
+        sample    : str,
+        selection : dict[str,str]) -> None:
+        '''
+        Parameters
+        -------------
+        report   : Cutflow report
+        sample   : Sample to which selection was applied
+        selection: Dictionary with key the cut identifier and value the actual cut
+        '''
+        df = rut.rdf_report_to_df(rep=report)
+
+        log.info(f'Saving cutflow to: {self._out_path}')
+
+        df.to_markdown(f'{self._out_path}/{sample}.md')
+        gut.dump_json(data=selection, path=f'{self._out_path}/{sample}.yaml', exists_ok=True)
     #-----------------------------------------------------------
     def __get_samples_rdf(self) -> tuple[dict[str,RDF.RNode],str]:
         '''
@@ -545,6 +571,10 @@ class PRec(Cache):
 
         d_df = self.__get_df()
         pdf  = self.__get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+
+        for sample in self._cut_info:
+            rep, d_sel = self._cut_info[sample]
+            self.__save_cutflow(report=rep, sample=sample, selection=d_sel)
 
         # Save dataframes before caching
         # Cache at the very end
