@@ -512,9 +512,9 @@ class PRec(Cache):
         Full pdf, i.e. all ccbar components added
         '''
         l_pdf     = [ self.__get_pdf(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items()                    ]
-        l_pdf     = [                                                                  pdf for      pdf in l_pdf        if pdf is not None ]
+        l_pdf     = [                                                                  pdf  for      pdf in l_pdf        if pdf is not None ]
         l_wgt_yld = [ self.__yield_in_range(pdf=pdf)                                        for      pdf in l_pdf                           ]
-        l_frc     = [ wgt_yld / sum(l_wgt_yld)                                             for  wgt_yld in l_wgt_yld                       ]
+        l_frc     = [ wgt_yld / sum(l_wgt_yld)                                              for  wgt_yld in l_wgt_yld                       ]
 
         if   len(l_pdf) >= 2:
             pdf   = zfit.pdf.SumPDF(l_pdf, fracs=l_frc, name='ccbar PRec')
