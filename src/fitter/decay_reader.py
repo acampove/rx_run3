@@ -201,15 +201,45 @@ class KLLDecayReader(DecayReader):
         self._l2 = l2
         self._kp = kp
     #---------------------------
+    def _get_kp_wgt(self, kp : PChain) -> float:
+        '''
+        Returns correction weights for branching fraction associated
+        to kaon chain
+        '''
+        weight = 1.0
+        if kp.match_decay( [self._Pion_id, self._KShort_id             ]):
+            weight *= 0.5
+
+        if kp.match_decay( [self._Kplus_id, self._Phi_id, self._Bd_id]):
+            weight *= 0.5/0.9974
+
+        if kp.match_decay( [self._Kplus_id, self._Phi_id, self._Bu_id]):
+            weight *= 0.5/0.7597
+
+        if kp.match_decay( [self._Pion_id, self._Eta_id] ):
+            weight *= 0.28/0.4
+
+        if kp.match_decay( [self._Kplus_id, self._Kstar_id] ):
+            weight *= 0.66 / 0.7993
+
+        if kp.match_decay( [self._Kplus_id, self._Kst_c_id] ):
+            weight *= 0.33 / 0.4993
+
+        if kp.match_decay( [self._Kplus_id, self._K_2_1430_c]):
+            weight *= 0.1670/0.2485
+
+        return weight
+    #---------------------------
     def get_weight(self) -> float:
         '''
         Returns:
 
         wt (float): Weight for candidate
         '''
-        wt = self._get_common_weights(l1=self._l1, l2=self._l2, kp=self._kp)
+        w1 = self._get_common_weights(l1=self._l1, l2=self._l2)
+        w2 = self._get_kp_wgt(kp=self._kp)
 
-        return wt
+        return w1 * w2
 #---------------------------
 class KPiLLDecayReader(DecayReader):
     '''
