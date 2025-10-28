@@ -77,30 +77,30 @@ hh_from_bzero     : 'TMath::Abs(Kst_MC_MOTHER_ID) == 511'
 # Resonant
 #-------------------------------------------------------------
 # Bd -> Jpsi(mm) Kst(Kpi)
-11144001             : '{b_is_bzero} && {lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
-11144002             : '{b_is_bzero} && {lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
-jpsi_mm_kstzero      : '{b_is_bzero} && {lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+11144001             : '{b_is_bzero} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+11144002             : '{b_is_bzero} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+jpsi_mm_kstzero      : '{b_is_bzero} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 
 # Bd -> Jpsi(ee) Kst(Kpi)
-11154001             : '{b_is_bzero} && {lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
-11154002             : '{b_is_bzero} && {lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
-jpsi_ee_kstzero      : '{b_is_bzero} && {lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+11154001             : '{b_is_bzero} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+11154002             : '{b_is_bzero} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+jpsi_ee_kstzero      : '{b_is_bzero} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_bzero} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 
 # Bd -> psi2(mm) Kst(Kpi)
-11144011             : '{b_is_bzero} && {lep_are_muons}     && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
-psi2_mm_kstzero      : '{b_is_bzero} && {lep_are_muons}     && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+11144011             : '{b_is_bzero} && {lep_are_muons}     && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+psi2_mm_kstzero      : '{b_is_bzero} && {lep_are_muons}     && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 
 # Bd -> psi2(ee) Kst(Kpi)
-11154011             : '{b_is_bzero} && {lep_are_electrons} && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
-psi2_ee_kstzero      : '{b_is_bzero} && {lep_are_electrons} && {ll_is_psi2} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+11154011             : '{b_is_bzero} && {lep_are_electrons} && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+psi2_ee_kstzero      : '{b_is_bzero} && {lep_are_electrons} && {ll_is_psi2} && {ll_from_bzero} && {lep_from_psi2} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 #-------------------------------------------------------------
 # Background for resonant
 #-------------------------------------------------------------
 # Bs -> Jpsi(mm) Kst(Kpi)
-13444001             : '{b_is_bstrn} && {lep_are_muons}     && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+13444001             : '{b_is_bstrn} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 
 # Bs -> Jpsi(ee) Kst(Kpi)
-Bs_JpsiKst_ee_eq_DPC : '{b_is_bstrn} && {lep_are_electrons} && {ll_is_jpsi} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
+Bs_JpsiKst_ee_eq_DPC : '{b_is_bstrn} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_jpsi} && {had_are_kpi} && {hh_is_kstzero} && {hh_from_bzero} && {had_from_kstzero}'
 #-------------------------------------------------------------
 # Rare
 #-------------------------------------------------------------
