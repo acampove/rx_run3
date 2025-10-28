@@ -10,8 +10,8 @@ not_fail_mes      : 'TMath::Abs(B_TRUEID)  != 0 && TMath::Abs(Jpsi_TRUEID) != 0 
 not_fail_moth_1   : 'TMath::Abs(L1_MC_MOTHER_ID)   != 0 && TMath::Abs(L2_MC_MOTHER_ID) != 0'
 not_fail_moth_2   : 'TMath::Abs(Jpsi_MC_MOTHER_ID) != 0 && TMath::Abs(H1_MC_MOTHER_ID)  != 0 && TMath::Abs(H2_MC_MOTHER_ID)  != 0'
 not_fail          : '{not_fail_lep} && {not_fail_mes} && {not_fail_moth_1} && {not_fail_moth_2}' 
-not_reso_ee       : '({jpsi_ee_kstzero}) == 0'
-not_reso_mm       : '({jpsi_mm_kstzero}) == 0'
+not_reso_ee       : '({jpsi_ee_kstzero}) == 0 && ({psi2_ee_kstzero}) == 0'
+not_reso_mm       : '({jpsi_mm_kstzero}) == 0 && ({psi2_mm_kstzero}) == 0'
 ll_mother         : '(({ll_is_jpsi} && {lep_from_jpsi}) || ({ll_is_psi2} && {lep_from_psi2}))'
 # ----------
 h1_is_pion        : 'TMath::Abs(H1_TRUEID)       == 211' 
