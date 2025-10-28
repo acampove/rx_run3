@@ -311,10 +311,15 @@ class PRec(Cache):
         bd          = '(abs(B_TRUEID) == 511)'
         bp          = '(abs(B_TRUEID) == 521)'
 
-        d_cut                                  = {}
-        d_cut[r'$B_s\to c\bar{c}(\to ee)H_s$'] = bs
-        d_cut[r'$B_d\to c\bar{c}(\to ee)H_s$'] = bd
-        d_cut[r'$B^+\to c\bar{c}(\to ee)H_s$'] = bp
+        d_cut       = {}
+        if info.is_ee(trigger=self._trig):
+            d_cut[r'$B_s\to c\bar{c}(\to e^+ e^-)H_s$'] = bs
+            d_cut[r'$B_d\to c\bar{c}(\to e^+ e^-)H_s$'] = bd
+            d_cut[r'$B^+\to c\bar{c}(\to e^+ e^-)H_s$'] = bp
+        else:
+            d_cut[r'$B_s\to c\bar{c}(\to \mu^+\mu^-)H_s$'] = bs
+            d_cut[r'$B_d\to c\bar{c}(\to \mu^+\mu^-)H_s$'] = bd
+            d_cut[r'$B^+\to c\bar{c}(\to \mu^+\mu^-)H_s$'] = bp
 
         return d_cut
     #-----------------------------------------------------------
