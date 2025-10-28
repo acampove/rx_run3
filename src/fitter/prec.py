@@ -308,66 +308,6 @@ class PRec(Cache):
 
         return d_cut
     #-----------------------------------------------------------
-    def _get_match_str_psi2_large(self) -> dict[str,str]:
-        '''
-        Returns dictionary needed to split mix of MC inclusive samples
-        '''
-        # pylint: disable=too-many-locals
-
-        bp_psjp     = '(abs(Jpsi_MC_MOTHER_ID) == 100443) & (abs(Jpsi_MC_GD_MOTHER_ID) == 521) & (abs(H_MC_MOTHER_ID) == 521)'
-        bd_psks     = '(abs(Jpsi_MC_MOTHER_ID) ==    511) & (abs(H_MC_MOTHER_ID) == 313) & (abs(H_MC_GD_MOTHER_ID) == 511) & (abs(Jpsi_TRUEID) == 100443)'
-        bp_psks     = '(abs(Jpsi_MC_MOTHER_ID) ==    521) & (abs(H_MC_MOTHER_ID) == 323) & (abs(H_MC_GD_MOTHER_ID) == 521) & (abs(Jpsi_TRUEID) == 100443)'
-
-        neg_bp_psjp = bp_psjp.replace('==', '!=').replace('&' , '|')
-        neg_bd_psks = bd_psks.replace('==', '!=').replace('&' , '|')
-        neg_bp_psks = bp_psks.replace('==', '!=').replace('&' , '|')
-
-        bp_jpkp     = '(abs(B_TRUEID) == 521) & (abs(H_TRUEID) == 321) & (abs(Jpsi_TRUEID) == 443)'
-        bd_jpkp     = '(abs(B_TRUEID) == 511) & (abs(H_TRUEID) == 321) & (abs(Jpsi_TRUEID) == 443)'
-
-        bp_jpkp_ex  = f'({bp_jpkp}) & ({neg_bp_psjp}) & ({neg_bd_psks}) & ({neg_bp_psks})'
-        bd_jpkp_ex  = f'({bd_jpkp}) & ({neg_bp_psjp}) & ({neg_bd_psks}) & ({neg_bp_psks})'
-
-        neg_bp_jpkp = bp_jpkp.replace('==', '!=').replace('&' , '|')
-        neg_bd_jpkp = bd_jpkp.replace('==', '!=').replace('&' , '|')
-
-
-        bs          = '(abs(B_TRUEID) == 531)'
-        neg_bs      = '(abs(B_TRUEID) != 531)'
-
-        none        = f'({neg_bp_jpkp}) & ({neg_bd_jpkp}) & ({neg_bp_psjp}) & ({neg_bd_psks}) & ({neg_bp_psks}) & ({neg_bs})'
-
-        d_cut            = {}
-        d_cut['bp_psjp'] = bp_psjp
-        d_cut['bp_psks'] = bp_psks
-        d_cut['bp_jpkp'] = bp_jpkp_ex
-
-        d_cut['bd_psks'] = bd_psks
-        d_cut['bd_jpkp'] = bd_jpkp_ex
-
-        d_cut['bs']      = bs
-
-        d_cut['unmatched'] = none
-
-        return d_cut
-    #-----------------------------------------------------------
-    def _get_match_str_psi2_all(self) -> dict[str,str]:
-        d_cut           = {}
-        d_cut['jpsi']   = '(Jpsi_TRUEID == 443)'
-        d_cut['nojpsi'] = '(Jpsi_TRUEID != 443)'
-
-        return d_cut
-    #-----------------------------------------------------------
-    def _print_wgt_stat(self, arr_wgt):
-        l_wgt = arr_wgt.tolist()
-        s_wgt = set(l_wgt)
-
-        log.debug('-' * 20)
-        log.debug(f'{"Frequency":<10}{"Weight":>10}')
-        for wgt in s_wgt:
-            nwgt = numpy.count_nonzero(wgt == arr_wgt)
-            log.debug(f'{nwgt:<10}{wgt:>10.3}')
-    #-----------------------------------------------------------
     def _normalize_weights(self, arr_wgt):
         tot_wgt = arr_wgt.sum()
         num_wgt = arr_wgt.shape[0]
@@ -375,32 +315,6 @@ class PRec(Cache):
         arr_wgt = fact * arr_wgt
 
         return arr_wgt
-    #-----------------------------------------------------------
-    def _filter_mass(self, df : pnd.DataFrame, mass : str, obs):
-        ([[minx]], [[maxx]]) = obs.limits
-
-        cut   = f'({minx} < {mass}) & ({mass} < {maxx})'
-        log.debug(f'Applying: {cut}')
-        inum  = df.shape[0]
-        df    = df.query(cut)
-        fnum  = df.shape[0]
-
-        self._d_fstat[cut] = inum, fnum
-
-        return df
-    #-----------------------------------------------------------
-    def _path_from_identifier(self, identifier : str) -> str:
-        dir_path = '/tmp/cache/prec'
-        os.makedirs(dir_path, exist_ok=True)
-
-        return f'{dir_path}/pdf_{identifier}.json'
-    #-----------------------------------------------------------
-    def _drop_before_saving(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        l_needed = self._l_mass + ['wgt_br', 'wgt_dec', 'wgt_sam']
-        l_drop   = [ name for name in df.columns if  name not in l_needed ]
-        df       = df.drop(l_drop, axis=1)
-
-        return df
     #-----------------------------------------------------------
     def _get_pdf(
         self,
