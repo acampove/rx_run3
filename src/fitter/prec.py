@@ -64,7 +64,7 @@ class PRec(Cache):
         d_rdf, uid     = self.__get_samples_rdf()
         self._d_rdf    = d_rdf
 
-        self._d_match         = self._get_match_str()
+        self._d_match         = self.__get_match_str()
         self._l_mass          = ['B_Mass', 'B_Mass_smr', 'B_const_mass_M', 'B_const_mass_psi2S_M']
         self._min_entries     = 40 # Will not build KDE if fewer entries than this are found
         self._min_isj_entries = 500 #if Fewer entries than this, switch from ISJ to FFT
@@ -102,7 +102,7 @@ class PRec(Cache):
             return {}
 
         arr_wgt      = df.wgt_dec.to_numpy() * df.wgt_sam.to_numpy()
-        df['wgt_br'] = self._normalize_weights(arr_wgt)
+        df['wgt_br'] = self.__normalize_weights(arr_wgt)
 
         d_df = { component : df.query(cut) for component, cut in self._d_match.items() }
 
@@ -217,7 +217,7 @@ class PRec(Cache):
             raise ValueError(f'Invalid value of wgt_dec: {dec}')
 
         arr_wgt      = df.wgt_dec.to_numpy()
-        arr_wgt      = self._normalize_weights(arr_wgt)
+        arr_wgt      = self.__normalize_weights(arr_wgt)
         df['wgt_dec']= arr_wgt
 
         return df
@@ -239,7 +239,7 @@ class PRec(Cache):
             raise ValueError(f'Invalid value of wgt_sam: {sam}')
 
         arr_wgt      = df.wgt_sam.to_numpy()
-        arr_wgt      = self._normalize_weights(arr_wgt)
+        arr_wgt      = self.__normalize_weights(arr_wgt)
         df['wgt_sam']= arr_wgt
 
         return df
@@ -262,7 +262,7 @@ class PRec(Cache):
             log.error(f'Value for {name}, {var}, is not valid')
             raise ValueError
     #-----------------------------------------------------------
-    def _get_match_str(self) -> dict[str,str]:
+    def __get_match_str(self) -> dict[str,str]:
         '''
         Returns
         ----------------
@@ -270,17 +270,17 @@ class PRec(Cache):
         for plotting
         '''
         if   self._q2bin == 'jpsi':
-            d_match = self._get_match_str_jpsi()
+            d_match = self.__get_match_str_jpsi()
         elif self._q2bin == 'psi2':
-            d_match = self._get_match_str_psi2()
+            d_match = self.__get_match_str_psi2()
         elif self._q2bin in ['low', 'central', 'high']:
-            d_match = self._get_match_str_psi2()
+            d_match = self.__get_match_str_psi2()
         else:
             raise ValueError(f'Invalid q2bin: {self._q2bin}')
 
         return d_match
     #-----------------------------------------------------------
-    def _get_match_str_jpsi(self) -> dict[str,str]:
+    def __get_match_str_jpsi(self) -> dict[str,str]:
         bd          = '(abs(B_TRUEID) == 511)'
         bp          = '(abs(B_TRUEID) == 521)'
         bs          = '(abs(B_TRUEID) == 531)'
@@ -292,7 +292,7 @@ class PRec(Cache):
 
         return d_cut
     #-----------------------------------------------------------
-    def _get_match_str_psi2(self) -> dict[str,str]:
+    def __get_match_str_psi2(self) -> dict[str,str]:
         bd          = '(abs(B_TRUEID) == 511)'
         bp_psjp     = '(abs(B_TRUEID) == 521) & (abs(Jpsi_TRUEID) == 443) & (abs(Jpsi_MC_MOTHER_ID) == 100443) & (abs(Jpsi_MC_GD_MOTHER_ID) == 521) & (abs(H_MC_MOTHER_ID) == 521)'
         bs          = '(abs(B_TRUEID) == 531)'
