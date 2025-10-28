@@ -308,7 +308,7 @@ class PRec(Cache):
 
         return d_cut
     #-----------------------------------------------------------
-    def _normalize_weights(self, arr_wgt):
+    def __normalize_weights(self, arr_wgt):
         tot_wgt = arr_wgt.sum()
         num_wgt = arr_wgt.shape[0]
         fact    = num_wgt / tot_wgt
@@ -316,7 +316,7 @@ class PRec(Cache):
 
         return arr_wgt
     #-----------------------------------------------------------
-    def _get_pdf(
+    def __get_pdf(
         self,
         mass           : str,
         df             : pnd.DataFrame,
@@ -349,14 +349,14 @@ class PRec(Cache):
         arr_wgt  = df['wgt_br' ].to_numpy()
         obs      = kwargs['obs']
 
-        nentries = self._yield_from_arrays(arr_mass=arr_mass, arr_weight=arr_wgt, obs=obs)
+        nentries = self.__yield_from_arrays(arr_mass=arr_mass, arr_weight=arr_wgt, obs=obs)
         if nentries < self._min_entries:
             log.warning(f'Found fewer than {self._min_entries}: {nentries:.0f}, skipping PDF {component_name}')
             return None
 
         log.debug(f'Building PDF with {nentries:.0f} entries for {component_name}')
 
-        pdf = self._pdf_from_df(df=df, mass=mass, **kwargs)
+        pdf = self.__pdf_from_df(df=df, mass=mass, **kwargs)
         setattr(pdf, 'arr_mass',                 arr_mass)
         setattr(pdf, 'arr_wgt' ,                 arr_wgt )
         setattr(pdf, 'arr_sam' , df['wgt_sam'].to_numpy())
@@ -374,7 +374,7 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def _pdf_from_df(
+    def __pdf_from_df(
         self,
         df   : pnd.DataFrame,
         mass : str,
@@ -393,7 +393,7 @@ class PRec(Cache):
         arr_wgt  = arr_wgt.astype(float)
 
         try:
-            pdf = self._build_kde(arr_mass=arr_mass, arr_wgt=arr_wgt, **kwargs)
+            pdf = self.__build_kde(arr_mass=arr_mass, arr_wgt=arr_wgt, **kwargs)
         except Exception as exc:
             for setting, value in kwargs.items():
                 if not isinstance(value, (str,float,int)):
@@ -406,7 +406,7 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def _build_kde(
+    def __build_kde(
             self,
             arr_mass : numpy.ndarray,
             arr_wgt  : numpy.ndarray, **kwargs) -> zpdf:
@@ -436,7 +436,7 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def _yield_in_range(self, pdf : zpdf) -> float:
+    def __yield_in_range(self, pdf : zpdf) -> float:
         '''
         Parameters
         ---------------
@@ -452,9 +452,9 @@ class PRec(Cache):
         wgt = getattr(pdf,  'arr_wgt')
         mas = getattr(pdf, 'arr_mass')
 
-        return self._yield_from_arrays(arr_mass=mas, arr_weight=wgt, obs=obs)
+        return self.__yield_from_arrays(arr_mass=mas, arr_weight=wgt, obs=obs)
     #-----------------------------------------------------------
-    def _yield_from_arrays(
+    def __yield_from_arrays(
         self,
         obs        : zobs,
         arr_mass   : numpy.ndarray,
@@ -467,7 +467,7 @@ class PRec(Cache):
 
         return sum(wgt)
     #-----------------------------------------------------------
-    def _get_full_pdf(
+    def __get_full_pdf(
         self,
         mass : str,
         d_df : dict[str,pnd.DataFrame],
@@ -485,9 +485,9 @@ class PRec(Cache):
         -------------------
         Full pdf, i.e. all ccbar components added
         '''
-        l_pdf     = [ self._get_pdf(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items()                    ]
+        l_pdf     = [ self.__get_pdf(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items()                    ]
         l_pdf     = [                                                                  pdf for      pdf in l_pdf        if pdf is not None ]
-        l_wgt_yld = [ self._yield_in_range(pdf=pdf)                                        for      pdf in l_pdf                           ]
+        l_wgt_yld = [ self.__yield_in_range(pdf=pdf)                                        for      pdf in l_pdf                           ]
         l_frc     = [ wgt_yld / sum(l_wgt_yld)                                             for  wgt_yld in l_wgt_yld                       ]
 
         if   len(l_pdf) >= 2:
@@ -531,7 +531,7 @@ class PRec(Cache):
         if self._copy_from_cache():
             log.info(f'Data found cached, reloading from {self._out_path}')
             d_df = { ltex : pnd.read_parquet(path) for ltex , path in d_path.items() }
-            pdf        = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+            pdf        = self.__get_full_pdf(mass=mass, d_df=d_df, **kwargs)
 
             PRec.plot_pdf(
                 pdf,
@@ -544,7 +544,7 @@ class PRec(Cache):
         log.info(f'Recalculating, cached data not found in: {self._out_path}')
 
         d_df = self.__get_df()
-        pdf  = self._get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+        pdf  = self.__get_full_pdf(mass=mass, d_df=d_df, **kwargs)
 
         # Save dataframes before caching
         # Cache at the very end
