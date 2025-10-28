@@ -166,40 +166,10 @@ class DecayReader:
 
         return 1.0
     #---------------------------
-    def _get_kp_wgt(self, kp : PChain) -> float:
-        '''
-        Returns correction weights for branching fraction associated
-        to kaon chain
-        '''
-        weight = 1.0
-        if kp.match_decay( [self._Pion_id, self._KShort_id             ]):
-            weight *= 0.5
-
-        if kp.match_decay( [self._Kplus_id, self._Phi_id, self._Bd_id]):
-            weight *= 0.5/0.9974
-
-        if kp.match_decay( [self._Kplus_id, self._Phi_id, self._Bu_id]):
-            weight *= 0.5/0.7597
-
-        if kp.match_decay( [self._Pion_id, self._Eta_id] ):
-            weight *= 0.28/0.4
-
-        if kp.match_decay( [self._Kplus_id, self._Kstar_id] ):
-            weight *= 0.66 / 0.7993
-
-        if kp.match_decay( [self._Kplus_id, self._Kst_c_id] ):
-            weight *= 0.33 / 0.4993
-
-        if kp.match_decay( [self._Kplus_id, self._K_2_1430_c]):
-            weight *= 0.1670/0.2485
-
-        return weight
-    #---------------------------
     def _get_common_weights(
         self,
         l1 : PChain,
-        l2 : PChain,
-        kp : PChain) -> float:
+        l2 : PChain) -> float:
         '''
         Returns
         ----------------
@@ -208,14 +178,12 @@ class DecayReader:
         w1 = self._get_jpsi_wgt(l1=l1, l2=l2)
         w2 = self._get_psi2_wgt(l1=l1, l2=l2)
         w3 = self._get_psi2_over_jpsi()
-        w4 = self._get_kp_wgt(kp=kp)
-        wt = w1 * w2 * w3 * w4
+        wt = w1 * w2 * w3
 
         log.verbose('-----------------------------')
         log.verbose(f'Jpsi wgt:           {w1:.3f}')
         log.verbose(f'psi2 wgt:           {w2:.3f}')
         log.verbose(f'Psi2 over Jpsi wgt: {w3:.3f}')
-        log.verbose(f'Kstar wgt:          {w4:.3f}')
         log.verbose(f'Total wgt:          {wt:.3f}')
 
         return wt
