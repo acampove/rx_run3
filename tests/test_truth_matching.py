@@ -35,6 +35,7 @@ l_sample_kstee = [
     'Bs_JpsiKst_ee_eq_DPC',
     # ----
     'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC',
+    'Lb_JpsipK_ee_eq_phsp_DPC',
 ]
 
 l_sample_kpmm = [
@@ -54,6 +55,7 @@ l_sample_kstmm = [
     'Bs_JpsiKst_mm_eq_DPC',
     # ----
     'Bs_Jpsiphi_mm_eq_CPV_update2012_DPC',
+    'Lb_JpsipK_mm_eq_phsp_DPC',
 ]
 
 log=LogStore.add_logger('rx_selection:test_truth_matching')
