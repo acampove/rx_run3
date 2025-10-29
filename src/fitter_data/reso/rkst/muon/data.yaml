@@ -18,6 +18,7 @@ model:
         - 6200
   components:
     combinatorial : reso/rkst/muon/combinatorial.yaml
+    bsjpsiphi     : reso/rkst/muon/bsjpsiphi.yaml
     ccbar         : reso/rkst/muon/ccbar.yaml
     bsjpsikst     : reso/rkst/muon/bsjpsikst.yaml
     jpsi          : reso/rkst/muon/jpsi.yaml
@@ -30,6 +31,7 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   stacked         : True
   plot_components : ccbar
   d_leg :
+    bsjpsiphi     : $B_s \to J/\psi\phi$
     ccbar         : $B_{s,d,u}\to c\bar{c} X$
     jpsi          : $B^0\to J/\psi(\to \mu^+\mu^-) K^{*0}(\to K^+\pi^-)$ 
     psi2          : $B^0\to \psi(2S)(\to \mu^+\mu^-) K^{*0}(\to K^+\pi^-)$ 
