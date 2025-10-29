@@ -54,6 +54,7 @@ had_are_kpi       : '{h1_is_kaon}      && {h2_is_pion}'
 had_are_pik       : '{h1_is_pion}      && {h2_is_kaon}'
 had_are_kk        : '{h1_is_kaon}      && {h2_is_kaon}'
 had_are_pk        : '{h1_is_proton}    && {h2_is_kaon}'
+had_are_kp        : '{h1_is_kaon}      && {h2_is_proton}'
 
 had_from_kstzero  : '{h1_from_kstzero} && {h2_from_kstzero}'
 had_from_k1plus   : '{h1_from_k1plus}  && {h2_from_k1plus}'
@@ -124,10 +125,9 @@ Bs_JpsiKst_ee_eq_DPC : '{b_is_bstrn} && {lep_are_electrons} && {ll_is_jpsi} && {
 13144001             : '{b_is_bstrn} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_jpsi} && {had_are_kk}  && {hh_is_phi}     && {hh_from_bstrn} && {had_from_phi}'
 13154001             : '{b_is_bstrn} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_bstrn} && {lep_from_jpsi} && {had_are_kk}  && {hh_is_phi}     && {hh_from_bstrn} && {had_from_phi}'
 
-
 # Lb -> Jpsi(ll) pK
-15144001             : '{b_is_lambd} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_lambd} && {lep_from_jpsi} && {had_are_pk}  &&                                       {had_from_lambd}'
-15154001             : '{b_is_lambd} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_lambd} && {lep_from_jpsi} && {had_are_pk}  &&                                       {had_from_lambd}'
+15144001             : '{b_is_lambd} && {lep_are_muons}     && {ll_is_jpsi} && {ll_from_lambd} && {lep_from_jpsi} && ({had_are_pk} || {had_are_kp})   &&                    {had_from_lambd}'
+15154001             : '{b_is_lambd} && {lep_are_electrons} && {ll_is_jpsi} && {ll_from_lambd} && {lep_from_jpsi} && ({had_are_pk} || {had_are_kp})   &&                    {had_from_lambd}'
 #-------------------------------------------------------------
 # Rare
 #-------------------------------------------------------------
