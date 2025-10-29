@@ -172,11 +172,14 @@ def test_bdkstee(sample : str):
     cut = tm.get_truth(sample, kind='bdkstll')
     trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
+    org = gtr.get_rdf(per_file=False)
 
-    ini = rdf.Count().GetValue()
-    rdf = rdf.Filter(cut, 'truth match')
+    ini = org.Count().GetValue()
+    rdf = org.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
+
+    if fin == 0:
+        _check_rdf(rdf=org, cut=cut)
 
     assert 20 * fin > ini
 
@@ -191,11 +194,14 @@ def test_bdkstmm(sample : str):
 
     trigger = 'Hlt2RD_B0ToKpPimMuMu_MVA'
     gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
+    org = gtr.get_rdf(per_file=False)
 
-    ini = rdf.Count().GetValue()
-    rdf = rdf.Filter(cut, 'truth match')
+    ini = org.Count().GetValue()
+    rdf = org.Filter(cut, 'truth match')
     fin = rdf.Count().GetValue()
+
+    if fin == 0:
+        _check_rdf(rdf=org, cut=cut)
 
     assert 20 * fin > ini
     log.info(f'eff={fin/ini=:.3f}')
