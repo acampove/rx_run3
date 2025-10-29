@@ -10,6 +10,21 @@ from rx_data.sample_emulator import SampleEmulator
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:test_sample_emulator')
+
+_SAMPLES_MOTHER_SWAP=[
+    'Bs_JpsiKst_mm_eq_DPC' ,
+    'Bs_JpsiKst_ee_eq_DPC' ,
+]
+
+_SAMPLES_HADRON_SWAP=[
+    'Bd_JpsiKst_mm_had_swp',
+    'Bd_JpsiKst_ee_had_swp',
+]
+
+_SAMPLE_PAIRS = [
+    ('Bs_JpsiKst_mm_eq_DPC' , 'Bd_JpsiKst_mm_eq_DPC'),
+    ('Bs_JpsiKst_ee_eq_DPC' , 'Bd_JpsiKst_ee_eq_DPC'),
+]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -17,7 +32,7 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('rx_data:sample_emulator', 10)
-    LogStore.set_level('dmu:generic:utilities'  , 20)
+    LogStore.set_level('dmu:generic:utilities'  , 10)
 # ----------------------
 def _get_rdf() -> RDF.RNode:
     '''
@@ -35,30 +50,28 @@ def _get_rdf() -> RDF.RNode:
     rdf = rdf.Define('B_ID'                , '123')
     rdf = rdf.Define('Kst_MC_MOTHER_ID'    , '123')
     rdf = rdf.Define('Jpsi_MC_MOTHER_ID'   , '123')
+    rdf = rdf.Define('H1_TRUEID'           , '321')
+    rdf = rdf.Define('H2_TRUEID'           , '211')
 
     return rdf
 # --------------------------------------------
-@pytest.mark.parametrize('old_name, new_name',
-    [
-       ('Bs_JpsiKst_ee_eq_DPC', 'Bd_JpsiKst_ee_eq_DPC'),
-       ('Bs_JpsiKst_mm_eq_DPC', 'Bd_JpsiKst_mm_eq_DPC'),
-    ])
+@pytest.mark.parametrize('new_name, old_name', _SAMPLE_PAIRS)
 def test_rename(
-    old_name : str, 
-    new_name : str):
+    new_name : str, 
+    old_name : str):
     '''
     Check renaming of samples
 
-    old_name: Sample requested
-    new_name: Expected sample to use
+    new_name: Sample requested 
+    old_name: Sample that will emulate sample requested 
     '''
-    emu = SampleEmulator(sample=old_name)
+    emu = SampleEmulator(sample=new_name)
     val = emu.get_sample_name()
 
-    assert new_name == val 
+    assert old_name == val 
 # --------------------------------------------
-@pytest.mark.parametrize('sample', ['Bs_JpsiKst_ee_eq_DPC'])
-def test_post_process(sample : str):
+@pytest.mark.parametrize('sample', _SAMPLES_MOTHER_SWAP)
+def test_swap_mother(sample : str):
     '''
     sample: Name of sample to emulate
     '''
@@ -74,3 +87,20 @@ def test_post_process(sample : str):
             continue
 
         assert numpy.isclose(arr_val, expected).all()
+# --------------------------------------------
+@pytest.mark.parametrize('sample', _SAMPLES_HADRON_SWAP)
+def test_swap_hadrons(sample : str):
+    '''
+    sample: Name of sample to emulate
+    '''
+    log.info('')
+    rdf_old = _get_rdf()
+    emu     = SampleEmulator(sample=sample)
+    rdf_new = emu.post_process(rdf = rdf_old)
+
+    data    = rdf_new.AsNumpy()
+    h1_id   = data['H1_TRUEID']
+    h2_id   = data['H2_TRUEID']
+
+    assert numpy.all(h1_id == 211)
+    assert numpy.all(h2_id == 321)
