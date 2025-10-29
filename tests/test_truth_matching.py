@@ -1,8 +1,10 @@
 '''
 Module needed to test truth matching
 '''
+import re
 
 import pytest
+from ROOT                  import RDF # type: ignore
 from rx_selection          import truth_matching as tm
 from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
@@ -63,6 +65,47 @@ def initialize():
     '''
     LogStore.set_level('rx_data:rdf_getter', 40)
     LogStore.set_level('rx_selection:truth_matching', 10)
+# ----------------------
+def _print_values(rdf : RDF.RNode, cut : str, number : int) -> None:
+    '''
+    This should be ran if zero entries pass the truth matching
+
+    Parameters
+    -------------
+    rdf   : DataFrame before truth matching
+    cut   : Truth matching string
+    number: Number of values to print
+    '''
+    rgx  = r'TMath::Abs\((.*)\)'
+    vals = re.findall(rgx, cut)
+
+    if len(vals) != 1:
+        raise ValueError(f'Could not find one variable, but: {vals}')
+
+    var = vals[0]
+
+    arr_val = rdf.AsNumpy([var])[var]
+
+    log.info(arr_val[:number])
+# ----------------------
+def _check_rdf(rdf : RDF.RNode, cut : str) -> None:
+    '''
+    This should be ran if zero entries pass the truth matching
+
+    Parameters
+    -------------
+    rdf: DataFrame before truth matching
+    cut: Truth matching string
+    '''
+    l_cut = cut.split('&&')
+
+    log.warning('The following cuts remove all candidates')
+    for cut in l_cut:
+        res = rdf.Filter(cut)
+        val = res.Count().GetValue()
+        if val == 0:
+            _print_values(rdf=rdf, cut=cut, number=20)
+            log.info(cut)
 # --------------------------
 @pytest.mark.parametrize('sample', [
     'Bu_Kee_eq_btosllball05_DPC',
