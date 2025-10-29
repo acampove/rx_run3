@@ -55,9 +55,12 @@ class SampleEmulator:
         Dataframe after redefinitions, etc
         '''
         if self._sample not in self._cfg:
+            log.debug(f'Not emulating {self._sample}, missing in config')
             return rdf
 
+        log.debug(f'Emulating {self._sample}')
         for key, val in self._cfg[self._sample].redefine.items():
+            log.info(f'{key:<25}{"->":10}{val}')
             rdf = rdf.Redefine(key, val)
 
         return rdf
