@@ -21,8 +21,8 @@ Bs_JpsiKst_ee_eq_DPC :
 Bd_JpsiKst_mm_had_swp:
   sample   : Bd_JpsiKst_mm_eq_DPC
   redefine : &red_002
-    H1_TRUEID : 'H1_TRUEID == 321 ? 211 : H1_TRUEID'
-    H2_TRUEID : 'H2_TRUEID == 211 ? 321 : H2_TRUEID'
+    H1_TRUEID : 'TMath::Abs(H1_TRUEID) == 321 ? 211 : H1_TRUEID'
+    H2_TRUEID : 'TMath::Abs(H2_TRUEID) == 211 ? 321 : H2_TRUEID'
 Bd_JpsiKst_ee_had_swp:
   sample   : Bd_JpsiKst_ee_eq_DPC
   redefine :
