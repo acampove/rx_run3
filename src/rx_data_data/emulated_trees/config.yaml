@@ -1,8 +1,9 @@
 # This is a config meant to specify how to emulate a sample
 
+# ----------------------------------------
 Bs_JpsiKst_mm_eq_DPC : 
   sample : Bd_JpsiKst_mm_eq_DPC
-  redefine : &red
+  redefine : &red_001
     B_M                  : B_M                  + 87.23
     B_Mass               : B_Mass               + 87.23
     B_M_brem_track_2     : B_M_brem_track_2     + 87.23
@@ -12,8 +13,17 @@ Bs_JpsiKst_mm_eq_DPC :
     B_TRUEID             : 'B_TRUEID          == 511 ? 531 :          B_TRUEID'
     Kst_MC_MOTHER_ID     : 'Kst_MC_MOTHER_ID  == 511 ? 531 :  Kst_MC_MOTHER_ID'
     Jpsi_MC_MOTHER_ID    : 'Jpsi_MC_MOTHER_ID == 511 ? 531 : Jpsi_MC_MOTHER_ID'
-
 Bs_JpsiKst_ee_eq_DPC :
   sample : Bd_JpsiKst_ee_eq_DPC
   redefine :
-    <<: *red
+    <<: *red_001
+# ----------------------------------------
+Bd_JpsiKst_mm_had_swp:
+  sample   : Bd_JpsiKst_mm_eq_DPC
+  redefine : &red_002
+    H1_TRUEID : 'H1_TRUEID == 321 ? 211 : H1_TRUEID'
+    H2_TRUEID : 'H2_TRUEID == 211 ? 321 : H2_TRUEID'
+Bd_JpsiKst_ee_had_swp:
+  sample   : Bd_JpsiKst_ee_eq_DPC
+  redefine :
+    <<: *red_002
