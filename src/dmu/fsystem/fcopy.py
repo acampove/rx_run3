@@ -43,6 +43,8 @@ class FCopy:
         source : User and server name where input files are, e.g. user@server.ch
         target : User and server name where output files will go, e.g. user@server.ch
         timeout: When checking for servers availability, wait this number of seconds
+        
+        If server and/or target are left empty (default), the files will be assumed to be local
         '''
         self._source = source
         self._target = target 
