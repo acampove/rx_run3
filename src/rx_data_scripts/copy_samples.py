@@ -15,6 +15,7 @@ from omegaconf                      import DictConfig
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
 from dmu.generic                    import utilities as gut
+from dmu                            import FCopy
 from rx_data                        import utilities as ut
 
 log = LogStore.add_logger('rx_data:copy_samples')
@@ -47,6 +48,8 @@ class Data:
         'brem_track_2']
     copied_files : int   = 0
     copied_size  : float = 0
+
+    fcp     = FCopy(source='campoverde@lxlogin.ihep.ac.cn')
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
@@ -205,7 +208,7 @@ def _copy_sample(source : Path) -> int:
     log.debug('')
 
     if not Data.dry:
-        shutil.copy(source, target)
+        Data.fcp.copy(source=source, target=target)
 
     return 1
 # -----------------------------------------
