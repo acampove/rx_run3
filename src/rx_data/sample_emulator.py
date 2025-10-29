@@ -22,7 +22,7 @@ class SampleEmulator:
         '''
         Parameters
         ---------------
-        sample: Name of sample, e.g. Bd_JpsiKst_ee_eq_DPC
+        sample: Name of sample to emulate, e.g. Bs_JpsiKst_ee_eq_DPC
         '''
         self._sample = sample
         self._cfg    = load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
