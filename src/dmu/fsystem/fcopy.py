@@ -32,21 +32,28 @@ class FCopy:
     files are assumed to be local
     '''
     # ----------------------
-    def __init__(self, source :  str = '', target : str = ''):
+    def __init__(
+        self, 
+        source : str = '', 
+        target : str = '',
+        timeout: int = 50):
         '''
         Parameters
         -------------
-        cfg: Instance of FCopyConf storing configuration
+        source : User and server name where input files are, e.g. user@server.ch
+        target : User and server name where output files will go, e.g. user@server.ch
+        timeout: When checking for servers availability, wait this number of seconds
         '''
         self._source = source
         self._target = target 
+        self._timeout= timeout
 
         self._check_utility(name='rsync')
         self._check_utility(name='ssh'  )
         self._check_remote(server=self._source)
         self._check_remote(server=self._target)
     # ----------------------
-    def _check_remote(self, server : str, timeout : int = 10) -> None:
+    def _check_remote(self, server : str) -> None:
         '''
         Parameters
         -------------
@@ -58,12 +65,12 @@ class FCopy:
 
         try:
             result = subprocess.run(
-                ['ssh', '-o', f'ConnectTimeout={timeout}', 
+                ['ssh', '-o', f'ConnectTimeout={self._timeout}', 
                  '-o', 'BatchMode=yes',
                  '-o', 'StrictHostKeyChecking=no', server, 
                  '/bin/true'],
                 capture_output= True,
-                timeout       = timeout)
+                timeout       = self._timeout)
         except subprocess.TimeoutExpired:
             raise ValueError(f'Timeout, cannot access: {server}')
 
