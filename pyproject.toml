@@ -1,10 +1,10 @@
 [project]
-name = "rx_data"
-description = "Project with lists of LFNs and utilities needed to download filtered ntuples"
-version = "0.0.0"
-readme = "README.md"
+name            = "rx_data"
+description     = "Project with lists of LFNs and utilities needed to download filtered ntuples"
+version         = "0.0.0"
+readme          = "README.md"
 requires-python = ">=3.10,<3.13"
-dependencies = [
+dependencies    = [
     "tqdm>=0.0.0",
     "dask>=0.0.0",
     "uproot>=0.0.0",
@@ -21,33 +21,19 @@ tst = ["pytest>=0.0.0"]  # When developing
 net = ["xrootd>=0.0.0"]  # When doing things that require access to remote files
 
 [project.scripts]
-move_sample = "rx_data_scripts.move_sample:main"
-make_friend_trees = "rx_data_scripts.make_friend_trees:main"
-check_missing = "rx_data_scripts.check_missing:main"
-check_corrupted = "rx_data_scripts.check_corrupted:main"
-branch_calculator = "rx_data_scripts.branch_calculator:main"
-copy_samples = "rx_data_scripts.copy_samples:main"
-merge_samples = "rx_data_scripts.merge_samples:main"
-dump_metadata = "rx_data_scripts.dump_metadata:main"
-download_rx_data = "rx_data_scripts.download_rx_data:main"
-check_local_stats = "rx_data_scripts.check_local_stats:main"
+move_sample          = "rx_data_scripts.move_sample:main"
+make_friend_trees    = "rx_data_scripts.make_friend_trees:main"
+check_missing        = "rx_data_scripts.check_missing:main"
+check_corrupted      = "rx_data_scripts.check_corrupted:main"
+branch_calculator    = "rx_data_scripts.branch_calculator:main"
+copy_samples         = "rx_data_scripts.copy_samples:main"
+merge_samples        = "rx_data_scripts.merge_samples:main"
+dump_metadata        = "rx_data_scripts.dump_metadata:main"
+download_rx_data     = "rx_data_scripts.download_rx_data:main"
+check_local_stats    = "rx_data_scripts.check_local_stats:main"
 check_filtered_stats = "rx_data_scripts.check_filtered_stats:main"
-list_triggers = "rx_data_scripts.list_triggers:main"
-list_lfns = "rx_data_scripts.list_lfns:main"
+list_triggers        = "rx_data_scripts.list_triggers:main"
+list_lfns            = "rx_data_scripts.list_lfns:main"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/rx_data", "src/rx_data_lfns", "src/rx_data_data"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"src/rx_data_data" = "rx_data_data"
-
-[tool.hatch.build]
-include = [
-    "src/rx_data_data/**/*.yaml",
-    "src/rx_data_data/**/*.json",
-    "src/rx_data_data/**/*.csv",
-]
+[tool.setuptools.package-data]
+rx_data_data = ['**/*.json', '**/*.yaml']
