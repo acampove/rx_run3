@@ -25,9 +25,9 @@ def _get_numeric_version(version : str) -> tuple[int,int]|None:
     Raises
     -------------
     If ANY file or directory that does not follow the regex is found
-    which is not among: README.md, comparison.
+    which is not among: README.md, comparison, ignored.
     '''
-    if version in ['README.md', 'comparison']:
+    if version in ['README.md', 'comparison', 'ignored']:
         return None
 
     version = version.replace('p', '.')
