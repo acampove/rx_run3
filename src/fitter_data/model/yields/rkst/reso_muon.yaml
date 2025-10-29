@@ -5,6 +5,8 @@ yields: &yields
   min : 0
   max : 1000000
 # -------------------------
+yld_lbjpsipk_brem_000:
+  <<: *yields
 yld_bsjpsiphi_brem_000:
   <<: *yields
 yld_bsjpsikst_brem_000:
