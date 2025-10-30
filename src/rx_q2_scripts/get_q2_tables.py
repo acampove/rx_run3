@@ -392,10 +392,13 @@ def _get_rdf(kind : str) -> RDF.RNode:
     log.info(f'Getting data for: {kind}')
 
     cfg    = _load_config()
-    sample = cfg.input.samples[cfg.project][kind]
-    trigger= cfg.input.trigger[cfg.project]
-    gtr    = RDFGetter(sample=sample, trigger=trigger)
-    rdf    = gtr.get_rdf(per_file=False)
+    inp    = cfg.input
+    sample = inp.samples[cfg.project][kind]
+    trigger= inp.trigger[cfg.project]
+    with RDFGetter.exclude_friends(names=inp.friends['excluded']):
+        gtr    = RDFGetter(sample=sample, trigger=trigger)
+        rdf    = gtr.get_rdf(per_file=False)
+
     trigger= cfg.input.trigger[cfg.project]
 
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)

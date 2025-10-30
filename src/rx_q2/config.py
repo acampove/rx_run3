@@ -45,6 +45,7 @@ class Input(BaseModel):
     samples   : Samples
     trigger   : dict[str,str]
     selection : dict[str,str]
+    friends   : dict[str,list[str]]
 #-------------------
 class Plotting(BaseModel):
     nbins : int
