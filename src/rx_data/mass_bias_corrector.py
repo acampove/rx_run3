@@ -243,14 +243,6 @@ class MassBiasCorrector:
 
         return row_cor
     # ------------------------------------------
-    def _add_suffix(self, df : pnd.DataFrame, suffix : str|None):
-        if suffix is None:
-            return df
-
-        df = df.add_suffix(f'_{suffix}')
-
-        return df
-    # ----------------------
     def _get_corrected_df(self) -> pnd.DataFrame:
         '''
         Returns
@@ -271,14 +263,20 @@ class MassBiasCorrector:
     # ------------------------------------------
     def get_df(self, suffix: str|None = None) -> pnd.DataFrame:
         '''
-        Returns corrected pandas dataframe
+        Parameters
+        ------------
+        suffix : If passed (by default not), will add this as the suffix of the column names
 
-        mass_name (str) : Name of the column containing the corrected mass, by default B_M
+        Returns 
+        ------------
+        corrected pandas dataframe
         '''
         log.info('Applying bias correction')
 
         df_corr = self._get_corrected_df()
-        df_corr = self._add_suffix(df_corr, suffix)
+
+        if suffix is not None:
+            df_corr = df_corr.add_suffix(f'_{suffix}')
 
         for variable in ['EVENTNUMBER', 'RUNNUMBER']:
             df_corr[variable] = self._df[variable]
