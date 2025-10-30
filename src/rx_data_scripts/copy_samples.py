@@ -2,7 +2,6 @@
 Script used to copy ntuples from mounted filesystem
 '''
 import os
-import shutil
 import argparse
 import multiprocessing
 from pathlib             import Path
