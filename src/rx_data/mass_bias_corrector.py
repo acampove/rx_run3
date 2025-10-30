@@ -13,7 +13,6 @@ from vector._methods                 import VectorProtocolSpatial
 from vector                          import MomentumObject3D as v3d
 from vector                          import MomentumObject4D as v4d
 from dmu.logging.log_store           import LogStore
-from rx_q2.q2smear_corrector         import Q2SmearCorrector
 from rx_common                       import info
 from dmu.generic                     import typing_utilities as tut
 
@@ -71,8 +70,6 @@ class MassBiasCorrector:
         self._ebc             = ElectronBiasCorrector(brem_energy_threshold = brem_energy_threshold)
         self._ecorr_kind      = ecorr_kind
 
-        channel               = info.channel_from_trigger(trigger=trigger).lower()
-        self._qsq_corr        = Q2SmearCorrector(channel=channel)
         self._project : Final[str] = info.project_from_trigger(trigger=self._trigger, lower_case=True)
 
         log.info(f'Using project: {self._project}')
@@ -198,9 +195,6 @@ class MassBiasCorrector:
             'L2_HASBREMADDED' : row.L2_HASBREMADDED,
             }
 
-        d_data['Jpsi_M_smr'] = self._smear_mass(row, particle='Jpsi', reco=jmass)
-        d_data[   'B_M_smr'] = self._smear_mass(row, particle=   'B', reco=bmass)
-
         d_data[   'B_DIRA_OWNPV'] = self._calculate_dira(momentum=bp.to_Vector3D(), row=row, particle=   'B')
         d_data['Jpsi_DIRA_OWNPV'] = self._calculate_dira(momentum=jp.to_Vector3D(), row=row, particle='Jpsi')
 
@@ -238,17 +232,6 @@ class MassBiasCorrector:
         cos_theta = dr.dot(momentum) / (dr.mag * momentum.mag)
 
         return cos_theta
-    # ------------------------------------------
-    def _smear_mass(self, row : pnd.Series, particle : str, reco : float) -> float:
-        if not self._is_mc:
-            return reco
-
-        true    = row[f'{particle}_TRUEM']
-        nbrem   = row['L1_HASBREMADDED'] + row['L2_HASBREMADDED']
-        block   = row['block']
-        smeared = self._qsq_corr.get_mass(nbrem=nbrem, block=block, jpsi_mass_reco=reco, jpsi_mass_true=true)
-
-        return smeared
     # ------------------------------------------
     def _calculate_correction(self, row : pnd.Series) -> pnd.Series:
         row_cor = row
