@@ -272,7 +272,6 @@ def test_medium_input(sample : str, trigger : str):
     Medium input
     '''
     kind    = 'brem_track_2'
-
     with RDFGetter.max_entries(100_000):
         rdf_org = _get_rdf(sample=sample, trigger=trigger)
 
@@ -286,7 +285,6 @@ def test_medium_input(sample : str, trigger : str):
         ecorr_kind= kind)
 
     df_cor  = cor.get_df()
-
     rdf_cor = RDF.FromPandas(df_cor)
 
     _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
@@ -310,10 +308,11 @@ def test_suffix(sample : str, trigger : str):
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
     cor     = MassBiasCorrector(
-        df      =df_org, 
-        trigger =trigger,
-        is_mc   =is_mc,
+        df        =df_org, 
+        trigger   =trigger,
+        is_mc     =is_mc,
         ecorr_kind=kind)
+
     df_cor = cor.get_df(suffix=kind)
     rdf_cor= RDF.FromPandas(df_cor)
 
