@@ -1,4 +1,7 @@
 input:
+  friends:
+    excluded:
+      - mva
   trigger:
     rk_ee   : Hlt2RD_BuToKpEE_MVA
     rk_mm   : Hlt2RD_BuToKpMuMu_MVA
@@ -18,7 +21,7 @@ input:
       sim : Bd_JpsiKst_mm_eq_DPC
       dat : DATA*
   selection:
-    bdt     : mva_cmb > 0.5 
+    bdt     : (1) 
     psi_vt  : B_const_mass_M > 5180 # This removes the psi2S contamination
     q2      : (1)
     mass    : (1) 
