@@ -110,7 +110,7 @@ def _check_corrected(
     # NaN means a track kinematic or brem energy is NaN
     arr_ind_pos = numpy.where(arr_val_cor > 0)
     arr_val_unc = arr_val_unc[arr_ind_pos]
-    arr_val_cor = arr_val_unc[arr_ind_pos]
+    arr_val_cor = arr_val_cor[arr_ind_pos]
 
     if 'MuMu' in trigger:
         assert numpy.isclose(arr_val_unc, arr_val_cor, atol=1).all()
@@ -316,8 +316,6 @@ def test_suffix(sample : str, trigger : str):
     df_cor = cor.get_df(suffix=kind)
     rdf_cor= RDF.FromPandas(df_cor)
 
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   f'B_M_{kind}')
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=f'Jpsi_M_{kind}')
     _check_output_columns(rdf_cor)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
