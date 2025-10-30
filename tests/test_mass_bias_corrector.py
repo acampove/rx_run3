@@ -207,43 +207,16 @@ def _check_output_columns(rdf : RDF.RNode) -> None:
 #-----------------------------------------
 def _get_rdf(
     trigger  : str,
-    sample   : str,
-    q2bin    : str       = 'jpsi',
-    is_inner : None|bool = None,
-    npvs     : None|int  = None,
-    bdt      : None|str  = None,
-    is_mc    : bool      = False) -> RDF.RNode:
+    sample   : str) -> RDF.RNode:
     '''
     Return ROOT dataframe needed for test
 
     nbrem : E.g. 0, 1, 2
     '''
-    with RDFGetter.exclude_friends(names=['brem_track_2']):
+    with RDFGetter.only_friends(s_friend=set()),\
+         RDFGetter.max_entries(value=1000):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
-
-    d_sel = sel.selection(
-        trigger = trigger, 
-        q2bin   = q2bin, 
-        smeared = False,
-        process = sample)
-
-    # Do not use part reco removal for MC
-    d_sel['mass'] = '(1)' if is_mc       else 'B_const_mass_M > 5160'
-    d_sel['bdt']  = '(1)' if bdt is None else bdt
-
-    for name, cut in d_sel.items():
-        log.debug(f'{name:<20}{cut}')
-        rdf = rdf.Filter(cut, name)
-
-    if is_inner is not None and     is_inner:
-        rdf = rdf.Filter('L1_BREMHYPOAREA == 2 && L2_BREMHYPOAREA == 2')
-
-    if is_inner is not None and not is_inner:
-        rdf = rdf.Filter('L1_BREMHYPOAREA != 2 && L2_BREMHYPOAREA != 2')
-
-    if npvs     is not None:
-        rdf = rdf.Filter(f'nPVs == {npvs}')
 
     _check_input_columns(rdf)
 
