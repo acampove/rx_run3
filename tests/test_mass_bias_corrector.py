@@ -137,25 +137,6 @@ def _check_corrected(
     assert corrected / total < 1 
 
     return corrected
-# ----------------------
-def _check_smeared(
-    rdf             : RDF.RNode,
-    must_be_smeared : bool, 
-    name            : str) -> None:
-    '''
-    Parameters
-    -------------
-    must_be_smeared: If true, will raise if unsmeared and smeared are equal.
-    name           : Variable to be checked
-    rdf            : DataFrame after correction
-    '''
-    arr_val_unc = rdf.AsNumpy([name])[name]
-    arr_val_smr = rdf.AsNumpy([f'{name}_smr'])[f'{name}_smr']
-
-    if not must_be_smeared:
-        assert     numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
-    else:
-        assert not numpy.isclose(arr_val_unc, arr_val_smr, atol=0.1).all()
 #-----------------------------------------
 def _clean_rdf(rdf : RDF.RNode, name : str) -> RDF.RNode:
     if name == 'Original':
