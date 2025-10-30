@@ -209,8 +209,7 @@ def _get_rdf(
 
     nbrem : E.g. 0, 1, 2
     '''
-    with RDFGetter.only_friends(s_friend=set()),\
-         RDFGetter.max_entries(value=1000):
+    with RDFGetter.only_friends(s_friend=set()):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
