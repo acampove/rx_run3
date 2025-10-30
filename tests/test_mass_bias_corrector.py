@@ -246,7 +246,7 @@ def test_simple(sample : str, trigger : str):
     Simplest test
     '''
     kind    = 'brem_track_2'
-    with RDFGetter.max_entries(value = 10_000):
+    with RDFGetter.max_entries(value = 1000):
         rdf_org = _get_rdf(sample = sample, trigger = trigger)
 
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
@@ -302,7 +302,7 @@ def test_suffix(sample : str, trigger : str):
     Tests that output dataframe has columns with suffix added
     '''
     kind = 'brem_track_2'
-    with RDFGetter.max_entries(value = 10_000):
+    with RDFGetter.max_entries(value = 1000):
         rdf_org = _get_rdf(sample=sample, trigger=trigger)
 
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
@@ -324,7 +324,7 @@ def test_brem_threshold(sample:str, trigger : str, brem_energy_threshold: float)
     '''
     Vary energy threhold of brem photon needed to be added
     '''
-    with RDFGetter.max_entries(value=50_000):
+    with RDFGetter.max_entries(value=1000):
         rdf_org = _get_rdf(sample=sample, trigger=trigger)
 
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
