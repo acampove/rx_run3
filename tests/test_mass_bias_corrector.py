@@ -278,21 +278,32 @@ def test_medium_input(sample : str, trigger : str):
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
-    cor   = MassBiasCorrector(
-        df        = df_org, 
-        is_mc     = is_mc,
-        trigger   = trigger,
-        ecorr_kind= kind)
+    cor_1   = MassBiasCorrector(
+        skip_correction= True,
+        df             = df_org, 
+        is_mc          = is_mc,
+        trigger        = trigger,
+        ecorr_kind     = kind)
 
-    df_cor  = cor.get_df()
+    cor_2   = MassBiasCorrector(
+        skip_correction= False,
+        df             = df_org, 
+        is_mc          = is_mc,
+        trigger        = trigger,
+        ecorr_kind     = kind)
+
+    df_unc  = cor_1.get_df()
+    rdf_unc = RDF.FromPandas(df_unc)
+
+    df_cor  = cor_2.get_df()
     rdf_cor = RDF.FromPandas(df_cor)
 
     _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
     _check_output_columns(rdf_cor)
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   'B_M')
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name='Jpsi_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name=   'B_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
 
-    d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    d_rdf   = {'Original' : rdf_org, 'Uncorrected' : rdf_unc, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
