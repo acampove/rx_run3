@@ -260,6 +260,8 @@ def test_simple(sample : str, trigger : str):
 
     _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
     _check_output_columns(rdf_cor)
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   'B_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name='Jpsi_M')
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'simple/{trigger}', kind)
@@ -289,6 +291,8 @@ def test_medium_input(sample : str, trigger : str):
 
     _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
     _check_output_columns(rdf_cor)
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   'B_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name='Jpsi_M')
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
@@ -313,6 +317,8 @@ def test_suffix(sample : str, trigger : str):
     df_cor = cor.get_df(suffix=kind)
     rdf_cor= RDF.FromPandas(df_cor)
 
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   f'B_M_{kind}')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=f'Jpsi_M_{kind}')
     _check_output_columns(rdf_cor)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
@@ -339,5 +345,7 @@ def test_brem_threshold(sample:str, trigger : str, brem_energy_threshold: float)
 
     d_rdf  = {'Original' : rdf_org, 'Corrected' : rdf_cor}
 
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   'B_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name='Jpsi_M')
     _compare_masses(d_rdf, f'{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
 #-----------------------------------------
