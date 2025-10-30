@@ -50,7 +50,7 @@ def _make_paths(
 
     return l_path
 # ----------------------
-@pytest.mark.skip
+@pytest.mark.skip(reason='Uses SSH')
 def test_local(tmp_path) -> None:
     '''
     Test for transfer between two local paths
@@ -62,7 +62,7 @@ def test_local(tmp_path) -> None:
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
 # ----------------------
-@pytest.mark.skip
+@pytest.mark.skip(reason='Uses SSH')
 def test_remote_target(tmp_path) -> None:
     '''
     Files are in a local server, copy them remotely 
@@ -74,7 +74,7 @@ def test_remote_target(tmp_path) -> None:
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
 # ----------------------
-@pytest.mark.skip
+@pytest.mark.skip(reason='Uses SSH')
 def test_remote_source(tmp_path) -> None:
     '''
     Files are in a remote server, copy them locally
