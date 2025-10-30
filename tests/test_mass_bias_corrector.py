@@ -137,11 +137,7 @@ def _check_corrected(
     assert corrected / total < 1 
 
     return corrected
-#-----------------------------------------
-def _clean_rdf(rdf : RDF.RNode, name : str) -> RDF.RNode:
-    if name == 'Original':
-        rdf = rdf.Define('Jpsi_M_smr', 'Jpsi_M')
-
+def _clean_rdf(rdf : RDF.RNode) -> RDF.RNode:
     rdf = rdf.Filter('Jpsi_M > 0', 'pos_jmass')
     rdf = rdf.Filter('B_M    > 0', 'pos_bmass')
 
