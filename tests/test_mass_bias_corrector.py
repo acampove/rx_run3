@@ -19,8 +19,6 @@ from omegaconf                   import OmegaConf
 from ROOT                        import RDF # type: ignore
 from dmu.logging.log_store       import LogStore
 from dmu.plotting.plotter_1d     import Plotter1D as Plotter
-from rx_common                   import info
-from rx_selection                import selection as sel
 from rx_data                     import utilities as ut
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
