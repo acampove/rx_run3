@@ -69,6 +69,8 @@ class FCopy:
             result = subprocess.run(
                 ['ssh', '-o', f'ConnectTimeout={self._timeout}', 
                  '-o', 'BatchMode=yes',
+                 '-o', 'PubkeyAuthentication=yes',
+                 '-o', 'PasswordAuthentication=no',
                  '-o', 'StrictHostKeyChecking=no', server, 
                  '/bin/true'],
                 capture_output= True,
