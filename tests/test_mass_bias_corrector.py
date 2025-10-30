@@ -249,19 +249,30 @@ def test_simple(sample : str, trigger : str):
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
-    cor     = MassBiasCorrector(
-        df        = df_org, 
-        is_mc     = is_mc,
-        trigger   = trigger,
-        ecorr_kind= kind)
+    cor_1   = MassBiasCorrector(
+        skip_correction= True,
+        df             = df_org, 
+        is_mc          = is_mc,
+        trigger        = trigger,
+        ecorr_kind     = kind)
 
-    df_cor = cor.get_df()
-    rdf_cor= RDF.FromPandas(df_cor)
+    cor_2   = MassBiasCorrector(
+        skip_correction= False,
+        df             = df_org, 
+        is_mc          = is_mc,
+        trigger        = trigger,
+        ecorr_kind     = kind)
+
+    df_unc  = cor_1.get_df()
+    rdf_unc = RDF.FromPandas(df_unc)
+
+    df_cor  = cor_2.get_df()
+    rdf_cor = RDF.FromPandas(df_cor)
 
     _check_size(rdf_org=rdf_org, rdf_cor=rdf_cor)
     _check_output_columns(rdf_cor)
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   'B_M')
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name='Jpsi_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name=   'B_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
     _compare_masses(d_rdf, f'simple/{trigger}', kind)
@@ -341,19 +352,29 @@ def test_brem_threshold(sample:str, trigger : str, brem_energy_threshold: float)
     df_org  = ut.df_from_rdf(rdf=rdf_org, drop_nans=False)
     is_mc   = ut.rdf_is_mc(rdf=rdf_org)
 
-    cor     = MassBiasCorrector(
-        df        =df_org, 
-        trigger   =trigger,
-        is_mc     =is_mc,
+    cor_1   = MassBiasCorrector(
+        df                   =df_org, 
+        trigger              =trigger,
+        is_mc                =is_mc,
+        skip_correction      =True,
         brem_energy_threshold=brem_energy_threshold)
 
-    df_cor = cor.get_df()
+    cor_2   = MassBiasCorrector(
+        df                   =df_org, 
+        trigger              =trigger,
+        is_mc                =is_mc,
+        skip_correction      =False,
+        brem_energy_threshold=brem_energy_threshold)
 
+    df_unc = cor_1.get_df()
+    rdf_unc= RDF.FromPandas(df_unc)
+
+    df_cor = cor_2.get_df()
     rdf_cor= RDF.FromPandas(df_cor)
 
-    d_rdf  = {'Original' : rdf_org, 'Corrected' : rdf_cor}
+    d_rdf  = {'Original' : rdf_org, 'Uncorrected' : rdf_unc, 'Corrected' : rdf_cor}
 
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name=   'B_M')
-    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_org, trigger=trigger, name='Jpsi_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name=   'B_M')
+    _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
     _compare_masses(d_rdf, f'{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
 #-----------------------------------------
