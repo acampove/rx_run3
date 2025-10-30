@@ -88,16 +88,16 @@ def _load_conf() -> dict:
     return cfg
 # ----------------------
 def _check_corrected(
-    rdf_unc          : RDF.RNode,
-    rdf_cor          : RDF.RNode,
-    must_be_corrected: bool, 
-    name             : str) -> int:
+    rdf_unc : RDF.RNode,
+    rdf_cor : RDF.RNode,
+    trigger : str, 
+    name    : str) -> int:
     '''
     Parameters
     -------------
-    must_be_corrected : If true, will raise if brem corrected and not corrected are equal.
-    name              : Variable to be checked
-    rdf               : DataFrame after correction
+    trigger : Needed to know if sample should be corrected, muon trigger should not
+    name    : Variable to be checked
+    rdf     : DataFrame after correction
 
     Returns
     -------------
@@ -112,8 +112,7 @@ def _check_corrected(
     arr_val_unc = arr_val_unc[arr_ind_pos]
     arr_val_cor = arr_val_unc[arr_ind_pos]
 
-    # E.g. this is the muon channel
-    if not must_be_corrected:
+    if 'MuMu' in trigger:
         assert numpy.isclose(arr_val_unc, arr_val_cor, atol=1).all()
         return 0
 
@@ -135,6 +134,7 @@ def _check_corrected(
     assert corrected / total < 1 
 
     return corrected
+# ----------------------
 def _clean_rdf(rdf : RDF.RNode) -> RDF.RNode:
     rdf = rdf.Filter('Jpsi_M > 0', 'pos_jmass')
     rdf = rdf.Filter('B_M    > 0', 'pos_bmass')
