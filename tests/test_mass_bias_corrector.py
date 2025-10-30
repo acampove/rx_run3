@@ -161,7 +161,7 @@ def _compare_masses(
     correction: Correction name, used for title
     skip_jpsi : If false, will plot Jpsi_M distributin
     '''
-    d_rdf = { name : _clean_rdf(rdf, name) for name, rdf in d_rdf.items() }
+    d_rdf = { name : _clean_rdf(rdf) for name, rdf in d_rdf.items() }
 
     dat = _load_conf()
     dat = copy.deepcopy(dat)
@@ -196,11 +196,11 @@ def _check_input_columns(rdf : RDF.RNode) -> None:
 def _check_output_columns(rdf : RDF.RNode) -> None:
     l_colname = [ name.c_str() for name in rdf.GetColumnNames() ]
     ncol = len(l_colname)
-    if ncol != 20:
+    if ncol != 18:
         for colname in l_colname:
             log.info(f'   {colname}')
 
-        raise ValueError(f'Expected 14 columns, got {ncol}')
+        raise ValueError(f'Expected 18 columns, got {ncol}')
 
     for colname in l_colname:
         log.debug(f'   {colname}')
