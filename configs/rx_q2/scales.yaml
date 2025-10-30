@@ -1,8 +1,8 @@
 args:
-  - {vers : v2, project : rk_ee  , year : '2024'}
-  - {vers : v2, project : rk_mm  , year : '2024'}
-  - {vers : v2, project : rkst_ee, year : '2024'}
-  - {vers : v2, project : rkst_mm, year : '2024'}
+  - {vers : v3, project : rk_ee  , year : '2024'}
+  - {vers : v3, project : rk_mm  , year : '2024'}
+  - {vers : v3, project : rkst_ee, year : '2024'}
+  - {vers : v3, project : rkst_mm, year : '2024'}
 outputs:
   - parameters.json
   - mu_dat.png
