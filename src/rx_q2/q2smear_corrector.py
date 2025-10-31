@@ -105,7 +105,10 @@ class Q2SmearCorrector:
 
         mass  = truem + reso * (recom - truem) + scale + (1 - reso) * (mu_mc - JPSI_PDG_MASS)
 
-        log.debug(f'{recom:20.0f}{"->:<20"}{mass:<20.0f}')
+        log.verbose('')
+        log.verbose(f'{truem=:.0f}, {recom=:.0f}, {reso=:.3f}, {scale=:.3f}, {mu_mc=:.0f}, {JPSI_PDG_MASS=:.0f}')
+        log.verbose(f'{(reso * (recom - truem))=:.0f}, {((1 - reso) * (mu_mc - JPSI_PDG_MASS))=:.0f}')
+        log.verbose(f'{recom:<20.0f}{"->":<20}{mass:<20.0f}')
 
         return mass
     # ----------------------
