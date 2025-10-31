@@ -202,6 +202,37 @@ class Scales(law.Task):
 
         return l_scale
 # ----------------------
+class Resolution(law.WrapperTask):
+    '''
+    Task uses to steer calculation of scales, fits, etc, needed to
+    measure resolution and scale effects
+    '''
+    # --------------------------------
+    def _get_outputs(self, version : str, names : ListConfig) -> list[str]:
+        '''
+        Parameters
+        -------------
+        version : Version of current resolution job
+        names   : Names of the files needed, i.e. parameters_ee.json
+
+        Returns
+        -------------
+        List of paths to JSON files where combined scales should be
+        '''
+        ana_dir = os.environ['ANADIR']
+
+        return [ f'{ana_dir}/q2/fits/{version}/{name}' for name in names ]
+    # --------------------------------
+    def requires(self) -> Scales:
+        '''
+        Returns task meant to calculate combined mass scales
+        '''
+        cfg = gut.load_conf(package='configs', fpath='rx_q2/scales.yaml')
+
+        combined_scales = self._get_outputs(version=cfg.version, names=cfg.scales)
+
+        return Scales(combined_scales=combined_scales, version=cfg.version)
+# ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to steer mass scales and resolutions measurements')
     parser.add_argument('-l', '--loglvl' , type=int, help='Logging level', default=20)
@@ -211,7 +242,7 @@ def _parse_args() -> None:
 # ----------------------
 def main():
     _parse_args()
-    law.run(argv=['Scales', '--workers', '8', '--log-level', 'INFO'])
+    law.run(argv=['Resolution', '--workers', '8', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()
