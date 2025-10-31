@@ -3,8 +3,30 @@ This module tests the functions in the info.py module
 '''
 
 import pytest
+from ROOT      import RDataFrame, RDF
 from rx_common import info
 
+# ----------------------
+def _get_rdf(is_data : bool) -> RDF.RNode:
+    '''
+    Parameters
+    -------------
+    is_data: True if dataframe returned should represent real data
+
+    Returns
+    -------------
+    ROOT dataframe
+    '''
+    rdf = RDataFrame(100)
+
+    if not is_data:
+        rdf = rdf.Define('B_TRUEID' , '521')
+        rdf = rdf.Define('L1_TRUEID',  '11')
+        rdf = rdf.Define('L2_TRUEID',  '11')
+
+    rdf = rdf.Define('B_M', '5280')
+
+    return rdf
 # -----------------------------------------
 def test_is_ee():
     '''
