@@ -156,16 +156,39 @@ class Scale(law.Task, Dependencies):
 
         runner(args=args)
 # -------------------------------------
-class Scales(law.WrapperTask):
+class Scales(law.Task):
     '''
     Task in charge of calculating scales and resolutions
     from fit parameters
     '''
+    combined_scales : list[str] = luigi.ListParameter(default=[]) # type: ignore
+    version         : str       = luigi.Parameter() # type: ignore
     # --------------------------------
     def _get_outputs(self, args : DictConfig, names : ListConfig) -> list[str]:
+        '''
+        Returns
+        ------------
+        List of paths to files produced by each Scales job, e.g. fitting parameters, plots, etc.
+        '''
         ana_dir = os.environ['ANADIR']
 
         return [ f'{ana_dir}/q2/fits/{args.vers}/plots/{args.project}/{name}' for name in names ]
+    # --------------------------------
+    def output(self) -> list[law.LocalFileTarget]:
+        '''
+        Returns
+        -------------
+        List of path to JSON files with combined scales, e.g. /x/y/parameters_ee.json
+        '''
+        return [ law.LocalFileTarget(file_path) for file_path in self.combined_scales ]
+    # --------------------------------
+    def run(self):
+        '''
+        Run combination of scales produced by each of the `Scale` tasks
+        '''
+        from rx_q2 import cli
+
+        cli.combine_scales(version=self.version)
     # --------------------------------
     def requires(self) -> list[Scale]:
         cfg_path= files('rx_q2_data').joinpath('plots/scales.yaml')
