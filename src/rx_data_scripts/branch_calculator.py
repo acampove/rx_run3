@@ -13,6 +13,7 @@ from ROOT                   import RDataFrame, TFileMerger, TFile, TTree, RDF # 
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
 
+from rx_q2.q2smear_corrector     import Q2SmearCorrector
 from rx_common                   import info
 from rx_data                     import utilities
 from rx_data.mva_calculator      import MVACalculator
@@ -262,6 +263,8 @@ def _process_rdf(
         rdf = RDF.FromPandas(df)
     elif Data.kind in ['swp_cascade', 'swp_jpsi_misid']:
         rdf = _get_swap_rdf(rdf=rdf, trigger=trigger)
+    elif Data.kind == 'smear':
+        rdf = _get_smear_rdf(rdf=rdf, trigger=trigger)
     elif Data.kind == 'mva'   :
         obj = MVACalculator(rdf=rdf, sample=sample, trigger=trigger, version=Data.vers)
         rdf = obj.get_rdf(kind = 'root')
@@ -270,6 +273,24 @@ def _process_rdf(
         rdf = obj.get_rdf()
     else:
         raise ValueError(f'Invalid kind: {Data.kind}')
+
+    return rdf
+# ----------------------
+def _get_smear_rdf(rdf : RDF.RNode, trigger : str) -> RDF.RNode:
+    '''
+    Parameters
+    -------------
+    rdf    : ROOT dataframe
+    trigger: HLT2 trigger
+
+    Returns
+    -------------
+    ROOT dataframe with smeared masses
+    '''
+
+    channel = info.channel_from_trigger(trigger=trigger)
+    obj     = Q2SmearCorrector(channel=channel)
+    rdf     = obj.get_rdf(rdf=rdf)
 
     return rdf
 # ----------------------
