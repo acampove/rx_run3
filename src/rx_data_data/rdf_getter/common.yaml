@@ -35,8 +35,6 @@ definitions:
   EE:
     Jpsi_Mass         : Jpsi_M_brem_track_2 # Use brem corrected masses only for electron channel
     B_Mass            : B_M_brem_track_2
-    Jpsi_Mass_smr     : Jpsi_M_smr_brem_track_2 # These are brem corrected and smeared masses. Smeared for data/mc differences
-    B_Mass_smr        : B_M_smr_brem_track_2
     q2_smr            : Jpsi_Mass_smr * Jpsi_Mass_smr
     nbrem             : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2) # Will use the new definition of brem
     <<: *common
