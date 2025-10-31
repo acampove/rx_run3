@@ -2,10 +2,30 @@
 This script contains functions needed to get information on samples
 '''
 
-from dmu.generic import utilities  as gut
+from ROOT                  import RDF
+from dmu.generic           import utilities  as gut
+from dmu.logging.log_store import LogStore
 
 _triggers = gut.load_data(package='rx_common_data', fpath='triggers.yaml')
 
+log=LogStore.add_logger('rx_common:info')
+# ----------------------
+def is_rdf_data(rdf : RDF.RNode) -> bool:
+    '''
+    Parameters
+    -------------
+    rdf: ROOT dataframe
+
+    Returns
+    -------------
+    True if it is real data, false for MC
+    '''
+    log.debug('Checking for data')
+
+    names = [ name.c_str() for name in rdf.GetColumnNames() ]
+    trueid= [ name         for name in names if name.endswith('TRUEID')]
+
+    return not trueid
 # ---------------------------------
 def is_mc(sample : str) -> bool:
     '''

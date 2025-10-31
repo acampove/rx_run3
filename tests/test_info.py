@@ -88,3 +88,12 @@ def test_project_from_trigger(project : str, trigger : str):
 
     assert project == info.project_from_trigger(trigger=trigger, lower_case=True)
 # -----------------------------------------
+@pytest.mark.parametrize('is_data', [True, False])
+def test_is_rdf_data(is_data : bool) -> None:
+    '''
+    Tests is_rdf_data 
+    '''
+    rdf = _get_rdf(is_data=is_data)
+
+    assert is_data == info.is_rdf_data(rdf=rdf)
+# -----------------------------------------
