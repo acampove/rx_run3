@@ -37,10 +37,10 @@ def _plot_masses(
     data = rdf.AsNumpy()
 
     arr_reco = data[f'{particle}_M_brem_track_2']
-    arr_true = data[f'{particle}_Mass'          ]
+    arr_smr  = data[f'{particle}_Mass_smr'      ]
 
     plt.hist(arr_reco, range=(2000, 3500), bins=60, alpha=0.3      )
-    plt.hist(arr_true, range=(2000, 3500), bins=60, histtype='step')
+    plt.hist(arr_smr , range=(2000, 3500), bins=60, histtype='step')
 
     plt.savefig(dir_path / f'{particle}.png')
     plt.close()
