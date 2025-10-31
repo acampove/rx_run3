@@ -7,6 +7,7 @@ import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
+from ROOT                     import RDF
 from pathlib                  import Path
 from dmu.logging.log_store    import LogStore
 from dmu.generic              import typing_utilities as tut
@@ -90,4 +91,16 @@ def test_simple(is_uniform : bool, channel : str, tmp_path):
     df['mass_smr'] = df.apply(_correct_q2, args=(obj,), axis=1)
 
     _plot_masses(df=df, name = f'simple_{is_uniform}', dir_path=tmp_path)
+# -------------------------------------------
+@pytest.mark.parametrize('is_uniform', [True, False])
+@pytest.mark.parametrize('channel'   , ['ee',  'mm'])
+def test_get_rdf(is_uniform : bool, channel : str):
+    '''
+    Checks if the input is wrong
+    '''
+    df  = _get_df(uniform = is_uniform, channel = channel)
+    rdf = RDF.FromPandas(df)
+
+    obj = Q2SmearCorrector(channel=channel)
+    rdf = obj.get_rdf(rdf=rdf)
 # -------------------------------------------
