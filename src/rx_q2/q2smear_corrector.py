@@ -112,6 +112,29 @@ class Q2SmearCorrector:
 
         return mass
     # ----------------------
+    def _process_data(self, rdf : RDF.RNode) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT dataframe with data
+
+        Returns
+        -------------
+        ROOT dataframe with smeared variables, smearing is skipped
+        '''
+        columns = [f'{particle}_M_brem_track_2' for particle in self._particles ]
+        log.info(f'Using {columns} columns for unsmeared dataset')
+
+        data    = rdf.AsNumpy(columns)
+
+        expanded= {}
+        for name, array in data.items():
+            new_name           = name.replace('_M_brem_track_2', '_Mass_smr')
+            expanded[new_name] = array
+            expanded[    name] = array
+
+        return RDF.FromNumpy(expanded)
+    # ----------------------
     def get_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
         Parameters
