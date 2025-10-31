@@ -8,6 +8,7 @@ from functools import cache
 
 import pandas as pnd
 from ROOT                           import RDF
+from rx_common                      import info
 from dmu.generic                    import typing_utilities as tut
 from dmu.logging.log_store          import LogStore
 from dmu.generic.version_management import get_last_version
@@ -34,6 +35,13 @@ class Q2SmearCorrector:
         channel: E.g. ee or mm, needed to pick up the JSON file with scales
         '''
         log.debug(f'Using Jpsi PDG mass: {JPSI_PDG_MASS:.2f}')
+
+        self._particles : Final[list[str]] = ['B', 'Jpsi']
+        self._columns   : Final[list[str]] = [
+            'B_M_brem_track_2', 'Jpsi_M_brem_track_2', 
+            'B_TRUEID'        , 'Jpsi_TRUEID',
+            'B_TRUEM'         , 'Jpsi_TRUEM',
+            'nbrem'           , 'block']
 
         self._channel = channel
         self._df      = self._get_scales()
