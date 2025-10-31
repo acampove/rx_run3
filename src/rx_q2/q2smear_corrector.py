@@ -7,6 +7,7 @@ from typing    import Final
 from functools import cache
 
 import pandas as pnd
+from ROOT                           import RDF
 from dmu.logging.log_store          import LogStore
 from dmu.generic.version_management import get_last_version
 
@@ -97,4 +98,17 @@ class Q2SmearCorrector:
         log.debug(f'{jpsi_mass_reco:20.0f}{"->:<20"}{mass:<20.0f}')
 
         return mass
+    # ----------------------
+    def get_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT dataframe with mass columns to be smeared
+
+        Returns
+        -------------
+        ROOT dataframe with data to be smeared 
+        '''
+
+        return rdf
 # ------------------------------------
