@@ -120,5 +120,5 @@ class Q2SmearCorrector:
         for particle in ['B', 'Jpsi']:
             df[f'{particle}_Mass'] = df.apply(self._smear_mass, args=(particle,), axis=1)
 
-        return rdf
+        return RDF.FromPandas(df) 
 # ------------------------------------
