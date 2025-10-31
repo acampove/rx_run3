@@ -25,7 +25,7 @@ def initialize():
     '''
     This runs before any test
     '''
-    LogStore.set_level('rx_q2:q2smear_corrector'     , 20)
+    LogStore.set_level('rx_q2:q2smear_corrector'     , 10)
     LogStore.set_level('rx_q2:test_q2smear_corrector', 10)
 # -------------------------------------------
 def _plot_masses(
@@ -39,13 +39,19 @@ def _plot_masses(
     arr_reco = data[f'{particle}_M_brem_track_2']
     arr_smr  = data[f'{particle}_Mass_smr'      ]
 
-    plt.hist(arr_reco, range=(2000, 3500), bins=60, alpha=0.3      )
-    plt.hist(arr_smr , range=(2000, 3500), bins=60, histtype='step')
+    rng = {'B' : (5000, 6000), 'Jpsi' : (2000, 3500)}[particle]
+
+    plt.hist(arr_reco, range=rng, bins=60, alpha=0.3      )
+    plt.hist(arr_smr , range=rng, bins=60, histtype='step')
 
     plt.savefig(dir_path / f'{particle}.png')
     plt.close()
 # -------------------------------------------
-def _get_df(uniform : bool, channel : str) -> pnd.DataFrame:
+def _get_df(
+    uniform : bool, 
+    is_data : bool,
+    channel : str) -> pnd.DataFrame:
+
     df = pnd.DataFrame()
 
     if   channel == 'ee':
@@ -59,6 +65,12 @@ def _get_df(uniform : bool, channel : str) -> pnd.DataFrame:
 
     df = _add_mass(df=df, particle='B'   , uniform=uniform)
     df = _add_mass(df=df, particle='Jpsi', uniform=uniform)
+
+    if not is_data:
+        df['B_TRUEID'   ] = 521
+        df['Jpsi_TRUEID'] = 451
+        df['B_TRUEM'    ] = 5280 
+        df['Jpsi_TRUEM' ] = 3096.9
 
     return df
 # ----------------------
@@ -75,26 +87,33 @@ def _add_mass(
     -------------
     DataFrame with column added
     '''
-    
-    if uniform:
-        df[f'{particle}_M_brem_track_2'] = numpy.random.uniform(1800, 3700, Data.nentries)
-        df[f'{particle}_TRUEID'        ] = numpy.random.uniform(1800, 3700, Data.nentries)
+
+    name = f'{particle}_M_brem_track_2'
+    if       uniform and particle == 'Jpsi':
+        df[name] = numpy.random.uniform(1800, 3700, Data.nentries)
+    elif not uniform and particle == 'Jpsi':
+        df[name] = numpy.random.normal(loc=3097, scale=100, size=Data.nentries)
+    elif     uniform and particle == 'B':
+        df[name] = numpy.random.uniform(5000, 6000, Data.nentries)
+    elif not uniform and particle == 'B':
+        df[name] = numpy.random.normal(loc=5280, scale=100, size=Data.nentries)
     else:
-        df[f'{particle}_M_brem_track_2'] = numpy.random.normal(loc=3000, scale=100, size=Data.nentries)
-        df[f'{particle}_TRUEID'        ] = numpy.random.normal(loc=3000, scale=100, size=Data.nentries)
+        raise ValueError(f'Invalid particle: {particle}')
 
     return df
 # -------------------------------------------
 @pytest.mark.parametrize('is_uniform', [True, False])
 @pytest.mark.parametrize('channel'   , ['ee',  'mm'])
+@pytest.mark.parametrize('is_data'   , [True, False])
 def test_get_rdf(
     is_uniform : bool, 
     channel    : str,
+    is_data    : bool,
     tmp_path):
     '''
     Checks if the input is wrong
     '''
-    df  = _get_df(uniform = is_uniform, channel = channel)
+    df  = _get_df(uniform = is_uniform, channel = channel, is_data = is_data)
     rdf = RDF.FromPandas(df)
 
     obj = Q2SmearCorrector(channel=channel)
