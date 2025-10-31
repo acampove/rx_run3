@@ -29,16 +29,20 @@ def initialize():
     LogStore.set_level('rx_q2:test_q2smear_corrector', 10)
 # -------------------------------------------
 def _plot_masses(
-    df       : pnd.DataFrame, 
-    dir_path : Path,
-    name     : str) -> None:
+    rdf      : RDF.RNode, 
+    particle : str,
+    dir_path : Path) -> None:
     log.info('Plotting')
 
-    ax=None
-    ax=df.plot.hist(y='reco_mass', range=[2000, 3500], bins=60, alpha=0.3      , ax=ax)
-    ax=df.plot.hist(y='mass_smr' , range=[2000, 3500], bins=60, histtype='step', ax=ax)
+    data = rdf.AsNumpy()
 
-    plt.savefig(dir_path / f'{name}.png')
+    arr_reco = data[f'{particle}_M_brem_track_2']
+    arr_true = data[f'{particle}_Mass'          ]
+
+    plt.hist(arr_reco, range=(2000, 3500), bins=60, alpha=0.3      )
+    plt.hist(arr_true, range=(2000, 3500), bins=60, histtype='step')
+
+    plt.savefig(dir_path / f'{particle}.png')
     plt.close()
 # -------------------------------------------
 def _get_df(uniform : bool, channel : str) -> pnd.DataFrame:
@@ -83,7 +87,10 @@ def _add_mass(
 # -------------------------------------------
 @pytest.mark.parametrize('is_uniform', [True, False])
 @pytest.mark.parametrize('channel'   , ['ee',  'mm'])
-def test_get_rdf(is_uniform : bool, channel : str):
+def test_get_rdf(
+    is_uniform : bool, 
+    channel    : str,
+    tmp_path):
     '''
     Checks if the input is wrong
     '''
@@ -92,4 +99,7 @@ def test_get_rdf(is_uniform : bool, channel : str):
 
     obj = Q2SmearCorrector(channel=channel)
     rdf = obj.get_rdf(rdf=rdf)
+
+    _plot_masses(rdf=rdf, particle='B'   , dir_path=tmp_path)
+    _plot_masses(rdf=rdf, particle='Jpsi', dir_path=tmp_path)
 # -------------------------------------------
