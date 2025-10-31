@@ -167,7 +167,7 @@ class Scales(law.WrapperTask):
 
         return [ f'{ana_dir}/q2/fits/{args.vers}/plots/{args.project}/{name}' for name in names ]
     # --------------------------------
-    def requires(self):
+    def requires(self) -> list[Scale]:
         cfg_path= files('rx_q2_data').joinpath('plots/scales.yaml')
         cfg     = gut.load_conf(package='configs', fpath='rx_q2/scales.yaml')
 
