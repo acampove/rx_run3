@@ -8,6 +8,7 @@ from functools import cache
 
 import pandas as pnd
 from ROOT                           import RDF
+from dmu.generic                    import typing_utilities as tut
 from dmu.logging.log_store          import LogStore
 from dmu.generic.version_management import get_last_version
 
@@ -72,30 +73,31 @@ class Q2SmearCorrector:
 
         raise NotImplementedError(f'Invalid quantity: {kind}')
     # ------------------------------------
-    def get_mass(
+    def _smear_mass(
         self,
-        nbrem          : int,
-        block          : int,
-        jpsi_mass_true : float,
-        jpsi_mass_reco : float) -> float:
+        row      : pnd.Series,
+        particle : str) -> float:
         '''
         Parameters:
         ---------------
-        brem          : Integer with the brem category 0, 1, 2 
-        block         : Integer with the block [0-8] 
-        jpsi_mass_true: True mass of Jpsi
-        jpsi_mass_reco: Value of unsmeared Jpsi mass
+        row : DataFrame row representing candiate 
 
         Returns:
         ---------------
         Smeared mass
         '''
+        block = tut.numeric_from_series(row=row, name='block', numeric=int)
+        nbrem = tut.numeric_from_series(row=row, name='nbrem', numeric=int)
+        recom = tut.numeric_from_series(row=row, name=f'{particle}_M_brem_track_2', numeric=float)
+        truem = tut.numeric_from_series(row=row, name=f'{particle}_TRUEID'        , numeric=float)
+
         mu_mc = self._read_quantity(nbrem=nbrem, block=block, kind='mu_mc')
         reso  = self._read_quantity(nbrem=nbrem, block=block, kind= 'reso')
         scale = self._read_quantity(nbrem=nbrem, block=block, kind='scale')
-        mass  = jpsi_mass_true + reso * (jpsi_mass_reco - jpsi_mass_true) + scale + (1 - reso) * (mu_mc - JPSI_PDG_MASS)
 
-        log.debug(f'{jpsi_mass_reco:20.0f}{"->:<20"}{mass:<20.0f}')
+        mass  = truem + reso * (recom - truem) + scale + (1 - reso) * (mu_mc - JPSI_PDG_MASS)
+
+        log.debug(f'{recom:20.0f}{"->:<20"}{mass:<20.0f}')
 
         return mass
     # ----------------------
@@ -109,6 +111,14 @@ class Q2SmearCorrector:
         -------------
         ROOT dataframe with data to be smeared 
         '''
+        columns = ['B_M_brem_track_2', 'Jpsi_M_brem_track_2', 
+                   'B_TRUEID'        , 'Jpsi_TRUEID',
+                   'nbrem'           , 'block']
+        data    = rdf.AsNumpy(columns)
+        df      = pnd.DataFrame(data)
+
+        for particle in ['B', 'Jpsi']:
+            df[f'{particle}_Mass'] = df.apply(self._smear_mass, args=(particle,), axis=1)
 
         return rdf
 # ------------------------------------
