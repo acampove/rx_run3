@@ -145,13 +145,16 @@ class Q2SmearCorrector:
         -------------
         ROOT dataframe with data to be smeared 
         '''
-        columns = ['B_M_brem_track_2', 'Jpsi_M_brem_track_2', 
-                   'B_TRUEID'        , 'Jpsi_TRUEID',
-                   'nbrem'           , 'block']
-        data    = rdf.AsNumpy(columns)
+        if info.is_rdf_data(rdf=rdf):
+            log.info('DataFrame from real data, will return unsmeared variables')
+            return self._process_data(rdf=rdf)
+
+        data    = rdf.AsNumpy(self._columns)
         df      = pnd.DataFrame(data)
 
-        for particle in ['B', 'Jpsi']:
+        log.info('Smearing masses')
+        for particle in self._particles:
+            log.debug(particle)
             df[f'{particle}_Mass_smr'] = df.apply(self._smear_mass, args=(particle,), axis=1)
 
         return RDF.FromPandas(df) 
