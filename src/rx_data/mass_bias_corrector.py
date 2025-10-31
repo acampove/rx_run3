@@ -36,7 +36,6 @@ class MassBiasCorrector:
     by correcting biases in electrons due to:
 
     - Issues with brem recovery: For this we use the `ElectronBiasCorrector` with `brem_track_2` correction
-    - Differences in scale and resolution: For this we use the `Q2SmearCorrector`
     '''
     # ------------------------------------------
     def __init__(
