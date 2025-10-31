@@ -85,8 +85,8 @@ def _load_config() -> ScalesConf:
 
         parser = argparse.ArgumentParser(description='Used to create pandas dataframe with information from fits needed to smear q2')
         parser.add_argument('-v', '--vers'   , type=str, help='Version', required=True)
-        parser.add_argument('-p', '--project', type=str, help='Version', required=True, choices=projects)
-        parser.add_argument('-y', '--year'   , type=str, help='Version', default='2024')
+        parser.add_argument('-p', '--project', type=str, help='Name of project', required=True, choices=projects)
+        parser.add_argument('-y', '--year'   , type=str, help='Year for data whose corrections are needed', default='2024')
         args = parser.parse_args()
 
     data         = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
