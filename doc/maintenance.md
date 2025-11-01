@@ -193,8 +193,9 @@ Currently the command can add:
 - `mva`: With the BDT branches 
 - `smear`: This will calculate the smeared masses `B_Mass_smr` and `Jpsi_Mass_smr` and `q2_smr`.
 
-The `mva` and `smear` trees depend on the `brem_track_2` and `hop` trees, therefore the first four
-would be calculated first and then the latter two.
+The `smear` tree depends on the `brem_track_2` (will smear corrected masses) trees, therefore the latter has to be calculated first.
+While the `mva` trees depend on `smear` (need $q^2$ wise models, which would be obtained with a cut on the smeared $q^2$), 
+`brem_track_2` (training has to be on brem corrected features) and `hop` and trees and thus needs to be calculated alone at the end.
 
 ### Calculating friend trees with jobs
 
