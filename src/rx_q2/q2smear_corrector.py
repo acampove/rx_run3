@@ -44,6 +44,8 @@ class Q2SmearCorrector:
             'B_TRUEM'         , 'Jpsi_TRUEM',
             'nbrem'           , 'block']
 
+        self._extra_columns : Final[list[str]] = ['EVENTNUMBER', 'RUNNUMBER']
+
         self._channel = channel
         self._df      = self._get_scales()
     # ------------------------------------
@@ -143,21 +145,29 @@ class Q2SmearCorrector:
             expanded[    name] = array
 
         df = pnd.DataFrame(expanded)
-        df = self._add_extra_columns(df=df)
+        df = self._add_extra_columns(df=df, rdf=rdf)
 
         return RDF.FromPandas(df)
     # ----------------------
-    def _add_extra_columns(self, df : pnd.DataFrame) -> pnd.DataFrame:
+    def _add_extra_columns(
+        self, 
+        rdf : RDF.RNode,
+        df  : pnd.DataFrame) -> pnd.DataFrame:
         '''
         Parameters
         -------------
-        df: DataFrame with smeared data
+        rdf: ROOT dataframe with input data to be smeared
+        df : DataFrame with smeared data
 
         Returns
         -------------
         Dataframe with extra columns, e.g. q2_smr
         '''
         df['q2_smr'] = df['Jpsi_Mass_smr'] * df['Jpsi_Mass_smr']
+
+        data = rdf.AsNumpy(self._extra_columns)
+        for name, values in data.items():
+            df[name] = values
 
         return df
     # ----------------------
@@ -183,7 +193,7 @@ class Q2SmearCorrector:
             log.debug(particle)
             df[f'{particle}_Mass_smr'] = df.apply(self._smear_mass, args=(particle,), axis=1)
 
-        df = self._add_extra_columns(df=df)
+        df = self._add_extra_columns(df=df, rdf=rdf)
 
         return RDF.FromPandas(df) 
 # ------------------------------------
