@@ -206,7 +206,6 @@ Where:
 
 - `-c` will point the script to the configuration file
 - `-p` Corresponds to the project, e.g. `rk`, `rkst`
-`src/rx_data_data/friend_trees/nopid.yaml`.
 - `-w` Optional, this is a wild card, e.g. `data*.root` will only allow processing of data files
 - `-e` Optional, will tell what trees to exclude.
 - `-o` Optional, will tell that only these trees need to be processed.
