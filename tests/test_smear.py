@@ -151,7 +151,7 @@ def test_get_rdf(
     df  = _get_df(uniform = is_uniform, channel = channel, is_data = is_data)
     rdf = RDF.FromPandas(df)
 
-    obj = Q2SmearCorrector(channel=channel)
+    obj = Q2SmearCorrector(channel=channel, add_original=True)
     rdf = obj.get_rdf(rdf=rdf)
 
     _check_rdf(rdf=rdf)
