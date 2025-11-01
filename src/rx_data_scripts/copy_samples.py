@@ -42,6 +42,7 @@ class Data:
         'mva',
         'hop',
         'mass',
+        'smear',
         'swp_jpsi_misid',
         'swp_cascade',
         'brem_track_2']
