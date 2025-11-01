@@ -53,9 +53,6 @@ class ScaleCombiner:
         df = df.sort_values(by=['brem', 'block', 'sample'])
         df = df.reset_index(drop=True)
 
-        log.warning('Dropping blocks 7 and 8')
-        df = df[~df['block'].isin([7, 8])]
-
         log.debug(df)
 
         return df
