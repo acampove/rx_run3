@@ -78,6 +78,22 @@ class ScaleCombiner:
         var_1 = tut.numeric_from_series(row_1, f'{name}_err', float) ** 2
         var_2 = tut.numeric_from_series(row_2, f'{name}_err', float) ** 2
 
+        is_nan_1 = math.isnan(val_1) or math.isnan(var_1)
+        is_nan_2 = math.isnan(val_2) or math.isnan(var_2)
+        
+        if is_nan_1 and     is_nan_2:
+            log.error(row_1)
+            log.error(row_2)
+            raise ValueError(f'Both elements in combination of {name} are NaN')
+
+        if is_nan_1 and not is_nan_2:
+            log.warning(f'First measurement of {name} is Nan: {row_1}')
+            return val_2, var_2
+
+        if is_nan_2 and not is_nan_1:
+            log.warning(f'Second measurement of {name} is Nan: {row_2}')
+            return val_1, var_1
+
         den   = 1 / var_1 + 1 / var_2
 
         avg   = (val_1 / var_1 + val_2 / var_2) / den 
