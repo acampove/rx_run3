@@ -142,7 +142,24 @@ class Q2SmearCorrector:
             expanded[new_name] = array
             expanded[    name] = array
 
-        return RDF.FromNumpy(expanded)
+        df = pnd.DataFrame(expanded)
+        df = self._add_extra_columns(df=df)
+
+        return RDF.FromPandas(df)
+    # ----------------------
+    def _add_extra_columns(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        df: DataFrame with smeared data
+
+        Returns
+        -------------
+        Dataframe with extra columns, e.g. q2_smr
+        '''
+        df['q2_smr'] = df['Jpsi_Mass_smr'] * df['Jpsi_Mass_smr']
+
+        return df
     # ----------------------
     def get_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
@@ -165,6 +182,8 @@ class Q2SmearCorrector:
         for particle in self._particles:
             log.debug(particle)
             df[f'{particle}_Mass_smr'] = df.apply(self._smear_mass, args=(particle,), axis=1)
+
+        df = self._add_extra_columns(df=df)
 
         return RDF.FromPandas(df) 
 # ------------------------------------
