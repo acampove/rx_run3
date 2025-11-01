@@ -356,7 +356,7 @@ def _get_input_rdf(path : str) -> RDF.RNode:
 
     s_friend : set[str] = set()
     if Data.kind == 'mva':
-        s_friend = {'brem_track_2', 'hop'}
+        s_friend = {'brem_track_2', 'hop', 'smear'}
 
     if Data.kind == 'smear':
         s_friend = {'brem_track_2'}
