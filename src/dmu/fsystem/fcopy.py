@@ -69,6 +69,8 @@ class FCopy:
             result = subprocess.run(
                 ['ssh', '-o', f'ConnectTimeout={self._timeout}', 
                  '-o', 'BatchMode=yes',
+                 '-o', 'PubkeyAuthentication=yes',
+                 '-o', 'PasswordAuthentication=no',
                  '-o', 'StrictHostKeyChecking=no', server, 
                  '/bin/true'],
                 capture_output= True,
@@ -141,10 +143,15 @@ class FCopy:
         log.debug('--->')
         log.debug(target)
 
-        spath    = self._get_path(source, is_source= True)
-        tpath    = self._get_path(target, is_source=False)
-        commands = ['rsync', '-a', spath, tpath]
+        spath = self._get_path(source, is_source= True)
+        tpath = self._get_path(target, is_source=False)
 
+        if self._source or self._target:
+            commands = ['rsync', '-a', '-e', 'ssh -o PubkeyAuthentication=yes -o PasswordAuthentication=no', spath, tpath]
+        else:
+            commands = ['rsync', '-a', spath, tpath]
+
+        log.debug(' '.join(commands))
         subprocess.run(commands)
 
         return True
