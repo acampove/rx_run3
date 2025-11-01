@@ -204,11 +204,22 @@ make_friend_trees -p rk_nopid -o mva -c rk
 
 Where:
 
-- `-c` will point the script to the configuration file
-- `-p` Corresponds to the project, e.g. `rk`, `rkst`
-- `-w` Optional, this is a wild card, e.g. `data*.root` will only allow processing of data files
-- `-e` Optional, will tell what trees to exclude.
-- `-o` Optional, will tell that only these trees need to be processed.
+```
+options:
+  -h, --help            show this help message and exit
+  -c CONFIG, --config CONFIG
+                        Name of config file, e.g. rk_nopid
+  -p PROJECT, --project PROJECT
+                        Name of project, e.g. rk
+  -e EXCLUDE [EXCLUDE ...], --exclude EXCLUDE [EXCLUDE ...]
+                        List of names of friend trees to exclude
+  -o ONLY, --only ONLY  Name the the only friend tree
+  -w WCARD, --wcard WCARD
+                        Wildcard to match files
+  -d, --dry_run         If used, it will do a dry run, fewer jobs and no outputs
+  -l {10,20,30}, --log_lvl {10,20,30}
+                        Logging level
+```
 
 In this case, these last two flags are needed because the `mva` trees are calculated with the `brem_track_2`
 trees as input. Therefore they can only be processed afterwards.
