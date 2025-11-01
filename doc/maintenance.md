@@ -181,14 +181,16 @@ Currently the command can add:
 - `swp_cascade`: Branches corresponding to $D\to K\pi$ with $\pi\to\ell$ swaps, where the swap is inverted and the $D$ mass provided.
 
 - `hop`: With the $\alpha$ and mass branches calculated
-
-- `mva`: With the BDT branches 
-
 - `brem_track_2`: This will calculate branches associated to the brem correction. 
     The branches will include:
     - Masses of B and Jpsi.
     - Momenta of mesons and electrons.
     - Derived quantities like `DIRA` or the `brem` categories.
+- `mva`: With the BDT branches 
+- `smear`: This will calculate the smeared masses `B_Mass_smr` and `Jpsi_Mass_smr` and `q2_smr`.
+
+The `mva` and `smear` trees depend on the `brem_track_2` and `hop` trees, therefore the first four
+would be calculated first and then the latter two.
 
 ### Calculating friend trees with jobs
 
@@ -218,9 +220,6 @@ Once the extra branches have been calculated, one will have a file structure lik
 
 ```
 ├── brem_track_2
-│   └── v1
-├── ecalo_bias
-│   ├── v0
 │   └── v1
 ├── hop
 │   ├── v1
