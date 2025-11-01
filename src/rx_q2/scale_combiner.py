@@ -177,7 +177,7 @@ class ScaleCombiner:
     def combine(
         self, 
         name         : str,
-        measurements : list[str]) -> None:
+        measurements : list[str]) -> pnd.DataFrame:
         '''
         Writes the combined scales to JSON
 
@@ -185,6 +185,10 @@ class ScaleCombiner:
         -------------
         name: Name of file where combination is stored
         measurements: List of strings with names of directories with measurements to combine, e.g. rk_ee
+
+        Returns
+        -------------
+        Dataframe with combined scales
         '''
         l_df = [ self._get_dataframes(measurement=measurement) for measurement in measurements ]
         self._validate(l_df = l_df)
@@ -192,4 +196,6 @@ class ScaleCombiner:
         df   = self._combine(df_1=l_df[0], df_2=l_df[1])
 
         self._save_combination(name=name, df=df)
+
+        return df
 # -------------------------------------
