@@ -27,13 +27,17 @@ class Q2SmearCorrector:
     - Returns smeared mass for each unsmeared mass, block and brem 
     '''
     # ------------------------------------
-    def __init__(self, channel : str):
+    def __init__(
+        self, 
+        channel      : str,
+        add_original : bool = False):
         '''
         No arguments needed, inputs will be passed to `get_mass`
 
         Parameters
         -------------------
-        channel: E.g. ee or mm, needed to pick up the JSON file with scales
+        channel     : E.g. ee or mm, needed to pick up the JSON file with scales
+        add_original: If true (default False), will add unsmeared masses
         '''
         log.debug(f'Using Jpsi PDG mass: {JPSI_PDG_MASS:.2f}')
 
@@ -46,8 +50,14 @@ class Q2SmearCorrector:
 
         self._extra_columns : Final[list[str]] = ['EVENTNUMBER', 'RUNNUMBER']
 
-        self._channel = channel
-        self._df      = self._get_scales()
+        if not add_original:
+            _expected = ['Jpsi_Mass_smr', 'B_Mass_smr', 'q2_smr']
+        else:
+            _expected = ['Jpsi_Mass_smr', 'B_Mass_smr', 'q2_smr', 'B_M_brem_track_2', 'Jpsi_M_brem_track_2']
+
+        self._expected : Final[list[str]] = _expected
+        self._channel  = channel
+        self._df       = self._get_scales()
     # ------------------------------------
     def _get_scales(self) -> pnd.DataFrame:
         ana_dir = os.environ['ANADIR']
@@ -146,6 +156,7 @@ class Q2SmearCorrector:
 
         df = pnd.DataFrame(expanded)
         df = self._add_extra_columns(df=df, rdf=rdf)
+        df = self._trim_columns(df=df)
 
         return RDF.FromPandas(df)
     # ----------------------
@@ -168,6 +179,28 @@ class Q2SmearCorrector:
         data = rdf.AsNumpy(self._extra_columns)
         for name, values in data.items():
             df[name] = values
+
+        return df
+    # ----------------------
+    def _trim_columns(self, df : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        df: Pandas dataframe with potentially not needed columns
+
+        Returns
+        -------------
+        Dataframe with only the needed columns
+        '''
+        all_needed : Final[list[str]] = self._expected + self._extra_columns
+
+        columns = df.columns
+        for column in columns:
+            if column in all_needed:
+                continue
+
+            log.debug(f'Trimming: {column}')
+            df = df.drop(columns=[column])
 
         return df
     # ----------------------
@@ -194,6 +227,7 @@ class Q2SmearCorrector:
             df[f'{particle}_Mass_smr'] = df.apply(self._smear_mass, args=(particle,), axis=1)
 
         df = self._add_extra_columns(df=df, rdf=rdf)
+        df = self._trim_columns(df=df)
 
         return RDF.FromPandas(df) 
 # ------------------------------------
