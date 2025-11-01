@@ -53,6 +53,8 @@ def _get_df(
     channel : str) -> pnd.DataFrame:
 
     df = pnd.DataFrame()
+    df['EVENTNUMBER'] = 1
+    df['RUNNUMBER'  ] = 2
 
     if   channel == 'ee':
         df['nbrem'] = numpy.random.choice([0, 1, 2], Data.nentries)
@@ -102,12 +104,33 @@ def _add_mass(
 
     return df
 # ----------------------
+def _check_columns(rdf : RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    rdf: Dataframe
+    '''
+    s_col  = { name.c_str() for name in rdf.GetColumnNames() }
+
+    fail = False
+    for col in {'EVENTNUMBER', 'RUNNUMBER', 'Jpsi_Mass_smr', 'B_Mass_smr', 'q2_smr'}:
+        if col in s_col:
+            continue
+
+        fail = True
+        log.error(f'Missing column: {col}')
+
+    assert not fail
+# ----------------------
 def _check_rdf(rdf : RDF.RNode) -> None:
     '''
     Parameters
     -------------
     rdf: DataFrame after correction
     '''
+
+    _check_columns(rdf=rdf)
+
     data   = rdf.AsNumpy()
     arr_q2 = data['q2_smr']
     arr_jp = data['Jpsi_Mass_smr']
