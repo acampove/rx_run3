@@ -148,12 +148,12 @@ class ScaleCombiner:
         ncols = { len(df.columns) for df in l_df }
 
         if len(nrows) != 1:
-            raise ValueError(f'Multiple sizes for dataframes: {nrows}')
+            log.warning(f'Multiple sizes for dataframes: {nrows}')
 
         if len(ncols) != 1:
             raise ValueError(f'Multiple sizes for dataframes: {ncols}')
 
-        log.debug(f'All dataframes have same number of rows/columns: {nrows}/{ncols}')
+        log.debug(f'Dataframes rows/columns: {nrows}/{ncols}')
     # ----------------------
     def _save_combination(
         self, 
