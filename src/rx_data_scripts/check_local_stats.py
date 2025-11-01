@@ -222,9 +222,9 @@ def _colorize(row : pnd.Series) -> pnd.Series:
             continue
 
         if val > expected:
-            colored[col] = f'{Fore.RED}{val}{Style.RESET_ALL}'
+            colored[col] = f'{Fore.LIGHTRED_EX}{val}{Style.RESET_ALL}'
         else:
-            colored[col] = f'{Fore.BLUE}{val}{Style.RESET_ALL}'
+            colored[col] = f'{Fore.LIGHTBLUE_EX}{val}{Style.RESET_ALL}'
 
     return colored
 # --------------------------------------
