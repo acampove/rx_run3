@@ -42,7 +42,7 @@ class Data:
     chunk_size: int
     out_dir   : str
 
-    l_kind    = ['mass', 'hop', 'swp_jpsi_misid', 'swp_cascade', 'brem_track_2', 'mva']
+    l_kind    = ['mass', 'hop', 'swp_jpsi_misid', 'swp_cascade', 'brem_track_2', 'mva', 'smear']
     l_ecorr   = ['brem_track_2']
 
     tree_name = 'DecayTree'
@@ -289,7 +289,7 @@ def _get_smear_rdf(rdf : RDF.RNode, trigger : str) -> RDF.RNode:
     '''
 
     channel = info.channel_from_trigger(trigger=trigger)
-    obj     = Q2SmearCorrector(channel=channel)
+    obj     = Q2SmearCorrector(channel=channel.lower())
     rdf     = obj.get_rdf(rdf=rdf)
 
     return rdf
@@ -357,6 +357,9 @@ def _get_input_rdf(path : str) -> RDF.RNode:
     s_friend : set[str] = set()
     if Data.kind == 'mva':
         s_friend = {'brem_track_2', 'hop'}
+
+    if Data.kind == 'smear':
+        s_friend = {'brem_track_2'}
 
     with RDFGetter.only_friends(s_friend=s_friend):
         gtr   = RDFGetter(sample=sample, trigger=trigger)
