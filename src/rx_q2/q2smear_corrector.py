@@ -3,6 +3,7 @@ Module containing Q2SmearCalculator class
 '''
 
 import os
+import math
 from typing    import Final
 from functools import cache
 
@@ -110,7 +111,15 @@ class Q2SmearCorrector:
         log.verbose(f'{(reso * (recom - truem))=:.0f}, {((1 - reso) * (mu_mc - JPSI_PDG_MASS))=:.0f}')
         log.verbose(f'{recom:<20.0f}{"->":<20}{mass:<20.0f}')
 
-        return mass
+        if not math.isnan(mass):
+            return mass
+
+        log.debug('')
+        log.debug(f'{truem=:.0f}, {recom=:.0f}, {reso=:.3f}, {scale=:.3f}, {mu_mc=:.0f}, {JPSI_PDG_MASS=:.0f}')
+        log.debug(f'{(reso * (recom - truem))=:.0f}, {((1 - reso) * (mu_mc - JPSI_PDG_MASS))=:.0f}')
+        log.debug(f'{recom:<20.0f}{"->":<20}{mass:<20.0f}')
+
+        return recom 
     # ----------------------
     def _process_data(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
