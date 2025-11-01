@@ -219,7 +219,7 @@ def _colorize(row : pnd.Series) -> pnd.Series:
             continue
 
         if math.isnan(val):
-            continue
+            colored[col] = f'{Fore.LIGHTYELLOW_EX}{val}{Style.RESET_ALL}'
 
         if val > expected:
             colored[col] = f'{Fore.LIGHTRED_EX}{val}{Style.RESET_ALL}'
