@@ -482,12 +482,17 @@ class FilterFile:
         file_name = f'{self._sample_name}_{line_name}_{hsh}.root'
 
         # Long names make grid jobs fail, drop stuff not needed, stored in metadata string
+        file_name = file_name.replace( '_sim10f_'  , '_')
+        file_name = file_name.replace( '_sim10d_'  , '_')
         file_name = file_name.replace(  '_tuple_'  , '_')
         file_name = file_name.replace('_24_w31_34_', '_')
+        file_name = file_name.replace('_24_w31_'   , '_')
+        file_name = file_name.replace('_24_w32_34_', '_')
         file_name = file_name.replace('_24_w35_37_', '_')
         file_name = file_name.replace('_24_w37_39_', '_')
+        file_name = file_name.replace('_24_w40_41_', '_')
+        file_name = file_name.replace('_24_w41_42_', '_')
         file_name = file_name.replace('_24_w40_42_', '_')
-        file_name = file_name.replace( '_sim10d_'  , '_')
         file_name = file_name.replace('_hlt1bug_'  , '_')
         file_name = file_name.replace('_pythia8_'  , '_')
 
