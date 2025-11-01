@@ -101,6 +101,18 @@ def _add_mass(
         raise ValueError(f'Invalid particle: {particle}')
 
     return df
+# ----------------------
+def _check_rdf(rdf : RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    rdf: DataFrame after correction
+    '''
+    data   = rdf.AsNumpy()
+    arr_q2 = data['q2_smr']
+    arr_jp = data['Jpsi_Mass_smr']
+
+    assert numpy.isclose(arr_q2, arr_jp ** 2, atol=1).all()
 # -------------------------------------------
 @pytest.mark.parametrize('is_uniform', [True, False])
 @pytest.mark.parametrize('channel'   , ['ee',  'mm'])
@@ -118,6 +130,8 @@ def test_get_rdf(
 
     obj = Q2SmearCorrector(channel=channel)
     rdf = obj.get_rdf(rdf=rdf)
+
+    _check_rdf(rdf=rdf)
 
     _plot_masses(rdf=rdf, particle='B'   , dir_path=tmp_path)
     _plot_masses(rdf=rdf, particle='Jpsi', dir_path=tmp_path)
