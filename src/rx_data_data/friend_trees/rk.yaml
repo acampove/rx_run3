@@ -9,6 +9,7 @@ versions:
   mass           : v1
   swp_cascade    : v3
   swp_jpsi_misid : v3
+  smear          : v1
 splitting:  # Use for real jobs
   hop            : 10
   brem_track_2   : 30
@@ -16,6 +17,7 @@ splitting:  # Use for real jobs
   mass           : 30
   swp_cascade    : 10
   swp_jpsi_misid : 10
+  smear          : 10
 test_split: # Use for dry runs
   hop            : 2
   brem_track_2   : 3
@@ -23,3 +25,4 @@ test_split: # Use for dry runs
   mass           : 3
   swp_cascade    : 2
   swp_jpsi_misid : 2
+  smear          : 1
