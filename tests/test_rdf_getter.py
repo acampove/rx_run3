@@ -1108,3 +1108,26 @@ def _validate_emulation(src : RDF.RNode, tar : RDF.RNode, path) -> None:
             plt.yscale('log')
         plt.savefig(path / f'{var_name}.png')
         plt.close()
+# ------------------------------------------------
+_CUSTOM_PROJECTS=[
+    ('Bd_Kstee_eq_btosllball05_DPC', 'rk'         ),
+    ('Bd_Kstee_eq_btosllball05_DPC', 'rk_nopid'   ),
+    ('Bu_JpsiK_ee_eq_DPC'          , 'rk_sim10d'  ),
+    ('DATA_24_MagUp_24c2'          , 'rk_no_refit'),
+]
+@pytest.mark.parametrize('sample, project', _CUSTOM_PROJECTS)
+def test_project(sample : str, project : str):
+    '''
+    Will test `project` context manager
+    '''
+    trigger = 'Hlt2RD_BuToKpEE_MVA'
+
+    with RDFGetter.max_entries(value=1000),\
+         RDFGetter.project(name=project):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
+
+    nentries = rdf.Count().GetValue()
+
+    assert nentries > 0
+# ------------------------------------------------
