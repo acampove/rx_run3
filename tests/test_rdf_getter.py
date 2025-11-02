@@ -119,7 +119,7 @@ def _name_from_raw_name(name : str) -> str:
     return l_name[-1]
 # ------------------------------------------------
 def _check_branches(
-    rdf          : RDataFrame,
+    rdf          : RDF.RNode,
     is_ee        : bool,
     is_mc        : bool,
     friends      : bool = True,
@@ -186,7 +186,7 @@ def _plot_block(rdf : RDF.RNode, name : str) -> None:
     plt.close()
 # ------------------------------------------------
 def _plot_bmass(
-        rdf         : RDataFrame,
+        rdf         : RDF.RNode,
         is_electron : bool,
         brem_track_2: bool,
         test_name   : str) -> None:
@@ -285,10 +285,10 @@ def _plot_hop(rdf : RDF.RNode, test : str) -> None:
     plt.close()
 # ------------------------------------------------
 def _apply_selection(
-        rdf      : RDataFrame,
+        rdf      : RDF.RNode,
         trigger  : str,
         sample   : str,
-        override : None|dict[str,str] = None) -> RDataFrame:
+        override : None|dict[str,str] = None) -> RDF.RNode:
     '''
     Apply full selection but q2 and mass
     '''
@@ -423,7 +423,7 @@ def _check_mcdt(rdf : RDF.RNode, name : str) -> None:
     plt.close()
 # ------------------------------------------------
 def _run_default_checks(
-    rdf          : RDataFrame,
+    rdf          : RDF.RNode,
     test_name    : str,
     trigger      : str,
     sample       : str,
