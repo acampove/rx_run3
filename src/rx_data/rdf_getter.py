@@ -905,7 +905,7 @@ class RDFGetter:
         '''
         log.info('Adding TRUEM branches')
 
-        rdf = rdf.Define('B_TRUEM', cfg.TRUEM.Bu)
+        rdf = rdf.Define('B_TRUEM', cfg.TRUEM.B_mass)
 
         return rdf
     # ---------------------------------------------------
