@@ -86,7 +86,7 @@ def initialize(out_dir):
     os.makedirs(Data.out_dir, exist_ok=True)
 # ------------------------------------------------
 def _check_truem_columns(rdf : RDF.RNode):
-    l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.endswith('_TRUEM') ]
+    l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.c_str().endswith('_TRUEM') ]
     d_data = rdf.AsNumpy(l_name)
     df     = pnd.DataFrame(d_data)
     nnan   = df.isna().sum().sum()
@@ -125,7 +125,7 @@ def _check_branches(
     friends      : bool = True,
     brem_track_2 : bool = True) -> None:
 
-    l_name = [ _name_from_raw_name(name=name) for name in rdf.GetColumnNames() ]
+    l_name = [ _name_from_raw_name(name=name.c_str()) for name in rdf.GetColumnNames() ]
 
     if brem_track_2:
         l_branch_ee = Data.l_brem_track_2 + Data.l_branch_ee
