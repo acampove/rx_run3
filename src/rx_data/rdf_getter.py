@@ -147,10 +147,10 @@ class RDFGetter:
         -------------
         E.g. rk, rkst
         '''
-        if RDFGetter._project is None:
+        if RDFGetter._custom_project is None:
             return info.project_from_trigger(trigger=trigger, lower_case=True) 
 
-        return RDFGetter._project
+        return RDFGetter._custom_project
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
         if not hasattr(RDFGetter, '_main_tree'):
