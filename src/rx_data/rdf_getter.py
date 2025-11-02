@@ -180,8 +180,15 @@ class RDFGetter:
         Loads yaml files with configuration needed to rename and define
         new columns in dataframe
         '''
+        if   self._project.startswith('rk_'):
+            main_project = 'rk'
+        elif self._project.startswith('rkst_'):
+            main_project = 'rkst'
+        else:
+            raise ValueError(f'Invalid project {self._project}')
+
         cfg_com = gut.load_conf(package='rx_data_data', fpath='rdf_getter/common.yaml')
-        cfg_ana = gut.load_conf(package='rx_data_data', fpath=f'rdf_getter/{self._analysis}.yaml')
+        cfg_ana = gut.load_conf(package='rx_data_data', fpath=f'rdf_getter/{main_project}.yaml')
         cfg     = OmegaConf.merge(cfg_com, cfg_ana)
         if not isinstance(cfg, DictConfig):
             raise ValueError('Merged config not a DictConfig')
