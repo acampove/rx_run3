@@ -162,35 +162,6 @@ def _initialize(kind : str):
 
     Data.l_source = l_path
 # ----------------------
-def _not_corrupted(source : Path, target : Path) -> bool:
-    '''
-    This function checks that copied path and original are identical
-
-    Parameters
-    -------------
-    source: Path to file to be copied
-    target: Path to copied file
-
-    Returns
-    -------------
-    True if the file is not corrupted, False otherwise
-    If it is corrupted, will remove target (local) file
-    '''
-    src_size = source.stat().st_size
-    tgt_size = target.stat().st_size
-    if src_size != tgt_size:
-        log.warning('')
-        log.warning(f'Files differ in size for: {target.name}')
-        log.warning(f'Removing local {target.name}')
-        log.warning(f'{src_size/1000_000:.3f} Mb != {tgt_size/1000_000:.3f} Mb')
-        target.unlink()
-        return False
-
-    size = source.stat().st_size
-    log.verbose(f'Files agree in size ({size}) for: {source.name}')
-
-    return True
-# -----------------------------------------
 def _copy_sample(source : Path) -> int:
     '''
     Parameters
@@ -202,11 +173,6 @@ def _copy_sample(source : Path) -> int:
     Number of files that were actually copied
     '''
     target= Data.out_dir/source.name
-
-    if os.path.isfile(target) and _not_corrupted(source=source, target=target):
-        log.verbose(f'Target found, skipping: {target}')
-        log.verbose('')
-        return 0
 
     Data.copied_files += 1
     Data.copied_size  += source.stat().st_size / 1_000_000_000
