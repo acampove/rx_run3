@@ -192,6 +192,15 @@ def _not_corrupted(source : Path, target : Path) -> bool:
     return True
 # -----------------------------------------
 def _copy_sample(source : Path) -> int:
+    '''
+    Parameters
+    ---------------
+    source: Path to file to be copied
+
+    Returns
+    ---------------
+    Number of files that were actually copied
+    '''
     target= Data.out_dir/source.name
 
     if os.path.isfile(target) and _not_corrupted(source=source, target=target):
@@ -213,7 +222,10 @@ def _copy_sample(source : Path) -> int:
     return 1
 # -----------------------------------------
 def _download_group(group : list[Path]) -> int:
-    if len(group) == 1:
+    nfiles = len(group)
+    log.debug(f'Downloading {nfiles} files in parallel')
+
+    if nfiles == 1:
         ncopied = _copy_sample(source=group[0])
         return ncopied
 
@@ -249,9 +261,12 @@ def _group_paths(l_path : list[Path]) -> list[list[Path]]:
 
     return l_l_path
 # -----------------------------------------
-def _download_kind(kind : str):
-    if kind == 'all':
-        return
+def _download_kind(kind : str) -> None:
+    '''
+    Parameters
+    -------------------
+    kind: E.g. mva, mass, brem_track_2
+    '''
 
     log.info(f'Copying files for kind {kind}')
     _initialize(kind)
@@ -276,6 +291,9 @@ def main():
         l_kind = [Data.kind]
 
     for kind in l_kind:
+        if kind == 'all':
+            continue
+
         if kind == Data.skipped_friend:
             continue
 
