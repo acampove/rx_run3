@@ -1173,4 +1173,24 @@ class RDFGetter:
                 cls._only_friends = old_val
 
         return _context()
+    # ---------------------------------------------------
+    @classmethod
+    def project(cls, name : str):
+        '''
+        Parameters
+        --------------
+        name : Name of project where ntuples will be taken from, e.g. rk 
+        '''
+        if cls._custom_project:
+            raise ValueError(f'Custom project already set to: {cls._custom_project}')
+
+        cls._custom_project = name 
+        @contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                cls._custom_project = None 
+
+        return _context()
 # ---------------------------------------------------
