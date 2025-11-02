@@ -61,6 +61,7 @@ class RDFGetter:
     _d_custom_columns : dict[str,str] = {}
     _allow_multithreading             = False
     _nthreads                         = None
+    _project    : str | None          = None
     _identifier : Final[int]          = os.getpid()  # In order to create JSON files with file lists, this string
                                                 # will be used to identify those files. This is needed to avoid collisions
                                                 # when sending jobs to clusters with shared file systems
@@ -86,7 +87,7 @@ class RDFGetter:
         self._trigger         = trigger
         self._tree_name       = tree
 
-        self._analysis        = info.project_from_trigger(trigger=trigger, lower_case=True) 
+        self._project         = self._set_project(trigger=trigger) 
         self._samples         : dict[str,str]
         self._l_columns       : list[str]
         self._s_ftree         : set[str] # list of friend trees actually used
@@ -135,6 +136,21 @@ class RDFGetter:
         self._check_multithreading()
 
         self._samples = self._get_json_paths()
+    # ----------------------
+    def _set_project(self, trigger : str) -> str:
+        '''
+        Parameters
+        -------------
+        trigger: HLT2 trigger
+
+        Returns
+        -------------
+        E.g. rk, rkst
+        '''
+        if RDFGetter._project is None:
+            return info.project_from_trigger(trigger=trigger, lower_case=True) 
+
+        return RDFGetter._project
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
         if not hasattr(RDFGetter, '_main_tree'):
@@ -187,7 +203,7 @@ class RDFGetter:
         value: Path to JSON file with the directory structure needed to make an RDataFrame
         '''
         data_dir     = os.environ['ANADIR']
-        ftree_wc     = f'{data_dir}/Data/{self._analysis}/*'
+        ftree_wc     = f'{data_dir}/Data/{self._project}/*'
         l_ftree_dir  = glob.glob(ftree_wc)
         if len(l_ftree_dir) == 0:
             raise ValueError(f'No directories with samples found in: {ftree_wc}')
