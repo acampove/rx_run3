@@ -2,7 +2,7 @@
 # BPLS_PDG_MASS = 5279.34 # https://pdg.lbl.gov/2022/tables/rpp2022-tab-mesons-bottom.pdf
 
 TRUEM:
-  Bu : 'ROOT::Math::XYZVector L1_3D(L1_TRUEPX, L1_TRUEPY, L1_TRUEPZ); auto L1_truept=L1_3D.Rho(); auto L1_trueeta=L1_3D.Eta(); auto L1_truephi=L1_3D.Phi();
+  B_mass : 'ROOT::Math::XYZVector L1_3D(L1_TRUEPX, L1_TRUEPY, L1_TRUEPZ); auto L1_truept=L1_3D.Rho(); auto L1_trueeta=L1_3D.Eta(); auto L1_truephi=L1_3D.Phi();
         ROOT::Math::XYZVector L2_3D(L2_TRUEPX, L2_TRUEPY, L2_TRUEPZ); auto L2_truept=L2_3D.Rho(); auto L2_trueeta=L2_3D.Eta(); auto L2_truephi=L2_3D.Phi();
         ROOT::Math::XYZVector H1_3D(H1_TRUEPX, H1_TRUEPY, H1_TRUEPZ); auto H1_truept=H1_3D.Rho(); auto H1_trueeta=H1_3D.Eta(); auto H1_truephi=H1_3D.Phi();
         ROOT::Math::XYZVector H2_3D(H2_TRUEPX, H2_TRUEPY, H2_TRUEPZ); auto H2_truept=H2_3D.Rho(); auto H2_trueeta=H2_3D.Eta(); auto H2_truephi=H2_3D.Phi();
