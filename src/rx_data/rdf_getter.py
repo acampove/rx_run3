@@ -61,10 +61,10 @@ class RDFGetter:
     _d_custom_columns : dict[str,str] = {}
     _allow_multithreading             = False
     _nthreads                         = None
-    _project    : str | None          = None
-    _identifier : Final[int]          = os.getpid()  # In order to create JSON files with file lists, this string
-                                                # will be used to identify those files. This is needed to avoid collisions
-                                                # when sending jobs to clusters with shared file systems
+    _custom_project : str | None      = None         # If set, will use this project instead of the one deduced from trigger
+    _identifier     : Final[int]      = os.getpid()  # In order to create JSON files with file lists, this string
+                                                     # will be used to identify those files. This is needed to avoid collisions
+                                                     # when sending jobs to clusters with shared file systems
     # ---------------------------------------------------
     def __init__(
         self,
