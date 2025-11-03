@@ -185,12 +185,14 @@ class RDFGetter:
         Loads yaml files with configuration needed to rename and define
         new columns in dataframe
         '''
-        if   self._project.startswith('rk'):
-            main_project = 'rk'
-        elif self._project.startswith('rkst'):
+        if   self._project.startswith('rkst'):
             main_project = 'rkst'
+        elif self._project.startswith('rk'):
+            main_project = 'rk'
         else:
             raise ValueError(f'Invalid project {self._project}')
+
+        log.debug(f'Using config for project: {main_project}')
 
         cfg_com = gut.load_conf(package='rx_data_data', fpath='rdf_getter/common.yaml')
         cfg_ana = gut.load_conf(package='rx_data_data', fpath=f'rdf_getter/{main_project}.yaml')
