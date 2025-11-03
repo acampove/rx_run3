@@ -5,7 +5,7 @@ The commands below need to be run inside a DIRAC shell.
 Two files control the samples used in the analysis:
 
 - `ap_utilities_data/analyses/by_priority.yaml`: Which defines the event types to be used in priority sections.
-- `ap_utilities_data/samples/2024.yaml`: Which defines the settings used for each block of 2024 data
+- `ap_utilities_data/samples/2024_sim10f.yaml`: Which defines the settings used for each block of 2024 data
 
 ## Updating `by_priority.yaml` with new event types
 
