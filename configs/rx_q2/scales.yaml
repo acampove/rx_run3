@@ -1,4 +1,4 @@
-version : v3
+vers   : v4
 scales :
   - parameters_ee.json
   - parameters_mm.json
