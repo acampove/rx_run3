@@ -11,6 +11,7 @@ from typing    import Mapping, Any
 import hist
 import numpy
 import mplhep
+import matplotlib
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
@@ -450,6 +451,7 @@ def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
+    matplotlib.use('Agg')
     global _ARGS
     _ARGS = args 
     _initialize()
