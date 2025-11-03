@@ -586,8 +586,9 @@ def test_data(sample : str, trigger : str):
     '''
     Test of getter class in data
     '''
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
+    with RDFGetter.max_entries(value=100_000):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
 
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
