@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euxo pipefail
+set -euo pipefail
 
 LOCAL_PATH=/tmp/${USER}/ap_utilities/env
 # ------------------------------------------------------------------
@@ -75,12 +75,12 @@ make_rcfile()
     echo "export PATH+=:$LOCAL_PATH/bin"                   >> $RCFILE
     echo "export PYTHONPATH+=:$LIBPATH"                    >> $RCFILE
     echo ""                                                >> $RCFILE
-    echo "echo \"-----------------------\""                >> $RCFILE
-    echo "echo \"Installing projects    \""                >> $RCFILE
-    echo "echo \"-----------------------\""                >> $RCFILE
+    echo "echo \"----------------------------------\""     >> $RCFILE
+    echo "echo \"Installing projects in $LOCAL_PATH\""     >> $RCFILE
+    echo "echo \"----------------------------------\""     >> $RCFILE
     echo ""                                                >> $RCFILE
-    echo "pip install -e --prefix $LOCAL_PATH $APUT_PATH " >> $RCFILE
-    echo "pip install -e --prefix $LOCAL_PATH  $DMU_PATH " >> $RCFILE
+    echo "pip install --prefix $LOCAL_PATH -e $APUT_PATH " >> $RCFILE
+    echo "pip install --prefix $LOCAL_PATH -e  $DMU_PATH " >> $RCFILE
     echo ""
     echo "Using rc file:"
     cat $RCFILE
