@@ -112,7 +112,7 @@ class Fits(law.WrapperTask):
         l_cfg    = [] 
         outputs  = OmegaConf.to_container(cfg.outputs, resolve=True)
 
-        for args in cfg.args:
+        for args in cfg.l_args:
             args     = OmegaConf.to_container(args, resolve=True)
             json_str = json.dumps({'args' : args, 'outputs' : outputs}) 
             l_cfg.append(json_str)
@@ -194,7 +194,7 @@ class Scales(law.Task):
         '''
         from rx_q2 import cli
 
-        cli.combine_scales(version=self.version)
+        cli.combine_scales(version=self.vers)
     # --------------------------------
     def requires(self) -> list[Scale]:
         cfg_path= files('rx_q2_data').joinpath('plots/scales.yaml')
@@ -219,12 +219,12 @@ class Resolution(law.WrapperTask):
     measure resolution and scale effects
     '''
     # --------------------------------
-    def _get_outputs(self, version : str, names : ListConfig) -> list[str]:
+    def _get_outputs(self, vers : str, names : ListConfig) -> list[str]:
         '''
         Parameters
         -------------
-        version : Version of current resolution job
-        names   : Names of the files needed, i.e. parameters_ee.json
+        vers : Version of current resolution job
+        names: Names of the files needed, i.e. parameters_ee.json
 
         Returns
         -------------
@@ -232,7 +232,7 @@ class Resolution(law.WrapperTask):
         '''
         ana_dir = os.environ['ANADIR']
 
-        return [ f'{ana_dir}/q2/fits/{version}/{name}' for name in names ]
+        return [ f'{ana_dir}/q2/fits/{vers}/{name}' for name in names ]
     # --------------------------------
     def requires(self) -> Scales:
         '''
@@ -240,9 +240,9 @@ class Resolution(law.WrapperTask):
         '''
         cfg = gut.load_conf(package='configs', fpath='rx_q2/scales.yaml')
 
-        combined_scales = self._get_outputs(version=cfg.version, names=cfg.scales)
+        combined_scales = self._get_outputs(vers=cfg.vers, names=cfg.scales)
 
-        return Scales(combined_scales=combined_scales, version=cfg.version)
+        return Scales(combined_scales=combined_scales, vers=cfg.vers)
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script used to steer mass scales and resolutions measurements')
