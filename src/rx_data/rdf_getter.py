@@ -148,7 +148,12 @@ class RDFGetter:
         E.g. rk, rkst
         '''
         if RDFGetter._custom_project is None:
-            return info.project_from_trigger(trigger=trigger, lower_case=True) 
+            project = info.project_from_trigger(trigger=trigger, lower_case=True) 
+            log.debug(f'Using project {project} for trigger {trigger}')
+
+            return project
+
+        log.warning(f'Using custom project: {RDFGetter._custom_project}')
 
         return RDFGetter._custom_project
     # ---------------------------------------------------
