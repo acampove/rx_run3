@@ -95,6 +95,7 @@ class Fits(law.WrapperTask):
     '''
     This class takes care of steering the workflow
     '''
+    vers : str = law.Parameter() # type: ignore
     # ----------------------
     @cache
     @staticmethod
@@ -123,9 +124,12 @@ class Fits(law.WrapperTask):
         Defines the sets of tasks in the workflow
         '''
         cfg = gut.load_conf(package='configs', fpath='rx_q2/fits.yaml')
+        for args in cfg.l_args:
+            args['vers'] = self.vers
 
         log.info(20 * '-')
         l_settings = Fits.get_settings(cfg=cfg)
+
         return [ Fit(config_string = settings, kind='dat') for settings in l_settings ]
 # -------------------------------------
 class Scale(law.Task, Dependencies):
@@ -135,9 +139,10 @@ class Scale(law.Task, Dependencies):
     args         : dict[str,str] = luigi.DictParameter(default={}) # type: ignore
     outputs      : list[str]     = luigi.ListParameter(default=[]) # type: ignore
     dependencies : tuple         = law.Parameter()                 # type: ignore
+    vers         : str           = law.Parameter()                 # type: ignore
     # ----------------------
     def requires(self) -> law.Task:
-        return Fits()
+        return Fits(vers = self.vers)
     # ----------------------
     def output(self) -> list[law.LocalFileTarget]:
         l_path    = [ law.LocalFileTarget(out_dir) for out_dir in self.outputs ]
@@ -149,8 +154,9 @@ class Scale(law.Task, Dependencies):
     def run(self):
         from rx_q2_scripts.dump_q2_ratios import main as runner
 
-        data = { key : val for key, val in self.args.items() }
-        args = OmegaConf.create(data)
+        data         = { key : val for key, val in self.args.items() }
+        args         = OmegaConf.create(data)
+        args['vers'] = self.vers
 
         self._touch_hash()
 
@@ -162,7 +168,7 @@ class Scales(law.Task):
     from fit parameters
     '''
     combined_scales : list[str] = luigi.ListParameter(default=[]) # type: ignore
-    version         : str       = luigi.Parameter() # type: ignore
+    vers            : str       = luigi.Parameter() # type: ignore
     # --------------------------------
     def _get_outputs(self, args : DictConfig, names : ListConfig) -> list[str]:
         '''
@@ -172,7 +178,7 @@ class Scales(law.Task):
         '''
         ana_dir = os.environ['ANADIR']
 
-        return [ f'{ana_dir}/q2/fits/{args.vers}/plots/{args.project}/{name}' for name in names ]
+        return [ f'{ana_dir}/q2/fits/{self.vers}/plots/{args.project}/{name}' for name in names ]
     # --------------------------------
     def output(self) -> list[law.LocalFileTarget]:
         '''
@@ -197,7 +203,12 @@ class Scales(law.Task):
         l_scale = []
         for args in cfg.args:
             outputs = self._get_outputs(args=args, names=cfg.outputs)
-            scl     = Scale(args=args, outputs=outputs, dependencies=[cfg_path])
+            scl     = Scale(
+                args        =args, 
+                outputs     =outputs, 
+                vers        =self.vers,
+                dependencies=[cfg_path])
+
             l_scale.append(scl)
 
         return l_scale
