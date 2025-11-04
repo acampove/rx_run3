@@ -23,11 +23,5 @@ Bs_JpsiKst_ee_eq_DPC :
 # ----------------------------------------
 Bd_JpsiKst_mm_had_swp:
   sample   : Bd_JpsiKst_mm_eq_DPC
-  swap     :
-    - H1
-    - H2
 Bd_JpsiKst_ee_had_swp:
   sample   : Bd_JpsiKst_ee_eq_DPC
-  swap     :
-    - H1
-    - H2
