@@ -18,9 +18,9 @@ model:
         - 6200
   components:
     combinatorial : reso/rkst/muon/combinatorial.yaml
-    bsjpsiphi     : reso/rkst/muon/bsjpsiphi.yaml
-    lbjpsipk      : reso/rkst/muon/lbjpsipk.yaml
     ccbar         : reso/rkst/muon/ccbar.yaml
+    lbjpsipk      : reso/rkst/muon/lbjpsipk.yaml
+    bsjpsiphi     : reso/rkst/muon/bsjpsiphi.yaml
     bsjpsikst     : reso/rkst/muon/bsjpsikst.yaml
     jpsi          : reso/rkst/muon/jpsi.yaml
     psi2          : reso/rkst/muon/psi2.yaml
