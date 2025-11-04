@@ -56,7 +56,7 @@ def plot(project : str, qsq : Qsq, trigger : Trigger):
     channel: Electron or muon channel 
     '''
     ana_dir = Path(os.environ['ANADIR'])
-    plt_dir = ana_dir / 'plots/refitting'
+    plt_dir = ana_dir / 'plots/refitting' / trigger / qsq
 
     rdf_org = _get_rdf(trigger = trigger, qsq = qsq, out_path = plt_dir, project = f'{project}_no_refit')
     rdf_rft = _get_rdf(trigger = trigger, qsq = qsq, out_path = plt_dir, project =    project)
