@@ -184,3 +184,18 @@ run123 -c mass
 
 it will show the comparison of the uncorrected mass distribution for run3
 with the mass distribution for Run1+2, also the $q^2_{track}$.
+
+## Refitted vs non-refitted
+
+To compare refitted and non refitted distributions use:
+
+```bash
+rxplt refitting -p rkst -q jpsi -t Hlt2RD_B0ToKpPimMuMu_MVA -n 5
+```
+
+which will plot the variables in the config:
+
+```
+src/rx_plotter_data/refitting/vx.yaml
+```
+
