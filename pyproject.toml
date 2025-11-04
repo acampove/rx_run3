@@ -32,12 +32,8 @@ build-backend = "poetry_dynamic_versioning.backend"
 [tool.poetry.extras]
 dev    = ['pytest']
 
-[tool.poetry-dynamic-versioning]
-enable = true
-vcs    = 'git'
-style  = 'pep440'
-
 [tool.poetry.scripts]
+rxplt               = 'rx_plotter.cli:app'
 high_q2cut          ='rx_plotter_scripts.high_q2cut:main'
 leakage             ='rx_plotter_scripts.leakage:main'
 compare             ='rx_plotter_scripts.compare:main'
