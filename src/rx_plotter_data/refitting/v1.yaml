@@ -1,0 +1,26 @@
+# This config specifies how to compare refitted and original data samples
+
+general:
+  size : [15, 10]
+plots:
+  B_Mass :
+    binning    : [5100, 5800, 40]
+    yscale     : log 
+    labels     : ['$M(B)$', 'Entries']
+    title      : Refitted vs original 
+    name       : bmass 
+    styling :
+        Original:
+            histtype : fill 
+            color    : gray
+            alpha    : 0.3
+        Refitted:
+            color    : red 
+            histtype : step
+            linestyle: '-'
+        vline   :
+          x     : 5280 
+          label : PDG 
+          ls    : --
+          c     : blue
+          lw    : 1
