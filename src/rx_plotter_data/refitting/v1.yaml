@@ -4,23 +4,23 @@ general:
   size : [15, 10]
 plots:
   B_Mass :
-    binning    : [5100, 5800, 40]
+    binning    : [5100, 5800, 140]
     yscale     : log 
-    labels     : ['$M(B)$', 'Entries']
+    labels     : ['$M(B)$', 'Entries/5 MeV']
     title      : Refitted vs original 
     name       : bmass 
     styling :
         Original:
             histtype : fill 
-            color    : gray
-            alpha    : 0.3
+            color    : green 
+            alpha    : 0.4
         Refitted:
-            color    : red 
+            color    : blue 
             histtype : step
             linestyle: '-'
-        vline   :
-          x     : 5280 
-          label : PDG 
-          ls    : --
-          c     : blue
-          lw    : 1
+    vline   :
+      x     : 5280 
+      label : PDG 
+      ls    : --
+      c     : blue
+      lw    : 1
