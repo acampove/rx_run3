@@ -1,24 +1,10 @@
 output_directory : reso/rkst/muon/bsjpsiphi
 categories:
   main:
-    model :
-      - dscb
-      - gauss
+    model : KDE1DimFFT
 sample        : Bs_Jpsiphi_mm_eq_CPV_update2012_DPC
-shared        : 
-  - mu
-  - sg
-float         :
-  - mu
-  - sg
-reparametrize : {}
-fix           : {}
 fit:
-  strategy  :
-    retry   :
-      ntries        : 10
-      pvalue_thresh : 0.05
-      ignore_status : true
+  strategy  : KDE1DimFFT
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
