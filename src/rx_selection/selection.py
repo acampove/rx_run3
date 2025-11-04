@@ -6,6 +6,7 @@ import os
 import re
 import copy
 
+from pathlib             import Path
 from importlib.resources import files
 from contextlib          import contextmanager
 
@@ -14,6 +15,8 @@ import ap_utilities.decays.utilities as aput
 from ROOT                   import RDF # type: ignore
 from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
+from dmu.rdataframe         import utilities as rut
+from dmu.generic            import utilities as gut
 
 from rx_common    import info
 from rx_selection import truth_matching     as tm
@@ -337,21 +340,44 @@ def _override_block(
 
     return new_cut
 #-----------------------
+def _save_cutflow(
+    path : Path, 
+    rdf  : RDF.RNode, 
+    cuts : dict[str,str]) -> None:
+    '''
+    Parameters
+    -------------
+    path: Path where cutflow will be saved
+    rdf : Root Dataframe
+    cuts: Selection
+    '''
+    log.info(f'Saving cutflow to: {path}')
+
+    path.mkdir(parents=True, exist_ok=True)
+
+    rep = rdf.Report()
+    df  = rut.rdf_report_to_df(rep=rep)
+    df.to_markdown(path / 'cutflow.md')
+
+    gut.dump_json(data = cuts, path = path / 'cuts.yaml')
+#-----------------------
 def apply_full_selection(
     rdf      : RDF.RNode,
     q2bin    : str,
     process  : str,
     trigger  : str,
     ext_cut  : str|None = None,
-    uid      : str|None = None) -> RDF.RNode:
+    uid      : str|None = None,
+    out_path : Path|None= None) -> RDF.RNode:
     '''
     Will apply full selection on dataframe.
     IMPORTANT: This HAS to be done lazily or else the rest of the code will be slowed down.
 
     Parameters
     --------------------
-    uid: Unique identifier, used for hashing. If not passed no hashing will be done
-    ext_cut: Extra cut, optional
+    uid     : Unique identifier, used for hashing. If not passed no hashing will be done
+    ext_cut : Extra cut, optional
+    out_path: Path where selection and cutflow will be stored, optional
 
     Returns
     --------------------
@@ -366,10 +392,17 @@ def apply_full_selection(
     for cut_name, cut_value in d_sel.items():
         rdf = rdf.Filter(cut_value, cut_name)
 
+    if out_path:
+        _save_cutflow(path=out_path, rdf=rdf, cuts=d_sel)
+    else:
+        log.warning('Not saving cutflow')
+
     if uid is None:
+        log.debug('No UID found, not updating it')
         return rdf
 
+    log.info('Attaching updated UID')
     rdf.uid = hashing.hash_object([uid, d_sel])
 
     return rdf
-#-----------------------
+# ----------------------
