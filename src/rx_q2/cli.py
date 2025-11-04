@@ -20,9 +20,5 @@ def combine_scales(version : str) -> None:
     cmb.combine(name = 'parameters_ee.json', measurements=['rk_ee', 'rkst_ee'])
     cmb.combine(name = 'parameters_mm.json', measurements=['rk_mm', 'rkst_mm'])
 # ----------------------
-@app.command()
-def dummy() -> None:
-    pass
-# ----------------------
 if __name__ == '__main__':
     app()
