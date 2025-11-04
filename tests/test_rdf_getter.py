@@ -1062,9 +1062,13 @@ def test_full_selection_muon(sample : str, q2bin : str, trigger : str):
     _print_dotted_branches(rdf)
 # --------------------------
 @pytest.mark.parametrize('target, source, trigger', 
-                         [
-                         ('Bs_JpsiKst_mm_eq_DPC', 'Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-                         ('Bs_JpsiKst_ee_eq_DPC', 'Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  )])
+    [
+    ('Bs_JpsiKst_mm_eq_DPC', 'Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('Bs_JpsiKst_ee_eq_DPC', 'Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    # -------------
+    ('Bd_JpsiKst_mm_eq_DPC', 'Bd_JpsiKst_mm_had_swp', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('Bd_JpsiKst_ee_eq_DPC', 'Bd_JpsiKst_ee_had_swp', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    ])
 def test_emulated_samples(
     target  : str, 
     source  : str, 
