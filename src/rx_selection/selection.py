@@ -359,7 +359,7 @@ def _save_cutflow(
     df  = rut.rdf_report_to_df(rep=rep)
     df.to_markdown(path / 'cutflow.md')
 
-    gut.dump_json(data = cuts, path = path / 'cuts.yaml')
+    gut.dump_json(data = cuts, path = path / 'cuts.yaml', exists_ok=True)
 #-----------------------
 def apply_full_selection(
     rdf      : RDF.RNode,
