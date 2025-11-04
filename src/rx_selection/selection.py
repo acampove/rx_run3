@@ -11,7 +11,7 @@ from contextlib          import contextmanager
 
 import yaml
 import ap_utilities.decays.utilities as aput
-from ROOT                   import RDataFrame, RDF
+from ROOT                   import RDF # type: ignore
 from dmu.generic            import hashing
 from dmu.logging.log_store  import LogStore
 
