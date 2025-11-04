@@ -4,7 +4,8 @@ Class testing RDFGetter
 import os
 import glob
 import math
-from typing import cast
+from typing  import cast
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas            as pnd
@@ -1061,49 +1062,65 @@ def test_full_selection_muon(sample : str, q2bin : str, trigger : str):
 
     _print_dotted_branches(rdf)
 # --------------------------
-@pytest.mark.parametrize('target, source, trigger', 
+@pytest.mark.parametrize('source, target, trigger', 
     [
-    ('Bs_JpsiKst_mm_eq_DPC', 'Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-    ('Bs_JpsiKst_ee_eq_DPC', 'Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    ('Bd_JpsiKst_mm_eq_DPC', 'Bs_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('Bd_JpsiKst_ee_eq_DPC', 'Bs_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
     # -------------
     ('Bd_JpsiKst_mm_eq_DPC', 'Bd_JpsiKst_mm_had_swp', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
     ('Bd_JpsiKst_ee_eq_DPC', 'Bd_JpsiKst_ee_had_swp', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
     ])
 def test_emulated_samples(
-    target  : str, 
     source  : str, 
+    target  : str, 
     trigger : str,
-    tmp_path):
+    tmp_path: Path):
     '''
     Test sample emulation, e.g.
 
     B0 -> Jpsi K* => Bs -> Jpsi K*
     '''
-    with RDFGetter.max_entries(value=-1):
+    with RDFGetter.max_entries(value=100_000):
         gtr_1   = RDFGetter(sample=target, trigger=trigger)
         rdf_tar = gtr_1.get_rdf(per_file=False)
+        rdf_tar = sel.apply_full_selection(
+            rdf      = rdf_tar, 
+            q2bin    = 'jpsi', 
+            process  = target, 
+            trigger  = trigger,
+            out_path = tmp_path)
 
         gtr_2   = RDFGetter(sample=source, trigger=trigger)
         rdf_src = gtr_2.get_rdf(per_file=False)
 
     log.info(f'Saving validation plots in: {tmp_path}')
 
-    _validate_emulation(src = rdf_src, tar = rdf_tar, path = tmp_path)
+    _validate_emulation(
+        source = source,
+        target = target,
+        src    = rdf_src, 
+        tar    = rdf_tar, 
+        path   = tmp_path)
 # --------------------------
-def _validate_emulation(src : RDF.RNode, tar : RDF.RNode, path) -> None:
+def _validate_emulation(
+    source : str,
+    target : str,
+    src : RDF.RNode, 
+    tar : RDF.RNode, 
+    path: Path) -> None:
     for var_name in ['B_M', 'B_Mass', 'q2']:
         arr_src = src.AsNumpy([var_name])[var_name]
         arr_tar = tar.AsNumpy([var_name])[var_name]
 
         if var_name in ['B_M', 'B_Mass']:
-            plt.hist(arr_src, bins=60, range=(5000, 6000), histtype='step', label='Original')
-            plt.hist(arr_tar, bins=60, range=(5000, 6000), histtype='step', label='Emulated')
+            plt.hist(arr_src, bins=60, range=(5000, 6000), histtype='stepfilled', alpha=0.5, label=source)
+            plt.hist(arr_tar, bins=60, range=(5000, 6000), histtype='step', label=target)
         else:
             arr_src = arr_src / 1000_000
             arr_tar = arr_tar / 1000_000
 
-            plt.hist(arr_src, bins=100, range=(0, 22), histtype='step', label='Original')
-            plt.hist(arr_tar, bins=100, range=(0, 22), histtype='step', label='Emulated')
+            plt.hist(arr_src, bins=100, range=(0, 22), histtype='stepfilled', alpha=0.5, label=source)
+            plt.hist(arr_tar, bins=100, range=(0, 22), histtype='step', label=target)
 
         nentries = len(arr_src)
 
