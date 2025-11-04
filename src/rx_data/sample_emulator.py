@@ -67,40 +67,6 @@ class SampleEmulator:
 
         return rdf
     # ----------------------
-    def _run_swaps(
-        self, 
-        rdf   : RDF.RNode, 
-        swaps : ListConfig) -> RDF.RNode:
-        '''
-        Parameters
-        -------------
-        rdf: DataFrame before swaps
-        swaps: List with two elements, representing heads of branches to swap, e.g. H1, H2
-
-        Returns
-        -------------
-        Dataframe with branches values swapped
-        '''
-        if len(swaps) != 2:
-            raise ValueError(f'Expected two particles, found: {swaps}')
-
-        log.info(f'Swapping: {swaps}')
-        [part_1, part_2] = swaps
-
-        l_part_1 = sorted([ name.c_str() for name in rdf.GetColumnNames() if name.c_str().startswith(part_1) ])
-        l_part_2 = sorted([ name.c_str() for name in rdf.GetColumnNames() if name.c_str().startswith(part_2) ])
-
-        assert len(l_part_1) == len(l_part_2)
-
-        for part_1, part_2 in zip(l_part_1, l_part_2):
-            rdf = rdf.Define(f'tmp_{part_1}', part_1)
-            rdf = rdf.Define(f'tmp_{part_2}', part_2)
-
-            rdf = rdf.Redefine(part_2, f'tmp_{part_1}')
-            rdf = rdf.Redefine(part_1, f'tmp_{part_2}')
-
-        return rdf
-    # ---------------------
     def post_process(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
         Parameters
@@ -121,9 +87,6 @@ class SampleEmulator:
 
         if 'redefine' in cfg:
             rdf = self._run_redefine(rdf=rdf, definitions=cfg.redefine)
-
-        if 'swap' in cfg:
-            rdf = self._run_swaps(rdf=rdf, swaps=cfg.swap)
 
         return rdf
 # ----------------------
