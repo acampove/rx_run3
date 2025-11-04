@@ -1126,9 +1126,10 @@ def _validate_emulation(
 
         plt.title(f'Entries: {nentries}')
         plt.legend()
-        if var_name == 'q2':
-            plt.yscale('log')
-        plt.savefig(path / f'{var_name}.png')
+        plt.savefig(path / f'{var_name}_linear.png')
+
+        plt.yscale('log')
+        plt.savefig(path / f'{var_name}_log.png')
         plt.close()
 # ------------------------------------------------
 _CUSTOM_PROJECTS=[
