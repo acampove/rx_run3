@@ -13,6 +13,7 @@ dependencies    = [
     "particle>=0.0.0",
     "vector>=0.0.0",
     "pandas",
+    'typer',
     "numpy",
 ]
 
@@ -21,6 +22,7 @@ tst = ["pytest>=0.0.0"]  # When developing
 net = ["xrootd>=0.0.0"]  # When doing things that require access to remote files
 
 [project.scripts]
+rxdata               = "rx_data.cli:app"
 move_sample          = "rx_data_scripts.move_sample:main"
 make_friend_trees    = "rx_data_scripts.make_friend_trees:main"
 check_missing        = "rx_data_scripts.check_missing:main"
