@@ -8,7 +8,7 @@ plots:
     yscale     : log 
     labels     : ['$M_{DTF}^{\psi(2S)}(B)$', 'Entries/5 MeV']
     title      : Refitted vs original 
-    name       : bmass 
+    name       : bmass_psi2_dtf
     styling :
         Original:
             histtype : fill 
@@ -29,7 +29,7 @@ plots:
     yscale     : log 
     labels     : ['$M_{DTF}^{J/\psi}(B)$', 'Entries/5 MeV']
     title      : Refitted vs original 
-    name       : bmass 
+    name       : bmass_jpsi_dtf 
     styling :
         Original:
             histtype : fill 
