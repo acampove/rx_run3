@@ -13,4 +13,3 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
     - 5500
   d_leg :
     gauss_1 : Gauss 
-    dscb_1  : DSCB 
