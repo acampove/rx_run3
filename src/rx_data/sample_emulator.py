@@ -3,6 +3,7 @@ Module holding SampleEmulator class
 '''
 
 from ROOT                  import RDF # type: ignore
+from omegaconf             import DictConfig
 
 from dmu.generic.utilities import load_conf
 from dmu.logging.log_store import LogStore
@@ -43,6 +44,28 @@ class SampleEmulator:
         log.warning(f'Emulating {self._sample} with {new_sample}')
 
         return new_sample
+    # ----------------------
+    def _run_redefine(
+        self, 
+        rdf         : RDF.RNode, 
+        definitions : DictConfig) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf : DataFrame before redefinitions
+        definitions: Dictionary between variable and new definition
+
+        Returns
+        -------------
+        Dictionary after definitiions
+        '''
+        for var, expr in definitions.items():
+            assert isinstance(var, str)
+
+            log.debug(f'{var:<30}{"--->"}{expr:<}')
+            rdf = rdf.Redefine(var, expr)
+
+        return rdf
     # ---------------------
     def post_process(self, rdf : RDF.RNode) -> RDF.RNode:
         '''
@@ -54,14 +77,16 @@ class SampleEmulator:
         -------------
         Dataframe after redefinitions, etc
         '''
-        if self._sample not in self._cfg:
+        cfg = self._cfg.get(self._sample)
+
+        if not cfg: 
             log.debug(f'Not emulating {self._sample}, missing in config')
             return rdf
 
-        log.debug(f'Emulating {self._sample}')
-        for key, val in self._cfg[self._sample].redefine.items():
-            log.info(f'{key:<25}{"->":10}{val}')
-            rdf = rdf.Redefine(key, val)
+        log.info(f'Emulating {self._sample}')
+
+        if 'redefine' in cfg:
+            rdf = self._run_redefine(rdf=rdf, definitions=cfg.redefine)
 
         return rdf
 # ----------------------
