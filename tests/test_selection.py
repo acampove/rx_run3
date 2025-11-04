@@ -3,8 +3,10 @@ Script with functions needed to test functions in selection.py
 '''
 import os
 import pytest
+from pathlib                import Path
 from dmu.logging.log_store  import LogStore
 from rx_selection           import selection as sel
+from rx_data.rdf_getter     import RDFGetter 
 
 log=LogStore.add_logger('rx_selection:test_selection')
 # --------------------------
@@ -172,3 +174,24 @@ def test_no_truth(trigger : str):
         process   =sample)
 
     assert d_sel['truth'] == '(1)'
+# --------------------------
+def test_apply_full_selection(tmp_path : Path):
+    '''
+    Tests application of selection
+    '''
+    q2bin  = 'jpsi'
+    sample = 'DATA_24_MagDown_24c2'
+    trigger= 'Hlt2RD_BuToKpEE_MVA'
+
+    with RDFGetter.max_entries(10_000):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
+
+    out_path = tmp_path / f'{q2bin}_{sample}_{trigger}'
+
+    rdf =sel.apply_full_selection(
+        rdf     =rdf, 
+        q2bin   =q2bin, 
+        process =sample,
+        trigger =trigger,
+        out_path=out_path)
