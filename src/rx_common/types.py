@@ -14,6 +14,9 @@ class Trigger(str, Enum):
     rkst_ee_os = 'Hlt2RD_B0ToKpPimEE_MVA'
     rkst_mm_os = 'Hlt2RD_B0ToKpPimMuMu_MVA'
 
+    def __str__(self):
+        return self.value
+
 class Channel(str, Enum):
     '''
     This class repsesents the electron, muon or emu channel types
@@ -21,6 +24,10 @@ class Channel(str, Enum):
     ee = 'ee'
     mm = 'mm'
     em = 'em'
+
+    def __str__(self):
+        return self.value
+
 
 class Project(str, Enum):
     '''
@@ -31,6 +38,9 @@ class Project(str, Enum):
     rk_no_refit   = 'rk_no_refit'
     rkst_no_refit = 'rkst_no_refit'
 
+    def __str__(self):
+        return self.value
+
 class Qsq(str, Enum):
     '''
     This class represents different q2 bins
@@ -40,3 +50,7 @@ class Qsq(str, Enum):
     jpsi    = 'jpsi'
     psi2    = 'psi2'
     high    = 'high'
+
+    def __str__(self):
+        return self.value
+
