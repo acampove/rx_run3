@@ -8,7 +8,7 @@ import typer
 
 from dmu.logging.log_store import LogStore
 from rx_common.types       import Project 
-from rx_data.samples       import SamplePrinter
+from rx_data.samples       import SamplesPrinter
 
 app = typer.Typer(help=__doc__)
 log = LogStore.add_logger('rx_data:cli')
@@ -18,7 +18,7 @@ def show_samples_by_block(project : Project = typer.Option(..., '--project', '-p
     '''
     This will print a table with the samples available for each block
     '''
-    printer = SamplePrinter(project=project)
+    printer = SamplesPrinter(project=project)
     printer.print_by_block()
 # ----------------------
 @app.command()
