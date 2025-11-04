@@ -52,6 +52,8 @@ def _get_rdf() -> RDF.RNode:
     rdf = rdf.Define('Jpsi_MC_MOTHER_ID'   , '123')
     rdf = rdf.Define('H1_TRUEID'           , '321')
     rdf = rdf.Define('H2_TRUEID'           , '211')
+    rdf = rdf.Define('H1_PT'               , '10000')
+    rdf = rdf.Define('H2_PT'               , '20000')
 
     return rdf
 # --------------------------------------------
@@ -98,9 +100,14 @@ def test_swap_hadrons(sample : str):
     emu     = SampleEmulator(sample=sample)
     rdf_new = emu.post_process(rdf = rdf_old)
 
-    data    = rdf_new.AsNumpy()
-    h1_id   = data['H1_TRUEID']
-    h2_id   = data['H2_TRUEID']
+    data_old = rdf_old.AsNumpy()
+    data_new = rdf_new.AsNumpy()
+    for variable in ['TRUEID', 'PT']:
+        arr_1o= data_old[f'H1_{variable}']
+        arr_2o= data_old[f'H2_{variable}']
 
-    assert numpy.all(h1_id == 211)
-    assert numpy.all(h2_id == 321)
+        arr_1n= data_new[f'H1_{variable}']
+        arr_2n= data_new[f'H2_{variable}']
+
+        assert numpy.isclose(arr_1o, arr_2n, rtol=1e-5).all()
+        assert numpy.isclose(arr_2o, arr_1n, rtol=1e-5).all()
