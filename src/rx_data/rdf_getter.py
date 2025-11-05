@@ -1,14 +1,14 @@
 '''
 Module holding RDFGetter class
 '''
-from contextlib import contextmanager
 import os
 import glob
 import copy
 import pprint
 import fnmatch
 import secrets
-from typing              import Any, Final, overload, Literal
+from contextlib import contextmanager
+from typing     import Any, Final, overload, Literal
 
 import yaml
 import dmu.generic.utilities as gut
