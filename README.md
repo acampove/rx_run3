@@ -143,6 +143,8 @@ analysis productions pipeline.
 
 # Checking what samples exist as ntuples in ANADIR (locally)
 
+## Check friend trees
+
 For this run:
 
 ```bash
@@ -156,6 +158,19 @@ check_local_stats -p rk
 
 Where the rows represent samples and the columns represent the friend trees.
 The numbers are the number of ntuples.
+
+## Check samples vs block
+
+To find out which blocks have MC or data missing and the fraction of data and MC
+in each block do:
+
+```bash
+# For Rk project
+rxdata show-samples-by-block -p rk
+
+# For Rkst project
+rxdata show-samples-by-block -p rkst
+```
 
 # Multithreading
 
