@@ -118,6 +118,7 @@ class SamplesPrinter:
 
         df = pnd.DataFrame(l_d_block_stats, index=list(d_rdf))
         df = df.sort_index()
+        df = df[sorted(df.columns)]
         df = df.fillna(value=0)
 
         colors = {0 : Fore.LIGHTRED_EX}
