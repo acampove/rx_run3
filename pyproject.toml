@@ -5,20 +5,21 @@ description     = 'Project storing utilities needed to reduce boilerplate code w
 readme          = 'README.md'
 requires-python = '>=3.10,<3.14'
 dependencies = [
-    'PyYAML',
-    'scipy',
     'awkward',
-    'tqdm',
-    'omegaconf',
-    'toml',
-    'uproot',
-    'numpy<=2.2',
+    'awkward-pandas',
+    'colorama',
     'jinja2',
+    'hist[plot]',
     'matplotlib',
     'mplhep',
+    'numpy<=2.2',
+    'omegaconf',
     'pandas',
-    'awkward-pandas',
-    'hist[plot]',
+    'PyYAML',
+    'scipy',
+    'tqdm',
+    'toml',
+    'uproot',
 ]
 
 [project.optional-dependencies]
