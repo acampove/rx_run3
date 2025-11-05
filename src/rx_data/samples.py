@@ -92,7 +92,15 @@ class SamplesPrinter:
         Key  : Block number
         Value: Percentage of events in block
         '''
-        return {'1' : '20', '2' : '20', '3' : '20'}
+        arr_block      = rdf.AsNumpy(['block'])['block']
+        values, counts = numpy.unique(arr_block, return_counts=True)
+        total          = sum(counts)
+        fractions      = [ math.floor(100 * count / total) for count in counts ]
+        values         = [ f'Block {value:.0f}'            for value in values ]
+        d_stats        = dict(zip(values, fractions))
+        d_stats_sorted = { key : d_stats[key] for key in sorted(d_stats) }
+
+        return d_stats_sorted
     # ----------------------
     def print_by_block(self) -> None:
         '''
