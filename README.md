@@ -1673,6 +1673,22 @@ samples:
 
 These are thin layers of code that take pandas dataframes and carry out specific tasks
 
+### Colorize dataframes
+
+In order to add colors to certain cells in a dataframe with integer values do:
+
+```python
+from colorama       import Fore
+from dmu.pdataframe import utilities as put
+
+colors = {1 : Fore.RED, 2 : Fore.BLUE}
+df     = df.apply(put.colorize_row, args=(colors,), axis=1)
+
+print(df.to_markdown())
+```
+
+Which will print all cells with 1's as red and the ones with 2's as blue.
+
 ### NaN filter
 
 The following snippet will remove NaNs from the dataframe
