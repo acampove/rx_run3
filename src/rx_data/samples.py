@@ -4,8 +4,11 @@ This module is meant to hold SamplesPrinter
 
 import os
 import tqdm
+import math
+import numpy
 import pandas as pnd 
 
+from colorama               import Fore
 from pathlib                import Path
 from ROOT                   import RDF # type: ignore
 from rx_common.types        import Project
@@ -13,6 +16,7 @@ from rx_data                import utilities as dut
 from rx_data.rdf_getter     import RDFGetter
 from dmu.generic            import version_management as vm
 from dmu.logging.log_store  import LogStore
+from dmu.pdataframe         import utilities as put
 
 log=LogStore.add_logger('rx_data:samples')
 # ----------------------
