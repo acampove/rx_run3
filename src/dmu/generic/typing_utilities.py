@@ -4,7 +4,6 @@ This module contains utility functions related to typing
 
 from typing import TypeVar, Type, cast
 import pandas as pnd
-import numpy
 
 from dmu.logging.log_store import LogStore
 
@@ -33,9 +32,11 @@ def numeric_from_series(
         raise ValueError(f'Cannot find {name} in row: {row}')
 
     val = row[name]
+    numerical_types = int, float
 
-    if not isinstance(val, (int, float, bool, numpy.integer, numpy.floating, numpy.bool_)):
-        raise ValueError(f'Value {name}={val} is not numeric')
+    if not isinstance(val, numerical_types):
+        type_name = type(val)
+        raise ValueError(f'Value {name}={val} is not numeric, but {type_name}')
 
     if numeric is int:
         return cast(Num, int(val))
