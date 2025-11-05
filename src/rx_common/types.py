@@ -34,9 +34,12 @@ class Project(str, Enum):
     This class represents the projects
     '''
     rk            = 'rk'
-    rkst          = 'rkst'
     rk_no_refit   = 'rk_no_refit'
+    rk_sim10d     = 'rk_sim10d'
+    # ---------------
+    rkst          = 'rkst'
     rkst_no_refit = 'rkst_no_refit'
+    rkst_sim10d   = 'rkst_sim10d'
 
     def __str__(self):
         return self.value
