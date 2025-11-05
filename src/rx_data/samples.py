@@ -32,6 +32,7 @@ class SamplesPrinter:
         project: Project, e.g. rk, rkst, rk_no_refit
         '''
         self._project = project
+        self._skipped_samples = ['Bu_D0pi_Kenu_eq_DPC_TC']
 
         LogStore.set_level('rx_data:rdf_getter', 40)
     # ----------------------
@@ -67,6 +68,9 @@ class SamplesPrinter:
         with RDFGetter.only_friends(s_friend=set()),\
              RDFGetter.project(name = self._project):
             for sample, trigger in tqdm.tqdm(input_samples, ascii=' -'):
+                if sample in self._skipped_samples:
+                    continue
+
                 gtr = RDFGetter(sample =sample, trigger=trigger)
                 try:
                     d_rdf[sample] = gtr.get_rdf(per_file=False)
