@@ -62,6 +62,7 @@ class SamplesPrinter:
         -------------
         Dictionary mapping sample name to corresponding dataframe built from only main trees
         '''
+        log.info('Collecting dataframes')
         input_samples : list[tuple[str,str]] = self._get_input_samples()
         d_rdf : dict[str, RDF.RNode]         = dict()
 
@@ -109,7 +110,9 @@ class SamplesPrinter:
         d_rdf = self._get_rdf()
 
         l_d_block_stats : list[dict[str,str]] = []
-        for rdf in d_rdf.values():
+
+        log.info('Collecting statistics')
+        for rdf in tqdm.tqdm(d_rdf.values(), ascii=' -'):
             d_block_stats : dict[str,str] = self._get_block_stats(rdf=rdf)
             l_d_block_stats.append(d_block_stats)
 
