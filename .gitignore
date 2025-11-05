@@ -183,5 +183,6 @@ pyrightconfig.json
 
 tests/*/*/*.json
 src/dmu_data/tests/*.tex
+tmp/
 
 !doc/images/*.png
