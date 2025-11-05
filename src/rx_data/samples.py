@@ -96,7 +96,7 @@ class SamplesPrinter:
         arr_block      = rdf.AsNumpy(['block'])['block']
         values, counts = numpy.unique(arr_block, return_counts=True)
         total          = sum(counts)
-        fractions      = [ math.floor(100 * count / total) for count in counts ]
+        fractions      = [ math.ceil(100 * count / total) for count in counts ]
         values         = [ f'Block {value:.0f}'            for value in values ]
         d_stats        = dict(zip(values, fractions))
         d_stats_sorted = { key : d_stats[key] for key in sorted(d_stats) }
@@ -121,7 +121,7 @@ class SamplesPrinter:
         df = df[sorted(df.columns)]
         df = df.fillna(value=0)
 
-        colors = {0 : Fore.LIGHTRED_EX}
+        colors = {0 : Fore.LIGHTRED_EX, 1 : Fore.LIGHTYELLOW_EX}
         df = df.apply(put.colorize_row, args=(colors,), axis=1)
 
         print(df.to_markdown())
