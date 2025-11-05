@@ -5,7 +5,9 @@ import os
 import yaml
 import pandas as pnd
 
+from colorama              import Style
 from dmu.logging.log_store import LogStore
+from dmu.generic           import typing_utilities   as tut
 
 log=LogStore.add_logger('dmu:pdataframe:utilities')
 # -------------------------------------
@@ -108,3 +110,39 @@ def dropna(df : pnd.DataFrame, max_frac : float = 0.02) -> pnd.DataFrame:
 
     return df
 # -------------------------------------
+def colorize_row(
+    row    : pnd.Series, 
+    colors : dict[int, str]) -> pnd.Series:
+    '''
+    To pick color strings use:
+
+    ```python
+    from colorama import Fore
+
+    Fore.RED
+    Fore.LIGHTYELLOW_EX
+    ```
+
+    Parameters
+    -------------
+    df    : DataFrame to colorize
+    colors: Dictionary where 
+            key  : Is an integer
+            Value: String symbolizing color
+
+    Returns
+    -------------
+    Dataframe with colors added
+    '''
+
+    for col in row.index:
+        val : int = tut.numeric_from_series(row, col, int)
+
+        if val not in colors:
+            continue
+
+        color = colors[val]
+
+        row[col] = f'{color}{val}{Style.RESET_ALL}'
+
+    return row

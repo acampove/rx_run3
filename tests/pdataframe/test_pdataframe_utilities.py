@@ -4,13 +4,13 @@ Module will hold test for pandas dataframes utilities
 import os
 import pytest
 import numpy
-import pandas as pnd
-
+import pandas                   as pnd
 import dmu.pdataframe.utilities as put
+
+from colorama              import Fore
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test:pdataframe:utilities')
-
 # --------------------------------------
 class Data:
     '''
@@ -111,3 +111,13 @@ def test_dropna(nan_frac : float):
     with pytest.raises(ValueError):
         df   = put.dropna(df)
 # --------------------------------------
+def test_colorize():
+    '''
+    Tests function that adds colors to dataframes
+    '''
+    df     = _get_df()
+    colors = {1 : Fore.RED, 2 : Fore.BLUE}
+    df     = df.apply(put.colorize_row, args=(colors,), axis=1)
+
+    log.info('')
+    print(df.to_markdown())
