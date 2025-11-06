@@ -150,11 +150,11 @@ class SpecMaker:
         for ftree, json_path in self._samples.items():
             log.debug(f'{"":<4}{ftree:<15}{json_path}')
 
-            d_section = self._get_section(json_path=json_path, ftree=ftree)
-            if ftree == self._main_tree:
-                data['samples'][ftree] = d_section
+            sample = self._get_sample(json_path=json_path, ftree=ftree)
+            if ftree == _MAIN_TREE:
+                data['samples'][ftree] = sample
             else:
-                data['friends'][ftree] = d_section
+                data['friends'][ftree] = sample
 
         return Specification(**data) 
     # ---------------------------------------------------
