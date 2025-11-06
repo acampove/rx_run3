@@ -6,7 +6,7 @@ import pytest
 
 from rx_common.info     import LogStore
 from rx_common.types    import Project, Trigger
-from rx_data.spec_maker import SpecMaker
+from rx_data.spec_maker import SpecMaker, Specification
 
 _SAMPLES=[
     ('Bu_JpsiK_ee_eq_DPC'            , 'Hlt2RD_BuToKpEE_MVA'),
@@ -56,6 +56,11 @@ def test_exclude_friends(friend : str, sample : str, trigger : Trigger):
         path= gtr.get_spec_path(per_file=False)
 
     assert path.exists()
+
+    json_string = path.read_text()
+    spec = Specification.model_validate_json(json_string)
+
+    assert friend not in spec.friends
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rk_mm_os])
