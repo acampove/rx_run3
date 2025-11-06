@@ -1,7 +1,6 @@
 '''
 Module holding RDFGetter class
 '''
-import os
 import copy
 from contextlib import contextmanager
 from pathlib    import Path
