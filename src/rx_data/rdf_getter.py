@@ -419,7 +419,7 @@ class RDFGetter:
         Dataframe after some basic preprocessing
         '''
         log.debug(f'Building dataframe from {conf_path} for {fpath}')
-        rdf = RDF.Experimental.FromSpec(conf_path)
+        rdf = RDF.Experimental.FromSpec(str(conf_path))
 
         nentries = rdf.Count().GetValue()
         if nentries == 0:
