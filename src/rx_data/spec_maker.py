@@ -216,8 +216,6 @@ class SpecMaker:
         --------------------
         json_path : Path to JSON file specifying samples:trigger:files
         ftree     : Friend tree name, e.g mva, main
-        '''
-        d_section = {'trees' : [self._tree_name]}
 
         log.debug(f'Building section from: {json_path}')
 
@@ -262,10 +260,9 @@ class SpecMaker:
             log.error(data)
             raise ValueError(f'Could not find any sample matching {self._sample} with friend tree {ftree} in {json_path}')
 
-        self._l_path      += l_path
-        d_section['files'] = l_path
+        self._l_path += l_path
 
-        return d_section
+        return Sample(trees = [self._tree_name], files = l_path)
     # ---------------------------------------------------
     def _filter_samples(
         self, 
