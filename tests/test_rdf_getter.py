@@ -832,18 +832,6 @@ def test_exclude_friends(sample : str, trigger : Trigger):
 
     assert l_mva == []
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_custom_friend(sample : str, trigger : Trigger):
-    '''
-    Tests getting data with a custom version for a given tree, either friend or main
-    '''
-    with RDFGetter.custom_friends(versions={'mva' : 'v8'}):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
-
-    _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend')
-# ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
 def test_skip_brem_track_2(kind : str, trigger : Trigger):
@@ -867,6 +855,18 @@ def test_skip_brem_track_2(kind : str, trigger : Trigger):
             test_name    ='electron',
             trigger      =trigger,
             sample       =sample)
+# ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
+def test_custom_friend(sample : str, trigger : Trigger):
+    '''
+    Tests getting data with a custom version for a given tree, either friend or main
+    '''
+    with RDFGetter.custom_friends(versions={'mva' : 'v8'}):
+        gtr = RDFGetter(sample=sample, trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
+
+    _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger' , [
     ('Bu_KplKplKmn_eq_sqDalitz_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
