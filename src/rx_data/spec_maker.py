@@ -204,19 +204,20 @@ class SpecMaker:
 
         return l_path
     # ---------------------------------------------------
-    def _get_section(
+    def _get_sample(
         self,
         json_path : Path,
-        ftree     : str) -> dict:
+        ftree     : str) -> Sample:
         '''
-        This method should return the different sections (friend/main tree)
-        needed to make the JSON file taken by FromSpec
-
         Parameters:
         --------------------
         json_path : Path to JSON file specifying samples:trigger:files
         ftree     : Friend tree name, e.g mva, main
 
+        Returns
+        --------------------
+        Sample object, e.g. main, mva, hop, etc needed to build Specification object
+        '''
         log.debug(f'Building section from: {json_path}')
 
         d_data = gut.load_json(path=json_path)
