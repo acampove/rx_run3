@@ -2,7 +2,7 @@
 Module containing PathSplitter class
 '''
 from pathlib import Path
-from typing  import TypeAlias
+from typing  import Literal, TypeAlias, overload
 
 import ap_utilities.decays.utilities as aput
 from dmu.logging.log_store  import LogStore
@@ -111,6 +111,10 @@ class PathSplitter:
 
         return d_struc
     # ------------------------------------------
+    @overload
+    def split(self, nested : Literal[False]) -> Samples:...
+    @overload
+    def split(self, nested : Literal[True] ) -> NestedSamples:...
     def split(self, nested : bool = False) -> Samples | NestedSamples:
         '''
         Takes list of paths to ROOT files and splits them in an easier to read structure
