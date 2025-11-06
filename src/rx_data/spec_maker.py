@@ -1,8 +1,12 @@
 '''
 Module with SpecMaker class
 '''
-from rx_common.types import Trigger
+from pathlib               import Path
+from rx_common.types       import Trigger
+from dmu.logging.log_store import LogStore
 
+log=LogStore.add_logger('rx_data:spec_maker')
+# --------------------------
 class SpecMaker:
     '''
     Class meant to:
@@ -20,6 +24,15 @@ class SpecMaker:
         '''
         self._sample = sample
         self._trigger= trigger
+    # ----------------------
+    def get_path(self) -> Path:
+        '''
+        Returns
+        ------------
+        Path to JSON file with specification
+        '''
+        path = Path('/tmp/file.json')
+        path.touch(exist_ok=True)
 
-    def get_
-        
+        return path
+# --------------------------
