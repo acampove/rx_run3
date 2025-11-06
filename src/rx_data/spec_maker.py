@@ -435,7 +435,12 @@ class SpecMaker:
         '''
 
         data       = spec.model_dump()
-        fpath_main = spec.samples[main].files[ifile]
+        try:
+            fpath_main = spec.samples[main].files[ifile]
+        except IndexError as exc:
+            model_str = spec.model_dump(mode='json')
+            log.error(yaml.safe_dump(model_str))
+            raise IndexError(f'Cannot access tree {main} at {ifile}') from exc
 
         data['samples'][main]['files'] = [fpath_main]
 
