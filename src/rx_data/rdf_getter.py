@@ -496,18 +496,14 @@ class RDFGetter(SpecMaker):
             log.debug('Returning already calculated dataframe dictionary')
             return self._d_rdf
 
-        d_sample = self._get_paths_to_conf(per_file=per_file)
         if per_file:
+            d_sample = self.get_spec_path(per_file=per_file)
             log.info('Building one dataframe per file')
             self._d_rdf = { fpath : self._rdf_from_conf(fpath=fpath, conf_path=conf_path) for fpath, conf_path in d_sample.items() }
 
             return self._d_rdf
 
-        nconf = len(d_sample)
-        if nconf != 1:
-            raise ValueError(f'Sample-wise config dictionary expects only one entry, found {nconf}')
-
-        _, conf_path = next(iter(d_sample.items()))
+        conf_path = self.get_spec_path(per_file=per_file)
         log.debug(f'Building datarame from file {conf_path}')
 
         self._rdf = self._rdf_from_conf(fpath='joint_files', conf_path=conf_path)
