@@ -313,8 +313,9 @@ class SpecMaker:
         log.info(f'{"Friend":<20}{"Version":<20}')
         log.info(40 * '-')
         d_vers_dir   = { ftree_name : self._versioned_from_ftrees(ftree_dir)        for ftree_name, ftree_dir in d_ftree_dir.items() }
-        d_json_path  = { ftree_name : self._json_path_from_ftree(dir_path=vers_dir) for ftree_name,  vers_dir in d_vers_dir.items()  }
         log.info(40 * '-')
+
+        d_json_path  = { ftree_name : self._json_path_from_ftree(dir_path=vers_dir) for ftree_name,  vers_dir in d_vers_dir.items()  }
         log.info('')
 
         return d_json_path
@@ -343,6 +344,8 @@ class SpecMaker:
         Takes path to directory with ROOT files associated to friend tree
         returns path to YAML file with correctly structured files
         '''
+        log.debug(f'Looking for files in: {dir_path}')
+
         l_root_path = list(dir_path.glob(pattern='*.root'))
         if not l_root_path: 
             raise ValueError(f'No ROOT files found in {dir_path}')
