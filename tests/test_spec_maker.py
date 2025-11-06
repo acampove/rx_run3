@@ -4,8 +4,8 @@ Module with tests for SpecMaker class
 
 import pytest
 
-from rx_common.info import LogStore
-from rx_common.types    import Trigger
+from rx_common.info     import LogStore
+from rx_common.types    import Project, Trigger
 from rx_data.spec_maker import SpecMaker
 
 _SAMPLES=[
@@ -43,4 +43,54 @@ def test_per_file(sample : str, trigger : Trigger) -> None:
     for root_path, config_path in paths.items():
         assert root_path.exists()
         assert config_path.exists()
+# ------------------------------------------------
+@pytest.mark.parametrize('friend' , ['mva', 'brem_track_2'])
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rk_mm_os])
+def test_exclude_friends(friend : str, sample : str, trigger : Trigger):
+    '''
+    Tests excluding friend trees through a context manager
+    '''
+    with SpecMaker.exclude_friends(names=[friend]):
+        gtr = SpecMaker(sample=sample, trigger=trigger)
+        path= gtr.get_spec_path(per_file=False)
 
+    assert path.exists()
+# ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rk_mm_os])
+def test_custom_friend(sample : str, trigger : Trigger):
+    '''
+    Tests getting data with a custom version for a given tree, either friend or main
+    '''
+    with SpecMaker.custom_friends(versions={'mva' : 'v8'}):
+        gtr = SpecMaker(sample=sample, trigger=trigger)
+        path= gtr.get_spec_path(per_file=False)
+
+    assert path.exists()
+# ------------------------------------------------
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rk_mm_os])
+def test_only_friends(sample : str, trigger : Trigger):
+    '''
+    Tests getting data with a custom version for a given tree, either friend or main
+    '''
+    s_friend = {'mva', 'hop'}
+    with SpecMaker.only_friends(s_friend=s_friend):
+        gtr = SpecMaker(sample=sample, trigger=trigger)
+        path= gtr.get_spec_path(per_file=False)
+
+    assert path.exists()
+# ------------------------------------------------
+@pytest.mark.parametrize('project', [Project.rk, Project.rk_no_refit])
+@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rk_mm_os])
+def test_project(sample : str, trigger : Trigger, project : Project):
+    '''
+    Tests getting data with a custom version for a given tree, either friend or main
+    '''
+    with SpecMaker.project(name=project):
+        gtr = SpecMaker(sample=sample, trigger=trigger)
+        path= gtr.get_spec_path(per_file=False)
+
+    assert path.exists()
