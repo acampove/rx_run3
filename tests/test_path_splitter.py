@@ -58,7 +58,7 @@ def test_default(analysis : str):
     '''
     pfns  = _get_pfns(analysis=analysis)
     spl   = PathSplitter(paths = pfns)
-    data  = spl.split()
+    data  = spl.split(nested=False)
 
     _save_samples(f'default_{analysis}', data)
 # ----------------------------------------
@@ -80,7 +80,7 @@ def test_max_files(analysis : str):
     '''
     l_pfn = _get_pfns(analysis=analysis)
     spl   = PathSplitter(paths = l_pfn, max_files=100)
-    data  = spl.split()
+    data  = spl.split(nested=False)
 
     _save_samples(f'max_files_{analysis}', data)
 # ----------------------------------------
@@ -92,7 +92,7 @@ def test_sample_naming(naming : str, analysis : str):
     '''
     l_pfn = _get_pfns(analysis=analysis)
     spl   = PathSplitter(paths = l_pfn, sample_naming=naming)
-    data  = spl.split()
+    data  = spl.split(nested=False)
 
     _save_samples(f'naming_{naming}_{analysis}', data)
 # ----------------------------------------
