@@ -72,7 +72,7 @@ class SpecMaker:
         self._sample    = sample
         self._trigger   = trigger
         self._tree_name = tree
-        self._cfg       = self._load_config()
+        self._cfg       = gut.load_conf(package='rx_data_data', fpath='spec_maker/config.yaml')
         self._project   = self._set_project(trigger=trigger) 
         self._main_tree = self._get_main_tree()
         self._samples   = self._get_json_paths()
@@ -354,17 +354,6 @@ class SpecMaker:
         gut.dump_json(data, out_path)
 
         return out_path
-    # ---------------------------------------------------
-    def _load_config(self) -> DictConfig:
-        '''
-        Loads yaml files with configuration needed to rename and define
-        new columns in dataframe
-        '''
-        cfg = gut.load_conf(package='rx_data_data', fpath='spec_maker/config.yaml')
-        if not isinstance(cfg, DictConfig):
-            raise ValueError('Merged config not a DictConfig')
-
-        return cfg
     # ---------------------------------------------------
     def _get_main_tree(self) -> str:
         '''
