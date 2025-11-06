@@ -136,6 +136,8 @@ class SpecMaker:
             if ftree not in SpecMaker._only_friends: # If _only_friends was set and ftree is not one of them, skip
                 return True
 
+        log.debug(f'Not excluding {ftree} friend')
+
         return False
     # ---------------------------------------------------
     def _get_samples(self) -> Specification:
