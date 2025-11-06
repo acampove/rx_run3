@@ -158,8 +158,8 @@ class RDFGetter(SpecMaker):
         '''
         This method will raise if running with mulithreading and if it was not explicitly allowed
         '''
-        if RDFGetter._allow_multithreading:
-            log.info(f'Using {RDFGetter._nthreads} threads')
+        if self._allow_multithreading:
+            log.info(f'Using {self._nthreads} threads')
             return
 
         nthreads = GetThreadPoolSize()
@@ -274,9 +274,9 @@ class RDFGetter(SpecMaker):
         log.info('Adding common columns')
 
         d_def = self._cfg['definitions'][self._channel]
-        if hasattr(RDFGetter, '_d_custom_columns'):
+        if self._d_custom_columns:
             log.debug('Adding custom column definitions')
-            d_def.update(RDFGetter._d_custom_columns)
+            d_def.update(self._d_custom_columns)
 
         for name, definition in d_def.items():
             rdf = self._add_column(redefine=False, rdf=rdf, name=name, definition=definition)
@@ -431,7 +431,7 @@ class RDFGetter(SpecMaker):
         log.debug(f'Dataframe at: {id(rdf)}')
 
         rdf = self._filter_dataframe(rdf=rdf)
-        if RDFGetter._skip_adding_columns:
+        if self._skip_adding_columns:
             log.warning('Not adding new columns')
             return rdf
         try:
@@ -451,7 +451,7 @@ class RDFGetter(SpecMaker):
         ------------
         Dataframe after optional filter
         '''
-        nent = RDFGetter._max_entries
+        nent = self._max_entries
         if nent < 0:
             return rdf
 
