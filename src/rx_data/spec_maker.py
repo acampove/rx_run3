@@ -307,7 +307,7 @@ class SpecMaker:
 
         d_ftree_dir  = { os.path.basename(ftree_dir) : ftree_dir for ftree_dir in l_ftree_dir }
         d_ftree_dir  = self._filter_samples(d_ftree_dir=d_ftree_dir)
-        self._s_ftree= { ftree for ftree in list(d_ftree_dir) if ftree != _MAIN_TREE } # These friend trees both exist and are picked up
+        self._s_ftree= { ftree for ftree in d_ftree_dir if ftree != _MAIN_TREE } # These friend trees both exist and are picked up
 
         log.info(40 * '-')
         log.info(f'{"Friend":<20}{"Version":<20}')
