@@ -58,23 +58,18 @@ class RDFGetter:
         trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
         tree   : E.g. DecayTree or MCDecayTree, default DecayTree
         '''
-        os.makedirs(RDFGetter._cache_dir, exist_ok=True)
 
         log.debug(f'Process identifier: {RDFGetter._identifier}')
 
         self._emulator        = SampleEmulator(sample=sample)
         self._sample          = self._emulator.get_sample_name()
         self._trigger         = trigger
-        self._tree_name       = tree
 
-        self._project         = self._set_project(trigger=trigger) 
         self._samples         : dict[str,str]
         self._l_columns       : list[str]
         self._s_ftree         : set[str] # list of friend trees actually used
 
         self._cfg : DictConfig= self._load_config()
-        self._main_tree       = self._get_main_tree()
-        self._l_electron_only = self._cfg['trees']['electron_only']
         self._ext_weight      = '(L1_PID_E > 1 && L2_PID_E > 1) ? 1 : 10'
 
         _l_bu_ee_trigger      = [
@@ -109,14 +104,10 @@ class RDFGetter:
                                             # with the main and friend trees
 
         self._d_info : dict[str,Any] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
-        self._l_path : list[str]     = [] # list of paths to all the ROOT files
         self._channel                = self._channel_from_trigger()
 
         self._set_logs()
         self._check_multithreading()
-
-        self._samples = self._get_json_paths()
-    # ----------------------
     # ---------------------------------------------------
     def _channel_from_trigger(self) -> str:
         '''
