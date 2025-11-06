@@ -1,5 +1,0 @@
-trees:
-  main : main # This is the name of the file holding the main (not friend) trees, e.g. main.yaml
-  electron_only: # These are the yaml files with friend trees meant for only the electrons
-    - brem_track_2
-    - mass          # Kpipi and KKK masses are only available for electron channel, needed for misID
