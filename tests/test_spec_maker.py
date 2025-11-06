@@ -17,6 +17,6 @@ def test_simple(sample : str, trigger : Trigger) -> None:
     Simplest test of SpecMaker
     '''
     mkr  = SpecMaker(sample=sample, trigger=trigger)
-    path = mkr.get_path()
+    path = mkr.get_spec_path(per_file=False)
 
     assert path.exists()
