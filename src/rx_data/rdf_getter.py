@@ -415,8 +415,8 @@ class RDFGetter:
     # ---------------------------------------------------
     def _rdf_from_conf(
         self, 
-        fpath     : str,
-        conf_path : str) -> RDF.RNode:
+        fpath     : Path | str,
+        conf_path : Path) -> RDF.RNode:
         '''
         Parameters
         ------------------
@@ -479,9 +479,9 @@ class RDFGetter:
     @overload
     def get_rdf(self, per_file : Literal[False]) -> RDF.RNode:...
     @overload
-    def get_rdf(self, per_file : Literal[True ]) -> dict[str,RDF.RNode]:...
+    def get_rdf(self, per_file : Literal[True ]) -> dict[Path,RDF.RNode]:...
     # ---------------------------------------------------
-    def get_rdf(self, per_file :  bool = False ) -> RDF.RNode|dict[str,RDF.RNode]:
+    def get_rdf(self, per_file :  bool = False ) -> dict[Path,RDF.RNode] | RDF.RNode:
         '''
         Returns sample in the form of dataframes
 
