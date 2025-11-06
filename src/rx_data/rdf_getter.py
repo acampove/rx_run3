@@ -919,60 +919,7 @@ class RDFGetter:
 
         return rdf
     # ---------------------------------------------------
-    def _remove_all_but(self, data : dict, ifile : int, main : str) -> tuple[dict,str]:
-        '''
-        Will:
-
-        - Take the file specification structure `data`
-        - Make a local copy
-        - Remove all the paths except the ifile th entry
-        - Return the copy after removal alongside the path not removed AND beloging to the main sample
-        '''
-
-        datac      = copy.deepcopy(data)
-        fpath_main = data['samples'][main]['files'][ifile]
-
-        datac['samples'][main]['files'] = [fpath_main]
-
-        data_frnd = data['friends']
-        for kind, data_kind in data_frnd.items():
-            try:
-                fpath_friend = data_kind['files'][ifile]
-            except IndexError as exc:
-                data_string = yaml.dump(data_kind)
-                log.warning(20 * '-')
-                log.info(data_string)
-                log.warning(20 * '-')
-                raise KeyError(f'Cannot retrieve file at {ifile} for friend {kind}, sample {self._sample}/{self._trigger}/{self._tree_name}') from exc
-
-            datac['friends'][kind]['files'] = [fpath_friend]
-
-        return datac, fpath_main
-    # ---------------------------------------------------
-    def _get_tmp_path(self, identifier : str, data : dict) -> str:
-        '''
-        This method creates paths to temporary config files in /tmp.
-        Needed to configure creation of dataframes
-
-        Parameters
-        ----------------
-        identifier : String identifying sample/file whose configuration will be stored
-        data       : Dictionary with structure as needed by ROOT to make dataframe with friend trees
-
-        Returns
-        ----------------
-        Path to JSON file that will be used to dump configuration
-        '''
-        val      = hashing.hash_object(obj=data)
-        val      = val[:10]
-
-        # Id of process plus random number 
-        proc_id  = self._identifier + secrets.randbelow(1000_000_000) 
-        tmp_path = f'{RDFGetter._cache_dir}/{identifier}_{proc_id}_{val}.json'
-
-        log.debug(f'Using config JSON: {tmp_path}')
-
-        return tmp_path
+    # Context managers
     # ---------------------------------------------------
     @classmethod
     def max_entries(cls, value : int):
@@ -1015,48 +962,6 @@ class RDFGetter:
         return _context()
     # ---------------------------------------------------
     @classmethod
-    def exclude_friends(cls, names : list[str]):
-        '''
-        It will build the dataframe, excluding the friend trees
-        in the `names` list
-        '''
-        @contextmanager
-        def _context():
-            old_val = cls._excluded_friends
-            cls._excluded_friends = copy.deepcopy(names)
-            log.warning(f'Excluding friend trees: {cls._excluded_friends}')
-
-            try:
-                yield
-            finally:
-                cls._excluded_friends = old_val
-
-        return _context()
-    # ---------------------------------------------------
-    @classmethod
-    def custom_friends(cls, versions : dict[str,str]):
-        '''
-        It will pick a dictionary between:
-
-        key: Friend tree names, e.g. mva
-        val: Versions, e.g. v5
-
-        and override the version used for this friend tree
-        '''
-        @contextmanager
-        def _context():
-            old_val = cls._custom_versions
-            cls._custom_versions = copy.deepcopy(versions)
-            log.warning(f'Using custom friend tree versions: {cls._custom_versions}')
-
-            try:
-                yield
-            finally:
-                cls._custom_versions = old_val
-
-        return _context()
-    # ---------------------------------------------------
-    @classmethod
     def custom_columns(cls, columns : dict[str,str]):
         '''
         Contextmanager that will define new columns
@@ -1076,26 +981,6 @@ class RDFGetter:
                 yield
             finally:
                 cls._d_custom_columns = old_val
-
-        return _context()
-    # ---------------------------------------------------
-    @classmethod
-    def default_excluded(cls, names : list[str]):
-        '''
-        Contextmanager that will (re)define which
-        trees are excluded as friend trees by default
-        '''
-        log.debug(f'Default excluding: {names}')
-
-        @contextmanager
-        def _context():
-            old_val = cls._default_excluded
-            cls._default_excluded = names
-
-            try:
-                yield
-            finally:
-                cls._default_excluded = old_val
 
         return _context()
     # ---------------------------------------------------
@@ -1136,48 +1021,6 @@ class RDFGetter:
                 DisableImplicitMT()
                 cls._allow_multithreading = old_val
                 cls._nthreads             = old_nth
-
-        return _context()
-    # ---------------------------------------------------
-    @classmethod
-    def only_friends(cls, s_friend : set[str]):
-        '''
-        This context manager sets the accepted friend trees
-        to what is passed. Every other friend tree will be dropped
-
-        Parameters
-        --------------
-        s_friend : Set of friend tree names, e.g ['mva', 'hop']
-        '''
-
-        old_val = cls._only_friends
-        cls._only_friends = s_friend
-        @contextmanager
-        def _context():
-            try:
-                yield
-            finally:
-                cls._only_friends = old_val
-
-        return _context()
-    # ---------------------------------------------------
-    @classmethod
-    def project(cls, name : str):
-        '''
-        Parameters
-        --------------
-        name : Name of project where ntuples will be taken from, e.g. rk 
-        '''
-        if cls._custom_project:
-            raise ValueError(f'Custom project already set to: {cls._custom_project}')
-
-        cls._custom_project = name 
-        @contextmanager
-        def _context():
-            try:
-                yield
-            finally:
-                cls._custom_project = None 
 
         return _context()
 # ---------------------------------------------------
