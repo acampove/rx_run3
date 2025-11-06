@@ -21,6 +21,7 @@ from dmu.rdataframe          import utilities as ut
 from rx_selection           import selection as sel
 from rx_data                import collector as col
 from rx_data.rdf_getter     import RDFGetter
+from rx_common.types        import Trigger
 
 # TODO: Need test for default_skip manager
 log=LogStore.add_logger('rx_data:test_rdf_getter')
@@ -456,7 +457,7 @@ def _run_default_checks(
 # ------------------------------------------------
 @pytest.mark.parametrize('per_file', [True, False])
 @pytest.mark.parametrize('trigger' , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_guid(trigger : str, per_file : bool):
+def test_guid(trigger : Trigger, per_file : bool):
     '''
     Tests retrieval of unique identifier for underlying data
     '''
@@ -493,7 +494,7 @@ def test_guid(trigger : str, per_file : bool):
 @pytest.mark.parametrize('sample'   , ['Bd_Kstee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger'  , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('requested', [1_000, 10_000, 20_000])
-def test_max_entries(sample : str, requested : int, trigger : str):
+def test_max_entries(sample : str, requested : int, trigger : Trigger):
     '''
     Check that one can filter randomly entries in dataframe
     '''
@@ -509,7 +510,7 @@ def test_max_entries(sample : str, requested : int, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_per_file(kind : str, trigger : str):
+def test_per_file(kind : str, trigger : Trigger):
     '''
     Test of per_file flag set to True
     '''
@@ -545,7 +546,7 @@ def test_per_file(kind : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_electron(kind : str, trigger : str):
+def test_electron(kind : str, trigger : Trigger):
     '''
     Tests for electron samples
     '''
@@ -583,7 +584,7 @@ def test_electron(kind : str, trigger : str):
      'Hlt2RD_BuToKpMuMu_MVA',
      'Hlt2RD_B0ToKpPimEE_MVA',
      'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_data(sample : str, trigger : str):
+def test_data(sample : str, trigger : Trigger):
     '''
     Test of getter class in data
     '''
@@ -606,7 +607,7 @@ def test_data(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_mc(sample : str, trigger : str):
+def test_mc(sample : str, trigger : Trigger):
     '''
     Test of getter class in mc
     '''
@@ -631,7 +632,7 @@ def test_mc(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_q2_track_electron(sample : str, trigger : str):
+def test_q2_track_electron(sample : str, trigger : Trigger):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
@@ -653,7 +654,7 @@ def test_q2_track_electron(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstmumu_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_q2_track_muon(sample : str, trigger : str):
+def test_q2_track_muon(sample : str, trigger : Trigger):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
@@ -676,7 +677,7 @@ def test_q2_track_muon(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
-def test_brem_track_2(sample : str, trigger : str):
+def test_brem_track_2(sample : str, trigger : Trigger):
     '''
     Test brem_track_2 correction
     '''
@@ -694,7 +695,7 @@ def test_brem_track_2(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_check_vars(sample : str, trigger : str):
+def test_check_vars(sample : str, trigger : Trigger):
     '''
     Checks that variables from:
 
@@ -716,7 +717,7 @@ def test_check_vars(sample : str, trigger : str):
     ('Bu_Kee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA'),
     ('Bd_Kstee_eq_btosllball05_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'),
     ('Bu_Kmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA')])
-def test_mcdecaytree(sample : str, trigger : str):
+def test_mcdecaytree(sample : str, trigger : Trigger):
     '''
     Builds dataframe from MCDecayTree
     '''
@@ -736,7 +737,7 @@ def test_mcdecaytree(sample : str, trigger : str):
 @pytest.mark.parametrize('period'  ,['24c2','24c3','24c4'])
 @pytest.mark.parametrize('polarity',['MagUp', 'MagDown'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA_ext', 'Hlt2RD_B0ToKpPimEE_MVA_ext'])
-def test_ext_trigger(period : str, polarity : str, trigger : str):
+def test_ext_trigger(period : str, polarity : str, trigger : Trigger):
     '''
     Test of getter class for combination of analysis and misID trigger
     '''
@@ -749,7 +750,7 @@ def test_ext_trigger(period : str, polarity : str, trigger : str):
     _plot_ext(rdf, sample=sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_custom_columns(trigger : str):
+def test_custom_columns(trigger : Trigger):
     '''
     Tests defining of new custom columns
     '''
@@ -766,7 +767,7 @@ def test_custom_columns(trigger : str):
 # TODO: This test is very slow, needs to be disabled for now
 @pytest.mark.parametrize('sample' , ['Bd_JpsiKst_ee_eq_DPC'  ])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_B0ToKpPimEE_MVA'])
-def test_block(sample : str, trigger : str):
+def test_block(sample : str, trigger : Trigger):
     '''
     Test of getter class with check for block assignment
     '''
@@ -804,7 +805,7 @@ def test_add_truem(project : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc', 'Bd_JpsiX_ee_eq_JpsiInAcc', 'Bs_JpsiX_ee_eq_JpsiInAcc'] )
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_ccbar(sample : str, trigger : str):
+def test_ccbar(sample : str, trigger : Trigger):
     '''
     Tests reading of ccbar + X samples
     '''
@@ -818,7 +819,7 @@ def test_ccbar(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_exclude_friends(sample : str, trigger : str):
+def test_exclude_friends(sample : str, trigger : Trigger):
     '''
     Tests excluding friend trees through a context manager
     '''
@@ -833,7 +834,7 @@ def test_exclude_friends(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_custom_friend(sample : str, trigger : str):
+def test_custom_friend(sample : str, trigger : Trigger):
     '''
     Tests getting data with a custom version for a given tree, either friend or main
     '''
@@ -845,7 +846,7 @@ def test_custom_friend(sample : str, trigger : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
-def test_skip_brem_track_2(kind : str, trigger : str):
+def test_skip_brem_track_2(kind : str, trigger : Trigger):
     '''
     Tests for electron samples
     '''
@@ -876,7 +877,7 @@ def test_skip_brem_track_2(kind : str, trigger : str):
     # -------------
     ('Bu_Kmumu_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
     ('Bd_Kstmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA_noPID')])
-def test_no_pid(sample : str, trigger : str):
+def test_no_pid(sample : str, trigger : Trigger):
     '''
     Tests loading of noPID samples
     '''
@@ -893,7 +894,7 @@ def test_no_pid(sample : str, trigger : str):
 # TODO: Check for negative numbers
 @pytest.mark.parametrize('nthreads', [1, 6])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_multithreading(nthreads : int, trigger : str):
+def test_multithreading(nthreads : int, trigger : Trigger):
     '''
     This will test the context manager used to enable multithreading
     '''
@@ -929,7 +930,7 @@ def test_multithreading_invalid(nthreads : int):
     sample   = 'Bu_JpsiK_ee_eq_DPC'
     with pytest.raises(ValueError):
         with RDFGetter.multithreading(nthreads=nthreads):
-            gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+            gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
             gtr.get_rdf(per_file=False)
 # ------------------------------------------------
 def test_multithreading_locked():
@@ -942,7 +943,7 @@ def test_multithreading_locked():
     with pytest.raises(ValueError):
         with RDFGetter.multithreading(nthreads=nthreads):
             with RDFGetter.multithreading(nthreads=nthreads):
-                gtr = RDFGetter(sample=sample, trigger='Hlt2RD_BuToKpEE_MVA')
+                gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
                 gtr.get_rdf(per_file=False)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc'] )
@@ -950,13 +951,11 @@ def test_skip_adding_columns(sample : str):
     '''
     Tests reading of ccbar + X samples
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-
-    gtr_1 = RDFGetter(sample=sample, trigger=trigger)
+    gtr_1 = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
     rdf_1 = gtr_1.get_rdf(per_file=False)
 
     with RDFGetter.skip_adding_columns(True):
-        gtr_2 = RDFGetter(sample=sample, trigger=trigger)
+        gtr_2 = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
         rdf_2 = gtr_2.get_rdf(per_file=False)
 
     assert not isinstance(rdf_1, dict)
@@ -969,7 +968,7 @@ def test_skip_adding_columns(sample : str):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_only_friends(sample : str, trigger : str):
+def test_only_friends(sample : str, trigger : Trigger):
     '''
     Tests the only_friends manager, which allows only a subset of friend trees
     '''
@@ -985,7 +984,7 @@ def test_only_friends(sample : str, trigger : str):
 @pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
 def test_selection(
     sample  : str, 
-    trigger : str,
+    trigger : Trigger,
     smeared : bool, 
     q2bin   : str):
     '''
@@ -1022,7 +1021,7 @@ def test_selection(
 def test_full_selection_electron(
     sample  : str, 
     q2bin   : str, 
-    trigger : str):
+    trigger : Trigger):
     '''
     Applies full selection to all q2 bins in electron channel
     '''
@@ -1044,7 +1043,7 @@ def test_full_selection_electron(
 @pytest.mark.parametrize('sample' , ['Bd_Kstmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_full_selection_muon(sample : str, q2bin : str, trigger : str):
+def test_full_selection_muon(sample : str, q2bin : str, trigger : Trigger):
     '''
     Applies full selection to all q2 bins in muon channel
     '''
@@ -1073,7 +1072,7 @@ def test_full_selection_muon(sample : str, q2bin : str, trigger : str):
 def test_emulated_samples(
     source  : str, 
     target  : str, 
-    trigger : str,
+    trigger : Trigger,
     tmp_path: Path):
     '''
     Test sample emulation, e.g.
@@ -1143,11 +1142,9 @@ def test_project(sample : str, project : str):
     '''
     Will test `project` context manager
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-
     with RDFGetter.max_entries(value=1000),\
          RDFGetter.project(name=project):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
+        gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
         rdf = gtr.get_rdf(per_file=False)
 
     nentries = rdf.Count().GetValue()
