@@ -403,14 +403,17 @@ class SpecMaker:
             raise KeyError('Cannot access list of files from JSON config needed by FromSpec') from exc
 
         nfiles = len(l_file)
+        log.info(f'Found {nfiles} files')
+
         d_config : dict[Path, Path] = {}
         for ifile in range(nfiles):
-            spec, fpath = self._remove_all_but(spec=spec, ifile=ifile, main=main)
-            config_path = self._get_tmp_path(identifier='rdframe_config', data=spec)
-            log.debug(f'Saving per-file config path to {config_path}')
+            log.debug(f'Removing {ifile}-th file')
+            single_file_spec, fpath = self._remove_all_but(spec=spec, ifile=ifile, main=main)
+            config_path             = self._get_tmp_path(identifier='rdframe_config', data=single_file_spec)
 
-            config_path.write_text(spec.model_dump_json(indent=2))
-            d_config[fpath]  = config_path 
+            log.debug(f'Saving per-file config path to {config_path}')
+            config_path.write_text(single_file_spec.model_dump_json(indent=2))
+            d_config[fpath] = config_path 
 
         return d_config
     # ---------------------------------------------------
