@@ -2,25 +2,20 @@
 Module holding RDFGetter class
 '''
 import os
-import glob
 import copy
-import pprint
-import fnmatch
-import secrets
 from contextlib import contextmanager
-from typing     import Any, Final, overload, Literal
+from pathlib    import Path
+from typing     import Any, overload, Literal
 
-import yaml
 import dmu.generic.utilities as gut
 
-from ROOT                  import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
-from dmu.generic           import version_management as vmn
-from dmu.generic           import hashing
-from dmu.logging.log_store import LogStore
-from omegaconf             import DictConfig, OmegaConf
-from rx_common             import info
-from rx_data.path_splitter import PathSplitter
+from ROOT                    import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
+from dmu.generic             import hashing
+from dmu.logging.log_store   import LogStore
+from omegaconf               import DictConfig, OmegaConf
 from rx_data.sample_emulator import SampleEmulator
+from rx_data.spec_maker      import SpecMaker
+from rx_common.types         import Trigger
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
