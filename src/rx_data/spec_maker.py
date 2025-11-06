@@ -10,7 +10,7 @@ import pprint
 
 from pydantic              import BaseModel, ConfigDict
 from contextlib            import contextmanager
-from omegaconf             import DictConfig, OmegaConf
+from omegaconf             import OmegaConf
 from pathlib               import Path
 from typing                import overload, Literal, Final
 from rx_common.types       import Trigger
