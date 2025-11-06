@@ -10,7 +10,6 @@ import pprint
 
 from pydantic              import BaseModel, ConfigDict
 from contextlib            import contextmanager
-from omegaconf             import OmegaConf
 from pathlib               import Path
 from typing                import overload, Literal, Final
 from rx_common.types       import Trigger
@@ -22,6 +21,9 @@ from dmu.generic           import version_management as vmn
 from dmu.generic           import utilities          as gut
 
 log=LogStore.add_logger('rx_data:spec_maker')
+
+_MAIN_TREE           : Final[str]       = 'main'
+_ELECTRON_ONLY_TREES : Final[list[str]] = ['brem_track_2']
 # --------------------------
 class Sample(BaseModel):
     '''
@@ -72,9 +74,7 @@ class SpecMaker:
         self._sample    = sample
         self._trigger   = trigger
         self._tree_name = tree
-        self.__cfg      = gut.load_conf(package='rx_data_data', fpath='spec_maker/config.yaml')
         self._project   = self._set_project(trigger=trigger) 
-        self._main_tree = self._get_main_tree()
         self._samples   = self._get_json_paths()
 
         self._l_path : list[Path] = [] # list of paths to all the ROOT files
@@ -112,7 +112,7 @@ class SpecMaker:
             return True
 
         # The main tree is never skipped
-        if ftree == self.__cfg.trees.main:
+        if ftree == _MAIN_TREE: 
             return False
 
         if ftree in SpecMaker._excluded_friends:
@@ -123,7 +123,7 @@ class SpecMaker:
             log.debug(f'Default excluding {ftree}')
             return True
 
-        if ftree in self.__cfg.trees.electron_only and 'MuMu' in self._trigger:
+        if ftree in _ELECTRON_ONLY_TREES and info.is_mm(trigger = self._trigger):
             log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
             return True
 
@@ -287,8 +287,8 @@ class SpecMaker:
 
         # MCDecayTree has no friends
         if self._tree_name == 'MCDecayTree':
-            path = d_ftree_dir_flt[self._main_tree]
-            return {self._main_tree : path}
+            path = d_ftree_dir_flt[_MAIN_TREE]
+            return {_MAIN_TREE : path}
 
         raise ValueError(f'Invalid tree name: {self._tree_name}')
     # ---------------------------------------------------
@@ -307,7 +307,7 @@ class SpecMaker:
 
         d_ftree_dir  = { os.path.basename(ftree_dir) : ftree_dir for ftree_dir in l_ftree_dir }
         d_ftree_dir  = self._filter_samples(d_ftree_dir=d_ftree_dir)
-        self._s_ftree= { ftree for ftree in list(d_ftree_dir) if ftree != self._main_tree } # These friend trees both exist and are picked up
+        self._s_ftree= { ftree for ftree in list(d_ftree_dir) if ftree != _MAIN_TREE } # These friend trees both exist and are picked up
 
         log.info(40 * '-')
         log.info(f'{"Friend":<20}{"Version":<20}')
@@ -355,22 +355,6 @@ class SpecMaker:
         gut.dump_json(data, out_path)
 
         return out_path
-    # ---------------------------------------------------
-    def _get_main_tree(self) -> str:
-        '''
-        Returns name of main tree from config file
-        '''
-        try:
-            name = self.__cfg.trees.main
-        except Exception as exc:
-            yaml_string = OmegaConf.to_yaml(self.__cfg)
-            log.error(yaml_string)
-            raise ValueError('Cannot find main tree name') from exc
-
-        if not isinstance(name, str):
-            raise ValueError(f'Main tree name not a string: {name} ({type(name)})')
-
-        return name
     # ---------------------------------------------------
     def _split_per_file(self, spec : Specification, main : str) -> dict[Path,Path]:
         '''
@@ -516,7 +500,7 @@ class SpecMaker:
 
         log.debug('Splitting per file')
 
-        return self._split_per_file(spec=spec, main=self._main_tree)
+        return self._split_per_file(spec=spec, main = _MAIN_TREE)
     # ----------------------
     # Context managers
     # ----------------------
