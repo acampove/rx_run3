@@ -4,6 +4,7 @@ Module with tests for PFNSplitter class
 import os
 import json
 import glob
+from pathlib               import Path
 from importlib.resources   import files
 from functools             import cache
 
@@ -23,7 +24,10 @@ class Data:
     out_dir = '/tmp/tests/rx_data/path_splitter'
 # ----------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This will run before any test
+    '''
     LogStore.set_level('rx_data:path_splitter', 10)
 
     os.makedirs(Data.out_dir, exist_ok=True)
@@ -34,12 +38,11 @@ def _save_samples(test : str, data : dict) -> None:
         yaml.dump(data, ofile, indent=2)
 # ----------------------------------------
 @cache
-def _get_pfns(analysis : str) -> list[str]:
+def _get_pfns(analysis : str) -> list[Path]:
     lfn_dir= files('rx_data_lfns').joinpath(analysis)
-    lfn_dir= str(lfn_dir)
+    lfn_dir= Path(str(lfn_dir))
     lfn_ver= vmn.get_last_version(dir_path=lfn_dir, version_only=False)
-    jsn_wc = f'{lfn_ver}/*.json'
-    l_path = glob.glob(jsn_wc)
+    l_path = lfn_ver.glob(pattern='*.json')
 
     l_pfn  = []
     for path in l_path:
@@ -53,8 +56,8 @@ def test_default(analysis : str):
     '''
     Default usage
     '''
-    l_pfn = _get_pfns(analysis=analysis)
-    spl   = PathSplitter(paths = l_pfn)
+    pfns  = _get_pfns(analysis=analysis)
+    spl   = PathSplitter(paths = pfns)
     data  = spl.split()
 
     _save_samples(f'default_{analysis}', data)
