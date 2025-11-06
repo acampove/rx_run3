@@ -144,7 +144,7 @@ class SpecMaker:
         '''
         Returns a dictionary with information on the main samples and the friend trees, needed to build dataframes
         '''
-        data = {'samples' : {}, 'friends' : {}}
+        data : dict[str,dict[str, Sample]] = {'samples' : {}, 'friends' : {}}
 
         log.info('Adding samples')
         for ftree, json_path in self._samples.items():
