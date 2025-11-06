@@ -78,7 +78,7 @@ class SpecMaker:
         self._samples   = self._get_json_paths()
 
         self._l_path : list[Path] = [] # list of paths to all the ROOT files
-        SpecMaker._cache_dir.mkdir(parents=True, exist_ok=True)
+        self._cache_dir.mkdir(parents=True, exist_ok=True)
     # ----------------------
     def _set_project(self, trigger : str) -> str:
         '''
@@ -90,15 +90,15 @@ class SpecMaker:
         -------------
         E.g. rk, rkst
         '''
-        if SpecMaker._custom_project is None:
+        if self._custom_project is None:
             project = info.project_from_trigger(trigger=trigger, lower_case=True) 
             log.debug(f'Using project {project} for trigger {trigger}')
 
             return project
 
-        log.warning(f'Using custom project: {SpecMaker._custom_project}')
+        log.warning(f'Using custom project: {self._custom_project}')
 
-        return SpecMaker._custom_project
+        return self._custom_project
     # ---------------------------------------------------
     def _skip_ftree(self, ftree : str) -> bool:
         '''
@@ -115,11 +115,11 @@ class SpecMaker:
         if ftree == _MAIN_TREE: 
             return False
 
-        if ftree in SpecMaker._excluded_friends:
+        if ftree in self._excluded_friends:
             log.debug(f'Excluding {ftree}')
             return True
 
-        if ftree in SpecMaker._default_excluded:
+        if ftree in self._default_excluded:
             log.debug(f'Default excluding {ftree}')
             return True
 
@@ -127,13 +127,13 @@ class SpecMaker:
             log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
             return True
 
-        if SpecMaker._only_friends is None: # If _only_friends is unset, do not skip current tree
+        if self._only_friends is None: # If _only_friends is unset, do not skip current tree
             return False
 
         # This check is needed to silence pyright error
         # otherwise the line above should be enough
-        if SpecMaker._only_friends is not None:
-            if ftree not in SpecMaker._only_friends: # If _only_friends was set and ftree is not one of them, skip
+        if self._only_friends is not None:
+            if ftree not in self._only_friends: # If _only_friends was set and ftree is not one of them, skip
                 return True
 
         log.debug(f'Not excluding {ftree} friend')
@@ -326,8 +326,8 @@ class SpecMaker:
         Finds latest/custom version and returns this path
         '''
         friend_name = ftree_dir.name
-        if friend_name in SpecMaker._custom_versions:
-            version     = SpecMaker._custom_versions[friend_name]
+        if friend_name in self._custom_versions:
+            version     = self._custom_versions[friend_name]
             version_dir = ftree_dir / version
 
             log.warning(f'{friend_name:<20}{version:<20}')
@@ -464,8 +464,8 @@ class SpecMaker:
         val      = val[:10]
 
         # Id of process plus random number 
-        proc_id  = self._identifier + secrets.randbelow(1000_000_000) 
-        tmp_path = SpecMaker._cache_dir / f'{identifier}_{proc_id}_{val}.json'
+        proc_id  = self._identifier + secrets.randbelow(1000_000_000)
+        tmp_path = self._cache_dir / f'{identifier}_{proc_id}_{val}.json'
 
         log.debug(f'Using config JSON: {tmp_path}')
 
@@ -492,7 +492,7 @@ class SpecMaker:
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
         spec = self._get_samples()
-        log.debug(f'This instance/process ID is: {SpecMaker._identifier}')
+        log.debug(f'This instance/process ID is: {self._identifier}')
         if not per_file:
             log.debug('Not splitting per file')
             cfg_path = self._get_tmp_path(identifier='rdframe_config', data=spec)
