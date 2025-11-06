@@ -103,10 +103,10 @@ class RDFGetter:
 
         self._l_mm_trigger  = _l_bd_mm_trigger + _l_bu_mm_trigger
 
-        self._rdf    : RDF.RNode           # This is where the dataframe will be stored, prevents recalculation
-        self._d_rdf  : dict[str,RDF.RNode] # This is where the dataframes are stored, when per_file splitting was
-                                           # requested. They keys are the main tree file path, the value is the dataframe
-                                           # with the main and friend trees
+        self._rdf    : RDF.RNode            # This is where the dataframe will be stored, prevents recalculation
+        self._d_rdf  : dict[Path,RDF.RNode] # This is where the dataframes are stored, when per_file splitting was
+                                            # requested. They keys are the main tree file path, the value is the dataframe
+                                            # with the main and friend trees
 
         self._d_info : dict[str,Any] = {} # Used to store information related to transformations done to dataframe (e.g. Range), needed for hashing
         self._l_path : list[str]     = [] # list of paths to all the ROOT files
