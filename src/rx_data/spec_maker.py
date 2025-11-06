@@ -111,7 +111,8 @@ class SpecMaker:
         if ftree == 'not_used': # This is the directory where old samples will go
             return True
 
-        if ftree == self._cfg.trees.electron_only:
+        # The main tree is never skipped
+        if ftree == self._cfg.trees.main:
             return False
 
         if ftree in SpecMaker._excluded_friends:
