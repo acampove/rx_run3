@@ -72,7 +72,7 @@ class SpecMaker:
         self._sample    = sample
         self._trigger   = trigger
         self._tree_name = tree
-        self._cfg       = gut.load_conf(package='rx_data_data', fpath='spec_maker/config.yaml')
+        self.__cfg      = gut.load_conf(package='rx_data_data', fpath='spec_maker/config.yaml')
         self._project   = self._set_project(trigger=trigger) 
         self._main_tree = self._get_main_tree()
         self._samples   = self._get_json_paths()
@@ -112,7 +112,7 @@ class SpecMaker:
             return True
 
         # The main tree is never skipped
-        if ftree == self._cfg.trees.main:
+        if ftree == self.__cfg.trees.main:
             return False
 
         if ftree in SpecMaker._excluded_friends:
@@ -123,7 +123,7 @@ class SpecMaker:
             log.debug(f'Default excluding {ftree}')
             return True
 
-        if ftree in self._cfg.trees.electron_only and 'MuMu' in self._trigger:
+        if ftree in self.__cfg.trees.electron_only and 'MuMu' in self._trigger:
             log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
             return True
 
@@ -363,9 +363,9 @@ class SpecMaker:
         Returns name of main tree from config file
         '''
         try:
-            name = self._cfg.trees.main
+            name = self.__cfg.trees.main
         except Exception as exc:
-            yaml_string = OmegaConf.to_yaml(self._cfg)
+            yaml_string = OmegaConf.to_yaml(self.__cfg)
             log.error(yaml_string)
             raise ValueError('Cannot find main tree name') from exc
 
