@@ -411,7 +411,7 @@ class RDFGetter:
         '''
         Parameters
         ------------------
-        fpath    : Path to ROOT file corresponding to main category
+        fpath    : Path to ROOT file corresponding to main category or 'joint_files' string when doing the full sample
         conf_path: Path to JSON file with configuration needed to build dataframe
 
         Returns
@@ -495,10 +495,6 @@ class RDFGetter:
             log.debug('Returning already calculated dataframe dictionary')
             return self._d_rdf
 
-        # This is a dictionary with:
-        #
-        # key  : Path to ROOT file from the main sample, if per_file==True. Otherwise empty string
-        # Value: Path to config used to build DataFrame
         d_sample = self._get_paths_to_conf(per_file=per_file)
         if per_file:
             log.info('Building one dataframe per file')
