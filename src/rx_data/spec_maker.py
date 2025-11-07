@@ -60,13 +60,12 @@ class SpecMaker:
         self._tree_name = tree
         self._project   = self._set_project(trigger=trigger) 
         self._samples   = self._get_json_paths()
+        self._l_path : list[Path]    = [] # list of paths to all the ROOT files
+        self._cache_dir.mkdir(parents=True, exist_ok=True)
 
-        spec = self._get_specification()
+        spec            = self._get_specification()
         self._patcher   = SamplePatcher(sample = sample, spec = spec)
         self._spec      = self._patcher.get_patched_specification()
-
-        self._l_path : list[Path] = [] # list of paths to all the ROOT files
-        self._cache_dir.mkdir(parents=True, exist_ok=True)
     # ----------------------
     def _set_project(self, trigger : str) -> str:
         '''
