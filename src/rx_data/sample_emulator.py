@@ -36,7 +36,7 @@ class SampleEmulator:
         original sample
         '''
 
-        if self._sample not in self._cfg:
+        if self._cfg is None:
             log.debug(f'Not emulating {self._sample}')
             return self._sample
 
