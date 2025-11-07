@@ -9,10 +9,15 @@ from rx_common.types    import Project, Trigger
 from rx_data.spec_maker import SpecMaker, Specification
 
 _SAMPLES=[
-    ('Bu_JpsiK_ee_eq_DPC'            , 'Hlt2RD_BuToKpEE_MVA'),
-    ('Bu_JpsiK_mm_eq_DPC'            , 'Hlt2RD_BuToKpMuMu_MVA'),
-    ('Bd_Kstee_eq_btosllball05_DPC'  , 'Hlt2RD_B0ToKpPimEE_MVA'),
-    ('Bd_Kstmumu_eq_btosllball05_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    ('Bu_JpsiK_ee_eq_DPC'            , Trigger.rk_ee_os),
+    ('Bu_JpsiK_mm_eq_DPC'            , Trigger.rk_mm_os),
+    ('Bd_Kstee_eq_btosllball05_DPC'  , Trigger.rkst_ee_os),
+    ('Bd_Kstmumu_eq_btosllball05_DPC', Trigger.rkst_mm_os),
+]
+
+_PATCHING_SAMPLES = [
+    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
 ]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
