@@ -14,6 +14,12 @@ _UNPATCHED_SAMPLES = [
     ('Bd_Kstee_eq_btosllball05_DPC'  , Trigger.rkst_ee_os),
     ('Bd_Kstmumu_eq_btosllball05_DPC', Trigger.rkst_mm_os),
 ]
+_PATCHED_SAMPLES = [
+    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+]
+
+log=LogStore.add_logger('rx_data:test_sample_patching')
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -38,3 +44,18 @@ def test_unpatched(sample : str, trigger : Trigger) -> None:
 
     assert spec == spk.spec
     assert len(ptr.redefinitions) == 0
+# ----------------------
+@pytest.mark.parametrize('sample, trigger', _PATCHED_SAMPLES)
+def test_patched(sample : str, trigger : Trigger) -> None:
+    '''
+    Tests that patching
+    '''
+    spk = SpecMaker(sample=sample, trigger=trigger, skip_patch=True)
+    spec_old = spk.spec
+
+    ptr = SamplePatcher(sample = sample, spec = spec_old)
+    spec_new = ptr.get_patched_specification()
+
+    assert spec_old != spec_new
+    assert len(ptr.redefinitions) != 0
+  
