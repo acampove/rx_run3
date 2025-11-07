@@ -33,3 +33,11 @@ Bs_JpsiX_mm_eq_JpsiInAcc:
     2 : 5
     3 : 5
     4 : 5
+# ----------------------------------------
+Bu_JpsiX_mm_eq_JpsiInAcc:
+  sample : Bu_JpsiX_mm_eq_JpsiInAcc
+  patching:
+    1 : 5
+    2 : 5
+    3 : 5
+    4 : 5
