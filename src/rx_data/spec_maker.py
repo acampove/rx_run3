@@ -46,14 +46,16 @@ class SpecMaker:
     # ----------------------
     def __init__(
         self, 
-        sample  : str, 
-        trigger : Trigger,
-        tree    : str = 'DecayTree') -> None:
+        sample     : str, 
+        trigger    : Trigger,
+        skip_patch : bool = False,
+        tree       : str  = 'DecayTree') -> None:
         '''
         Parameters
         -------------
-        sample : E.g. Bu_JpsiK_ee_eq_DPC
-        trigger: Hlt2RD_BuToKpEE_MVA
+        sample    : E.g. Bu_JpsiK_ee_eq_DPC
+        trigger   : Hlt2RD_BuToKpEE_MVA
+        skip_patch: If true, it will not patch for missing samples, false by default
         '''
         self._sample    = sample
         self._trigger   = trigger
@@ -63,9 +65,13 @@ class SpecMaker:
         self._l_path : list[Path]    = [] # list of paths to all the ROOT files
         self._cache_dir.mkdir(parents=True, exist_ok=True)
 
-        spec            = self._get_specification()
-        self._patcher   = SamplePatcher(sample = sample, spec = spec)
-        self._spec      = self._patcher.get_patched_specification()
+        if skip_patch:
+            log.warning(f'Skipping patching of {sample}')
+            self._spec    = self._get_specification()
+        else:
+            spec          = self._get_specification()
+            self._patcher = SamplePatcher(sample = sample, spec = spec)
+            self._spec    = self._patcher.get_patched_specification()
     # ----------------------
     def _set_project(self, trigger : str) -> str:
         '''
