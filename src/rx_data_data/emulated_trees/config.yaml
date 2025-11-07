@@ -25,3 +25,11 @@ Bd_JpsiKst_mm_had_swp:
   sample   : Bd_JpsiKst_mm_eq_DPC
 Bd_JpsiKst_ee_had_swp:
   sample   : Bd_JpsiKst_ee_eq_DPC
+# ----------------------------------------
+Bs_JpsiX_mm_eq_JpsiInAcc:
+  sample : Bs_JpsiX_mm_eq_JpsiInAcc
+  patching:
+    1 : 5
+    2 : 5
+    3 : 5
+    4 : 5
