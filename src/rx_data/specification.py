@@ -2,6 +2,7 @@
 Module holding Specification and Sample classes
 '''
 
+from pathlib   import Path
 from pydantic  import BaseModel, ConfigDict
 
 # --------------------------
