@@ -37,6 +37,16 @@ def test_patching(sample : str, trigger : Trigger) -> None:
 
     assert path.exists()
 # ------------------------------------------------------
+@pytest.mark.parametrize('sample, trigger', _PATCHING_SAMPLES)
+def test_skip_patching(sample : str, trigger : Trigger) -> None:
+    '''
+    Disable patching
+    '''
+    mkr  = SpecMaker(sample=sample, trigger=trigger, skip_patch=True)
+    path = mkr.get_spec_path(per_file=False)
+
+    assert path.exists()
+# ------------------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES)
 def test_combined(sample : str, trigger : Trigger) -> None:
     '''
