@@ -124,7 +124,7 @@ class SpecMaker:
 
         return False
     # ---------------------------------------------------
-    def _get_samples(self) -> Specification:
+    def _get_specification(self) -> Specification:
         '''
         Returns a dictionary with information on the main samples and the friend trees, needed to build dataframes
         '''
@@ -188,10 +188,7 @@ class SpecMaker:
 
         return l_path
     # ---------------------------------------------------
-    def _get_sample(
-        self,
-        json_path : Path,
-        ftree     : str) -> Sample:
+    def _get_sample(self, json_path : Path, ftree : str) -> Sample:
         '''
         Parameters:
         --------------------
@@ -475,7 +472,7 @@ class SpecMaker:
                If per_file is False, key will be ''
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
-        spec = self._get_samples()
+        spec : Specification = self._get_specification()
         log.debug(f'This instance/process ID is: {self._identifier}')
         if not per_file:
             log.debug('Not splitting per file')
@@ -487,7 +484,9 @@ class SpecMaker:
 
         log.debug('Splitting per file')
 
-        return self._split_per_file(spec=spec, main = _MAIN_TREE)
+        paths : dict[Path,Path] = self._split_per_file(spec=spec, main = _MAIN_TREE)
+
+        return paths
     # ----------------------
     # Context managers
     # ----------------------
