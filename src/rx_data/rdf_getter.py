@@ -499,7 +499,8 @@ class RDFGetter(SpecMaker):
         if per_file:
             d_sample = self.get_spec_path(per_file=per_file)
             log.info('Building one dataframe per file')
-            self._d_rdf = { fpath : self._rdf_from_conf(fpath=fpath, conf_path=conf_path) for fpath, conf_path in d_sample.items() }
+            d_rdf       = { fpath : self._rdf_from_conf(fpath=fpath, conf_path=conf_path) for fpath, conf_path in d_sample.items() }
+            self._d_rdf = { fpath : self._emulator.post_process(rdf=rdf)                  for fpath, rdf       in d_rdf.items() }
 
             return self._d_rdf
 
