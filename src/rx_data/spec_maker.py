@@ -60,6 +60,7 @@ class SpecMaker:
         self._tree_name = tree
         self._project   = self._set_project(trigger=trigger) 
         self._samples   = self._get_json_paths()
+        self._patcher   = SamplePatcher(sample=sample)
 
         self._l_path : list[Path] = [] # list of paths to all the ROOT files
         self._cache_dir.mkdir(parents=True, exist_ok=True)
@@ -473,6 +474,8 @@ class SpecMaker:
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
         spec : Specification = self._get_specification()
+        spec = self._patcher.patch(spec = spec)
+
         log.debug(f'This instance/process ID is: {self._identifier}')
         if not per_file:
             log.debug('Not splitting per file')
