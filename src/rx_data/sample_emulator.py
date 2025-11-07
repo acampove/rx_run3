@@ -3,7 +3,7 @@ Module holding SampleEmulator class
 '''
 
 from ROOT                  import RDF # type: ignore
-from omegaconf             import DictConfig, ListConfig
+from omegaconf             import DictConfig
 
 from dmu.generic.utilities import load_conf
 from dmu.logging.log_store import LogStore
@@ -40,7 +40,7 @@ class SampleEmulator:
             log.debug(f'Not emulating {self._sample}')
             return self._sample
 
-        new_sample = self._cfg[self._sample].sample
+        new_sample = self._cfg.sample
         log.warning(f'Emulating {self._sample} with {new_sample}')
 
         return new_sample
