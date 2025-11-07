@@ -10,13 +10,14 @@ class SamplePatcher:
     blocks in simulated samples
     '''
     # ----------------------
-    def __init__(self, sample : str) -> None:
+    def __init__(self, sample : str, spec : Specification) -> None:
         '''
         Parameters
         -------------
         sample : Name of sample, e.g. Bs_JpsiX_ee_eq_JpsiInAcc
         '''
         self._sample = sample 
+        self._spec   = spec
         self._redefinitions : None | dict[str,str] = None
     # ----------------------
     @property
@@ -31,7 +32,7 @@ class SamplePatcher:
 
         return self._redefinitions
     # ----------------------
-    def patch(self, spec : Specification) -> Specification:
+    def get_patched_specification(self) -> Specification:
         '''
         Parameters
         -------------
@@ -41,5 +42,5 @@ class SamplePatcher:
         -------------
         Patched version, which takes into account block patching
         '''
-        return spec
+        return self._spec
 # ------------------------------------
