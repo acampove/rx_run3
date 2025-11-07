@@ -26,7 +26,7 @@ class SampleEmulator:
         sample: Name of sample to emulate, e.g. Bs_JpsiKst_ee_eq_DPC
         '''
         self._sample = sample
-        self._cfg    = load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
+        self._cfg    = load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml').get(sample)
     # ---------------------
     def get_sample_name(self) -> str:
         '''
@@ -77,16 +77,14 @@ class SampleEmulator:
         -------------
         Dataframe after redefinitions, etc
         '''
-        cfg = self._cfg.get(self._sample)
-
-        if not cfg: 
+        if self._cfg is None: 
             log.debug(f'Not emulating {self._sample}, missing in config')
             return rdf
 
         log.info(f'Emulating {self._sample}')
 
-        if 'redefine' in cfg:
-            rdf = self._run_redefine(rdf=rdf, definitions=cfg.redefine)
+        if 'redefine' in self._cfg:
+            rdf = self._run_redefine(rdf=rdf, definitions=self._cfg.redefine)
 
         return rdf
 # ----------------------
