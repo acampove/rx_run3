@@ -16,6 +16,7 @@ from rx_common              import info
 from rx_data.path_splitter  import PathSplitter, NestedSamples
 from rx_data.sample_patcher import SamplePatcher
 from rx_data.specification  import Sample, Specification
+from rx_data.sample_emulator import SampleEmulator
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import hashing
 from dmu.generic            import version_management as vmn
@@ -57,7 +58,9 @@ class SpecMaker:
         trigger   : Hlt2RD_BuToKpEE_MVA
         skip_patch: If true, it will not patch for missing samples, false by default
         '''
-        self._sample    = sample
+        self._emulator  = SampleEmulator(sample=sample)
+        self._sample    = self._emulator.get_sample_name()
+
         self._trigger   = trigger
         self._tree_name = tree
         self._project   = self._set_project(trigger=trigger) 
@@ -72,6 +75,7 @@ class SpecMaker:
             spec          = self._get_specification()
             self._patcher = SamplePatcher(sample = sample, spec = spec)
             self._spec    = self._patcher.get_patched_specification()
+            self._emulator.extend_redefinitions(redefinitions = self._patcher.redefinitions)
     # ----------------------
     def _set_project(self, trigger : str) -> str:
         '''
