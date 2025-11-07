@@ -79,6 +79,10 @@ class SampleEmulator:
         -------------
         ValueError: If a column re-definition is already present in config
         '''
+        if not redefinitions:
+            log.info('Not using extra redefinitions')
+            return
+
         fail = False
         log.info('Extending columns redefinitions')
         for name, expression in redefinitions.items():
