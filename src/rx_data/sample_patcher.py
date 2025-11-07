@@ -1,8 +1,11 @@
 '''
 Module containing SamplePatcher
 '''
+from dmu.generic            import utilities as gut 
 from rx_data.specification  import Specification
+from dmu.logging.log_store  import LogStore
 
+log=LogStore.add_logger('rx_data:sample_patcher')
 # ------------------------------------
 class SamplePatcher:
     '''
@@ -19,6 +22,34 @@ class SamplePatcher:
         self._sample = sample 
         self._spec   = spec
         self._redefinitions : None | dict[str,str] = None
+        self._associations  : dict[int,int] = self._get_patching_dictionary()
+    # ----------------------
+    def _get_patching_dictionary(self) -> dict[int,int]:
+        '''
+        This method will set redefinitions to an empty dictionary if patching
+        not found
+
+        Returns
+        -------------
+        Dictionary where the keys are the blocks needed 
+        and the values are the blocks used to patch the needed blocks
+
+        If no patching is available, dictionary will be empty
+        '''
+        cfg = gut.load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
+        if self._sample not in cfg:
+            log.info(f'No patching needed for {self._sample}')
+            self._redefinitions = dict()
+            return dict()
+
+        if 'patching' not in cfg[self._sample]:
+            log.info(f'No patching needed for {self._sample}')
+            self._redefinitions = dict()
+            return dict()
+
+        log.info(f'Using patching for {self._sample}')
+
+        return cfg[self._sample].patching
     # ----------------------
     @property
     def redefinitions(self) -> dict[str,str]:
@@ -42,5 +73,6 @@ class SamplePatcher:
         -------------
         Patched version, which takes into account block patching
         '''
+
         return self._spec
 # ------------------------------------
