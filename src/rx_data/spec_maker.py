@@ -456,6 +456,17 @@ class SpecMaker:
 
         return tmp_path
     # ----------------------
+    @property
+    def spec(self) -> Specification:
+        '''
+        Returns specification object, needed
+        to make ROOT dataframe
+        '''
+        if not isinstance(self._spec, Specification):
+            raise ValueError('Cannot find specification')
+
+        return self._spec
+    # ----------------------
     @overload
     def get_spec_path(self, per_file : Literal[False]) -> Path:...
     @overload
