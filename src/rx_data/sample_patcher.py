@@ -21,10 +21,11 @@ class SamplePatcher:
         -------------
         sample : Name of sample, e.g. Bs_JpsiX_ee_eq_JpsiInAcc
         '''
-        self._sample = sample 
-        self._spec   = spec
-        self._redefinitions : None | dict[str,str] = None
-        self._associations  : dict[int,int] = self._get_patching_dictionary()
+        self._sample = sample
+        self._spec   = spec.model_copy(deep=True)
+        self._redefinitions  : None | dict[str,str] = None
+        self._associations   : dict[int,int]        = self._get_patching_dictionary()
+        self._patching_files : dict[int,list[Path]] = dict()
     # ----------------------
     def _get_patching_dictionary(self) -> dict[int,int]:
         '''
