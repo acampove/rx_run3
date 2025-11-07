@@ -63,6 +63,8 @@ class RDFGetter(SpecMaker):
         log.debug(f'Process identifier: {RDFGetter._identifier}')
 
         self._emulator        = SampleEmulator(sample=sample)
+        self._emulator.extend_redefinitions(redefinitions = self._patcher.redefinitions)
+
         self._sample          = self._emulator.get_sample_name()
         self._trigger         = trigger
 
