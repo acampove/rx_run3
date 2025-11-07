@@ -60,7 +60,10 @@ class SpecMaker:
         self._tree_name = tree
         self._project   = self._set_project(trigger=trigger) 
         self._samples   = self._get_json_paths()
-        self._patcher   = SamplePatcher(sample=sample)
+
+        spec = self._get_specification()
+        self._patcher   = SamplePatcher(sample = sample, spec = spec)
+        self._spec      = self._patcher.get_patched_specification()
 
         self._l_path : list[Path] = [] # list of paths to all the ROOT files
         self._cache_dir.mkdir(parents=True, exist_ok=True)
@@ -473,21 +476,19 @@ class SpecMaker:
                If per_file is False, key will be ''
         value: Path to JSON config file, needed to build dataframe though FromSpec
         '''
-        spec : Specification = self._get_specification()
-        spec = self._patcher.patch(spec = spec)
 
         log.debug(f'This instance/process ID is: {self._identifier}')
         if not per_file:
             log.debug('Not splitting per file')
-            cfg_path = self._get_tmp_path(identifier='rdframe_config', data=spec)
+            cfg_path = self._get_tmp_path(identifier='rdframe_config', data=self._spec)
             log.debug(f'Saving config path to {cfg_path}')
-            cfg_path.write_text(data=spec.model_dump_json(indent=2))
+            cfg_path.write_text(data=self._spec.model_dump_json(indent=2))
 
             return cfg_path
 
         log.debug('Splitting per file')
 
-        paths : dict[Path,Path] = self._split_per_file(spec=spec, main = _MAIN_TREE)
+        paths : dict[Path,Path] = self._split_per_file(spec=self._spec, main = _MAIN_TREE)
 
         return paths
     # ----------------------
