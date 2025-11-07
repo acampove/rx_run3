@@ -27,6 +27,16 @@ def initialize():
     '''
     LogStore.set_level('rx_data:spec_maker', 10)
 # ------------------------------------------------------
+@pytest.mark.parametrize('sample, trigger', _PATCHING_SAMPLES)
+def test_patching(sample : str, trigger : Trigger) -> None:
+    '''
+    Return path to specification of combined sample
+    '''
+    mkr  = SpecMaker(sample=sample, trigger=trigger)
+    path = mkr.get_spec_path(per_file=False)
+
+    assert path.exists()
+# ------------------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES)
 def test_combined(sample : str, trigger : Trigger) -> None:
     '''
