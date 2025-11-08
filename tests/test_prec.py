@@ -101,9 +101,16 @@ def test_muon_by_block(tmp_path : Path, trig : str, block : int):
     obs=zfit.Space(label, limits=(4500, 6900))
 
     test = f'reso/{q2bin}_{block:03}'
+    d_wgt= {'dec' : 1, 'sam' : 1}
+
     with sel.custom_selection(d_sel={'block' : f'block == {block}'}):
-        d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1= PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp_1= PRec(
+            samples =l_samp, 
+            trig    =trig, 
+            q2bin   =q2bin, 
+            d_weight=d_wgt,
+            out_dir =f'{block:03}_{trig}')
+
         pdf_1= obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
