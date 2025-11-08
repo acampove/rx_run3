@@ -64,7 +64,28 @@ class SamplePatcher:
         if self._conditions is None:
             raise ValueError(f'No conditions available for sample {self._sample}')
 
-        return self._redefinitions
+        if not self._conditions:
+            return dict()
+
+        nconditions = len(self._conditions)
+        log.info(f'Using {nconditions} conditions')
+        for block, condition in self._conditions.items():
+            log.debug(f'{block:<10}{condition:<}')
+
+        # block times condition for that block to be true
+        terms     = [ f'{block} * ({condition})' for block, condition in self._conditions.items() ]
+
+        # New block is picked based on condition
+        new_block = ' + '.join(terms)
+
+        log.debug(f'Block condition: {new_block}')
+
+        # If this is a candidate where no new block is satisfied, pick old block
+        condition = f'{new_block} == 0 ? block : {new_block}'
+
+        log.debug(f'Block redefinition: {condition}')
+
+        return {'block' : condition} 
     # ----------------------
     def _get_patching_files(self, block : int, main_sample : Sample) -> list[Path]:
         '''
