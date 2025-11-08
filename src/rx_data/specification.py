@@ -11,8 +11,9 @@ class Sample(BaseModel):
     '''
     Class meant to represent a sample
     '''
-    files : list[Path]
-    trees : list[str]
+    files    : list[Path]
+    trees    : list[str]
+    metadata : dict[str,str]
     # --------------------
     @property
     def size(self) -> int:
