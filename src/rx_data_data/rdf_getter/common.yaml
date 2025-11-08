@@ -2,8 +2,9 @@
 
 #If a column ins not found in a dataframe, it will be added according to the following definitions
 redefinitions:
-  block : 'block < 0 ? 0 : block' # This is needed to process pre-UT data as Block 0 data, temporary
-  q2    : Jpsi_Mass * Jpsi_Mass   # Ntuples from post_ap already have q2 calculated without correction
+  block      : 'block < 0 ? 0 : block' # This is needed to process pre-UT data as Block 0 data, temporary
+  q2         : Jpsi_Mass * Jpsi_Mass   # Ntuples from post_ap already have q2 calculated without correction
+  B_Mass_smr : smear.B_Mass_smr
 definitions:
   common: &common
     L1_TRACK_ETA      : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.eta();
