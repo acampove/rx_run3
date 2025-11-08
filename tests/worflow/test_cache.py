@@ -11,7 +11,7 @@ from dmu.logging.log_store import LogStore
 log=LogStore.add_logger('dmu:workflow:test_cache')
 # -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     LogStore.set_level('dmu:workflow:cache', 10)
 # -----------------------------------
 class Tester(Wcache):
@@ -23,6 +23,7 @@ class Tester(Wcache):
         self,
         name   : str,
         nval   : int,
+        val    : int  = 1,
         add_dir: bool = False):
         '''
         name   : Identifies instance of Tester
@@ -31,9 +32,11 @@ class Tester(Wcache):
         '''
         super().__init__(
             out_path=name,
+            val     =val,
             nval    =nval)
 
         self._nval    = nval
+        self._val     = val
         self._add_dir = add_dir
     # -----------------------------------
     def run(self) -> list[int]:
@@ -48,7 +51,7 @@ class Tester(Wcache):
 
             return val
 
-        res = [1] * self._nval
+        res = [self._val] * self._nval
         log.info(f'Data not cached, saving: {res}')
 
         empty_dir_path = f'{self._out_path}/some_empty_dir'
