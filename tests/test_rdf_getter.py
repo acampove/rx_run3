@@ -23,6 +23,16 @@ from rx_data                import collector as col
 from rx_data.rdf_getter     import RDFGetter
 from rx_common.types        import Trigger
 
+_INCLUSIVE_SAMPLES = [
+    ('Bu_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    ('Bd_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    ('Bs_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    # ----------
+    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    ('Bd_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+]
+
 # TODO: Need test for default_skip manager
 log=LogStore.add_logger('rx_data:test_rdf_getter')
 # ------------------------------------------------
@@ -804,13 +814,12 @@ def test_add_truem(project : str):
 
     _check_truem_columns(rdf)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc', 'Bd_JpsiX_ee_eq_JpsiInAcc', 'Bs_JpsiX_ee_eq_JpsiInAcc'] )
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('sample, trigger', _INCLUSIVE_SAMPLES) 
 def test_ccbar(sample : str, trigger : Trigger):
     '''
     Tests reading of ccbar + X samples
     '''
-    with RDFGetter.max_entries(-1), RDFGetter.skip_adding_columns(True):
+    with RDFGetter.max_entries(10_000):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
