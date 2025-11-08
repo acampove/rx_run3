@@ -119,6 +119,8 @@ class SampleEmulator:
 
         if 'redefine' in self._cfg:
             rdf = self._run_redefine(rdf=rdf, definitions=self._cfg.redefine)
+        else:
+            log.debug('Not running redefinitions')
 
         return rdf
 # ----------------------
