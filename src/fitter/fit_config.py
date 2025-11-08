@@ -153,7 +153,7 @@ class FitConfig:
         if self.block == 78:
             return  '(block == 7) || (block == 8)'
 
-        if self.block in [3, 4, 5, 6]:
+        if self.block in [1, 2, 3, 4, 5, 6, 7, 8]:
             return f'block == {self.block}'
 
         raise ValueError(f'Invalid block {self.block}')
