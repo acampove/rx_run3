@@ -54,7 +54,13 @@ def test_electron(tmp_path : Path, trig : str):
     test = f'reso/{q2bin}'
     with RDFGetter.max_entries(value = 100_000):
         d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp_1= PRec(
+            samples =l_samp, 
+            trig    =trig, 
+            q2bin   =q2bin, 
+            d_weight=d_wgt,
+            out_dir =f'electron_{trig}')
+
         pdf_1=obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
@@ -78,7 +84,13 @@ def test_muon(tmp_path : Path, trig : str):
     test = f'reso/{q2bin}'
     with RDFGetter.max_entries(value = 100_000):
         d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1= PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp_1= PRec(
+            samples =l_samp, 
+            trig    =trig, 
+            q2bin   =q2bin, 
+            d_weight=d_wgt,
+            out_dir =f'muon_{trig}')
+
         pdf_1= obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
@@ -109,7 +121,7 @@ def test_muon_by_block(tmp_path : Path, trig : str, block : int):
             trig    =trig, 
             q2bin   =q2bin, 
             d_weight=d_wgt,
-            out_dir =f'{block:03}_{trig}')
+            out_dir =f'muon_by_block_{block:03}_{trig}')
 
         pdf_1= obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 
