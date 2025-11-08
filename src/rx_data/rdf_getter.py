@@ -353,6 +353,12 @@ class RDFGetter(SpecMaker):
             else:
                 log.debug(f'Redefining: {name}={definition}')
 
+            # noPID samples are B-> 3h or B -> 4h, no need to smear these
+            # and no smear friend trees available yet
+            if name == 'B_Mass_smr' and self._trigger.endswith('_noPID'):
+                log.warning(f'Not redefining {name} for trigger {self._trigger}')
+                continue
+
             rdf = self._add_column(redefine=True, rdf=rdf, name=name, definition=definition)
 
         return rdf
