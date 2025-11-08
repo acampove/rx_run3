@@ -173,11 +173,13 @@ class SamplePatcher:
         sample.files    = sample.files + sorted(list(patching_paths))
         new_sample_size = sample.size
 
-        if self._redefinitions is None:
-            self._redefinitions = dict()
+        if sample.metadata['kind'] == 'main':
+            self._build_conditions(
+                block_needed    = block_needed,
+                min_index = old_sample_size,
+                max_index = new_sample_size)
 
-        redefinition = f' rdfentry_ + 1 > {old_sample_size} && rdfentry_ < {new_sample_size} ? {block_needed} : block'
-        log.debug(f'Redefinition: {redefinition}')
+        return sample
 
         self._redefinitions['block'] = redefinition
 
