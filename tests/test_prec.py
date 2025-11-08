@@ -83,6 +83,31 @@ def test_muon(tmp_path : Path, trig : str):
 
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
 #-----------------------------------------------
+@pytest.mark.parametrize('trig' , [Trigger.rk_mm_os, Trigger.rkst_mm_os])
+@pytest.mark.parametrize('block', range(1, 9))
+def test_muon_by_block(tmp_path : Path, trig : str, block : int):
+    '''
+    Simplest test in electron channel
+    '''
+    q2bin  = 'jpsi'
+    mass   = 'B_const_mass_M'
+    label  = r'$M_{DTF}$'
+
+    l_samp = [
+        'Bu_JpsiX_mm_eq_JpsiInAcc',
+        'Bd_JpsiX_mm_eq_JpsiInAcc',
+        'Bs_JpsiX_mm_eq_JpsiInAcc']
+
+    obs=zfit.Space(label, limits=(4500, 6900))
+
+    test = f'reso/{q2bin}_{block:03}'
+    with sel.custom_selection(d_sel={'block' : f'block == {block}'}):
+        d_wgt= {'dec' : 1, 'sam' : 1}
+        obp_1= PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf_1= obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
+
+        PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
+#-----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'jpsi', 'psi2', 'high'])
 def test_reso(q2bin : str):
     '''
