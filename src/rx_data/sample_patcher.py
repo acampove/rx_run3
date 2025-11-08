@@ -180,10 +180,31 @@ class SamplePatcher:
                 max_index = new_sample_size)
 
         return sample
+    # ----------------------
+    def _build_conditions(
+        self, 
+        block_needed: int,
+        min_index   : int, 
+        max_index   : int) -> None:
+        '''
+        If block 3 needs to be used between two entry indexes.
+        This function will append the index condition and the block to _conditions.
 
-        self._redefinitions['block'] = redefinition
+        Parameters
+        -------------
+        block_needed : Block for which the condition is build
+        *_index      : Index of first and last element that will be assigned this block
+        '''
+        condition = f'rdfentry_ + 1 > {min_index} && rdfentry_ < {max_index}'
+        log.debug(f'Condition: {condition}')
 
-        return sample
+        if self._conditions is None:
+            self._conditions = dict()
+
+        if block_needed in self._conditions:
+            raise ValueError(f'Block {block_needed} already found in conditions dictionary')
+
+        self._conditions[block_needed] = condition 
     # ----------------------
     def get_patched_specification(self) -> Specification:
         '''
