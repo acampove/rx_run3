@@ -91,8 +91,9 @@ def initialize(out_dir):
     '''
     This will run before any test
     '''
-    LogStore.set_level('rx_data:rdf_getter', 10)
-    LogStore.set_level('rx_data:spec_maker', 10)
+    LogStore.set_level('rx_data:rdf_getter'     , 10)
+    LogStore.set_level('rx_data:spec_maker'     , 10)
+    LogStore.set_level('rx_data:sample_emulator', 10)
     plt.style.use(mplhep.style.LHCb2)
 
     Data.out_dir = f'{out_dir}/rdf_getter'
