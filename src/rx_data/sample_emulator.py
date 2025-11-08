@@ -85,6 +85,10 @@ class SampleEmulator:
 
         fail = False
         log.info('Extending columns redefinitions')
+
+        if 'redefine' not in self._cfg:
+            self._cfg['redefine'] = dict()
+
         for name, expression in redefinitions.items():
             if name in self._cfg.redefine:
                 log.error(name)
