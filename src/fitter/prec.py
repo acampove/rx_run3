@@ -375,8 +375,19 @@ class PRec(Cache):
         slug           = slugify.slugify(pdf_name, lowercase=False)
         kwargs['name'] = component_name
 
-        arr_mass = df[mass     ].to_numpy()
-        arr_wgt  = df['wgt_br' ].to_numpy()
+        try:
+            arr_mass = df[mass     ].to_numpy()
+            arr_wgt  = df['wgt_br' ].to_numpy()
+        except Exception as exc:
+            for column in df.columns:
+                log.error(column)
+
+            log.info(f'Trigger: {self._trig}')
+            log.info(f'Q2bin  : {self._q2bin}')
+            log.info(f'Samples: {self._l_sample}')
+
+            raise ValueError(f'Cannot access {mass} and wgt_br') from exc
+
         obs      = kwargs['obs']
 
         nentries = self.__yield_from_arrays(arr_mass=arr_mass, arr_weight=arr_wgt, obs=obs)
