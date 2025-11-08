@@ -4,7 +4,6 @@ Module containing PRec
 import os
 import copy
 import pprint
-from contextlib import contextmanager
 from pathlib    import Path
 
 import numpy
@@ -38,7 +37,6 @@ class PRec(Cache):
     '''
     Class used to calculate the PDF associated to the partially reconstructed background
     '''
-    use_cache = True # Use cached if found
     #-----------------------------------------------------------
     def __init__(
         self,
@@ -664,19 +662,4 @@ class PRec(Cache):
 
         text_path = plot_path.replace('png', 'txt')
         sut.print_pdf(pdf, txt_path=text_path)
-    #-----------------------------------------------------------
-    @staticmethod
-    @contextmanager
-    def apply_setting(use_cache : bool):
-        '''
-        Used to override default behaviour
-
-        use_cache : If False (default is True) will recalculate the PDF
-        '''
-        old_val = PRec.use_cache
-        try:
-            PRec.use_cache = use_cache
-            yield
-        finally:
-            PRec.use_cache = old_val
 #-----------------------------------------------------------
