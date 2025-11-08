@@ -38,11 +38,12 @@ def test_unpatched(sample : str, trigger : Trigger) -> None:
     meant to be patched
     '''
     spk  = SpecMaker(sample=sample, trigger=trigger)
+    spec_old = spk.spec
 
-    ptr  = SamplePatcher(sample = sample, spec = spk.spec)
-    spec = ptr.get_patched_specification()
+    ptr  = SamplePatcher(sample = sample, spec = spec_old)
+    spec_new = ptr.get_patched_specification()
 
-    assert spec == spk.spec
+    assert spec_old == spec_new
     assert len(ptr.redefinitions) == 0
 # ----------------------
 @pytest.mark.parametrize('sample, trigger', _PATCHED_SAMPLES)
@@ -58,4 +59,4 @@ def test_patched(sample : str, trigger : Trigger) -> None:
 
     assert spec_old != spec_new
     assert len(ptr.redefinitions) != 0
-  
+# ----------------------
