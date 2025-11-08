@@ -257,7 +257,7 @@ class SpecMaker:
 
         self._l_path += l_path
 
-        return Sample(trees = [self._tree_name], files = l_path)
+        return Sample(trees = [self._tree_name], files = l_path, metadata = {'kind' : ftree})
     # ---------------------------------------------------
     def _filter_samples(
         self, 
