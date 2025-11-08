@@ -212,8 +212,9 @@ class PRec(Cache):
         for sample, rdf in self._d_rdf.items():
             log.debug(f'    {sample}')
 
-            rep = rdf.Report()
-            rep.Print()
+            if log.getEffectiveLevel() < 20:
+                rep = rdf.Report()
+                rep.Print()
 
             l_var      = [ name.c_str() for name in rdf.GetColumnNames() if self.__need_var( name.c_str() )]
             data       = rdf.AsNumpy(l_var)
