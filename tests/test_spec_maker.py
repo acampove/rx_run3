@@ -19,6 +19,16 @@ _PATCHING_SAMPLES = [
     ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
     ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
 ]
+
+_INCLUSIVE_SAMPLES = [
+    ('Bu_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    ('Bd_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    ('Bs_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    # ----------
+    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    ('Bd_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -33,6 +43,16 @@ def test_patching(sample : str, trigger : Trigger) -> None:
     Return path to specification of combined sample
     '''
     mkr  = SpecMaker(sample=sample, trigger=trigger)
+    path = mkr.get_spec_path(per_file=False)
+
+    assert path.exists()
+# ------------------------------------------------------
+@pytest.mark.parametrize('sample, trigger', _INCLUSIVE_SAMPLES)
+def test_inclusive(sample : str, trigger : Trigger) -> None:
+    '''
+    Disable patching
+    '''
+    mkr  = SpecMaker(sample=sample, trigger=trigger, skip_patch=True)
     path = mkr.get_spec_path(per_file=False)
 
     assert path.exists()
