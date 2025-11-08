@@ -256,7 +256,7 @@ class Cache:
         return _context()
     # ---------------------------
     @classmethod
-    def set_cache_root(cls, root : str) -> None:
+    def set_cache_root(cls, root : str | Path) -> None:
         '''
         Sets the path to the directory WRT which the _out_path_
         will be placed.
@@ -264,6 +264,8 @@ class Cache:
         This is meant to be called once per execution and has a lock
         that will raise an exception if called twice
         '''
+        root = str(root)
+
         if cls._cache_root is not None:
             raise ValueError(f'Trying to set {root}, but already found {cls._cache_root}')
 
