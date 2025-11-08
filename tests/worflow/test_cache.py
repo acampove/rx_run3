@@ -67,6 +67,20 @@ class Tester(Wcache):
 
         return res
 # -----------------------------------
+@pytest.mark.parametrize('nval', range(1, 11))
+def test_cache_parallel(nval : int):
+    '''
+    Tests running caching in parallel
+    '''
+    val = 1
+
+    log.info('')
+    res = nval * [val]
+    obj = Tester(nval=nval, val=val, name=f'worker_{nval:03}')
+    out = obj.run()
+
+    assert res == out
+# -----------------------------------
 def test_cache_once():
     '''
     Will run once
