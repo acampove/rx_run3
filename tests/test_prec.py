@@ -11,6 +11,7 @@ from dmu.stats.fitter       import Fitter
 from dmu.stats              import utilities as sut
 from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
+from rx_common.types        import Trigger
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 from fitter.prec            import PRec
@@ -34,7 +35,7 @@ def initialize():
 
     plt.style.use(mplhep.style.LHCb2)
 #-----------------------------------------------
-@pytest.mark.parametrize('trig', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('trig', [Trigger.rk_ee_os, Trigger.rkst_ee_os])
 def test_electron(tmp_path : Path, trig : str):
     '''
     Simplest test in electron channel
@@ -58,7 +59,7 @@ def test_electron(tmp_path : Path, trig : str):
 
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
 #-----------------------------------------------
-@pytest.mark.parametrize('trig', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
+@pytest.mark.parametrize('trig', [Trigger.rk_mm_os, Trigger.rkst_mm_os])
 def test_muon(tmp_path : Path, trig : str):
     '''
     Simplest test in electron channel
