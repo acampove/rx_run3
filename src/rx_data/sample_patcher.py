@@ -23,7 +23,7 @@ class SamplePatcher:
         '''
         self._sample = sample
         self._spec   = spec.model_copy(deep=True)
-        self._redefinitions  : None | dict[str,str] = None
+        self._conditions     : None | dict[int,str] = None # This will map the block to the condition
         self._associations   : dict[int,int]        = self._get_patching_dictionary()
         self._patching_files : dict[int,list[Path]] = dict()
     # ----------------------
@@ -42,12 +42,12 @@ class SamplePatcher:
         cfg = gut.load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
         if self._sample not in cfg:
             log.info(f'No patching needed for {self._sample}')
-            self._redefinitions = dict()
+            self._conditions = dict()
             return dict()
 
         if 'patching' not in cfg[self._sample]:
             log.info(f'No patching needed for {self._sample}')
-            self._redefinitions = dict()
+            self._conditions = dict()
             return dict()
 
         log.info(f'Using patching for {self._sample}')
@@ -61,8 +61,8 @@ class SamplePatcher:
         --------------
         Dictionary between column name and string with new definition
         '''
-        if self._redefinitions is None:
-            raise ValueError(f'No redefinitions available for sample {self._sample}')
+        if self._conditions is None:
+            raise ValueError(f'No conditions available for sample {self._sample}')
 
         return self._redefinitions
     # ----------------------
