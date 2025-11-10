@@ -99,7 +99,10 @@ def test_misid(component : str, q2bin : str):
     obs   = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
 
+    # For no PID triggers, take unsmeared simulation. This simulation will be B -> 3/4 H and
+    # smearing is not needed
     with RDFGetter.multithreading(nthreads=8),\
+        RDFGetter.custom_columns(columns={'B_Mass_smr' : 'B_M', 'q2_smr' : 'q2'}),\
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
 
         ftr = SimFitter(
