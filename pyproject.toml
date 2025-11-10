@@ -13,15 +13,16 @@ packages    = [
 include = ['src/fitter_data/**/*.yaml']
 
 [tool.poetry.dependencies]
-python         = '>=3.10,<3.13'
-pdg            = '*'
-omegaconf      = '*'
-numpy          = '*'
-seaborn        = '*'
-mplhep         = '*'
-matplotlib     = '*'
-python-slugify = '*'
-zfit           = '*'
+python          = '>=3.10,<3.13'
+pdg             = '*'
+omegaconf       = '*'
+numpy           = '*'
+seaborn         = '*'
+mplhep          = '*'
+matplotlib      = '*'
+python-slugify  = '*'
+zfit            = '*'
+types-tensorflow='*'
 
 [tool.poetry.scripts]
 fit_rx_rare    = 'fitter_scripts.fit_rx_rare:main'
