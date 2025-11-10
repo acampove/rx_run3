@@ -40,7 +40,6 @@ class DataPreprocessor(Cache):
         obs     : zobs,
         sample  : str,
         trigger : Trigger,
-        project : str,
         q2bin   : str,
         wgt_cfg : DictConfig|None,
         is_sig  : bool               = True,
@@ -52,7 +51,6 @@ class DataPreprocessor(Cache):
         obs    : zfit observable
         sample : e.g. DATA_24_MagUp...
         trigger: e.g. Hlt2RD...
-        project: e.g. rx, nopid
         q2bin  : e.g. central
         wgt_cfg: Dictionary with:
                  key: Representing kind of weight, e.g. pid
@@ -66,7 +64,6 @@ class DataPreprocessor(Cache):
         self._obs    = obs
         self._sample = sample
         self._trigger= trigger
-        self._project= project
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
 
@@ -103,7 +100,7 @@ class DataPreprocessor(Cache):
            - Dictionary storing selection
            - Pandas dataframe with cutflow
         '''
-        log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}/{self._project}')
+        log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}')
         gtr = RDFGetter(
             sample  =self._sample,
             trigger =self._trigger)
