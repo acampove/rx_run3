@@ -1096,7 +1096,22 @@ from dmu.stats.zfit_plotter import ZFitPlotter
 ptr = ZFitPlotter(data=dat, model=pdf)
 ptr.plot()
 
-sut.save_fit(data=data, model=pdf, res=fit_result, fit_dir='/some/directory', d_const=constraints)
+cfg = {
+    'nbins'      : 50, 
+    'stacked'    : True, # If False, it would overlay the components
+    'plot_range' : [-5, +6], # This is the xaxis range
+    'yrange'     : {
+        'log'    : [1.0, 1e3], # It will save a log and linear plot in the y axis
+        'linear' : [0.0, 1e2]}
+}
+
+sut.save_fit(
+    data   =data, 
+    model  =pdf, 
+    res    =fit_result, 
+    fit_dir='/some/directory', 
+    d_const=constraints,
+    plt_cfg=cfg)
 ```
 
 and the function will save everything that you would normally need from a fit.
