@@ -78,7 +78,6 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = 'DATA_24_*',
-        project= 'rx',
         trigger= cfg.fit_cfg.trigger,
         cfg    = cfg.fit_cfg)
     nll = ftr.run()
