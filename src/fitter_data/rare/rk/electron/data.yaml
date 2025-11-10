@@ -1,9 +1,9 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
-output_directory : rare/electron/data
+output_directory : rare/rk/electron/data
 model:
-  yields    : model/yields/rare_electron.yaml
+  yields    : model/yields/rk/rare_electron.yaml
   observable:
     low:
       name : B_Mass_smr
@@ -21,18 +21,18 @@ model:
         - 4500 
         - 6900
   components:
-    ccbar                             : rare/electron/ccbar.yaml
-    combinatorial                     : rare/electron/combinatorial.yaml
-    Bd_Kstee_eq_btosllball05_DPC      : rare/electron/bdkstee.yaml
-    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/electron/bukstee.yaml
-    Bs_phiee_eq_Ball_DPC              : rare/electron/bsphiee.yaml
-    jpsi_leakage                      : rare/electron/jpsi_leakage.yaml
-    psi2_leakage                      : rare/electron/psi2_leakage.yaml
-    kkk                               : rare/electron/kkk.yaml
-    kpipi                             : rare/electron/kpipi.yaml
-    signal                            : rare/electron/signal_non_parametric.yaml
+    ccbar                             : rare/rk/electron/ccbar.yaml
+    combinatorial                     : rare/rk/electron/combinatorial.yaml
+    Bd_Kstee_eq_btosllball05_DPC      : rare/rk/electron/bdkstee.yaml
+    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/rk/electron/bukstee.yaml
+    Bs_phiee_eq_Ball_DPC              : rare/rk/electron/bsphiee.yaml
+    jpsi_leakage                      : rare/rk/electron/jpsi_leakage.yaml
+    psi2_leakage                      : rare/rk/electron/psi2_leakage.yaml
+    kkk                               : rare/rk/electron/kkk.yaml
+    kpipi                             : rare/rk/electron/kpipi.yaml
+    signal                            : rare/rk/electron/signal_non_parametric.yaml
   constraints:
-    misid     : misid/electron/data_misid.yaml
+    misid     : misid/rk/electron/data_misid.yaml
     prec_rare :
       - Bd_Kstee_eq_btosllball05_DPC
       - Bu_Kstee_Kpi0_eq_btosllball05_DPC
