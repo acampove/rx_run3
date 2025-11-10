@@ -122,6 +122,7 @@ def test_with_pid_weights(
 
     name = f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}'
     with RDFGetter.max_entries(1000_000),\
+         RDFGetter.custom_columns(columns = {'q2_smr' : 'q2', 'B_Mass_smr' : 'B_M'}),\
          RDFGetter.default_excluded(names=[]):
         prp = DataPreprocessor(
             obs    = obs,
