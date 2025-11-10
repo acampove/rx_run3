@@ -15,13 +15,17 @@ from fitter.data_model     import DataModel
 
 log=LogStore.add_logger('fitter:test_data_model')
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This runs before any test
     '''
     LogStore.set_level('fitter:data_model' , 10)
     LogStore.set_level('rx_data:rdf_getter', 30)
+
+    with RDFGetter.max_entries(value = 30_000),\
+        DataModel.skip_components(names = ['kkk', 'kpipi']):
+        yield
 # --------------------------
 @pytest.mark.parametrize('kind, trigger', [
     ('reso/rk/muon'  , Trigger.rk_mm_os  ), 
@@ -37,9 +41,7 @@ def test_resonant(kind : str, trigger : Trigger):
         package='fitter_data',
         fpath  =f'{kind}/data.yaml')
 
-    with RDFGetter.max_entries(value=30_000),\
-         PL.parameter_schema(cfg=cfg.model.yields),\
-         sel.custom_selection(d_sel = {'mass' : '(1)'}):
+    with PL.parameter_schema(cfg=cfg.model.yields):
         dmd = DataModel(
             name    = 'brem_000',
             cfg     = cfg,
@@ -59,7 +61,7 @@ def test_rare_electron():
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='rare/electron/data.yaml')
+        fpath  ='rare/rk/electron/data.yaml')
 
     with PL.parameter_schema(cfg=cfg.model.yields),\
          sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
@@ -72,6 +74,7 @@ def test_rare_electron():
 
     sut.print_pdf(pdf)
 # --------------------------
+@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
 @pytest.mark.parametrize('observable', ['kpipi', 'kkk'])
 @pytest.mark.parametrize('q2bin'     , ['low', 'central', 'high'])
 def test_misid_rare(observable : str, q2bin : str):
