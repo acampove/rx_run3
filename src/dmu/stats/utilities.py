@@ -6,7 +6,7 @@ from contextlib import contextmanager
 import os
 import re
 import pickle
-from typing     import Union, Mapping, Any, cast
+from typing     import Union, Any
 from pathlib    import Path
 
 import yaml
