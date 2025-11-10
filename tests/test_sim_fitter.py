@@ -19,7 +19,7 @@ def test_nomc():
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
 
-    cfg = gut.load_conf(package='fitter_data', fpath='rare/electron/combinatorial.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/combinatorial.yaml')
     ftr = SimFitter(
         component= 'combinatorial',
         obs     = obs,
@@ -34,7 +34,7 @@ def test_nocat():
     '''
     block = 1
     obs   = zfit.Space('B_Mass', limits=(5000, 5800))
-    cfg   = gut.load_conf(package='fitter_data', fpath='rare/muon/signal.yaml')
+    cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=8),\
@@ -54,7 +54,7 @@ def test_with_cat():
     '''
     block = 1
     obs   = zfit.Space('B_Mass', limits=(4500, 7000))
-    cfg   = gut.load_conf(package='fitter_data', fpath='rare/electron/signal_parametric.yaml')
+    cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/signal_parametric.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=8),\
@@ -75,7 +75,7 @@ def test_kde(component : str):
     '''
     block = 1
     obs   = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
 
     with Cache.turn_off_cache(val = ['SimFitter', 'DataPreprocessor']),\
         RDFGetter.multithreading(nthreads=8),\
@@ -97,7 +97,7 @@ def test_misid(component : str, q2bin : str):
     '''
     block = 1
     obs   = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
 
     with RDFGetter.multithreading(nthreads=8),\
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
@@ -119,7 +119,7 @@ def test_ccbar_reso(limits : str):
     tp_limits = {'wide' : (4500, 6000), 'narrow' : (5000, 6000)}[limits]
     component = 'ccbar'
     obs       = zfit.Space('B_const_mass_M', limits=tp_limits)
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
 
     out_dir   = f'{cfg.output_directory}/{limits}'
     cfg.output_directory = out_dir
@@ -149,7 +149,7 @@ def test_ccbar_rare():
     mass      = 'B_Mass'
     q2bin     = 'high'
     obs       = zfit.Space(mass, limits=(4500, 6000))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'rare/electron/{component}.yaml')
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
 
     with Cache.turn_off_cache(val=['SimFitter']),\
         sel.custom_selection(d_sel={
@@ -172,7 +172,7 @@ def test_mc_reso(component : str, brem : int):
     '''
     block = 1
     obs   = zfit.Space('B_const_mass_M', limits=(5000, 6900))
-    cfg   = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=8),\
@@ -197,7 +197,7 @@ def test_name(name : str):
     block     = 1
     component = 'ccbar'
     obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/electron/{component}.yaml')
+    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=8),\
@@ -218,7 +218,7 @@ def test_weights(component : str):
     '''
     block = 1
     obs   = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg   = gut.load_conf(package='fitter_data', fpath=f'misid/electron/{component}.yaml')
+    cfg   = gut.load_conf(package='fitter_data', fpath=f'misid/rk/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
         RDFGetter.multithreading(nthreads=8),\
