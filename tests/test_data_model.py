@@ -3,6 +3,7 @@ This module has tests for the DataModel class
 '''
 import pytest
 
+from rx_common.types       import Trigger
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter 
 from dmu.stats.parameters  import ParameterLibrary as PL
@@ -41,8 +42,7 @@ def test_resonant(kind : str):
         dmd = DataModel(
             cfg     = cfg,
             obs     = obs,
-            trigger = 'Hlt2RD_BuToKpEE_MVA',
-            project = 'rx',
+            trigger = Trigger.rk_ee_os,
             q2bin   = 'jpsi')
         pdf = dmd.get_model()
 
@@ -64,8 +64,7 @@ def test_rare_electron():
         dmd = DataModel(
             cfg     = cfg,
             obs     = obs,
-            trigger = 'Hlt2RD_BuToKpEE_MVA',
-            project = 'rx',
+            trigger = Trigger.rk_ee_os,
             q2bin   = q2bin)
         pdf = dmd.get_model()
 
@@ -80,7 +79,7 @@ def test_misid_rare(observable : str, q2bin : str):
     obs = zfit.Space(f'B_Mass_{observable}', limits=(4500, 7000))
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='misid/electron/data_misid.yaml')
+        fpath  ='misid/rk/electron/data_misid.yaml')
 
     out_dir  = f'{cfg.output_directory}/{observable}'
     cfg.output_directory = out_dir
@@ -95,8 +94,7 @@ def test_misid_rare(observable : str, q2bin : str):
             name    = observable,
             cfg     = cfg,
             obs     = obs,
-            trigger = 'custom', # These should be picked up from config
-            project = 'custom',
+            trigger = Trigger.rk_ee_nopid,
             q2bin   = q2bin)
         pdf = dmd.get_model()
 
