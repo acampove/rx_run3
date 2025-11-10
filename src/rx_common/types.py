@@ -15,6 +15,8 @@ class Trigger(str, Enum):
     rkst_ee_os   = 'Hlt2RD_B0ToKpPimEE_MVA'
     rkst_ee_nopid= 'Hlt2RD_B0ToKpPimEE_MVA_noPID'
     rkst_mm_os   = 'Hlt2RD_B0ToKpPimMuMu_MVA'
+    # -----------
+    uninitialized= ''
 
     def __str__(self):
         return self.value
