@@ -210,7 +210,7 @@ def test_is_pdf_usable():
 
     is_pdf_usable(pdf=pdf)
 #----------------------------------
-def test_save_fit_simple():
+def test_save_fit_simple(tmp_path : Path):
     '''
     Simplest case
     '''
@@ -220,12 +220,21 @@ def test_save_fit_simple():
     obj = Fitter(pdf, dat)
     res = obj.fit()
 
+    cfg = {
+        'nbins'      : 50, 
+        'stacked'    : True, 
+        'plot_range' : [-5, +6],
+        'yrange'     : {
+            'log'    : [1.0, 1e3],
+            'linear' : [0.0, 1e2]}
+    }
+
     sut.save_fit(
         data   =dat,
         model  =pdf,
         res    =res,
-        plt_cfg={'nbins' : 50, 'stacked' : True, 'plot_range' : [-5, +6]},
-        fit_dir=f'{Data.fit_dir}/save_fit/simple')
+        plt_cfg=cfg,
+        fit_dir=tmp_path / 'save_fit/simple')
 #----------------------------------
 def test_save_fit_param():
     '''
