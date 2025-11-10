@@ -554,8 +554,8 @@ class ZFitPlotter:
         ylabel: str       = '',
         d_leg : dict|None = None,
         d_col : dict|None = None,
-        plot_range: tuple = None,
-        plot_components:list[str] = None,
+        plot_range: tuple | None = None,
+        plot_components : list[str] | None = None,
         ext_text : str    = '',
         add_pars          = None,
         ymax              = None,
@@ -635,7 +635,7 @@ class ZFitPlotter:
 
         self.axs[0].legend(title=text, fontsize=20, title_fontsize=20, loc=self._leg_loc)
         self.axs[0].set(xlabel=xlabel, ylabel=ylabel)
-        self.axs[0].set_xlim([self.lower, self.upper])
+        self.axs[0].set_xlim((self.lower, self.upper))
 
         if yscale is not None:
             self.axs[0].set_yscale(yscale)
@@ -644,7 +644,7 @@ class ZFitPlotter:
             self.axs[0].set_title(title)
 
         if ymax is not None:
-            self.axs[0].set_ylim([0, ymax])
+            self.axs[0].set_ylim((0, ymax))
 
         if not skip_pulls:
             self.axs[1].set(xlabel=xlabel, ylabel="pulls")
