@@ -9,7 +9,6 @@ shared        :
   - mu
   - sg
 float         :
-  - mu
   - sg
 reparametrize : {}
 fix           : {}
