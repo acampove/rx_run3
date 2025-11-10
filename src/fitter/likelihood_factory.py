@@ -5,6 +5,7 @@ from omegaconf                import DictConfig, OmegaConf
 
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
+from rx_common.types          import Trigger
 from rx_selection             import selection  as sel
 
 from zfit.loss                import ExtendedUnbinnedNLL
@@ -26,8 +27,7 @@ class LikelihoodFactory:
         self,
         obs     : zobs,
         sample  : str,
-        trigger : str,
-        project : str,
+        trigger : Trigger,
         q2bin   : str,
         cfg     : DictConfig,
         name    : str|None = None):
@@ -43,7 +43,6 @@ class LikelihoodFactory:
         self._obs       = obs
         self._sample    = sample
         self._trigger   = trigger
-        self._project   = project
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._name      = name
@@ -55,9 +54,9 @@ class LikelihoodFactory:
         '''
         sample = self._sample.replace('*', 'p')
         if self._name is not None:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._name}/{self._trigger}_{self._project}_{self._q2bin}'
+            sample = f'{self._cfg.output_directory}/{sample}/{self._name}/{self._trigger}_{self._q2bin}'
         else:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._project}_{self._q2bin}'
+            sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._q2bin}'
 
         return sample
     # ------------------------
