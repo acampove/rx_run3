@@ -15,6 +15,8 @@ from dmu.logging.log_store    import LogStore
 
 from rx_efficiencies.decay_names import DecayNames
 from rx_selection             import selection        as sel
+from rx_common.types          import Trigger
+from rx_data.rdf_getter       import RDFGetter
 from zfit.data                import Data             as zdata
 from zfit.pdf                 import BasePDF          as zpdf
 from zfit.param               import Parameter
@@ -34,8 +36,7 @@ class SimFitter(BaseFitter, Cache):
     def __init__(
         self,
         component : str,
-        trigger   : str,
-        project   : str,
+        trigger   : Trigger,
         q2bin     : str,
         cfg       : DictConfig,
         obs       : zobs,
@@ -47,7 +48,6 @@ class SimFitter(BaseFitter, Cache):
         name     : Optional, identifier for fit, used to name directory
         component: Nickname of component, e.g. combinatorial, only used for naming
         trigger  : Hlt2RD...
-        project  : E.g. rx
         q2bin    : E.g. central
         cfg      : Object storing configuration for fit
         '''
@@ -61,14 +61,14 @@ class SimFitter(BaseFitter, Cache):
         self._category  = self._get_category(cfg=cfg)
         self._component = component
         self._trigger   = trigger
-        self._project   = project
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._obs       = obs
+
         if name is None:
-            self._base_path = f'{cfg.output_directory}/{trigger}_{project}_{q2bin}'
+            self._base_path = f'{cfg.output_directory}/{trigger}_{q2bin}'
         else:
-            self._base_path = f'{cfg.output_directory}/{name}/{trigger}_{project}_{q2bin}'
+            self._base_path = f'{cfg.output_directory}/{name}/{trigger}_{q2bin}'
 
         log.debug(f'For component {self._component} using output: {self._base_path}')
 
