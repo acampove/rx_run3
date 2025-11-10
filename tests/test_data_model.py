@@ -23,8 +23,11 @@ def initialize():
     LogStore.set_level('fitter:data_model' , 10)
     LogStore.set_level('rx_data:rdf_getter', 30)
 # --------------------------
-@pytest.mark.parametrize('kind', ['reso/muon'])
-def test_resonant(kind : str):
+@pytest.mark.parametrize('kind, trigger', [
+    ('reso/rk/muon'  , Trigger.rk_mm_os  ), 
+    ('reso/rkst/muon', Trigger.rkst_mm_os),
+])
+def test_resonant(kind : str, trigger : Trigger):
     '''
     Simplest test
     '''
@@ -34,15 +37,14 @@ def test_resonant(kind : str):
         package='fitter_data',
         fpath  =f'{kind}/data.yaml')
 
-    with RDFGetter.max_entries(value=-1),\
+    with RDFGetter.max_entries(value=30_000),\
          PL.parameter_schema(cfg=cfg.model.yields),\
-         sel.custom_selection(d_sel = {
-        'mass' : '(1)',
-        'block': 'block == 1'}):
+         sel.custom_selection(d_sel = {'mass' : '(1)'}):
         dmd = DataModel(
+            name    = 'brem_000',
             cfg     = cfg,
             obs     = obs,
-            trigger = Trigger.rk_ee_os,
+            trigger = trigger, 
             q2bin   = 'jpsi')
         pdf = dmd.get_model()
 
