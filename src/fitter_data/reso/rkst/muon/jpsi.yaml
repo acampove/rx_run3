@@ -5,7 +5,6 @@ categories:
       - dscb
       - gauss
 sample        : Bd_JpsiKst_mm_eq_DPC
-max_entries   : 100000
 shared        : 
   - mu
   - sg
