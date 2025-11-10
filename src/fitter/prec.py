@@ -25,6 +25,7 @@ from zfit.pdf              import BasePDF       as zpdf
 from zfit.interface        import ZfitSpace     as zobs
 from rx_selection          import selection     as sel
 from rx_data.rdf_getter    import RDFGetter
+from rx_common.types       import Trigger
 from rx_common             import info
 from ROOT                  import RDF # type: ignore
 
@@ -41,7 +42,7 @@ class PRec(Cache):
     def __init__(
         self,
         samples  : list[str],
-        trig     : str,
+        trig     : Trigger,
         q2bin    : str,
         d_weight : dict[str,int],
         out_dir  : str = ''):
