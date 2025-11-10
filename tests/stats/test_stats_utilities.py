@@ -5,6 +5,7 @@ import os
 import re
 import math
 from importlib.resources import files
+from pathlib             import Path
 
 import numpy
 from omegaconf              import OmegaConf
@@ -19,8 +20,8 @@ from dmu.stats.utilities    import is_pdf_usable
 
 import pytest
 import pandas as pnd
-from zfit.interface   import ZfitData as zdata
-from zfit.interface   import ZfitPDF  as zpdf
+from zfit.interface         import ZfitData as zdata
+from zfit.pdf               import BasePDF  as zpdf
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
