@@ -421,14 +421,33 @@ def _save_fit_plot(
         plt.close('all')
         return
 
+    # Here we know the config is a dictionary with a string as a key
+    # so we ignore the error. Need pydantic for configs...
+    pyconf : dict[str,Any] = OmegaConf.to_container(cfg, resolve=True) # type: ignore
+    if 'yrange' in pyconf:
+        yrange_log = pyconf['yrange']['log'   ]
+        yrange_lin = pyconf['yrange']['linear']
+
+        del pyconf['yrange']
+    else:
+        yrange_log = None
+        yrange_lin = None
+
     ptr = ZFitPlotter(data=data, model=model)
-    ptr.plot(**cast(Mapping[str, Any], cfg)) # Need this casting to remove error from pyright
+    ptr.plot(**pyconf)
 
     log.info(f'Saving fit to: {fit_path_lin}')
+    if yrange_lin:
+        log.debug(f'Using linear yrange: {yrange_lin}')
+        ptr.axs[0].set_ylim(yrange_lin)
+
     plt.savefig(fit_path_lin)
 
     ptr.axs[0].set_yscale('log')
-    ptr.axs[0].set_ylim(bottom=0.1, top=1e7)
+    if yrange_log:
+        log.debug(f'Using log yrange: {yrange_log}')
+        ptr.axs[0].set_ylim(yrange_log)
+
     log.info(f'Saving fit to: {fit_path_log}')
     plt.savefig(fit_path_log)
     plt.close()
