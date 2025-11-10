@@ -133,16 +133,17 @@ class SimFitter(BaseFitter, Cache):
             return d_data
 
         for cat_name, cat_cfg in self._cfg.categories.items():
-            prp   = DataPreprocessor(
-                obs    = self._obs,
-                cut    = cat_cfg.get('selection'),
-                wgt_cfg= cat_cfg.get('weights'),
-                trigger= self._trigger,
-                project= self._project,
-                q2bin  = self._q2bin,
-                out_dir= self._base_path,
-                sample = self._cfg.sample)
-            d_data[cat_name] = prp.get_data()
+            nentries = self._cfg.get('max_entries', -1)
+            with RDFGetter.max_entries(value = nentries):
+                prp   = DataPreprocessor(
+                    obs    = self._obs,
+                    cut    = cat_cfg.get('selection'),
+                    wgt_cfg= cat_cfg.get('weights'),
+                    trigger= self._trigger,
+                    q2bin  = self._q2bin,
+                    out_dir= self._base_path,
+                    sample = self._cfg.sample)
+                d_data[cat_name] = prp.get_data()
 
             self._l_rdf_uid.append(prp.rdf_uid)
 
