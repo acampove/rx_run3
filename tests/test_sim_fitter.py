@@ -7,6 +7,7 @@ from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
 from dmu.workflow.cache     import Cache
+from rx_common.types        import Trigger
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
 from fitter.sim_fitter      import SimFitter
@@ -23,10 +24,10 @@ def test_nomc():
         component= 'combinatorial',
         obs     = obs,
         cfg     = cfg,
-        trigger = 'Hlt2RD_BuToKpEE_MVA',
+        trigger = Trigger.rk_ee_os,
         project = 'rx',
         q2bin   = 'low')
-    pdf = ftr.get_model()
+    _ = ftr.get_model()
 # ---------------------------------------------------
 def test_nocat():
     '''
@@ -44,7 +45,7 @@ def test_nocat():
             component= 'signal_muon',
             obs     = obs,
             cfg     = cfg,
-            trigger = 'Hlt2RD_BuToKpMuMu_MVA',
+            trigger = Trigger.rk_mm_os,
             project = 'rx',
             q2bin   = 'jpsi')
         ftr.get_model()
@@ -65,7 +66,7 @@ def test_with_cat():
             component= 'signal_electron',
             obs     = obs,
             cfg     = cfg,
-            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            trigger = Trigger.rk_ee_os,
             project = 'rx',
             q2bin   = 'jpsi')
         _ = ftr.get_model()
@@ -87,7 +88,7 @@ def test_kde(component : str):
             component= component,
             obs      = obs,
             cfg      = cfg,
-            trigger  = 'Hlt2RD_BuToKpEE_MVA',
+            trigger  = Trigger.rk_ee_os,
             project  = 'rx',
             q2bin    = 'central')
         ftr.get_model()
@@ -109,7 +110,7 @@ def test_misid(component : str, q2bin : str):
             component= component,
             obs      = obs,
             cfg      = cfg,
-            trigger  = 'Hlt2RD_BuToKpEE_MVA_noPID',
+            trigger  = Trigger.rk_ee_nopid,
             project  = 'nopid',
             q2bin    = q2bin)
         ftr.get_model()
@@ -135,7 +136,7 @@ def test_ccbar_reso(limits : str):
             component= component,
             obs      = obs,
             cfg      = cfg,
-            trigger  = 'Hlt2RD_BuToKpEE_MVA',
+            trigger  = Trigger.rk_ee_os,
             project  = 'rx',
             q2bin    = 'jpsi')
         pdf = ftr.get_model()
@@ -165,7 +166,7 @@ def test_ccbar_rare():
             component= component,
             obs     = obs,
             cfg     = cfg,
-            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            trigger = Trigger.rk_ee_os,
             project = 'rx',
             q2bin   = q2bin)
         ftr.get_model()
@@ -191,7 +192,7 @@ def test_mc_reso(component : str, brem : int):
             component= component,
             obs     = obs,
             cfg     = cfg,
-            trigger = 'Hlt2RD_BuToKpEE_MVA',
+            trigger = Trigger.rk_ee_os,
             project = 'rx',
             q2bin   = 'jpsi')
         ftr.get_model()
@@ -214,7 +215,7 @@ def test_name(name : str):
             component= component,
             obs      = obs,
             cfg      = cfg,
-            trigger  = 'Hlt2RD_BuToKpEE_MVA',
+            trigger  = Trigger.rk_ee_os,
             project  = 'rx',
             q2bin    = 'jpsi')
         ftr.get_model()
@@ -235,7 +236,7 @@ def test_weights(component : str):
             component= component,
             obs     = obs,
             cfg     = cfg,
-            trigger = 'Hlt2RD_BuToKpEE_MVA_noPID',
+            trigger = Trigger.rk_ee_nopid,
             project = 'nopid',
             q2bin   = 'central')
         ftr.get_model()
