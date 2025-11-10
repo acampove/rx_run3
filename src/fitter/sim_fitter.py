@@ -16,7 +16,6 @@ from dmu.logging.log_store    import LogStore
 from rx_efficiencies.decay_names import DecayNames
 from rx_selection             import selection        as sel
 from rx_common.types          import Trigger
-from rx_data.rdf_getter       import RDFGetter
 from zfit.data                import Data             as zdata
 from zfit.pdf                 import BasePDF          as zpdf
 from zfit.param               import Parameter
@@ -40,7 +39,7 @@ class SimFitter(BaseFitter, Cache):
         q2bin     : str,
         cfg       : DictConfig,
         obs       : zobs,
-        name      : str|None = None):
+        name      : str):
         '''
         Parameters
         --------------------
@@ -64,11 +63,7 @@ class SimFitter(BaseFitter, Cache):
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._obs       = obs
-
-        if name is None:
-            self._base_path = f'{cfg.output_directory}/{trigger}_{q2bin}'
-        else:
-            self._base_path = f'{cfg.output_directory}/{name}/{trigger}_{q2bin}'
+        self._base_path = f'{cfg.output_directory}/{name}/{trigger}_{q2bin}'
 
         log.debug(f'For component {self._component} using output: {self._base_path}')
 
@@ -272,7 +267,7 @@ class SimFitter(BaseFitter, Cache):
             return model, sumw, None
 
         if sumw < self._min_fit_entries:
-            log.warning(f'Found to few entries {sumw:.1f} < {self._min_fit_entries}, skipping component')
+            log.warning(f'Found to few entries {sumw:.1f} < {self._min_fit_entries}, skipping {self._component} component')
             return None, 0, None
 
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
