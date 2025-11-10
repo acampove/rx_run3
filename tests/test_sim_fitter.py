@@ -25,7 +25,6 @@ def test_nomc():
         obs     = obs,
         cfg     = cfg,
         trigger = Trigger.rk_ee_os,
-        project = 'rx',
         q2bin   = 'low')
     _ = ftr.get_model()
 # ---------------------------------------------------
@@ -46,7 +45,6 @@ def test_nocat():
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_mm_os,
-            project = 'rx',
             q2bin   = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
@@ -67,7 +65,6 @@ def test_with_cat():
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_ee_os,
-            project = 'rx',
             q2bin   = 'jpsi')
         _ = ftr.get_model()
 # ---------------------------------------------------
@@ -89,7 +86,6 @@ def test_kde(component : str):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            project  = 'rx',
             q2bin    = 'central')
         ftr.get_model()
 # ---------------------------------------------------
@@ -111,7 +107,6 @@ def test_misid(component : str, q2bin : str):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_nopid,
-            project  = 'nopid',
             q2bin    = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
@@ -137,7 +132,6 @@ def test_ccbar_reso(limits : str):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            project  = 'rx',
             q2bin    = 'jpsi')
         pdf = ftr.get_model()
 
@@ -167,7 +161,6 @@ def test_ccbar_rare():
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_ee_os,
-            project = 'rx',
             q2bin   = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
@@ -193,7 +186,6 @@ def test_mc_reso(component : str, brem : int):
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_ee_os,
-            project = 'rx',
             q2bin   = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
@@ -216,7 +208,6 @@ def test_name(name : str):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            project  = 'rx',
             q2bin    = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
@@ -237,6 +228,5 @@ def test_weights(component : str):
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_ee_nopid,
-            project = 'nopid',
             q2bin   = 'central')
         ftr.get_model()
