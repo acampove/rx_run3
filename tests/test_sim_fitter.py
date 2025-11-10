@@ -167,7 +167,7 @@ def test_ccbar_rare():
             q2bin   = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('component', ['signal', 'cabibbo'])
+@pytest.mark.parametrize('component', ['jpsi', 'cabibbo'])
 @pytest.mark.parametrize('brem'     , [1, 2])
 def test_mc_reso(component : str, brem : int):
     '''
@@ -224,6 +224,7 @@ def test_weights(component : str):
     cfg   = gut.load_conf(package='fitter_data', fpath=f'misid/rk/electron/{component}.yaml')
 
     with RDFGetter.max_entries(value=-1),\
+        RDFGetter.custom_columns(columns={'B_Mass_smr' : 'B_M', 'q2_smr' : 'q2'}),\
         RDFGetter.multithreading(nthreads=8),\
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
         ftr = SimFitter(
