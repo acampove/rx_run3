@@ -24,6 +24,14 @@ class Data:
     out_dir = f'/tmp/{user}/tests/fitter'
     os.makedirs(out_dir, exist_ok=True)
 # -------------------------------------------------
+@pytest.mark.fixture(autouse=True)
+def max_entries():
+    '''
+    This fixture runs for all the tests in this module
+    '''
+    with RDFGetter.max_entries(value=100_000):
+        yield
+# -------------------------------------------------
 def _validate_data(data : zdata, name : str) -> None:
     '''
     Makes validation plots from zfit data
@@ -52,15 +60,14 @@ def test_muon_data(sample : str):
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
     name= f'data_preprocessor/{sample}_muon_data'
 
-    with RDFGetter.max_entries(100_000):
-        prp = DataPreprocessor(
-            obs    = obs,
-            out_dir= name,
-            sample = sample,
-            trigger= Trigger.rk_mm_os,
-            wgt_cfg= None,
-            q2bin  = 'jpsi')
-        dat = prp.get_data()
+    prp = DataPreprocessor(
+        obs    = obs,
+        out_dir= name,
+        sample = sample,
+        trigger= Trigger.rk_mm_os,
+        wgt_cfg= None,
+        q2bin  = 'jpsi')
+    dat = prp.get_data()
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
@@ -76,19 +83,19 @@ def test_brem_cat_data(sample : str, brem_cat : int):
     name= f'data_preprocessor/{sample}_brem_{brem_cat:03}'
     cut = {'brem' : f'nbrem == {brem_cat}'}
 
-    with RDFGetter.max_entries(100_000):
-        prp = DataPreprocessor(
-            obs    = obs,
-            out_dir= name,
-            sample = sample,
-            trigger= Trigger.rk_ee_os,
-            cut    =  cut, 
-            wgt_cfg= None,
-            q2bin  = 'jpsi')
-        dat = prp.get_data()
+    prp = DataPreprocessor(
+        obs    = obs,
+        out_dir= name,
+        sample = sample,
+        trigger= Trigger.rk_ee_os,
+        cut    =  cut, 
+        wgt_cfg= None,
+        q2bin  = 'jpsi')
+    dat = prp.get_data()
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
+@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
 @pytest.mark.parametrize('sample', [
     'Bu_piplpimnKpl_eq_sqDalitz_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC'])
@@ -119,19 +126,16 @@ def test_with_pid_weights(
         'pid_l': '(1)'}
 
     name = f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}'
-    with RDFGetter.max_entries(1000_000),\
-         RDFGetter.custom_columns(columns = {'q2_smr' : 'q2', 'B_Mass_smr' : 'B_M'}),\
-         RDFGetter.default_excluded(names=[]):
-        prp = DataPreprocessor(
-            obs    = obs,
-            out_dir= name,
-            sample = sample,
-            trigger= Trigger.rk_ee_nopid,
-            cut    = cut, 
-            wgt_cfg= wgt_cfg,
-            is_sig = kind == 'signal',
-            q2bin  = 'jpsi')
-        dat = prp.get_data()
+    prp  = DataPreprocessor(
+        obs    = obs,
+        out_dir= name,
+        sample = sample,
+        trigger= Trigger.rk_ee_nopid,
+        cut    = cut, 
+        wgt_cfg= wgt_cfg,
+        is_sig = kind == 'signal',
+        q2bin  = 'jpsi')
+    dat  = prp.get_data()
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
