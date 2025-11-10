@@ -58,7 +58,6 @@ def test_muon_data(sample : str):
             out_dir= name,
             sample = sample,
             trigger= Trigger.rk_mm_os,
-            project= 'rx',
             wgt_cfg= None,
             q2bin  = 'jpsi')
         dat = prp.get_data()
@@ -83,7 +82,6 @@ def test_brem_cat_data(sample : str, brem_cat : int):
             out_dir= name,
             sample = sample,
             trigger= Trigger.rk_ee_os,
-            project= 'rx',
             cut    =  cut, 
             wgt_cfg= None,
             q2bin  = 'jpsi')
@@ -129,7 +127,6 @@ def test_with_pid_weights(
             out_dir= name,
             sample = sample,
             trigger= Trigger.rk_ee_nopid,
-            project= 'nopid',
             cut    = cut, 
             wgt_cfg= wgt_cfg,
             is_sig = kind == 'signal',
