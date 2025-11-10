@@ -2,9 +2,9 @@
 # It illustrates how a fit would run for data
 
 trigger          : Hlt2RD_BuToKpMuMu_MVA 
-output_directory : reso/muon/data
+output_directory : reso/rk/muon/data
 model:
-  yields    : model/yields/reso_muon.yaml
+  yields    : model/yields/rk/reso_muon.yaml
   observable:
     jpsi:
       name : B_const_mass_M
@@ -17,9 +17,9 @@ model:
         - 5180 
         - 5700
   components:
-    combinatorial : reso/muon/combinatorial.yaml
-    jpsi          : reso/muon/jpsi.yaml
-    #psi2          : reso/muon/psi2.yaml
+    combinatorial : reso/rk/muon/combinatorial.yaml
+    jpsi          : reso/rk/muon/jpsi.yaml
+    #psi2          : reso/rk/muon/psi2.yaml
   constraints:
     yields : []
 fit: {}
