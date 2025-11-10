@@ -9,8 +9,9 @@ from dmu.generic              import utilities as gut
 from dmu.stats                import utilities as sut
 from dmu.logging.log_store    import LogStore
 from omegaconf                import OmegaConf
+from rx_common.types          import Trigger
 from rx_data.rdf_getter       import RDFGetter
-from zfit.interface           import ZfitData  as zdata
+from zfit.data                import Data      as zdata
 from fitter.data_preprocessor import DataPreprocessor
 
 log=LogStore.add_logger('fitter:test_data_preprocessor')
@@ -56,7 +57,7 @@ def test_muon_data(sample : str):
             obs    = obs,
             out_dir= name,
             sample = sample,
-            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
+            trigger= Trigger.rk_mm_os,
             project= 'rx',
             wgt_cfg= None,
             q2bin  = 'jpsi')
@@ -81,7 +82,7 @@ def test_brem_cat_data(sample : str, brem_cat : int):
             obs    = obs,
             out_dir= name,
             sample = sample,
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
+            trigger= Trigger.rk_ee_os,
             project= 'rx',
             cut    =  cut, 
             wgt_cfg= None,
@@ -126,7 +127,7 @@ def test_with_pid_weights(
             obs    = obs,
             out_dir= name,
             sample = sample,
-            trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
+            trigger= Trigger.rk_ee_nopid,
             project= 'nopid',
             cut    = cut, 
             wgt_cfg= wgt_cfg,
