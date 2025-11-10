@@ -22,7 +22,8 @@ def initialize():
     LogStore.set_level('fitter:data_model' , 10)
     LogStore.set_level('rx_data:rdf_getter', 30)
 # --------------------------
-def test_resonant():
+@pytest.mark.parametrize('kind', ['reso/muon'])
+def test_resonant(kind : str):
     '''
     Simplest test
     '''
@@ -30,13 +31,13 @@ def test_resonant():
     obs = zfit.Space('B_const_mass_M', limits=(5000, 6000))
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='reso/electron/data.yaml')
+        fpath  =f'{kind}/data.yaml')
 
     with RDFGetter.max_entries(value=-1),\
          PL.parameter_schema(cfg=cfg.model.yields),\
          sel.custom_selection(d_sel = {
         'mass' : '(1)',
-        'block': 'block == 1 || block == 2'}):
+        'block': 'block == 1'}):
         dmd = DataModel(
             cfg     = cfg,
             obs     = obs,
