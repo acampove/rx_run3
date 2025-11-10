@@ -21,6 +21,7 @@ def test_nomc():
 
     cfg = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/combinatorial.yaml')
     ftr = SimFitter(
+        name     = 'test_nomc',
         component= 'combinatorial',
         obs     = obs,
         cfg     = cfg,
@@ -41,6 +42,7 @@ def test_nocat():
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
 
         ftr = SimFitter(
+            name     = 'test_nocat',
             component= 'signal_muon',
             obs     = obs,
             cfg     = cfg,
@@ -61,6 +63,7 @@ def test_with_cat():
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
 
         ftr = SimFitter(
+            name     = 'test_with_cat',
             component= 'signal_electron',
             obs     = obs,
             cfg     = cfg,
@@ -82,6 +85,7 @@ def test_kde(component : str):
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
 
         ftr = SimFitter(
+            name     = 'test_kde',
             component= component,
             obs      = obs,
             cfg      = cfg,
@@ -106,6 +110,7 @@ def test_misid(component : str, q2bin : str):
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
 
         ftr = SimFitter(
+            name     = 'test_misid',
             component= component,
             obs      = obs,
             cfg      = cfg,
@@ -131,6 +136,7 @@ def test_ccbar_reso(limits : str):
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
 
         ftr = SimFitter(
+            name     = 'test_ccbar_reso',
             component= component,
             obs      = obs,
             cfg      = cfg,
@@ -160,6 +166,7 @@ def test_ccbar_rare():
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = SimFitter(
+            name     = 'test_ccbar_rare',
             component= component,
             obs     = obs,
             cfg     = cfg,
@@ -185,6 +192,7 @@ def test_mc_reso(component : str, brem : int):
             'mass'  : '(1)',
             'nbrem' :f'nbrem == {brem}'}):
         ftr = SimFitter(
+            name     = 'test_mc_reso',
             component= component,
             obs     = obs,
             cfg     = cfg,
@@ -228,6 +236,7 @@ def test_weights(component : str):
         RDFGetter.multithreading(nthreads=8),\
         sel.custom_selection(d_sel = {'block' : f'block == {block}'}):
         ftr = SimFitter(
+            name     = 'test_weights',
             component= component,
             obs     = obs,
             cfg     = cfg,
