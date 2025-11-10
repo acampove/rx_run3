@@ -6,6 +6,7 @@ from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
 from dmu.stats.parameters   import ParameterLibrary as PL
 from omegaconf              import DictConfig
+from rx_common.types        import Trigger
 from zfit.pdf               import BasePDF       as zpdf
 from zfit.interface         import ZfitSpace     as zobs
 from fitter.sim_fitter      import SimFitter
@@ -21,8 +22,7 @@ class DataModel:
         self,
         cfg     : DictConfig,
         obs     : zobs,
-        trigger : str,
-        project : str,
+        trigger : Trigger,
         q2bin   : str,
         name    : str|None=None):
         '''
@@ -39,7 +39,6 @@ class DataModel:
         self._cfg    = cfg
         self._obs    = obs
         self._trigger= trigger
-        self._project= project
         self._q2bin  = q2bin
         self._name   = name
     # ------------------------
@@ -84,7 +83,6 @@ class DataModel:
                 name     = self._name,
                 component= component,
                 trigger  = cfg.get('trigger', self._trigger),
-                project  = cfg.get('project', self._project),
                 q2bin    = self._q2bin,
                 cfg      = cfg,
                 obs      = self._obs)
