@@ -9,6 +9,7 @@ from dmu.stats.fitter         import Fitter
 from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from dmu.logging.log_store    import LogStore
+from rx_common.types          import Trigger
 from zfit.result              import FitResult  as zres
 from zfit.data                import Data       as zdata
 from zfit.pdf                 import BasePDF    as zpdf
@@ -27,11 +28,11 @@ class BaseFitter:
         '''
         Used to hold attributes passed from derived classes
         '''
-        self._sample  : str = ''
-        self._trigger : str = ''
-        self._project : str = ''
-        self._q2bin   : str = ''
-        self._sig_yld : str = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
+        self._sample  : str     = ''
+        self._trigger : Trigger = Trigger.uninitialized
+        self._project : str     = ''
+        self._q2bin   : str     = ''
+        self._sig_yld : str     = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
     # ------------------------
     def _fit(
         self,
