@@ -1,6 +1,8 @@
 '''
 Module holding DataPreprocessor class
 '''
+from pathlib import Path
+
 import numpy
 import pandas   as pnd
 from omegaconf                import DictConfig, OmegaConf
@@ -13,6 +15,7 @@ from dmu.pdataframe           import utilities  as put
 from dmu.logging.log_store    import LogStore
 from zfit.data                import Data
 from zfit.interface           import ZfitSpace  as zobs
+from rx_common.types          import Trigger
 from rx_data.rdf_getter       import RDFGetter
 from rx_selection             import selection  as sel
 from rx_misid.sample_splitter import SampleSplitter
@@ -36,7 +39,7 @@ class DataPreprocessor(Cache):
         out_dir : str,
         obs     : zobs,
         sample  : str,
-        trigger : str,
+        trigger : Trigger,
         project : str,
         q2bin   : str,
         wgt_cfg : DictConfig|None,
