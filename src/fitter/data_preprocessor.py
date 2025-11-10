@@ -70,7 +70,7 @@ class DataPreprocessor(Cache):
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
 
-        rdf , d_sel, df_ctf  = self._get_rdf(cut=cut)
+        rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir)
         self._rdf    = rdf 
         self._d_sel  = d_sel
         self._df_ctf = df_ctf
@@ -87,7 +87,10 @@ class DataPreprocessor(Cache):
             wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
             rdf_uid  = self._rdf_uid)
     # ------------------------
-    def _get_rdf(self, cut : dict[str,str]|None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
+    def _get_rdf(
+        self, 
+        out_dir : str,
+        cut : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
         -------------------
@@ -110,6 +113,11 @@ class DataPreprocessor(Cache):
 
         log.debug(f'Applying selection to {self._sample}/{self._trigger}')
 
+        if Cache._cache_root is None:
+            raise ValueError('Cache root directory not defined')
+
+        out_path = Path(Cache._cache_root) / out_dir
+
         # overriding only happens for simulation samples
         with sel.custom_selection(d_sel=cut, force_override=True):
             rdf = sel.apply_full_selection(
@@ -117,7 +125,8 @@ class DataPreprocessor(Cache):
                 uid     = uid,
                 q2bin   = self._q2bin,
                 trigger = self._trigger,
-                process = self._sample)
+                process = self._sample,
+                out_path= out_path)
 
             cfg_sel = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
             rep = rdf.Report()
