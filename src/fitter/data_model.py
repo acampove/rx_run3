@@ -2,6 +2,7 @@
 Module containing DataModel class
 '''
 
+from contextlib             import contextmanager
 from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
 from dmu.stats.parameters   import ParameterLibrary as PL
@@ -17,6 +18,7 @@ class DataModel:
     '''
     Model for fitting data samples
     '''
+    _skipped_components : list[str] = []
     # ------------------------
     def __init__(
         self,
@@ -79,6 +81,10 @@ class DataModel:
 
         log.debug(f'Found {npdf} components')
         for component, cfg in self._cfg.model.components.items():
+            if component in self._skipped_components:
+                log.warning(f'Skipping {component} component')
+                continue
+
             ftr = SimFitter(
                 name     = self._name,
                 component= component,
@@ -98,4 +104,25 @@ class DataModel:
         pdf = zfit.pdf.SumPDF(l_pdf)
 
         return pdf
+    # ------------------------
+    @classmethod
+    def skip_components(cls, names : list[str]):
+        '''
+        Parameters
+        ------------
+        names: Names of components to be skipped, from data.yaml
+        '''
+        log.warning(f'Excluding components: {names}')
+
+        @contextmanager
+        def _context():
+            old_val = cls._skipped_components
+            cls._skipped_components = names
+
+            try:
+                yield
+            finally:
+                cls._skipped_components = old_val
+
+        return _context()
 # ------------------------
