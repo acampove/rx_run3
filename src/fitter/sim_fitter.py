@@ -269,6 +269,14 @@ class SimFitter(BaseFitter, Cache):
 
         if sumw < self._min_fit_entries:
             log.warning(f'Found to few entries {sumw:.1f} < {self._min_fit_entries}, skipping {self._component} component')
+            self._save_fit(
+                cut_cfg  = self._get_cut_config(),
+                plt_cfg  = self._cfg.plots,
+                data     = data,
+                model    = None,
+                res      = None,
+                out_path = f'{self._out_path}/{category}')
+
             return None, 0, None
 
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
