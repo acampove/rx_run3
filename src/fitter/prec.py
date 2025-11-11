@@ -324,8 +324,17 @@ class PRec(Cache):
         return d_cut
     #-----------------------------------------------------------
     def __get_match_str_psi2(self) -> dict[str,str]:
-        bd          = '(abs(B_TRUEID) == 511)'
-        bp_psjp     = '(abs(B_TRUEID) == 521) & (abs(Jpsi_TRUEID) == 443) & (abs(Jpsi_MC_MOTHER_ID) == 100443) & (abs(Jpsi_MC_GD_MOTHER_ID) == 521) & (abs(H_MC_MOTHER_ID) == 521)'
+        bd         = '(abs(B_TRUEID) == 511)'
+        project    = info.project_from_trigger(trigger=self._trig, lower_case=True)
+
+        common_cut = '(abs(Jpsi_TRUEID) == 443) & (abs(Jpsi_MC_MOTHER_ID) == 100443)' 
+        if project == 'rk':
+            bp_psjp = f'(abs(B_TRUEID) == 521) & {common_cut} & (abs(Jpsi_MC_GD_MOTHER_ID) == 521) & (abs(H_MC_MOTHER_ID)  == 521)'
+        elif project == 'rkst':
+            bp_psjp = f'(abs(B_TRUEID) == 511) & {common_cut} & (abs(Jpsi_MC_GD_MOTHER_ID) == 511) & (abs(H1_MC_MOTHER_ID) == 511)'
+        else:
+            raise ValueError(f'Invalid project: {project}')
+
         bs          = '(abs(B_TRUEID) == 531)'
 
         neg_bp_psjp = bp_psjp.replace('==', '!=').replace('&' , '|')
