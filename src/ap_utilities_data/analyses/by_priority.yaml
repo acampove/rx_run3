@@ -146,6 +146,14 @@ missing for W40_42_md:
 # These samples are all the samples, sorted by priority
 # Samples in the sorted section might be missing
 # ----------------
+charmonium:
+  12952000  : $B^+ \to J/\psi(\to e^+ e^-) X$
+  11453001  : $B^0 \to J/\psi(\to e^+ e^-) X$
+  13454001  : $B_s \to J/\psi(\to e^+ e^-) X$
+  # -----------
+  12442001  : $B^+ \to J/\psi(\to \mu^+ \mu^-) X$
+  11442001  : $B^0 \to J/\psi(\to \mu^+ \mu^-) X$
+  13442001  : $B_s \to J/\psi(\to \mu^+ \mu^-) X$
 sim10f:
   13144025 : Bs_JpsiKst_update2012_mm_eq_DPC
   11104000 : Bd_piplpimnKst_eq_sqDalitz_DPC
