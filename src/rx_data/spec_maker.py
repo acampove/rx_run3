@@ -8,19 +8,19 @@ import secrets
 import fnmatch
 import pprint
 
-from contextlib             import contextmanager
-from pathlib                import Path
-from typing                 import overload, Literal, Final
-from rx_common.types        import Trigger
-from rx_common              import info
-from rx_data.path_splitter  import PathSplitter, NestedSamples
-from rx_data.sample_patcher import SamplePatcher
-from rx_data.specification  import Sample, Specification
+from contextlib              import contextmanager
+from pathlib                 import Path
+from typing                  import overload, Literal, Final
+from rx_common.types         import Trigger
+from rx_common               import info
+from rx_data.path_splitter   import PathSplitter, NestedSamples
+from rx_data.sample_patcher  import SamplePatcher
+from rx_data.specification   import Sample, Specification
 from rx_data.sample_emulator import SampleEmulator
-from dmu.logging.log_store  import LogStore
-from dmu.generic            import hashing
-from dmu.generic            import version_management as vmn
-from dmu.generic            import utilities          as gut
+from dmu.logging.log_store   import LogStore
+from dmu.generic             import hashing
+from dmu.generic             import version_management as vmn
+from dmu.generic             import utilities          as gut
 
 log=LogStore.add_logger('rx_data:spec_maker')
 
