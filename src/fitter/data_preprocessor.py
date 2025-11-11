@@ -69,12 +69,7 @@ class DataPreprocessor(Cache):
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
 
-        rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir)
-        if max_entries:
-            log.warning(f'Limitting {sample}/{trigger} dataframe to {max_entries} entries')
-            uid = rdf.uid
-            rdf = rdf.Range(max_entries)
-            rdf.uid = uid
+        rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir, max_entries = max_entries)
 
         self._rdf    = rdf 
         self._d_sel  = d_sel
@@ -94,11 +89,13 @@ class DataPreprocessor(Cache):
     # ------------------------
     def _get_rdf(
         self, 
-        out_dir : str,
-        cut : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
+        out_dir     : str,
+        max_entries : int | None,
+        cut         : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
         -------------------
+        max_entries : Will limit to this number, if not None
         category_cut: Selection to be added on top, used for categories.
 
         Returns
@@ -114,6 +111,10 @@ class DataPreprocessor(Cache):
             trigger =self._trigger)
 
         rdf = gtr.get_rdf(per_file=False)
+        if max_entries:
+            log.warning(f'Limitting {self._sample}/{self._trigger} dataframe to {max_entries} entries')
+            rdf = rdf.Range(max_entries)
+
         uid = gtr.get_uid()
 
         log.debug(f'Applying selection to {self._sample}/{self._trigger}')
