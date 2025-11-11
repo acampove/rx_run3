@@ -43,6 +43,7 @@ class DataPreprocessor(Cache):
         q2bin   : str,
         wgt_cfg : DictConfig|None,
         is_sig  : bool               = True,
+        max_entries : int | None     = None,
         cut     : dict[str,str]|None = None):
         '''
         Parameters
@@ -52,6 +53,7 @@ class DataPreprocessor(Cache):
         sample : e.g. DATA_24_MagUp...
         trigger: e.g. Hlt2RD...
         q2bin  : e.g. central
+        max_entries: If used (default None), limit number of entries to this value
         wgt_cfg: Dictionary with:
                  key: Representing kind of weight, e.g. pid
                  value: Actual configuration for kind of weight
@@ -68,6 +70,10 @@ class DataPreprocessor(Cache):
         self._wgt_cfg= wgt_cfg
 
         rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir)
+        if max_entries:
+            log.warning(f'Limitting {sample}/{trigger} dataframe to {max_entries} entries')
+            rdf = rdf.Range(max_entries)
+
         self._rdf    = rdf 
         self._d_sel  = d_sel
         self._df_ctf = df_ctf
