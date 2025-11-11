@@ -72,7 +72,9 @@ class DataPreprocessor(Cache):
         rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir)
         if max_entries:
             log.warning(f'Limitting {sample}/{trigger} dataframe to {max_entries} entries')
+            uid = rdf.uid
             rdf = rdf.Range(max_entries)
+            rdf.uid = uid
 
         self._rdf    = rdf 
         self._d_sel  = d_sel
