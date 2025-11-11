@@ -34,7 +34,10 @@ class SamplesPrinter:
         self._project = project
         self._skipped_samples = ['Bu_D0pi_Kenu_eq_DPC_TC']
 
-        LogStore.set_level('rx_data:rdf_getter', 40)
+        LogStore.set_level('rx_data:rdf_getter'     , 40)
+        LogStore.set_level('rx_data:spec_maker'     , 40)
+        LogStore.set_level('rx_data:sample_patcher' , 40)
+        LogStore.set_level('rx_data:sample_emulator', 40)
     # ----------------------
     def _get_input_samples(self) -> list[tuple[str,str]]:
         '''
