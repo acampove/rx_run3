@@ -157,9 +157,9 @@ def test_ccbar_rare():
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', ['jpsi', 'cabibbo'])
 @pytest.mark.parametrize('brem'     , [1, 2])
-def test_mc_reso(component : str, brem : int):
+def test_reso_rk_ee(component : str, brem : int):
     '''
-    Tests retriveval of PDF associated to ccbar inclusive decays
+    Test electron resonant with rk trigger
     '''
     obs   = zfit.Space('B_const_mass_M', limits=(5000, 6900))
     cfg   = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
