@@ -415,7 +415,7 @@ def _save_fit_plot(
 
     if model is None:
         log.warning('Model not found, saving dummy plot')
-        plt.figure()
+        plt.hist(bins=100, x=data.numpy())
         plt.savefig(fit_path_lin)
         plt.savefig(fit_path_log)
         plt.close('all')
