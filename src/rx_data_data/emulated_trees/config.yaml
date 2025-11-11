@@ -41,3 +41,17 @@ Bu_JpsiX_mm_eq_JpsiInAcc:
     2 : 5
     3 : 5
     4 : 5
+# ----------------------------------------
+Bd_psi2SKst_mm_eq_DPC:
+  sample : Bd_psi2SKst_mm_eq_DPC
+  patching:
+    4 : 2
+    3 : 2
+    7 : 6
+    8 : 6
+# ----------------------------------------
+Bd_psi2SKst_ee_eq_DPC:
+  sample : Bd_psi2SKst_ee_eq_DPC
+  patching:
+    4 : 2
+    3 : 2
