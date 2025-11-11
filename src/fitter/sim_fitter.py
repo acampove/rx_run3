@@ -129,7 +129,6 @@ class SimFitter(BaseFitter, Cache):
 
         for cat_name, cat_cfg in self._cfg.categories.items():
             prp   = DataPreprocessor(
-                max_entries = 100_000,
                 obs    = self._obs,
                 cut    = cat_cfg.get('selection'),
                 wgt_cfg= cat_cfg.get('weights'),
