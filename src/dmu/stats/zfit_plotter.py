@@ -29,23 +29,31 @@ class ZFitPlotter:
     Class used to plot fits done with zfit
     '''
     #----------------------------------------
-    def __init__(self, data=None, model=None, weights=None, result=None, suffix=''):
+    def __init__(
+        self, 
+        data   : zdat, 
+        model  : zpdf, 
+        weights: np.ndarray| None = None, 
+        result : zres | None      = None, 
+        suffix : str              = ''):
         '''
-        obs: zfit space you are using to define the data and model
-        data: the data you are fit on
+        Parameters
+        ------------------
+        obs    : Zfit space you are using to define the data and model
+        data   : The data you are fit on
         weights: 1D numpy array of weights
-        total_model: the final total fit model
+        model  : The final total fit model
         '''
-        # pylint: disable=too-many-positional-arguments
 
         self.obs               = model.space
         self.data              = self._data_to_zdata(model.space, data, weights)
-        self.lower, self.upper = self.data.data_range.limit1d
+        min, max               = self.obs.limits
+        self.lower, self.upper = min[0][0], max[0][0]
         self.total_model       = model
         self.x                 = np.linspace(self.lower, self.upper, 2000)
         self.data_np           = zfit.run(self.data.unstack_x())
-        self.data_weight_np    = np.ones_like(self.data_np) if self.data.weights is None else zfit.run(self.data.weights)
 
+        self.data_weight_np    = np.ones_like(self.data_np) if self.data.weights is None else zfit.run(self.data.weights)
         self.errors            = []
         self._l_def_col        = []
         self._result           = result
