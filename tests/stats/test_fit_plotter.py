@@ -27,7 +27,10 @@ class Data:
             ]
 #--------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This will run before all tests in this module
+    '''
     LogStore.set_level('dmu:zfit_plotter', 10)
 #--------------------------------
 def _make_dir_path(name : str) -> str:
