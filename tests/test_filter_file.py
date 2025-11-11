@@ -117,14 +117,14 @@ def _move_outputs(test_name : str, is_mc : bool) -> None:
         shutil.move(source, f'{target_dir}/{file_name}')
 # --------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     '''
     Will set loggers, etc
     '''
     log.info('Initializing')
 
     cfg_dir  = files('post_ap_data').joinpath('post_ap/rx')
-    cfg_path = vmn.get_latest_file(dir_path = cfg_dir, wc='v*.yaml')
+    cfg_path = vmn.get_latest_file(dir_path = str(cfg_dir), wc='v*.yaml')
 
     os.environ['CONFIG_PATH'] = str(cfg_path)
 
