@@ -176,6 +176,28 @@ def test_reso_rk_ee(component : str, brem : int):
             q2bin   = 'jpsi')
         ftr.get_model()
 # ---------------------------------------------------
+@pytest.mark.parametrize('component', ['jpsi', 'psi2'])
+@pytest.mark.parametrize('q2bin'    , ['jpsi', 'psi2'])
+def test_reso_rkst_mm(component : str, q2bin : str):
+    '''
+    Test resonant jpsi and psi2S in rkst muon channel
+    '''
+
+    obs_name = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
+    obs = zfit.Space(obs_name, limits=(5000, 6000))
+
+    cfg = gut.load_conf(package='fitter_data', fpath=f'reso/rkst/muon/{component}.yaml')
+
+    with sel.custom_selection(d_sel={'mass'  : '(1)'}):
+        ftr = SimFitter(
+            name     = 'reso_rkst_mm',
+            component= component,
+            obs     = obs,
+            cfg     = cfg,
+            trigger = Trigger.rkst_mm_os,
+            q2bin   = q2bin)
+        ftr.get_model()
+# ---------------------------------------------------
 @pytest.mark.parametrize('name', ['name_001', 'name_002'])
 def test_name(name : str):
     '''
