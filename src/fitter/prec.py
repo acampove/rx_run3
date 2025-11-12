@@ -58,6 +58,9 @@ class Model:
         -----------------
         Added model
         '''
+        if not models:
+            raise ValueError('No models found')
+
         # Only one component survived
         if len(models) == 1:
             log.debug('Found only one component model, returning it')
@@ -148,9 +151,6 @@ class PRec(Cache):
         d_df = { sample : self.__add_dec_weights(sample, df) for sample, df in d_df.items() }
         df   = pnd.concat(d_df.values(), axis=0)
         df   = self.__add_sam_weights(df)
-
-        if len(df) == 0:
-            return {}
 
         arr_wgt      = df.wgt_dec.to_numpy() * df.wgt_sam.to_numpy()
         df['wgt_br'] = self.__normalize_weights(arr_wgt)
@@ -277,6 +277,7 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def __add_dec_weights(self, sample : str, df : pnd.DataFrame) -> pnd.DataFrame:
         if len(df) == 0:
+            df['wgt_dec'] = 0
             return df
 
         dec = self._d_wg['dec']
@@ -299,6 +300,7 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def __add_sam_weights(self, df : pnd.DataFrame) -> pnd.DataFrame:
         if len(df) == 0:
+            df['wgt_sam'] = 0
             return df
 
         sam = self._d_wg['sam']
@@ -587,11 +589,14 @@ class PRec(Cache):
         -------------------
         Full pdf, i.e. all ccbar components added
         '''
+        if not d_df:
+            raise ValueError('No dataframes with components data')
+
         all_models: list[Model] = [ self.__get_model(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items() ]
         models    : list[Model] = [ model for model in all_models if model.pdf is not None ]
 
         if not models:
-            log.warning('No PDF were found for any component, will return model without PFD')
+            log.warning('No PDFs were found for any component, will return model without PFD')
             return Model.add_models(models=all_models, fractions=None)
 
         yields    : list[float] = [ self.__yield_in_range(model=model)                                      for    model in models       ]
