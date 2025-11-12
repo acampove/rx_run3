@@ -170,7 +170,7 @@ class Tester(Wcache):
 
         return res
 
-with Cache.cache_path(path='/some/directory')
+with Cache.cache_root(path='/some/directory')
     obj = Tester(nval=3)
     ...
 ```
