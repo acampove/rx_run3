@@ -67,13 +67,17 @@ def test_electron(tmp_path : Path, trig : Trigger):
 
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
-@pytest.mark.parametrize('trig', [Trigger.rk_mm_os, Trigger.rkst_mm_os])
-def test_muon(tmp_path : Path, trig : Trigger):
+@pytest.mark.parametrize('trig, q2bin, mass', [
+    (Trigger.rk_mm_os  , 'jpsi', 'B_const_mass_M'), 
+    (Trigger.rk_mm_os  , 'psi2', 'B_const_mass_psi2S_M'), 
+    # ---------
+    (Trigger.rkst_mm_os, 'jpsi', 'B_const_mass_M'),
+    (Trigger.rkst_mm_os, 'psi2', 'B_const_mass_psi2S_M'),
+])
+def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
     '''
     Simplest test in electron channel
     '''
-    q2bin  = 'jpsi'
-    mass   = 'B_const_mass_M'
     label  = r'$M_{DTF}$'
 
     l_samp = [
@@ -91,7 +95,7 @@ def test_muon(tmp_path : Path, trig : Trigger):
             trig    =trig, 
             q2bin   =q2bin, 
             d_weight=d_wgt,
-            out_dir =f'muon_{trig}')
+            out_dir =f'{trig}_{q2bin}')
 
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
