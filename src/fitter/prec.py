@@ -447,7 +447,7 @@ class PRec(Cache):
 
         obs       = kwargs['obs']
         nentries  = self.__yield_from_arrays(masses=arr_mass, weights=arr_wgt, obs=obs)
-        plot_name = slugify.slugify(component_name, lowercase=False)
+        plot_name = slugify.slugify(text=component_name, lowercase=False)
         if nentries < self._min_entries:
             log.warning(f'Found fewer than {self._min_entries}: {nentries:.0f}, skipping PDF {component_name}')
 
@@ -671,7 +671,7 @@ class PRec(Cache):
 
         Parameters
         ------------------
-        pdf    : PDF
+        model  : Object storing PDF
         neme   : used to name the PNG file as {name}.png
         title  : Title for plots, will be appended after number of entries
         maxy   : Will be used to plot fit properly in case labels overlap
