@@ -67,7 +67,7 @@ class PRec(Cache):
         self._d_rdf    = d_rdf
 
         self._d_match         = self.__get_match_str()
-        self._l_mass          = ['B_Mass', 'B_Mass_smr', 'B_const_mass_M', 'B_const_mass_psi2S_M']
+        self._l_mass          = ['B_M', 'B_Mass', 'B_Mass_smr', 'B_const_mass_M', 'B_const_mass_psi2S_M']
         self._min_entries     = 40 # Will not build KDE if fewer entries than this are found
         self._min_isj_entries = 500 #if Fewer entries than this, switch from ISJ to FFT
 
