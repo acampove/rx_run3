@@ -31,7 +31,7 @@ class ZFitPlotter:
     #----------------------------------------
     def __init__(
         self, 
-        data   : zdat, 
+        data   : zdat | np.ndarray | pd.Series | pd.DataFrame, 
         model  : zpdf, 
         weights: np.ndarray| None = None, 
         result : zres | None      = None, 
