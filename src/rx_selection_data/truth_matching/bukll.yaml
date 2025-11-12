@@ -10,8 +10,8 @@ not_fail_mes      : 'TMath::Abs(B_TRUEID)  != 0 && TMath::Abs(Jpsi_TRUEID) != 0 
 not_fail_moth_1   : 'TMath::Abs(L1_MC_MOTHER_ID)   != 0 && TMath::Abs(L2_MC_MOTHER_ID) != 0'
 not_fail_moth_2   : 'TMath::Abs(Jpsi_MC_MOTHER_ID) != 0 && TMath::Abs(H_MC_MOTHER_ID)  != 0'
 not_fail          : '{not_fail_lep} && {not_fail_mes} && {not_fail_moth_1} && {not_fail_moth_2}' 
-not_reso_ee       : '(({jpsi_ee_kp}) || ({jpsi_ee_pi})) == 0'
-not_reso_mm       : '(({jpsi_mm_kp}) || ({jpsi_mm_pi})) == 0'
+not_reso_ee       : '( ({jpsi_ee_kp}) == 0 && ({jpsi_ee_pi}) == 0 && ({psi2_ee_kp}) == 0 && ({psi2_ee_pi}) == 0 )'
+not_reso_mm       : '( ({jpsi_mm_kp}) == 0 && ({jpsi_mm_pi}) == 0 && ({psi2_mm_kp}) == 0 && ({psi2_mm_pi}) == 0 )'
 # ----------
 h_is_pion         : 'TMath::Abs(H_TRUEID)       == 211' 
 h_is_kaon         : 'TMath::Abs(H_TRUEID)       == 321' 
@@ -153,6 +153,9 @@ ll_cut0   : '({l1_cut0}) || ({l2_cut0})'
 # -------------
 # B+ -> pi+ee
 12123021  : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_pion}  && {h_from_bplus}'
+#-------------------------------------------------------------
+# Resonant fully reconstructed
+#-------------------------------------------------------------
 # B+ -> Jpsi(-> mu mu) K+
 12143001  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_muons}      && {lep_from_jpsi} && {h_is_kaon} && {h_from_bplus}'
 jpsi_mm_kp: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_muons}      && {lep_from_jpsi} && {h_is_kaon} && {h_from_bplus}'
@@ -163,16 +166,27 @@ jpsi_ee_kp: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electro
 12153420  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #B+ -> Psi(mm) K+
 12143020  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
+psi2_ee_kp: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #B+ -> Psi(ee) K+
 12153012  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #B+ psi2S(ee) K*+(Kpi0)
 12153430  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstplus}'
+psi2_mm_kp: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
+#---------
+#Cabibbo suppressed versions
+#---------
 #reso jpsi pi mumu
 12143010  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
 jpsi_mm_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
 #reso jpsi pi ee
 12153020  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
 jpsi_ee_pi: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && {h_from_bplus}'
+#reso psi2 pi mumu
+12143031  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_pion} && {h_from_bplus}'
+psi2_mm_pi: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_pion} && {h_from_bplus}'
+#reso psi2 pi ee
+12153030  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_pion} && {h_from_bplus}'
+psi2_ee_pi: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_pion} && {h_from_bplus}'
 #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
 12125101 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_pion} && ({h_from_kshort} || {h_from_kstplus})'
 #-------------------------------------------------------------
