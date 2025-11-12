@@ -155,6 +155,7 @@ charmonium:
   11442001  : $B^0 \to J/\psi(\to \mu^+ \mu^-) X$
   13442001  : $B_s \to J/\psi(\to \mu^+ \mu^-) X$
 sim10f:
+  12143031 : $B^+\to \psi(2S)(\to \mu^+ \mu^-) \pi^+$
   13144025 : Bs_JpsiKst_update2012_mm_eq_DPC
   11104000 : Bd_piplpimnKst_eq_sqDalitz_DPC
   12583022 : Bu_D0enu_Kenu_eq_TC
