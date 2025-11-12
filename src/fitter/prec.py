@@ -452,7 +452,7 @@ class PRec(Cache):
             log.warning(f'Found fewer than {self._min_entries}: {nentries:.0f}, skipping PDF {component_name}')
 
             model  = Model(pdf=None, mass=arr_mass, wgt=arr_wgt, sam=arr_sam, dec=arr_dec)
-            PRec.plot_pdf(
+            self._plot_pdf(
                 model  = model, 
                 title  = component_name,
                 name   = plot_name,
@@ -469,7 +469,7 @@ class PRec(Cache):
             return Model(pdf=None, mass=arr_mass, wgt=arr_wgt, sam=arr_sam, dec=arr_dec)
 
         model = Model(pdf =pdf, mass=arr_mass, wgt =arr_wgt, sam =arr_sam, dec =arr_dec)
-        PRec.plot_pdf(
+        self._plot_pdf(
             model  = model,
             title  = component_name,
             name   = plot_name,
@@ -624,7 +624,7 @@ class PRec(Cache):
             d_df = { ltex : pnd.read_parquet(path) for ltex , path in d_path.items() }
             model= self.__get_full_model(mass=mass, d_df=d_df, **kwargs)
 
-            PRec.plot_pdf(
+            self._plot_pdf(
                 model  =model,
                 title  =name,
                 name   =plot_name,
@@ -649,7 +649,7 @@ class PRec(Cache):
             log.info(f'   {path}')
             df.to_parquet(path)
 
-        PRec.plot_pdf(
+        self._plot_pdf(
             model  =model,
             title  =name,
             name   =plot_name,
@@ -659,8 +659,8 @@ class PRec(Cache):
 
         return model.pdf
     #-----------------------------------------------------------
-    @staticmethod
-    def plot_pdf(
+    def _plot_pdf(
+        self,
         model   : Model,
         name    : str,
         out_dir : str|Path,
