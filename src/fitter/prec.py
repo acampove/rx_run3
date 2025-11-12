@@ -35,6 +35,43 @@ from fitter.inclusive_sample_weights import Reader as inclusive_sample_weights
 
 log=LogStore.add_logger('fitter:prec')
 #-----------------------------------------------------------
+@dataclass
+class Model:
+    '''
+    Class meant to hold a PDF and the data used to fit it
+    '''
+    pdf : zpdf | None
+    mass: numpy.ndarray
+    wgt : numpy.ndarray # Full weight
+    sam : numpy.ndarray # Sample weights
+    dec : numpy.ndarray # Weights for individual decays in cocktail
+    # ------------------------------
+    @staticmethod
+    def add_models(models : list['Model'], fractions : list[float]) -> 'Model':
+        '''
+        Parameters
+        -----------------
+        models   : List of models to be added
+        fractions: Fractions between each component
+
+        Returns
+        -----------------
+        Added model
+        '''
+        pdfs = [ model.pdf for model in  models if model.pdf is not None ]
+
+        if len(pdfs) != len(fractions):
+            raise ValueError('Number of PDFs and fractions differ')
+        
+        pdf  = zfit.pdf.SumPDF(pdfs, fractions)
+
+        arrays = dict()
+        for attr_name in ['mass', 'wgt', 'dec', 'sam']:
+            l_value = [ getattr(model, attr_name) for model in models ]
+            arrays[attr_name] = numpy.concatenate(l_value)
+
+        return Model(pdf=pdf, **arrays)
+#-----------------------------------------------------------
 class PRec(Cache):
     '''
     Class used to calculate the PDF associated to the partially reconstructed background
