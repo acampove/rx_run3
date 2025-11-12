@@ -376,7 +376,7 @@ def test_low_stats(mass : str, tmp_path : Path):
 
     d_wgt = {'dec' : 1, 'sam' : 1}
     with Cache.cache_root(path=tmp_path),\
-        sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.9 && mva_prc > 0.6'}):
+        sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.9 && mva_prc > 0.9'}):
         obp=PRec(samples=l_samp, trig=trig, q2bin='high', d_weight=d_wgt)
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
