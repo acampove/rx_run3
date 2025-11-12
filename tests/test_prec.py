@@ -2,6 +2,7 @@
 Module with tests for the PRec class
 '''
 
+from dmu.workflow.cache import Cache
 import mplhep
 import pytest
 import matplotlib.pyplot as plt
@@ -34,6 +35,9 @@ def initialize():
     LogStore.set_level('rx_fitter:prec'                    , 10)
 
     plt.style.use(mplhep.style.LHCb2)
+
+    with Cache.turn_off_cache(val=None):
+        yield
 #-----------------------------------------------
 @pytest.mark.parametrize('trig', [Trigger.rk_ee_os, Trigger.rkst_ee_os])
 def test_electron(tmp_path : Path, trig : Trigger):
@@ -357,22 +361,22 @@ def test_extended():
 
     assert pdf.is_extended is False
 #-----------------------------------------------
-def test_low_stats():
+@pytest.mark.parametrize('mass' , ['B_M', 'B_Mass', 'B_Mass_smr'])
+def test_low_stats(mass : str, tmp_path : Path):
     '''
     Testing with low statistics sample, tight MVA
     '''
-    obs=zfit.Space('mass', limits=(4500, 6000))
+    obs    = zfit.Space(mass, limits=(4500, 7000))
     trig   = Trigger.rk_ee_os 
     l_samp = [
-            'Bu_JpsiX_ee_eq_JpsiInAcc',
-            'Bd_JpsiX_ee_eq_JpsiInAcc',
-            'Bs_JpsiX_ee_eq_JpsiInAcc',
-            ]
+        'Bu_JpsiX_ee_eq_JpsiInAcc',
+        'Bd_JpsiX_ee_eq_JpsiInAcc',
+        'Bs_JpsiX_ee_eq_JpsiInAcc',
+        ]
 
     d_wgt = {'dec' : 1, 'sam' : 1}
-    with sel.custom_selection(d_sel={'brem' : 'mva_cmb > 0.9 && mva_prc > 0.9'}):
+    with Cache.cache_root(path=tmp_path),\
+        sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.9 && mva_prc > 0.6'}):
         obp=PRec(samples=l_samp, trig=trig, q2bin='high', d_weight=d_wgt)
-        pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
-
-    PRec.plot_pdf(pdf, name='pdf', title='', out_dir=f'{Data.out_dir}/low_stats')
+        obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
