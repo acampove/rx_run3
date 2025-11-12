@@ -394,12 +394,12 @@ class PRec(Cache):
 
         return arr_wgt
     #-----------------------------------------------------------
-    def __get_pdf(
+    def __get_model(
         self,
         mass           : str,
         df             : pnd.DataFrame,
         component_name : str,
-        **kwargs) -> zpdf|None:
+        **kwargs) -> Model:
         '''
         Parameters
         ------------------
@@ -413,9 +413,7 @@ class PRec(Cache):
 
         Returns
         ------------------
-        Either:
-        None   : If there are fewer than _min_entries
-        KDE PDF: Otherwise
+        Model object, holding PDF (or None) and arrays used to build it
         '''
         # This kwargs reffers to this particular PDF
         kwargs         = copy.deepcopy(kwargs)
@@ -556,11 +554,11 @@ class PRec(Cache):
 
         return sum(wgt)
     #-----------------------------------------------------------
-    def __get_full_pdf(
+    def __get_full_model(
         self,
         mass : str,
         d_df : dict[str,pnd.DataFrame],
-        **kwargs) -> zpdf|None:
+        **kwargs) -> Model: 
         '''
         Parameters
         -------------------
