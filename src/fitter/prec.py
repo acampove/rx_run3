@@ -749,33 +749,33 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def _plot_weights(
         self, 
+        model   : Model,
         name    : str,
         title   : str,
-        out_dir : Path,
-        pdf     : zpdf) -> None:
+        out_dir : str) -> None:
         '''
         Save plot of weights and PDF as text
 
         Parameters
         -------------------
+        model  : Object holding PDF and data used to make it
         name   : Name of plot and place where PDF will be saved as text, i.e. {name}.png, {name}.txt
         title  : Plot title
         out_dir: Directory where files will be saved
-        pdf    : PDF from fit, which holds weights as attributes
         '''
-        arr_wgt  = getattr(pdf, 'arr_wgt' )
-        arr_sam  = getattr(pdf, 'arr_sam' )
-        arr_dec  = getattr(pdf, 'arr_dec' )
 
-        plt.hist(arr_sam, bins=30, label='sample', histtype='step', linestyle='-' )
-        plt.hist(arr_dec, bins=30, label='decay' , histtype='step', linestyle='--')
-        plt.hist(arr_wgt, bins=30, label='Total' , histtype='step', linestyle=':' )
+        plt.hist(model.sam, bins=30, label='sample', histtype='step', linestyle='-' )
+        plt.hist(model.dec, bins=30, label='decay' , histtype='step', linestyle='--')
+        plt.hist(model.wgt, bins=30, label='Total' , histtype='step', linestyle=':' )
 
         plt.legend()
         plt.title(title)
         plt.savefig(f'{out_dir}/{name}_wgt.png')
         plt.close('all')
 
+        if model.pdf is None:
+            return
+
         text_path = f'{out_dir}/{name}.txt' 
-        sut.print_pdf(pdf, txt_path=text_path)
+        sut.print_pdf(model.pdf, txt_path=text_path)
 #-----------------------------------------------------------
