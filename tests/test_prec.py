@@ -36,7 +36,7 @@ def initialize():
     plt.style.use(mplhep.style.LHCb2)
 #-----------------------------------------------
 @pytest.mark.parametrize('trig', [Trigger.rk_ee_os, Trigger.rkst_ee_os])
-def test_electron(tmp_path : Path, trig : str):
+def test_electron(tmp_path : Path, trig : Trigger):
     '''
     Simplest test in electron channel
     '''
@@ -66,7 +66,7 @@ def test_electron(tmp_path : Path, trig : str):
         PRec.plot_pdf(pdf_1, name='simple', title='', out_dir= tmp_path / test)
 #-----------------------------------------------
 @pytest.mark.parametrize('trig', [Trigger.rk_mm_os, Trigger.rkst_mm_os])
-def test_muon(tmp_path : Path, trig : str):
+def test_muon(tmp_path : Path, trig : Trigger):
     '''
     Simplest test in electron channel
     '''
@@ -97,7 +97,7 @@ def test_muon(tmp_path : Path, trig : str):
 #-----------------------------------------------
 @pytest.mark.parametrize('trig' , [Trigger.rk_mm_os, Trigger.rkst_mm_os])
 @pytest.mark.parametrize('block', range(1, 9))
-def test_muon_by_block(tmp_path : Path, trig : str, block : int):
+def test_muon_by_block(tmp_path : Path, trig : Trigger, block : int):
     '''
     Simplest test in electron channel
     '''
@@ -132,7 +132,7 @@ def test_reso(q2bin : str):
     '''
     Tests PRec building in resonant bins
     '''
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    trig   = Trigger.rk_ee_os
 
     mass   = {
         'low'     : 'B_Mass_smr',
@@ -212,7 +212,7 @@ def test_fit():
     Tests that the PDF is fittable
     '''
     q2bin  = 'high'
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    trig   = Trigger.rk_ee_os 
     mass   = 'B_Mass_smr'
     label  = r'$M(K^+e^+e^-)$'
     maxy   = 250
@@ -265,7 +265,7 @@ def test_bdt(q2bin : str, bdt_cut : str, name : str):
     Testing application of BDT cuts
     '''
     obs=zfit.Space('mass', limits=(4500, 6000))
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
     maxy   = {'jpsi' : 20_000          , 'psi2' :                  4_000}[q2bin]
     l_samp = [
@@ -295,7 +295,7 @@ def test_brem(brem_cut : str, name : str):
     '''
     q2bin  = 'jpsi'
     obs=zfit.Space('mass', limits=(4500, 6000))
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
     l_samp = [
             'Bu_JpsiX_ee_eq_JpsiInAcc',
@@ -320,7 +320,7 @@ def test_cache():
     q2bin  = 'jpsi'
 
     obs=zfit.Space('mass', limits=(4500, 6000))
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
     maxy   = {'jpsi' : 20_000          , 'psi2' :                  4_000}[q2bin]
     l_samp = [
@@ -342,7 +342,7 @@ def test_extended():
     Testing that PDFs are not extended
     '''
     obs=zfit.Space('mass', limits=(4500, 6000))
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    trig   = Trigger.rk_ee_os 
     l_samp = [
             'Bu_JpsiX_ee_eq_JpsiInAcc',
             'Bd_JpsiX_ee_eq_JpsiInAcc',
@@ -362,7 +362,7 @@ def test_low_stats():
     Testing with low statistics sample, tight MVA
     '''
     obs=zfit.Space('mass', limits=(4500, 6000))
-    trig   = 'Hlt2RD_BuToKpEE_MVA'
+    trig   = Trigger.rk_ee_os 
     l_samp = [
             'Bu_JpsiX_ee_eq_JpsiInAcc',
             'Bd_JpsiX_ee_eq_JpsiInAcc',
