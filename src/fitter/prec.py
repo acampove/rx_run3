@@ -47,28 +47,39 @@ class Model:
     dec : numpy.ndarray # Weights for individual decays in cocktail
     # ------------------------------
     @staticmethod
-    def add_models(models : list['Model'], fractions : list[float]) -> 'Model':
+    def add_models(models : list['Model'], fractions : list[float] | None) -> 'Model':
         '''
         Parameters
         -----------------
         models   : List of models to be added
-        fractions: Fractions between each component
+        fractions: Fractions between each component, if None, will skip addition of PDFs
 
         Returns
         -----------------
         Added model
         '''
-        pdfs = [ model.pdf for model in  models if model.pdf is not None ]
-
-        if len(pdfs) != len(fractions):
-            raise ValueError('Number of PDFs and fractions differ')
-        
-        pdf  = zfit.pdf.SumPDF(pdfs, fractions)
+        # Only one component survived
+        if len(models) == 1:
+            log.debug('Found only one component model, returning it')
+            return models[0]
 
         arrays = dict()
         for attr_name in ['mass', 'wgt', 'dec', 'sam']:
             l_value = [ getattr(model, attr_name) for model in models ]
             arrays[attr_name] = numpy.concatenate(l_value)
+
+        # No components survived
+        if fractions is None:
+            log.debug('No fractions passed, returning model without PDF')
+            return Model(pdf=None, **arrays)
+
+        pdfs = [ model.pdf for model in  models if model.pdf is not None ]
+
+        if len(pdfs) != len(fractions):
+            raise ValueError('Number of PDFs and fractions differ')
+        
+        log.debug('Adding PDFs')
+        pdf  = zfit.pdf.SumPDF(pdfs, fractions)
 
         return Model(pdf=pdf, **arrays)
 #-----------------------------------------------------------
