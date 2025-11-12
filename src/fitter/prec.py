@@ -375,9 +375,10 @@ class PRec(Cache):
         return d_cut
     #-----------------------------------------------------------
     def __get_match_str_psi2(self) -> dict[str,str]:
-        bd         = '(abs(B_TRUEID) == 511)'
-        project    = info.project_from_trigger(trigger=self._trig, lower_case=True)
+        bd = '(abs(B_TRUEID) == 511)'
+        bs = '(abs(B_TRUEID) == 531)'
 
+        project    = info.project_from_trigger(trigger=self._trig, lower_case=True)
         common_cut = '(abs(B_TRUEID) == 521) & (abs(Jpsi_TRUEID) == 443) & (abs(Jpsi_MC_MOTHER_ID) == 100443) & (abs(Jpsi_MC_GD_MOTHER_ID) == 521)' 
         if project == 'rk':
             bp_psjp = f'{common_cut} & (abs(H_MC_MOTHER_ID)  == 521)'
@@ -386,16 +387,21 @@ class PRec(Cache):
         else:
             raise ValueError(f'Invalid project: {project}')
 
-        bs          = '(abs(B_TRUEID) == 531)'
-
         neg_bp_psjp = bp_psjp.replace('==', '!=').replace('&' , '|')
         bp_ex       = f'(abs(B_TRUEID) == 521) & ({neg_bp_psjp})'
 
         d_cut       = {}
         d_cut[r'$B^+\to \psi(2S)(\to J/\psi+X)H_{s}$'] = bp_psjp
-        d_cut[r'$B^+\to c\bar{c}(\to ee)H_s$']         = bp_ex
-        d_cut[r'$B_d\to c\bar{c}(\to ee)H_s$']         = bd
-        d_cut[r'$B_s\to c\bar{c}(\to ee)H_s$']         = bs
+        if   info.is_ee(trigger = self._trig):
+            d_cut[r'$B^+\to c\bar{c}(\to ee)H_s$']     = bp_ex
+            d_cut[r'$B_d\to c\bar{c}(\to ee)H_s$']     = bd
+            d_cut[r'$B_s\to c\bar{c}(\to ee)H_s$']     = bs
+        elif info.is_mm(trigger = self._trig):
+            d_cut[r'$B^+\to c\bar{c}(\to \mu\mu)H_s$'] = bp_ex
+            d_cut[r'$B_d\to c\bar{c}(\to \mu\mu)H_s$'] = bd
+            d_cut[r'$B_s\to c\bar{c}(\to \mu\mu)H_s$'] = bs
+        else:
+            raise ValueError(f'Trigger not associated to electron or muon channel: {self._trig}')
 
         return d_cut
     #-----------------------------------------------------------
