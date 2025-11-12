@@ -589,6 +589,11 @@ class PRec(Cache):
         '''
         all_models: list[Model] = [ self.__get_model(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items() ]
         models    : list[Model] = [ model for model in all_models if model.pdf is not None ]
+
+        if not models:
+            log.warning('No PDF were found for any component, will return model without PFD')
+            return Model.add_models(models=all_models, fractions=None)
+
         yields    : list[float] = [ self.__yield_in_range(model=model)                                      for    model in models       ]
         fractions : list[float] = [ wgt_yld / sum(yields)                                                   for  wgt_yld in yields       ]
 
