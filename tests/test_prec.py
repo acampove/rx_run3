@@ -287,7 +287,7 @@ def test_cache():
         obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
-def test_extended():
+def test_extended(tmp_path : Path):
     '''
     Testing that PDFs are not extended
     '''
@@ -299,8 +299,10 @@ def test_extended():
         'Bs_JpsiX_ee_eq_JpsiInAcc']
 
     d_wgt= {'dec' : 1, 'sam' : 1}
-    obp=PRec(samples=l_samp, trig=trig, q2bin='jpsi', d_weight=d_wgt)
-    pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
+    with Cache.cache_root(path = tmp_path):
+        obp=PRec(samples=l_samp, trig=trig, q2bin='jpsi', d_weight=d_wgt)
+        pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
+
     if pdf is None:
         raise ValueError('No PDF found')
 
