@@ -417,13 +417,13 @@ class PRec(Cache):
         '''
         # This kwargs reffers to this particular PDF
         kwargs         = copy.deepcopy(kwargs)
-        pdf_name       = kwargs['name']
-        slug           = slugify.slugify(pdf_name, lowercase=False)
         kwargs['name'] = component_name
 
         try:
             arr_mass = df[mass     ].to_numpy()
             arr_wgt  = df['wgt_br' ].to_numpy()
+            arr_sam  = df['wgt_sam'].to_numpy()
+            arr_dec  = df['wgt_dec'].to_numpy()
         except Exception as exc:
             for column in df.columns:
                 log.error(column)
@@ -434,32 +434,37 @@ class PRec(Cache):
 
             raise ValueError(f'Cannot access {mass} and wgt_br') from exc
 
-        obs      = kwargs['obs']
-
-        nentries = self.__yield_from_arrays(arr_mass=arr_mass, arr_weight=arr_wgt, obs=obs)
+        obs       = kwargs['obs']
+        nentries  = self.__yield_from_arrays(masses=arr_mass, weights=arr_wgt, obs=obs)
+        plot_name = slugify.slugify(component_name, lowercase=False)
         if nentries < self._min_entries:
             log.warning(f'Found fewer than {self._min_entries}: {nentries:.0f}, skipping PDF {component_name}')
-            return None
+
+            model  = Model(pdf=None, mass=arr_mass, wgt=arr_wgt, sam=arr_sam, dec=arr_dec)
+            PRec.plot_pdf(
+                model  = model, 
+                title  = component_name,
+                name   = plot_name,
+                out_dir= self._out_path)
+
+            return model 
 
         log.debug(f'Building PDF with {nentries:.0f} entries for {component_name}')
 
         pdf = self.__pdf_from_df(df=df, mass=mass, **kwargs)
-        setattr(pdf, 'arr_mass',                 arr_mass)
-        setattr(pdf, 'arr_wgt' ,                 arr_wgt )
-        setattr(pdf, 'arr_sam' , df['wgt_sam'].to_numpy())
-        setattr(pdf, 'arr_dec' , df['wgt_dec'].to_numpy())
 
         if not is_pdf_usable(pdf):
             log.warning(f'PDF {component_name} is not usable')
-            return None
+            return Model(pdf=None, mass=arr_mass, wgt=arr_wgt, sam=arr_sam, dec=arr_dec)
 
+        model = Model(pdf =pdf, mass=arr_mass, wgt =arr_wgt, sam =arr_sam, dec =arr_dec)
         PRec.plot_pdf(
-            pdf,
-            title  =component_name,
-            name   =component_name,
-            out_dir=f'{self._out_path}/{slug}')
+            model  = model,
+            title  = component_name,
+            name   = plot_name,
+            out_dir= self._out_path)
 
-        return pdf
+        return model 
     #-----------------------------------------------------------
     def __pdf_from_df(
         self,
@@ -523,34 +528,33 @@ class PRec(Cache):
 
         return pdf
     #-----------------------------------------------------------
-    def __yield_in_range(self, pdf : zpdf) -> float:
+    def __yield_in_range(self, model : Model) -> float:
         '''
-        Parameters
-        ---------------
-        pdf: ZFit KDE PDF with array of weights and masses that were used to make it, attached
-
-        Returns
-        ---------------
         The mass and weights are defined in the WHOLE range. This method extracts the yields
         in the observable range. Needed to calculate fractions of componets, used to put
         ccbar stuff together
+
+        Parameters
+        ---------------
+        model: Holding PDF and arrays used to build it 
+
+        Returns
+        ---------------
+        Weighted yield of dataset used to build PDF in range where PDF is defined
         '''
-        obs = pdf.space
-        wgt = getattr(pdf,  'arr_wgt')
-        mas = getattr(pdf, 'arr_mass')
+        if model.pdf is None:
+            raise ValueError('PDF associated to model should not be None, but it is')
 
-        return self.__yield_from_arrays(arr_mass=mas, arr_weight=wgt, obs=obs)
+        arr_mass   = model.mass
+        arr_weight = model.wgt
+        obs        = model.pdf.space
+
+        return self.__yield_from_arrays(masses = arr_mass, weights = arr_weight, obs = obs)
     #-----------------------------------------------------------
-    def __yield_from_arrays(
-        self,
-        obs        : zobs,
-        arr_mass   : numpy.ndarray,
-        arr_weight : numpy.ndarray) -> float:
-
+    def __yield_from_arrays(self, masses :  numpy.ndarray, weights : numpy.ndarray, obs : zobs) -> float:
         minx, maxx = sut.range_from_obs(obs=obs)
-
-        mask= (minx < arr_mass) & (arr_mass < maxx)
-        wgt = arr_weight[mask]
+        mask       = (minx < masses) & (masses < maxx)
+        wgt        = weights[mask]
 
         return sum(wgt)
     #-----------------------------------------------------------
@@ -572,30 +576,14 @@ class PRec(Cache):
         -------------------
         Full pdf, i.e. all ccbar components added
         '''
-        l_pdf     = [ self.__get_pdf(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items()                    ]
-        l_pdf     = [                                                                  pdf  for      pdf in l_pdf        if pdf is not None ]
-        l_wgt_yld = [ self.__yield_in_range(pdf=pdf)                                        for      pdf in l_pdf                           ]
-        l_frc     = [ wgt_yld / sum(l_wgt_yld)                                              for  wgt_yld in l_wgt_yld                       ]
+        all_models: list[Model] = [ self.__get_model(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items() ]
+        models    : list[Model] = [ model for model in all_models if model.pdf is not None ]
+        yields    : list[float] = [ self.__yield_in_range(model=model)                                      for    model in models       ]
+        fractions : list[float] = [ wgt_yld / sum(yields)                                                   for  wgt_yld in yields       ]
 
-        if   len(l_pdf) >= 2:
-            pdf   = zfit.pdf.SumPDF(l_pdf, fracs=l_frc, name='ccbar PRec')
-        elif len(l_pdf) == 1:
-            [pdf] = l_pdf
-        else:
-            log.warning('No PDF can be built with dataset')
-            return None
+        model = Model.add_models(models=models, fractions=fractions)
 
-        l_arr_mass   = [ getattr(pdf, 'arr_mass') for pdf in l_pdf ]
-        l_arr_wgt    = [ getattr(pdf, 'arr_wgt' ) for pdf in l_pdf ]
-        l_arr_sam    = [ getattr(pdf, 'arr_sam' ) for pdf in l_pdf ]
-        l_arr_dec    = [ getattr(pdf, 'arr_dec' ) for pdf in l_pdf ]
-
-        setattr(pdf, 'arr_mass', numpy.concatenate(l_arr_mass))
-        setattr(pdf, 'arr_wgt' , numpy.concatenate(l_arr_wgt ))
-        setattr(pdf, 'arr_dec' , numpy.concatenate(l_arr_dec ))
-        setattr(pdf, 'arr_sam' , numpy.concatenate(l_arr_sam ))
-
-        return pdf
+        return model
     #-----------------------------------------------------------
     def get_sum(self, mass : str, name : str = 'unnamed', **kwargs) -> zpdf|None:
         '''Provides extended PDF that is the sum of multiple KDEs representing PRec background
@@ -609,29 +597,29 @@ class PRec(Cache):
         zfit.pdf.SumPDF instance
         '''
         kwargs['name'] = name
-        slug           = slugify.slugify(name, lowercase=False)
 
         l_ltex      = list(self._d_match) # Get component names in latex and map them to parquet files to save
         d_ltex_slug = { ltex : slugify.slugify(ltex, lowercase=False) for ltex       in l_ltex }
         d_path      = { ltex : f'{self._out_path}/{slug}.parquet'     for ltex, slug in d_ltex_slug.items() }
 
+        plot_name   = slugify.slugify(name, lowercase=False)
         if self._copy_from_cache():
             log.info(f'Data found cached, reloading from {self._out_path}')
             d_df = { ltex : pnd.read_parquet(path) for ltex , path in d_path.items() }
-            pdf        = self.__get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+            model= self.__get_full_model(mass=mass, d_df=d_df, **kwargs)
 
             PRec.plot_pdf(
-                pdf,
+                model  =model,
                 title  =name,
-                name   =name,
-                out_dir=f'{self._out_path}/{slug}')
+                name   =plot_name,
+                out_dir=self._out_path)
 
-            return pdf
+            return model.pdf
 
         log.info(f'Recalculating, cached data not found in: {self._out_path}')
 
         d_df = self.__get_df()
-        pdf  = self.__get_full_pdf(mass=mass, d_df=d_df, **kwargs)
+        model= self.__get_full_model(mass=mass, d_df=d_df, **kwargs)
 
         for sample in self._cut_info:
             rep, d_sel = self._cut_info[sample]
@@ -646,18 +634,18 @@ class PRec(Cache):
             df.to_parquet(path)
 
         PRec.plot_pdf(
-            pdf,
+            model  =model,
             title  =name,
-            name   =name,
-            out_dir=f'{self._out_path}/{slug}')
+            name   =plot_name,
+            out_dir=self._out_path)
 
         self._cache()
 
-        return pdf
+        return model.pdf
     #-----------------------------------------------------------
     @staticmethod
     def plot_pdf(
-        pdf     : zpdf|None,
+        model   : Model,
         name    : str,
         out_dir : str|Path,
         title   : str        = '',
@@ -674,40 +662,57 @@ class PRec(Cache):
         out_dir: Directory where plots will go
         '''
 
-        if pdf is None:
+        if model.pdf:
+            obj = ZFitPlotter(data=model.mass, model=model.pdf, weights=model.wgt)
+            obj.plot(stacked=True)
+
+            obj.axs[0].set_title(f'#Entries: {model.mass.size}; {title}')
+
+            if maxy is not None:
+                obj.axs[0].set_ylim(bottom=0, top=maxy)
+
+            obj.axs[0].axvline(x=5080, linestyle=':')
+            obj.axs[0].axvline(x=5680, linestyle=':')
+            obj.axs[0].axvline(x=5280, label=r'$B^+$', color='gray', linestyle='--')
+
+            obj.axs[1].set_ylim(-5, +5)
+            obj.axs[1].axhline(y=-3, color='red')
+            obj.axs[1].axhline(y=+3, color='red')
+            obj.axs[1].set_label('M$(B^+)$[MeV/${}_{c^2}$]')
+        else:
             log.warning(f'PDF {name} not build, not plotting')
-            return
+            nentries = len(model.mass)
 
-        arr_mass = getattr(pdf, 'arr_mass')
-        arr_wgt  = getattr(pdf, 'arr_wgt' )
-        arr_sam  = getattr(pdf, 'arr_sam' )
-        arr_dec  = getattr(pdf, 'arr_dec' )
-
-        obj = ZFitPlotter(data=arr_mass, model=pdf, weights=arr_wgt)
-        obj.plot(stacked=True)
-
-        obj.axs[0].set_title(f'#Entries: {arr_mass.size}; {title}')
-
-        if maxy is not None:
-            obj.axs[0].set_ylim(bottom=0, top=maxy)
-
-        obj.axs[0].axvline(x=5080, linestyle=':')
-        obj.axs[0].axvline(x=5680, linestyle=':')
-        obj.axs[0].axvline(x=5280, label=r'$B^+$', color='gray', linestyle='--')
-
-        obj.axs[1].set_ylim(-5, +5)
-        obj.axs[1].axhline(y=-3, color='red')
-        obj.axs[1].axhline(y=+3, color='red')
-        obj.axs[1].set_label('M$(B^+)$[MeV/${}_{c^2}$]')
+            plt.figure(figsize=(15,10))
+            plt.title(f'Entries = {nentries}; {title}')
+            plt.hist(model.mass, weights=model.wgt, bins=100)
 
         os.makedirs(out_dir, exist_ok=True)
 
-        slug = slugify.slugify(name, lowercase=False)
-
-        plot_path = f'{out_dir}/{slug}.png'
+        plot_path = f'{out_dir}/{name}.png'
         log.info(f'Saving to: {plot_path}')
         plt.savefig(plot_path)
         plt.close('all')
+    #-----------------------------------------------------------
+    def _plot_weights(
+        self, 
+        name    : str,
+        title   : str,
+        out_dir : Path,
+        pdf     : zpdf) -> None:
+        '''
+        Save plot of weights and PDF as text
+
+        Parameters
+        -------------------
+        name   : Name of plot and place where PDF will be saved as text, i.e. {name}.png, {name}.txt
+        title  : Plot title
+        out_dir: Directory where files will be saved
+        pdf    : PDF from fit, which holds weights as attributes
+        '''
+        arr_wgt  = getattr(pdf, 'arr_wgt' )
+        arr_sam  = getattr(pdf, 'arr_sam' )
+        arr_dec  = getattr(pdf, 'arr_dec' )
 
         plt.hist(arr_sam, bins=30, label='sample', histtype='step', linestyle='-' )
         plt.hist(arr_dec, bins=30, label='decay' , histtype='step', linestyle='--')
@@ -715,9 +720,9 @@ class PRec(Cache):
 
         plt.legend()
         plt.title(title)
-        plt.savefig(f'{out_dir}/{slug}_wgt.png')
+        plt.savefig(f'{out_dir}/{name}_wgt.png')
         plt.close('all')
 
-        text_path = plot_path.replace('png', 'txt')
+        text_path = f'{out_dir}/{name}.txt' 
         sut.print_pdf(pdf, txt_path=text_path)
 #-----------------------------------------------------------
