@@ -4,7 +4,8 @@ Module containing PRec
 import os
 import copy
 import pprint
-from pathlib    import Path
+from pathlib     import Path
+from dataclasses import dataclass
 
 import numpy
 import slugify
