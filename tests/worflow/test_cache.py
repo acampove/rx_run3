@@ -4,6 +4,7 @@ Module used to test Cache class
 import os
 import pytest
 
+from pathlib               import Path
 from dmu.generic           import utilities as gut
 from dmu.workflow.cache    import Cache     as Wcache
 from dmu.logging.log_store import LogStore
@@ -145,3 +146,15 @@ def test_cache_with_dir():
 
         assert res == out
 # -----------------------------------
+def test_cache_context(tmp_path : Path):
+    '''
+    Tests setting caching directory through context manager
+    '''
+    log.info('')
+    res = 4 * [1]
+
+    with Wcache.cache_root(path=tmp_path):
+        obj = Tester(nval=4, name='cache_context')
+        out = obj.run()
+
+    assert res == out

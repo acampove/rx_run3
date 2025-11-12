@@ -256,6 +256,26 @@ class Cache:
         return _context()
     # ---------------------------
     @classmethod
+    def cache_root(cls, path : Path):
+        '''
+        Context manager used to set caching directory
+
+        Parameters
+        ----------------
+        path: Path to directory where outputs will be cached
+        '''
+        old_val = cls._cache_root
+        @contextmanager
+        def _context():
+            cls._cache_root = str(path)
+            try:
+                yield
+            finally:
+                cls._cache_root = old_val
+
+        return _context()
+    # ---------------------------
+    @classmethod
     def set_cache_root(cls, root : str | Path) -> None:
         '''
         Sets the path to the directory WRT which the _out_path_
