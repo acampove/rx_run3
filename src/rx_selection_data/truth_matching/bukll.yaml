@@ -150,9 +150,6 @@ ll_cut0   : '({l1_cut0}) || ({l2_cut0})'
 12123002 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_kaon} && {h_from_bplus}'
 12123003 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_kaon} && {h_from_bplus}'
 12123005 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_kaon} && {h_from_bplus}'
-# -------------
-# B+ -> pi+ee
-12123021  : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_pion}  && {h_from_bplus}'
 #-------------------------------------------------------------
 # Resonant fully reconstructed
 #-------------------------------------------------------------
@@ -162,15 +159,11 @@ jpsi_mm_kp: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_muons} 
 # B+ -> Jpsi(-> e  e ) K+
 12153001  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_bplus}'
 jpsi_ee_kp: '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons}  && {lep_from_jpsi} && {h_is_kaon} && {h_from_bplus}'
-#B+ -> K*+(-> K+ pi0) Jpsi ee
-12153420  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
 #B+ -> Psi(mm) K+
 12143020  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 psi2_ee_kp: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons}     && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #B+ -> Psi(ee) K+
 12153012  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
-#B+ psi2S(ee) K*+(Kpi0)
-12153430  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstplus}'
 psi2_mm_kp: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_bplus}'
 #---------
 #Cabibbo suppressed versions
@@ -187,9 +180,20 @@ psi2_mm_pi: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_muons} 
 #reso psi2 pi ee
 12153030  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_pion} && {h_from_bplus}'
 psi2_ee_pi: '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_pion} && {h_from_bplus}'
+#-------------------------------------------------------------
+# MisID fully reconstructed
+#-------------------------------------------------------------
+# B+ -> pi+ee
+12123021  : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_pion}  && {h_from_bplus}'
+#-------------------------------------------------------------
+# Partially reconstructed
+#-------------------------------------------------------------
 #reso B+ -> (K*+ -> (K_S0 -> pi+ pi-) pi+) e+ e-
 12125101 : '{b_is_bplus} && {lep_are_electrons} && {lep_from_bplus} && {h_is_pion} && ({h_from_kshort} || {h_from_kstplus})'
-#-------------------------------------------------------------
+#B+ -> K*+(-> K+ pi0) Jpsi(ee)
+12153420  : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_kaon} && {h_from_kstplus}'
+#B+ -> K*+(-> K+ pi0) psi2S(ee) 
+12153430  : '{b_is_bplus} && {ll_is_psi2} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_psi2} && {h_is_kaon} && {h_from_kstplus}'
 #-------------------------------------------------------------
 #  Bu -> Jpsi(ee) Kst(KS(-> pipi) pi)
 12155100 : '{b_is_bplus} && {ll_is_jpsi} && {ll_from_bplus} && {lep_are_electrons} && {lep_from_jpsi} && {h_is_pion} && ({h_from_kstplus} || {h_from_kshort}) && (TMath::Abs(H_MC_GD_MOTHER_ID) == 521 || TMath::Abs(H_MC_GD_MOTHER_ID) == 323)'
