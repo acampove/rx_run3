@@ -75,7 +75,7 @@ class SimFitter(BaseFitter, Cache):
 
         # Will not build (fit) a parametric PDF if fewer than these entries
         # will return None
-        self._min_fit_entries = 100
+        self._min_fit_entries = 50
 
         # All the PDFs will share the mu and sigma below and these will float
         self._mu_par = Parameter('mu_flt', 5280, 5000, 5500)
