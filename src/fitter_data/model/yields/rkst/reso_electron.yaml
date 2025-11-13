@@ -13,18 +13,32 @@ psi2_fraction:
   min : 0.0
   max : 1.0 
 # -------------------------
-yld_cabibbo_brem_001:
+yld_combinatorial_brem_001:
   <<: *yields
 yld_ccbar_brem_001:
   <<: *yields
-yld_combinatorial_brem_001:
+yld_lbjpsipk_brem_001:
   <<: *yields
-yld_cabibbo_brem_002:
+yld_bsjpsiphi_brem_001:
+  <<: *yields
+yld_bsjpsikst_brem_001:
+  <<: *yields
+yld_bdjpsikst_swp_brem_001:
+  <<: *yields
+# -----
+yld_combinatorial_brem_002:
   <<: *yields
 yld_ccbar_brem_002:
   <<: *yields
-yld_combinatorial_brem_002:
+yld_lbjpsipk_brem_002:
   <<: *yields
+yld_bsjpsiphi_brem_002:
+  <<: *yields
+yld_bsjpsikst_brem_002:
+  <<: *yields
+yld_bdjpsikst_swp_brem_002:
+  <<: *yields
+# -----
 yld_jpsi:
   <<: *yields
 yld_psi2:
