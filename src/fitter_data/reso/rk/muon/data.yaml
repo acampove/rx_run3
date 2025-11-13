@@ -26,8 +26,9 @@ model:
     yields : []
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins   : 50
-  stacked : True
+  nbins           : 50
+  stacked         : True
+  plot_components : ccbar
   d_leg :
     ccbar         : $B_{s,d,u}\to c\bar{c} X$
     jpsi          : $B^+\to J/\psi(\to \mu^+\mu^-) K^+$ 
