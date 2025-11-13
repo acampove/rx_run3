@@ -9,5 +9,6 @@ def test_simple() -> None:
     '''
     Simplest test
     '''
-    smr = FitSummary()
+    smr = FitSummary(name='mid_window')
+    smr.save()
     
