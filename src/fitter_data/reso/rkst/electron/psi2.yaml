@@ -24,3 +24,5 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   plot_range:
     - 4700 
     - 6500
+  d_leg :
+    dscb_1 : DSCB 
