@@ -4,7 +4,7 @@ common_settings: &settings
   reparametrize : {}
   fix           : {}
 
-output_directory : reso/muon/combinatorial
+output_directory : reso/rk/muon/combinatorial
 categories:
   main:
     models :
