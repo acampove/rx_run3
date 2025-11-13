@@ -69,10 +69,20 @@ class Fit(law.Task):
 
         ana_dir = Path(os.environ['ANADIR'])
         mva_cut = self._get_mva_cut(args=args)
-        out_dir = ana_dir / f'fits/data/{mva_cut}_b{args.block}/{args.fit_cfg}/data/{args.q2bin}/brem_000'
-        out_dir.mkdir(parents=True, exist_ok=True)
 
-        l_output = [ law.LocalFileTarget(out_dir / name) for name in cfg.outputs ]
+        if args.fit_cfg.endswith('muon'):
+            l_brem = ['brem_000']
+        elif args.fit_cfg.endswith('electron'):
+            l_brem = ['brem_001', 'brem_002']
+        else:
+            raise ValueError(f'Could not identify {args.fit_cfg} as electron or muon')
+
+        l_output = []
+        for brem in l_brem:
+            out_dir = ana_dir / f'fits/data/{mva_cut}_b{args.block}/{args.fit_cfg}/data/{args.q2bin}/{brem}'
+            out_dir.mkdir(parents=True, exist_ok=True)
+
+            l_output += [ law.LocalFileTarget(out_dir / name) for name in cfg.outputs ]
 
         nout = len(l_output)
         log.debug(f'Using {nout} outputs')
