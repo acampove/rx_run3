@@ -18,7 +18,7 @@ model:
         - 5700
   components:
     combinatorial : reso/rk/muon/combinatorial.yaml
-    ccbar         : reso/rkst/muon/ccbar.yaml
+    ccbar         : reso/rk/muon/ccbar.yaml
     cabibbo       : reso/rk/muon/cabibbo.yaml
     psi2          : reso/rk/muon/psi2.yaml
     jpsi          : reso/rk/muon/jpsi.yaml
