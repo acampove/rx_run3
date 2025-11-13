@@ -18,9 +18,10 @@ model:
         - 5700
   components:
     combinatorial : reso/rk/muon/combinatorial.yaml
-    jpsi          : reso/rk/muon/jpsi.yaml
-    psi2          : reso/rk/muon/psi2.yaml
+    ccbar         : reso/rkst/muon/ccbar.yaml
     cabibbo       : reso/rk/muon/cabibbo.yaml
+    psi2          : reso/rk/muon/psi2.yaml
+    jpsi          : reso/rk/muon/jpsi.yaml
   constraints:
     yields : []
 fit: {}
@@ -28,6 +29,7 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   nbins   : 50
   stacked : True
   d_leg :
+    ccbar         : $B_{s,d,u}\to c\bar{c} X$
     jpsi          : $B^+\to J/\psi(\to \mu^+\mu^-) K^+$ 
     cabibbo       : $B^+\to J/\psi(\to \mu^+\mu^-) \pi^+$ 
     psi2          : $B^+\to \psi(2S)(\to \mu^+\mu^-) K^+$ 
