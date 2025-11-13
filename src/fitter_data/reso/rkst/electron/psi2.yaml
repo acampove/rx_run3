@@ -1,14 +1,13 @@
-output_directory : reso/electron/psi2/brem_xxx
+output_directory : reso/rkst/electron/psi2
 categories:
-  brem_xxx:
+  main:
     model :
-      - dscb 
-      - cbl
-sample : Bu_psi2SK_ee_eq_DPC
-shared :
+      - dscb
+sample        : Bd_psi2SKst_ee_eq_DPC
+shared        : 
   - mu
   - sg
-float  :
+float         :
   - mu
   - sg
 reparametrize : {}
@@ -16,12 +15,12 @@ fix           : {}
 fit:
   strategy  :
     retry   :
-      ntries        : 15
+      ntries        : 10
       pvalue_thresh : 0.05
-      ignore_status : false
+      ignore_status : true
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins     : 50
-  stacked   : True
-  plot_range: 
+  nbins   : 50
+  stacked : True
+  plot_range:
     - 5100
-    - 5700
+    - 5500

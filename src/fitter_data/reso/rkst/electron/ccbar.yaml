@@ -1,4 +1,4 @@
-output_directory : /reso/rkst/electron/ccbar/brem_xxx
+output_directory : /reso/rkst/electron/ccbar/
 ccbar_samples:
   - Bd_JpsiX_ee_eq_JpsiInAcc
   - Bu_JpsiX_ee_eq_JpsiInAcc

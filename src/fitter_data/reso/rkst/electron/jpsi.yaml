@@ -1,14 +1,14 @@
-output_directory : reso/electron/jpsi/brem_xxx
+output_directory : reso/rkst/electron/jpsi
 categories:
-  brem_xxx:
+  main:
     model :
-      - dscb 
-      - cbl
-sample : Bu_JpsiK_ee_eq_DPC
-shared :
+      - dscb
+      - gauss
+sample        : Bd_JpsiKst_ee_eq_DPC
+shared        : 
   - mu
   - sg
-float  :
+float         :
   - mu
   - sg
 reparametrize : {}
@@ -16,12 +16,15 @@ fix           : {}
 fit:
   strategy  :
     retry   :
-      ntries        : 15
+      ntries        : 10
       pvalue_thresh : 0.05
-      ignore_status : false
+      ignore_status : true
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins     : 50
-  stacked   : True
-  plot_range: 
-    - 5100
-    - 6500
+  nbins   : 50
+  stacked : True
+  plot_range:
+    - 5180
+    - 5700
+  d_leg :
+    gauss_1 : Gauss 
+    dscb_1  : DSCB 
