@@ -393,13 +393,13 @@ class PRec(Cache):
         d_cut       = {}
         d_cut[r'$B^+\to \psi(2S)(\to J/\psi+X)H_{s}$'] = bp_psjp
         if   info.is_ee(trigger = self._trig):
-            d_cut[r'$B^+\to c\bar{c}(\to ee)H_s$']     = bp_ex
-            d_cut[r'$B_d\to c\bar{c}(\to ee)H_s$']     = bd
-            d_cut[r'$B_s\to c\bar{c}(\to ee)H_s$']     = bs
+            d_cut[r'$B^+\to c\bar{c}(\to e^+ e^-)H_s$']    = bp_ex
+            d_cut[r'$B_d\to c\bar{c}(\to e^+ e^-)H_s$']    = bd
+            d_cut[r'$B_s\to c\bar{c}(\to e^+ e^-)H_s$']    = bs
         elif info.is_mm(trigger = self._trig):
-            d_cut[r'$B^+\to c\bar{c}(\to \mu\mu)H_s$'] = bp_ex
-            d_cut[r'$B_d\to c\bar{c}(\to \mu\mu)H_s$'] = bd
-            d_cut[r'$B_s\to c\bar{c}(\to \mu\mu)H_s$'] = bs
+            d_cut[r'$B^+\to c\bar{c}(\to \mu^+\mu^-)H_s$'] = bp_ex
+            d_cut[r'$B_d\to c\bar{c}(\to \mu^+\mu^-)H_s$'] = bd
+            d_cut[r'$B_s\to c\bar{c}(\to \mu^+\mu^-)H_s$'] = bs
         else:
             raise ValueError(f'Trigger not associated to electron or muon channel: {self._trig}')
 
