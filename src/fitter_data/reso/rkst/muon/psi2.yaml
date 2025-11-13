@@ -4,9 +4,7 @@ categories:
     model :
       - dscb
 sample        : Bd_psi2SKst_mm_eq_DPC
-shared        : 
-  - mu
-  - sg
+shared        : []
 float         :
   - mu
   - sg
