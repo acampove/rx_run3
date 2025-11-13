@@ -1,4 +1,7 @@
 args:
+  # ------------
+  # Muon
+  # ------------
   - {block :  1, fit_cfg : reso/rkst/muon, q2bin : psi2, mva_cmb : 0.5, mva_prc : 0.5} 
   - {block :  2, fit_cfg : reso/rkst/muon, q2bin : psi2, mva_cmb : 0.5, mva_prc : 0.5} 
   - {block :  3, fit_cfg : reso/rkst/muon, q2bin : psi2, mva_cmb : 0.5, mva_prc : 0.5} 
@@ -16,6 +19,9 @@ args:
   - {block :  6, fit_cfg : reso/rkst/muon, q2bin : jpsi, mva_cmb : 0.5, mva_prc : 0.5} 
   - {block :  7, fit_cfg : reso/rkst/muon, q2bin : jpsi, mva_cmb : 0.5, mva_prc : 0.5} 
   - {block :  8, fit_cfg : reso/rkst/muon, q2bin : jpsi, mva_cmb : 0.5, mva_prc : 0.5} 
+  # ------------
+  # Electron
+  # ------------
 outputs:
   - data.json
   - fit_linear.png
