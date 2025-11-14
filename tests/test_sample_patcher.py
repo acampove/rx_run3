@@ -37,7 +37,7 @@ def test_unpatched(sample : str, trigger : Trigger) -> None:
     Tests that patching does not affect samples that are not
     meant to be patched
     '''
-    spk  = SpecMaker(sample=sample, trigger=trigger)
+    spk  = SpecMaker(sample=sample, trigger=trigger, skip_patch=True)
     spec_old = spk.spec
 
     ptr  = SamplePatcher(sample = sample, spec = spec_old)
