@@ -2,9 +2,9 @@
 # It illustrates how a fit would run for data
 
 trigger          : Hlt2RD_BuToKpEE_MVA
-output_directory : reso/electron/data/brem_xxx
+output_directory : reso/rk/electron/data
 model:
-  yields    : model/yields/reso_electron.yaml
+  yields    : model/yields/rk/reso_electron.yaml
   observable:
     jpsi:
       name : B_const_mass_M
@@ -17,27 +17,24 @@ model:
         - 4800 
         - 6500
   components:
-    combinatorial : reso/electron/combinatorial.yaml
-    ccbar         : reso/electron/ccbar.yaml
-    jpsi          : reso/electron/jpsi.yaml
-    psi2          : reso/electron/psi2.yaml
+    combinatorial : reso/rk/electron/combinatorial.yaml
+    cabibbo       : reso/rk/electron/cabibbo.yaml
+    ccbar         : reso/rk/electron/ccbar.yaml
+    jpsi          : reso/rk/electron/jpsi.yaml
+    psi2          : reso/rk/electron/psi2.yaml
   constraints:
     yields : []
-fit:
-  strategy  :
-    retry   :
-      ntries        : 3 
-      pvalue_thresh : 0.05
-      ignore_status : false 
+fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  yrange:
+    log   : [1.0,  1e6]
+    linear: [0.0, null]
   nbins           : 50
   stacked         : True
   plot_components : ccbar
-  plot_range :
-    - 4800
-    - 6500
   d_leg :
+    combinatorial : Combinatorial
+    cabibbo       : $B^+\to J/\psi(\to e^+e^-)\pi^+$
+    ccbar         : $B_{s,d,u}\to c\bar{c} X$
     jpsi          : $B^+\to J/\psi(\to e^+e^-) K^+$
     psi2          : $B^+\to \psi(2S)(\to e^+e^-) K^+$
-    cabibbo       : $B^+\to J/\psi(\to e^+e^-)\pi^+$
-    combinatorial : Combinatorial

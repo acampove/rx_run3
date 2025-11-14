@@ -1,14 +1,14 @@
-output_directory : reso/electron/cabibbo/brem_xxx
+output_directory : reso/rk/electron/cabibbo
 categories:
-  brem_xxx:
+  main:
     model :
       - dscb 
       - cbl
-sample : Bu_JpsiPi_ee_eq_DPC
-shared :
+sample        : Bu_JpsiPi_ee_eq_DPC
+shared        :
   - mu
   - sg
-float  :
+float         :
   - sg
 reparametrize : {}
 fix           : {}
@@ -21,6 +21,6 @@ fit:
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins     : 50
   stacked   : True
-  plot_range: 
-    - 5100
-    - 5700
+  d_leg :
+    dscb_1 : DSCB 
+    cbl_1  : Crystal Ball 

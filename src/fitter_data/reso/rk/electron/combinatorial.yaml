@@ -3,8 +3,7 @@ common_settings: &settings
   float         : []
   reparametrize : {}
   fix           : {}
-
-output_directory : reso/electron/combinatorial
+output_directory : reso/rk/electron/combinatorial
 categories:
   main:
     models :
