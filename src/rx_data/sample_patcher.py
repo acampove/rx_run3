@@ -57,6 +57,10 @@ class SamplePatcher:
     @property
     def redefinitions(self) -> dict[str,str]:
         '''
+        Here the conditions refer to redefinitions of the block column
+        such that for the entries at the end of the dataframe a block is reused
+        as a different block
+
         Returns
         --------------
         Dictionary between column name and string with new definition
