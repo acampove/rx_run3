@@ -23,8 +23,8 @@ class SamplePatcher:
         '''
         self._sample = sample
         self._spec   = spec.model_copy(deep=True)
-        self._conditions     : None | dict[int,str] = None # This will map the block to the condition
         self._associations   : dict[int,int]        = self._get_patching_dictionary()
+        self._conditions     : dict[int,str]        = dict() 
         self._patching_files : dict[int,list[Path]] = dict()
     # ----------------------
     def _get_patching_dictionary(self) -> dict[int,int]:
@@ -40,19 +40,24 @@ class SamplePatcher:
         If no patching is available, dictionary will be empty
         '''
         cfg = gut.load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
+
+        associations : dict[int,int] = dict()
+        if not self._sample.startswith('DATA_') and 'simulation' in cfg:
+            log.debug('Found patching section for simulation')
+            associations.update(cfg.simulation.patching)
+
         if self._sample not in cfg:
-            log.info(f'No patching needed for {self._sample}')
-            self._conditions = dict()
-            return dict()
+            log.debug(f'No sample specific patching needed for {self._sample}')
+            return associations 
 
         if 'patching' not in cfg[self._sample]:
-            log.info(f'No patching needed for {self._sample}')
-            self._conditions = dict()
-            return dict()
+            log.info(f'No sample specific patching needed for {self._sample}')
+            return associations 
 
-        log.info(f'Using patching for {self._sample}')
+        log.info(f'Using sample specifig patching for {self._sample}')
+        associations.update(cfg[self._sample].patching)
 
-        return cfg[self._sample].patching
+        return associations 
     # ----------------------
     @property
     def redefinitions(self) -> dict[str,str]:
