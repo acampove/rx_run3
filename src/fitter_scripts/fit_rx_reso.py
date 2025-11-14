@@ -5,8 +5,6 @@ and run fits to the resonant mode
 
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-import matplotlib
-matplotlib.use('Agg')
 
 import argparse
 
