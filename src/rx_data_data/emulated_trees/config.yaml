@@ -1,7 +1,7 @@
 # This is a config meant to specify how to emulate a sample
 
 # ----------------------------------------
-all:
+simulation:
   patching:
     3 : 5
     4 : 5
