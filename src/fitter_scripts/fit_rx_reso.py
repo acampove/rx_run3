@@ -130,6 +130,8 @@ def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
+    matplotlib.use('Agg')
+
     cfg = _parse_args(args=args) 
 
     overriding_selection = {
