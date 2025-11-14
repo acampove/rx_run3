@@ -9,10 +9,10 @@ from rx_data.sample_patcher import SamplePatcher
 from rx_data.spec_maker     import SpecMaker
 
 _UNPATCHED_SAMPLES = [
-    ('Bu_JpsiK_ee_eq_DPC'            , Trigger.rk_ee_os),
-    ('Bu_JpsiK_mm_eq_DPC'            , Trigger.rk_mm_os),
-    ('Bd_Kstee_eq_btosllball05_DPC'  , Trigger.rkst_ee_os),
-    ('Bd_Kstmumu_eq_btosllball05_DPC', Trigger.rkst_mm_os),
+    ('DATA_24_MagDown_24c2', Trigger.rk_ee_os),
+    ('DATA_24_MagDown_24c2', Trigger.rk_mm_os),
+    ('DATA_24_MagDown_24c2', Trigger.rkst_ee_os),
+    ('DATA_24_MagDown_24c2', Trigger.rkst_mm_os),
 ]
 _PATCHED_SAMPLES = [
     ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
