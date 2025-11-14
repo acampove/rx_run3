@@ -25,8 +25,9 @@ class SampleEmulator:
         ---------------
         sample: Name of sample to emulate, e.g. Bs_JpsiKst_ee_eq_DPC
         '''
-        self._sample = sample
-        self._cfg    = load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml').get(sample)
+        self._sample  = sample
+        cfg       : DictConfig = load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
+        self._cfg : DictConfig = cfg.get(sample, DictConfig({}))
     # ---------------------
     def get_sample_name(self) -> str:
         '''
@@ -36,7 +37,7 @@ class SampleEmulator:
         original sample
         '''
 
-        if self._cfg is None:
+        if not self._cfg:
             log.debug(f'Not emulating {self._sample}')
             return self._sample
 
@@ -111,7 +112,7 @@ class SampleEmulator:
         -------------
         Dataframe after redefinitions, etc
         '''
-        if self._cfg is None: 
+        if not self._cfg: 
             log.debug(f'Not emulating {self._sample}, missing in config')
             return rdf
 
