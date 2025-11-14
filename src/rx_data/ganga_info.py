@@ -9,7 +9,8 @@ import tarfile
 from pathlib import Path
 from typing import Final
 
-from dmu.generic.utilities import gut, hashing
+from dmu.generic           import hashing
+from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_data:ganga_info')
