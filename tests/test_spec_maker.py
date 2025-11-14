@@ -8,7 +8,8 @@ from rx_common.info     import LogStore
 from rx_common.types    import Project, Trigger
 from rx_data.spec_maker import SpecMaker, Specification
 
-_SAMPLES=[
+# These samples need minimal patching/emulation, etc
+_GOODSAMPLES=[
     ('Bu_JpsiK_ee_eq_DPC'            , Trigger.rk_ee_os),
     ('Bu_JpsiK_mm_eq_DPC'            , Trigger.rk_mm_os),
     ('Bd_Kstee_eq_btosllball05_DPC'  , Trigger.rkst_ee_os),
@@ -69,7 +70,7 @@ def test_skip_patching(sample : str, trigger : Trigger) -> None:
 
     assert path.exists()
 # ------------------------------------------------------
-@pytest.mark.parametrize('sample, trigger', _SAMPLES)
+@pytest.mark.parametrize('sample, trigger', _GOODSAMPLES)
 def test_combined(sample : str, trigger : Trigger) -> None:
     '''
     Return path to specification of combined sample
@@ -79,7 +80,7 @@ def test_combined(sample : str, trigger : Trigger) -> None:
 
     assert path.exists()
 # ------------------------------------------------------
-@pytest.mark.parametrize('sample, trigger', _SAMPLES)
+@pytest.mark.parametrize('sample, trigger', _GOODSAMPLES)
 def test_per_file(sample : str, trigger : Trigger) -> None:
     '''
     Return path to specification of combined sample
