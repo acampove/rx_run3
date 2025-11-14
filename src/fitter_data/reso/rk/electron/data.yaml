@@ -18,7 +18,7 @@ model:
         - 6500
   components:
     combinatorial : reso/rk/electron/combinatorial.yaml
-    cabibbo       : reso/rk/electron/cabibbo.yaml
+    #cabibbo       : reso/rk/electron/cabibbo.yaml
     ccbar         : reso/rk/electron/ccbar.yaml
     jpsi          : reso/rk/electron/jpsi.yaml
     psi2          : reso/rk/electron/psi2.yaml
