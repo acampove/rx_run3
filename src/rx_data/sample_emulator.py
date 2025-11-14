@@ -86,13 +86,15 @@ class SampleEmulator:
 
         fail = False
         log.info('Extending columns redefinitions')
+        for name, expr in redefinitions.items():
+            log.debug(f'{name:<20}{expr}')
 
         if 'redefine' not in self._cfg:
             self._cfg['redefine'] = dict()
 
         for name, expression in redefinitions.items():
             if name in self._cfg.redefine:
-                log.error(name)
+                log.error(f'Cannot redefine {name}, already in redefine block')
                 fail = True
                 continue
 
