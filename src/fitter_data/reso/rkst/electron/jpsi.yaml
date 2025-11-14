@@ -22,9 +22,6 @@ fit:
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
-  plot_range:
-    - 4700 
-    - 6500
   d_leg :
     gauss_1 : Gauss 
     dscb_1  : DSCB 
