@@ -30,6 +30,10 @@ def _set_logs() -> None:
     '''
     Hides log messages from certain tools
     '''
+    LogStore.set_level('rx_fitter:inclusive_sample_weights', 30)
+    LogStore.set_level('rx_fitter:inclusive_decays_weights', 30)
+
+    LogStore.set_level('rx_data:path_splitter'    , 30)
     LogStore.set_level('rx_data:spec_maker'       , 30)
     LogStore.set_level('rx_data:sample_patcher'   , 30)
     LogStore.set_level('rx_data:sample_emulator'  , 30)
