@@ -5,6 +5,8 @@ import os
 import law
 import json
 import argparse
+import matplotlib # This should prevent errors when using batch jobs with matplotlib
+matplotlib.use('Agg')
 
 from pathlib               import Path
 from law.parameter         import Parameter
