@@ -8,15 +8,15 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 import argparse
 
-from contextlib                 import ExitStack
-from dmu.stats.fitter           import GofCalculator
-from omegaconf                  import DictConfig
-from dmu.stats.parameters       import ParameterLibrary as PL
-from dmu.generic                import utilities as gut
-from dmu.stats                  import utilities as sut
-from dmu.workflow.cache         import Cache
-from dmu.logging.log_store      import LogStore
-from zfit.loss                  import ExtendedUnbinnedNLL
+from contextlib                import ExitStack
+from dmu.stats.fitter          import GofCalculator
+from omegaconf                 import DictConfig
+from dmu.stats.parameters      import ParameterLibrary as PL
+from dmu.generic               import utilities as gut
+from dmu.stats                 import utilities as sut
+from dmu.workflow.cache        import Cache
+from dmu.logging.log_store     import LogStore
+from zfit.loss                 import ExtendedUnbinnedNLL
 
 from fitter.fit_config         import FitConfig
 from fitter.data_fitter        import DataFitter
