@@ -4,12 +4,14 @@ and run fits to the resonant mode
 '''
 
 import os
-
-from dmu.stats.fitter import GofCalculator
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-import argparse
-from contextlib import ExitStack
+import matplotlib
+matplotlib.use('Agg')
 
+import argparse
+
+from contextlib                 import ExitStack
+from dmu.stats.fitter           import GofCalculator
 from omegaconf                  import DictConfig
 from dmu.stats.parameters       import ParameterLibrary as PL
 from dmu.generic                import utilities as gut
@@ -130,7 +132,6 @@ def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
-    matplotlib.use('Agg')
 
     cfg = _parse_args(args=args) 
 
