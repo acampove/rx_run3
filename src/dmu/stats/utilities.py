@@ -442,6 +442,8 @@ def _save_fit_plot(
     if yrange_lin:
         log.debug(f'Using linear yrange: {yrange_lin}')
         ptr.axs[0].set_ylim(yrange_lin)
+    else:
+        ptr.axs[0].set_ylim(bottom=0.0)
 
     plt.savefig(fit_path_lin)
 
@@ -449,6 +451,8 @@ def _save_fit_plot(
     if yrange_log:
         log.debug(f'Using log yrange: {yrange_log}')
         ptr.axs[0].set_ylim(yrange_log)
+    else:
+        ptr.axs[0].set_ylim(bottom=1.0)
 
     log.info(f'Saving fit to: {fit_path_log}')
     plt.savefig(fit_path_log)
