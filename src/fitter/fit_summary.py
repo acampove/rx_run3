@@ -120,11 +120,17 @@ class FitSummary:
 
         return df
     # ----------------------
-    def save(self) -> None:
+    def get_df(self, force_update : bool = False) -> pnd.DataFrame:
         '''
-        Saves summary to _fit_dir/summary
+        Parameters
+        ---------------
+        force_update: If true (default false) will regenerate file, otherwise will reuse file if found 
         '''
+        path  = self._fit_dir / 'parameters.parquet'
         paths = self._get_parameter_paths()
+
+        if path.exists() and not force_update:
+            return pnd.read_parquet(path)
 
         l_df : list[pnd.DataFrame] = []
         for path in tqdm.tqdm(paths, ascii=' -'):
@@ -134,8 +140,25 @@ class FitSummary:
         df = pnd.concat(objs=l_df, axis=0)
         df = df.reset_index(drop=True)
 
-        df.to_parquet(path = self._fit_dir / 'parameters.parquet')
-        df.to_markdown(buf = self._fit_dir / 'parameters.md')
+        self._save_df(df=df, path = path)
 
-        log.info(f'Saving summary to: {self._fit_dir}')
+        return df
+    # ----------------------
+    def _save_df(
+        self, 
+        df   : pnd.DataFrame, 
+        path : Path) -> None:
+        '''
+        Parameters
+        ----------------
+        path: Path to parquet file to save
+        '''
+        df.to_parquet(path = path)
+        log.info(f'Saving summary to: {path}')
+
+        str_path = str(path)
+        str_path = str_path.replace('.parquet', '.md')
+        df.to_markdown(buf = path)
+
+        log.info(f'Saving summary to: {path}')
 # -------------------------------
