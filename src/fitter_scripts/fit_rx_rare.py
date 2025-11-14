@@ -5,9 +5,12 @@ and run fits
 
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-import argparse
-from contextlib import ExitStack
+import matplotlib
+matplotlib.use('Agg')
 
+import argparse
+
+from contextlib                 import ExitStack
 from omegaconf                  import DictConfig, OmegaConf
 from dmu.stats.parameters       import ParameterLibrary as PL
 from dmu.generic                import utilities as gut
