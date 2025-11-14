@@ -26,6 +26,19 @@ from rx_selection              import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_reso')
 # ----------------------
+def _set_logs() -> None:
+    '''
+    Hides log messages from certain tools
+    '''
+    LogStore.set_level('rx_data:spec_maker'       , 30)
+    LogStore.set_level('rx_data:sample_patcher'   , 30)
+    LogStore.set_level('rx_data:sample_emulator'  , 30)
+    LogStore.set_level('rx_data:rdf_getter'       , 30)
+
+    LogStore.set_level('fitter:base_fitter'       , 30)
+    LogStore.set_level('fitter:sim_fitter'        , 30)
+    LogStore.set_level('fitter:likelihood_factory', 30)
+# ----------------------
 def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
     '''
     Returns
@@ -130,6 +143,7 @@ def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
+    _set_logs()
 
     cfg = _parse_args(args=args) 
 
