@@ -35,7 +35,9 @@ def initialize():
     '''
     This will run before any test
     '''
-    LogStore.set_level('rx_data:spec_maker', 10)
+    LogStore.set_level('rx_data:spec_maker'     , 10)
+    LogStore.set_level('rx_data:sample_emulator', 10)
+    LogStore.set_level('rx_data:sample_patcher' , 10)
 # ------------------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _PATCHING_SAMPLES)
 def test_patching(sample : str, trigger : Trigger) -> None:
