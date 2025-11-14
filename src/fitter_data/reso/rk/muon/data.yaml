@@ -29,7 +29,7 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   yrange:
     log   : [1.0,  1e7]
     linear: [0.0, null]
-  nbins           : 50
+  nbins           : 200
   stacked         : True
   plot_components : ccbar
   d_leg :
