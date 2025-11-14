@@ -26,6 +26,7 @@ from fitter.misid_constraints  import MisIDConstraints
 from fitter.toy_maker          import ToyMaker
 from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
+from rx_common.types           import Trigger
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 # ----------------------
@@ -136,8 +137,7 @@ def _fit(cfg : FitConfig) -> None:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = 'DATA_24_*',
-        trigger= 'Hlt2RD_BuToKpEE_MVA',
-        project= 'rx',
+        trigger= Trigger.rk_ee_os,
         cfg    = cfg.fit_cfg)
     nll = ftr.run()
     cfg_mod = ftr.get_config()
