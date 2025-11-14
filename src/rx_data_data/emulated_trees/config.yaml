@@ -1,6 +1,11 @@
 # This is a config meant to specify how to emulate a sample
 
 # ----------------------------------------
+all:
+  patching:
+    3 : 5
+    4 : 5
+# ----------------------------------------
 Bs_JpsiKst_mm_eq_DPC : 
   sample : Bd_JpsiKst_mm_eq_DPC
   redefine : &red_001
