@@ -7,6 +7,7 @@ import pytest
 import pandas             as pnd
 import matplotlib.pyplot  as plt
 
+from pathlib               import Path
 from matplotlib            import patches
 from dmu.logging.log_store import LogStore
 from ecal_calibration      import calo_translator as ctran
@@ -80,7 +81,7 @@ def _plot_region(df : pnd.DataFrame, det : str, name : str, color : str = 'blue'
     return ax
 # --------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     '''
     This function will execute before the tests
     '''
@@ -111,7 +112,7 @@ def test_read_xy():
 
     print(df)
 # --------------------------------
-def test_plot_row_col():
+def test_plot_row_col(tmp_path : Path):
     '''
     Plots row and column histograms
     '''
@@ -119,7 +120,7 @@ def test_plot_row_col():
     df.c.hist(bins=64, histtype='step', linestyle='-', label='column')
     df.r.hist(bins=64, histtype='step', linestyle=':', label='row')
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/row_col.png')
+    plt.savefig(tmp_path / 'row_col.png')
     plt.close()
 # --------------------------------
 def test_plot_xyz():
