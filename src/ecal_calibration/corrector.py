@@ -45,10 +45,10 @@ class Corrector:
         return val
     # ---------------------------------------
     def run(
-            self,
-            electron : v4d,
-            row      : pnd.Series,
-            from_nn  : bool = True) -> v4d:
+        self,
+        electron : v4d,
+        row      : pnd.Series,
+        from_nn  : bool = True) -> v4d:
         '''
         Calibrates electron
 
