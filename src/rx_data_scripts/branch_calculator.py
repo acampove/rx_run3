@@ -178,7 +178,12 @@ def _filter_paths(l_path : list[Path]) -> list[Path]:
     return l_path
 # ---------------------------------
 def _get_paths() -> list[Path]:
-    data_dir = vman.get_last_version(dir_path=f'{Data.ana_dir}/Data/{Data.proj}/main', version_only=False)
+    dir_path = Data.ana_dir / f'Data/{Data.proj}/main'
+    log.debug(f'Looking for latest version in: {dir_path}')
+
+    data_dir = vman.get_last_version(dir_path = dir_path, version_only = False)
+    log.debug(f'Lookig for files in: {data_dir}')
+
     l_path   = list(data_dir.glob('*.root'))
     l_path   = _filter_paths(l_path)
     l_path   = _get_partition(l_path)
