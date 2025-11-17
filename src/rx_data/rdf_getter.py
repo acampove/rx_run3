@@ -168,6 +168,32 @@ class RDFGetter(SpecMaker):
     # TODO: This class is pretty large, all the lines below
     # have one job, adding columns to dataframe, put them in a class
     # ---------------------------------------------------
+    def _skip_smear_definition(self, name: str, definition : str) -> bool:
+        '''
+        This method will allow to skip definitions that use smear tree branches
+
+        Parameters
+        -------------------
+        name      : Name of variable to be defined
+        definition: Definition...
+
+        Returns
+        -------------------
+        True: This definition is not possible, due to absence of brem_track_2
+        False: Definition possible
+        '''
+        if 'smear' in self._s_ftree:
+            log.debug('Not skipping smear definitions')
+            return False
+
+        if 'smear.' not in definition:
+            log.debug(f'Not skipping smear definitions for: {name} = {definition}')
+            return False
+
+        log.debug(f'Skipping definition of {name}')
+
+        return True
+    # ---------------------------------------------------
     def _skip_brem_track_2_definition(self, name: str, definition : str) -> bool:
         '''
         This method checks if this is a brem_track_2 definition. If not, returns False.
@@ -247,7 +273,16 @@ class RDFGetter(SpecMaker):
         '''
         # If this is a brem_track_2 dependent definition
         # and the definition is not possible, skip
-        if self._skip_brem_track_2_definition(name, definition):
+        if self._skip_brem_track_2_definition(
+            name       = name, 
+            definition = definition):
+
+            return rdf
+
+        if self._skip_smear_definition(
+            name       = name, 
+            definition = definition):
+
             return rdf
 
         if redefine:
