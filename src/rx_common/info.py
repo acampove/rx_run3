@@ -2,7 +2,7 @@
 This script contains functions needed to get information on samples
 '''
 
-from ROOT                  import RDF
+from ROOT                  import RDF # type: ignore
 from dmu.generic           import utilities  as gut
 from dmu.logging.log_store import LogStore
 
