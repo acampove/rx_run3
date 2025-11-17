@@ -23,6 +23,7 @@ from zfit.result              import FitResult     as zres
 from zfit.pdf                 import BasePDF       as zpdf
 from zfit.param               import Parameter     as zpar
 from zfit.data                import Data          as zdat
+from zfit                     import Space         as zobs
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
@@ -200,7 +201,7 @@ class Fitter:
         to uniform PDF
         '''
 
-        s_par = self._pdf.get_params(floating=True)
+        s_par : set[zpar] = self._pdf.get_params(floating=True)
         for par in s_par:
             ival = par.value()
             fval = numpy.random.uniform(par.lower, par.upper)
@@ -271,7 +272,7 @@ class Fitter:
         return data
     #------------------------------
     def _get_binned_observable(self, nbins : int):
-        obs = self._pdf.space
+        obs : zobs = self._pdf.space
         [[minx]], [[maxx]] = obs.limits
 
         binning = zfit.binned.RegularBinning(nbins, minx, maxx, name=obs.label)
@@ -582,7 +583,7 @@ class Fitter:
                 err = d_val['hesse']['error']
             except KeyError as exc:
                 pprint.pprint(d_val)
-                raise KeyError(f'Cannot extract value, hesse or error from dictionary above') from exc
+                raise KeyError('Cannot extract value, hesse or error from dictionary above') from exc
 
             d_par[par.name] = [val, err]
 
