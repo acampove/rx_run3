@@ -11,6 +11,7 @@ import pandas                        as pnd
 
 from ROOT                   import RDF # type: ignore
 from dmu.logging.log_store  import LogStore
+from rx_common.types        import Trigger
 
 log   = LogStore.add_logger('rx_data:utilities')
 # ---------------------------------
@@ -35,7 +36,7 @@ def rdf_is_mc(rdf : RDF.RNode) -> bool:
 # ---------------------------------
 def info_from_path(
     path             : str|Path,
-    sample_lowercase : bool = True) -> tuple[str,str]:
+    sample_lowercase : bool = True) -> tuple[str,Trigger]:
     '''
     Parameter
     -------------------
@@ -54,13 +55,13 @@ def info_from_path(
     elif path.name.startswith('mc_'):
         info = _info_from_mc_path(path=path)
     else:
-        log.error(f'File name is not for data or MC: {path.name}')
-        raise ValueError
+        raise ValueError(f'File name is not for data or MC: {path.name}')
 
+    sample, trigger_str = info
+    trigger = Trigger(value = trigger_str)
     if sample_lowercase:
-        return info
+        return sample, trigger 
 
-    sample, trigger = info
     sample = aput.name_from_lower_case(sample)
 
     return sample, trigger
