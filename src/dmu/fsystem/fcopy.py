@@ -147,9 +147,9 @@ class FCopy:
         tpath = self._get_path(target, is_source=False)
 
         if self._source or self._target:
-            commands = ['rsync', '--append-verify', '-a', '-e', 'ssh -o PubkeyAuthentication=yes -o PasswordAuthentication=no', spath, tpath]
+            commands = ['rsync', '--delete', '--append-verify', '-a', '-e', 'ssh -o PubkeyAuthentication=yes -o PasswordAuthentication=no', spath, tpath]
         else:
-            commands = ['rsync', '--append-verify', '-a', spath, tpath]
+            commands = ['rsync', '--delete', '--append-verify', '-a', spath, tpath]
 
         log.debug(' '.join(commands))
         subprocess.run(commands)
