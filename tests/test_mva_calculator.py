@@ -18,7 +18,7 @@ class Data:
     '''
     l_trigger= [Trigger.rk_mm_os, Trigger.rk_ee_os]
     nentries = 30_000
-    version  = 'v7.7'
+    version  = 'v8'
     l_mc     = [
         ('Hlt2RD_BuToKpEE_MVA'  , 'Bu_Kee_eq_btosllball05_DPC'  ),
         ('Hlt2RD_BuToKpMuMu_MVA', 'Bu_Kmumu_eq_btosllball05_DPC')]
