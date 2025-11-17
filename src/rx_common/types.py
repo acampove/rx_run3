@@ -15,6 +15,7 @@ class Trigger(str, Enum):
     rk_ee_cal    = 'Hlt2RD_BuToKpEE_MVA_cal'
     rk_ee_misid  = 'Hlt2RD_BuToKpEE_MVA_misid'
     rk_mm_os     = 'Hlt2RD_BuToKpMuMu_MVA'
+    rk_mm_nopid  = 'Hlt2RD_BuToKpMuMu_MVA_noPID'
     rk_mm_ss     = 'Hlt2RD_BuToKpMuMu_SameSign_MVA'
     # -----------
     rkst_ee_os   = 'Hlt2RD_B0ToKpPimEE_MVA'
@@ -24,6 +25,7 @@ class Trigger(str, Enum):
     rkst_ee_cal  = 'Hlt2RD_B0ToKpPimEE_MVA_cal'
     rkst_ee_misid= 'Hlt2RD_B0ToKpPimEE_MVA_misid'
     rkst_mm_os   = 'Hlt2RD_B0ToKpPimMuMu_MVA'
+    rkst_mm_nopid= 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'
     rkst_mm_ss   = 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA'
     # -----------
     uninitialized= ''
