@@ -62,21 +62,24 @@ class LikelihoodFactory:
 
         return sample
     # ------------------------
-    def _update_trigger_project(self) -> tuple[str,str]:
+    def _update_trigger_project(self) -> tuple[Trigger,str]:
         '''
         Returns
         -------------
         Tuple with trigger and project. If trigger does not end with ext
-        return _trigger and _project
+        return _trigger and default project, i.e. rk, rkst 
 
-        If trigger ends with ext, switch to noPID trigger and nopid project
-        because we are working with PID control region.
+        If trigger ends with ext, switch to noPID trigger and rk/rkst_nopid project
+        because we are working with PID control region with simulation.
         '''
-        if not self._trigger.endswith('_ext'):
-            return self._trigger, self._project
+        default_project = info.project_from_trigger(trigger = self._trigger, lower_case=True)
+        if self._trigger not in [Trigger.rk_ee_ext, Trigger.rkst_ee_ext]:
+            log.debug(f'Found non-Extended trigger {self._trigger}, using default project {default_project}')
+            return self._trigger, default_project
 
-        trigger = self._trigger.replace('_ext', '_noPID')
-        project = 'nopid'
+        value   = self._trigger.replace('_ext', '_noPID')
+        trigger = Trigger(value)
+        project = f'{default_project}_nopid'
 
         log.info(f'Found ext trigger, overriding with: {trigger}/{project}')
 
