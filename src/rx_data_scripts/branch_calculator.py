@@ -21,6 +21,7 @@ from rx_data.mva_calculator      import MVACalculator
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mis_calculator      import MisCalculator
 from rx_data.hop_calculator      import HOPCalculator
+from rx_data.spec_maker          import SpecMaker
 from rx_data.swp_calculator      import SWPCalculator
 from rx_data.mass_calculator     import MassCalculator
 from rx_data.mass_bias_corrector import MassBiasCorrector
@@ -89,6 +90,7 @@ def _parse_args() -> None:
     LogStore.set_level('rx_data:rdf_getter'         ,       30)
 
     if Data.lvl < 10:
+        LogStore.set_level('rx_data:spec_maker', Data.lvl)
         LogStore.set_level('rx_data:rdf_getter', Data.lvl)
 # ---------------------------------
 def _get_path_size(path : Path) -> int:
@@ -379,7 +381,8 @@ def _get_input_rdf(path : Path) -> RDF.RNode:
     if Data.kind == 'smear':
         s_friend = {'brem_track_2'}
 
-    with RDFGetter.only_friends(s_friend=s_friend):
+    with RDFGetter.only_friends(s_friend=s_friend),\
+         SpecMaker.project(name = Data.proj):
         gtr   = RDFGetter(sample=sample, trigger=trigger)
         d_rdf = gtr.get_rdf(per_file=True)
 
