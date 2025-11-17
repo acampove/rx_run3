@@ -152,7 +152,12 @@ class FCopy:
             commands = ['rsync', '--delete', '--append-verify', '-a', spath, tpath]
 
         log.debug(' '.join(commands))
-        subprocess.run(commands)
+        result = subprocess.run(commands, capture_output = True, text = True)
+
+        if result != 0:
+            log.error(f'STDERR: {result.stderr}')
+            log.error(f'STDOUT: {result.stdout}')
+            raise RuntimeError(f'Failed to run: {commands}')
 
         return True
 # ----------------------
