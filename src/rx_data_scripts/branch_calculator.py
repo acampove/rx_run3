@@ -62,7 +62,7 @@ def _parse_args() -> None:
     parser.add_argument('-p', '--part', nargs= 2, help='Partitioning, first number is the index, second is the number of parts', required=True)
     parser.add_argument('-b', '--pbar',           help='If used, will show progress bar whenever it is available', action='store_true')
     parser.add_argument('-d', '--dry' ,           help='If used, will do dry drun, e.g. stop before processing', action='store_true')
-    parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[10, 20, 30], default=20)
+    parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[5, 10, 20, 30], default=20)
     args = parser.parse_args()
 
     Data.kind = args.kind
