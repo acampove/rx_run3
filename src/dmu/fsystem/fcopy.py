@@ -46,6 +46,9 @@ class FCopy:
         
         If server and/or target are left empty (default), the files will be assumed to be local
         '''
+        if source and target:
+            raise RuntimeError('Source and target cannot be both remote')
+
         self._source = source
         self._target = target 
         self._timeout= timeout
