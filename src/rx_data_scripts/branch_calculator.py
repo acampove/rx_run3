@@ -9,6 +9,7 @@ import argparse
 
 import tqdm
 import dmu.generic.utilities as gut
+from pathlib                import Path
 from ROOT                   import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
 from dmu.logging.log_store  import LogStore
 from dmu.generic            import version_management as vman
@@ -40,13 +41,13 @@ class Data:
     lvl  : int
     wild_card : str
     chunk_size: int
-    out_dir   : str
+    out_dir   : Path 
 
     l_kind    = ['mass', 'hop', 'swp_jpsi_misid', 'swp_cascade', 'brem_track_2', 'mva', 'smear']
     l_ecorr   = ['brem_track_2']
 
     tree_name = 'DecayTree'
-    ana_dir   = os.environ['ANADIR']
+    ana_dir   = Path(os.environ['ANADIR'])
 # ---------------------------------
 def _parse_args() -> None:
     '''
@@ -90,7 +91,7 @@ def _parse_args() -> None:
     if Data.lvl < 10:
         LogStore.set_level('rx_data:rdf_getter', Data.lvl)
 # ---------------------------------
-def _get_path_size(path : str) -> int:
+def _get_path_size(path : Path) -> int:
     '''
     Parameters
     ----------------
@@ -100,14 +101,12 @@ def _get_path_size(path : str) -> int:
     ----------------
     Size in Megabytes
     '''
-    path = os.path.realpath(path)
-    size = os.path.getsize(path)
-    size = size / 1024 ** 2
+    size = path.stat().st_size / 1024 ** 2
     size = int(size)
 
     return size
 # ---------------------------------
-def _get_partition(l_path : list[str]) -> list[str]:
+def _get_partition(l_path : list[Path]) -> list[Path]:
     '''
     Parameters
     -----------------
@@ -159,24 +158,25 @@ def _print_groups(group : dict[int,list[str]], sizes : dict[int,int], this_group
 
     log.info(30 * '-')
 # ---------------------------------
-def _filter_paths(l_path : list[str]) -> list[str]:
+def _filter_paths(l_path : list[Path]) -> list[Path]:
     ninit = len(l_path)
     log.debug(f'Filtering {ninit} paths')
     if Data.kind in Data.l_ecorr:
         # For electron corrections, drop muon paths
-        l_path = [ path for path in l_path if 'MuMu' not in path ]
+        l_path = [ path for path in l_path if 'MuMu' not in str(path) ]
 
     if Data.wild_card is not None:
-        l_path = [ path for path in l_path if fnmatch.fnmatch(path, f'*{Data.wild_card}*') ]
+        log.debug(f'Filtering with wildcard: {Data.wild_card}')
+        l_path = [ path for path in l_path if fnmatch.fnmatch( str(path), f'*{Data.wild_card}*') ]
 
     nfnal = len(l_path)
     log.debug(f'Filtered -> {nfnal} paths')
 
     return l_path
 # ---------------------------------
-def _get_paths() -> list[str]:
+def _get_paths() -> list[Path]:
     data_dir = vman.get_last_version(dir_path=f'{Data.ana_dir}/Data/{Data.proj}/main', version_only=False)
-    l_path   = glob.glob(f'{data_dir}/*.root')
+    l_path   = list(data_dir.glob('*.root'))
     l_path   = _filter_paths(l_path)
     l_path   = _get_partition(l_path)
 
@@ -188,15 +188,15 @@ def _get_paths() -> list[str]:
 
     return l_path
 # ---------------------------------
-def _get_out_dir() -> str:
-    out_dir  = f'{Data.ana_dir}/Data/{Data.proj}/{Data.kind}/{Data.vers}'
+def _get_out_dir() -> Path:
+    out_dir  = Data.ana_dir / f'Data/{Data.proj}/{Data.kind}/{Data.vers}'
 
     if not Data.dry:
-        os.makedirs(out_dir, exist_ok=True)
+        out_dir.mkdir(parents=True, exist_ok=True)
 
     return out_dir
 # ---------------------------------
-def _get_out_path(path : str) -> str:
+def _get_out_path(path : Path) -> str:
     fname    = os.path.basename(path)
     out_path = f'{Data.out_dir}/{fname}'
 
@@ -204,18 +204,18 @@ def _get_out_path(path : str) -> str:
 
     return out_path
 # ---------------------------------
-def _is_mc(path : str) -> bool:
-    if '/data_24_mag' in path:
+def _is_mc(path : Path) -> bool:
+    if '/data_24_mag' in str(path):
         return False
 
-    if '/mc_mag' in path:
+    if '/mc_mag' in str(path):
         return True
 
     raise ValueError(f'Cannot determine if MC or data for: {path}')
 # ---------------------------------
 def _process_rdf(
     rdf     : RDF.RNode,
-    path    : str) -> RDF.RNode|None:
+    path    : Path) -> RDF.RNode|None:
     '''
     Takes:
 
@@ -342,7 +342,7 @@ def _split_rdf(rdf : RDF.RNode) -> list[RDF.RNode]:
 
     return l_rdf
 # ----------------------
-def _get_input_rdf(path : str) -> RDF.RNode:
+def _get_input_rdf(path : Path) -> RDF.RNode:
     '''
     Parameters
     -------------
@@ -376,7 +376,7 @@ def _get_input_rdf(path : str) -> RDF.RNode:
 
     return rdf
 # ---------------------------------
-def _create_file(path : str) -> None:
+def _create_file(path : Path) -> None:
     '''
     Parameters
     ------------------
@@ -431,7 +431,7 @@ def _process_and_merge(
     l_rdf     : list[RDF.RNode],
     nchunk    : int,
     out_path  : str,
-    input_path: str) -> None:
+    input_path: Path) -> None:
     '''
     Parameters
     -------------
