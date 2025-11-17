@@ -178,6 +178,11 @@ def _filter_paths(l_path : list[Path]) -> list[Path]:
     return l_path
 # ---------------------------------
 def _get_paths() -> list[Path]:
+    '''
+    Returns
+    ---------------------
+    List of paths to ROOT files to process
+    '''
     dir_path = Data.ana_dir / f'Data/{Data.proj}/main'
     log.debug(f'Looking for latest version in: {dir_path}')
 
@@ -197,6 +202,11 @@ def _get_paths() -> list[Path]:
     return l_path
 # ---------------------------------
 def _get_out_dir() -> Path:
+    '''
+    Returns
+    -------------
+    Path to directory where output ROOT files will be stored
+    '''
     out_dir  = Data.ana_dir / f'Data/{Data.proj}/{Data.kind}/{Data.vers}'
 
     if not Data.dry:
