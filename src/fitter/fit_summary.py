@@ -130,6 +130,7 @@ class FitSummary:
         paths = self._get_parameter_paths()
 
         if path.exists() and not force_update:
+            log.info(f'Reading cached files at: {path}')
             return pnd.read_parquet(path)
 
         l_df : list[pnd.DataFrame] = []
