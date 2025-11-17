@@ -2,6 +2,7 @@
 Script with tests for FCopy class
 '''
 
+import os
 import pytest
 
 from pathlib import Path
@@ -10,6 +11,21 @@ from dmu     import FCopy
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test_fcopy')
+
+# ----------------------
+@pytest.fixture
+def user() -> str:
+    '''
+    Returns
+    -------------
+    Name of user in local machine
+    '''
+    user = os.environ.get('USER')
+
+    if user is None:
+        raise ValueError('Cannot find USER environment variable')
+
+    return user
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -70,7 +86,7 @@ def test_remote_target(tmp_path) -> None:
     l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
     l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
 
-    fcp = FCopy(target='acampove@localhost')
+    fcp = FCopy(target=f'{user}@localhost')
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
 # ----------------------
@@ -82,6 +98,6 @@ def test_remote_source(tmp_path) -> None:
     l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
     l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
 
-    fcp = FCopy(source='acampove@localhost')
+    fcp = FCopy(source=f'{user}@localhost')
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
