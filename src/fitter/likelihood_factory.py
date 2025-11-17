@@ -95,7 +95,6 @@ class LikelihoodFactory:
             sample = self._sample,
             trigger= self._trigger,
             out_dir= self._base_path,
-            project= self._project,
             wgt_cfg= None) # Do not need weights for data
         data = dpr.get_data()
 
@@ -112,7 +111,7 @@ class LikelihoodFactory:
         model= mod.get_model()
 
         log.info(50 * '-')
-        log.info(f'Making likelihood for: {self._sample}/{self._trigger}/{self._project}/{self._q2bin}')
+        log.info(f'Making likelihood for: {self._sample}/{self._trigger}/{self._q2bin}')
         log.info(50 * '-')
 
         nll = zfit.loss.ExtendedUnbinnedNLL(model=model, data=data)
