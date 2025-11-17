@@ -161,6 +161,9 @@ def _print_groups(group : dict[int,list[str]], sizes : dict[int,int], this_group
 def _filter_paths(l_path : list[Path]) -> list[Path]:
     ninit = len(l_path)
     log.debug(f'Filtering {ninit} paths')
+    for path in l_path:
+        log.verbose(path)
+
     if Data.kind in Data.l_ecorr:
         # For electron corrections, drop muon paths
         l_path = [ path for path in l_path if 'MuMu' not in str(path) ]
