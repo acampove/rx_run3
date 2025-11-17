@@ -67,7 +67,7 @@ def _make_paths(
     return l_path
 # ----------------------
 @pytest.mark.skip(reason='Uses SSH')
-def test_local(tmp_path) -> None:
+def test_local(tmp_path : Path) -> None:
     '''
     Test for transfer between two local paths
     '''
@@ -79,7 +79,7 @@ def test_local(tmp_path) -> None:
         fcp.copy(source=source, target=target)
 # ----------------------
 @pytest.mark.skip(reason='Uses SSH')
-def test_remote_target(tmp_path) -> None:
+def test_remote_target(tmp_path : Path, user : str) -> None:
     '''
     Files are in a local server, copy them remotely 
     '''
@@ -91,7 +91,7 @@ def test_remote_target(tmp_path) -> None:
         fcp.copy(source=source, target=target)
 # ----------------------
 @pytest.mark.skip(reason='Uses SSH')
-def test_remote_source(tmp_path) -> None:
+def test_remote_source(tmp_path : Path , user : str) -> None:
     '''
     Files are in a remote server, copy them locally
     '''
