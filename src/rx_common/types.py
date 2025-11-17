@@ -9,6 +9,7 @@ class Trigger(str, Enum):
     Class meant to represent MVA triggers
     '''
     rk_ee_os     = 'Hlt2RD_BuToKpEE_MVA'
+    rk_ee_ext    = 'Hlt2RD_BuToKpEE_MVA_ext'
     rk_ee_ss     = 'Hlt2RD_BuToKpEE_SameSign_MVA'
     rk_ee_nopid  = 'Hlt2RD_BuToKpEE_MVA_noPID'
     rk_ee_cal    = 'Hlt2RD_BuToKpEE_MVA_cal'
@@ -17,6 +18,7 @@ class Trigger(str, Enum):
     rk_mm_ss     = 'Hlt2RD_BuToKpMuMu_SameSign_MVA'
     # -----------
     rkst_ee_os   = 'Hlt2RD_B0ToKpPimEE_MVA'
+    rkst_ee_ext  = 'Hlt2RD_B0ToKpPimEE_MVA_ext'
     rkst_ee_ss   = 'Hlt2RD_B0ToKpPimEE_SameSign_MVA'
     rkst_ee_nopid= 'Hlt2RD_B0ToKpPimEE_MVA_noPID'
     rkst_ee_cal  = 'Hlt2RD_B0ToKpPimEE_MVA_cal'
