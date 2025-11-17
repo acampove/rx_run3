@@ -102,15 +102,15 @@ class LikelihoodFactory:
 
         trigger, project = self._update_trigger_project()
 
-        log.info('Getting full data model')
-        mod  = DataModel(
-            name   = self._name,
-            cfg    = self._cfg,
-            obs    = self._obs,
-            q2bin  = self._q2bin,
-            trigger= trigger,
-            project= project)
-        model= mod.get_model()
+        log.info('Getting full data model using fits to simulation')
+        with SpecMaker.project(name = project):
+            mod  = DataModel(
+                name   = self._name,
+                cfg    = self._cfg,
+                obs    = self._obs,
+                q2bin  = self._q2bin,
+                trigger= trigger)
+            model= mod.get_model()
 
         log.info(50 * '-')
         log.info(f'Making likelihood for: {self._sample}/{self._trigger}/{self._q2bin}')
