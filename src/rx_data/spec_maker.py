@@ -544,7 +544,9 @@ class SpecMaker:
         def _context():
             old_val = cls._excluded_friends
             cls._excluded_friends = copy.deepcopy(names)
-            log.warning(f'Excluding friend trees: {cls._excluded_friends}')
+
+            if cls._excluded_friends:
+                log.warning(f'Excluding friend trees: {cls._excluded_friends}')
 
             try:
                 yield
