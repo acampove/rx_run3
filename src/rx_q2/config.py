@@ -50,6 +50,12 @@ class Input(BaseModel):
 class Plotting(BaseModel):
     nbins : int
 #-------------------
+class Plots(BaseModel):
+    yrange : dict[str, list[float|None]] 
+    nbins  : int
+    stacked: bool
+    d_leg  : dict[str,str]
+#-------------------
 class FitModel(BaseModel):
     '''
     Class meant to represent a fitting model
@@ -99,6 +105,7 @@ class Config(BaseModel):
     syst     : str
     input    : Input
     fitting  : Fitting
+    plots    : Plots
     #-------------------
     @model_validator(mode='after')
     def _update_selection(self) -> Self:
