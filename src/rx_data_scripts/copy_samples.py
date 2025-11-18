@@ -27,7 +27,7 @@ class Data:
     proj    : str
     dry     : bool
     nprc    : int
-    conf  : DictConfig 
+    conf    : DictConfig 
     d_data  : dict
     l_source: list[Path]
     skipped_friend : str|None
