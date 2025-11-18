@@ -4,12 +4,12 @@ Script used to copy ntuples from mounted filesystem
 import os
 import argparse
 import multiprocessing
-from pathlib             import Path
 
 import tqdm
 import numpy
 import ap_utilities.decays.utilities as aput
 
+from pathlib                        import Path
 from omegaconf                      import DictConfig
 from dmu.generic.version_management import get_last_version
 from dmu.logging.log_store          import LogStore
