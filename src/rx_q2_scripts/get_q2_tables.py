@@ -31,6 +31,7 @@ from dmu.stats.zfit_plotter  import ZFitPlotter
 from dmu.logging.log_store   import LogStore
 
 from rx_selection            import selection as sel
+from rx_common.types         import Trigger
 from rx_data.rdf_getter      import RDFGetter
 from rx_q2.config            import Config
 
@@ -378,7 +379,7 @@ def _get_rdf(kind : str) -> RDF.RNode:
     sample = inp.samples[cfg.project][kind]
     trigger= inp.trigger[cfg.project]
     with RDFGetter.exclude_friends(names=inp.friends['excluded']):
-        gtr    = RDFGetter(sample=sample, trigger=trigger)
+        gtr    = RDFGetter(sample=sample, trigger=Trigger(trigger))
         rdf    = gtr.get_rdf(per_file=False)
 
     trigger= cfg.input.trigger[cfg.project]
