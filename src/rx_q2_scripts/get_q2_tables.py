@@ -294,7 +294,7 @@ def _plot_data(df : pnd.DataFrame) -> None:
     [[lower]], [[upper]] = cfg.obs.limits
     _, ax     = plt.subplots(figsize=(15, 10))
     data_hist = hist.Hist.new.Regular(
-        cfg.fitting.plotting.nbins, 
+        cfg.plots.nbins, 
         lower, 
         upper, 
         name     ='', 
@@ -353,12 +353,12 @@ def _plot_fit(
             text, title = _get_text(data = dat)
 
             obj.plot(
-                    nbins     = cfg.fitting.plotting.nbins,
-                    d_leg     = _get_naming(),
-                    plot_range= cfg.obs_range,
-                    yscale    = yscale,
-                    ext_text  = text,
-                    add_pars  = pars)
+                nbins     = cfg.plots.nbins,
+                d_leg     = cfg.plots.d_leg,
+                plot_range= cfg.obs_range,
+                yscale    = yscale,
+                ext_text  = text,
+                add_pars  = pars)
 
             _add_q2_region_lines(obj)
 
