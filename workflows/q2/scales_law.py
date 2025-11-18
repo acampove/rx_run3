@@ -4,6 +4,7 @@ This script is meant to steer the calculation of mass scales and resolutions
 import os
 import json
 import argparse
+import matplotlib
 from functools             import cache
 from pathlib               import Path
 from importlib.resources   import files
@@ -16,6 +17,7 @@ from omegaconf             import DictConfig, ListConfig, OmegaConf
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
+matplotlib.use('Agg')
 log=LogStore.add_logger('rx_orchestration:q2_scales')
 # -------------------------------------
 class Fit(law.Task):
