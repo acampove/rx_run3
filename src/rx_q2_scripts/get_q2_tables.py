@@ -247,7 +247,7 @@ def _fit(d_fix : Parameters | None = None)-> Parameters | None:
 
     d_par = _get_pars(res)
 
-    sut.save_fit(data=dat, model=pdf, res=res, fit_dir=cfg.out_dir, plt_cfg={})
+    sut.save_fit(data=dat, model=pdf, res=res, fit_dir=cfg.out_dir, plt_cfg=cfg.plots.model_dump())
 
     return d_par
 #-------------------
