@@ -57,8 +57,6 @@ fitting:
         - 3250
   mass    : Jpsi_M_brem_track_2 # Observable to be fitted
   weights : weight
-  plotting:
-    nbins : 60
   model:
     pdfs: 
       - dscb
@@ -79,8 +77,8 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   yrange:
     log   : [1.0,  1e5]
     linear: [0.0, null]
-  nbins           : 60 
-  stacked         : False 
+  nbins         : 60 
+  stacked       : False 
   d_leg :
     q2_smearing : Model
     dscb_1      : DSCB
