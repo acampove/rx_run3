@@ -47,9 +47,6 @@ class Input(BaseModel):
     selection : dict[str,str]
     friends   : dict[str,list[str]]
 #-------------------
-class Plotting(BaseModel):
-    nbins : int
-#-------------------
 class Plots(BaseModel):
     yrange : dict[str, list[float|None]] 
     nbins  : int
@@ -69,7 +66,6 @@ class Fitting(BaseModel):
     ranges    : dict[str,dict[int,list[float]]]
     mass      : str
     weights   : str
-    plotting  : Plotting 
     model     : FitModel
     sim       : FitConfig 
     dat       : FitConfig 
