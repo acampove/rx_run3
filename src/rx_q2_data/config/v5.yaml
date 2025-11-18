@@ -66,13 +66,13 @@ fitting:
       retry  :
         ntries        : 12
         pvalue_thresh : 0.05
-        ignore_status : true
+        ignore_status : false 
   dat:
     strategy :
       retry  :
         ntries        : 3
         pvalue_thresh : 0.05
-        ignore_status : true
+        ignore_status : false 
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   yrange:
     log   : [1.0,  1e5]
