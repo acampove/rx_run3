@@ -338,24 +338,6 @@ def _get_text(data : zdata) -> tuple[str,str]:
 
     return text, title
 #-------------------
-def _get_naming() -> dict[str,str]:
-    cfg  = _load_config()
-    kind = cfg.input.kind
-
-    if kind == 'dat':
-        return {
-                'Data'   : 'Data',
-                'Signal' : 'PDF',
-                }
-
-    if kind == 'sim':
-        return {
-                'Data'   : 'Simulation',
-                'dscb_1' : 'PDF',
-                }
-
-    raise NotImplementedError(f'Invalid sample: {kind}')
-#-------------------
 def _plot_fit(
     dat        : zdata,
     pdf        : zpdf,
