@@ -66,7 +66,7 @@ fitting:
   sim:
     strategy :
       retry  :
-        ntries        : 8
+        ntries        : 12
         pvalue_thresh : 0.05
         ignore_status : true
   dat:
