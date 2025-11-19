@@ -949,6 +949,24 @@ where:
 It is needed to know how many bins to use to make the histogram. The recommended value is 10.
 - `kind` The argument can be `pvalue` or `chi2/ndof`.
 
+### Abstracting measurements
+
+A measurement is represented by the name of the quantity been measured, the value and the error.
+This can be representing using the `Measurement` class like:
+
+```python
+from dmu import Measurement
+
+# Add multiple measurements
+data = {'a' : (1., 1.), 'b' : (2., 1.)}
+ms   = Measurement(data=data)
+
+# Retrieve a measurement
+val = ms['c']
+```
+
+the `Measurement` is frozen and the data contained cannot be modified once the object is created.
+
 ### Simplest fit
 
 ```python
