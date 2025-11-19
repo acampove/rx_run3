@@ -217,7 +217,7 @@ def test_save_fit_simple(tmp_path : Path):
     '''
     Simplest case
     '''
-    pdf = _get_pdf(kind='simple')
+    pdf = _get_pdf_simple(is_extended=True)
     dat = pdf.create_sampler(n=1000)
 
     obj = Fitter(pdf, dat)
