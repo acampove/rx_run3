@@ -72,7 +72,7 @@ def _get_pdf_composed_nonextended() -> zpdf:
 
     return pdf
 #----------------------------------
-def _get_zdata(weighted : bool) -> zdata:
+def _get_zdata(weighted : bool) -> tuple[zdata, float]:
     '''
     Returns zfit data, weighted or not and yield
     '''
