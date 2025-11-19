@@ -42,7 +42,7 @@ def initialize():
     os.makedirs(Data.fit_dir, exist_ok=True)
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 #----------------------------------
-def _get_pdf_simple() -> zpdf:
+def _get_pdf_simple(is_extended : bool = True) -> zpdf:
     obs = zfit.Space('m',    limits=(-10, 10))
     mu  = zfit.Parameter("mu", 0.4,   -5,     5)
     sg  = zfit.Parameter("sg", 1.3,  0.5,     2)
@@ -51,6 +51,9 @@ def _get_pdf_simple() -> zpdf:
     sg.floating = False
 
     pdf  = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+    if not is_extended:
+        return pdf
+
     epdf = pdf.create_extended(ne)
 
     return epdf
