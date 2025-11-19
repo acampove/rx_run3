@@ -1,4 +1,4 @@
-output_directory : rare/muon/signal
+output_directory : rare/rk/muon/signal
 categories:
   main:
     model :
