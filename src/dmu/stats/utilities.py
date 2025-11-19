@@ -354,13 +354,31 @@ def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
 
     return d_par
 #---------------------------------------------
+@overload
+def save_fit(
+    data    : zdata,
+    model   : None,
+    res     : None,
+    fit_dir : str|Path,
+    plt_cfg : DictConfig|dict|None,
+    d_const : dict[str,tuple[float,float]]|None = None) -> None: ...
+#---------------------------------------------
+@overload
+def save_fit(
+    data    : zdata,
+    model   : zpdf,
+    res     : zres,
+    fit_dir : str|Path,
+    plt_cfg : DictConfig|dict|None,
+    d_const : dict[str,tuple[float,float]]|None = None) -> Measurement: ...
+#---------------------------------------------
 def save_fit(
     data    : zdata,
     model   : zpdf|None,
     res     : zres|None,
     fit_dir : str|Path,
     plt_cfg : DictConfig|dict|None,
-    d_const : dict[str,tuple[float,float]]|None = None) -> None:
+    d_const : dict[str,tuple[float,float]]|None = None) -> Measurement | None:
     '''
     Parameters
     --------------------
