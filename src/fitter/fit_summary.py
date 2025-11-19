@@ -126,12 +126,12 @@ class FitSummary:
         ---------------
         force_update: If true (default false) will regenerate file, otherwise will reuse file if found 
         '''
-        path  = self._fit_dir / 'parameters.parquet'
+        output_path  = self._fit_dir / 'parameters.parquet'
         paths = self._get_parameter_paths()
 
-        if path.exists() and not force_update:
-            log.info(f'Reading cached files at: {path}')
-            return pnd.read_parquet(path)
+        if output_path.exists() and not force_update:
+            log.info(f'Reading cached files at: {output_path}')
+            return pnd.read_parquet(output_path)
 
         l_df : list[pnd.DataFrame] = []
         for path in tqdm.tqdm(paths, ascii=' -'):
@@ -141,7 +141,7 @@ class FitSummary:
         df = pnd.concat(objs=l_df, axis=0)
         df = df.reset_index(drop=True)
 
-        self._save_df(df=df, path = path)
+        self._save_df(df=df, path = output_path)
 
         return df
     # ----------------------
