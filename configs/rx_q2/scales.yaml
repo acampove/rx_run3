@@ -1,4 +1,4 @@
-vers   : v5
+vers   : v6
 scales :
   - parameters_ee.json
   - parameters_mm.json
