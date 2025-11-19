@@ -46,10 +46,11 @@ def test_nocat(tmp_path : Path):
     '''
     Test for components without categories, e.g. muon
     '''
-    with gut.environment(mapping = { 'ANADIR' : str(tmp_path) }):
-        obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
-        cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
+    obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
+    cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
 
+    with Cache.cache_root(path = tmp_path),\
+         RDFGetter.max_entries(value=30_000):
         ftr = SimFitter(
             name     = 'test_nocat',
             component= 'signal_muon',
