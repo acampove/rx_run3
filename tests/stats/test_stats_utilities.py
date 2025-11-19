@@ -213,11 +213,12 @@ def test_is_pdf_usable():
 
     is_pdf_usable(pdf=pdf)
 #----------------------------------
-def test_save_fit_simple(tmp_path : Path):
+@pytest.mark.parametrize('is_extended', [True, False])
+def test_save_fit_simple(tmp_path : Path, is_extended : bool):
     '''
     Simplest case
     '''
-    pdf = _get_pdf_simple(is_extended=True)
+    pdf = _get_pdf_simple(is_extended=is_extended)
     dat = pdf.create_sampler(n=1000)
 
     obj = Fitter(pdf, dat)
@@ -232,12 +233,17 @@ def test_save_fit_simple(tmp_path : Path):
             'linear' : [0.0, 1e2]}
     }
 
-    sut.save_fit(
+    measurement = sut.save_fit(
         data   =dat,
         model  =pdf,
         res    =res,
         plt_cfg=cfg,
         fit_dir=tmp_path / 'save_fit/simple')
+
+    if not is_extended:
+        assert 'nentries' in measurement
+    else:
+        assert 'nentries' not in measurement
 #----------------------------------
 def test_save_fit_param():
     '''
