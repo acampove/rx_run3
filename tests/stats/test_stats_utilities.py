@@ -20,8 +20,8 @@ from dmu.stats.utilities    import is_pdf_usable
 
 import pytest
 import pandas as pnd
-from zfit.interface         import ZfitData as zdata
-from zfit.pdf               import BasePDF  as zpdf
+from zfit.data        import Data     as zdata
+from zfit.pdf         import BasePDF  as zpdf
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
