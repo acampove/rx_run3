@@ -27,4 +27,17 @@ class Measurement(BaseModel):
             raise KeyError(f'Invalid variable: {variable}')
 
         return self.data[variable]
+    # ----------------------
+    def __contains__(self, variable : str) -> bool:
+        '''
+        Parameters
+        ----------------
+        variable: Name of variable sought
+
+        Returns
+        ----------------
+        True if variable was found
+        '''
+
+        return variable in self.data
 # ----------------------------------------------

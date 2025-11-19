@@ -15,3 +15,6 @@ def test_simple():
 
     with pytest.raises(ValidationError):
         ms.data = {}
+
+    assert 'a'     in ms
+    assert 'x' not in ms
