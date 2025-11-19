@@ -15,8 +15,9 @@ _UNPATCHED_SAMPLES = [
     ('DATA_24_MagDown_24c2', Trigger.rkst_mm_os),
 ]
 _PATCHED_SAMPLES = [
-    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
-    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    ('Bs_JpsiX_mm_eq_JpsiInAcc'    , Trigger.rk_mm_os),
+    ('Bu_JpsiX_mm_eq_JpsiInAcc'    , Trigger.rk_mm_os),
+    ('Bu_Kmumu_eq_btosllball05_DPC', Trigger.rk_mm_os),
 ]
 
 log=LogStore.add_logger('rx_data:test_sample_patching')
