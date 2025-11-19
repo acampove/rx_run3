@@ -6,7 +6,7 @@ from contextlib import contextmanager
 import os
 import re
 import pickle
-from typing     import Union, Any
+from typing     import Union, Any, overload
 from pathlib    import Path
 
 import yaml
@@ -21,6 +21,7 @@ from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
+from dmu                    import Measurement
 
 import tensorflow as tf
 
