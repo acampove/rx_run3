@@ -187,6 +187,7 @@ class FitSummary:
 
         str_path = str(path)
         str_path = str_path.replace('.parquet', '.md')
+        path     = Path(str_path)
         df.to_markdown(buf = path)
 
         log.info(f'Saving summary to: {path}')
