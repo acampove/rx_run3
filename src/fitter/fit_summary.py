@@ -116,9 +116,37 @@ class FitSummary:
 
         parameters = self._attach_information(data=parameters, path=path)
         values     = { key : [value] for key, value in parameters.items() }
-        df         = pnd.DataFrame(values)
+
+        # Do this just for MC, data has parameters starting with yld_
+        if all( not key.startswith('yld_') for key in parameters ):
+            parameters['nentries'] = self._get_mc_nentries(path=path)
+
+        df = pnd.DataFrame(values)
 
         return df
+    # ----------------------
+    def _get_mc_nentries(self, path : Path) -> int:
+        '''
+        This is needed to get entries from simulated datasets
+
+        Parameters
+        -------------
+        path: Path to YAML file with parameters
+
+        Returns
+        -------------
+        Number of entries in dataset used in fit
+        '''
+        json_path = path.parent / 'data.json'
+        if not json_path.exists():
+            raise FileNotFoundError(f'Cannot find: {json_path}')
+
+        try:
+            df   = pnd.read_json(json_path)
+        except Exception as exc:
+            raise Exception(f'Cannot build dataframe from {json_path}') from exc
+
+        return len(df)
     # ----------------------
     def get_df(self, force_update : bool = False) -> pnd.DataFrame:
         '''
