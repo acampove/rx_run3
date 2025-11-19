@@ -52,6 +52,18 @@ Then, for each remote it pushes the tags and the commits.
 
 This section describes generic tools that could not be put in a specific category, but tend to be useful.
 
+## Environment
+
+To temporarily set an environment use:
+
+```python
+from dmu.generic import utilities as gut
+
+with gut.environment(mapping = {'VAR' : '1234', 'VOR' : 'abcd'}):
+    var = os.environ['VAR']
+    vor = os.environ['VOR']
+```
+
 ## Typing
 
 ### Pandas types

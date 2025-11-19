@@ -1,6 +1,7 @@
 '''
 Module with tests for functions in generic/utilities.py
 '''
+import os
 from time    import sleep
 from pathlib import Path
 
@@ -10,6 +11,23 @@ from omegaconf             import DictConfig, OmegaConf
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:test_generic_utilities')
+# ----------------------
+def test_environment_context():
+    '''
+    This function tests the environment context manager
+    '''
+    with gut.environment(mapping = {}):
+        pass
+
+    with gut.environment(mapping = {'VAR' : '1234'}):
+        assert os.environ['VAR'] == '1234'
+    
+    with gut.environment(mapping = {'VAR' : '1234', 'VOR' : 'abcd'}):
+        assert os.environ['VAR'] == '1234'
+        assert os.environ['VOR'] == 'abcd'
+
+    with pytest.raises(KeyError):
+        os.environ['VAR']
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():

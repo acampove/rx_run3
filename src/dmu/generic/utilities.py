@@ -83,6 +83,25 @@ def object_to_string(obj : Any, sort_keys=False) -> str:
     return json_string
 # ---------------------------------
 @contextmanager
+def environment(mapping : dict[str,str]):
+    '''
+    Parameters
+    ---------------
+    mapping: Dictionary holding environment that will be set
+    '''
+    old_mapping = { key : os.environ.get(key) for key in mapping }
+
+    try:
+        os.environ.update(mapping)
+        yield
+    finally:
+        for key, val in old_mapping.items():
+            if val is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = val
+# ---------------------------------
+@contextmanager
 def enforce_schema_validation(value : bool):
     '''
     Parameters
