@@ -840,7 +840,8 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
 
     par   = res.params
     try:
-        d_par = { name : _reformat_values(d_par=d_par, fall_back_error=fall_back_error) for name, d_par in par.items()}
+        # TODO: Remove ignore once we figure out how to deal properly with typing issues in zfit
+        d_par = { name : _reformat_values(d_par=d_par, fall_back_error=fall_back_error) for name, d_par in par.items()} # type: ignore
     except KeyError as exc:
         print(res)
         raise KeyError('Fit parameters cannot be used') from exc
