@@ -388,9 +388,13 @@ def save_fit(
     fit_dir: Directory where outputs are meant to go
     plt_cfg: Plotting configuration, as taken by ZfitPlotter
     d_const: Dictionary storing constraints
+
+    Returns
+    --------------------
+    Object holding fitting parameters if fit happened, or None if fit did not run
     '''
     if plt_cfg is None:
-        return
+        return None
 
     if isinstance(plt_cfg, dict):
         plt_cfg = OmegaConf.create(plt_cfg)
@@ -401,18 +405,26 @@ def save_fit(
         fit_dir = str(fit_dir)
 
     _save_fit_plot(data=data, model=model, cfg=plt_cfg, fit_dir=fit_dir)
-    _save_result(fit_dir=fit_dir, res=res)
 
+    if model and not model.extended:
+        # TODO: Update this when the issue with this property be fixed in zfit
+        nentries = data.samplesize.numpy() # type: ignore
+    else:
+        nentries = None
+
+    pars  = _save_result(fit_dir=fit_dir, res=res, nentries = nentries)
     df    = data.to_pandas(weightsname=Data.weight_name)
     opath = f'{fit_dir}/data.json'
     log.debug(f'Saving data to: {opath}')
     df.to_json(opath, indent=2)
 
     if model is None:
-        return
+        return None
 
     print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
     pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
+
+    return pars
 # ----------------------
 def _save_fit_plot(
     data   : zdata, 
@@ -477,18 +489,27 @@ def _save_fit_plot(
     plt.savefig(fit_path_log)
     plt.close()
 #-------------------------------------------------------
-def _save_result(fit_dir : str, res : zres|None) -> None:
+def _save_result(
+    nentries: float | None,
+    fit_dir : str, 
+    res     : zres  | None) -> Measurement | None:
     '''
     Saves result as yaml, JSON, pkl
 
     Parameters
     ---------------
-    fit_dir: Directory where fit result will go
-    res    : Zfit result object
+    nentries: Number of entries or sum of weights, if not None 
+    fit_dir : Directory where fit result will go
+    res     : Zfit result object
+
+    Returns
+    ---------------
+    Object holding values and errors of fitting parameters or None if result not found
+    because fit did not run
     '''
     if res is None:
         log.info('No result object found, not saving parameters in pkl or JSON')
-        return
+        return None
 
     # TODO: Remove this once there be a safer way to freeze
     # see https://github.com/zfit/zfit/issues/632
@@ -503,6 +524,9 @@ def _save_result(fit_dir : str, res : zres|None) -> None:
     d_par  = _parameters_from_result(result=res)
     d_par  = dict(sorted(d_par.items()))
 
+    if nentries:
+        d_par['nentries'] = nentries, 0
+
     opath  = f'{fit_dir}/parameters.json'
     log.debug(f'Saving parameters to: {opath}')
     gut.dump_json(data = d_par, path = opath, exists_ok = True)
@@ -510,6 +534,8 @@ def _save_result(fit_dir : str, res : zres|None) -> None:
     opath  = f'{fit_dir}/parameters.yaml'
     log.debug(f'Saving parameters to: {opath}')
     gut.dump_json(data = d_par, path = opath, exists_ok = True)
+
+    return Measurement(data = d_par)
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
