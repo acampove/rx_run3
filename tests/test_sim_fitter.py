@@ -3,6 +3,7 @@ This module is meant to test the SimFitter class
 '''
 import pytest
 
+from pathlib                import Path
 from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
@@ -11,13 +12,16 @@ from rx_common.types        import Trigger
 from rx_data.rdf_getter     import RDFGetter
 from rx_selection           import selection as sel
 from fitter.sim_fitter      import SimFitter
+from dmu.logging.log_store  import LogStore
 
+log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
 @pytest.fixture(autouse=True)
 def disable_caching():
     '''
     This will disable caching for all tests in this module
     '''
+    log.info('Disabling caching')
     with RDFGetter.max_entries(value = 100_000),\
          Cache.turn_off_cache(val=None):
         yield
@@ -38,21 +42,22 @@ def test_nomc():
         q2bin   = 'low')
     _ = ftr.get_model()
 # ---------------------------------------------------
-def test_nocat():
+def test_nocat(tmp_path : Path):
     '''
     Test for components without categories, e.g. muon
     '''
-    obs   = zfit.Space('B_Mass', limits=(5000, 5800))
-    cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
+    with gut.environment(mapping = { 'ANADIR' : str(tmp_path) }):
+        obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
+        cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
 
-    ftr = SimFitter(
-        name     = 'test_nocat',
-        component= 'signal_muon',
-        obs     = obs,
-        cfg     = cfg,
-        trigger = Trigger.rk_mm_os,
-        q2bin   = 'jpsi')
-    ftr.get_model()
+        ftr = SimFitter(
+            name     = 'test_nocat',
+            component= 'signal_muon',
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_mm_os,
+            q2bin    = 'jpsi')
+        ftr.get_model()
 # ---------------------------------------------------
 def test_with_cat():
     '''
