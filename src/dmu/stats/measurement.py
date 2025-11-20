@@ -13,6 +13,20 @@ class Measurement(BaseModel):
     data         : dict[str, tuple[float, float]]
     model_config = ConfigDict(frozen=True)
     # ----------------------
+    def __repr__(self) -> str:
+        '''
+        String representation
+        '''
+        message = f'\n{"Variable":<40}{"Value":<20}{"Error":<20}\n'
+        message+= 80 * '-' + '\n'
+        for name, (value, error) in self.data.items():
+            message += f'{name:<40}{value:<20.3f}{error:<20.3f}\n'
+
+        return message
+    # ----------------------
+    def __str__(self) -> str:
+        return self.__repr__()
+    # ----------------------
     def __getitem__(self, variable : str) -> tuple[float,float]:
         '''
         Parameters
