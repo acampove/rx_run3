@@ -13,6 +13,9 @@ from dmu.logging.log_store import LogStore
 from dmu.generic           import utilities as gut
 
 log=LogStore.add_logger('fitter:fit_summary')
+# TODO: Generalize tool to deal with any sample, i.e.
+# - Generalize _regex to match any sample and pick name
+# - For MC, instead of nentries use yld_{sample}
 # -------------------------------
 class FitSummary:
     '''
@@ -170,6 +173,7 @@ class FitSummary:
         df = df.reset_index(drop=True)
 
         self._save_df(df=df, path = output_path)
+        df = df.astype(dtype = {'block' : int})
 
         return df
     # ----------------------
