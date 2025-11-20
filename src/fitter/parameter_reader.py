@@ -98,8 +98,6 @@ class ParameterReader:
             if var_name not in output_data:
                 output_data[var_name] = [-999.0, -999.0]
 
-            print(var_name, val)
-
             output_data[var_name][index] = val
 
         return { key : (value[0], value[1]) for key, value in output_data.items() } 
