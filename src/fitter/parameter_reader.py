@@ -71,6 +71,39 @@ class ParameterReader:
 
         return df_out
     # ----------------------
+    def _format_data(self, data : dict[str, float]) -> dict[str,tuple[float,float]]:
+        '''
+        Parameters
+        -------------
+        data: Dictionary mapping quantity with value
+
+        Returns
+        -------------
+        Dictionary mapping quantity with tuple where first element is value and second one is the error
+        '''
+        output_data : dict[str, list[float]] = dict()
+        for key, val in data.items():
+            if not isinstance(val, float):
+                continue
+
+            if math.isnan(val):
+                continue
+
+            if key in ['brem', 'block', 'channel', 'project', 'q2bin', 'mva_cmb', 'mva_prc']:
+                continue
+
+            index    = 0 if key.endswith('_value') else 1
+            var_name = key.rstrip('_value').rstrip('_error')
+
+            if var_name not in output_data:
+                output_data[var_name] = [-999.0, -999.0]
+
+            print(var_name, val)
+
+            output_data[var_name][index] = val
+
+        return { key : (value[0], value[1]) for key, value in output_data.items() } 
+    # ----------------------
     def __call__(
         self, 
         brem      : int,
