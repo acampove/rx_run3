@@ -123,8 +123,20 @@ class ParameterReader:
         -------------
         FitMeasurement instance, i.e. container with parameter names, values and errors
         '''
-        data = {'a' : (1., 1.)}
+        channel = info.channel_from_trigger(trigger=trigger, full_name = True)
+        df      = self._df
+        df      = self._query(df = df, cut = f'brem    ==   {brem}')
+        df      = self._query(df = df, cut = f'block   ==   {block}')
+        df      = self._query(df = df, cut = f'q2bin   == \"{q2bin}\"')
+        df      = self._query(df = df, cut = f'channel == \"{channel}\"')
+        df      = self._query(df = df, cut = f'project == \"{project}\"')
+
+        if len(df) != 1:
+            self._print_info(df=df)
+            raise ValueError('Not found one and only one row')
+
+        raw_data = df.iloc[0].to_dict()
+        data     = self._format_data(data = raw_data)
 
         return FitMeasurement(data = data)
-        
 # ------------------------------------
