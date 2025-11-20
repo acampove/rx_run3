@@ -108,7 +108,7 @@ class ParameterReader:
         self, 
         brem      : int,
         block     : int,
-        component : Component,
+        project   : Project,
         q2bin     : Qsq,
         trigger   : Trigger) -> FitMeasurement:
         '''
