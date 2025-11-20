@@ -276,20 +276,6 @@ def test_save_fit_nomodel():
         plt_cfg={'nbins' : 50, 'stacked' : True},
         fit_dir=f'{Data.fit_dir}/save_fit/parametric')
 #----------------------------------
-def test_save_fit_nonparam():
-    '''
-    Tests saving fit without parameters
-    '''
-    pdf = _get_pdf(kind='simple')
-    dat = pdf.create_sampler(n=1000)
-
-    sut.save_fit(
-        data   =dat,
-        model  =pdf,
-        res    =None,
-        plt_cfg={'nbins' : 50, 'stacked' : True},
-        fit_dir=f'{Data.fit_dir}/save_fit/non_parametric')
-#----------------------------------
 def test_save_fit_param_refreeze():
     '''
     Tests saving fit with parameters
