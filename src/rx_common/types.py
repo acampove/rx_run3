@@ -57,7 +57,7 @@ class Trigger(str, Enum):
 
     def __str__(self):
         return self.value
-
+# ---------------------------------------
 class Channel(str, Enum):
     '''
     This class repsesents the electron, muon or emu channel types
@@ -68,8 +68,7 @@ class Channel(str, Enum):
 
     def __str__(self):
         return self.value
-
-
+# ---------------------------------------
 class Project(str, Enum):
     '''
     This class represents the projects
@@ -84,7 +83,7 @@ class Project(str, Enum):
 
     def __str__(self):
         return self.value
-
+# ---------------------------------------
 class Qsq(str, Enum):
     '''
     This class represents different q2 bins
@@ -97,4 +96,4 @@ class Qsq(str, Enum):
 
     def __str__(self):
         return self.value
-
+# ---------------------------------------
