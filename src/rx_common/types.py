@@ -4,6 +4,31 @@ This module contains classes derived from Enum
 
 from enum import Enum
 
+# ---------------------------------------
+class Component(str, Enum):
+    r'''
+    This class is meant to hold elements representing fitting components 
+
+    data          : Real data
+    jpsi          : E.g. B^+ -> J/psi K^+, B^0 J/psi K^*
+    psi2          : E.g. B^+ -> psi(2s) K^+, B^0 psi(2S) K^*
+    ccbar         : Charmonium inclusive samples
+    cabibbo       : B^+ \to \pi^+ J/\psi
+    lbjpsipk      : Lb -> p K J/psi
+    bsjpsiphi     : B_s \to J/\psi \phi
+    bsjpsikst     : B_s \to J/\psi K^* 
+    bdjpsikst_swp : B_d \to J/\psi K^* with K -> pi and pi -> K
+    '''
+    data          = 'data'
+    jpsi          = 'jpsi'
+    psi2          = 'psi2'
+    ccbar         = 'ccbar'
+    cabibbo       = 'cabibbo'
+    lbjpsipk      = 'lbjpsipk'
+    bsjpsiphi     = 'bsjpsiphi'
+    bsjpsikst     = 'bsjpsikst'
+    bdjpsikst_swp = 'bdjpsikst_swp'
+# ---------------------------------------
 class Trigger(str, Enum):
     '''
     Class meant to represent MVA triggers
