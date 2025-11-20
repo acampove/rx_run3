@@ -7,6 +7,8 @@ from dmu       import Measurement
 from pathlib   import Path
 from rx_common import Trigger 
 from rx_common import Component
+from rx_common import Qsq 
+from rx_common import info
 
 # ------------------------------------
 class FitMeasurement(Measurement):
@@ -37,11 +39,34 @@ class ParameterReader:
 
         self._df = pnd.read_parquet(path = pars_path)
     # ----------------------
+    def _query(self, df : pnd.DataFrame, cut : str) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        cut: Selection used to filter dataframe
+
+        Returns
+        -------------
+        Filtered DataFrame
+        '''
+        df_out = df.query(cut)
+
+        if len(df_out) == 0:
+            df_info = df[['brem', 'block', 'q2bin', 'channel']]
+
+            print('\n') 
+            print(df_info)
+            print(df_info.dtypes)
+            raise ValueError(f'No entries pass: {cut}')
+
+        return df_out
+    # ----------------------
     def __call__(
         self, 
         brem      : int,
         block     : int,
         component : Component,
+        q2bin     : Qsq,
         trigger   : Trigger) -> FitMeasurement:
         '''
         Parameters
