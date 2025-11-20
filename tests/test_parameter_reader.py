@@ -6,9 +6,9 @@ def test_simple():
     '''
     Test simplest use of reader
     '''
-    rdr    = ParameterReader()
+    rdr    = ParameterReader(name = 'mid_window')
     ms_sim = rdr(component=Component.jpsi, brem=1, block=3, trigger=Trigger.rk_ee_os)
     ms_dat = rdr(component=Component.data, brem=1, block=3, trigger=Trigger.rk_ee_os)
-    
-    _, _ = ms_sim.yield
-    _, _ = ms_dat.yield
+
+    _, _ = ms_sim.candidates
+    _, _ = ms_dat.candidates
