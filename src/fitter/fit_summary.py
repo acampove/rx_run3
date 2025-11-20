@@ -172,8 +172,8 @@ class FitSummary:
         df = pnd.concat(objs=l_df, axis=0)
         df = df.reset_index(drop=True)
 
+        df = df.astype(dtype = {'block' : int, 'brem' : int})
         self._save_df(df=df, path = output_path)
-        df = df.astype(dtype = {'block' : int})
 
         return df
     # ----------------------
