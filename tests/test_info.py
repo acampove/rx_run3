@@ -3,7 +3,7 @@ This module tests the functions in the info.py module
 '''
 
 import pytest
-from ROOT      import RDataFrame, RDF
+from ROOT      import RDataFrame, RDF # type: ignore
 from rx_common import info
 
 # ----------------------
