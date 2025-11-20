@@ -42,6 +42,17 @@ class ParameterReader:
 
         self._df = pnd.read_parquet(path = pars_path)
     # ----------------------
+    def _print_info(self, df : pnd.DataFrame) -> None:
+        '''
+        This method will print the sample information
+
+        Parameters
+        -------------
+        df: DataFrame with fit information
+        '''
+        df_info = df[['brem', 'block', 'q2bin', 'channel']]
+        log.info(df_info)
+    # ----------------------
     def _query(self, df : pnd.DataFrame, cut : str) -> pnd.DataFrame:
         '''
         Parameters
@@ -55,11 +66,7 @@ class ParameterReader:
         df_out = df.query(cut)
 
         if len(df_out) == 0:
-            df_info = df[['brem', 'block', 'q2bin', 'channel']]
-
-            print('\n') 
-            print(df_info)
-            print(df_info.dtypes)
+            self._print_info(df = df)
             raise ValueError(f'No entries pass: {cut}')
 
         return df_out
