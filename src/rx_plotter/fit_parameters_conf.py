@@ -1,8 +1,20 @@
 '''
 Class holding FitParametersConf and classes needed by it
 '''
-from pydantic import BaseModel, Field, RootModel
+import yaml
 
+from pydantic  import BaseModel, Field, RootModel
+from rx_common import Project, Qsq, Trigger, Brem
+
+# ----------------------
+class Info(BaseModel):
+    '''
+    Class meant to hold metadata type of information
+    '''
+    trigger : Trigger 
+    project : Project 
+    q2bin   : Qsq
+    brem    : Brem
 # ----------------------
 class GraphConf(BaseModel):
     '''
@@ -21,11 +33,19 @@ class PlotConf(BaseModel):
     '''
     Class meant to hold configuration for single plot
     '''
-    cuts : str
+    info : Info 
     plots: dict[str, GraphConf]
 # ----------------------
-class FitParametersConf(RootModel[dict[str,PlotConf]]):
+class FitParametersConf(RootModel):
     '''
     Class meant to hold parameters needed for plotting
     '''
-    pass
+    root : dict[str,PlotConf]
+    # -------------------------
+    def __str__(self):
+        data = self.model_dump(mode='deep')
+
+        return yaml.dump(data)
+    # -------------------------
+    def __repr__(self):
+        return self.__str__()
