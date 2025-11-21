@@ -1,6 +1,7 @@
 '''
 Module holding FitParameters class
 '''
+import numpy
 import numexpr
 import mplhep
 import matplotlib.pyplot as plt
@@ -103,12 +104,14 @@ class FitParameters:
             yvals.append(yval)
             yerrs.append(yerr)
 
-        plt.errorbar(
+        arr_up = numpy.array(yvals) + numpy.array(yerrs)
+        arr_dn = numpy.array(yvals) - numpy.array(yerrs)
+
+        plt.fill_between(
             x        = xvals, 
-            y        = yvals, 
-            yerr     = yerrs, 
-            linestyle= 'none',
-            marker   =  'o',
+            y1       = arr_up, 
+            y2       = arr_dn, 
+            alpha    = 0.5,
             color    = gcfg.color,
             label    = gcfg.label)
     # ----------------------
@@ -133,6 +136,7 @@ class FitParameters:
             plt.xlabel(plot_cfg.xlabel)
             plt.ylabel(plot_cfg.ylabel)
 
+            plt.title(plot_cfg.title)
             plt.legend()
             plt.savefig(out_path / f'{plot_name}.png')
             plt.close(fig = plot_name)
