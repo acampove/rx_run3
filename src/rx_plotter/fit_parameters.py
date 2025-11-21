@@ -4,6 +4,7 @@ Module holding FitParameters class
 
 from dmu.generic                    import utilities as gut
 from rx_plotter.fit_parameters_conf import FitParametersConf
+from fitter                         import ParameterReader
 
 # ----------------------
 class FitParameters:
@@ -18,7 +19,7 @@ class FitParameters:
         name : Fit name, e.g. mid_window
         cfg  : Name of config meant for plots, e.g. fpars
         '''
-        self._name = name
+        self._rdr  = ParameterReader(name = name)
         self._cfg  = self._load_config(name = cfg) 
     # ----------------------
     def _load_config(self, name : str) -> FitParametersConf:
@@ -39,5 +40,16 @@ class FitParameters:
         '''
         Starts plotting
         '''
-        pass 
+        for name, cfg in self._cfg.root.items():
+            info = cfg.info
+
+            ms = self._rdr(
+                block    = 3, 
+                brem     = info.brem, 
+                trigger  = info.trigger, 
+                project  = info.project,
+                q2bin    = info.q2bin)
+
+            print(name)
+            print(ms)
 # ----------------------
