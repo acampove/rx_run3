@@ -39,22 +39,38 @@ class FitParameters:
 
         return FitParametersConf(**data)
     # ----------------------
+    def _plot_data(
+        self, 
+        pcfg : PlotConf,
+        gcfg : GraphConf) -> None:
+        '''
+        This method plots a given graph
+
+        Parameters
+        -------------
+        pcfg : Plotting configuration for a group of graphs
+        gcfg : Plotting configuration for a signle graph
+        '''
+        info : Info = gcfg.info
+        pcfg.xaxis
+
+        ms   = self._rdr(
+            block    = 3, 
+            brem     = info.brem, 
+            trigger  = info.trigger, 
+            project  = info.project,
+            q2bin    = info.q2bin)
+
+        print(ms)
+    # ----------------------
     def run(self) -> None:
         '''
         Starts plotting
         '''
         for plot_name, plot_cfg in self._cfg.root.items():
+            log.info(f'Plotting {plot_name}')
             for expr, graph_cfg in plot_cfg.graphs.items():
-                info = graph_cfg.info
+                log.debug(f'    {expr}')
 
-                ms = self._rdr(
-                    block    = 3, 
-                    brem     = info.brem, 
-                    trigger  = info.trigger, 
-                    project  = info.project,
-                    q2bin    = info.q2bin)
-
-                print(plot_name)
-                print(expr)
-                print(ms)
+                self._plot_data(pcfg = plot_cfg, gcfg = graph_cfg)
 # ----------------------
