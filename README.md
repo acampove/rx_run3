@@ -141,6 +141,51 @@ cfg = OmegaConf.create(config)
 before passing it to the `ConstraintAdder`, which will attach the constraints
 to the likelihood.
 
+### Summarize fits
+
+To collect the fit parameters do:
+
+```python
+from fitter import FitSummary
+
+smr = FitSummary(name='mid_window')
+df  = smr.get_df()
+```
+
+which will:
+
+- Look for all the `mid_window` fits and collect the parameters from
+the JSON files.
+- Use them to build a pandas dataframe and return it.
+
+### Access parameters
+
+The result of this will be a large table, this table can be accessed with:
+
+```python
+from fitter    import ParameterReader
+from rx_common import Project
+from rx_common import Trigger 
+from rx_common import Qsq 
+
+rdr = ParameterReader(name = 'mid_window')
+ms  = rdr(
+    brem     = 1, 
+    block    = 3, 
+    trigger  = Trigger.rk_ee_os, 
+    project  = Project.rk,
+    q2bin    = Qsq.jpsi)
+```
+
+where `ms` is a `Measurement` object that can be read with:
+
+```python
+# Retrieve yield for resonant fit component
+value, error = ms['yld_jpsi']
+
+# Print contents
+print(ms)
+```
 
 ## Toys
 
