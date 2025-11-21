@@ -14,27 +14,26 @@ class Info(BaseModel):
     trigger : Trigger 
     project : Project 
     q2bin   : Qsq
-    brem    : Brem
+    brem    : Brem 
 # ----------------------
 class GraphConf(BaseModel):
     '''
     Class meant to represent config for a single graph
     '''
+    info  : Info 
     error : str
-    xvals : list[str | int]
-    xname : str
-    yrange: list[float] = Field(min_length=2, max_length=2)
     label : str
     color : str
-    xlabel: str
-    ylabel: str
 # ----------------------
 class PlotConf(BaseModel):
     '''
-    Class meant to hold configuration for single plot
+    Class representing configurations for plots that
+    will go in a canvas
     '''
-    info : Info 
-    plots: dict[str, GraphConf]
+    yrange : list[float] = Field(min_length=2, max_length=2)
+    xlabel : str
+    ylabel : str
+    graphs : dict[str,GraphConf]
 # ----------------------
 class FitParametersConf(RootModel):
     '''

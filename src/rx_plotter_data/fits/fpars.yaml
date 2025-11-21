@@ -1,32 +1,35 @@
-
+# This is what all the plots will have in common
+generic_info: &sel
+  trigger : Hlt2RD_BuToKpEE_MVA
+  project : rk
+  q2bin   : jpsi
+  brem    : 1
 # ------------------------------------
-yld_jpsi_ee_rk:
-  info: 
-    trigger : Hlt2RD_BuToKpEE_MVA
-    project : rk
-    q2bin   : jpsi
-    brem    : 1
-  plots   :
-    yld_jpsi * jpsi_fraction:
+yld_jpsi_ee_rk: # Label of what will be plotted below, used to name PNGs
+  # ------------------------------------
+  # These are common to all graphs
+  # ------------------------------------
+  yrange:
+    - 0
+    - 1e5
+  xlabel: Block
+  ylabel: Yield 
+  xaxis :                  
+    block : [4, 3, 2, 1, 5, 6, 7, 8] # Plot will be WRT this
+  # ------------------------------------
+  # This is the per-graph configuration
+  # ------------------------------------
+  graphs:
+    yld_jpsi * jpsi_fraction:                 # Value plotted in y-axis
+      info:                                   # Used to select subset of data
+        <<: *sel
       error : yld_jpsi_error * jpsi_fraction_error
-      xvals : [4, 3, 2, 1, 5, 6, 7, 8]
-      xname : block
-      yrange:
-        - 0
-        - 1e5
       label : $1\gamma$
       color : blue
-      xlabel: Block
-      ylabel: Yield 
     yld_jpsi * (1 - jpsi_fraction):
+      info:
+        <<: *sel
       error : yld_jpsi_error * (1 - jpsi_fraction_error)
-      xvals : [4, 3, 2, 1, 5, 6, 7, 8]
-      xname : block
-      yrange:
-        - 0
-        - 1e5
       label : $2\gamma$
       color : red 
-      xlabel: Block
-      ylabel: Yield 
 # ------------------------------------
