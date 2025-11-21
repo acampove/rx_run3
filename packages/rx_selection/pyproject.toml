@@ -1,51 +1,44 @@
-[tool.poetry]
-name         = 'rx_selection'
-description  = 'Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project'
-version      = '0.1.9'
-readme       = 'README.md'
-package-mode = true 
-packages     = [
-{include='rx_selection',      from='src'},
-{include='rx_selection_data', from='src'}]
+[project]
+name = "rx_selection"
+version = "0.1.9"
+description = "Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
 
-[[tool.poetry.include]]
-path = "src/rx_selection_data/**/*.yaml"
-format = "wheel"
-
-[tool.poetry.dependencies]
-python     = '>=3.10,<3.13'
-numexpr    = {version = '>=0.0.0'}
-jacobi     = {version = '>=0.0.0'}
-joblib     = {version = '>=0.0.0'}
-pandas     = {version = '>=0.0.0'}
-numpy      = {version = '>=0.0.0'}
-matplotlib = {version = '>=0.0.0'}
-
-[tool.poetry.group.dev.dependencies]
-pytest  = '*'
-
-[build-system]
-requires      = [
-    'poetry-core>=1.0.0',
-    'poetry-dynamic-versioning>=1.0.0'
+dependencies = [
+    "numexpr>=0.0.0",
+    "jacobi>=0.0.0",
+    "joblib>=0.0.0",
+    "pandas>=0.0.0",
+    "numpy>=0.0.0",
+    "matplotlib>=0.0.0",
 ]
-build-backend = 'poetry_dynamic_versioning.backend'
 
-[tool.poetry-dynamic-versioning]
-enable       = true
-vcs          = 'git'
-style        = 'pep440'
-pattern      = 'default-unprefixed'
-format-jinja = """
-{%- if distance == 0 -%}
-{{ base }}
-{%- else -%}
-{{ serialize_pep440(bump_version(base), dev=distance) }}
-{%- endif -%}
-"""
+[project.optional-dependencies]
+dev = ["pytest"]
 
-[tool.poetry.scripts]
-apply_selection ='rx_selection_scripts.apply_selection:main'
-make_jobs_list  ='rx_selection_scripts.make_jobs_list:main'
-validate_sample ='rx_selection_scripts.validate_sample:main'
-jmanager_ihep   ='rx_selection_scripts.jmanager_ihep:main'
+# Scripts / CLI entry points
+[project.scripts]
+apply_selection = "rx_selection_scripts.apply_selection:main"
+make_jobs_list  = "rx_selection_scripts.make_jobs_list:main"
+validate_sample = "rx_selection_scripts.validate_sample:main"
+jmanager_ihep   = "rx_selection_scripts.jmanager_ihep:main"
+
+# Hatch build system
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+rx_selection       = { workspace = true }
+rx_selection_data  = { workspace = true }
+
+# Include YAML data files
+[tool.hatch.include]
+files = ["src/rx_selection_data/**/*.yaml"]
+
+# Optional: dynamic versioning via git (like poetry-dynamic-versioning)
+[tool.hatch.version]
+path   = "src/rx_selection"
+scheme = "git" 
+format = "{tag}"  # can be customized if you want PEP440-like versions

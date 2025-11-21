@@ -1,43 +1,48 @@
-[tool.poetry]
-name        = 'rx_fitter'
-version     = '0.0.1'
-description = 'Framework used to handle fits to data and simulation'
-readme      = 'README.md'
-authors     = []
-license     = ''
-packages    = [
-    { include = 'fitter'       , from = 'src' },
-    { include = 'fitter_data'  , from = 'src' },
-    { include = 'fitter_schema', from = 'src' },
+[project]
+name = "rx_fitter"
+version = "0.0.1"
+description = "Framework used to handle fits to data and simulation"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "typer",
+    "pdg",
+    "omegaconf",
+    "numpy",
+    "seaborn",
+    "mplhep",
+    "matplotlib",
+    "python-slugify",
+    "zfit",
+    "types-tensorflow",
 ]
-include = ['src/fitter_data/**/*.yaml']
 
-[tool.poetry.dependencies]
-python          = '>=3.10,<3.13'
-typer           = '*'
-pdg             = '*'
-omegaconf       = '*'
-numpy           = '*'
-seaborn         = '*'
-mplhep          = '*'
-matplotlib      = '*'
-python-slugify  = '*'
-zfit            = '*'
-types-tensorflow='*'
+# Scripts / CLI entry points
+[project.scripts]
+rxfitter       = "fitter_scripts.cli:app"
+fit_rx_rare    = "fitter_scripts.fit_rx_rare:main"
+fit_rx_reso    = "fitter_scripts.fit_rx_reso:main"
+fit_grid       = "fitter_scripts.fit_grid:main"
+navigate_fits  = "fitter_scripts.navigate_fits:main"
+validate_cmb   = "fitter_scripts.validate_cmb:main"
+plot_toys      = "fitter_scripts.plot_toys:main"
+summarize_toys = "fitter_scripts.summarize_toys:main"
 
-[tool.poetry.scripts]
-rxfitter       = 'fitter_scripts.cli:app'
-fit_rx_rare    = 'fitter_scripts.fit_rx_rare:main'
-fit_rx_reso    = 'fitter_scripts.fit_rx_reso:main'
-fit_grid       = 'fitter_scripts.fit_grid:main'
-navigate_fits  = 'fitter_scripts.navigate_fits:main'
-validate_cmb   = 'fitter_scripts.validate_cmb:main'
-plot_toys      = 'fitter_scripts.plot_toys:main'
-summarize_toys = 'fitter_scripts.summarize_toys:main'
+# Optional / development dependencies
+[project.optional-dependencies]
+dev = ["pytest"]
 
-[tool.poetry.group.dev.dependencies]
-pytest = '*'
-
+# Use Hatch to build
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+# Make these packages editable in the virtual environment
+fitter       = { workspace = true }
+fitter_data  = { workspace = true }
+fitter_schema= { workspace = true }
+
+# Include YAML data files
+[tool.hatch.include]
+files = ["src/fitter_data/**/*.yaml"]
