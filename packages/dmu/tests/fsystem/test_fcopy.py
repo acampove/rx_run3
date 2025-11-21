@@ -1,0 +1,116 @@
+'''
+Script with tests for FCopy class
+'''
+
+import os
+import pytest
+
+from pathlib import Path
+from dmu     import FCopy
+
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('dmu:test_fcopy')
+
+# ----------------------
+@pytest.fixture
+def user() -> str:
+    '''
+    Returns
+    -------------
+    Name of user in local machine
+    '''
+    user = os.environ.get('USER')
+
+    if user is None:
+        raise ValueError('Cannot find USER environment variable')
+
+    return user
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:fsystem:fcopy', 10)
+# ----------------------
+def _make_paths(
+    dir       : Path, 
+    make_file : bool,
+    number    : int,
+    size      : int = 1) -> list[Path]:
+    '''
+    Parameters
+    -------------
+    dir      : Path to directory
+    make_file: If true, will make an empty file
+    number   : Number of paths to make
+    size     : Size in MB, default 1
+
+    Returns
+    -------------
+    List of paths
+    '''
+    dir.mkdir(parents=True, exist_ok=True)
+
+    l_path = []
+    for index in range(number):
+        path = dir / f'{index:03}'
+
+        if make_file:
+            with open(path, 'wb') as f:
+                f.seek(size * 1024 * 1024 - 1)
+                f.write(b'\0')
+
+        l_path.append(path)
+
+    return l_path
+# ----------------------
+@pytest.mark.skip(reason='Uses SSH')
+def test_local(tmp_path : Path) -> None:
+    '''
+    Test for transfer between two local paths
+    '''
+    l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
+    l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
+
+    fcp = FCopy()
+    for source, target in zip(l_source, l_target):
+        fcp.copy(source=source, target=target)
+# ----------------------
+@pytest.mark.skip(reason='Uses SSH')
+def test_remote_target(tmp_path : Path, user : str) -> None:
+    '''
+    Files are in a local server, copy them remotely 
+    '''
+    l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
+    l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
+
+    fcp = FCopy(target=f'{user}@localhost')
+    for source, target in zip(l_source, l_target):
+        fcp.copy(source=source, target=target)
+# ----------------------
+@pytest.mark.skip(reason='Uses SSH')
+def test_remote_source(tmp_path : Path , user : str) -> None:
+    '''
+    Files are in a remote server, copy them locally
+    '''
+    l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
+    l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
+
+    fcp = FCopy(source=f'{user}@localhost')
+    for source, target in zip(l_source, l_target):
+        fcp.copy(source=source, target=target)
+# ----------------------
+@pytest.mark.skip(reason='Uses SSH')
+def test_remote_both(tmp_path : Path, user : str) -> None:
+    '''
+    Files are transferred between two remote servers 
+    Should fail, this tests that the failure happens
+    '''
+    l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
+    l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
+
+    for _, _ in zip(l_source, l_target):
+        with pytest.raises(RuntimeError):
+            _ = FCopy(source=f'{user}@localhost', target=f'{user}@localhost')

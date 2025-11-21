@@ -1,0 +1,46 @@
+[project]
+name            = 'data-manipulation-utilities'
+version         = '0.3.2'
+description     = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
+readme          = 'README.md'
+requires-python = '>=3.10,<3.14'
+dependencies = [
+    'awkward',
+    'awkward-pandas',
+    'colorama',
+    'jinja2',
+    'hist[plot]',
+    'matplotlib',
+    'mplhep',
+    'numpy<=2.2',
+    'omegaconf',
+    'pandas',
+    'PyYAML',
+    'scipy',
+    'tqdm',
+    'toml',
+    'uproot',
+]
+
+[project.optional-dependencies]
+parallel = ['dask[dataframe,distributed]']
+ml       = ['scikit-learn', 'joblib', 'optuna']
+fit      = ['zfit', 'tensorflow']
+dev      = ['pytest', 'pytest-xdist', 'pandas-stubs', 'memory-profiler']
+
+[project.scripts]
+transform_text      = 'dmu_scripts.text.transform_text:main'
+coned               = 'dmu_scripts.ssh.coned:main'
+check_truth         = 'dmu_scripts.physics.check_truth:main'
+print_trees         = 'dmu_scripts.rfile.print_trees:main'
+compare_root_files  = 'dmu_scripts.rfile.compare_root_files:main'
+compare_classifiers = 'dmu_scripts.ml.compare_classifiers:main'
+
+[build-system]
+requires      = ['hatchling']
+build-backend = 'hatchling.build'
+
+[tool.hatch.build.targets.wheel]
+sources  = ['src']
+packages = ['src/dmu', 'src/dmu_data']
+

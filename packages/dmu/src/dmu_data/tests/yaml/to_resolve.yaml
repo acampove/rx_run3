@@ -1,0 +1,6 @@
+# This file is used by tests of the Resolver class
+
+x : 1
+y :
+  - 2
+  - 3

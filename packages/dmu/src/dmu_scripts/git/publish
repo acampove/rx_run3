@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# --------------------------
+display_help()
+{
+    echo "Script meant to:"
+    echo ""
+    echo "1. Check if version in pyproject.toml has been modified"
+    echo "2. If it has create new tag following version name"
+    echo "3. Push to remote "
+}
+# --------------------------
+get_opts()
+{
+    while getopts :hf: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
+# --------------------------
+# Picks up version from pyproject.toml
+get_version()
+{
+    if [[ ! -f pyproject.toml ]];then
+        echo "Cannot find pyproject.toml"
+        exit 1
+    fi
+
+    VERSION_LINE=$(grep version pyproject.toml)
+
+    if [[ $? -ne 0 ]];then
+        ehco "Could not extract version from pyproject.toml"
+        exit 1
+    fi
+
+    if [[ "$VERSION_LINE" =~ .*([0-9]\.[0-9]\.[0-9]).* ]];then
+        VERSION=${BASH_REMATCH[1]}
+        echo "Using version: $VERSION"
+        return
+    fi
+
+    echo "Could not extract version from: $VERSION_LINE"
+    exit 1
+}
+# --------------------------
+create_tag()
+{
+    git tag -n | grep $VERSION
+
+    if [[ $? -eq 0 ]];then
+        echo "Version found among tags, not tagging"
+        return
+    fi
+
+    echo "Version $VERSION not found among tags, creating new tag"
+
+    git tag -a $VERSION
+}
+# --------------------------
+push_all()
+{
+    for REMOTE in $(git remote);do
+        echo "Pushing tags and commits to remote: $REMOTE"
+        git add pyproject.toml
+        git commit -m "Publication commit"
+
+        git pull    $REMOTE HEAD
+        git push -u $REMOTE HEAD
+        git push    $REMOTE --tags
+    done
+}
+# --------------------------
+get_opts "$@"
+
+get_version
+create_tag
+push_all

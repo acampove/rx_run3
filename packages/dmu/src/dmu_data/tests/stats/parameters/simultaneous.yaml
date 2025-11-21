@@ -1,0 +1,17 @@
+yield:
+  val : 1
+  min : 0
+  max : 10
+fraction:
+  val : 0.2
+  min : 0.0
+  max : 1.0 
+
+yield_001:
+  mul:
+    - yield
+    - fraction
+yield_002:
+  dif:
+    - yield
+    - yield_001 
