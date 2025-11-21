@@ -41,16 +41,18 @@ class FitParameters:
         '''
         Starts plotting
         '''
-        for name, cfg in self._cfg.root.items():
-            info = cfg.info
+        for plot_name, plot_cfg in self._cfg.root.items():
+            for expr, graph_cfg in plot_cfg.graphs.items():
+                info = graph_cfg.info
 
-            ms = self._rdr(
-                block    = 3, 
-                brem     = info.brem, 
-                trigger  = info.trigger, 
-                project  = info.project,
-                q2bin    = info.q2bin)
+                ms = self._rdr(
+                    block    = 3, 
+                    brem     = info.brem, 
+                    trigger  = info.trigger, 
+                    project  = info.project,
+                    q2bin    = info.q2bin)
 
-            print(name)
-            print(ms)
+                print(plot_name)
+                print(expr)
+                print(ms)
 # ----------------------
