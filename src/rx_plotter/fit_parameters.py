@@ -1,6 +1,7 @@
 '''
 Module holding FitParameters class
 '''
+import numexpr
 import mplhep
 import matplotlib.pyplot as plt
 
@@ -60,7 +61,17 @@ class FitParameters:
         -------------
         Tuple with y value and error 
         '''
-        return 1, 1 
+        pars : dict[str,float] = ms.to_dict()
+
+        val = numexpr.evaluate(
+            ex         = expr, 
+            local_dict = pars)
+
+        err = numexpr.evaluate(
+            ex         = error, 
+            local_dict = pars)
+
+        return float(val), float(err)
     # ----------------------
     def _plot_graph(
         self, 
