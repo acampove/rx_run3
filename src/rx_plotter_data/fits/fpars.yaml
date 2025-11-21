@@ -1,7 +1,11 @@
 
 # ------------------------------------
 yld_jpsi_ee_rk:
-  cuts    : channel == "electron" and project == "rk" and q2bin == "jpsi"
+  info: 
+    trigger : Hlt2RD_BuToKpEE_MVA
+    project : rk
+    q2bin   : jpsi
+    brem    : 1
   plots   :
     yld_jpsi * jpsi_fraction:
       error : yld_jpsi_error * jpsi_fraction_error
