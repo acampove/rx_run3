@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+#--------------------------------------
+set_vars()
+{
+    echo "Turning off multithreading"
+    export MKL_NUM_THREADS=1
+    export NUMEXPR_NUM_THREADS=1
+    export OMP_NUM_THREADS=1
+    export OPENBLAS_NUM_THREADS=1
+
+    echo "Setting paths to sandbox files"
+    export PFN_PATH=$PWD/pfns.json
+
+    echo "Setting environment name"
+    export ENVNAME=dcheck
+    export TARP=dcheck.tar
+}
+#--------------------------------------
+rename_paths()
+{
+    echo "Renaming paths, searching for $VENV/$ENVNAME, in:"
+    ls $PWD/$ENVNAME
+
+    for FILEPATH in $(grep --files-with-matches --binary-files=without-match -r $VENV/$ENVNAME $PWD/$ENVNAME);do
+        echo ""
+        echo $VENV
+        echo "--->      in  "  $FILEPATH
+        echo $PWD
+        echo ""
+        sed -i "s|$VENV|$PWD|g" $FILEPATH
+    done
+    echo "Renamed paths"
+}
+#--------------------------------------
+check_vars()
+{
+    echo "Running with args: $@"
+
+    if [[ ! -f $TARP ]];then
+        echo "Cannot find \"$CONF\" in:"
+        ls
+        exit 1
+    fi
+
+    if [[ ! -f $CONF ]];then
+        echo "Cannot find \"$CONF\" in:"
+        ls
+        exit 1
+    fi
+
+    if [[ ! -f $PFN_PATH ]];then
+        echo "Cannot find \"$PFN_PATH\" in:"
+        ls
+        exit 1
+    fi
+}
+#--------------------------------------
+untar_venv()
+{
+    if [[ -d $ENVNAME ]];then
+        echo "Untarred directory with environment found, not untarring"
+        return
+    fi
+
+    if [[ ! -f $TARP ]];then
+        echo "Cannot find tarred virtual environment \"$TARP\""
+        exit 1
+    fi
+
+    tar -xf $TARP
+}
+#--------------------------------------
+PROD=$1
+SAMP=$2
+CONF=$3
+NJOB=$4
+IJOB=$5
+VENV=$6
+UNAM=$7
+
+set_vars
+check_vars
+untar_venv
+
+rename_paths
+dcheck/run bash -c "export PFN_PATH=$PFN_PATH && export CONFIG_PATH=$CONF && export LXNAME=$UNAM && filter_ntuples -p $PROD -s $SAMP -g $NJOB -i $IJOB -l 10"
+
+if [[ $? -ne 0 ]];then
+    echo "Failed job, sandbox: "
+    ls
+    exit 1
+else
+    echo "Job succeeded, sandbox: "
+    ls
+fi

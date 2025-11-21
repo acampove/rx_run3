@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# This function will:
+# - Pick location of sites-packages from current conda virtual environment
+# - Add to python path of environment
+# such that modules from current environment are available to lhcb shell
+update_python_path()
+{
+    CURRENT_PATH=$(pip show $CONDA_DEFAULT_ENV | grep Location | awk -F ': ' '{print $2}')
+    if [[ ! -d $CURRENT_PATH ]];then
+        echo "Cannot find current python path at: \"$CURRENT_PATH\""
+        exit 1
+    fi
+
+    export PYTHONPATH+=":$CURRENT_PATH"
+}
+
+update_python_path
+
+ganga_shell "$@"

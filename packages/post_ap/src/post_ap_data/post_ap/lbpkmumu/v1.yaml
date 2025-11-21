@@ -1,0 +1,269 @@
+# -----------------------------------
+tests:
+  versions: &tst_ver
+      test_w31_34_v1r2266_mm : v1r2266
+      test_w35_37_v1r2266_mm : v1r2266
+      test_w37_39_v1r2266_mm : v1r2266
+      # ---------
+      test_dt_c1             : v1r1670
+      test_dt_c2             : v1r1670
+      test_dt_c3             : v1r1670
+      test_dt_c4             : v1r1670
+  samples: &tst_sam
+    test_dt_c1:
+        - data_24_magup_turbo_24c1
+    test_dt_c2:
+        - data_24_magup_turbo_24c2
+    test_dt_c3:
+        - data_24_magup_turbo_24c3
+    test_dt_c4:
+        - data_24_magup_turbo_24c4
+    # ---------
+    test_w31_34_v1r2266_mm:
+      - mc_24_w31_34_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+    test_w35_37_v1r2266_mm:
+      - mc_24_w35_37_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+    test_w37_39_v1r2266_mm:
+      - mc_24_w37_39_magdown_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+working_group: rd
+productions:
+  rd_ap_2024:
+    versions:
+      data_turbo_24c1 : v1r1670
+      data_turbo_24c2 : v1r1670
+      data_turbo_24c3 : v1r1670
+      data_turbo_24c4 : v1r1670
+      # ---------
+      w31_34_v1r2266: v1r2266
+      w35_37_v1r2266: v1r2266
+      w37_39_v1r2266: v1r2266
+      w40_42_v1r2266: v1r2266
+      # ---------
+      w31_34_v1r2437: v1r2437
+      w35_37_v1r2437: v1r2437
+      w37_39_v1r2437: v1r2437
+      w40_42_v1r2437: v1r2437
+      <<: *tst_ver
+    samples:
+      data_turbo_24c1:
+        - data_24_magdown_turbo_24c1
+        - data_24_magup_turbo_24c1
+      data_turbo_24c2:
+        - data_24_magdown_turbo_24c2
+        - data_24_magup_turbo_24c2
+      data_turbo_24c3:
+        - data_24_magdown_turbo_24c3
+        - data_24_magup_turbo_24c3
+      data_turbo_24c4:
+        - data_24_magdown_turbo_24c4
+        - data_24_magup_turbo_24c4
+      # ---------
+      w31_34_v1r2266:
+        - mc_24_w31_34_magup_sim10d_15102001_lb_pk_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15102011_lb_ppi_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144040_lb_lambda1520jpsi_mm_eq_dpc_tuple
+        - mc_24_w31_34_magup_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w31_34_magup_sim10d_15512020_lb_pmunu_eq_tc_lqcd_m4p5g_rh_tuple
+      w35_37_v1r2266:
+        - mc_24_w35_37_magup_sim10d_15102001_lb_pk_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15102011_lb_ppi_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144040_lb_lambda1520jpsi_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w35_37_magup_sim10d_15512020_lb_pmunu_eq_tc_lqcd_m4p5g_rh_tuple
+      w37_39_v1r2266:
+        - mc_24_w37_39_magdown_sim10d_15102001_lb_pk_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15102011_lb_ppi_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15114001_lb_lambda1520mumu_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15114011_lb_pkmumu_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15114021_lb_ppimumu_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144001_lb_jpsipk_mm_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144011_lb_psi2spk_mm_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144021_lb_jpsippi_mm_eq_phsp_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144040_lb_lambda1520jpsi_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w37_39_magdown_sim10d_15512020_lb_pmunu_eq_tc_lqcd_m4p5g_rh_tuple
+      w40_42_v1r2266:
+        - mc_24_w40_42_magdown_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+        - mc_24_w40_42_magup_sim10d_15144100_lb_jpsilambda_mm_eq_phsp_tuple
+      <<: *tst_sam
+# ------------------------------------------------
+transformations:
+  redefine_head:
+    B_ : Lb_ 
+    X_ : Lz_ 
+    H1_: P_
+    H2_: K_
+  particle_variables:
+    P  : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) + TMath::Sq(PARTICLE_PZ) )
+    PT : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) )
+  define_all:
+    nTracks  : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
+  drop_branches:
+    # This should happend AFTER the redefinitions, renaming and definitions are done
+    includes:
+      # Kinematics
+      - _MAXDOCA
+      - _MAXSDOCA
+      - _DOCA
+      - _SDOCA
+      - _SUM_PT
+      - _ALLPV_
+      # Drop covariance matrices
+      - _COV_MATRIX
+      #Track's cluster, calo, RICH PID,
+      - _CLUSTER
+      - _Calo
+      - _RICH_DLL_
+      - _RICH_SCALED_DLL_
+      - _STATEAT_
+      - _THREE_
+      #
+      - SMOG2
+      - _EE2KK_
+      - _EE2PiPi_
+      - _K2P_
+      - _K2Pi_
+      - _KP2PK_
+      - _P2K_
+      - _MuMu2KK_
+      - _MuMu2PiPi_
+      - _MuMuK2KKPi_
+      - _MuMuK2PiPiPi_
+      - _POS_COV_MATRIX_
+      - _MOM_POS_COV_MATRIX_
+      - _MOM_COV_MATRIX_
+      - _POSITION_STATEAT_
+      - CutBasedIncl
+      - _InclDet
+      - _RICH_THRESHOLD_
+      - _Hlt1Beam
+      - _Hlt1BGI
+      - _Hlt1D2K
+      - _Hlt1D2P
+      - _Hlt1Det
+      - _Hlt1DiElectron
+      - _Hlt1DiMuon
+      - _Hlt1DiPhoton
+      - _Hlt1Displaced
+      - _Hlt1Dst2
+      - _Hlt1Error
+      - _Hlt1GEC
+      - _Hlt1KsToPiPi
+      - _Hlt1LambdaLL
+      - _Hlt1LowPtDiMuon
+      - _Hlt1LowPtMuon
+      - _Hlt1Material
+      - _Hlt1MicroBias
+      - _Hlt1NoBias
+      - _Hlt1ODIN
+      - _Hlt1OneMuon
+      - _Hlt1Passthrough
+      - _Hlt1Pi02GammaGamma
+      - _Hlt1RICH1
+      - _Hlt1RICH2
+      - _Hlt1SingleHighPt
+      - _Hlt1SMOG
+      - _Hlt1TAEPassthrough
+      - _Hlt1Velo
+      - _Hlt1XiOmegaLLL
+    starts_with:
+      - B_
+      - H1_
+      - H2_
+      - X_
+      # Jpsi
+      - Jpsi_Min
+      - Jpsi_MIN
+      - Jpsi_Max
+      - Jpsi_MAX
+      - Jpsi_ALV
+      # Lepton
+      - L1_HCAL
+      - L2_HCAL
+      # Hadron
+      - Hp_
+      - H_BREM
+      - H_ECAL
+      - H_ELECTRON
+      - H_MUON
+      - P_BREM
+      - P_ECAL
+      - P_ELECTRON
+      - P_MUON
+      - H1_BREM
+      - H1_ECAL
+      - H1_ELECTRON
+      - H1_MUON
+      - H2_BREM
+      - H2_ECAL
+      - H2_ELECTRON
+      - H2_MUON
+      # Hlt not for B
+      - Hlt1
+      - Phi_Hlt1
+      - Kst_Hlt1
+      - Hlt2
+      # Hlt1 for tracks not needed, will use Hlt1 for B
+      - H_Hlt1
+      - P_Hlt1
+      - H1_Hlt1
+      - H2_Hlt1
+      - L1_Hlt1
+      - L2_Hlt1
+      # Others
+      - B_K2Pi_DTF_
+      - BUNCHCROSSING
+    ends_with:
+      - _KEY
+      - _PARTICLE_ID
+      - _SUM_PT
+    #Will drop branches matching wild card
+    wild_card:
+      # Leptons
+      - L*_N*HITS
+      - L*_PT_WITH_BREM
+      - L*_MUONCATBOOST
+      - L*_RICH*_GAS_USED
+      - L*_ECALPID*
+      - L*_ELECTRON*
+      - L*_BREMHYPO*
+      - L*_HASBREM*
+      - L*MUONLLBG
+      - L*MUONLLMU
+      # Hadrons
+      - H_N*HITS
+      - H_RICH*_GAS_USED
+      - H_HASBREM*
+      - H1_N*HITS
+      - H1_RICH*_GAS_USED
+      - H1_HASBREM*
+      - H2_N*HITS
+      - H2_RICH*_GAS_USED
+      - H2_HASBREM*
+  hlt_lines:
+    lb_mumu_cut:
+      - Hlt2RD_LbToLMuMu_DD
+      - Hlt2RD_LbToPKJpsi_JpsiToMuMu
+      - Hlt2RD_LambdabToPKMuMu
+      - Hlt2RD_LbToLMuMu_LL
+    lb_mumu_mva:
+      - Hlt2RD_LbTopKMuMu_MVA
+      - Hlt2RD_LbTopKMuMu_SameSign_MVA
+  selection:
+    evt_max : -1
+  saving:
+    evt_max : -1
+    compression : 2
+    store_branch: false

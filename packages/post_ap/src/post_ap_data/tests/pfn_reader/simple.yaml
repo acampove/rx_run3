@@ -1,0 +1,20 @@
+# Minimal config needed to test PFNReader 
+
+working_group: rd
+productions:
+  btoxll_mva_2024_nopid:
+    versions:
+      w31_34_v1r3411: v1r3411
+      w35_37_v1r3411: v1r3411
+      w37_39_v1r3411: v1r3411
+      w40_42_v1r3411: v1r3411
+    samples:
+      w31_34_v1r3411:
+        - mc_24_w31_34_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+      w35_37_v1r3411:
+        - mc_24_w35_37_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+      w37_39_v1r3411:
+        - mc_24_w37_39_magdown_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+      w40_42_v1r3411:
+        - mc_24_w40_42_magup_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple
+        - mc_24_w40_42_magdown_sim10d_12153001_bu_jpsik_ee_eq_dpc_tuple

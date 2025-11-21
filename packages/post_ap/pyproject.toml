@@ -1,0 +1,42 @@
+[project]
+name        = 'post_ap'
+description = 'Project with code needed to filter, trim and slim ntuples produced by AP'
+version     = '0.3.8'
+readme      = 'README.md'
+dependencies= [
+'tqdm',
+'apd',
+'omegaconf',
+'data-manipulation-utilities',
+]
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+lfns_from_csv        ='post_ap_scripts.lfns_from_csv:main'
+dump_samples         ='post_ap_scripts.dump_samples:main'
+save_pfns            ='post_ap_scripts.save_pfns:main'
+ntup_info            ='post_ap_scripts.ntup_info:main'
+plot_vars            ='post_ap_scripts.plot_vars:main'
+link_merge           ='post_ap_scripts.link_merge:main'
+filter_ntuples       ='post_ap_scripts.filter_ntuples:main'
+run3_download_ntuples='post_ap_scripts.run3_download_ntuples:main'
+job_filter_dirac     ='post_ap_scripts.job_filter_dirac:main'
+job_filter_ganga     ='post_ap_scripts.job_filter_ganga:main'
+validate_slimming    ='post_ap_scripts.validate_slimming:main'
+
+[tool.setuptools.package-data]
+post_ap_data = ['**/*.json', '**/*.yaml']
+post_ap_grid = ['run_filter']
+
+[tool.setuptools]
+script-files=[
+'src/post_ap_scripts/update_tarball',
+'src/post_ap_scripts/list_venvs',
+'src/post_ap_scripts/remove_job',
+'src/post_ap_scripts/post_shell',
+]

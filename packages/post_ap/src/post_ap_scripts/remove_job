@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# -------------------------------
+display_help()
+{
+    echo "Script used to remove LFNs associated to given job" 
+    echo ""
+    echo "-n: Name of job, something like dec_08_2024" 
+    echo "-s: Name of sample (usually called nickname), e.g. data, simulation" 
+}
+# -------------------------------
+get_opts()
+{
+    while getopts :hf:n:s: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            n)  JOB_NAME=${OPTARG};;
+            s)  SAMPLE_NAME=${OPTARG};;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
+# -------------------------------
+check_env()
+{
+    which dirac-dms-user-lfns > /dev/null 2>&1
+    if [[ $? -ne 0 ]];then
+        echo "Dirac not available, run lb_dirac to be in the right environment"
+        exit 1
+    fi
+
+    if [[ -z $ULXNAME ]];then
+        echo "ULXNAME variable not set"
+        exit 1
+    fi
+
+    if [[ -z $JOB_NAME ]];then
+        echo "Job name not passed"
+        exit 1
+    fi
+
+    if [[ -z $SAMPLE_NAME ]];then
+        echo "Sample name not passed"
+        exit 1
+    fi
+}
+# -------------------------------
+remove_lfns()
+{
+    LFN_PATH=/lhcb/user/${ULXNAME:0:1}/$ULXNAME/$JOB_NAME"_"$SAMPLE_NAME 
+    dirac-dms-user-lfns -b $LFN_PATH > /dev/null 2>&1
+    LFN_LIST=lhcb-user-${ULXNAME:0:1}-$ULXNAME"-"$JOB_NAME"_"$SAMPLE_NAME".lfns"
+    NFILES=$(cat $LFN_LIST | wc -l)
+    if [[ $NFILES -eq 0 ]];then
+        echo "No LFNs were found in $LFN_PATH"
+        exit 1
+    fi
+
+    echo "Removing $NFILES LFNs"
+
+    dirac-dms-remove-files $LFN_LIST
+}
+# -------------------------------
+get_opts "$@"
+check_env
+remove_lfns
+

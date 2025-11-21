@@ -1,0 +1,86 @@
+decays:
+    B0ToKpPimEE           : ana_cut_bd
+    B0ToKpPimMuMu         : ana_cut_bd
+    # -------
+    B0ToKpPimEE_MVA       : ana_mva_bd
+    B0ToKpPimMuMu_MVA     : ana_mva_bd
+    # -------
+    BuToKpEE              : ana_cut_bp
+    BuToKpMuMu            : ana_cut_bp
+    # -------
+    BuToKpEE_MVA          : ana_mva_bp
+    BuToKpMuMu_MVA        : ana_mva_bp
+    # -------
+    BuToKpEE_MVA_cal      : ana_mva_bp_cal
+    B0ToKpPimEE_MVA_cal   : ana_mva_bd_cal
+    # -------
+    BuToKpEE_MVA_misid    : ana_mva_bp_misid
+    B0ToKpPimEE_MVA_misid : ana_mva_bd_misid
+    LbTopKEE_MVA_misid    : ana_mva_lb_misid
+    BsToPhiEE_MVA_misid   : ana_mva_bs_misid
+    # -------
+    LbToLEE_LL            : ana_cut_lb
+    LbToLMuMu_LL          : ana_cut_lb
+    # -------
+    LbTopKEE_MVA          : ana_mva_lb
+    LbTopKMuMu_MVA        : ana_mva_lb
+    # -------
+    BsToPhiEE_MVA         : ana_mva_bs
+    BsToPhiMuMu_MVA       : ana_mva_bs
+evt_proc:
+    # ------Resonant RK
+    12143001       : ctrl_mm
+    12143020       : psi2_mm
+    #
+    12153001       : ctrl_ee
+    12153012       : psi2_ee
+    #
+    11144001       : bdks_jpsi_mm
+    #
+    12155100       : bpks_jpsi_ee
+    11154001       : bdks_jpsi_ee
+    13154001       : bsph_jpsi_ee
+    #
+    12145090       : bpk1_jpsi_mm
+    13144001       : bsph_jpsi_mm
+    15144100       : lblz_jpsi_mm
+    #
+    12155020       : bpkpipi_jpsi_ee
+    #
+    11144103       : bpKS_jpsi_mm
+    #
+    11154100       : bdKS_jpsi_ee
+    # ------Signal
+    12113002       : sign_mm
+    12123003       : sign_ee
+    # ------Inclusive
+    11442001       : bdXcHs_mm
+    12442001       : bpXcHs_mm
+    13442001       : bsXcHs_mm
+    11453001       : bdXcHs_ee
+    12952000       : bpXcHs_ee
+    13454001       : bsXcHs_ee
+    15454101       : lbXcHs_ee
+    # ------Cabibbo suppresed
+    12153020       : ctrl_pi_ee
+    12143010       : ctrl_pi_mm
+    # ------Rare backgrounds
+    11154011       : bdpsi2kst_ee
+    11144011       : bdpsi2kst_mm
+    12155110       : bppsi2kst_ee
+    12145120       : bppsi2kst_mm
+    12425011       : bpk2ee 
+    12425000       : bpk1ee 
+    13124006       : bsphiee 
+    # ------Rare backgrounds
+    11124002       : bdks_ee
+    11124037       : bdkpi_ee
+    12123445       : bpks_ee
+    # ------Hadronic MisID
+    12103025       : bpkpipi
+    12103030       : bpkpik
+    12103017       : bpkkk
+    # ------Cascade decays
+    12183004       : bpd0kpenupi
+    12583013       : bpd0kppienu
+    12583021       : bpd0kpenuenu

@@ -1,0 +1,185 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+#--------------------------------
+display_help()
+{
+    echo "Usage: Used to update tarball with virtual environment and optionally upload it to the grid"
+    echo ""
+    echo "-h: Help"
+    echo "-v: Version of tarball, optional, if not passed, wont upload it"
+    echo "-i: This will force the script to install this version, e.g. 0.2.4" 
+    echo "-u: With 1 will force updating tarball if found in the grid, default is 0"
+    echo "-d: If 1, it will do a dry run (skip upload), default 0" 
+    echo "-V: This will turn on verbose messages with 1"
+}
+#--------------------------------
+get_args()
+{
+    UPDATE=0
+    DRY=0
+    POSA_VERS="latest"
+    VERBOSE=0
+    while getopts :hf:v:i:u:d:V: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+            v)  VENV_VERS=${OPTARG};;
+            i)  POSA_VERS=${OPTARG};;
+            u)  UPDATE=${OPTARG};;
+            d)  DRY=${OPTARG};;
+            V)  VERBOSE=${OPTARG};;
+        esac
+    done
+
+    if [[ $VERBOSE -eq 1 ]];then
+        set -x
+    fi
+}
+#--------------------------------
+check()
+{
+    PROCESS=$1
+    if [[ $? -ne 0 ]];then
+        echo "Failed: $PROCESS, check logs at $LOGPATH"
+        exit 1
+    fi
+}
+#--------------------------------
+check_existing()
+{
+    LFN=$1
+    echo "Checking for existing TARBALL for: \"$LFN\""
+
+    if ! lb-dirac dirac-dms-lfn-replicas $LFN > /dev/null 2>&1;then
+        code=1
+    else
+        code=0
+    fi
+
+    if   [[ $code -eq 0 ]] && [[ $UPDATE -eq 1 ]];then
+        echo "LFN found, removing: \"$LFN\""
+        lb-dirac dirac-dms-remove-files $LFN
+    elif [[ $code -eq 0 ]] && [[ $UPDATE -eq 0 ]];then
+        echo "LFN found: \"$LFN\""
+        exit 1
+    elif [[ $code -ne 0 ]];then
+        echo "No replica found for \"$LFN\""
+    else
+        echo "Replica finding process exited with status $code and the updating flag was $UPDATE"
+        exit 1
+    fi
+}
+#---------------------------------
+upload()
+{
+    echo "Uploading"
+
+    if [[ -z $VENV_VERS ]];then
+        echo "Version of tarball not passed, won't upload it"
+        exit 0
+    fi
+
+    SOURCE=$VENVS/dcheck.tar 
+    TARGET=LFN:/lhcb/user/${LXNAME:0:1}/$LXNAME/run3/venv/$VENV_VERS/dcheck.tar
+
+    check_existing $TARGET
+
+    echo "Uploading tarball for $TARGET"
+    if [[ $DRY -eq 0 ]];then
+        lb-dirac dirac-dms-add-file $TARGET $SOURCE CERN-USER
+    else
+        lb-dirac echo "This is DIRAC, uploading as \"$TARGET\" file \"$SOURCE\" to CERN-USER"
+    fi
+}
+#--------------------------------
+initialize()
+{
+    mkdir -p /tmp/logs/post_ap
+    LOGPATH="/tmp/logs/post_ap/update_tarball.log"
+
+    echo "Initializing"
+
+    if command -v lb-conda-dev >/dev/null 2>&1;then
+        echo "lb-conda-dev found"
+    else
+        echo "lb-conda-dev missing"
+        exit 1
+    fi
+
+    if command -v lb-dirac >/dev/null 2>&1;then
+        echo "lb-dirac found"
+    else
+        echo "lb-dirac missing"
+        exit 1 
+    fi
+
+    if [[ -z $VENVS ]];then
+        echo "VENVS environment variable not set"
+        exit 1
+    fi
+
+    if [[ -z $LXNAME ]];then
+        echo "LXNAME (LXPLUS username) variable not set"
+        exit 1
+    fi
+}
+#--------------------------------
+make_tarball()
+{
+    echo "Making tarball"
+
+    mkdir -p $VENVS
+    cd $VENVS
+
+    rm -rf dchecks.tar
+
+    if [[ ! -f $VENVS/dcheck/run ]];then
+        echo "Environment not found, creating it in $PWD"
+        lb-conda-dev virtual-env default dcheck
+    else
+        echo "Environment found, updating tarball"
+    fi
+
+    install_pkg post_ap $POSA_VERS
+
+    tar -czf dcheck.tar dcheck
+    echo "Running: tar -czf dcheck.tar dcheck"
+    check "Tar post_ap"
+
+    cd - > /dev/null 2>&1
+}
+#--------------------------------
+install_pkg()
+{
+    NAME=$1
+    VERS=$2
+
+    if [[ "$VERS" == "latest" ]];then
+        echo "Installing latest version of $NAME"
+        $VENVS/dcheck/run pip install $NAME        >> $LOGPATH 2>&1
+    else
+        echo "Installing $VERS version of $NAME"
+        $VENVS/dcheck/run pip install $NAME==$VERS >> $LOGPATH 2>&1
+    fi
+
+    check "Installation of $NAME"
+    echo "-----------------"
+    $VENVS/dcheck/run pip show $NAME
+    echo "-----------------"
+}
+#--------------------------------
+get_args "$@"
+initialize
+make_tarball
+upload

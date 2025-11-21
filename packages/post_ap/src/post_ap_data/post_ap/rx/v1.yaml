@@ -1,0 +1,462 @@
+working_group: rd
+productions:
+  btoxll_mva_2024_nopid:
+    version: v1r2093
+    samples:
+      data: []
+      simulation:
+        - mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143010_bu_jpsipi_mm_tuple
+        - mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_11154001_bd_jpsikst_ee_tuple
+        - mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12153001_bu_jpsik_ee_tuple
+        - mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_11442001_bd_jpsix_mm_tuple
+        - mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_11144001_bd_jpsikst_mm_tuple
+        - mc_2024_w31_34_magup_nu6p3_sim10d_pythia8_12143001_bu_jpsik_mm_tuple
+  rd_ap_2024:
+    version: v1r1670
+    samples:
+      data:
+        - data_24_magdown_turbo_24c1
+        - data_24_magdown_turbo_24c2
+        - data_24_magdown_turbo_24c3
+        - data_24_magdown_turbo_24c4
+        - data_24_magup_turbo_24c1
+        - data_24_magup_turbo_24c2
+        - data_24_magup_turbo_24c3
+        - data_24_magup_turbo_24c4
+      simulation: []
+# ------------------------------------------------
+transformations:
+  redefine_head:
+    # This is needed due to the way the isolation head is defined for
+    # cut based and mva based lines:
+    # https://gitlab.cern.ch/lhcb/Moore/-/blob/2024-patches/Hlt/Hlt2Conf/python/Hlt2Conf/lines/rd/b_to_xll_hlt2_mva.py
+    Lb_HEAD_CC_Lb_: B_HEAD_CC_B_
+    Lb_HEAD_NC_Lb_: B_HEAD_NC_B_
+    Lb_VTXISO_Lb_ : B_VTXISO_B_
+
+    B_HEAD_CC_bp_ : B_HEAD_CC_B_
+    B_HEAD_NC_bp_ : B_HEAD_NC_B_
+    B_VTXISO_bp_  : B_VTXISO_B_
+
+    B_HEAD_CC_bd_ : B_HEAD_CC_B_
+    B_HEAD_NC_bd_ : B_HEAD_NC_B_
+    B_VTXISO_bd_  : B_VTXISO_B_
+    # Lb and Bx samples will have branches starting with B, simpler
+    Lb_           : B_
+  define:
+    #These defitions are done on top of the names stemming from the changes caused by `redefine_head`
+    nTracks                           : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
+    B_VTXISODCHI2ONETRACK             : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+    B_VTXISODCHI2MASSONETRACK         : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+    B_VTXISODCHI2TWOTRACK             : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2
+    B_VTXISODCHI2MASSTWOTRACK         : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+  rename:
+    B_DTF_Jpsi_MASS                   : B_const_mass_M
+    B_DTF_Jpsi_PX                     : B_const_mass_PX
+    B_DTF_Jpsi_PY                     : B_const_mass_PY
+    B_DTF_Jpsi_PZ                     : B_const_mass_PZ
+    B_DTF_Jpsi_PE                     : B_const_mass_PE
+
+    B_DTF_Psi2S_MASS                  : B_const_mass_psi2S_M
+    B_DTF_Psi2S_PX                    : B_const_mass_psi2S_PX
+    B_DTF_Psi2S_PY                    : B_const_mass_psi2S_PY
+    B_DTF_Psi2S_PZ                    : B_const_mass_psi2S_PZ
+    B_DTF_Psi2S_PE                    : B_const_mass_psi2S_PE
+    #---------
+    K_TRGHOSTPROB                     : H_TRACK_GhostProb
+    H1_TRGHOSTPROB                    : H1_TRACK_GhostProb
+    H2_TRGHOSTPROB                    : H2_TRACK_GhostProb
+    L1_TRGHOSTPROB                    : L1_TRACK_GhostProb
+    L2_TRGHOSTPROB                    : L2_TRACK_GhostProb
+    #
+    K_PID_E                           : H_PIDe
+    H1_PID_E                          : H1_PIDe
+    H2_PID_E                          : H2_PIDe
+    #
+    K_PROBNN_E                        : K_ProbNNe
+    H1_PROBNN_E                       : H1_ProbNNe
+    H2_PROBNN_E                       : H2_ProbNNe
+    #
+    K_PROBNN_K                        : H_ProbNNk
+    H1_PROBNN_K                       : H1_ProbNNk
+    H2_PROBNN_K                       : H2_ProbNNk
+    #
+    L1_PID_E                          : L1_PIDe
+    L2_PID_E                          : L2_PIDe
+    L1_PROBNN_E                       : L1_ProbNNe
+    L2_PROBNN_E                       : L2_ProbNNe
+    #
+    L1_PID_MU                         : L1_PIDmu
+    L2_PID_MU                         : L2_PIDmu
+    L1_PROBNN_MU                      : L1_ProbNNmu
+    L2_PROBNN_MU                      : L2_ProbNNmu
+    #
+    L1_ISMUON                         : L1_isMuon
+    L2_ISMUON                         : L2_isMuon
+    B_BPVFDCHI2                       : B_FDCHI2_OWNPV
+    H_BPVIPCHI2                       : H_IPCHI2_OWNPV
+    Jpsi_BPVIPCHI2                    : Jpsi_IPCHI2_OWNPV
+    L1_BPVIPCHI2                      : L1_IPCHI2_OWNPV
+    L2_BPVIPCHI2                      : L2_IPCHI2_OWNPV
+    Jpsi_BPVDIRA                      : Jpsi_DIRA_OWNPV
+    B_BPVDIRA                         : B_DIRA_OWNPV
+    B_BPVIPCHI2                       : B_IPCHI2_OWNPV
+    B_END_VZ                          : B_ENDVERTEX_Z
+    B_CHI2                            : B_ENDVERTEX_CHI2
+    L1_ENERGY                         : L1_PE
+    L2_ENERGY                         : L2_PE
+    B_FDCHI2_OWNPV                    : B_BPVFDCHI2
+    B_IPCHI2_OWNPV                    : B_BPVIPCHI2
+    Jpsi_FDCHI2_OWNPV                 : Jpsi_BPVFDCHI2
+    Jpsi_IPCHI2_OWNPV                 : Jpsi_BPVIPCHI2
+    H_IPCHI2_OWNPV                    : H_BPVIPCHI2
+    L1_IPCHI2_OWNPV                   : L1_BPVIPCHI2
+    L2_IPCHI2_OWNPV                   : L2_BPVIPCHI2
+    B_DIRA_OWNPV                      : B_BPVDIRA
+    Jpsi_DIRA_OWNPV                   : Jpsi_BPVDIRA
+    B_ENDVERTEX_Z                     : B_END_VZ
+    B_ENDVERTEX_CHI2                  : B_CHI2
+    L1_PE                             : L1_ENERGY
+    L2_PE                             : L2_ENERGY
+    L1_HASBREMADDED                   : L1_BremMultiplicity
+    L2_HASBREMADDED                   : L2_BremMultiplicity
+  drop_branches:
+    # This should happend AFTER the redefinitions, renaming and definitions are done
+    includes:
+      # Kinematics
+      - _MAXDOCA
+      - _MAXSDOCA
+      - _DOCA
+      - _SDOCA
+      - _SUM_PT
+      - _ALLPV_
+      # Isolation heads
+      - _Lb_
+      - _bp_
+      - _bd_
+      - _Lz_
+      # Coordinate in X,Y,Z of the best PV? Never used this
+      - _BPV
+      # Drop covariance matrices
+      - _COV_MATRIX
+      #Track's cluster, calo, RICH PID,
+      - _CLUSTER
+      - _Calo
+      - _RICH_DLL_
+      - _RICH_SCALED_DLL_
+      - _STATEAT_
+      - _THREE_
+      #
+      - NeutralIso
+      - SMOG2
+      - _EE2KK_
+      - _EE2PiPi_
+      - _K2P_
+      - _K2Pi_
+      - _KP2PK_
+      - _P2K_
+      - _DTF_
+      - _MuMu2KK_
+      - _MuMu2PiPi_
+      - _MuMuK2KKPi_
+      - _MuMuK2PiPiPi_
+      - _POS_COV_MATRIX_
+      - _MOM_POS_COV_MATRIX_
+      - _MOM_COV_MATRIX_
+      - _POSITION_STATEAT_
+      - CutBasedIncl
+      - _InclDet
+      - _RICH_THRESHOLD_
+      - _Hlt1Beam
+      - _Hlt1BGI
+      - _Hlt1D2K
+      - _Hlt1D2P
+      - _Hlt1Det
+      - _Hlt1DiElectron
+      - _Hlt1DiMuon
+      - _Hlt1DiPhoton
+      - _Hlt1Displaced
+      - _Hlt1Dst2
+      - _Hlt1Error
+      - _Hlt1GEC
+      - _Hlt1KsToPiPi
+      - _Hlt1LambdaLL
+      - _Hlt1LowPtDiMuon
+      - _Hlt1LowPtMuon
+      - _Hlt1Material
+      - _Hlt1MicroBias
+      - _Hlt1NoBias
+      - _Hlt1ODIN
+      - _Hlt1OneMuon
+      - _Hlt1Passthrough
+      - _Hlt1Pi02GammaGamma
+      - _Hlt1RICH1
+      - _Hlt1RICH2
+      - _Hlt1SingleHighPt
+      - _Hlt1SMOG
+      - _Hlt1TAEPassthrough
+      - _Hlt1Velo
+      - _Hlt1XiOmegaLLL
+    starts_with:
+      # Occupacy
+      - nBackTracks
+      - nDownstreamTracks
+      - nLongTracks
+      - nTTracks
+      - nUpstreamTracks
+      - nVeloTracks
+      # B
+      - B_ID
+      - B_KEY
+      - B_VPVFDI
+      - B_VPVFDV
+      - B_END_V
+      - B_AL
+      - B_BPVFDVEC
+      - B_MAX
+      - B_MIN
+      # B isolation
+      - B_VTXISO_B_
+      - B_cone_indx
+      - bp_cone_indx
+      - bd_cone_indx
+      # Jpsi
+      - Jpsi_Min
+      - Jpsi_MIN
+      - Jpsi_Max
+      - Jpsi_MAX
+      - Jpsi_ALV
+      # Phi
+      - Phi_Max
+      - Phi_Min
+      - Phi_ALV
+      # Kst
+      - Kst_Min
+      - Kst_MIN
+      - Kst_Max
+      - Kst_MAX
+      - Kst_ALV
+      # Lz
+      - Lz_Max
+      - Lz_Min
+      - Lz_ALV
+      # Lepton
+      - L1_HCAL
+      - L2_HCAL
+      # Hadron
+      - H_BREM
+      - H_ECAL
+      - H_ELECTRON
+      - H_MUON
+      - P_BREM
+      - P_ECAL
+      - P_ELECTRON
+      - P_MUON
+      - H1_BREM
+      - H1_ECAL
+      - H1_ELECTRON
+      - H1_MUON
+      - H2_BREM
+      - H2_ECAL
+      - H2_ELECTRON
+      - H2_MUON
+      # Hlt not for B
+      - Hlt1
+      - Jpsi_Hlt1
+      - Phi_Hlt1
+      - Kst_Hlt1
+      - Lz_Hlt1
+      - Hlt2
+      # Hlt1 for tracks not needed, will use Hlt1 for B
+      - H_Hlt1
+      - P_Hlt1
+      - H1_Hlt1
+      - H2_Hlt1
+      - L1_Hlt1
+      - L2_Hlt1
+      # Others
+      - B_K2Pi_DTF_
+      - K_
+      - Lb_
+      - BUNCHCROSSING
+    ends_with:
+      - _KEY
+      - _PARTICLE_ID
+      - _SUM_PT
+    #Will drop branches matching wild card
+    wild_card:
+      # Leptons
+      - L*_N*HITS
+      - L*_PT_WITH_BREM
+      - L*_MUONCATBOOST
+      - L*_RICH*_GAS_USED
+      - L*_ECALPID*
+      - L*_ELECTRON*
+      - L*_BREMHYPO*
+      - L*_HASBREM*
+      - L*MUONLLBG
+      - L*MUONLLMU
+      # Hadrons
+      - H_N*HITS
+      - H_RICH*_GAS_USED
+      - H_HASBREM*
+      - H1_N*HITS
+      - H1_RICH*_GAS_USED
+      - H1_HASBREM*
+      - H2_N*HITS
+      - H2_RICH*_GAS_USED
+      - H2_HASBREM*
+      # DETA and DPHI vectors of isolation track positions?
+      - B_HEAD_CC_B_ChargedIso_DR2_*_D*
+      - B_HEAD_CC_B_ChargedIso_DR2_*_Max_P
+      - B_HEAD_CC_B_ChargedIso_DR2_*_Max_PT
+      - B_HEAD_CC_B_ChargedIso_DR2_*_Min_P
+      - B_HEAD_CC_B_ChargedIso_DR2_*_Min_PT
+      - B_HEAD_CC_B_ChargedIso_DR2_*_PASY
+      - B_HEAD_CC_B_ChargedIso_DR2_*_PTASY
+      - B_HEAD_CC_B_ChargedIso_DR2_*_PXASY
+      - B_HEAD_CC_B_ChargedIso_DR2_*_PYASY
+      - B_HEAD_CC_B_ChargedIso_DR2_*_PZASY
+  hlt_lines_test:
+    lines_phys_ee_mva:
+      - Hlt2RD_B0ToKpPimEE_MVA
+  hlt_lines_very_low_priority:  &very_low_priority
+    lines_ss_ee_mva:
+      - Hlt2RD_BuToKpEE_SameSign_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+      - Hlt2RD_LbTopKEE_SameSign_MVA
+      - Hlt2RD_BsToPhiEE_SameSign_MVA
+    lines_ss_mm_mva:
+      - Hlt2RD_BuToKpMuMu_SameSign_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+      - Hlt2RD_LbTopKMuMu_SameSign_MVA
+      - Hlt2RD_BsToPhiMuMu_SameSign_MVA
+    lines_msid_ee_mva:
+      - Hlt2RD_LbTopKEE_MVA_misid
+      - Hlt2RD_BsToPhiEE_MVA_misid
+    lines_phys_ee_cut:
+      - Hlt2RD_LbToLEE_LL
+      - Hlt2RD_LbToLMuMu_LL
+    lines_phys_mm_mva:
+      - Hlt2RD_LbTopKMuMu_MVA
+      - Hlt2RD_BsToPhiMuMu_MVA
+    lines_phys_ee_mva:
+      - Hlt2RD_LbTopKEE_MVA
+      - Hlt2RD_BsToPhiEE_MVA
+  hlt_lines_low_priority:  &low_priority
+    lines_phys_ee_cut:
+      - Hlt2RD_BuToKpEE
+      - Hlt2RD_B0ToKpPimEE
+    lines_phys_mm_cut:
+      - Hlt2RD_BuToKpMuMu
+      - Hlt2RD_B0ToKpPimMuMu
+  hlt_lines_high_priority: &high_priority
+    lines_nopid:
+      - Hlt2RD_BuToKpEE_MVA_noPID
+      - Hlt2RD_BuToKpMuMu_MVA_noPID
+      - Hlt2RD_B0ToKpPimEE_MVA_noPID
+      - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+    lines_cali_ee_mva:
+      - Hlt2RD_BuToKpEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
+    lines_msid_ee_mva:
+      - Hlt2RD_BuToKpEE_MVA_misid
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+    lines_phys_ee_mva:
+      - Hlt2RD_BuToKpEE_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA
+    lines_phys_mm_mva:
+      - Hlt2RD_BuToKpMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_MVA
+  hlt_lines:
+    <<: *high_priority
+    <<: *low_priority
+  categories:
+      bukee:
+      - Hlt2RD_BuToKpEE
+      - Hlt2RD_BuToKpEE_MVA
+      - Hlt2RD_BuToKpEE_MVA_cal
+      - Hlt2RD_BuToKpEE_MVA_noPID
+      - Hlt2RD_BuToKpEE_MVA_misid
+      bdkstee:
+      - Hlt2RD_B0ToKpPimEE
+      - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_noPID
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+      bukmm:
+      - Hlt2RD_BuToKpMuMu
+      - Hlt2RD_BuToKpMuMu_MVA
+      - Hlt2RD_BuToKpMuMu_MVA_noPID
+      bdkstmm:
+      - Hlt2RD_B0ToKpPimMuMu
+      - Hlt2RD_B0ToKpPimMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+  selection:
+    cuts:
+      any:
+        L1Ghost: L1_TRGHOSTPROB < 0.5
+        L2Ghost: L2_TRGHOSTPROB < 0.5
+      bukee:
+        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 6000
+        KpGhost: H_TRGHOSTPROB  < 0.5
+      bukmm:
+        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 5800
+        KpGhost: H_TRGHOSTPROB  < 0.5
+      bdkstee:
+        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 6000
+        k_mass: Kst_M    >  800 && Kst_M   < 1000
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      bdkstmm:
+        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 5800
+        k_mass: Kst_M    >  800 && Kst_M   < 1000
+        H1Ghost: H1_TRGHOSTPROB < 0.5
+        H2Ghost: H2_TRGHOSTPROB < 0.5
+      lbpkee:
+        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 6000
+      lbpkmm:
+        b_mass: B_const_mass_M > 4000 && B_const_mass_M < 5800
+  saving:
+    evt_max : -1
+    compression : 2
+    store_branch: false
+    tree_name:
+      KEE:
+        - Hlt2RD_BuToKpEE_MVA
+        - Hlt2RD_BuToKpEE_MVA_noPID
+        - Hlt2RD_B0ToKpPimEE_MVA
+        - Hlt2RD_B0ToKpPimEE_MVA_noPID
+        - Hlt2RD_LbTopKEE_MVA
+        - Hlt2RD_BsToPhiEE_MVA
+        - Hlt2RD_BuToKpEE
+        - Hlt2RD_B0ToKpPimEE
+        - Hlt2RD_LbToLEE_LL
+      KMM:
+        - Hlt2RD_BuToKpMuMu_MVA
+        - Hlt2RD_BuToKpMuMu_MVA_noPID
+        - Hlt2RD_B0ToKpPimMuMu_MVA
+        - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+        - Hlt2RD_LbTopKMuMu_MVA
+        - Hlt2RD_BsToPhiMuMu_MVA
+        - Hlt2RD_BuToKpMuMu
+        - Hlt2RD_B0ToKpPimMuMu
+        - Hlt2RD_LbToLMuMu_LL
+      KSS_ee:
+        - Hlt2RD_BuToKpEE_SameSign_MVA
+        - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+        - Hlt2RD_LbTopKEE_SameSign_MVA
+        - Hlt2RD_BsToPhiEE_SameSign_MVA
+      KSS_mm:
+        - Hlt2RD_BuToKpMuMu_SameSign_MVA
+        - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+        - Hlt2RD_LbTopKMuMu_SameSign_MVA
+        - Hlt2RD_BsToPhiMuMu_SameSign_MVA
+      KMI_ee:
+        - Hlt2RD_BuToKpEE_MVA_misid
+        - Hlt2RD_B0ToKpPimEE_MVA_misid
+        - Hlt2RD_LbTopKEE_MVA_misid
+        - Hlt2RD_BsToPhiEE_MVA_misid
+      KCL_ee:
+        - Hlt2RD_BuToKpEE_MVA_cal
+        - Hlt2RD_B0ToKpPimEE_MVA_cal
