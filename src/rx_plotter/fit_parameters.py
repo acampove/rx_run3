@@ -2,8 +2,8 @@
 Module holding FitParameters class
 '''
 
-from dmu.generic import utilities as gut
-from rx_plotter  import FitParametersConf
+from dmu.generic                    import utilities as gut
+from rx_plotter.fit_parameters_conf import FitParametersConf
 
 # ----------------------
 class FitParameters:
@@ -31,7 +31,7 @@ class FitParameters:
         -------------
         Class holding configuration
         '''
-        data = gut.load_data(package='rx_plots_data', fpath = f'fits/{name}.yaml')
+        data = gut.load_data(package='rx_plotter_data', fpath = f'fits/{name}.yaml')
 
         return FitParametersConf(**data)
     # ----------------------
