@@ -1,5 +1,5 @@
 [project]
-name            = 'data-manipulation-utilities'
+name            = 'dmu'
 version         = '0.3.2'
 description     = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
 readme          = 'README.md'
