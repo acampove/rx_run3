@@ -28,19 +28,41 @@ class ParameterReader:
     This class is meant to be an interface to the dataframe
     containing the fitting parameters
     '''
+    _pars_path : Path | None = None
     # ----------------------
-    def __init__(self, name : str):
+    def __init__(self, name : str | None = None):
         '''
         Parameters
         -------------
         name : Fit name, e.g. mid_window 
         '''
+        if name is None and self._pars_path is None:
+            raise ValueError('No name was passed and no path to parameters exists')
+
+        self._df = self._get_dataframe(name = name)
+    # ----------------------
+    def _get_dataframe(self, name : str | None = None) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        name: Label for fits
+
+        Returns
+        -------------
+        Dataframe with fit parameters 
+        '''
+        if self._pars_path:
+            log.info(f'Using user defined path: {self._pars_path}')
+            return pnd.read_parquet(self._pars_path)
+
         ana_dir   = Path(os.environ['ANADIR'])
         pars_path = ana_dir / f'fits/data/{name}/parameters.parquet'
+
+        log.debug(f'Using path: {pars_path}')
         if not pars_path.exists():
             raise FileNotFoundError(f'Cannot find: {pars_path}')
 
-        self._df = pnd.read_parquet(path = pars_path)
+        return pnd.read_parquet(path = pars_path)
     # ----------------------
     def _print_info(self, df : pnd.DataFrame) -> None:
         '''
@@ -137,4 +159,27 @@ class ParameterReader:
         data     = self._format_data(data = raw_data)
 
         return FitMeasurement(data = data)
+    # ----------------------
+    @classmethod
+    def inputs_from(cls, pars_path : Path):
+        '''
+        Parameters
+        -------------
+        pars_path: Path to parquet file with parameters 
+
+        Returns
+        -------------
+        Context manager
+        '''
+        old_val = cls._pars_path
+
+        @contextmanager
+        def _context():
+            try:
+                cls._pars_path = pars_path
+                yield
+            finally:
+                cls._pars_path = old_val
+
+        return _context()
 # ------------------------------------
