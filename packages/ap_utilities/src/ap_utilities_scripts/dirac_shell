@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+LOCAL_PATH=/tmp/${USER}/ap_utilities/env
+# ------------------------------------------------------------------
+display_help()
+{
+    echo "Utility needed to create a shell with access to dirac" 
+    echo ""
+    echo "-h: Print this help"
+}
+# ------------------------------------------------------------------
+get_opts()
+{
+    while getopts :hf: option; do
+        case "${option}" in
+            h)
+                display_help
+                exit 0
+                ;;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;
+        esac
+    done
+}
+# ------------------------------------------------------------------
+# Make paths to directories with python projets
+# available globally
+# 
+# Globals:
+#   APUT_PATH
+#   DMU_PATH
+# ------------------------------------------------------------------
+export_paths()
+{
+    if [[ ! -d $SFTDIR ]];then
+        echo "Software directory not found"
+        exit 1
+    fi
+
+    APUT_PATH=$SFTDIR"/ap_utilities"
+    if [[ ! -d $APUT_PATH ]];then
+        echo "ap_utilities directory not found"
+        exit 1
+    else
+        export APUT_PATH
+    fi
+
+    DMU_PATH=$SFTDIR"/dmu"
+    if [[ ! -d $DMU_PATH ]];then
+        echo "dmu directory not found"
+        exit 1
+    else
+        export DMU_PATH
+    fi
+}
+# ------------------------------------------------------------------
+make_rcfile()
+{
+    export RCFILE=/tmp/bash_dirac
+    export LIBPATH=$LOCAL_PATH/lib/python3.11/site-packages
+
+    export_paths
+
+    echo "#!/usr/bin/env bash"                              > $RCFILE
+    echo ""                                                >> $RCFILE
+    echo "export PS1='\u@\h\$ '"                           >> $RCFILE
+    echo "export PATH+=:$LOCAL_PATH/bin"                   >> $RCFILE
+    echo "export PYTHONPATH+=:$LIBPATH"                    >> $RCFILE
+    echo ""                                                >> $RCFILE
+    echo "echo \"----------------------------------\""     >> $RCFILE
+    echo "echo \"Installing projects in $LOCAL_PATH\""     >> $RCFILE
+    echo "echo \"----------------------------------\""     >> $RCFILE
+    echo ""                                                >> $RCFILE
+    echo "pip install --prefix $LOCAL_PATH    $APUT_PATH " >> $RCFILE
+    echo "pip install --prefix $LOCAL_PATH     $DMU_PATH " >> $RCFILE
+    echo ""
+    echo "Using rc file:"
+    cat $RCFILE
+}
+# ------------------------------------------------------------------
+initialize()
+{
+    mkdir -p $LOCAL_PATH
+    if [[ $? -ne 0 ]];then
+        echo "Cannot crate local installation path: $LOCAL_PATH"
+        exit 1
+    fi
+}
+# ------------------------------------------------------------------
+create_shell()
+{
+    set +u
+    lhcb_env
+    set -u
+
+    if [[ ! -f $RCFILE ]];then
+        echo "Cannot find $RCFILE"
+        exit 1
+    fi
+
+    lb-dirac bash -c "exec bash --rcfile $RCFILE"
+}
+# ------------------------------------------------------------------
+# This function will setup the LHCb environment
+# ------------------------------------------------------------------
+lhcb_env()
+{
+    local LBENV_PATH=/cvmfs/lhcb.cern.ch/lib/LbEnv
+
+    if [[ ! -f $LBENV_PATH ]]; then
+        echo "Cannot find $LBENV_PATH"
+        kill INT $$
+    fi
+
+    . $LBENV_PATH
+}
+# ------------------------------------------------------------------
+get_opts "$@"
+initialize
+make_rcfile
+create_shell

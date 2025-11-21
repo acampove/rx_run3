@@ -1,0 +1,381 @@
+# These are the event types needed by RX in Run3 by priority and with the latex decay mapped
+
+# ----------------
+# These are missing samples for each block
+# ----------------
+missing for W31_34:
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  11114000: Bd_Kpimumu_eq_DPC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
+missing for W35_37:
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11584030: Bd_Dstplenu_eq_PHSP_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  11114000: Bd_Kpimumu_eq_DPC
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  11584041: Bd_D0Xenu_D0_eq_cocktail
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
+missing for W37_39:
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11584030: Bd_Dstplenu_eq_PHSP_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11114000: Bd_Kpimumu_eq_DPC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
+  11584041: Bd_D0Xenu_D0_eq_cocktail
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+missing for W40_42_mu:
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11584030: Bd_Dstplenu_eq_PHSP_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11114000: Bd_Kpimumu_eq_DPC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  15124001: Lb_Lambda1520ee_eq_phsp_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15114001: Lb_Lambda1520mumu_eq_phsp_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  15144011: Lb_psi2SpK_mm_eq_phsp_DPC
+  13114006: Bs_phimumu_eq_Ball_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11584041: Bd_D0Xenu_D0_eq_cocktail
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+missing for W40_42_md:
+  12583022: Bu_D0enu_Kenu_eq_TC
+  11574090: Bd_Dstplmunu_eq_PHSP_TC
+  11114000: Bd_Kpimumu_eq_DPC
+  11104041: Bd_Kst0rho0_Kplpimnpiplpimn_eq_DPC
+  11104000: Bd_piplpimnKst_eq_sqDalitz_DPC
+  13104048: Bs_Kst0rho0_Kmnpiplpimnpipl_eq_DPC
+  12145072: Bu_Kpipipsi2S_mumu_eq_DPC_LSFLAT
+  12155010: Bu_Kpipipsi2S_ee_eq_DPC_LSFLAT
+  13144025: Bs_JpsiKst_update2012_mm_eq_DPC
+  15114001: Lb_Lambda1520mumu_eq_phsp_DPC
+  15124001: Lb_Lambda1520ee_eq_phsp_DPC
+  15114000: Lb_Lambda1520mumu_eq_phsp
+  15154011: Lb_psi2SpK_ee_eq_phsp_DPC
+  15144011: Lb_psi2SpK_mm_eq_phsp_DPC
+  13154011: Bs_psi2Sphi_ee_eq_CPV_DPC
+  13114006: Bs_phimumu_eq_Ball_DPC
+  12155030: Bu_psi2SK_Jpsipipi_ee_eq_DPC
+  13144020: Bs_psi2Sphi_mm_eq_CPV_DPC
+  12125000: Bu_Kpipiee_eq_DPC_LSFLAT
+  12115020: Bu_Kpipimumu_eq_DPC_LSFLAT
+  12155110: Bu_psi2SKst_ee_eq_DPC
+  12103024: Bu_Kmnpiplpipl_eq_phsp_DPC
+  12215002: Bu_K1mumu_phsp_eq_DPC
+  12155100: Bu_JpsiKst_ee_eq_DPC
+  11874092: Bd_D0Xmunu_D0_eq_cocktail_pipi_D0muInAcc
+  11453012: Bd_psi2SX_ee_eq_JpsiInAcc
+  15454001: Lb_JpsipKX_ee_eq_JpsiInAcc
+  12123444: Bu_Kstee_Kpi0_eq_DPC
+# ----------------
+# These samples are all the samples, sorted by priority
+# Samples in the sorted section might be missing
+# ----------------
+pending_sim10f:
+  11584030  : Bd_Dstplenu_eq_PHSP_TC
+charmonium:
+  12952000  : $B^+ \to J/\psi(\to e^+ e^-) X$
+  11453001  : $B^0 \to J/\psi(\to e^+ e^-) X$
+  13454001  : $B_s \to J/\psi(\to e^+ e^-) X$
+  # -----------
+  12442001  : $B^+ \to J/\psi(\to \mu^+ \mu^-) X$
+  11442001  : $B^0 \to J/\psi(\to \mu^+ \mu^-) X$
+  13442001  : $B_s \to J/\psi(\to \mu^+ \mu^-) X$
+sim10f:
+  12143031 : $B^+\to \psi(2S)(\to \mu^+ \mu^-) \pi^+$
+  13144025 : Bs_JpsiKst_update2012_mm_eq_DPC
+  11104000 : Bd_piplpimnKst_eq_sqDalitz_DPC
+  12583022 : Bu_D0enu_Kenu_eq_TC
+  12125000 : Bu_Kpipiee_eq_DPC_LSFLAT
+  11154001 : $B^0 \to J/\psi(\to e^+ e^-) K^{*0}$
+  12153001 : $B^+ \to J/\psi(\to e^+ e^-) K^+$
+  11144001 : $B^0 \to J/\psi(\to \mu^+ \mu^-) K^{*0}$
+  12143001 : $B^+ \to J/\psi(\to \mu^+ \mu^-) K^+$ 
+  # ----------
+  12123003 : $B^+ \to K^+ e^+ e^-$
+  11124002 : $B^0 \to K^{*0} e^+ e^-$
+  12113002 : $B^+ \to K^+ \mu^+ \mu^-$
+  11114002 : $B^0 \to K^{*0} \mu^+ \mu^-$
+  # ----------
+  11154011 : $B^0 \to \psi(2S)(\to e^+ e^-) K^{*0}$
+  12153012 : $B^+ \to \psi(2S)(\to e^+ e^-) K^+$
+  11144011 : $B^0 \to \psi(2S)(\to \mu^+ \mu^-) K^{*0}$
+  12143020 : $B^+ \to \psi(2S)(\to \mu^+ \mu^-) K^+$
+  # ----------
+  12425000 : $B^+ \to K_1^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
+  12425011 : $B^+ \to K_2^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
+  11124037 : $B^0 \to K^+ \pi^- e^+ e^-$
+  13124006 : $B_s \to \phi(\to K^+ K^-)\, e^+ e^-$
+  12123445 : $B^+ \to K^{*+}(\to K^+ \pi^0)\, e^+ e^-$
+  12155030 : $B^+ \to \psi(2S)(\to J/\psi(\to e^+ e^-) \pi^+ \pi^-)\, K^+$
+high_priority:
+  12123003  : $B^+ \to K^+ e^+ e^-$
+  11124002  : $B^0 \to K^{*0} e^+ e^-$
+  12113002  : $B^+ \to K^+ \mu^+ \mu^-$
+  11114002  : $B^0 \to K^{*0} \mu^+ \mu^-$
+  # --------
+  11154001  : $B^0 \to J/\psi(\to e^+ e^-) K^{*0}$
+  12153001  : $B^+ \to J/\psi(\to e^+ e^-) K^+$
+  11144001  : $B^0 \to J/\psi(\to \mu^+ \mu^-) K^{*0}$
+  12143001  : $B^+ \to J/\psi(\to \mu^+ \mu^-) K^+$
+  # -----------
+  11154011  : $B^0 \to \psi(2S)(\to e^+ e^-) K^{*0}$
+  12153012  : $B^+ \to \psi(2S)(\to e^+ e^-) K^+$
+  11144011  : $B^0 \to \psi(2S)(\to \mu^+ \mu^-) K^{*0}$
+  12143020  : $B^+ \to \psi(2S)(\to \mu^+ \mu^-) K^+$
+  # -----------
+  12425000  : $B^+ \to K_1^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
+  12425011  : $B^+ \to K_2^+(\to K^+ \pi^+ \pi^-)\, e^+ e^-$
+  11124037  : $B^0 \to K^+ \pi^- e^+ e^-$
+  13124006  : $B_s \to \phi(\to K^+ K^-)\, e^+ e^-$
+  12125000  : $B^+ \to K^+ \pi^+ \pi^-   e^+   e^-$
+  12123445  : $B^+ \to K^{*+}(\to K^+ \pi^0)\, e^+ e^-$
+  12155030  : $B^+ \to \psi(2S)(\to J/\psi(\to e^+ e^-) \pi^+ \pi^-)\, K^+$
+medium_priority:
+  12153020  : $B^+ \to J/\psi(\to e^+ e^-) \pi^+$
+  12143010  : $B^+ \to J/\psi(\to \mu^+ \mu^-) \pi^+$
+  # -----------
+  12952000  : $B^+ \to J/\psi(\to e^+ e^-) X$
+  11453001  : $B^0 \to J/\psi(\to e^+ e^-) X$
+  13454001  : $B_s \to J/\psi(\to e^+ e^-) X$
+  # -----------
+  12442001  : $B^+ \to J/\psi(\to \mu^+ \mu^-) X$
+  11442001  : $B^0 \to J/\psi(\to \mu^+ \mu^-) X$
+  13442001  : $B_s \to J/\psi(\to \mu^+ \mu^-) X$
+  # -----------
+  11264001  : $B^0 \to D^- \pi^+ \pi^-$
+  12183004  : $B^+ \to D^0(\to K^- e^+ \nu_e)\, \pi^0$
+  12583013  : $B^+ \to D^0(\to K^- \pi^+)\, e^+ \nu_e$
+  12583022  : $B^+ \to D^0(\to K^- e^+ \nu_e)\, e^+ \nu_e$
+  12573040  : $B^+ \to \bar{D}^0(\to K^+ \mu^- \nu_\mu)\, \mu^+ \nu_\mu$
+  12573050  : $B^+ \to \bar{D}^0(\to K^+ \mu^- \nu_\mu)\, \pi^+$
+  # -----------
+  11584022  : $B^0 \to D^-(\to K^{*0} e^- \nu_e)\, e^+ \nu_e$
+  11584030  : $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, e^+ \nu_e$
+  11574030  : $B^0 \to D^-(\to K^{*0} \mu^- \nu_\mu)\, \mu^+ \nu_\mu$
+  11574090  : $B^0 \to D^{*-}(\to \bar{D}^0 \pi^-)\, \mu^+ \nu_\mu$
+  # --------
+  11114000  : $B^0 \to K^+ \pi^- \mu^+ \mu^-$
+  # --------
+  12103017  : $B^+ \to K^+ K^+ K^-$
+  12103025  : $B^+ \to K^+ \pi^+ \pi^-$
+  11104000  : $B^0 \to K^{*0}(\to K^+\pi^-) \pi^+ \pi^-$ 
+  13104048  : $B_s \to K^{*0}(\to K^+\pi^-) \rho(\to \pi^+\pi^-)$
+  11104041  : $B_d \to K^{*0}(\to K^+\pi^-) \rho(\to \pi^+\pi^-)$
+  # --------
+  15154001  : $\Lambda_b \to J/\psi(\to e^+ e^-)\, p K^-$
+  15144001  : $\Lambda_b \to J/\psi(\to \mu^+ \mu^-)\, p K^-$
+  13154001  : $B_s \to J/\psi(\to e^+ e^-)\, \phi(\to K^+ K^-)$
+  13144001  : $B_s \to J/\psi(\to \mu^+ \mu^-)\, \phi(\to K^+ K^-)$
+  13144025  : $B_s \to J/\psi(\to \mu^+ \mu^-)\, K^{*0}(\to K^+ \pi^-)$
+  # --------
+  12155010  : $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to e^+ e^-)$
+  12145072  : $B^+ \to K^+ \pi^+ \pi^- \,\psi(2S)(\to \mu^+ \mu^-)$
+low_priority:
+  12103030  : $B^+ \to K^+ \pi^+ K^-$
+  15124001  : $\Lambda_b \to \Lambda(1520)(\to p K^-)\, e^+ e^-$
+  15114000  : $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15114001  : $\Lambda_b \to \Lambda(1520)(\to p K^-)\, \mu^+ \mu^-$
+  15124011  : $\Lambda_b \to p K^- e^+ e^-$
+  15114011  : $\Lambda_b \to p K^- \mu^+ \mu^-$
+  15154011  : $\Lambda_b \to \psi(2S)(\to e^+ e^-)\, p K^-$
+  15144011  : $\Lambda_b \to \psi(2S)(\to \mu^+ \mu^-)\, p K^-$
+very_low_priority:
+  12873002  : $B^+ \to \bar{D}^0(\to K^+ \pi^-)\, \mu^+ \nu_\mu$
+  12155020  : $B^+ \to K^+ \pi^+ \pi^- J/\psi(\to e^+ e^-)$
+  12145090  : $B^+ \to K^+ \pi^+ \pi^- J/\psi(\to \mu^+ \mu^-)$
+  13114006  : $B_s \to \phi(\to K^+ K^-)\, \mu^+ \mu^-$
+  12103024  : $B^+ \to K^- \pi^+ \pi^+$
+  13154011  : $B_s \to \psi(2S)(\to   e^+   e^-)\, \phi(\to K^+ K^-)$
+  13144020  : $B_s \to \psi(2S)(\to \mu^+ \mu^-)\, \phi(\to K^+ K^-)$
+  12115020  : $B^+ \to K^+ \pi^+ \pi^- \mu^+ \mu^-$
+  12215002  : $B^+ \to K_1 \mu^+ \mu^-$
+  12155110  : $B^+ \to \psi(2S)(\to e^+ e^-)\, K^{*+}(\to K^+ \pi^0)$
+  12155100  : $B^+ \to   J/\psi(\to e^+ e^-)\, K^{*+}(\to K^+ \pi^0)$
+  11584041  : $B^0 \to D^0 X e^+ \nu_e$      # we already have exclusive samples
+  11874092  : $B^0 \to D^0 X \mu^+ \nu_\mu$
+  11453012  : $B^0 \to \psi(2S)(\to e^+ e^-)\, X$
+  15454101  : $\Lambda_b \to J/\psi(\to e^+ e^-)\, X$
+  15454001  : $\Lambda_b \to J/\psi(\to e^+ e^-)\, p K^- X$
+  12123444  : $B^+ \to K^{*+}(\to K^+ \pi^0)\, e^+ e^-$ # btosllall sample available already
+# ----------------
+# These are all the samples
+# ----------------
+all:
+  - 13144025
+  - 11114000
+  - 11114002
+  - 11124002
+  - 11124037
+  - 11144001
+  - 11144011
+  - 11154001
+  - 11154011
+  - 11264001
+  - 11442001
+  - 11453001
+  - 11453012
+  - 11574030
+  - 11574090
+  - 11584022
+  - 11584030
+  - 11584041
+  - 11874092
+  - 12103024
+  - 12103025
+  - 12113002
+  - 12115020
+  - 12123003
+  - 12123444
+  - 12123445
+  - 12125000
+  - 12143001
+  - 12143010
+  - 12143020
+  - 12145072
+  - 12145090
+  - 12153001
+  - 12153012
+  - 12153020
+  - 12155010
+  - 12155020
+  - 12155030
+  - 12183004
+  - 12215002
+  - 12425000
+  - 12425011
+  - 12442001
+  - 12573040
+  - 12573050
+  - 12583013
+  - 12583022
+  - 12873002
+  - 12952000
+  - 13114006
+  - 13124006
+  - 13144001
+  - 13144020
+  - 13154001
+  - 13154011
+  - 13442001
+  - 13454001
+  - 15114000
+  - 15114001
+  - 15114011
+  - 15124001
+  - 15124011
+  - 15144001
+  - 15144011
+  - 15154001
+  - 15154011
+  - 15454001
+  - 12113002
+  - 12155110
+  - 12103025
+  - 12153012
+  - 12143001
+  - 12153001
+  - 12123445
+  - 12143020
+  - 12153020
+  - 12143010
+  - 11154001
+  - 12155100
+  - 11154011
+  - 12952000
+  - 11453001
+  - 13454001
+  - 15454101
+  - 12442001
+  - 11442001
+  - 13442001
+  - 12183004
+  - 12583013
+  - 12583022
+  - 11124037
+  - 11124002
+  - 12123003
+  - 12123445
+  - 13124006
+  - 12103030
+  - 12103017
+  - 12103025
+  - 12155110
+  - 11104000
+  - 13104048
+  - 11104041

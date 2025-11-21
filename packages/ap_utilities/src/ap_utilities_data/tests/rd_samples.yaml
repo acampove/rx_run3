@@ -1,0 +1,35 @@
+settings_common: &common
+  year      : 2024
+  block_id  : 2024.W31.34
+  hlt_conf  : 2024.W31.34
+  polarity  : MagUp
+  nu_path   : Nu6.3
+  sim_vers  : Sim10d
+  generator : Pythia8
+  ctags     : sim10-2024.Q3.4-v1.3-mu100
+  dtags     : dddb-20240427
+# -------------------------------------------
+sections:
+  one:
+    suffix : _first
+    settings:
+      <<: *common
+    evt_type:
+      - '11102211'
+      - '11102202'
+  two:
+    suffix : _second
+    settings:
+      <<        : *common
+      sim_vers  : Sim10d-SplitSim02
+    evt_type:
+      - '11102211'
+      - '11102202'
+  three:
+    suffix : _third
+    settings:
+      <<        : *common
+      generator : BcVegPyPythia8
+    evt_type:
+      - '14143013'
+      - '14113032'

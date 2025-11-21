@@ -1,0 +1,73 @@
+# -----------------------------------------
+# Needed to find where files are in EOS
+# -----------------------------------------
+paths:
+  pipeline_dir : /eos/lhcb/wg/dpa/wp2/ci
+  analysis_dir : rd_ap_2024
+# -----------------------------------------
+# Each key corresponds to a MC sample, the value is a list of lines that must be found
+# as a tree in the file. If any, then the sample is not signal for any of the HLT2 lines
+# therefore no tree (equivalent to a line) is required to be made
+# -----------------------------------------
+samples:
+  Bu_K1ee_eq_DPC:
+    - any 
+  Bu_K2stee_Kpipi_eq_mK1430_DPC:
+    - any 
+  Bu_Kstee_Kpi0_eq_btosllball05_DPC: 
+    - any 
+  Bd_Kpiee_eq_DPC:
+    - Hlt2RD_B0ToKpPimEE
+    - Hlt2RD_B0ToKpPimEE_MVA
+  #----------
+  # Exclusive ccbar PRec
+  #----------
+  Bu_JpsiKst_ee_Kpi0_eq_DPC:
+    - any 
+  Bu_psi2SKst_ee_Kpi0_eq_DPC:
+    - any 
+  Bd_psi2SKst_ee_eq_DPC:
+    - Hlt2RD_B0ToKpPimEE
+    - Hlt2RD_B0ToKpPimEE_MVA
+  #----------
+  # Cascade decays
+  #----------
+  Bu_D0pi_Kenu_eq_DPC_TightCut:
+    - any 
+  Bu_D0enu_Kpi_eq_DPC_TightCut:
+    - any 
+  Bu_D0enu_Kenu_eq_DPC_ptCut200MeV_visMass4GeV:
+    - any 
+  #----------
+  # Hadronic mis-ID, B-> hhh
+  #----------
+  Bu_KplpiplKmn_eq_sqDalitz_DPC:
+    - any 
+  Bu_KplKplKmn_eq_sqDalitz_DPC:
+    - any 
+  Bu_piplpimnKpl_eq_sqDalitz_DPC: 
+    - any 
+  #----------
+  # Cocktail electron
+  #----------
+  Bd_JpsiX_ee_eq_JpsiInAcc:
+    - any 
+  Bu_JpsiX_ee_eq_JpsiInAcc:
+    - any 
+  Bs_JpsiX_ee_eq_JpsiInAcc:
+    - any 
+  Lb_JpsiX_ee_eq_JpsiInAcc:
+    - any 
+  #----------
+  # Cocktail muon
+  #----------
+  Bd_JpsiX_mm_eq_JpsiInAcc:
+    - any 
+  Bu_JpsiX_mm_eq_JpsiInAcc:
+    - any 
+  Bs_JpsiX_mm_eq_JpsiInAcc:
+    - any 
+  Lb_JpsiX_mm_eq_JpsiInAcc:
+    - any 
+  Lb_JpsipKX_mm_eq_JpsiInAcc:
+    - any 

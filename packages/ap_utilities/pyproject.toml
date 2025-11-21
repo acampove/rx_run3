@@ -1,0 +1,40 @@
+[project]
+name        = 'ap_utilities'
+description = 'Utilities needed for analysis productions in LHCb'
+version     = '0.3.0'
+readme      = 'README.md'
+dependencies= [
+'apd',
+'PyYAML', 
+'tqdm',
+'omegaconf',
+'logzero'] 
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where= ['src']
+
+[project.scripts]
+analyze_samples    ='ap_utilities_scripts.analyze_samples:main'
+check_production   ='ap_utilities_scripts.check_production:main'
+check_samples      ='ap_utilities_scripts.check_samples:main'
+find_in_ap         ='ap_utilities_scripts.find_in_ap:main'
+list_ap_samples    ='ap_utilities_scripts.list_ap_samples:main'
+make_fields        ='ap_utilities_scripts.make_fields:main'
+make_name_evt      ='ap_utilities_scripts.make_name_evt:main'
+make_samples_table ='ap_utilities_scripts.make_samples_table:main'
+samples_to_filter  ='ap_utilities_scripts.samples_to_filter:main'
+update_decinfo     ='ap_utilities_scripts.update_decinfo:main'
+update_formatting  ='ap_utilities_scripts.update_formatting:main'
+validate_ap_tuples ='ap_utilities_scripts.validate_ap_tuples:main'
+
+[tool.setuptools.package-data]
+'ap_utilities_data' = ['*/**.json', '*/**.toml', '*/**.yaml']
+
+[tool.setuptools]
+script-files=[
+'src/ap_utilities_scripts/ganga_shell',
+'src/ap_utilities_scripts/dirac_shell',
+]

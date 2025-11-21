@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# ------------------------------------------------------------------
+display_help()
+{
+    echo "Utility needed to setup shell environment with access to Ganga from python"
+    echo ""
+    echo "-h: Print this help"
+    echo "-g: Ganga version, e.g. 8.7.10, by default LATEST"
+}
+# ------------------------------------------------------------------
+get_opts()
+{
+    TEST=1
+    GVER="LATEST"
+    while getopts :hf:g: option; do
+        case "${option}" in
+            h)
+                display_help
+                exit 0
+                ;;
+            g)  GVER="${OPTARG}";;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;
+        esac
+    done
+
+    if [[ "$GVER" != "LATEST" ]];then
+        echo "Using Ganga version: $GVER"
+    fi
+}
+# ------------------------------------------------------------------
+make_rcfile()
+{
+    export RCFILE=/tmp/bash_ganga
+    LHCBPATH=/cvmfs/lhcb.cern.ch/lib/bin
+
+    echo "#!/usr/bin/env bash"                                                                                    > $RCFILE
+    echo ""                                                                                                      >> $RCFILE
+    echo "export PS1='\u@\h\$ '"                                                                                 >> $RCFILE
+    echo "export PATH+=:$POSTAP_PATH:$LHCBPATH"                                                                  >> $RCFILE
+    echo "export VENVS=$VENVS"                                                                                   >> $RCFILE
+    echo "export LXNAME=$LXNAME"                                                                                 >> $RCFILE
+    echo "export GANGA_CONFIG_PATH=GangaLHCb/LHCb.ini"                                                           >> $RCFILE
+    echo "export GANGA_SITE_CONFIG_AREA=/cvmfs/lhcb.cern.ch/lib/GangaConfig/config"                              >> $RCFILE
+    echo "export PYTHONPATH=$PYTHONPATH:/cvmfs/ganga.cern.ch/Ganga/install/$GVER/lib/python3.11/site-packages/"  >> $RCFILE
+    echo "Using rc file:"
+    cat $RCFILE
+}
+# ------------------------------------------------------------------
+initialize()
+{
+    if [[ -z $POSTAP_PATH ]];then
+        echo "POSTAP_PATH (micromamba for the environment with the code) not set"
+        exit 1
+    fi
+
+    if [[ -z $VENVS ]];then
+        echo "VENVS (path where virtual environment tarballs will be saved) not set"
+        exit 1
+    fi
+
+    if [[ -z $LXNAME ]];then
+        echo "LXNAME (user's name in LXPLUS) not set"
+        exit 1
+    fi
+}
+# ------------------------------------------------------------------
+create_shell()
+{
+    # Will create a shell with dirac and some basic environment specified by rc file
+
+    which lb-dirac > /dev/null 2>&1
+
+    if [[ $? -ne 0 ]];then
+        echo "Cannot find lb-dirac, LHCb software not set, setting it"
+        lhcb_env
+    fi
+
+    if [[ ! -f $RCFILE ]];then
+        echo "Cannot find $RCFILE"
+        exit 1
+    fi
+
+    bash -c "exec bash --rcfile $RCFILE"
+}
+# ------------------------------------------------------------------
+lhcb_env()
+{
+    # This function will setup the LHCb environment
+
+    LBENV_PATH=/cvmfs/lhcb.cern.ch/lib/LbEnv
+
+    if [[ ! -f $LBENV_PATH ]]; then
+        echo "Cannot find $LBENV_PATH"
+        kill INT $$
+    fi
+
+    . $LBENV_PATH
+}
+# ------------------------------------------------------------------
+get_opts "$@"
+initialize
+make_rcfile
+create_shell
