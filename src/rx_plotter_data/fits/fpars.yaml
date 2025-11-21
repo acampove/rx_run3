@@ -15,7 +15,8 @@ yld_jpsi_ee_rk: # Label of what will be plotted below, used to name PNGs
   xlabel: Block
   ylabel: Yield 
   xaxis :                  
-    block : [4, 3, 2, 1, 5, 6, 7, 8] # Plot will be WRT this
+    name  : block 
+    values: [4, 3, 2, 1, 5, 6, 7, 8] # Plot will be WRT this
   # ------------------------------------
   # This is the per-graph configuration
   # ------------------------------------

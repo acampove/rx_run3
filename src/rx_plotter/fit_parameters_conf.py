@@ -7,6 +7,13 @@ from pydantic  import BaseModel, Field, RootModel
 from rx_common import Project, Qsq, Trigger, Brem
 
 # ----------------------
+class Axis(BaseModel):
+    '''
+    Class meant to represent an axis
+    '''
+    name  : str
+    values: list[str|int]
+# ----------------------
 class Info(BaseModel):
     '''
     Class meant to hold metadata type of information
@@ -34,6 +41,7 @@ class PlotConf(BaseModel):
     xlabel : str
     ylabel : str
     graphs : dict[str,GraphConf]
+    xaxis  : Axis 
 # ----------------------
 class FitParametersConf(RootModel):
     '''
