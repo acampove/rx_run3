@@ -89,12 +89,14 @@ class FitSummary:
             raise ValueError(f'Cannot match pattern \"{self._regex}\" to \"{path}\"')
 
         groups : list[str] = list(mtch.groups())
+        channel            = groups[4]
+        channel            = {'electron' : 'ee', 'muon' : 'mm'}[channel]
 
         data['mva_cmb'] = groups[0]
         data['mva_prc'] = groups[1]
         data['block'  ] = groups[2]
         data['project'] = groups[3]
-        data['channel'] = groups[4]
+        data['channel'] = channel
         data['q2bin'  ] = groups[5]
         data['brem'   ] = groups[6]
 
