@@ -78,6 +78,10 @@ def test_channel_from_trigger(channel : str, trigger : str):
     Test for function providing EE/MM for a given HLT2 trigger
     '''
     assert channel == info.channel_from_trigger(trigger=trigger)
+
+    channel = channel.lower()
+    assert channel == info.channel_from_trigger(trigger=trigger, lower_case=True)
+    assert channel != info.channel_from_trigger(trigger=trigger)
 # -----------------------------------------
 @pytest.mark.parametrize('project,trigger', [
     ('RK_noPID'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
