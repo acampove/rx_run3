@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+
+#--------------------------------------------------
+display_help()
+{
+    echo "Script used to steer the creation of ntuples with different decays from what is in the $RAPIDSIM_CONFIG directory"
+    echo ""
+    echo "-n: Number of entries in the ntuples"
+    echo "-v: Version of input config files, which is the same as the output's version"
+    echo "-d: Will run a dry run if 1 (default) or a real run if 0"
+    echo "-p: Process to run over, if none found, will do all the processes" 
+}
+#--------------------------------------------------
+get_opts()
+{
+    if [[ $# -eq 0 ]]; then
+        display_help
+        exit 1
+    fi  
+
+    DRY_RUN=1
+    while getopts :hf:n:v:d:p: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            n)  NEVENTS=${OPTARG};;
+            v)  VERSION=${OPTARG};;
+            d)  DRY_RUN=${OPTARG};;
+            p)  PROCESS=${OPTARG};;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
+# -----------------------
+check_status()
+{
+    if [ $? -ne 0 ];then
+        echo "Failed: $1"
+        exit 1
+    fi
+}
+# -----------------------
+initialize()
+{
+    RAPIDSIM_CONFIG=$(python3 -c "from importlib.resources import files; data_path=files('rx_efficiencies_data').joinpath('descriptors/$VERSION'); print(str(data_path))")
+    check_status "Finding rx_efficiencies data directory"
+
+    if [ -z $RAPIDSIM_CONFIG ];then
+        echo "Cannot find variable $RAPIDSIM_CONFIG"
+        exit 1
+    fi
+
+    if [ ! -d $RAPIDSIM_CONFIG ];then
+        echo "Cannot find directory $RAPIDSIM_CONFIG"
+        exit 1
+    else
+        echo "Looking for config files in $RAPIDSIM_CONFIG"
+    fi
+
+    if [ -z $ANADIR ];then
+        echo "ANADIR variable not set"
+        exit 1
+    fi
+
+    which rapidsim > /dev/null 2>&1
+
+    if [ $? -ne 0 ];then
+        echo ""
+        echo "Rapidsim not found"
+        exit 1
+    fi
+}
+# -----------------------
+find_decays()
+{
+    shopt -s nullglob
+    PATHS=($RAPIDSIM_CONFIG/*.decay)
+    FILES=("${PATHS[@]##*/}")
+    DECAYS=("${FILES[@]%.decay}")
+    echo "Found decays: ${DECAYS[@]}"
+}
+# -----------------------
+create_config()
+{
+    CFG_PATH=$1
+    ENERGY=$2
+
+    echo "geometry: 4pi"                   > $CFG_PATH
+    echo "paramsStable : P, PT, eta, phi" >> $CFG_PATH
+    echo "energy: $ENERGY          "      >> $CFG_PATH
+}
+# -----------------------
+create_ntuple()
+{
+    echo "    $NEVENTS entries @ $ENERGY TeV"
+
+    DECAYDIR=$OUTDIR"/"$DECAY"/"$ENERGY"TeV"
+    mkdir -p $DECAYDIR
+
+    check_status "Creating $DECAYDIR"
+
+    CFG_PATH=$RAPIDSIM_CONFIG/$DECAY".config"
+    create_config $CFG_PATH $ENERGY
+
+    cd $DECAYDIR
+    if [[ "$DRY_RUN" == "0" ]];then
+        rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
+
+        if [[ $? -ne 0 ]];then
+            echo "Cannot generate events, see $PWD/$DECAY".log""
+            exit 1
+        fi
+    fi
+    cd - > /dev/null
+
+    rm $CFG_PATH
+}
+# -----------------------
+get_opts "$@"
+initialize
+find_decays
+
+OUTDIR=$ANADIR"/Rapidsim/"$VERSION
+for DECAY in ${DECAYS[@]};do
+    if [[ ! -z $PROCESS ]] && [[ "$DECAY" != "$PROCESS" ]];then
+        continue
+    fi
+
+    echo "$DECAY"
+    for ENERGY in "8" "13" "14";do
+        create_ntuple
+    done
+done
+
+echo ""
+echo "Files saved to $OUTDIR:"
+echo ""
+ls $OUTDIR

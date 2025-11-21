@@ -1,0 +1,29 @@
+[project]
+name        = 'rx_efficiencies'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= [
+'numpy',
+'pandas',
+'mplhep',
+'matplotlib']
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+scan_efficiencies    ='rx_efficiencies_scripts.scan_efficiencies:main'
+calculate_acceptances='rx_efficiencies_scripts.calculate_acceptances:main'
+
+[tool.setuptools.package-data]
+rx_efficiencies_data=[
+'descriptors/*/*.decay',
+'scales/*/fr_br.yaml',
+'scan/*.yaml',
+]
+
+[tool.setuptools]
+script-files=['src/rx_efficiencies_scripts/create_rapidsim_ntuples']
