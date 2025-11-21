@@ -1,0 +1,58 @@
+# This config file is meant to be used by `copy_samples`, it specifies:
+# Where the samples are
+# Where the samples should be copied to
+# What samples should be copied
+
+triggers:
+  - Hlt2RD_B0ToKpPimEE_MVA
+  - Hlt2RD_B0ToKpPimEE_MVA_noPID
+  - Hlt2RD_B0ToKpPimEE_MVA_misid
+  - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+  - Hlt2RD_B0ToKpPimMuMu_MVA
+  - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+  - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+samples :
+  data:
+    - data_24_magdown_24c2
+    - data_24_magdown_24c3
+    - data_24_magdown_24c4
+    - data_24_magup_24c2
+    - data_24_magup_24c3
+    - data_24_magup_24c4
+  rk_signal:
+    - 12123003 # Kee
+    - 12113002 # Kmm
+  rkst_signal:
+    - 11124002 # K*ee
+    - 11114002 # K*mumu
+  inc_ee:
+    - 11453001 # Bd eeX
+    - 12952000 # Bp eeX
+    - 13454001 # Lb eeX
+  inc_mm:
+    - 11442001
+    - 12442001
+    - 13442001
+  semileptonic:
+    - 11584030 # B -> D*(D(Kpi)  pi) enu
+    - 11584022 # B -> D(K*(Kpi) enu) enu
+  #-------
+    - 11574030 # B -> D(K*(Kpi) munu) munu
+    #- 11574090 # B -> D*(D(Kpi)   pi) munu
+  resonant:
+    - 11144001 # Bd -> Jpsi(mm) Kst
+    - 11154001 # Bd -> Jpsi(ee) Kst
+    - 11144011 # Bd -> Psi2(mm) Kst
+    - 11154011 # Bd -> Psi2(ee) Kst
+  reso_bkg:
+    - 15154001 # Lb -> Jpsi(ee) pK
+    - 15144001 # Lb -> Jpsi(mm) pK
+    - 13154001 # Bs -> Jpsi(ee) phi
+    - 13144001 # Bs -> Jpsi(mm) phi
+  prec:
+    - 13124006 # Bs -> phi ee
+    - 12123445 # K*+ee
+    - 12425000 # B+ -> K1 K pipi ee
+    - 12425011 # B+ -> K2 K pipi ee
+  misid:
+    - 11104000 # B0 -> pipi K*(-> Kpi)

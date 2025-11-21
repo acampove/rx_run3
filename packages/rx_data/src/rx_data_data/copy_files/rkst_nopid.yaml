@@ -1,0 +1,14 @@
+# This config file is meant to be used by `copy_samples`, it specifies:
+# Where the samples are
+# Where the samples should be copied to
+# What samples should be copied
+
+inp_dir : /publicfs/ucas/user/campoverde/Data/Data
+out_dir : Data
+triggers:
+  - Hlt2RD_B0ToKpPimEE_MVA_noPID
+  - Hlt2RD_B0ToKpPimMuMu_MVA_noPID
+samples :
+  rkst_signal:
+    - 11124002 # K*ee
+    - 11114002 # K*mumu

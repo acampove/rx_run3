@@ -1,0 +1,25 @@
+# This config file is meant to be used by `copy_samples`, it specifies:
+# Where the samples are
+# Where the samples should be copied to
+# What samples should be copied
+
+inp_dir : /publicfs/ucas/user/campoverde/Data/Data
+out_dir : Data
+triggers:
+  - Hlt2RD_BuToKpEE_MVA_noPID
+  - Hlt2RD_BuToKpMuMu_MVA_noPID
+samples :
+  rk_signal:
+    - 12123003 # Kee
+    - 12113002 # Kmm
+  resonant:
+    - 12143001 # Muon Jpsi
+    - 12153001 # Electron Jpsi
+    - 12143010 # Muon cabibbo
+    - 12153020 # Electron cabibbo
+    - 12153012 # B+ -> psi2S(-> ee) K+
+    - 12143020 # B+ -> psi2S(-> mm) K+
+  misid:
+    - 12103017 # B -> KKK
+    - 12103030 # B -> KKpi
+    - 12103025 # B -> Kpipi
