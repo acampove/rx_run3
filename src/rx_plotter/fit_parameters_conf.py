@@ -41,6 +41,7 @@ class PlotConf(BaseModel):
     size   : list[int  ]      = Field(min_length=2, max_length=2)
     xlabel : str
     ylabel : str
+    title  : str
     graphs : dict[str,GraphConf]
     xaxis  : Axis 
 # ----------------------
