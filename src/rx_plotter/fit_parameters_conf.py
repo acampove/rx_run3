@@ -1,7 +1,7 @@
 '''
 Class holding FitParametersConf and classes needed by it
 '''
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 
 # ----------------------
 class GraphConf(BaseModel):
@@ -24,8 +24,8 @@ class PlotConf(BaseModel):
     cuts : str
     plots: dict[str, GraphConf]
 # ----------------------
-class FitParametersConf(BaseModel):
+class FitParametersConf(RootModel[dict[str,PlotConf]]):
     '''
     Class meant to hold parameters needed for plotting
     '''
-    data : dict[str, PlotConf] 
+    pass
