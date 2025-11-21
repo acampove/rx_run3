@@ -1,0 +1,28 @@
+[project]
+name        = 'rx_calibration'
+description = 'Project with code needed to interface with calibration projects and provide maps to RX analyses' 
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= [
+'triggercalib',
+'PyYaml',
+'data-manipulation-utilities',
+'tensorflow',
+'zfit>=0.25',
+'zfit-physics',
+]
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+make_electron_calibration_data='rx_calibration_scripts.make_electron_calibration_data:main'
+
+[tool.setuptools.package-data]
+rx_calibration_data = ['triggercalib/*.yaml', 'ecal_calib/*.yaml', 'ecal_calib/*.csv']
+
+[tool.setuptools]
+script-files=[]

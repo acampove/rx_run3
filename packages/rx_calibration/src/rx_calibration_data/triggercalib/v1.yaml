@@ -1,0 +1,45 @@
+bin : &bn
+  B_PT : 
+    bins : 
+      - 2000
+      - 3000
+      - 4000
+      - 5000
+      - 6000
+      - 7000
+      - 8000
+      - 9000
+      - 10000
+      - 11000
+      - 12000
+      - 13000
+      - 14000
+      - 15000
+      - 16000
+      - 17000
+      - 18000
+      - 19000
+      - 20000
+      - 21000
+      - 22000
+      - 25000
+sid : &sb
+  B_const_mass_M: 
+    signal: 
+      - 5225  
+      - 5335
+    sidebands : 
+      - [5130, 5225]
+      - [5335, 5430]
+# ----------------------------
+samples:
+  simulation : /home/acampove/cernbox/Run3/post_ap/tests/filter_file/test_mc/mc_test_Hlt2RD_BuToKpMuMu_MVA_cdf0dcd215.root:DecayTree
+  data       : /home/acampove/cernbox/Run3/post_ap/tests/filter_file/test_dt/data_test_SpruceRD_BuToKpMuMu_1b761f00da.root:DecayTree
+settings:
+  tos      : Hlt1TrackMVA
+  tis      : [Hlt1TrackMVA, Hlt1TwoTrackMVA]
+  particle : B
+  binning:
+    <<: *bn
+  sideband:
+    <<: *sb
