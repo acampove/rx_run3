@@ -1,6 +1,7 @@
 '''
 Module holding FitParameters class
 '''
+import mplhep
 import matplotlib.pyplot as plt
 
 from pathlib                        import Path
@@ -23,6 +24,8 @@ class FitParameters:
         name : Fit name, e.g. mid_window
         cfg  : Name of config meant for plots, e.g. fpars
         '''
+        plt.style.use(mplhep.style.LHCb2)
+
         self._rdr  = ParameterReader(name = name)
         self._cfg  = self._load_config(name = cfg) 
     # ----------------------
@@ -89,7 +92,14 @@ class FitParameters:
             yvals.append(yval)
             yerrs.append(yerr)
 
-        plt.errorbar(x=xvals, y=yvals, yerr=yerrs, label=gcfg.label)
+        plt.errorbar(
+            x        = xvals, 
+            y        = yvals, 
+            yerr     = yerrs, 
+            linestyle= 'none',
+            marker   =  'o',
+            color    = gcfg.color,
+            label    = gcfg.label)
     # ----------------------
     def run(self, out_path : Path) -> None:
         '''
@@ -109,6 +119,10 @@ class FitParameters:
                 self._plot_graph(expr = expr, pcfg = plot_cfg, gcfg = graph_cfg)
                 plt.ylim(plot_cfg.yrange)
 
+            plt.xlabel(plot_cfg.xlabel)
+            plt.ylabel(plot_cfg.ylabel)
+
+            plt.legend()
             plt.savefig(out_path / f'{plot_name}.png')
             plt.close(fig = plot_name)
 # ----------------------
