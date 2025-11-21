@@ -1,9 +1,8 @@
 '''
 Module with tests for FitSummary class 
 '''
-
 import pytest
-from fitter import FitSummary
+from fitter   import FitSummary
 
 # ----------------------
 @pytest.mark.parametrize('force_update', [True, False])
@@ -14,5 +13,5 @@ def test_update(force_update : bool) -> None:
     smr = FitSummary(name='mid_window')
     df  = smr.get_df(force_update = force_update)
 
-    print(df)
-    
+    assert len(df) > 0
+# ----------------------
