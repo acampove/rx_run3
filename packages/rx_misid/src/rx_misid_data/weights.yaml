@@ -1,0 +1,7 @@
+maps_path: Calibration/mis_id/v14 # WRT ANADIR
+regions  : # These are cuts that need to appear in the name of the pkl files with the PID maps
+  control : ((PROBNN_E<0.2)|(DLLe<3.0))&(DLLe>-1.0)
+  signal  : (PROBNN_E>0.2)&(DLLe>3.0)
+pars :
+  - log10(PARTICLE_TRACK_PT)
+  - PARTICLE_TRACK_ETA
