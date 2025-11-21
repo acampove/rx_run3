@@ -1,0 +1,28 @@
+
+# ------------------------------------
+yld_jpsi_ee_rk:
+  cuts    : channel == "electron" and project == "rk" and q2bin == "jpsi"
+  plots   :
+    yld_jpsi * jpsi_fraction:
+      error : yld_jpsi_error * jpsi_fraction_error
+      xvals : [4, 3, 2, 1, 5, 6, 7, 8]
+      xname : block
+      yrange:
+        - 0
+        - 1e5
+      label : $1\gamma$
+      color : blue
+      xlabel: Block
+      ylabel: Yield 
+    yld_jpsi * (1 - jpsi_fraction):
+      error : yld_jpsi_error * (1 - jpsi_fraction_error)
+      xvals : [4, 3, 2, 1, 5, 6, 7, 8]
+      xname : block
+      yrange:
+        - 0
+        - 1e5
+      label : $2\gamma$
+      color : red 
+      xlabel: Block
+      ylabel: Yield 
+# ------------------------------------
