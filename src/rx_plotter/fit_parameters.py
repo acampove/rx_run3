@@ -32,7 +32,8 @@ class FitParameters:
         -------------
         Class holding configuration
         '''
-        data = gut.load_data(package='rx_plotter_data', fpath = f'fits/{name}.yaml')
+        data : dict = gut.load_data(package='rx_plotter_data', fpath = f'fits/{name}.yaml')
+        data.pop('generic_info')
 
         return FitParametersConf(**data)
     # ----------------------
