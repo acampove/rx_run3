@@ -6,6 +6,14 @@ from enum import Enum
 
 # ---------------------------------------
 class Component(str, Enum):
+class Brem(IntEnum):
+    '''
+    Enum meant to represent brem category
+    '''
+    zero = 0 
+    one  = 1 
+    two  = 2 
+# ---------------------------------------
     r'''
     This class is meant to hold elements representing fitting components 
 
