@@ -29,3 +29,16 @@ def test_print():
 
     ms.__repr__()
     ms.__str__()
+# ----------------------
+def test_to_dict():
+    '''
+    Tests to_dict method
+    '''
+    data = {'a' : (1., 1.), 'b' : (2., 1.)}
+
+    ms  = Measurement(data=data)
+    res = ms.to_dict()
+
+    assert res == {
+        'a' : 1., 'a_error' : 1.,
+        'b' : 2., 'b_error' : 1.}

@@ -54,4 +54,18 @@ class Measurement(BaseModel):
         '''
 
         return variable in self.data
+    # ----------------------
+    def to_dict(self) -> dict[str, float]:
+        '''
+        Returns
+        -------------
+        Dictionary mapping names of quatities to numerical values.
+        E.g. given quantity x, entries x and x_error are created
+        '''
+        result = dict()
+        for name, (value, error) in self.data.items():
+            result[name           ] = value
+            result[f'{name}_error'] = error 
+
+        return result
 # ----------------------------------------------
