@@ -143,7 +143,7 @@ class ParameterReader:
         -------------
         FitMeasurement instance, i.e. container with parameter names, values and errors
         '''
-        channel = info.channel_from_trigger(trigger=trigger, full_name = True)
+        channel = info.channel_from_trigger(trigger=trigger, lower_case = True)
         df      = self._df
         df      = self._query(df = df, cut = f'brem    ==   {brem}')
         df      = self._query(df = df, cut = f'block   ==   {block}')
