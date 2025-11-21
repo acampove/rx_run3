@@ -11,12 +11,15 @@ yld_jpsi_ee_rk: # Label of what will be plotted below, used to name PNGs
   # ------------------------------------
   yrange:
     - 0
-    - 1e5
+    - 3
+  size:
+    - 15
+    - 10
   xlabel: Block
   ylabel: Yield 
   xaxis :                  
     name  : block 
-    values: [4, 3, 2, 1, 5, 6, 7, 8] # Plot will be WRT this
+    values: ['4', '3', '2', '1', '5', '6', '7', '8'] # Plot will be WRT this, use strings for custom ordering
   # ------------------------------------
   # This is the per-graph configuration
   # ------------------------------------
