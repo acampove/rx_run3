@@ -2,10 +2,9 @@
 This module contains classes derived from Enum
 '''
 
-from enum import Enum
+from enum import IntEnum, StrEnum
 
 # ---------------------------------------
-class Component(str, Enum):
 class Brem(IntEnum):
     '''
     Enum meant to represent brem category
@@ -14,6 +13,7 @@ class Brem(IntEnum):
     one  = 1 
     two  = 2 
 # ---------------------------------------
+class Component(StrEnum):
     r'''
     This class is meant to hold elements representing fitting components 
 
@@ -37,7 +37,7 @@ class Brem(IntEnum):
     bsjpsikst     = 'bsjpsikst'
     bdjpsikst_swp = 'bdjpsikst_swp'
 # ---------------------------------------
-class Trigger(str, Enum):
+class Trigger(StrEnum):
     '''
     Class meant to represent MVA triggers
     '''
@@ -66,7 +66,7 @@ class Trigger(str, Enum):
     def __str__(self):
         return self.value
 # ---------------------------------------
-class Channel(str, Enum):
+class Channel(StrEnum):
     '''
     This class repsesents the electron, muon or emu channel types
     '''
@@ -77,7 +77,7 @@ class Channel(str, Enum):
     def __str__(self):
         return self.value
 # ---------------------------------------
-class Project(str, Enum):
+class Project(StrEnum):
     '''
     This class represents the projects
     '''
@@ -92,7 +92,7 @@ class Project(str, Enum):
     def __str__(self):
         return self.value
 # ---------------------------------------
-class Qsq(str, Enum):
+class Qsq(StrEnum):
     '''
     This class represents different q2 bins
     '''
