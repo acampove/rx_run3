@@ -177,6 +177,24 @@ ms  = rdr(
     q2bin    = Qsq.jpsi)
 ```
 
+If one has access to the parquet file with the parameters, one can do:
+
+```python
+from fitter    import ParameterReader
+from rx_common import Project
+from rx_common import Trigger 
+from rx_common import Qsq 
+
+with ParameterReader.inputs_from(pars_path = '/path/to/parameters.parquet'):
+    rdr = ParameterReader(name = 'mid_window')
+    ms  = rdr(
+        brem     = 1, 
+        block    = 3, 
+        trigger  = Trigger.rk_ee_os, 
+        project  = Project.rk,
+        q2bin    = Qsq.jpsi)
+```
+
 where `ms` is a `Measurement` object that can be read with:
 
 ```python
