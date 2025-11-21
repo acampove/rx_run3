@@ -1,0 +1,31 @@
+#!/bin/bash
+
+source $HOME/.bashrc
+conda_init
+conda activate rk 
+
+IJOB=$1
+VERS=$2
+ISSM=$3
+TRIG=$4
+YEAR=$5
+BREM=$6
+
+CACHE_NAME=settings_$IJOB.txt
+
+print_q2_settings -i $IJOB -t $TRIG -d $YEAR -b $BREM > $CACHE_NAME 
+
+TRIG=$(cat $CACHE_NAME | grep TRIG | awk -F '=' '{print$2}')
+YEAR=$(cat $CACHE_NAME | grep YEAR | awk -F '=' '{print$2}')
+BREM=$(cat $CACHE_NAME | grep BREM | awk -F '=' '{print$2}')
+
+echo "$VERS, $YEAR, $TRIG, $BREM, $ISSM"
+
+if [[ $ISSM -eq 1 ]];then
+    echo "Doing simulation"
+    get_q2_resolutions -d $YEAR -t $TRIG -b $BREM -v $VERS -s
+else
+    echo "Doing data"
+    get_q2_resolutions -d $YEAR -t $TRIG -b $BREM -v $VERS
+fi
+

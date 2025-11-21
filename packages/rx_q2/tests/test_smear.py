@@ -1,0 +1,161 @@
+'''
+Script used to test Q2Smear
+'''
+
+import numpy
+import pytest
+import pandas            as pnd
+import matplotlib.pyplot as plt
+
+from ROOT                     import RDF
+from pathlib                  import Path
+from dmu.logging.log_store    import LogStore
+from rx_q2.q2smear_corrector  import Q2SmearCorrector
+
+log  = LogStore.add_logger('rx_q2:test_q2smear_corrector')
+# -------------------------------------------
+class Data:
+    '''
+    Data class
+    '''
+    nentries = 10_000
+# -------------------------------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This runs before any test
+    '''
+    LogStore.set_level('rx_q2:q2smear_corrector'     , 10)
+    LogStore.set_level('rx_q2:test_q2smear_corrector', 10)
+# -------------------------------------------
+def _plot_masses(
+    rdf      : RDF.RNode, 
+    particle : str,
+    dir_path : Path) -> None:
+    log.info('Plotting')
+
+    data = rdf.AsNumpy()
+
+    arr_reco = data[f'{particle}_M_brem_track_2']
+    arr_smr  = data[f'{particle}_Mass_smr'      ]
+
+    rng = {'B' : (5000, 6000), 'Jpsi' : (2000, 3500)}[particle]
+
+    plt.hist(arr_reco, range=rng, bins=60, alpha=0.3      )
+    plt.hist(arr_smr , range=rng, bins=60, histtype='step')
+
+    plt.savefig(dir_path / f'{particle}.png')
+    plt.close()
+# -------------------------------------------
+def _get_df(
+    uniform : bool, 
+    is_data : bool,
+    channel : str) -> pnd.DataFrame:
+
+    df = pnd.DataFrame()
+    df['EVENTNUMBER'] = 1
+    df['RUNNUMBER'  ] = 2
+
+    if   channel == 'ee':
+        df['nbrem'] = numpy.random.choice([0, 1, 2], Data.nentries)
+    elif channel == 'mm':
+        df['nbrem'] = numpy.random.choice([0]      , Data.nentries)
+    else:
+        raise ValueError(f'Invalid channel: {channel}')
+
+    df['block']    = numpy.random.choice(range(1, 7) , Data.nentries)
+
+    df = _add_mass(df=df, particle='B'   , uniform=uniform)
+    df = _add_mass(df=df, particle='Jpsi', uniform=uniform)
+
+    if not is_data:
+        df['B_TRUEID'   ] = 521
+        df['Jpsi_TRUEID'] = 451
+        df['B_TRUEM'    ] = 5280 
+        df['Jpsi_TRUEM' ] = 3096.9
+
+    return df
+# ----------------------
+def _add_mass(
+    df       : pnd.DataFrame,
+    uniform  : bool,
+    particle : str) -> pnd.DataFrame:
+    '''
+    Parameters
+    -------------
+    particle: Name of particle to add to dataframe, e.g Jpsi
+
+    Returns
+    -------------
+    DataFrame with column added
+    '''
+
+    name = f'{particle}_M_brem_track_2'
+    if       uniform and particle == 'Jpsi':
+        df[name] = numpy.random.uniform(1800, 3700, Data.nentries)
+    elif not uniform and particle == 'Jpsi':
+        df[name] = numpy.random.normal(loc=3097, scale=100, size=Data.nentries)
+    elif     uniform and particle == 'B':
+        df[name] = numpy.random.uniform(5000, 6000, Data.nentries)
+    elif not uniform and particle == 'B':
+        df[name] = numpy.random.normal(loc=5280, scale=100, size=Data.nentries)
+    else:
+        raise ValueError(f'Invalid particle: {particle}')
+
+    return df
+# ----------------------
+def _check_columns(rdf : RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    rdf: Dataframe
+    '''
+    s_col  = { name.c_str() for name in rdf.GetColumnNames() }
+
+    fail = False
+    for col in {'EVENTNUMBER', 'RUNNUMBER', 'Jpsi_Mass_smr', 'B_Mass_smr', 'q2_smr'}:
+        if col in s_col:
+            continue
+
+        fail = True
+        log.error(f'Missing column: {col}')
+
+    assert not fail
+# ----------------------
+def _check_rdf(rdf : RDF.RNode) -> None:
+    '''
+    Parameters
+    -------------
+    rdf: DataFrame after correction
+    '''
+
+    _check_columns(rdf=rdf)
+
+    data   = rdf.AsNumpy()
+    arr_q2 = data['q2_smr']
+    arr_jp = data['Jpsi_Mass_smr']
+
+    assert numpy.isclose(arr_q2, arr_jp ** 2, atol=1).all()
+# -------------------------------------------
+@pytest.mark.parametrize('is_uniform', [True, False])
+@pytest.mark.parametrize('channel'   , ['ee',  'mm'])
+@pytest.mark.parametrize('is_data'   , [True, False])
+def test_get_rdf(
+    is_uniform : bool, 
+    channel    : str,
+    is_data    : bool,
+    tmp_path):
+    '''
+    Checks if the input is wrong
+    '''
+    df  = _get_df(uniform = is_uniform, channel = channel, is_data = is_data)
+    rdf = RDF.FromPandas(df)
+
+    obj = Q2SmearCorrector(channel=channel, add_original=True)
+    rdf = obj.get_rdf(rdf=rdf)
+
+    _check_rdf(rdf=rdf)
+
+    _plot_masses(rdf=rdf, particle='B'   , dir_path=tmp_path)
+    _plot_masses(rdf=rdf, particle='Jpsi', dir_path=tmp_path)
+# -------------------------------------------

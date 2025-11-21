@@ -1,0 +1,40 @@
+input:
+  year:    # Supported years
+    - 2011
+    - 2012
+    - 2015
+    - 2016
+    - 2017
+    - 2018
+  trigger:
+    - ETOS
+    - GTIS
+  brem:   # Supported brem categories
+    - 0
+    - 1
+    - 2
+  cali:   # This specifies what weights the MC input to the calibration can have 
+    - 000 # No weights
+    - nom # Fully weighted with nominal weights
+  samples: # Supported samples
+    - simulation
+    - data
+    - both
+syst:
+    - nom   # Nominal
+    - nspd  # Measured by splitting in different nSPDHits bins
+fitting:
+  mass : Jpsi_M # Observable to be fitted
+  binning :
+    nbins : 60
+
+  model:
+    parameters: # Initial values of parameters used in fit
+      mu   : 3060
+      sg   : 20.0
+      ap_r :  1.0
+      pw_r :  1.0
+      ap_l : -1.0
+      pw_l :  1.0
+      ncbr :  1000
+      ncbl :  1000

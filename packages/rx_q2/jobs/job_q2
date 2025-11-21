@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+#-------------------------------------------------------------------
+display_help()
+{
+    echo "Script used to send jobs to do q2 calibration fits"
+    echo ""
+    echo "-k: Kind of job, q2sys or q2nom"
+    echo "-v: Version of the output"
+    echo "-r: Real run (1) or test run (0 default) "
+    echo "-d: Flag specifying simulation 0 or data 1, only needed if kind=q2mom"
+    echo "-s: Systematic nom or nspd, only needed if running with kind=q2sys"
+    echo "-t: Trigger"
+    echo "-y: Year or dataset"
+    echo "-b: Bremsstrahlung category"
+}
+#-------------------------------------------------------------------
+get_args()
+{
+    REAL=0
+    TRIG='all'
+    YEAR='all'
+    BREM='all'
+    while getopts :hf:k:v:d:r:s:t:y:b: option
+    do
+	case "${option}"
+	    in
+	    k)KIND=${OPTARG};;
+	    v)VERS=${OPTARG};;
+	    d)DATA=${OPTARG};;
+	    r)REAL=${OPTARG};;
+	    s)SYST=${OPTARG};;
+	    #---------------
+	    t)TRIG=${OPTARG};;
+	    y)YEAR=${OPTARG};;
+	    b)BREM=${OPTARG};;
+	    #---------------
+            h)  
+                display_help
+                exit 0
+                ;;  
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;; 
+	esac
+    done
+
+    IFS=',' read -ra TRIG <<< "$TRIG"
+    IFS=',' read -ra YEAR <<< "$YEAR"
+    IFS=',' read -ra BREM <<< "$BREM"
+}
+#-------------------------------------------------------------------
+prepare()
+{
+    print_q2_settings -i 0 -t $TRIG -d $YEAR -b $BREM > .settings.log
+
+    NJOB=$(cat .settings.log | grep NJOB | awk -F '=' '{print$2}')
+    JOBDIR=/publicfs/ucas/user/campoverde/Jobs/$KIND
+    DATE=$(date | sed "s|\s|_|g" | sed "s|:|_|g")
+    JOBDIR=$JOBDIR"_"$DATE
+
+    mkdir -p $JOBDIR
+    cd $JOBDIR
+
+    OFILE=$KIND_%{ClusterId}_%{ProcId}
+    MEMORY=4000
+
+    echo "NJOB=$NJOB"
+    echo "JOBDIR=$JOBDIR"
+}
+#-------------------------------------------------------------------
+submit()
+{
+    if   [[ $REAL -eq 0 ]];then
+	echo "This is a test, not submitting job"
+	echo "VERS:$VERS"
+	echo "KIND:$KIND"
+	echo "SYST:$SYST"
+	echo "TRIG:$TRIG"
+	echo "YEAR:$YEAR"
+	echo "BREM:$BREM"
+    elif [[ "$KIND" == "q2sys" ]];then
+	SUBMIT=$(which submit_q2sys)
+	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $SYST $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
+    elif [[ "$KIND" == "q2mom" ]];then
+	ISSM=$((1 - DATA))
+	SUBMIT=$(which submit_q2mom)
+	hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu %{ProcId} $VERS $ISSM $TRIG $YEAR $BREM -mem $MEMORY $SUBMIT 
+    else
+	echo "Invalid job type: $KIND"
+	kill -INT $$
+    fi
+}
+#-------------------------------------------------------------------
+get_args $@
+prepare
+submit
+

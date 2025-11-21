@@ -1,0 +1,77 @@
+input:
+  friends:
+    excluded:
+      - mva
+  trigger:
+    rk_ee   : Hlt2RD_BuToKpEE_MVA
+    rk_mm   : Hlt2RD_BuToKpMuMu_MVA
+    rkst_ee : Hlt2RD_B0ToKpPimEE_MVA
+    rkst_mm : Hlt2RD_B0ToKpPimMuMu_MVA
+  samples: # Supported samples
+    rk_ee:
+      sim : Bu_JpsiK_ee_eq_DPC
+      dat : DATA*
+    rkst_ee:
+      sim : Bd_JpsiKst_ee_eq_DPC
+      dat : DATA*
+    rk_mm:
+      sim : Bu_JpsiK_mm_eq_DPC
+      dat : DATA*
+    rkst_mm:
+      sim : Bd_JpsiKst_mm_eq_DPC
+      dat : DATA*
+  selection:
+    bdt     : (1) 
+    psi_vt  : B_const_mass_M > 5180 # This removes the psi2S contamination
+    q2      : (1)
+    mass    : (1) 
+syst:
+    - nom
+fitting:
+  ranges : # Fitting ranges for each brem category
+    rk_ee:
+      0 :
+        - 2500
+        - 3300
+      1 :
+        - 2500
+        - 3500
+      2 :
+        - 2500
+        - 3500
+    rkst_ee:
+      0 :
+        - 2000
+        - 4000
+      1 :
+        - 2000
+        - 4000
+      2 :
+        - 2000
+        - 4000
+    rk_mm:
+      0 :
+        - 2950
+        - 3250
+    rkst_mm:
+      0 :
+        - 2950
+        - 3250
+  mass    : Jpsi_M_brem_track_2 # Observable to be fitted
+  weights : weight
+  plotting:
+    nbins : 60
+  model:
+    pdfs: [dscb]
+  sim:
+    strategy :
+      retry  :
+        ntries        : 8
+        pvalue_thresh : 0.05
+        ignore_status : true
+  dat:
+    strategy :
+      retry  :
+        ntries        : 3
+        pvalue_thresh : 0.05
+        ignore_status : true

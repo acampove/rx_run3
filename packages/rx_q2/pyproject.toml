@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "rx_q2"
+version = "0.0.1"
+description = ""
+readme = "README.md"
+authors = []
+packages = [{ include = "rx_q2", from = "src" }]
+include = [
+  "rx_q2_data/config/*.yaml",
+  "rx_q2_data/scales/*/*.csv"
+]
+
+[tool.poetry.dependencies]
+python     = "3.12.*"
+matplotlib = "*"
+pydantic   = "*"
+pandas     = "*"
+numpy      = "*"
+zfit       = "*"
+typer      = "*"
+jacobi     = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+
+[tool.poetry.scripts]
+rx_q2              = "rx_q2.cli:app"
+calculate_brem     = "rx_q2_scripts.calculate_brem:main"
+check              = "rx_q2_scripts.check:main"
+compare_q2         = "rx_q2_scripts.compare_q2:main"
+compare_trig       = "rx_q2_scripts.compare_trig:main"
+create_rx_maps     = "rx_q2_scripts.create_rx_maps:main"
+dump_q2_ratios     = "rx_q2_scripts.dump_q2_ratios:main"
+get_q2_resolutions = "rx_q2_scripts.get_q2_resolutions:main"
+get_q2_tables      = "rx_q2_scripts.get_q2_tables:main"
+plot_resolutions   = "rx_q2_scripts.plot_resolutions:main"
+print_q2_settings  = "rx_q2_scripts.print_q2_settings:main"
+q2_merger          = "rx_q2_scripts.q2_merger:main"
+remake_q2_json     = "rx_q2_scripts.remake_q2_json:main"
+validate_smear     = "rx_q2_scripts.validate_smear:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
