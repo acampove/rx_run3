@@ -10,25 +10,6 @@ _triggers = gut.load_data(package='rx_common_data', fpath='triggers.yaml')
 
 log=LogStore.add_logger('rx_common:info')
 # ----------------------
-def _get_long_channel_name(name : str) -> str:
-    '''
-    Parameters
-    -------------
-    name: Short version of channel name, i.e. ee, mm, etc
-
-    Returns
-    -------------
-    Long version, e.g. electron, muon, etc
-    '''
-
-    if name in ['ee', 'EE']:
-        return 'electron'
-
-    if name in ['mm', 'MM']:
-        return 'muon'
-
-    raise NotImplementedError(f'Invalid channel name: {name}')
-# ----------------------
 def is_rdf_data(rdf : RDF.RNode) -> bool:
     '''
     Parameters
@@ -56,12 +37,12 @@ def is_mc(sample : str) -> bool:
 
     return True
 # ---------------------------------
-def channel_from_trigger(trigger : str, full_name : bool = False) -> str:
+def channel_from_trigger(trigger : str, lower_case : bool = False) -> str:
     '''
     Parameters
     ----------------
     trigger: Hlt2 trigger name, e.g. HLT2_BuKp...
-    full_name: If False (default) will return ee, mm, etc, otherwise electron, muon, etc
+    lower_case: If False (default), returns EE/MM, etc. Otherwise ee/mm, etc.
 
     Returns
     ----------------
@@ -72,8 +53,8 @@ def channel_from_trigger(trigger : str, full_name : bool = False) -> str:
             if trigger not in _triggers[project][channel]:
                 continue
 
-            if full_name:
-                return _get_long_channel_name(name=channel)
+            if lower_case:
+                return channel.lower()
 
             return channel
 
