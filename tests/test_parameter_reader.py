@@ -3,8 +3,9 @@ import pytest
 from pathlib import Path
 
 from fitter    import ParameterReader
-from rx_common import Project, Qsq
+from rx_common import Project
 from rx_common import Trigger 
+from rx_common import Qsq 
 from dmu       import LogStore
 
 log=LogStore.add_logger('fitter:test_parameter_reader')
