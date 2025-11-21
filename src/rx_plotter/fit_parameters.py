@@ -2,6 +2,9 @@
 Module holding FitParameters class
 '''
 
+from dmu.generic import utilities as gut
+from rx_plotter  import FitParametersConf
+
 # ----------------------
 class FitParameters:
     '''
@@ -16,7 +19,21 @@ class FitParameters:
         cfg  : Name of config meant for plots, e.g. fpars
         '''
         self._name = name
-        self._cfg  = cfg
+        self._cfg  = self._load_config(name = cfg) 
+    # ----------------------
+    def _load_config(self, name : str) -> FitParametersConf:
+        '''
+        Parameters
+        -------------
+        name: Name of config, e.g. fpars
+
+        Returns
+        -------------
+        Class holding configuration
+        '''
+        data = gut.load_data(package='rx_plots_data', fpath = f'fits/{name}.yaml')
+
+        return FitParametersConf(**data)
     # ----------------------
     def run(self) -> None:
         '''
