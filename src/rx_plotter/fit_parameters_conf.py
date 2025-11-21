@@ -37,8 +37,8 @@ class PlotConf(BaseModel):
     Class representing configurations for plots that
     will go in a canvas
     '''
-    yrange : list[float] = Field(min_length=2, max_length=2)
-    size   : list[int  ] = Field(min_length=2, max_length=2)
+    yrange : list[float|None] = Field(min_length=2, max_length=2)
+    size   : list[int  ]      = Field(min_length=2, max_length=2)
     xlabel : str
     ylabel : str
     graphs : dict[str,GraphConf]
