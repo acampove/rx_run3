@@ -18,6 +18,7 @@ mplhep           = '*'
 matplotlib       = '*'
 pandas           = '*'
 numpy            = '*'
+numexpr          = '*'
 omegaconf        = '*'
 formulate        = '*'
 pytest           = {version = '*', optional         =true}
