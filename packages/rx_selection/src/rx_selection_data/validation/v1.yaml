@@ -1,0 +1,44 @@
+sample:
+  ipath   : /home/acampove/Data/RX_run3/v1/post_ap
+  project : RK
+  #sample  : Bu_Kmumu_eq_btosllball05_DPC 
+  #hlt2    : Hlt2RD_BuToKpMuMu_MVA
+  #hlt2    : SpruceRD_BuToHpMuMu
+  sample  : Bu_Kee_eq_btosllball05_DPC
+  hlt2    : Hlt2RD_BuToKpEE_MVA
+  #hlt2    : SpruceRD_BuToHpEE
+  cutver  : v1
+plotting_1d:
+  saving:
+      plt_dir : validation
+  definitions:
+    q2 : Jpsi_M * Jpsi_M
+  plots:
+      q2 :
+          binning    : [0., 22000000, 40]
+          yscale     : 'linear'
+          labels     : ['$q^2$', 'Entries']
+          title      : '' 
+          name       : 'q2'
+      B_M :
+          binning    : [4500, 6000, 40]
+          yscale     : 'linear'
+          labels     : ['$M(B^+)$', 'Entries']
+          title      : '' 
+          name       : 'b_mass'
+plotting_2d:
+  saving:
+      plt_dir : validation 
+  definitions:
+    q2 : Jpsi_M * Jpsi_M
+  general:
+      size : [10, 5]
+  plots_2d:
+      - [B_M, q2,    null, 'bmass_q2']
+  axes:
+      B_M :
+          binning : [4500, 5600, 50]
+          label   : '$M(B^+)$'
+      q2  :
+          binning : [0., 22000000, 50]
+          label   : '$q^2$'

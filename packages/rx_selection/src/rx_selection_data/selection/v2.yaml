@@ -1,0 +1,149 @@
+cascade_common : &cascade_common
+  low     : swp_cascade_mass_swp    > 1900
+  central : swp_cascade_mass_swp    > 1900
+  jpsi    : swp_cascade_mass_swp    > 1900
+  psi2    : swp_cascade_mass_swp    > 1900
+  high    : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
+
+bdt_common: &bdt_common
+  low     : (mva_cmb > 0.50) && (mva_prc > 0.30)
+  central : (mva_cmb > 0.50) && (mva_prc > 0.50)
+  jpsi    : (mva_cmb > 0.50) && (mva_prc > 0.50)
+  psi2    : (mva_cmb > 0.50) && (mva_prc > 0.50)
+  high    : (mva_cmb > 0.50) && (mva_prc > 0.35)
+
+q2_common: &q2_common
+  low    : (Jpsi_M * Jpsi_M >        0) && (Jpsi_M * Jpsi_M <  1000000)
+  central: (Jpsi_M * Jpsi_M >  1100000) && (Jpsi_M * Jpsi_M <  6000000)
+  jpsi   : (Jpsi_M * Jpsi_M >  6000000) && (Jpsi_M * Jpsi_M < 12960000)
+  psi2   : (Jpsi_M * Jpsi_M >  9920000) && (Jpsi_M * Jpsi_M < 16400000)
+  high   : (Jpsi_M * Jpsi_M > 15500000) && (Jpsi_M * Jpsi_M < 22000000)
+
+hop_common: &hop_common
+  low    : hop_mass > 4500 
+  central: hop_mass > 4500 
+  jpsi   : hop_mass > 4500 
+  psi2   : hop_mass > 4500 
+  high   : hop_mass > 3000 
+
+mass_ee  : &mass_ee
+  low    : (B_M                  > 4600) && (B_M                  < 6200)
+  central: (B_M                  > 4600) && (B_M                  < 6200)
+  jpsi   : (B_const_mass_M       > 5080) && (B_const_mass_M       < 5680)
+  psi2   : (B_const_mass_psi2S_M > 4800) && (B_const_mass_psi2S_M < 5680)
+  high   : (B_M                  > 4500) && (B_M                  < 6000)
+
+mass_mm  : &mass_mm
+  low    : (B_M                  > 5150) && (B_M                  < 5850)
+  central: (B_M                  > 5150) && (B_M                  < 5850)
+  jpsi   : (B_const_mass_M       > 5150) && (B_const_mass_M       < 5850)
+  psi2   : (B_const_mass_psi2S_M > 5150) && (B_const_mass_psi2S_M < 5850)
+  high   : (B_M                  > 5150) && (B_M                  < 5850)
+# --------------------
+di_track_angles_rk: &angles
+  th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
+  th_l1_kp : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
+  th_l2_kp : TVector3 v1(L2_PX, L2_PY, L2_PZ); TVector3 v2( H_PX,  H_PY,  H_PZ); return v1.Angle(v2);
+Definitions:
+  RK:
+    EE:
+      <<: *angles
+      H_TRACK_GhostProb : H_TRGHOSTPROB
+      H_PIDe            : H_PID_E
+      H_ProbNNk         : H_PROBNN_K
+    MM:
+      <<: *angles
+      H_TRACK_GhostProb : H_TRGHOSTPROB
+      H_PIDe            : H_PID_E
+      H_ProbNNk         : H_PROBNN_K
+# --------------------
+RKst:
+  EE:
+    ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : L1_PT > 500 && L2_PT > 500 && L1_P > 3000 && L2_P > 3000
+    kinem_had : H1_PT > 300 && H2_PT > 300 && H1_P > 2500 && H2_P > 2500
+    kst_mass  : TMath::Abs(Kst_M - 892) < 100
+    kst_pt    : Kst_PT > 500
+    tr_ipchi2 : H1_IPCHI2_OWNPV > 9 && H2_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : L1_PROBNN_E > 0.2 && L2_PROBNN_E > 0.2 && L1_PIDe  > 3.000 && L2_PIDe  > 3.000
+    pid_k     : (H1_ProbNNk   * (1 - H1_PROBNN_P) > 0.05) && H1_PID_K > 0
+    pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
+    acceptance: L1_INECAL && L2_INECAL
+    cascade   : (1)
+    jpsi_misid: (1)
+    bdt       : (1) 
+    q2:
+      <<: *q2_common
+    mass:
+      <<: *mass_ee
+  MM:
+    ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : L1_PT > 500 && L2_PT > 500 && L1_P > 3000 && L2_P > 3000
+    kinem_had : H1_PT > 300 && H2_PT > 300 && H1_P > 2500 && H2_P > 2500
+    kst_mass  : TMath::Abs(Kst_M - 892) < 100
+    kst_pt    : Kst_PT > 500
+    tr_ipchi2 : H1_IPCHI2_OWNPV > 9 && H2_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : L1_ProbNNmu> 0.2 && L2_ProbNNmu> 0.2 && L1_ISMUON && L2_ISMUON && L1_PID_MU >-3. && L2_PID_MU > -3
+    pid_k     : (H1_ProbNNk   * (1 - H1_PROBNN_P) > 0.05) && H1_PID_K > 0
+    pid_pi    : (H2_PROBNN_PI * (1 - H2_PROBNN_P) * (1 - H2_ProbNNk) > 0.1) 
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH
+    acceptance: L1_INMUON && L2_INMUON
+    cascade   : (1)
+    jpsi_misid: (1)
+    bdt       : (1) 
+    q2:
+      <<: *q2_common
+    mass:
+      <<: *mass_mm
+RK:
+  EE:
+    ghost     : H_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : L1_PT > 500 && L2_PT > 500 && L1_P > 3000 && L2_P > 3000
+    kinem_had : H_PT > 300 && H_P > 2500
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l2_kp > 5e-4)
+    tr_ipchi2 : H_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : L1_PROBNN_E > 0.2 && L2_PROBNN_E > 0.2 && L1_PIDe  > 3.000 && L2_PIDe  > 3.000
+    pid_k     : H_PIDe <  0.000 && H_PID_K > 2.0
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
+    acceptance: L1_INECAL    && L2_INECAL
+    jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    cascade   :
+      <<: *cascade_common
+    hop       : 
+      <<: *hop_common
+    bdt       : 
+      <<: *bdt_common
+    q2:
+      <<: *q2_common
+    mass:
+      <<: *mass_ee
+  MM:
+    ghost     : H_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : L1_PT > 500 && L2_PT > 500 && L1_P > 3000 && L2_P > 3000
+    kinem_had : H_PT > 300 && H_P > 2500
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l2_kp > 5e-4)
+    tr_ipchi2 : H_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : L1_ProbNNmu> 0.2 && L2_ProbNNmu> 0.2 && L1_ISMUON && L2_ISMUON && L1_PID_MU >-3. && L2_PID_MU > -3
+    pid_k     : (H_ProbNNk   * (1 - H_PROBNN_P) > 0.05) && H_PID_K > 0
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H_PPHASRICH
+    acceptance: L1_INMUON && L2_INMUON
+    jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    cascade   :
+      <<: *cascade_common
+    hop       : 
+      <<: *hop_common
+    bdt       : 
+      <<: *bdt_common
+    q2:
+      <<: *q2_common
+    mass:
+      <<: *mass_mm

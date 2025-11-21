@@ -1,0 +1,133 @@
+#!/usr/bin/env bash
+
+#-----------------------------
+display_help()
+{
+    echo "Script used to submit jobs to the IHEP's HTCondor cluster. The jobs should apply selection." 
+    echo ""
+    echo "-d: Path to directory containing directory samples"
+    echo "-s: Name of the sample (subdirectory) to run over"
+    echo "-r: String with dash separated cuts to remove, e.g. q2-bdt, optional"
+    echo "-q: q2 bin, e.g. central"
+    echo "-t: HLT2 trigger, e.g Hlt2RD_B0ToKpPimEE"
+    echo "-p: Project, e.g. RK"
+    echo "-n: Number of parts into which selection is split, e.g. 100"
+    echo "-m: Memory required by job, default 4000Mb"
+    echo "-T: Will run a test with the first job (default) or will submit all the jobs"
+    echo "-Q: Queue, e.g. test (5m), short (30m), mid (10h), by default short"
+}
+#-----------------------------
+get_opts()
+{
+    TEST=1
+    QUEUE=mid
+    MEMORY=4000
+    while getopts :hf:d:s:r:q:t:p:n:m:T:Q: option; do 
+        case "${option}" in
+            d)  DATADIR="${OPTARG}";;
+            s)  SAMPLE="${OPTARG}";;
+            r)  REMOVED="${OPTARG}";;
+            q)  Q2BIN="${OPTARG}";;
+            t)  TRIGGER="${OPTARG}";;
+            p)  PROJECT="${OPTARG}";;
+            n)  NPART="${OPTARG}";;
+            T)  TEST="${OPTARG}";;
+            Q)  QUEUE="${OPTARG}";;
+            m)  MEMORY="${OPTARG}";;
+            h)  
+                display_help
+                exit 0
+                ;;  
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+
+    if [[ $TEST -eq 1 ]];then
+        QUEUE=short
+    fi
+}
+#-----------------------------
+set_colors()
+{
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m' # No Color
+}
+#-----------------------------
+prepare()
+{
+    if [[ -z $JOBDIR ]];then
+        echo "JOBDIR variable not set, this is the path where the log files will go"
+        exit 1
+    fi
+
+    DATE=$(date | sed "s|\s|_|g" | sed "s|:|_|g" | sed "s|__|_|g")
+    JOBDIR=$JOBDIR"/rx_selection/"$DATE
+
+    echo "Preparing log directory"
+    mkdir -p $JOBDIR
+    rm    -f $JOBDIR/*.out
+    rm    -f $JOBDIR/*.err
+
+    if [[ $TEST -eq 1 ]];then
+        echo -e "${YELLOW}Testing with a single job${NC}"
+        NJOB=1
+    else
+        echo -e "${GREEN}Running real job${NC}"
+        NJOB=$NPART
+    fi
+}
+#-----------------------------
+set_submitter()
+{
+    SUBMITTER=$(which submit_selection)
+    if [[ $? -ne 0 ]];then
+        echo "Cannot find submit_selection utility"
+        exit 1
+    else
+        echo "Running with: $SUBMITTER"
+    fi
+}
+#-----------------------------
+set_job_args()
+{
+    if [[ -z $REMOVED ]];then
+        JOB_ARGS="-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NPART} -p $PROJECT -t $TRIGGER -q $Q2BIN"
+    else
+        JOB_ARGS="-d $DATADIR -s $SAMPLE -i %{ProcId} -n ${NPART} -p $PROJECT -t $TRIGGER -q $Q2BIN -r $REMOVED"
+    fi
+}
+#-----------------------------
+submit_ihep()
+{
+    cd $JOBDIR
+    OFILE=%{ClusterId}_%{ProcId}
+
+    echo "Njobs  = $NJOB"
+    echo "Npart  = $NPART"
+    echo "Queue  = $QUEUE"
+    echo "Jobdir = $JOBDIR"
+
+    if [[ $NJOB -gt 100 ]];then
+        echo "Cannot send $NJOB jobs, max = 100"
+        exit 1
+    fi
+
+    hep_sub -n $NJOB -g lhcb -e $OFILE".err" -o $OFILE".out" -argu "$JOB_ARGS" -mem $MEMORY -wt $QUEUE $SUBMITTER
+}
+#-----------------------------
+get_opts "$@"
+set_colors
+prepare
+set_job_args
+set_submitter
+submit_ihep

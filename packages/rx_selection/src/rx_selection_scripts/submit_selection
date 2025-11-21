@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+# ----------------------------
+display_help()
+{
+    echo "Script used to setup mamba environment and run apply_selection script"
+    echo ""
+    echo "-d: Path to directory containing directory samples"
+    echo "-s: Name of the sample (subdirectory) to run over"
+    echo "-r: String with dash separated cuts to remove, e.g. q2-bdt, optional"
+    echo "-q: q2 bin, e.g. central"
+    echo "-t: HLT2 trigger, e.g Hlt2RD_B0ToKpPimEE"
+    echo "-p: Project, e.g. RK"
+    echo "-i: Part that current job will process, e.g. 32"
+    echo "-n: Number of parts into which selection is split, e.g. 100"
+}
+# ----------------------------
+setup()
+{
+    source $HOME/.bashrc
+    mma rx_selection 
+    if [[ $? -ne 0 ]];then
+        echo "Could not set virtual environment"
+        exit 1
+    fi
+
+    which apply_selection
+    if [[ $? -ne 0 ]];then
+        echo "Could not find apply_selection"
+        exit 1
+    fi
+}
+# ----------------------------
+get_opts()
+{
+    while getopts :hf:d:s:r:q:t:p:i:n: option; do 
+        case "${option}" in
+            d)  DATADIR="${OPTARG}";;
+            s)  SAMPLE="${OPTARG}";;
+            r)  REMOVED="${OPTARG}";;
+            q)  Q2BIN="${OPTARG}";;
+            t)  TRIGGER="${OPTARG}";;
+            p)  PROJECT="${OPTARG}";;
+            i)  IPART="${OPTARG}";;
+            n)  NPART="${OPTARG}";;
+            h)  
+                display_help
+                exit 0
+                ;;  
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+
+    if [[ ! -z $REMOVED ]];then
+        REMOVED=$(echo $REMOVED | sed 's|-| |g')
+    fi
+}
+# ----------------------------
+run()
+{
+    echo "DATADIR: $DATADIR"
+    echo "SAMPLE:  $SAMPLE"
+    echo "Q2BIN:   $Q2BIN"
+    echo "Trigger: $TRIGGER"
+    echo "PROJECT  $PROJECT"
+    echo "Running: $IPART/$NPART"
+
+    if [[ -z $REMOVED ]];then
+        echo "Will not remove cuts"
+        apply_selection -d $DATADIR -s $SAMPLE             -q $Q2BIN -t $TRIGGER -p $PROJECT -i $IPART -n $NPART
+    else
+        echo "Will remove cuts: \"$REMOVED\""
+        apply_selection -d $DATADIR -s $SAMPLE -r $REMOVED -q $Q2BIN -t $TRIGGER -p $PROJECT -i $IPART -n $NPART
+    fi
+}
+# ----------------------------
+setup
+eval get_opts "$@"
+run
