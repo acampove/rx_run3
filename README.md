@@ -120,6 +120,27 @@ Below is a list of the commands for each 2D plot:
 | ---------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | `-q jpsi -c ep_em_momentum -s "DATA*" -t Hlt2RD_BuToKpEE_SameSign_MVA` | This should make plots of the electrons momenta for the SS sample |
 
+## Fits
+
+In order to plot parameters associated to fits do:
+
+```python
+from pathlib    import Path
+from rx_plotter import FitParameters
+
+out_path = Path('/path/to/directory/with/plots/')
+
+fp = FitParameters(name = 'mid_window', cfg = 'fpars')
+fp.run(out_path = out_path)
+```
+
+where 
+
+- `mid_window` is the kind of fit among the ones in `$ANADIR/fits/data/mid_window`
+- `fpars` is the name of the config file where the settings are specified.
+
+For an example of a config file check `rx_plotter_data/fits/fpars.yaml`
+
 ## Other studies
 
 ### Leakage from $B^+\to K^+ J/\psi(\to ee)$ into central $q^2$ bin
