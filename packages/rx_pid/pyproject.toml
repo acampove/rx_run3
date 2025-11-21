@@ -1,0 +1,28 @@
+[project]
+name        = 'rx_pid'
+version     = '0.0.1'
+readme      = 'README.md'
+dependencies= [
+'uproot',
+'pyYAML',
+'numpy',
+'mplhep',
+'fsspec-xrootd',
+'omegaconf>=2.3.0',
+'pidcalib2']
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where   = ['src']
+
+[project.scripts]
+create_pid_maps='rx_pid_scripts.create_pid_maps:main'
+plot_histograms='rx_pid_scripts.plot_histograms:main'
+
+[tool.setuptools.package-data]
+rx_pid_data=['*/*/*.yaml', '*/*.yaml', '*/*.submit']
+
+[tool.setuptools]
+script-files=['src/rx_pid_scripts/make_pid_maps']

@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# -----------------------------------------------------
+display_help()
+{
+    echo "Script used to make PID maps, meant to be used by HTCondor submit script that will do:"
+    echo ""
+    echo "# 7 (Blocks) x 2 (Particles) x 2 (Signal and control region) x 2 (Brem categories) = 56 jobs"
+    echo ""
+    echo "With options:"
+    echo "-i: Index of the job. Such that each job will run with a different configuration, from 0 to 55, inclusive"
+    echo "-t: Test flag:"
+    echo "  0: Will actually run the job" 
+    echo "  1: Will do only one file and with pidcalib2's --verbose, by default 0"
+    echo "  2: Will skip everything and just print what would have been run"
+    echo "-o: Path to output directory, by default $OPATH"
+}
+# -----------------------------------------------------
+get_opts()
+{
+    if [[ $# -eq 0 ]]; then
+        display_help
+        exit 1
+    fi  
+
+    OPATH=/eos/home-a/acampove/calibration/mis_id
+    TEST=0
+    while getopts :hf:i:t:o: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            i)  JOBID=${OPTARG};;
+            t)  TEST=${OPTARG};;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
+# -----------------------------------------------------
+setup()
+{
+    if [[ $TEST -eq 2 ]];then
+        echo "Skipping setup"
+        return
+    fi
+
+    . /cvmfs/lhcb.cern.ch/lib/LbEnv
+    lb-conda-dev virtual-env default venv
+
+    source venv/bin/activate
+
+    pip install pidcalib2
+
+    git clone ssh://git@gitlab.cern.ch:7999/rx_run3/rx_pid.git
+
+    pip install ./rx_pid/
+}
+# -----------------------------------------------------
+run()
+{
+    let INDEX=0
+    for BREM in nobrem brem;do
+        for REGION in signal control;do
+            for BLOCK in b1 b2 b3 b5 b6 b7 b8;do
+                for PARTICLE in Pi K;do
+                    if [[ $INDEX -eq $JOBID ]];then
+                        echo "Running at $INDEX with: $BREM, $REGION, $BLOCK, $PARTICLE"
+                        if [[ $TEST -eq 0 ]];then
+                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$BREM
+                        elif [[ $TEST -eq 1 ]];then
+                            echo "Running test"
+                            create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$BREM -m 5 -v
+                        elif [[ $TEST -eq 2 ]];then
+                            echo "Would have ran:"
+                            echo "create_pid_maps -b $BREM -r $REGION -s $BLOCK -p $PARTICLE -o $OPATH/$BREM -m 5 -v"
+                        else
+                            echo "Invalid value for test argument $TEST"
+                            exit 1
+                        fi
+                        return
+                    fi
+                    let INDEX+=1
+                done
+            done
+        done
+    done
+}
+# -----------------------------------------------------
+get_opts "$@"
+setup
+run
