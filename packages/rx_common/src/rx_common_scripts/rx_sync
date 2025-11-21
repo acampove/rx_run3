@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+# -----------------------------------------
+display_help()
+{
+    echo "This script is used to copy files from remote servers to the current one"
+    echo ""
+    echo "-s: Server from which to download, e.g. IHEP, CERN"
+    echo "-k: Type of data to download e.g. FITS"
+    echo "-d: If 1, dry run (default), 0 for real run"
+}
+# -----------------------------------------
+get_opts()
+{
+    if [[ $# -eq 0 ]]; then
+        display_help
+        exit 1
+    fi  
+
+    DRY_RUN=1
+    while getopts :hf:s:k:d: option; do 
+        case "${option}" in
+            h)  
+                display_help
+                exit 0
+                ;;  
+            s)  SERVER=${OPTARG};;
+            k)  KIND=${OPTARG};;
+            d)  DRY_RUN=${OPTARG};;
+           \?)  echo "Invalid option: -${OPTARG}"
+                display_help
+                exit 1
+                ;;  
+            :)  echo "$0: Arguments needed"
+                display_help
+                exit 1
+                ;;  
+        esac
+    done
+}
+# -----------------------------------------
+set_remote()
+{
+    if [[ "$SERVER" == "IHEP" ]];then
+        REMOTE=campoverde@lxlogin.ihep.ac.cn:/publicfs/ucas/user/campoverde/Data
+    else
+        echo "Invalid server: $SERVER"
+        exit 1
+    fi
+}
+# -----------------------------------------
+set_data()
+{
+    if [[ "$KIND" == "FITS" ]];then
+        SOURCE=fits/data
+        TARGET=fits
+    else
+        echo "Invalid kind of file: $KIND"
+        exit 1
+    fi
+}
+# -----------------------------------------
+check_environment()
+{
+    if [[ -z $ANADIR ]];then
+        echo "ANADIR variable not set"
+        exit 1
+    fi
+
+    if [[ ! -d $ANADIR ]];then
+        echo "$ANADIR path not found"
+        exit 1
+    fi
+}
+# -----------------------------------------
+run_sync()
+{
+    if [[ $DRY_RUN -eq 1 ]];then
+        rsync -avz --dry-run        -e "ssh -o ForwardX11=no" "$REMOTE"/"$SOURCE" "$ANADIR"/"$TARGET"
+    else
+        rsync -aL  --info=progress2 -e "ssh -o ForwardX11=no" "$REMOTE"/"$SOURCE" "$ANADIR"/"$TARGET"
+    fi
+}
+# -----------------------------------------
+check_environment
+get_opts "$@"
+set_remote
+set_data
+run_sync
+
+
+
+
+
+
+
+
+
+
+
+
+
+

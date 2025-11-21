@@ -1,0 +1,20 @@
+[project]
+name        = 'rx_common'
+description = 'Project used to find and load libraries in cal-rx-run3 c++ code'
+version     = '0.0.6'
+readme      = 'README.md'
+dependencies= ['PyYAML']
+
+[project.optional-dependencies]
+dev  = ['pytest']
+
+[tools.setuptools.packages.find]
+where= ['src']
+
+[tool.setuptools.package-data]
+'rx_comon_data' = ['*.txt', '*.yaml']
+
+[tool.setuptools]
+script-files=[
+'src/rx_common_scripts/rx_setup',
+'src/rx_common_scripts/rx_sync']

@@ -1,0 +1,291 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GITROOT=ssh://git@gitlab.cern.ch:7999/rx_run3
+#--------------------------
+display_help()
+{
+    echo "Usage: Script used to push changes for all the analyses projects and pull and install"
+    echo ""
+    echo -e "-k: Kind of action, needs to be specified:
+    pull: Pulls all projects
+    push: pushes all projects
+    sync: Pulls and then pushes all projects\n"
+    echo -e "-i: Options are:
+    Do not install:           0 (default)
+    Install in editable mode: 1
+    Plain install:            2\n"
+    echo -e "-s: Starting project
+    When the code gets stuck in a specific project (e.g. the project has un-committed changes)
+    one can restart the script at that project instead of staring from zero.\n"
+    echo -e "-p: Purge:
+    Do not remove egg-info directories: 0 (default)
+    Remove egg-info directories:        1\n"
+    echo "-d: By default it is zero. Dry run if non-zero.
+    Dry runs will only print name of project and branch that will be run over."
+    echo "-l: Debug messages, by default turned off, use 1 to turn them on"
+    echo "-r: Name of remote, by default is origin"
+}
+#--------------------------
+check_unstaged()
+{
+    git diff --exit-code
+    if [[ $? -ne 0 ]];then
+        echo "Unstaged changes for $PROJECT/$BRANCH"
+        kill -INT $$
+    fi
+}
+#--------------------------
+check_uncommitted()
+{
+    VAR=$(git status --porcelain)
+    if [[ ! -z $VAR ]];then
+        echo "----------------------------------------"
+        echo "Uncommitted changes for $PROJECT/$BRANCH"
+        echo "Found: $VAR"
+        echo "----------------------------------------"
+        kill -INT $$
+    fi
+}
+#--------------------------
+check_error()
+{
+    if [[ $? -ne 0 ]];then
+        echo "Failed to push/pull:"
+        cat /tmp/rx_update.log
+        kill -INT $$
+    fi
+}
+#--------------------------
+# Will carry out checks before updating code and installing
+check_project()
+{
+    NAME=$1
+
+    clone_project $NAME
+    skip_project  $NAME
+}
+#--------------------------
+# Will clone project if not found
+clone_project()
+{
+    NAME=$1
+
+    if [[ -d $NAME ]];then
+        return
+    fi
+
+    echo "Project $NAME not found, clonning it"
+    echo "git clone $GITROOT/$NAME.git"
+    git clone --origin $REMOTE $GITROOT/$NAME.git
+}
+#--------------------------
+# Will set SKIP_UPDATE to 0 or 1
+skip_project()
+{
+    NAME=$1
+
+    if   [[ "$START" == "UNSET" ]];then
+        SKIP_UPDATE=0
+    elif [[ "$START" == "$NAME" ]];then
+        SKIP_UPDATE=0
+        START="UNSET"
+    else
+        SKIP_UPDATE=1
+    fi
+}
+#--------------------------
+# Will update project
+update()
+{
+    BRANCH=$1
+    PROJECT=$2
+
+    if [[ $DRY -ne 0 ]];then
+        echo "Dry run: $PROJECT/$BRANCH"
+        return
+    fi
+
+    check_project $PROJECT
+    if [[ $SKIP_UPDATE -eq 1 ]];then
+        echo "Skipping $PROJECT"
+        return
+    fi
+
+    cd $PROJECT
+
+    LOGFILE=/tmp/rx_update.log
+
+    git fetch              > $LOGFILE 2>&1
+    git checkout $BRANCH  >> $LOGFILE 2>&1
+
+    check_unstaged
+    check_uncommitted
+
+    echo "Running $KIND on: $PROJECT/$BRANCH"
+    if   [[ "$KIND" == "sync" ]];then
+        pull_project $REMOTE $BRANCH $PROJECT
+        if   [[ $INSTALL -eq 1 ]];then
+            echo "Installing in editable mode"
+            uv pip install -q -e .
+        elif [[ $INSTALL -eq 2 ]];then
+            echo "Installing in non-editable mode"
+            uv pip install -q .
+        fi
+        push_project $REMOTE $BRANCH $PROJECT
+    elif [[ "$KIND" == "push" ]];then
+        push_project $REMOTE $BRANCH $PROJECT
+    elif [[ "$KIND" == "pull" ]];then
+        pull_project $REMOTE $BRANCH $PROJECT
+        if [[ $INSTALL -eq 1 ]];then
+            echo "Installing in editable mode"
+            uv pip install -q -e .
+        elif [[ $INSTALL -eq 2 ]];then
+            echo "Installing in non-editable mode"
+            uv pip install -q .
+        fi
+    else
+        echo "Invalid kind of update: $KIND"
+        kill -INT $$
+    fi
+
+    cd - > /dev/null
+}
+#--------------------------
+push_project()
+{
+    REMOTE=$1
+    BRANCH=$2
+    PROJECT=$3
+
+    if [[ $LOG -eq 1 ]];then
+    echo "Pushing to: $REMOTE -> $PROJECT/$BRANCH"
+    fi
+
+    git push -q $REMOTE $BRANCH >> $LOGFILE 2>&1
+    check_error
+}
+#--------------------------
+pull_project()
+{
+    REMOTE=$1
+    BRANCH=$2
+    PROJECT=$3
+
+    if [[ $LOG -eq 1 ]];then
+    echo "Pulling from: $REMOTE -> $PROJECT/$BRANCH"
+    fi
+
+    git pull -q $REMOTE $BRANCH >> $LOGFILE 2>&1
+    check_error
+}
+#--------------------------
+update_all()
+{
+    while IFS= read -r LINE; do
+        cd $SFTDIR
+        update $LINE
+    done < "$FILEPATH"
+}
+#--------------------------
+update_projects()
+{
+    case $TYPE in
+        all)
+            update_all
+            ;;
+        *)
+            echo "Invalid type of project update: {TYPE}"
+            exit 1
+            ;;
+    esac
+}
+#--------------------------
+get_args()
+{
+    INSTALL=0
+    PURGE=0
+    TYPE=all
+    START=UNSET
+    REMOTE=origin
+    DRY=0
+    LOG=0
+    while getopts :hf:i:k:p:t:s:r:d:l: option
+    do
+        case "${option}"
+            in
+            h)
+            display_help
+            exit 0
+            ;;
+        \?)  echo "Invalid option: -${OPTARG}"
+            display_help
+            exit 1
+            ;;
+        :)  echo "$0: Arguments needed"
+            display_help
+            exit 1
+            ;;
+        k)KIND=${OPTARG};;
+        i)INSTALL=${OPTARG};;
+        p)PURGE=${OPTARG};;
+        t)TYPE=${OPTARG};;
+        s)START=${OPTARG};;
+        r)REMOTE=${OPTARG};;
+        d)DRY=${OPTARG};;
+        l)LOG=${OPTARG};;
+        esac
+    done
+}
+#--------------------------
+check_env()
+{
+    check_var "SFTDIR" $SFTDIR
+
+    if [[ ! -d $SFTDIR ]];then
+        echo "Path does not exist: $SFTDIR"
+        kill -INT $$
+    fi
+
+    FILEPATH=$(python -c "from importlib.resources import files; fpath=files('rx_common_data').joinpath('projects.txt'); print (fpath)")
+    if [[ $? -ne 0 ]];then
+        echo "Cannot extract the path to the list of projects"
+        exit 1
+    fi
+
+    if [[ ! -f $FILEPATH ]];then
+        echo "Cannot find: $FILEPATH"
+        exit 1
+    fi
+
+    echo "Using projects in: $FILEPATH"
+}
+#--------------------------
+check_var()
+{
+    NAME=$1
+    VAR=$2
+
+    if [[ -z $VAR ]];then
+        echo "Cannot find $NAME"
+        kill -INT $$
+    fi
+}
+#--------------------------
+purge()
+{
+    if [[ $PURGE -eq 0 ]];then
+        return
+    else
+        for EGG_DIR in `find $PWD -name "*.egg-info*" -type d`;do
+            echo "Removing $EGG_DIR"
+            rm -rf $EGG_DIR
+        done
+    fi
+}
+#--------------------------
+get_args "$@"
+check_env
+purge
+update_projects
