@@ -1,0 +1,44 @@
+# This config will plot the RMS of the B_M target variable
+
+input:
+  q2bin   : jpsi
+  trigger : Hlt2RD_BuToKpEE_MVA
+  sample  : DATA*
+  #sample  : Bu_JpsiK_ee_eq_DPC
+  samples :
+    main        : /home/acampove/external_ssd/Data/samples/main.yaml
+    mva         : /home/acampove/external_ssd/Data/samples/mva.yaml
+    hop         : /home/acampove/external_ssd/Data/samples/hop.yaml
+    cascade     : /home/acampove/external_ssd/Data/samples/cascade.yaml
+    jpsi_misid  : /home/acampove/external_ssd/Data/samples/jpsi_misid.yaml
+cuts:
+    brem_2  : L2_HASBREMADDED == 1
+    region  : L1_BREMHYPOAREA == 2 && L2_BREMHYPOAREA == 2
+    mass    : B_const_mass_M > 5150
+target:
+  variable : B_M
+  quantity : RMS
+processing:
+  ncores : 13
+# --------------------------
+saving:
+  plt_dir : plots/binning/resolution
+general:
+  size   : [20, 10]
+  zrange : [0, 350]
+plots:
+    brem_pos:
+      L2_BREMHYPOROW:
+        binning:
+          nbin: 64 
+          min : 0 
+          max : 64 
+        label: ECAL${}_{X}$
+        isobin: true
+      L2_BREMHYPOCOL:
+        binning:
+          nbin: 64 
+          min : 0 
+          max : 64 
+        label : ECAL${}_{Y}$
+        isobin: true

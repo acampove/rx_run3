@@ -1,0 +1,41 @@
+# If OS candidates pollute SS sample:
+# 
+# - One electron is low quality. This config plots chi2 of one electron vs the other
+# - One electron is high momentum and track is almost straight. This config plots momenta
+
+definitions : 
+  ep_mom : L1_P / 1000
+  ep_chi : L1_TRCHI2DOF
+  # -----------
+  em_mom : L2_P / 1000
+  em_chi : L2_TRCHI2DOF
+saving:
+    plt_dir : plots/2d/ep_em_momentum
+selection:
+  cuts:
+    bdt : mva_cmb > 0.95 && mva_prc > 0.80
+general:
+    size : [15, 10]
+plots_2d:
+  - [ep_chi,         em_chi, null, ep_em_chi2    , true]
+  - [ep_mom,         em_mom, null, ep_em_momentum, true]
+  - [B_Mass, B_const_mass_M, null, mass_raw_dtf  , true]
+axes:
+  ep_chi:
+      binning : [0, 3, 60]
+      label   : '$\chi^2(e_1)[GeV]$'
+  em_chi:
+      binning : [0, 3, 60]
+      label   : '$\chi^2(e_2)[GeV]$'
+  ep_mom:
+      binning : [3, 200, 60]
+      label   : '$p(e_1)[GeV]$'
+  em_mom:
+      binning : [3, 200, 60]
+      label   : '$p(e_2)[GeV]$'
+  B_Mass:
+      binning : [4500, 6000, 40]
+      label   : '$M_{corr}(B^+)[MeV]$'
+  B_const_mass_M:
+      binning : [4500, 6000, 40]
+      label   : '$M_{DTF}(B^+)[MeV]$'

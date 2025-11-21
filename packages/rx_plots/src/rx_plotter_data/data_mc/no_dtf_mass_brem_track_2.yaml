@@ -1,0 +1,56 @@
+# It is run with:
+# data_mc -q jpsi -d DATA* -s Bu_JpsiK_ee_eq_DPC -t Hlt2RD_BuToKpEE_MVA -c no_dtf_mass_brem_track_2 -b 0
+
+general:
+  size : [12, 8]
+definitions :
+  Jpsi_DTF_HEAD_MASS : TMath::Sqrt(TMath::Power(Jpsi_DTF_HEAD_PE,2) - TMath::Power(Jpsi_DTF_HEAD_PX, 2) - TMath::Power(Jpsi_DTF_HEAD_PY, 2) - TMath::Power(Jpsi_DTF_HEAD_PZ, 2))
+  nbrem      : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
+  B_M_corr   : B_M_brem_track_2
+  Jpsi_M_corr: Jpsi_M_brem_track_2
+selection:
+  q2     : (1)
+  mass   : B_const_mass_M > 5160
+plots:
+    B_M:
+      normalized : true
+      binning : [4200, 6000, 40]
+      yscale  : linear
+      labels  : ['M$(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+      styling :
+        linestyle: '-'
+    B_M_corr:
+      normalized : true
+      binning : [4200, 6000, 40]
+      yscale  : linear
+      labels  : ['M${}_{corr}(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+      styling :
+        linestyle: '-'
+    Jpsi_M_corr:
+      normalized : true
+      binning : [2100, 3500, 40]
+      yscale  : linear
+      labels  : ['M${}_{corr}(J/\psi(\to ee))$', '']
+      normalize : True
+      styling :
+        linestyle: '-'
+    Jpsi_M:
+      normalized : true
+      binning : [2100, 3500, 40]
+      yscale  : linear
+      labels  : ['M$(J/\psi(\to ee))$', '']
+      normalize : True
+      styling :
+        linestyle: '-'
+    Jpsi_DTF_HEAD_MASS:
+      normalized : true
+      binning : [2100, 3500, 40]
+      yscale  : linear
+      labels  : ['M${}_{DTF}(J/\psi(\to ee))$', '']
+      normalize : True
+      styling :
+        linestyle: '-'
+style:
+  skip_lines : true

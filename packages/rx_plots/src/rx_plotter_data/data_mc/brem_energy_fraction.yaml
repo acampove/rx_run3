@@ -1,0 +1,35 @@
+# This config makes plots needed to plot the fraction of energy in brem out of the track energy
+
+general:
+  size : [12, 8]
+definitions :
+  nbrem       : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
+  L1_TRACK_PT : TMath::Sqrt( TMath::Power(L1_TRACK_PX, 2) + TMath::Power(L1_TRACK_PY, 2) )
+  L1_TRACK_PE : TMath::Sqrt( TMath::Power(L1_TRACK_PT, 2) + TMath::Power(L1_TRACK_PZ, 2) )
+  L1_momentum : (1 - L1_BREMHYPOENERGY / L1_TRACK_PE) * L1_TRACK_PT
+  L1_eloss    : L1_BREMHYPOENERGY / L1_TRACK_PE
+selection:
+  eta      : L1_ETA < 4
+  energy   : L1_BREMHYPOENERGY > 0
+  momentum : L1_momentum > 2500
+  mass     : B_const_mass_M > 5160
+plots:
+    L1_eloss:
+      binning    : [0, 1, 60]
+      yscale     : linear 
+      labels     : ['Energy Loss', 'Normalized']
+      normalized : True
+      styling:
+        linestyle : '-'
+    B_M_brem_track_2:
+      binning    : [4500, 6000, 60]
+      yscale     : linear
+      labels     : ['B mass', 'Normalized']
+      normalized : True
+      styling:
+        linestyle : '-'
+plugin:
+  stats:
+    L1_eloss :
+      mean : $\mu$={:.3f}
+      rms  : $\sigma$={:.3f}

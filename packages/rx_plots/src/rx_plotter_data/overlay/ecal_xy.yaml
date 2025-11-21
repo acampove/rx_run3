@@ -1,0 +1,26 @@
+general:
+  size : [10, 8]
+definitions:
+  nbrem    : L1_BremMultiplicity + L2_BremMultiplicity
+overide_selection:
+  mass     : B_const_mass_M > 5180
+overlay:
+  Inner : L1_BREMHYPOAREA == 2 && L2_BREMHYPOAREA == 2
+  Outer : L1_BREMHYPOAREA == 0 && L2_BREMHYPOAREA == 0
+plots:
+    ecalo_bias.B_M:
+        binning    : [4500, 6000, 100]
+        yscale     : 'linear'
+        labels     : ['$M(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'ecalo_bias_bmass'
+        normalized : true 
+    B_M:
+        binning    : [4500, 6000, 100]
+        yscale     : 'linear'
+        labels     : ['$M(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass'
+        normalized : true 
+style:
+  skip_lines : true 

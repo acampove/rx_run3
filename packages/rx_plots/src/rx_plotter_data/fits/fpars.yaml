@@ -1,0 +1,69 @@
+# This is what all the plots will have in common
+generic_info: &sel
+  trigger : Hlt2RD_BuToKpEE_MVA
+  project : rk
+  q2bin   : jpsi
+  brem    : 1
+# ------------------------------------
+yld_jpsi_ee_rk: # Label of what will be plotted below, used to name PNGs
+  # ------------------------------------
+  # These are common to all graphs
+  # ------------------------------------
+  yrange:
+    - 0
+    - 12e4 
+  size:
+    - 15
+    - 10
+  xlabel: Block
+  ylabel: Yield 
+  title : Yield vs block
+  xaxis :                  
+    name  : block 
+    values: ['4', '3', '2', '1', '5', '6', '7', '8'] # Plot will be WRT this, use strings for custom ordering
+  # ------------------------------------
+  # This is the per-graph configuration
+  # ------------------------------------
+  graphs:
+    yld_jpsi * jpsi_fraction:                 # Value plotted in y-axis
+      info:                                   # Used to select subset of data
+        <<: *sel
+      error : yld_jpsi_error * jpsi_fraction
+      label : $1\gamma$
+      color : blue
+    yld_jpsi * (1 - jpsi_fraction):
+      info:
+        <<: *sel
+      error : yld_jpsi_error * (1 - jpsi_fraction_error)
+      label : $2\gamma$
+      color : red 
+# ------------------------------------
+jpsi_fraction:
+  yrange:
+    - 0
+    - 1
+  size:
+    - 15
+    - 10
+  xlabel: Block
+  ylabel: Brem fraction 
+  title : Brem fraction vs block 
+  xaxis :                  
+    name  : block 
+    values: ['4', '3', '2', '1', '5', '6', '7', '8'] # Plot will be WRT this, use strings for custom ordering
+  # ------------------------------------
+  # This is the per-graph configuration
+  # ------------------------------------
+  graphs:
+    jpsi_fraction:                 # Value plotted in y-axis
+      info:                                   # Used to select subset of data
+        <<: *sel
+      error : jpsi_fraction_error
+      label : $1\gamma$
+      color : blue
+    1 - jpsi_fraction:
+      info:
+        <<: *sel
+      error : jpsi_fraction_error # Error of 1 - x is error of x
+      label : $2\gamma$
+      color : red 

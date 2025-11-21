@@ -1,0 +1,43 @@
+general:
+  size : [15, 10]
+selection:
+  max_ran_entries : -1 
+  cuts:
+    pide : L1_PID_E > 1 && L2_PID_E > 1
+    pidk : K_PID_K > -2
+plots:
+  L1_PID_E : &lep_pid
+    binning : [-15,+15, 30]
+    labels  : ['$\text{PID}_{e}(e^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
+    weights : weights
+    name    : l1_pide
+    styling : &style
+      '0.1 x New':
+        histtype : fill
+        color    : red 
+        alpha    : 0.4
+      '2e-2 x New':
+        histtype : fill
+        color    : red 
+        alpha    : 0.4
+      '1e-4 x New':
+        histtype : fill
+        color    : red 
+        alpha    : 0.4
+      'Original':
+        histtype : fill 
+        color    : green 
+        alpha    : 0.4
+      'New with PID':
+        color    : blue
+  L2_PID_E:
+    <<: *lep_pid
+    name    : l2_pide
+    labels  : ['$\text{PID}_{e}(e^-)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
+  K_PID_K   :
+    binning : [-15,+15, 30]
+    labels  : ['$\text{PID}_{K}(K^+)$', 'Entries'] # Labels are optional, will use varname and Entries as labels if not present
+    weights : weights
+    name    : k_pidk
+    styling :
+      <<: *style

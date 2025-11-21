@@ -1,0 +1,50 @@
+# Config used to plot comparisons of different variables in the same dataframe
+
+general:
+  size : [15, 10]
+selection :
+  q2 : (1)
+comparison:
+  Original:
+    vars:
+      bmass :    B_M
+      jmass : Jpsi_M
+  Corrected:
+    vars:
+      bmass : B_M_brem_track_2
+      jmass : Jpsi_M_brem_track_2
+  Corrected and smeared:
+    vars:
+      bmass : B_M_smr_brem_track_2
+      jmass : Jpsi_M_smr_brem_track_2
+saving:
+  plt_dir : plots/comparison/smear
+plots:
+  bmass:
+    binning    : [4500, 6000, 40]
+    yscale     : linear
+    labels     : ['M$(B^+)$[MeV]', 'Normalized']
+    name       : bmass
+    normalized : true
+    styling:
+      linestyle : '-'
+    vline   :
+      x     : 5280 
+      label : $B^+$ 
+      ls    : --
+      c     : black 
+      lw    : 2
+  jmass:
+    binning    : [2300, 3700, 40]
+    yscale     : linear
+    labels     : ['M$(J/\psi)$[MeV]', 'Normalized']
+    name       : jmass 
+    normalized : true
+    styling:
+      linestyle : '-'
+    vline   :
+      x     : 3097
+      label : $J/\psi$ 
+      ls    : --
+      c     : black 
+      lw    : 2

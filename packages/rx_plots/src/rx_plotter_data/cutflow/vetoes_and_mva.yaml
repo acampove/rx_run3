@@ -1,0 +1,76 @@
+# Config meant to check effect of Vetoes
+# Also added some representative MVA cut
+# Adding DTF mass to check effect of charge misidentification on central q2
+
+general:
+  size : [12, 8]
+selection :
+  jpsi_misid : (1)
+  hop        : (1)
+  cascade    : (1)
+  bdt        : (1) 
+  mass       : (1)
+veto : &cuts
+cutflow:
+  low :
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    MVA            : (mva_prc > 0.7) && (mva_cmb > 0.8)
+  central:
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    MVA            : (mva_prc > 0.7) && (mva_cmb > 0.8)
+  jpsi:
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    MVA            : (mva_prc > 0.7) && (mva_cmb > 0.8)
+  psi2:
+    None           : (1)
+    HOP            : hop_mass > 4500 
+    Cascade        : swp_cascade_mass_swp    > 1900
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    MVA            : (mva_prc > 0.7) && (mva_cmb > 0.8)
+  high:
+    None           : (1)
+    HOP            : hop_mass > 3000 
+    Cascade        : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
+    $J/\psi$ MisID : swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
+    MVA            : (mva_prc > 0.7) && (mva_cmb > 0.8)
+saving:
+  plt_dir : plots/cutflow/vetoes
+plots:
+    B_M_brem_track_2:
+        binning    : [4500, 6000, 30]
+        yscale     : 'linear'
+        labels     : ['M${}_{corr}(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass_brem_track_2'
+        normalized : true
+        styling:
+          histtype : step
+    B_M :
+        binning    : [4500, 6000, 30]
+        yscale     : 'linear'
+        labels     : ['M$(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass'
+        normalized : true
+        styling:
+          histtype : step
+    B_const_mass_M :
+        binning    : [5000, 5800, 30]
+        yscale     : 'linear'
+        labels     : ['M${}_{DTF}(B^+)$', 'Normalized']
+        title      : ''
+        name       : 'bmass_dtf'
+        normalized : true
+        styling:
+          histtype : step
+style:
+  skip_lines : true

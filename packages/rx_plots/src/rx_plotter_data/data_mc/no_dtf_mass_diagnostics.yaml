@@ -1,0 +1,130 @@
+# This config makes plots needed to check good data/MC agreement
+# It was created to check investigate the source of dissagreements in lineshapes
+# It is run with:
+# data_mc -q jpsi -d DATA* -s Bu_JpsiK_ee_eq_DPC -t Hlt2RD_BuToKpEE_MVA -c no_dtf_mass -b 0
+
+general:
+  size : [12, 8]
+definitions :
+  B_DIRA_OWNPV_norm : (1 - B_DIRA_OWNPV) * 1000000
+  nbrem      : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2)
+  min_ll_pt  : TMath::Min(L1_PT , L2_PT)
+  max_ll_pt  : TMath::Max(L1_PT , L2_PT)
+  min_ll_eta : TMath::Min(L1_ETA , L2_ETA)
+  max_ll_eta : TMath::Max(L1_ETA , L2_ETA)
+selection:
+  mass   : B_const_mass_M > 5160
+plots:
+    nPVs:
+      normalized : true
+      binning : [0, 10, 10]
+      yscale  : 'linear'
+      labels  : ['nPVs', '']
+      normalize : True
+      styling:
+        linestyle : '-'
+    B_const_mass_M:
+      normalized : true
+      binning : [5100, 5500, 40]
+      yscale  : 'linear'
+      labels  : ['M${}_{DTF}(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+    B_PT :
+      normalized : true
+      binning : [0, 20000, 40]
+      yscale  : linear
+      labels  : ['$p_T(B^+)$', '']
+    H_PT :
+      normalized : true
+      binning : [0, 10000, 40]
+      yscale  : linear 
+      labels  : ['$p_T(K^+)$', '']
+    B_ETA :
+      normalized : true
+      binning : [2, 5, 40]
+      yscale  : linear 
+      labels  : ['$\eta(B^+)$', '']
+    Jpsi_PT :
+      normalized : true
+      binning : [0, 15000, 40]
+      yscale  : linear
+      labels  : ['$p_T(J/\psi)$', '']
+    Jpsi_ETA :
+      normalized : true
+      binning : [2, 5, 40]
+      yscale  : linear 
+      labels  : ['$\eta(J/\psi)$', '']
+    Jpsi_IPCHI2_OWNPV:
+      normalized : true
+      binning : [0, 500, 40]
+      yscale  : linear
+      labels  : ['$IP_{\chi^2}(J/\psi)$', '']
+    Jpsi_CHI2DOF:
+      normalized : true
+      binning : [0, 6, 40]
+      yscale  : linear
+      labels  : ['$\chi^2/dof(J/\psi)$', '']
+    B_M:
+      normalized : true
+      binning : [4500, 6000, 40]
+      yscale  : linear
+      labels  : ['M$(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+    Jpsi_M:
+      normalized : true
+      binning : [2300, 3400, 40]
+      yscale  : linear
+      labels  : ['M$(J/\psi(\to ee))$', '']
+      normalize : True
+    ecalo_bias_B_M:
+      normalized : true
+      binning : [4500, 6000, 40]
+      yscale  : linear
+      labels  : ['M${}_{corr}(B^+ \to J/\psi(\to ee)K^+)$', '']
+      normalize : True
+    B_ENDVERTEX_CHI2DOF:
+      normalized : true
+      binning : [0, 5, 40]
+      yscale  : linear
+      labels  : ['$\chi^2/dof(B^+)$', '']
+      normalize : True
+    B_DIRA_OWNPV_norm:
+      normalized : true
+      binning : [0, 20, 40]
+      yscale  : 'linear'
+      labels  : ['1M x (1-DIRA$(B^+)$ )', '']
+    B_FDCHI2_OWNPV :
+      normalized : true
+      binning : [0, 10000, 40]
+      yscale  : linear 
+      labels  : ['$FD_{\chi^2}(B^+)$', '']
+    min_ll_pt:
+      normalized : true
+      binning : [0, 5000, 40]
+      yscale  : linear
+      labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
+    max_ll_pt:
+      normalized : true
+      binning : [0, 8000, 40]
+      yscale  : linear
+      labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+    min_ll_eta:
+      normalized : true
+      binning : [1.5, 5, 30]
+      yscale  : linear 
+      labels  : ['$\min(\eta(e^+), \eta(e^-))$', '']
+    max_ll_eta:
+      normalized : true
+      binning : [1.5, 5, 30]
+      yscale  : linear 
+      labels  : ['$\max(\eta(e^+), \eta(e^-))$', '']
+style:
+  skip_lines : true
+plugin:
+    fwhm:
+      vars:
+        - B_M
+      obs    : [4500, 6000]
+      plot   : true        
+      format : FWHM={:.0f} MeV 
+      add_std: True        

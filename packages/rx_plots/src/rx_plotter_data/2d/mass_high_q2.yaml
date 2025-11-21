@@ -1,0 +1,25 @@
+# Config used to make 2D plots of mass vs q2 in high q2 bin
+# Needed to study shaping of mass distribution under q2_track cut
+
+saving:
+    plt_dir : plots/2d/mass_q2/high_q2
+selection:
+  cuts:
+    bdt    : (1)
+    mass   : (1)
+general:
+    size : [15, 10]
+plots_2d:
+    - [B_Mass, q2    , null, 'Bmass_q2_org', true]
+    - [B_Mass, q2_dtf, null, 'Bmass_q2_dtf', true]
+    - [q2    , q2_dtf, null, 'q2_q2_dtf'   , true]
+axes:
+    B_Mass:
+        binning : [4500, 7000, 100]
+        label   : '$M_{corr}(B^+)$[MeV]'
+    q2 :
+        binning : [15000000, 22000000, 100]
+        label   : '$q^2$[MeV${}^2$]'
+    q2_dtf :
+        binning : [15000000, 22000000, 100]
+        label   : '$q_{DTF}^2$[MeV${}^2$]'

@@ -1,0 +1,49 @@
+[tool.poetry]
+name         = 'rx_plotter'
+version      = '0.0.0'
+description  = 'Project meant to create simple plots for RX studies' 
+readme       = 'README.md'
+include      = ['src/rx_plotter_data/**/*.yaml']
+packages     = [
+{include='rx_plotter'        , from='src'},
+{include='rx_plotter_scripts', from='src'}]
+
+[tool.poetry.dependencies]
+python           = '>=3.10,<3.13'
+typer            = '*'
+apd              = '*'
+hist             = '*'
+boost-histogram  = '*'
+mplhep           = '*'
+matplotlib       = '*'
+pandas           = '*'
+numpy            = '*'
+numexpr          = '*'
+omegaconf        = '*'
+formulate        = '*'
+pytest           = {version = '*', optional         =true}
+
+[build-system]
+requires      = [
+    'poetry-core>=1.0.0',
+    'poetry-dynamic-versioning>=1.0.0'
+]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry.extras]
+dev    = ['pytest']
+
+[tool.poetry.scripts]
+rxplt               = 'rx_plotter.cli:app'
+high_q2cut          ='rx_plotter_scripts.high_q2cut:main'
+leakage             ='rx_plotter_scripts.leakage:main'
+compare             ='rx_plotter_scripts.compare:main'
+data_mc             ='rx_plotter_scripts.data_mc:main'
+binned              ='rx_plotter_scripts.binned:main'
+overlay             ='rx_plotter_scripts.overlay:main'
+cutflow             ='rx_plotter_scripts.cutflow:main'
+plot_2d             ='rx_plotter_scripts.plot_2d:main'
+validate_nopid      ='rx_plotter_scripts.validate_nopid:main'
+mass_bias_correction='rx_plotter_scripts.mass_bias_correction:main'
+efficiency_vs_q2    ='rx_plotter_scripts.efficiency_vs_q2:main'
+run123              ='rx_plotter_scripts.run123:main'

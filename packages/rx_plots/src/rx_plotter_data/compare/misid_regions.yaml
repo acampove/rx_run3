@@ -1,0 +1,49 @@
+# Config used to compare different regions used in fits to extract hadronic misid
+
+# TODO: For the selection, the pion and kaon tagging should be controlled through a
+# command line argument
+general:
+  size : [15, 10]
+selection:
+  #pid_l : ((L1_PROBNN_E < 0.2 || L1_PID_E < 3.0) && L1_PROBNN_K < 0.1 ) && ((L2_PROBNN_E < 0.2 || L2_PID_E < 3.0) && L1_PROBNN_K < 0.1) # Pions
+  pid_l : ((L1_PROBNN_E < 0.2 || L1_PID_E < 3.0) && L1_PROBNN_K > 0.1 ) && ((L2_PROBNN_E < 0.2 || L2_PID_E < 3.0) && L1_PROBNN_K > 0.1) # Kaons
+  bdt   : mva_cmb > 0.8 && mva_prc > 0.6
+comparison:
+  Signal:
+    vars:
+      bmass : B_Mass
+  Pion like:
+    vars:
+      bmass : B_Mass_kpipi
+  Kaon like:
+    vars:
+      bmass : B_Mass_kkk
+saving:
+  plt_dir : plots/misid_regions
+plots:
+  bmass:
+    binning    : [4500, 7000, 50]
+    yscale     : linear
+    labels     : ['M$(K^+e^+e^-)$[MeV]', 'Entries/50 MeV']
+    name       : bmass
+    normalized : false 
+    weights    : weight
+    styling:
+      Signal:
+        histtype : fill
+        alpha    : 0.7
+        color    : gray
+      Kaon like:
+        histtype : step
+        linestyle: '-'
+        color    : blue
+      Pion like:
+        histtype : step
+        linestyle: '-'
+        color    : red
+    vline   :
+      x     : 5280
+      label : $B^+$
+      ls    : --
+      c     : black
+      lw    : 1

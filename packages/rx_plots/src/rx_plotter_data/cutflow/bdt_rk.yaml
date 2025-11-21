@@ -1,0 +1,112 @@
+# Config used to check effect of BDT cut on shape of unconstrained B mass
+# BDT is progressively tightened
+
+styling: &style
+  None:
+    histtype : fill 
+    linestyle: '-'
+    alpha    : 0.3
+    color    : gray
+  cmb > 0.3:
+    histtype : step
+    linestyle: ':'
+  cmb > 0.4:
+    histtype : step
+    linestyle: ':'
+  cmb > 0.5:
+    histtype : step
+    linestyle: ':'
+  cmb > 0.6:
+    histtype : step
+    linestyle: ':'
+  cmb > 0.8:
+    histtype : step
+    linestyle: ':'
+  cmb > 0.95:
+    histtype : step
+    linestyle: ':'
+  prc > 0.2:
+    histtype : step
+    linestyle: '-'
+  prc > 0.3:
+    histtype : step
+    linestyle: '-'
+  prc > 0.4:
+    histtype : step
+    linestyle: '-'
+  prc > 0.5:
+    histtype : step
+    linestyle: '-'
+  prc > 0.6:
+    histtype : step
+    linestyle: '-'
+  prc > 0.8:
+    histtype : step
+    linestyle: '-'
+general:
+  size : [15, 10]
+selection :
+  bdt     : (1) 
+  mass      : (1)
+cutflow:
+  low :
+    None      : (1)
+    cmb > 0.3 : mva_cmb > 0.3
+    cmb > 0.5 : mva_cmb > 0.5
+    cmb > 0.6 : mva_cmb > 0.6
+    prc > 0.3 : mva_cmb > 0.6 && mva_prc > 0.3
+    prc > 0.5 : mva_cmb > 0.6 && mva_prc > 0.5
+    prc > 0.6 : mva_cmb > 0.6 && mva_prc > 0.6
+  central:
+    None      : (1)
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    cmb > 0.95: mva_cmb > 0.95
+    prc > 0.2 : mva_cmb > 0.95 && mva_prc > 0.2
+    prc > 0.4 : mva_cmb > 0.95 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.95 && mva_prc > 0.6
+  jpsi:
+    None      : (1)
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    cmb > 0.95: mva_cmb > 0.95
+    prc > 0.2 : mva_cmb > 0.95 && mva_prc > 0.2
+    prc > 0.4 : mva_cmb > 0.95 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.95 && mva_prc > 0.6
+  psi2:
+    None      : (1)
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    cmb > 0.95: mva_cmb > 0.95
+    prc > 0.2 : mva_cmb > 0.95 && mva_prc > 0.2
+    prc > 0.4 : mva_cmb > 0.95 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.95 && mva_prc > 0.6
+  high:
+    None      : (1)
+    cmb > 0.4 : mva_cmb > 0.4
+    cmb > 0.6 : mva_cmb > 0.6
+    cmb > 0.8 : mva_cmb > 0.8
+    prc > 0.4 : mva_cmb > 0.8 && mva_prc > 0.4
+    prc > 0.6 : mva_cmb > 0.8 && mva_prc > 0.6
+    prc > 0.8 : mva_cmb > 0.8 && mva_prc > 0.8
+saving:
+  plt_dir : cutflow/bdt
+plots:
+  B_M_brem_track_2:
+    binning    : [4500, 6000, 30]
+    yscale     : 'linear'
+    labels     : ['$\text{M}_{corr}(B^+)$', 'Normalized']
+    title      : ''
+    name       : 'bmass_brem_track_2'
+    normalized : true
+    styling:
+      <<: *style
+  B_M :
+    binning    : [4500, 6000, 30]
+    yscale     : 'linear'
+    labels     : ['M$(B^+)$', 'Normalized']
+    title      : ''
+    name       : 'bmass'
+    normalized : true
+    styling:
+      <<: *style

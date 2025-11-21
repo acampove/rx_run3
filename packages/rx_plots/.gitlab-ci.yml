@@ -1,0 +1,39 @@
+# -----------
+default:
+  image: docker.io/acampove/rx_run3:v3
+  tags:
+    - cvmfs
+  id_tokens:
+    LBAP_CI_JOB_JWT:  # generates a JSON Web Token (JWT) and assigns it to the env var $LBAP_CI_JOB_JWT
+      aud: https://lbap.app.cern.ch
+before_script:
+    - git config --global color.ui always # Enable colored output for git
+# -----------
+stages :
+  - build
+# -----------
+build:
+  cache:
+    key:
+      files :
+        - pyproject.toml
+    paths:
+      - ~/.cache/pip
+  stage: build 
+  variables:
+    ANADIR : /eos/lhcb/wg/RD/RX_run3
+  script:
+    - source /opt/root-install/bin/thisroot.sh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_USER_KEY" | tr -d '\r' > ~/.ssh/id_rsa_user
+    - chmod 600 ~/.ssh/id_rsa_user
+    - echo ~/.ssh
+    - ls ~/.ssh
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+# -----------
+    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' pip install poetry 
+    - GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa_user -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' poetry install --extras 'dev'
+    - eval "$(apd-login)"  # authenticate with Analysis Productions using this JWT
+    - root -l -q root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/anaprod/lhcb/MC/2024/TUPLE.ROOT/00298319/0000/00298319_00000001_1.tuple.root
+# -----------

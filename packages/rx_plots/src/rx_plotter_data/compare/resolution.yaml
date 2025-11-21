@@ -1,0 +1,57 @@
+general:
+  size : [15, 10]
+definitions:
+  max_ll_pt   : TMath::Max(L1_TRACK_PT, L2_TRACK_PT)
+selection:
+  mass  : B_const_mass_M > 5160
+comparison:
+  Original:
+    vars:
+      bmass :    B_M
+      jmass : Jpsi_M
+  Corrected:
+    vars:
+      bmass : B_M_brem_track_2
+      jmass : Jpsi_M_brem_track_2
+  Corrected and L0(nPVs):
+    cuts:
+      npv   : nPVs < 4
+      L0    : max_ll_pt > 2500
+    vars:
+      bmass : B_M_brem_track_2
+      jmass : Jpsi_M_brem_track_2
+saving:
+  plt_dir : plots/comparison/resolution
+plots:
+  bmass:
+    binning    : [4500, 6500, 40]
+    yscale     : linear
+    labels     : ['$M(B^+)$', 'Normalized']
+    name       : bmass_correction
+    normalized : true
+    vline :
+      x     : 5280
+      label : $B^{+(0)}$
+      ls    : ':'
+      c     : green
+  nLongTracks:
+    binning    : [0, 400, 20]
+    yscale     : linear
+    labels     : ['Long Tracks', 'Normalized']
+    name       : long_tracks
+    normalized : true
+    styling :          
+      linestyle: '-'
+  nPVs:
+    binning    : [1, 7, 6]
+    yscale     : linear
+    labels     : ['nPVs', 'Normalized']
+    name       : npv 
+    normalized : true
+plugin:
+  fwhm:
+    bmass:
+      obs    : [4500, 6000]
+      plot   : true        
+      format : FWHM={:.0f} MeV
+      add_std: True

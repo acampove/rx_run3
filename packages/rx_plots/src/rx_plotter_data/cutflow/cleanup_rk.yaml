@@ -1,0 +1,147 @@
+# Config used to make cutflow plot showing effect of vetoes
+
+styling: &style
+  None:
+    histtype : fill 
+    linestyle: '-'
+    alpha    : 0.3
+  $\text{MVA}_{CMB} > 0.3$ :
+    histtype : step
+    linestyle: '-'
+  HOP:
+    histtype : step
+    linestyle: '-'
+  Cascade:
+    histtype : step
+    linestyle: '-'
+  $J/\psi$ misID:
+    histtype : step
+    linestyle: '-'
+general:
+  size : [15, 10]
+selection:
+  bdt       : (1)
+  hop       : (1)
+  cascade   : (1)
+  jpsi_misid: (1)
+  mass      : (1)
+definitions:
+  otk_mas : B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+  ttk_mas : B_VTXISO_B_TwoTracks_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+cutflow:
+  low:
+    None                     : hop_mass >  0
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb  > 0.3
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+  central:
+    None                     : hop_mass >  0
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb  > 0.3
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+  jpsi:
+    None                     : hop_mass >  0
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb  > 0.3
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+  psi2S:
+    None                     : hop_mass >  0
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb  > 0.3
+    HOP                      : hop_mass >  4500
+    Cascade                  : swp_cascade_mass_swp    > 1900
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+  high:
+    None                     : hop_mass >  0
+    $\text{MVA}_{CMB} > 0.3$ : mva_cmb  > 0.3
+    HOP                      : hop_mass >  3000
+    Cascade                  : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
+    $J/\psi$ misID           : swp_jpsi_misid_mass_swp > 3150 || swp_jpsi_misid_mass_swp < 3050
+plots:
+    otk_mas:
+        binning    : [4000, 8000, 60]
+        yscale     : 'log'
+        labels     : ['$\text{Iso}_{1Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : '1Trk_mas'
+        normalized : false
+        styling:
+          <<: *style
+    ttk_mas:
+        binning    : [4000, 8000, 60]
+        yscale     : 'log'
+        labels     : ['$\text{Iso}_{2Trk}^{Mass}\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : '2Trk_mas'
+        normalized : false
+        styling:
+          <<: *style
+    swp_cascade_mass_swp:
+        binning    : [1600, 2200, 60]
+        yscale     : 'linear'
+        labels     : ['M$(K,\ell_{\to\pi})\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : 'mass_cascade'
+        normalized : false
+        styling:
+          <<: *style
+    swp_jpsi_misid_mass_swp:
+        binning    : [2900, 3300, 60]
+        yscale     : 'linear'
+        labels     : ['M$(K_{\to\ell},\ell)\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : 'mass_jpsi_misid'
+        normalized : false
+        styling:
+          <<: *style
+    hop_mass:
+        binning    : [0, 7000, 60]
+        yscale     : 'linear'
+        labels     : ['$M_{HOP}(B^+)\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : 'bmass_hop'
+        normalized : false
+        styling:
+          <<: *style
+    B_M:
+        binning    : [4500, 6500, 60]
+        yscale     : log
+        labels     : ['$M(B^+)\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : 'bmass'
+        normalized : false
+        styling:
+          <<: *style
+    B_Mass:
+        binning    : [4500, 6500, 60]
+        yscale     : log
+        labels     : ['$M_{corr}(B^+)\;[\text{MeV}]$', 'Entries']
+        title      : ''
+        name       : 'bmass_brem_corr'
+        normalized : false
+        styling:
+          <<: *style
+    mva_cmb:
+        binning    : [0.7, 1.0, 60]
+        yscale     : 'linear'
+        labels     : ['$\text{MVA}_{CMB}$', 'Entries']
+        title      : ''
+        name       : 'mva_cmb'
+        normalized : false
+        styling:
+          <<: *style
+    q2:
+        binning    : [0.0, 22000000, 60]
+        yscale     : 'linear'
+        labels     : ['$q^2\;[\text{GeV}^2]$', 'Entries']
+        title      : ''
+        name       : 'q2'
+        normalized : false
+        styling:
+          <<: *style
+style:
+  skip_lines : false
+saving:
+  plt_dir : cutflow/cleanup

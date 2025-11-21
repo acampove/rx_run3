@@ -1,0 +1,143 @@
+styling: &sty
+  histtype : step
+  linestyle: '-'
+general:
+  size : [15, 10]
+selection:
+  bdt : (1)
+  mas : B_const_mass_M > 5250 && B_const_mass_M < 5300
+cutflow:
+  Blocks 1 and 2 : block == 1 || block == 2
+  Blocks 3 and 4 : block == 3 || block == 4
+  Block 5        : block == 5
+  Block 6        : block == 6
+  Blocks 7 and 8 : block == 7 || block == 8
+saving:
+  plt_dir : overlay/block_quality
+plots:
+  B_const_mass_M:
+    binning    : [5000, 5500, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{M}_\text{DTF}(B^+)$', 'Entries']
+    title      : ''
+    name       : 'bmass_dtf'
+    normalized : true
+    styling:
+      <<: *sty
+  B_M:
+    binning    : [4500, 6000, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{M}(B^+)$', 'Entries']
+    title      : ''
+    name       : 'bmass'
+    normalized : true
+    styling:
+      <<: *sty
+  B_Mass:
+    binning    : [4500, 6000, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{M}_{corr}(B^+)$', 'Entries']
+    title      : ''
+    name       : 'bmass_corr'
+    normalized : true
+    styling:
+      <<: *sty
+  Jpsi_M:
+    binning    : [2500, 3400, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{M}(J/\psi)$', 'Entries']
+    title      : ''
+    name       : 'jmass'
+    normalized : true
+    styling:
+      <<: *sty
+  Jpsi_Mass:
+    binning    : [2500, 3400, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{M}_{corr}(J/\psi)$', 'Entries']
+    title      : ''
+    name       : 'jmass_corr'
+    normalized : true
+    styling:
+      <<: *sty
+  B_ENDVERTEX_CHI2:
+    binning    : [0, 20, 60]
+    yscale     : 'log'
+    labels     : ['$\chi^2_{vtx}$', 'Entries']
+    title      : ''
+    name       : 'bchi2'
+    normalized : true
+    styling:
+      <<: *sty
+  mva_cmb:
+    binning    : [0, 1, 60]
+    yscale     : 'log'
+    labels     : ['$\text{MVA}_{CMB}$', 'Entries']
+    title      : ''
+    name       : 'mva_cmb'
+    normalized : true
+    styling:
+      <<: *sty
+  mva_prc:
+    binning    : [0, 1, 60]
+    yscale     : 'log'
+    labels     : ['$\text{MVA}_{PRC}$', 'Entries']
+    title      : ''
+    name       : 'mva_prc'
+    normalized : true
+    styling:
+      <<: *sty
+  L1_PIDe:
+    binning    : [1, 20, 40]
+    yscale     : 'linear'
+    labels     : ['$\text{PID}_{e}(e^+)$', 'Entries']
+    title      : ''
+    name       : 'l1_pide'
+    normalized : true
+    styling:
+      <<: *sty
+  L2_PIDe:
+    binning    : [1, 20, 40]
+    yscale     : 'linear'
+    labels     : ['$\text{PID}_{e}(e^-)$', 'Entries']
+    title      : ''
+    name       : 'l2_pide'
+    normalized : true
+    styling:
+      <<: *sty
+  H_PID_K:
+    binning    : [-5, 20, 60]
+    yscale     : 'linear'
+    labels     : ['$\text{PID}_{K}(K)$', 'Entries']
+    title      : ''
+    name       : 'k_pidk'
+    normalized : true
+    styling:
+      <<: *sty
+  L1_TRACK_GhostProb:
+    binning    : [0, 0.3, 60]
+    yscale     : 'log'
+    labels     : ['$\text{Ghost}^{prob}(e^+)$', 'Entries']
+    title      : ''
+    name       : 'l1_ghost'
+    normalized : true
+    styling:
+      <<: *sty
+  L2_TRACK_GhostProb:
+    binning    : [0, 0.3, 60]
+    yscale     : 'log'
+    labels     : ['$\text{Ghost}^{prob}(e^-)$', 'Entries']
+    title      : ''
+    name       : 'l2_ghost'
+    normalized : true
+    styling:
+      <<: *sty
+  H_TRACK_GhostProb:
+    binning    : [0, 0.3, 60]
+    yscale     : 'log'
+    labels     : ['$\text{Prob}^{ghost}(K)$', 'Entries']
+    title      : ''
+    name       : 'k_ghost'
+    normalized : true
+    styling:
+      <<: *sty
