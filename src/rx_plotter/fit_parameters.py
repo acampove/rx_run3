@@ -1,11 +1,13 @@
 '''
 Module holding FitParameters class
 '''
+import matplotlib.pyplot as plt
 
+from pathlib                        import Path
 from dmu.generic                    import utilities as gut
 from rx_plotter.fit_parameters_conf import FitParametersConf, GraphConf, Info, PlotConf
 from fitter                         import ParameterReader
-from dmu                            import LogStore
+from dmu                            import LogStore, Measurement
 
 log=LogStore.add_logger('rx_plots:fit_parameters')
 # ----------------------
@@ -39,8 +41,27 @@ class FitParameters:
 
         return FitParametersConf(**data)
     # ----------------------
-    def _plot_data(
+    def _get_values(
+        self,
+        ms    : Measurement, 
+        expr  : str, 
+        error : str) -> tuple[float,float]:
+        '''
+        Parameters
+        -------------
+        ms: Measurement instance
+        expr: String describing y value
+        error: String describing error in yvalue
+
+        Returns
+        -------------
+        Tuple with y value and error 
+        '''
+        return 1, 1 
+    # ----------------------
+    def _plot_graph(
         self, 
+        expr : str,
         pcfg : PlotConf,
         gcfg : GraphConf) -> None:
         '''
@@ -48,29 +69,46 @@ class FitParameters:
 
         Parameters
         -------------
+        expr : Expression to plot, i.e. y axis
         pcfg : Plotting configuration for a group of graphs
-        gcfg : Plotting configuration for a signle graph
+        gcfg : Plotting configuration for a single graph
         '''
         info : Info = gcfg.info
-        pcfg.xaxis
 
-        ms   = self._rdr(
-            block    = 3, 
-            brem     = info.brem, 
-            trigger  = info.trigger, 
-            project  = info.project,
-            q2bin    = info.q2bin)
+        data  = info.model_dump()
+        name  = pcfg.xaxis.name
+        xvals = pcfg.xaxis.values
 
-        print(ms)
+        yvals = []
+        yerrs = []
+        for value in xvals:
+            data[name] = value
+            ms = self._rdr(**data)
+            yval, yerr = self._get_values(ms=ms, expr=expr, error=gcfg.error)
+
+            yvals.append(yval)
+            yerrs.append(yerr)
+
+        plt.errorbar(x=xvals, y=yvals, yerr=yerrs, label=gcfg.label)
     # ----------------------
-    def run(self) -> None:
+    def run(self, out_path : Path) -> None:
         '''
-        Starts plotting
+        Runs plotting
+
+        Parameters
+        -----------------
+        out_path: Directory path where plots will be saved
         '''
         for plot_name, plot_cfg in self._cfg.root.items():
             log.info(f'Plotting {plot_name}')
+            plt.figure(num = plot_name, figsize=plot_cfg.size)
+
             for expr, graph_cfg in plot_cfg.graphs.items():
                 log.debug(f'    {expr}')
 
-                self._plot_data(pcfg = plot_cfg, gcfg = graph_cfg)
+                self._plot_graph(expr = expr, pcfg = plot_cfg, gcfg = graph_cfg)
+                plt.ylim(plot_cfg.yrange)
+
+            plt.savefig(out_path / f'{plot_name}.png')
+            plt.close(fig = plot_name)
 # ----------------------
