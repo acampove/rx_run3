@@ -1,0 +1,195 @@
+# This config is meant to specify how plotting of toys should be done
+# when running ToyPlotter
+
+general:
+  size: [15, 10]
+
+saving:
+  plt_dir: toys/plots
+
+correlation:
+  size     : [20, 15]
+  title    : Correlation matrix 
+  annot    : true
+  fmt      : '.3f'
+  vmin     : -1.0
+  vmax     : +1.0
+  cmap     : Spectral 
+  linewidth: 0.5
+  annot_kws:
+    size : 15 
+  rotation :
+    x    : 45
+
+generated:
+  x     : -1 
+  label : Generated
+  ls    : --
+  c     : red
+  lw    : 1
+
+pulls:
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
+
+plots:
+  valid:
+    binning: [-1, 3, 4]
+    yscale: 'linear'
+    labels: ['Validity', 'Entries']
+    styling:
+      Toys:
+        histtype : step
+        linestyle: '-'
+
+  yld_signal_val:
+    binning: [0, 5000, 60]
+    yscale: 'linear'
+    labels: ['$N_{sig}$', 'Entries']
+  yld_signal_err:
+    binning: [0, 500, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(N_{sig})$', 'Entries']
+  yld_signal_unc:
+    binning: [-3, 10, 60]
+    yscale: 'linear'
+    labels: ['$\delta(N_{sig})[\%]$', 'Entries']
+
+  yld_combinatorial_val:
+    binning: [0, 5000, 60]
+    yscale: 'linear'
+    labels: ['Combinatorial', 'Entries']
+  yld_combinatorial_err:
+    binning: [0, 500, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(Combinatorial)$', 'Entries']
+    format: '{:.0f}'
+
+  yld_jpsi_leakage_val:
+    binning: [0, 5000, 60]
+    yscale: 'linear'
+    labels: ['$J/\psi\text{ leakage}$', 'Entries']
+  yld_jpsi_leakage_err:
+    binning: [0, 500, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(J/\psi\text{ leakage})$', 'Entries']
+    format: '{:.0f}'
+
+  yld_kkk_val:
+    binning: [0, 4, 60]
+    yscale: 'linear'
+    labels: ['$B^+\to KKK$', 'Entries']
+  yld_kkk_err:
+    binning: [0, 4, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(B^+\to KKK)$', 'Entries']
+    format: '{:.0f}'
+
+  yld_kpipi_val:
+    binning: [0, 10, 60]
+    yscale: 'linear'
+    labels: ['$B^+\to K\pi\pi$', 'Entries']
+  yld_kpipi_err:
+    binning: [0, 10, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(B^+\to K\pi\pi)$', 'Entries']
+    format: '{:.0f}'
+
+  pscale_yld_Bd_Kstee_eq_btosllball05_DPC_val:
+    binning: [0, 1, 60]
+    yscale: 'linear'
+    labels: ['$s(B_d\to K^{*0}e^+e^-)$', 'Entries']
+  pscale_yld_Bd_Kstee_eq_btosllball05_DPC_err:
+    binning: [0, 0.8, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(s(B_d\to K^{*0}e^+e^-))$', 'Entries']
+    format: '{:.3f}'
+
+  pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_val:
+    binning: [0, 1, 60]
+    yscale: 'linear'
+    labels: ['$s(B_u\to K^{*+}e^+e^-)$', 'Entries']
+  pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_err:
+    binning: [0, 0.8, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(s(B_u\to K^{*+}e^+e^-))$', 'Entries']
+    format: '{:.3f}'
+
+  mu_hypexp_combinatorial_main_1_val:
+    binning: [4000, 5000, 60]
+    yscale: 'linear'
+    labels: ['$\mu_{HypExp}$', 'Entries']
+  mu_hypexp_combinatorial_main_1_err:
+    binning: [0, 100, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\mu_{HypExp})$', 'Entries']
+    format: '{:.0f}'
+
+  ap_hypexp_combinatorial_main_1_val:
+    binning: [0, 0.1, 60]
+    yscale: 'linear'
+    labels: ['$\alpha_{HypExp}$', 'Entries']
+  ap_hypexp_combinatorial_main_1_err:
+    binning: [0, 0.01, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\alpha_{HypExp})$', 'Entries']
+    format: '{:.3f}'
+
+  bt_hypexp_combinatorial_main_1_val:
+    binning: [0, 0.003, 60]
+    yscale: 'linear'
+    labels: ['$\beta_{HypExp}$', 'Entries']
+  bt_hypexp_combinatorial_main_1_err:
+    binning: [0, 0.003, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\beta_{HypExp})$', 'Entries']
+    format: '{:.3f}'
+plugin:
+  pulls:
+    yld_signal_pul : {}
+    yld_combinatorial_pul: {}
+    yld_jpsi_leakage_pul: {}
+    yld_kkk_pul: {}
+    yld_kpipi_pul: {}
+    pscale_yld_Bd_Kstee_eq_btosllball05_DPC_pul: {}
+    pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_pul: {}
+    mu_hypexp_combinatorial_main_1_pul: {}
+    ap_hypexp_combinatorial_main_1_pul: {}
+    bt_hypexp_combinatorial_main_1_pul: {}
+  errors:
+    yld_signal_unc:
+      format : '{:.2f}'
+      symbol : '\delta'
+    yld_signal_err :
+      format : '{:.0f}'
+    yld_combinatorial_err:
+      format: '{:.0f}'
+    yld_jpsi_leakage_err:
+      format: '{:.0f}'
+    yld_kkk_err:
+      format: '{:.0f}'
+    yld_kpipi_err:
+      format: '{:.0f}'
+    pscale_yld_Bd_Kstee_eq_btosllball05_DPC_err:
+      format: '{:.3f}'
+    pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC_err:
+      format: '{:.3f}'
+    ap_hypexp_combinatorial_main_1_err:
+      format: '{:.3f}'
+    bt_hypexp_combinatorial_main_1_err:
+      format: '{:.3f}'
+    mu_hypexp_combinatorial_main_1_err:
+      format: '{:.0f}'
+  stats:
+    valid:
+      mean : validity rate={:.1%}
+
+summary:
+  median : 
+    - yld_signal_unc
+  mean : 
+    - valid
+  pulls:
+    - yld_signal_pul

@@ -1,0 +1,109 @@
+# This config is meant to specify how plotting of toys should be done
+# when running the test for ToyPlotter
+
+general:
+  size: [15, 10]
+
+
+correlation:
+  size     : [20, 15]
+  title    : Correlation matrix 
+  annot    : true
+  fmt      : '.3f'
+  vmin     : 0.0
+  vmax     : 1.0
+  cmap     : Spectral 
+  linewidth: 0.5
+  annot_kws:
+    size : 12 
+  rotation :
+    x    : 45
+
+generated:
+  x     : -1 
+  label : Generated
+  ls    : --
+  c     : red
+  lw    : 1
+
+saving:
+  plt_dir: toys/tests/integration
+
+pulls:
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
+
+plots:
+  mu_val:
+    binning: [5180, 5220, 60]
+    yscale: 'linear'
+    labels: ['$\mu$', 'Entries']
+  mu_err:
+    binning: [0.0, 5., 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\mu)$', 'Entries']
+  
+  nbkg_val:
+    binning: [700, 1300, 60]
+    yscale: 'linear'
+    labels: ['nbkg', 'Entries']
+  nbkg_err:
+    binning: [0, 50, 60]
+    yscale: 'linear'
+    labels: ['nbkg_err', 'Entries']
+  
+  nsig_val:
+    binning: [750, 1250, 60]
+    yscale: 'linear'
+    labels: ['nsig', 'Entries']
+  nsig_err:
+    binning: [0, 100, 60]
+    yscale: 'linear'
+    labels: ['nsig_err', 'Entries']
+
+  sg_val:
+    binning: [35, 65, 60]
+    yscale: 'linear'
+    labels: ['$\sigma$', 'Entries']
+  sg_err:
+    binning: [0.0, 4, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(\sigma)$', 'Entries']
+
+  c_val:
+    binning: [-0.002, 0.0, 60]
+    yscale: 'linear'
+    labels: ['c val', 'Entries']
+  c_err:
+    binning: [0.0, 0.0001, 60]
+    yscale: 'linear'
+    labels: ['c err', 'Entries']
+plugin:
+  pulls:
+    c_pul   : {}
+    mu_pul  : {}
+    sg_pul  : {}
+    nbkg_pul: {}
+    nsig_pul: {}
+  errors:
+    c_err  :
+      format : '{:.3f}'
+    mu_err :
+      format : '{:.3f}'
+    sg_err :
+      format : '{:.2f}'
+    nbkg_err :
+      format : '{:.3f}'
+    nsig_err :
+      format : '{:.2f}'
+
+summary:
+  median : 
+    - mu_err
+    - sg_err
+  mean : 
+    - valid 
+  pulls:
+    - mu_pul

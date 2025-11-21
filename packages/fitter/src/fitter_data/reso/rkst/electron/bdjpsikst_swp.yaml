@@ -1,0 +1,12 @@
+output_directory : reso/rkst/electron/bdjpsikst_swp
+categories:
+  main:
+    model : KDE1DimFFT
+sample        : Bd_JpsiKst_ee_had_swp
+fit:
+  strategy  : KDE1DimFFT
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    gauss_1 : Gauss 

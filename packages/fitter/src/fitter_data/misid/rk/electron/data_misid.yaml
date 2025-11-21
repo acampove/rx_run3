@@ -1,0 +1,37 @@
+# This config is used to control how the data model
+# is built for the fit to the misID control regions
+
+output_directory : rare/rk/electron/misid/data
+selection:
+  kkk  : (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K > 0.1
+  kpipi: (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K < 0.1
+model:
+  yields    : model/yields/rk/misid_electron.yaml
+  observable:
+    kpipi:
+      name : B_Mass_kpipi
+      range:
+        - 4500
+        - 6000
+    kkk:
+      name : B_Mass_kkk
+      range:
+        - 4500
+        - 6000
+  components:
+    combinatorial : misid/rk/electron/combinatorial.yaml
+    kpipi         : misid/rk/electron/kpipi.yaml
+    kkk           : misid/rk/electron/kkk.yaml
+  constraints:
+    yields : [] # Constraints on rare yields have to be calculated with correct noPID trigger
+fit:
+  strategy :
+    retry :
+      ntries : 4
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 30
+  stacked : True
+  d_leg :
+    combinatorial : Combinatorial
+    kpipi         : $B^+\to K^+\pi^-\pi^+$
+    kkk           : $B^+\to K^+K^-K^+$

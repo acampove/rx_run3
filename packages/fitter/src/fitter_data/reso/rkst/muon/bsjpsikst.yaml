@@ -1,0 +1,29 @@
+output_directory : reso/rkst/muon/bsjpsikst
+categories:
+  main:
+    model :
+      - dscb
+      - gauss
+sample        : Bs_JpsiKst_mm_eq_DPC
+shared        : 
+  - mu
+  - sg
+float         :
+  - sg
+reparametrize : {}
+fix           : {}
+fit:
+  strategy  :
+    retry   :
+      ntries        : 10
+      pvalue_thresh : 0.05
+      ignore_status : true
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  plot_range:
+    - 5100
+    - 5500
+  d_leg :
+    gauss_1 : Gauss 
+    dscb_1  : DSCB 

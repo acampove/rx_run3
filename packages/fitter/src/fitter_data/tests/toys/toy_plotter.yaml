@@ -1,0 +1,89 @@
+# This config is meant to specify how plotting of toys should be done
+# when running the test for ToyPlotter
+
+general:
+  size: [15, 10]
+
+saving:
+  plt_dir: toys/tests
+
+correlation:
+  size     : [20, 15]
+  title    : Correlation matrix 
+  annot    : true
+  fmt      : '.3f'
+  vmin     : 0.0
+  vmax     : 1.0
+  cmap     : Spectral 
+  linewidth: 0.5
+  annot_kws:
+    size : 12 
+  rotation :
+    x    : 45
+
+generated:
+  x     : -1 
+  label : Generated
+  ls    : --
+  c     : red
+  lw    : 1
+
+pulls:
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
+
+plots:
+  valid:
+    binning: [-1, 3, 4]
+    yscale: 'linear'
+    labels: ['Validity', 'Entries']
+    styling:
+      Toys:
+        histtype : step
+        linestyle: '-'
+  a_unc:
+    binning: [0, 200, 60]
+    yscale: 'linear'
+    labels: ['$\delta(a)[\%]$', 'Entries']
+  a_val:
+    binning: [-4.0, 4.0, 60]
+    yscale: 'linear'
+    labels: ['a', 'Entries']
+  a_err:
+    binning: [0.6, 1.4, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(a)$', 'Entries']
+  b_val:
+    binning: [800, 1200, 60]
+    yscale: 'linear'
+    labels: ['b', 'Entries']
+  b_err:
+    binning: [25, 35, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(b)$', 'Entries']
+plugin:
+  pulls:
+    a_pul : {}
+    b_pul : {}
+  errors:
+    a_err :
+      format : '{:.3f}'
+    b_err :
+      format : '{:.2f}'
+    a_unc:
+      format : '{:.2f}'
+      symbol : '\delta(a)'
+  stats:
+    valid:
+      mean : validity rate={:.1%}
+
+summary:
+  median : 
+    - a_unc
+    - b_unc
+  mean : 
+    - valid 
+  pulls:
+    - a_pul

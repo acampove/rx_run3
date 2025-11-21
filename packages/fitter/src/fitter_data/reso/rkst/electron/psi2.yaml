@@ -1,0 +1,25 @@
+output_directory : reso/rkst/electron/psi2
+categories:
+  main:
+    model :
+      - dscb
+sample        : Bd_psi2SKst_ee_eq_DPC
+shared        : 
+  - mu
+  - sg
+float         :
+  - mu
+  - sg
+reparametrize : {}
+fix           : {}
+fit:
+  strategy  :
+    retry   :
+      ntries        : 10
+      pvalue_thresh : 0.05
+      ignore_status : true
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    dscb_1 : DSCB 

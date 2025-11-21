@@ -1,0 +1,11 @@
+output_directory : /reso/rkst/electron/ccbar/
+ccbar_samples:
+  - Bd_JpsiX_ee_eq_JpsiInAcc
+  - Bu_JpsiX_ee_eq_JpsiInAcc
+  - Bs_JpsiX_ee_eq_JpsiInAcc
+weights:
+  dec : 1
+  sam : 1
+fitting:
+  bandwidth : 20
+  padding   : False

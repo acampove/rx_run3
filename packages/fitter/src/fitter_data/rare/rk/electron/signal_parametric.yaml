@@ -1,0 +1,30 @@
+output_directory : rare/electron/signal 
+categories:
+  brem_one : 
+    selection : 
+      brem1 : nbrem == 1
+    model :
+      - dscb
+  brem_two :
+    selection :
+      brem2 : nbrem == 2
+    model :
+      - dscb
+sample        : Bu_Kee_eq_btosllball05_DPC
+shared        :
+  - mu
+  - sg
+float         :
+  - mu
+  - sg
+reparametrize : {}
+fix           : {}
+fit:
+  strategy  :
+    retry   :
+      ntries        : 10
+      pvalue_thresh : 0.05
+      ignore_status : false 
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 30
+  stacked : True
