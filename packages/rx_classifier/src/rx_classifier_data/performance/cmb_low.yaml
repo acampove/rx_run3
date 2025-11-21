@@ -1,0 +1,52 @@
+# Config file used to control
+# 
+# - Which samples are compared
+# - Which models are compared
+# - How to plot the comparisons, colors, etc
+#
+# Used for the low q2 bin, checks performance of models trained in different q2 bins
+
+samples : &default
+  signal:
+    name    : Bu_Kee_eq_btosllball05_DPC
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : low 
+    selection :
+      bdt   : (1)
+  background: 
+    name    : DATA*
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : low 
+    selection :
+      bdt   : (1)
+      mass  : B_Mass > 5500
+plotting:
+  title: Performance on low $q^2$ bin, for different classifiers
+  minx : 0.5
+  miny : 0.5
+cases:
+  on low $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p0/low
+    color  : black 
+    samples:
+      <<: *default
+  on low SS $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p5/low
+    color  : red 
+    samples:
+      <<: *default
+  on central $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p0/central
+    color  : blue 
+    samples:
+      <<: *default
+  on central SS $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p5/central
+    color  : green 
+    samples:
+      <<: *default
+  on high $q^2$:
+    model  : /home/acampove/external_ssd/mva/cmb/v7p0/high
+    color  : orange
+    samples:
+      <<: *default

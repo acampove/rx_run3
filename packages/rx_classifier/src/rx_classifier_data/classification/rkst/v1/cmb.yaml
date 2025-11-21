@@ -1,0 +1,430 @@
+# Config file used to configure training of classifier for combinatorial background
+style: &sty
+  Signal:
+    histtype  : step
+    linestyle : '-' 
+    color     : blue 
+  Background:
+    histtype  : step 
+    linestyle : '-' 
+    color     : red
+
+features:
+  low:
+    - B_PT 
+    - B_BPVDIRA 
+    - B_IPCHI2_OWNPV
+    - B_FDCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF
+    #
+    - Kst_PT
+    - Kst_BPVDIRA
+    - Kst_BPVIPCHI2
+    - Kst_BPVFDCHI2
+    - Kst_END_VCHI2DOF
+    #
+    - Jpsi_PT 
+    - Jpsi_BPVDIRA 
+    - Jpsi_IPCHI2_OWNPV
+    - Jpsi_FDCHI2_OWNPV
+    - Jpsi_END_VCHI2DOF
+    #
+    - min_hh_pt
+    - max_hh_pt
+    - min_hh_ipc
+    - max_hh_ipc
+    #
+    - min_LL_pt
+    - max_LL_pt
+    - min_ll_ipc
+    - max_ll_ipc
+  central:
+    - B_PT 
+    - B_IPCHI2_OWNPV
+    - B_FDCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF
+    - B_BPVDIRA 
+    #
+    - Kst_PT
+    - Kst_BPVIPCHI2
+    - Kst_BPVFDCHI2
+    - Kst_END_VCHI2DOF
+    - Kst_BPVDIRA
+    #
+    - Jpsi_PT 
+    - Jpsi_IPCHI2_OWNPV
+    - Jpsi_FDCHI2_OWNPV
+    - Jpsi_END_VCHI2DOF
+    - Jpsi_BPVDIRA 
+    #
+    - min_hh_pt
+    - max_hh_pt
+    - min_hh_ipc
+    - max_hh_ipc
+    #
+    - min_LL_pt
+    - max_LL_pt
+    - min_ll_ipc
+    - max_ll_ipc
+  high:
+    - B_PT 
+    - B_IPCHI2_OWNPV
+    - B_FDCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF
+    - B_BPVDIRA 
+    #
+    - Kst_PT
+    - Kst_BPVIPCHI2
+    - Kst_BPVFDCHI2
+    - Kst_END_VCHI2DOF
+    - Kst_BPVDIRA
+    #
+    - Jpsi_PT 
+    - Jpsi_IPCHI2_OWNPV
+    - Jpsi_FDCHI2_OWNPV
+    - Jpsi_END_VCHI2DOF
+    - Jpsi_BPVDIRA 
+    #
+    - min_hh_pt
+    - max_hh_pt
+    - min_hh_ipc
+    - max_hh_ipc
+    #
+    - min_LL_pt
+    - max_LL_pt
+    - min_ll_ipc
+    - max_ll_ipc
+# ----------------------------------
+dataset :
+  selection:
+    bkg :
+      bdt      : (1)
+      kst_mass : 'TMath::Abs(Kst_M - 896) > 100' 
+      mass     : B_M > 5500 # This selection will be applied before definitions
+    sig :                            # Cannot be put in function of aliases
+      bdt      : (1)
+      mass     : (1)
+  samples:
+    sig :
+      sample : Bd_Kstee_eq_btosllball05_DPC # can be a list
+      trigger: Hlt2RD_B0ToKpPimEE_MVA
+    bkg :
+      sample : DATA*
+      trigger: Hlt2RD_B0ToKpPimEE_MVA
+  define :
+    b_pt       : B_PT_brem_track_2
+    j_pt       : Jpsi_PT_brem_track_2
+    b_dira     : B_DIRA_OWNPV_brem_track_2
+    j_dira     : Jpsi_DIRA_OWNPV_brem_track_2
+    min_LL_pt  : TMath::Min(L1_PT              , L2_PT)
+    max_LL_pt  : TMath::Max(L1_PT              , L2_PT)
+    min_ll_pt  : TMath::Min(L1_PT_brem_track_2 , L2_PT_brem_track_2)
+    max_ll_pt  : TMath::Max(L1_PT_brem_track_2 , L2_PT_brem_track_2)
+    min_ll_ipc : TMath::Min(L1_IPCHI2_OWNPV    , L2_IPCHI2_OWNPV)
+    max_ll_ipc : TMath::Max(L1_IPCHI2_OWNPV    , L2_IPCHI2_OWNPV)
+    #
+    min_hh_pt  : TMath::Min(H1_PT              , H2_PT)
+    max_hh_pt  : TMath::Max(H1_PT              , H2_PT)
+    min_hh_ipc : TMath::Min(H1_IPCHI2_OWNPV    , H2_IPCHI2_OWNPV)
+    max_hh_ipc : TMath::Max(H1_IPCHI2_OWNPV    , H2_IPCHI2_OWNPV)
+training :
+  nfold    : 10
+  rdm_stat : 1
+  hyper:
+    low :
+      learning_rate    : 0.088
+      max_depth        :     6 
+      max_features     :     3 
+      min_samples_split:     2
+      min_samples_leaf :    24 
+      n_estimators     :   312 
+    central :
+      learning_rate    : 0.097
+      max_depth        : 7
+      max_features     : 3
+      min_samples_split: 5
+      min_samples_leaf : 15
+      n_estimators     : 371
+    high :
+      learning_rate    : 0.089
+      max_depth        : 9
+      max_features     : 7
+      min_samples_split: 7
+      min_samples_leaf : 27
+      n_estimators     : 389
+saving:
+  output : mva/rkst/cmb/VERSION
+plotting:
+  roc :
+    min : [0.5, 0.9]
+    annotate:
+      sig_eff : [0.40, 0.5, 0.6, 0.7, 0.8, 0.9]
+      form : '{:.2f}'
+      color: 'green'
+      xoff : -30
+      yoff : -30
+      size :  30
+  correlation:
+    size       : [25, 15]
+    mask_value : 0
+  features:
+    plots:
+      B_PT:
+        normalized : true
+        binning : [0, 30000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T^{org}(B^0)$', '']
+        styling :
+          <<: *sty
+      b_pt:
+        normalized : true
+        binning : [0, 30000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T(B^0)$', '']
+        styling :
+          <<: *sty
+      B_IPCHI2_OWNPV :
+        normalized : true
+        binning : [0, 20, 100]
+        yscale  : 'log'
+        labels  : ['$IP_{\chi^2}(B^0)$', '']
+        styling :
+          <<: *sty
+      B_FDCHI2_OWNPV :
+        normalized : true
+        binning : [0, 10000, 100]
+        yscale  : 'log'
+        labels  : ['$FD_{\chi^2}(B^0)$', '']
+        styling :
+          <<: *sty
+      B_ENDVERTEX_CHI2DOF:
+        normalized : true
+        binning : [0, 9, 100]
+        yscale  : 'log'
+        labels  : ['$\chi^2/dof(B^0)$', '']
+        styling :
+          <<: *sty
+      B_BPVDIRA:
+        normalized : true
+        binning : [0.9995, 1, 100]
+        yscale  : 'log'
+        labels  : ['$\text{DIRA}^{org}(B^0)$', '']
+        styling :
+          <<: *sty
+      b_dira:
+        normalized : true
+        binning : [0.9995, 1, 100]
+        yscale  : 'log'
+        labels  : ['DIRA$(B^0)$', '']
+        styling :
+          <<: *sty
+      #
+      Jpsi_PT:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T^{org}(J/\psi)$', '']
+        styling :
+          <<: *sty
+      j_pt:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T(J/\psi)$', '']
+        styling :
+          <<: *sty
+      Jpsi_IPCHI2_OWNPV:
+        normalized : true
+        binning : [0, 500, 100]
+        yscale  : 'log'
+        labels  : ['$IP_{\chi^2}(J/\psi)$', '']
+        styling :
+          <<: *sty
+      Jpsi_FDCHI2_OWNPV:
+        normalized : true
+        binning : [0, 1000, 100]
+        yscale  : 'log'
+        labels  : ['$FD_{\chi^2}(J/\psi)$', '']
+        styling :
+          <<: *sty
+      Jpsi_END_VCHI2DOF:
+        normalized : true
+        binning : [0, 10, 100]
+        yscale  : 'log'
+        labels  : ['$\chi^2/dof(J/\psi)$', '']
+        styling :
+          <<: *sty
+      Jpsi_BPVDIRA:
+        normalized : true
+        binning : [0.99,  1, 100]
+        yscale  : 'log'
+        labels  : ['$\text{DIRA}^{org}(J/\psi)$', '']
+        styling :
+          <<: *sty
+      j_dira:
+        normalized : true
+        binning : [0.99,  1, 100]
+        yscale  : 'log'
+        labels  : ['DIRA$(J/\psi)$', '']
+        styling :
+          <<: *sty
+      #
+      Kst_PT:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T(K^{*0})$', '']
+        styling :
+          <<: *sty
+      Kst_BPVIPCHI2:
+        normalized : true
+        binning : [0, 500, 100]
+        yscale  : 'log'
+        labels  : ['$IP_{\chi^2}(K^{*0})$', '']
+        styling :
+          <<: *sty
+      Kst_BPVFDCHI2:
+        normalized : true
+        binning : [0, 1000, 100]
+        yscale  : 'log'
+        labels  : ['$FD_{\chi^2}(K^{*0})$', '']
+        styling :
+          <<: *sty
+      Kst_END_VCHI2DOF:
+        normalized : true
+        binning : [0, 10, 100]
+        yscale  : 'log'
+        labels  : ['$\chi^2/dof(K^{*0})$', '']
+        styling :
+          <<: *sty
+      Kst_BPVDIRA:
+        normalized : true
+        binning : [0.99,  1, 100]
+        yscale  : 'log'
+        labels  : ['DIRA$(K^{*0})$', '']
+        styling :
+          <<: *sty
+      #
+      min_LL_pt:
+        normalized : true
+        binning : [0, 10000, 100]
+        yscale  : 'log'
+        labels  : ['$\min(p_T^{org}(e^+), p_T^{org}(e^-))$', '']
+        styling :
+          <<: *sty
+      max_LL_pt:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(p_T^{org}(e^+), p_T^{org}(e^-))$', '']
+        styling :
+          <<: *sty
+      min_ll_pt:
+        normalized : true
+        binning : [0, 10000, 100]
+        yscale  : 'log'
+        labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
+        styling :
+          <<: *sty
+      max_ll_pt:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+        styling :
+          <<: *sty
+      min_ll_ipc:
+        normalized : true
+        binning : [0,  500, 100]
+        yscale  : 'log'
+        labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+        styling :
+          <<: *sty
+      max_ll_ipc:
+        normalized : true
+        binning : [0, 3000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+        styling :
+          <<: *sty
+      #
+      min_hh_pt:
+        normalized : true
+        binning : [0, 10000, 100]
+        yscale  : 'log'
+        labels  : ['$\min(p_T(K^+), p_T(\pi^-))$', '']
+        styling :
+          <<: *sty
+      max_hh_pt:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(p_T(K^+), p_T(\pi^-))$', '']
+        styling :
+          <<: *sty
+      min_hh_ipc:
+        normalized : true
+        binning : [0,  500, 100]
+        yscale  : 'log'
+        labels  : ['$\min(IP_{\chi^2}(K^+), IP_{\chi^2}(\pi^-))$', '']
+        styling :
+          <<: *sty
+      max_hh_ipc:
+        normalized : true
+        binning : [0, 3000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(IP_{\chi^2}(K^+), IP_{\chi^2}(\pi^-))$', '']
+        styling :
+          <<: *sty
+      B_Mass:
+        normalized : true
+        binning : [4400, 6600, 50]
+        yscale  : 'linear'
+        labels  : ['$M(B^0)$', '']
+        styling :
+          <<: *sty
+      B_M:
+        normalized : true
+        binning : [4400, 6600, 50]
+        yscale  : 'linear'
+        labels  : ['$M^{org}(B^0)$', '']
+        styling :
+          <<: *sty
+      Kst_M:
+        normalized : true
+        binning : [650, 1150, 50]
+        yscale  : 'linear'
+        labels  : ['$M(K^{*0})$', '']
+        styling :
+          <<: *sty
+diagnostics:
+  output      : mva/rkst/cmb/VERSION/plots/diagnostics
+  correlations:
+    target :
+      name    : B_Mass
+      overlay :
+        wp:
+          - 0.0
+          - 0.5
+          - 0.7
+          - 0.8
+          - 0.9
+        general:
+          size : [20, 10]
+        saving:
+          plt_dir : mva/rkst/cmb/VERSION/plots/diagnostics
+        plots:
+          B_Mass :
+            binning    : [4500, 6000, 40]
+            yscale     : 'linear'
+            labels     : ['M$(B^0)$', 'Entries']
+            normalized : true
+            styling :
+              <<: *sty
+    methods:
+      - Pearson
+      - Kendall-$\tau$
+    figure:
+      size       : [20, 10]
+      xlabelsize : 25
+      rotate     : 60

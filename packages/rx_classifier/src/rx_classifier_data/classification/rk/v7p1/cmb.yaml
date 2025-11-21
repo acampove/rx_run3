@@ -1,0 +1,283 @@
+# Config file used to configure training of classifier for combinatorial background
+
+features:
+  low:
+    - b_pt
+    - B_IPCHI2_OWNPV
+    - B_FDCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF
+    - b_dira
+    #
+    - j_dira
+    - Jpsi_CHI2DOF
+    - Jpsi_IPCHI2_OWNPV
+    #
+    - max_ll_ipc
+    - min_ll_ipc
+    #
+    - H_PT
+    - H_IPCHI2_OWNPV
+  central:
+    - b_pt
+    - b_dira
+    - B_IPCHI2_OWNPV
+    - B_FDCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF
+    #
+    - j_pt
+    - j_dira
+    - Jpsi_CHI2DOF
+    - Jpsi_IPCHI2_OWNPV
+    #
+    - min_ll_pt
+    - max_ll_ipc
+    - min_ll_ipc
+    #
+    - H_PT
+    - H_IPCHI2_OWNPV
+  high:
+    - b_pt
+    - b_dira
+    - B_IPCHI2_OWNPV
+    - B_ENDVERTEX_CHI2DOF
+    #
+    - j_pt
+    - j_dira
+    - Jpsi_CHI2DOF
+    - Jpsi_IPCHI2_OWNPV
+    #
+    - min_ll_pt
+    - max_ll_ipc
+    - min_ll_ipc
+    #
+    - H_PT
+    - H_IPCHI2_OWNPV
+# ----------------------------------
+hyper               :
+  loss              : log_loss
+  learning_rate     : 0.10
+  max_depth         : 3
+  min_samples_split : 2
+# ----------------------------------
+dataset :
+  override:
+    high :
+      q2 : q2_track >  14300000 && q2_track < 22000000 && q2 < 22000000
+  selection:
+    bkg :
+      bdt  : (1)
+      mass : B_Mass > 5500 # This selection will be applied before definitions
+    sig :                            # Cannot be put in function of aliases
+      bdt  : (1)
+      mass : (1)
+  samples:
+    sig :
+      sample : Bu_Kee_eq_btosllball05_DPC # can be a list
+      trigger: Hlt2RD_BuToKpEE_MVA
+    bkg :
+      sample : DATA*
+      trigger: Hlt2RD_BuToKpEE_MVA
+  define :
+    b_pt       : brem_track_2.B_PT_brem_track_2
+    j_pt       : brem_track_2.Jpsi_PT_brem_track_2
+    b_dira     : brem_track_2.B_DIRA_OWNPV_brem_track_2
+    j_dira     : brem_track_2.Jpsi_DIRA_OWNPV_brem_track_2
+    min_ll_pt  : TMath::Min(brem_track_2.L1_PT_brem_track_2 , brem_track_2.L2_PT_brem_track_2)
+    max_ll_pt  : TMath::Max(brem_track_2.L1_PT_brem_track_2 , brem_track_2.L2_PT_brem_track_2)
+    min_ll_ipc : TMath::Min(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)
+    max_ll_ipc : TMath::Max(L1_IPCHI2_OWNPV, L2_IPCHI2_OWNPV)
+training :
+  nfold    : 10
+  rdm_stat : 1
+  hyper:
+    low :
+      n_estimators : 70
+    central :
+      n_estimators : 70
+      max_depth    : 4
+    high :
+      n_estimators : 70
+saving:
+  output : mva/cmb/VERSION
+plotting:
+  roc :
+    min : [0.5, 0.9]
+    annotate:
+      sig_eff : [0.40, 0.5, 0.6, 0.7, 0.8, 0.9]
+      form : '{:.2f}'
+      color: 'green'
+      xoff : -30
+      yoff : -30
+      size :  30
+  correlation:
+    size       : [20, 15]
+    mask_value : 0
+  features:
+    plots:
+      b_pt:
+        normalized : true
+        binning : [0, 30000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T(B^+)$', '']
+        styling :
+            linestyle: '-'
+      B_IPCHI2_OWNPV :
+        normalized : true
+        binning : [0, 20, 100]
+        yscale  : 'log'
+        labels  : ['$IP_{\chi^2}(B^+)$', '']
+        styling :
+            linestyle: '-'
+      B_FDCHI2_OWNPV :
+        normalized : true
+        binning : [0, 10000, 100]
+        yscale  : 'log'
+        labels  : ['$FD_{\chi^2}(B^+)$', '']
+        styling :
+            linestyle: '-'
+      B_ENDVERTEX_CHI2DOF:
+        normalized : true
+        binning : [0, 9, 100]
+        yscale  : 'log'
+        labels  : ['$\chi^2/dof(B^+)$', '']
+        styling :
+            linestyle: '-'
+      b_dira:
+        normalized : true
+        binning : [0.9995, 1, 100]
+        yscale  : 'log'
+        labels  : ['DIRA$(B^+)$', '']
+        styling :
+            linestyle: '-'
+      #
+      j_pt:
+        normalized : true
+        binning : [0, 30000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T(J/\psi)$', '']
+        styling :
+            linestyle: '-'
+      Jpsi_IPCHI2_OWNPV:
+        normalized : true
+        binning : [0, 500, 100]
+        yscale  : 'log'
+        labels  : ['$IP_{\chi^2}(J/\psi)$', '']
+        styling :
+            linestyle: '-'
+      Jpsi_CHI2DOF:
+        normalized : true
+        binning : [0, 10, 100]
+        yscale  : 'log'
+        labels  : ['$\chi^2/dof(J/\psi)$', '']
+        styling :
+            linestyle: '-'
+      j_dira:
+        normalized : true
+        binning : [0.99,  1, 100]
+        yscale  : 'log'
+        labels  : ['DIRA$(J/\psi)$', '']
+        styling :
+            linestyle: '-'
+        #
+      min_ll_pt:
+        normalized : true
+        binning : [0, 10000, 100]
+        yscale  : 'log'
+        labels  : ['$\min(p_T(e^+), p_T(e^-))$', '']
+        styling :
+            linestyle: '-'
+      max_ll_pt:
+        normalized : true
+        binning : [0, 20000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(p_T(e^+), p_T(e^-))$', '']
+        styling :
+            linestyle: '-'
+      min_ll_ipc:
+        normalized : true
+        binning : [0,  500, 100]
+        yscale  : 'log'
+        labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+        styling :
+            linestyle: '-'
+      max_ll_ipc:
+        normalized : true
+        binning : [0, 3000, 100]
+        yscale  : 'log'
+        labels  : ['$\max(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+        styling :
+            linestyle: '-'
+        #
+      H_PT :
+        normalized : true
+        binning : [0, 15000, 100]
+        yscale  : 'log'
+        labels  : ['$p_T(K^+)$', '']
+        styling :
+            linestyle: '-'
+      H_IPCHI2_OWNPV:
+        normalized : true
+        binning : [0, 2000, 100]
+        yscale  : 'log'
+        labels  : ['$IP_{\chi^2}(K^+)$', '']
+        styling :
+            linestyle: '-'
+      B_Mass:
+        normalized : true
+        binning : [4400, 6500, 50]
+        yscale  : 'linear'
+        labels  : ['$M(B^+)$', '']
+        styling :
+            linestyle: '-'
+      hop.hop_mass:
+        normalized : true
+        binning : [3000, 7000, 60]
+        yscale  : 'linear'
+        labels  : ['$M_{HOP}(B^+)$', '']
+        styling :
+            linestyle: '-'
+      cascade.swp_cascade_mass_swp:
+        normalized : true
+        binning : [1700, 3000, 60]
+        yscale  : 'linear'
+        labels  : ['$M(K,\ell_{\to\pi})$', '']
+        styling :
+            linestyle: '-'
+      jpsi_misid.swp_jpsi_misid_mass_swp:
+        normalized : true
+        binning : [2000, 4000, 60]
+        yscale  : 'linear'
+        labels  : ['$M(K_{\to\ell},\ell)$', '']
+        styling :
+            linestyle: '-'
+diagnostics:
+  output      : mva/cmb/VERSION/plots/diagnostics
+  correlations:
+    target :
+      name    : B_Mass
+      overlay :
+        wp:
+          - 0.0
+          - 0.5
+          - 0.7
+          - 0.8
+          - 0.9
+        general:
+          size : [20, 10]
+        saving:
+          plt_dir : mva/cmb/VERSION/plots/diagnostics
+        plots:
+          B_Mass :
+            binning    : [4500, 6000, 40]
+            yscale     : 'linear'
+            labels     : ['M$(B^+)$', 'Entries']
+            normalized : true
+            styling :
+              linestyle: '-' # By default there is no line, just pointer
+    methods:
+      - Pearson
+      - Kendall-$\tau$
+    figure:
+      size       : [20, 10]
+      xlabelsize : 25
+      rotate     : 60

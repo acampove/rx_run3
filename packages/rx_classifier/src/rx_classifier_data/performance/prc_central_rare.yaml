@@ -1,0 +1,53 @@
+# This config compares PRec MVAs v6 and v7.
+# Which were both trained with muon low sideband candidates as background proxies
+# They are tested with muon and electron backgrounds
+# --------------------------------
+bp : &samp_bp
+  signal    : &signal
+    name    : Bu_Kee_eq_btosllball05_DPC
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : central
+    selection :
+      bdt   : mva_cmb > 0.6
+  background: 
+    name    : Bu_K2stee_Kpipi_eq_mK1430_DPC
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : central
+    selection :
+      bdt   : mva_cmb > 0.6
+bd : &samp_bd
+  signal    :
+    <<: *signal
+  background: 
+    name    : Bd_Kstee_eq_btosllball05_DPC
+    trigger : Hlt2RD_BuToKpEE_MVA
+    q2bin   : central
+    selection :
+      bdt   : mva_cmb > 0.6
+# --------------------------------
+mva : v5 # will use this MVA files version to load the dataframe
+plotting:
+  title: Performance on central $q^2$ bin
+  minx : 0.0
+  miny : 0.0
+cases:
+  v6 on $B^+$ rare background:
+    model  : /home/acampove/external_ssd/mva/prc/v6/central
+    color  : blue 
+    samples:
+      <<: *samp_bp
+  v7 on $B^+$ rare background:
+    model  : /home/acampove/external_ssd/mva/prc/v7p6/central
+    color  : red 
+    samples:
+      <<: *samp_bp
+  v6 on $B_d$ rare background:
+    model  : /home/acampove/external_ssd/mva/prc/v6/central
+    color  : green 
+    samples:
+      <<: *samp_bd
+  v7 on $B_d$ rare background:
+    model  : /home/acampove/external_ssd/mva/prc/v7p6/central
+    color  : orange 
+    samples:
+      <<: *samp_bd

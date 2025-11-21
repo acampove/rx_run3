@@ -1,0 +1,265 @@
+features:
+  low:
+    - log_b_pt
+    - sqrt_ipchi2
+    - sqrt_jipchi2
+    - acos_dira
+    - log_h_pt
+    - min_ll_ipc
+    - iso_one_mass
+    - iso_one_dchi
+    - iso_cc_mom
+    - iso_cc_ptasy
+    - iso_nc_mom
+    - iso_nc_ptasy
+  central:
+    - log_b_pt
+    - sqrt_ipchi2
+    - sqrt_jipchi2
+    - acos_dira
+    - log_h_pt
+    - min_ll_ipc
+    - iso_one_mass
+    - iso_one_dchi
+    - iso_cc_mom
+    - iso_cc_ptasy
+    - iso_nc_mom
+    - iso_nc_ptasy
+  high:
+    - log_b_pt
+    - sqrt_ipchi2
+    - sqrt_jipchi2
+    - acos_dira
+    - log_h_pt
+    - min_ll_ipc
+    - iso_one_mass
+    - iso_one_dchi
+    - iso_cc_mom
+    - iso_cc_ptasy
+    - iso_nc_mom
+    - iso_nc_ptasy
+# ----------------------------------
+hyper               :
+  loss              : log_loss
+  learning_rate     : 0.10
+  max_depth         : 3
+  min_samples_split : 2
+# ----------------------------------
+dataset :
+  selection:
+    bkg :
+      bdt  : mva_cmb > 0.6
+      mass : B_M < 5100
+    sig :
+      bdt  : mva_cmb > 0.6
+      mass : (1)
+  samples:
+    sig :
+      sample : Bu_Kee_eq_btosllball05_DPC
+      trigger: Hlt2RD_BuToKpEE_MVA
+      definitions:
+        mass                      : brem_track_2.B_M_brem_track_2
+        log_b_pt                  : TMath::Log(brem_track_2.B_PT_brem_track_2)
+        acos_dira                 : TMath::ACos(brem_track_2.B_DIRA_OWNPV_brem_track_2)
+    bkg :
+      sample : DATA*
+      trigger: Hlt2RD_BuToKpMuMu_MVA
+      definitions:
+        mass                      : B_M
+        log_b_pt                  : TMath::Log(B_PT)
+        acos_dira                 : TMath::ACos(B_DIRA_OWNPV)
+  define :
+    sqrt_ipchi2 : TMath::Sqrt(B_IPCHI2_OWNPV)
+    # ----------
+    iso_cc_mom  : B_HEAD_CC_B_ChargedIso_DR2_0p15_CP
+    iso_cc_ptasy: B_HEAD_CC_B_ChargedIso_DR2_0p15_PTASY
+
+    iso_nc_mom  : B_HEAD_NC_B_NeutralIso_DR2_0p15_CP
+    iso_nc_ptasy: B_HEAD_NC_B_NeutralIso_DR2_0p15_PTASY
+
+    iso_one_mass: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2_MASS
+    iso_one_dchi: B_VTXISO_B_OneTrack_DChi2Vtx_9p0_Smallest_DELTACHI2
+    # ----------
+    sqrt_jipchi2: TMath::Sqrt(Jpsi_IPCHI2_OWNPV)
+    log_h_pt    : TMath::Log(H_PT)
+    min_ll_ipc  : TMath::Min(TMath::Sqrt(L1_IPCHI2_OWNPV), TMath::Sqrt(L2_IPCHI2_OWNPV))
+  nan :
+    iso_one_mass : 2000
+    iso_one_dchi : -1
+    iso_cc_mom   : -10000
+    iso_nc_mom   : -10000
+training :
+  nfold    : 10
+  rdm_stat : 1
+  hyper:
+    low :
+      n_estimators : 70
+    central :
+      n_estimators : 70
+      max_depth    : 4
+    high :
+      n_estimators : 70
+saving:
+  output : mva/prc/VERSION
+plotting:
+  roc :
+    min : [0.0, 0.0]
+    annotate:
+      sig_eff : [0.40, 0.5, 0.6, 0.7, 0.8, 0.9]
+      form : '{:.2f}'
+      color: 'green'
+      xoff : -30
+      yoff : -30
+      size :  30
+  correlation:
+    size       : [20, 15]
+    mask_value : 0
+  features:
+    plots:
+      iso_cc_mom:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-20000, 200000, 40]
+        labels  : ['Iso$_{CC}^P(B^+)$MeV', '']
+        styling :
+            linestyle: '-'
+      iso_cc_ptasy:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-1, +1.2, 40]
+        labels  : ['Iso$_{CC}^{p_T, Asym}(B^+)$MeV', '']
+        styling :
+            linestyle: '-'
+      # --------------------
+      iso_nc_mom:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-20000, 100000, 40]
+        labels  : ['Iso$_{NC}^P(B^+)$MeV', '']
+        styling :
+            linestyle: '-'
+      iso_nc_ptasy:
+        normalized : true
+        yscale  : 'linear'
+        binning : [-1, +1.2, 40]
+        labels  : ['Iso$_{NC}^{p_T, Asym}(B^+)$MeV', '']
+        styling :
+            linestyle: '-'
+      # --------------------
+      iso_one_mass:
+        normalized : true
+        binning : [1999, 8000, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{mass}^{1Trk}(B^+)$', '']
+        styling :
+            linestyle: '-'
+      # --------------------
+      iso_one_dchi:
+        normalized : true
+        binning : [-3, 15, 40]
+        yscale  : 'linear'
+        labels  : ['Iso$_{\Delta\chi^2}^{1Trk}(B^+)$', '']
+        styling :
+            linestyle: '-'
+      # --------------------
+      log_b_pt  :
+        normalized : true
+        binning : [6, 11, 40]
+        yscale  : 'linear'
+        labels  : ['$\log(p_T)(B^+)$', '']
+        styling :
+            linestyle: '-'
+      sqrt_ipchi2:
+        normalized : true
+        yscale  : 'linear'
+        binning : [0, 6, 40]
+        labels  : ['$\sqrt{IP_{\chi^2}}(B^+)$', '']
+        styling :
+            linestyle: '-'
+      sqrt_jipchi2:
+        normalized : true
+        binning : [0, 100, 40]
+        yscale  : 'linear'
+        labels  : ['$\sqrt{IP_{\chi^2}}(J/\psi)$', '']
+        styling :
+            linestyle: '-'
+      acos_dira:
+        normalized : true
+        binning : [0, 0.03, 40]
+        yscale  : 'log'
+        labels  : ['$\arccos(DIRA)(B^+)$', '']
+        styling :
+            linestyle: '-'
+      log_h_pt  :
+        normalized : true
+        binning : [1, 10, 40]
+        yscale  : 'linear'
+        labels  : ['$\log(p_T)(K^+)$', '']
+        styling :
+            linestyle: '-'
+      min_ll_ipc:
+        normalized : true
+        binning : [0, 60, 40]
+        yscale  : 'linear'
+        labels  : ['$\min(IP_{\chi^2}(e^+), IP_{\chi^2}(e^-))$', '']
+        styling :
+            linestyle: '-'
+      mass:
+        normalized : true
+        binning : [3500, 6500, 50]
+        yscale  : 'linear'
+        labels  : ['$M(B^+)$', '']
+        styling :
+            linestyle: '-'
+      hop.hop_mass:
+        normalized : true
+        binning : [3000, 7000, 60]
+        yscale  : 'linear'
+        labels  : ['$M_{HOP}(B^+)$', '']
+        styling :
+            linestyle: '-'
+      cascade.swp_cascade_mass_swp:
+        normalized : true
+        binning : [1700, 3000, 60]
+        yscale  : 'linear'
+        labels  : ['$M(K,\ell_{\to\pi})$', '']
+        styling :
+            linestyle: '-'
+      jpsi_misid.swp_jpsi_misid_mass_swp:
+        normalized : true
+        binning : [2000, 4000, 60]
+        yscale  : 'linear'
+        labels  : ['$M(K_{\to\ell},\ell)$', '']
+        styling :
+            linestyle: '-'
+diagnostics:
+  output      : mva/prc/VERSION/plots/diagnostics
+  correlations:
+    target :
+      name    : mass
+      overlay :
+        wp:
+          - 0.0
+          - 0.5
+          - 0.7
+          - 0.8
+          - 0.9
+        general:
+          size : [20, 10]
+        saving:
+          plt_dir : mva/prc/VERSION/plots/diagnostics
+        plots:
+          mass:
+            binning    : [4500, 6000, 40]
+            yscale     : 'linear'
+            labels     : ['M$(B^+)$', 'Entries']
+            normalized : true
+            styling :
+              linestyle: '-' # By default there is no line, just pointer
+    methods:
+      - Pearson
+      - Kendall-$\tau$
+    figure:
+      size       : [20, 10]
+      xlabelsize : 25
+      rotate     : 60

@@ -1,0 +1,30 @@
+# Config file used to control how MVA score is scanned
+samples:
+  signal  : Bu_Kee_eq_btosllball05_DPC
+  control : Bu_JpsiK_ee_eq_DPC
+  trigger : Hlt2RD_BuToKpEE_MVA
+variables:
+  mva_cmb:
+    - 0.5
+    - 0.55
+    - 0.6
+    - 0.65
+    - 0.7
+    - 0.75
+    - 0.8
+    - 0.85
+    - 0.9
+    - 0.95
+    - 0.98
+  mva_prc:
+    - 0.5
+    - 0.55
+    - 0.6
+    - 0.65
+    - 0.7
+    - 0.75
+    - 0.8
+    - 0.85
+    - 0.9
+    - 0.95
+    - 0.98
