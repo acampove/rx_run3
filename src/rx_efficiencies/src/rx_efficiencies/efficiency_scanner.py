@@ -46,10 +46,11 @@ class EfficiencyScanner:
 
         return d_sel
     # --------------------------------
-    def _check_rdf(self, rdf : RDataFrame) -> None:
-        l_variable = [ var.c_str()        for var in rdf.GetColumnNames() ]
+    def _check_rdf(self, rdf : RDF.RNode) -> None:
+        l_variable = [ var.c_str()                for var in rdf.GetColumnNames() ]
+
         # Drop prefix for variables in friend trees
-        l_variable = [ var.split('.')[-1] for var in rdf.GetColumnNames() ]
+        l_variable = [ var.c_str().split('.')[-1] for var in rdf.GetColumnNames() ]
         l_variable = sorted(l_variable)
 
         fail = False
@@ -71,7 +72,7 @@ class EfficiencyScanner:
 
         return False
     # --------------------------------
-    def _get_rdf(self) -> tuple[RDataFrame,str]:
+    def _get_rdf(self) -> tuple[RDF.RNode,str]:
         '''
         Load dataframe and lazily apply selection, except for the scanning part
 
@@ -86,7 +87,7 @@ class EfficiencyScanner:
         trigger = self._cfg['input']['trigger']
 
         gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf()
+        rdf = gtr.get_rdf(per_file = False)
         uid = gtr.get_uid()
 
         self._check_rdf(rdf=rdf)
@@ -107,7 +108,7 @@ class EfficiencyScanner:
 
         return rdf, hsh
     # --------------------------------
-    def _scan_rdf(self, rdf : RDataFrame) -> dict[str,RDataFrame]:
+    def _scan_rdf(self, rdf : RDF.RNode) -> dict[str,RDF.RNode]:
         d_var        = self._cfg['variables']
         [xvar, yvar] = list(d_var.keys())
         arr_xval     = d_var[xvar]
@@ -152,7 +153,7 @@ class EfficiencyScanner:
 
         return df_tgt
     # --------------------------------
-    def _get_yields(self, rdf : RDataFrame) -> pnd.DataFrame:
+    def _get_yields(self, rdf : RDF.RNode) -> pnd.DataFrame:
         '''
         Parameters 
         ------------------
@@ -179,7 +180,7 @@ class EfficiencyScanner:
 
         return pnd.DataFrame(d_data)
     # ----------------------
-    def _set_default_wp_yield(self, rdf : RDataFrame) -> None:
+    def _set_default_wp_yield(self, rdf : RDF.RNode) -> None:
         '''
         This method sets _yld_default value. I.e. yield of MC sample
         for default selection.
