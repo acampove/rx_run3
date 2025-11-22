@@ -9,11 +9,12 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                              import RDataFrame
+from ROOT                              import RDF # type: ignore
 from dmu.logging.log_store             import LogStore
 from dmu.workflow.cache                import Cache
 from dmu.generic                       import hashing
 
+from rx_common.types                   import Trigger
 from rx_data.rdf_getter                import RDFGetter
 from rx_selection                      import selection as sel
 from rx_efficiencies.acceptance_reader import AcceptanceReader
@@ -32,21 +33,18 @@ class EfficiencyCalculator(Cache):
     def __init__(
         self, 
         q2bin   : str, 
-        trigger : str      = 'Hlt2RD_BuToKpEE_MVA',
-        analysis: str      = 'rx',
+        trigger : Trigger  =  Trigger.rk_ee_os,
         sample  : str|None = None):
         '''
         Parameters
         -----------------
         q2bin   : Either low, central or high
         trigger : By default Hlt2RD_BuToKpEE_MVA
-        analysis: By default rx, can be nopid
         sample  : MC sample for which the efficiency is calculated, e.g. Bu_JpsiK_ee_eq_DPC. 
                  If None, will calculate it for all samples found through DecayNames.get_decays() 
         '''
         self._q2bin      = q2bin
         self._year       = '2024'
-        self._analysis   = analysis
         self._trigger    = trigger 
         self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
         self._l_proc     = DecayNames.get_decays() if sample is None else [DecayNames.nic_from_sample(sample=sample)]
@@ -58,7 +56,6 @@ class EfficiencyCalculator(Cache):
             d_sel    = self._get_selection_hash(),
             q2bin    = self._q2bin,
             trigger  = self._trigger,
-            analysis = self._analysis,
             sample   = sample)
 
         self._initialized=False
@@ -176,13 +173,12 @@ class EfficiencyCalculator(Cache):
 
         return nsel
     #------------------------------------------
-    def _get_rdf(self, proc : str, tree_name : str) -> RDataFrame:
+    def _get_rdf(self, proc : str, tree_name : str) -> RDF.RNode:
         sample = DecayNames.sample_from_decay(proc)
 
         gtr = RDFGetter(
             sample  = sample, 
             trigger = self._trigger, 
-            analysis= self._analysis,
             tree    = tree_name)
         rdf = gtr.get_rdf(per_file=False)
 
