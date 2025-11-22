@@ -6,7 +6,6 @@ readme      = 'README.md'
 dependencies= [
 'triggercalib',
 'PyYaml',
-'data-manipulation-utilities',
 'tensorflow',
 'zfit>=0.25',
 'zfit-physics',
