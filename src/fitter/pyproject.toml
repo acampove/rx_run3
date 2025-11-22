@@ -1,5 +1,5 @@
 [project]
-name = "rx_fitter"
+name = "fitter"
 version = "0.0.1"
 description = "Framework used to handle fits to data and simulation"
 readme = "README.md"
