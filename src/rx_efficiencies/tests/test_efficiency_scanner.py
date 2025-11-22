@@ -6,10 +6,10 @@ import pytest
 import matplotlib.pyplot as plt
 import pandas            as pnd
 
-from pathlib                            import Path
-from dmu.workflow.cache                 import Cache
-from dmu.logging.log_store              import LogStore
-from rx_efficiencies.efficiency_scanner import EfficiencyScanner
+from pathlib                import Path
+from dmu.workflow.cache     import Cache
+from dmu                    import LogStore
+from rx_efficiencies        import EfficiencyScanner
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_scanner')
 # -----------------------------------
