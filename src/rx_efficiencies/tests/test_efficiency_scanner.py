@@ -2,31 +2,25 @@
 Module used to test EfficiencyScanner class
 '''
 
-import os
 import pytest
 import matplotlib.pyplot as plt
 import pandas            as pnd
 
+from pathlib                            import Path
+from dmu.workflow.cache                 import Cache
 from dmu.logging.log_store              import LogStore
 from rx_efficiencies.efficiency_scanner import EfficiencyScanner
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_scanner')
 # -----------------------------------
-class Data:
-    '''
-    Class needed to store attributes
-    '''
-    out_dir = '/tmp/tests/rx_efficiencies/efficiency_scanner'
-# -----------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     LogStore.set_level('rx_efficiencies:efficiency_scanner', 10)
-
-    os.makedirs(Data.out_dir, exist_ok=True)
 # -----------------------------------
 def _plot_values(
-        df  : pnd.DataFrame,
-        name:  str) -> None:
+    df      : pnd.DataFrame,
+    out_dir : Path,
+    name    :  str) -> None:
     '''
     Plot dataframe as an interpolated mesh
     '''
@@ -53,7 +47,7 @@ def _plot_values(
     plt.ylabel('MVA${}_{prec}$')
     plt.tight_layout()
 
-    out_path = f'{Data.out_dir}/{name}.png'
+    out_path = out_dir / f'{name}.png'
     plt.savefig(out_path)
     plt.close()
 # -----------------------------------
@@ -62,7 +56,7 @@ def _plot_values(
     ('Bu_Kee_eq_btosllball05_DPC', 'low'    ),
     ('Bu_Kee_eq_btosllball05_DPC', 'central'),
     ('Bu_Kee_eq_btosllball05_DPC', 'high'   )])
-def test_scan(sample : str, q2bin : str):
+def test_scan(sample : str, q2bin : str, tmp_path : Path):
     '''
     Test efficiency scanning
     '''
@@ -81,8 +75,9 @@ def test_scan(sample : str, q2bin : str):
             }
         }
 
-    obj = EfficiencyScanner(cfg=cfg)
-    df  = obj.run()
+    with Cache.cache_root(path = tmp_path):
+        obj = EfficiencyScanner(cfg=cfg)
+        df  = obj.run()
 
-    _plot_values(df=df, name=f'scan_{q2bin}_{sample}')
+    _plot_values(df=df, name=f'scan_{q2bin}_{sample}', out_dir = tmp_path)
 # -----------------------------------
