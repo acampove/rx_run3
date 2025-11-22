@@ -4,10 +4,9 @@ Module holding AcceptanceCalculator class
 
 import os
 import pprint
-
 import matplotlib.pyplot as plt
 
-from dmu.logging.log_store import LogStore
+from dmu import LogStore
 
 log = LogStore.add_logger('prec_acceptances::calculator')
 #-----------------------------
