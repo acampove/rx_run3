@@ -12,6 +12,7 @@ members   = ['src/*']
 [tool.uv.sources]
 ap_utilities    = { workspace = true }
 ecal_calibration= { workspace = true }
+root_stubs      = { workspace = true }
 rx_calibration  = { workspace = true }
 rx_classifier   = { workspace = true }
 rx_common       = { workspace = true }
@@ -22,6 +23,8 @@ rx_pid          = { workspace = true }
 rx_plots        = { workspace = true }
 rx_q2           = { workspace = true }
 rx_selection    = { workspace = true }
+vector_stubs    = { workspace = true }
+zfit-stubs      = { workspace = true }
 
 [project.optional-dependencies]
 dev = [
