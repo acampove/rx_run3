@@ -1,0 +1,91 @@
+name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
+on: push
+jobs:
+  build:
+    name   : Build distribution
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up micromamba
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        micromamba-version: 'latest'
+        environment-name: myenv
+        create-args: >-
+          python=3.12
+          gxx
+          root
+        channels: conda-forge
+        init-shell: bash
+    - name: Define output directory 
+      run: |
+        ANADIR=$PWD/output
+        echo  "ANADIR=$PWD/output" >> "$GITHUB_ENV"
+    
+        mkdir -p $ANADIR
+    #-----------
+    - name: Cache dependencies installed with poetry 
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pypoetry
+          ~/.cache/pip
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+    #-----------
+    - name: Install pypa/build
+      run: >-
+        micromamba run -n myenv  python3 -m
+        pip install
+        poetry
+        build
+        setuptools_scm
+    #-----------
+    - name: Install project dependencies
+      run: |
+        micromamba run -n myenv poetry install --extras 'dev ml'
+    - name: Install project itself 
+      run: |
+        micromamba run -n myenv pip install --no-deps .
+    - name: Show computed version
+      run: |
+        micromamba run -n myenv python -c "import importlib.metadata; print(importlib.metadata.version('ecal_calibration'))"
+    #-----------
+    - name: Test
+      run: |
+        micromamba run -n myenv pytest tests
+    #-----------
+    - name: Build a binary wheel and a source tarball
+      run:  micromamba run -n myenv python3 -m build
+    #-----------
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+  #--------------------
+  publish-to-pypi:
+    name: >-
+      Publish Python 🐍 distribution 📦 to PyPI
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/ecal_calibration
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Publish distribution 📦 to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+  #--------------------

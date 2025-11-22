@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+disable=logging-fstring-interpolation, too-few-public-methods, line-too-long, no-name-in-module, too-many-locals
+
+[TYPECHECK]
+ignored-modules = numpy
