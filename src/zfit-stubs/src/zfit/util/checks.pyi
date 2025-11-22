@@ -1,0 +1,16 @@
+from _typeshed import Incomplete
+
+class Singleton:
+    def __new__(cls, *_, **__): ...
+
+class NotSpecified(Singleton):
+    def __bool__(self) -> bool: ...
+
+NONE: Incomplete
+
+class ZfitNotImplemented:
+    def __new__(cls, *_, **__) -> None: ...
+
+class RuntimeDependency:
+    def __init__(self, name, how=None, error_msg=None) -> None: ...
+    def __getattr__(self, item): ...

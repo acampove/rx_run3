@@ -1,0 +1,6 @@
+import typing
+from collections.abc import Callable as Callable
+from typing import Any
+
+def convert_to_container(value: Any, container: Callable = ..., non_containers=None, ignore=None, convert_none: bool = False) -> None | typing.Collection: ...
+def is_container(obj): ...

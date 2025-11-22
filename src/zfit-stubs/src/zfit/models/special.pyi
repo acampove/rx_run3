@@ -1,0 +1,19 @@
+from ..core.basemodel import SimpleModelSubclassMixin as SimpleModelSubclassMixin
+from ..core.basepdf import BasePDF as BasePDF
+from ..core.space import supports as supports
+from ..util import ztyping as ztyping
+from ..util.exception import NormRangeNotImplemented as NormRangeNotImplemented
+from .functor import BaseFunctor as BaseFunctor
+
+class SimplePDF(BasePDF):
+    def __init__(self, obs, func, name: str = 'SimplePDF', label=None, norm=None, extended=None, **params) -> None: ...
+    def copy(self, **override_parameters) -> BasePDF: ...
+
+class SimpleFunctorPDF(BaseFunctor, SimplePDF):
+    def __init__(self, obs, pdfs, func, name: str = 'SimpleFunctorPDF', label=None, norm=None, extended=None, **params) -> None: ...
+
+def raise_error_if_norm_range(func): ...
+
+class ZPDF(SimpleModelSubclassMixin, BasePDF):
+    def __init__(self, obs: ztyping.ObsTypeInput, *, name: str = 'ZPDF', label: str | None = None, norm=None, extended=None, **params) -> None: ...
+    def __init_subclass__(cls, **kwargs) -> None: ...
