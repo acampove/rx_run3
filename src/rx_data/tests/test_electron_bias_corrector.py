@@ -12,7 +12,6 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 
 from ROOT                            import RDataFrame
-from pandarallel                     import pandarallel
 from dmu.logging.log_store           import LogStore
 from rx_data.rdf_getter              import RDFGetter
 from rx_data.utilities               import df_from_rdf
@@ -175,7 +174,6 @@ def test_correction_brem_track():
     Use brem_track methods
     '''
     LogStore.set_level('rx_data:electron_bias_corrector', 40)
-    pandarallel.initialize(nb_workers=1, progress_bar=True)
 
     df_org = _get_df(nentries = 10_000)
     df_org = df_org.fillna(-1)
