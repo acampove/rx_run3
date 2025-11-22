@@ -6,17 +6,17 @@ import numpy
 import tqdm
 import pandas as pnd
 
-from ROOT                  import RDataFrame, RDF # type: ignore
+from ROOT                  import RDF # type: ignore
+from dmu.workflow.cache    import Cache
 from dmu.logging.log_store import LogStore
 from dmu.generic           import hashing
-from dmu.generic           import utilities as gut
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
 from rx_efficiencies       import EfficiencyCalculator
 
 log = LogStore.add_logger('rx_efficiencies:efficiency_scanner')
 # --------------------------------
-class EfficiencyScanner:
+class EfficiencyScanner(Cache):
     '''
     Class meant to scan efficiencies in MC samples
 
@@ -27,6 +27,10 @@ class EfficiencyScanner:
     '''
     # --------------------------------
     def __init__(self, cfg : dict):
+        super().__init__(
+                out_path= 'EfficiencyScanner',
+                cfg     = cfg)
+
         self._cfg    = cfg
         [xvar, yvar] = list(cfg['variables'].keys())
 
@@ -211,13 +215,13 @@ class EfficiencyScanner:
         - The identity of the input data
         - The configuration, which specifies the variables to scan and where
         '''
-
         rdf, hsh = self._get_rdf()
+        out_path = f'{self._out_path}/efficiencies_{hsh}.json'
 
-        data = gut.load_cached(hash_obj=[hsh, self._cfg], on_fail=-999)
-        if data != -999:
+        if self._copy_from_cache():
             log.info('Efficiencies cached, reloading them')
-            df = pnd.DataFrame(data)
+            df = pnd.read_json(out_path)
+
             return df
 
         log.info('Efficiencies not cached, recalculating them')
@@ -226,8 +230,8 @@ class EfficiencyScanner:
         df = self._get_yields(rdf=rdf)
         df = self._eff_from_yield(df_tgt=df)
 
-        data = df.to_dict(orient='records')
-        gut.cache_data(data, hash_obj=[hsh, self._cfg])
+        df.to_json(out_path)
+        self._cache()
 
         return df
 # --------------------------------
