@@ -11,6 +11,7 @@ members   = ['src/*']
 
 [tool.uv.sources]
 ap_utilities    = { workspace = true }
+ecal_calibration= { workspace = true }
 rx_calibration  = { workspace = true }
 rx_classifier   = { workspace = true }
 rx_common       = { workspace = true }
