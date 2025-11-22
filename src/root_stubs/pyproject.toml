@@ -1,0 +1,25 @@
+[tool.poetry]
+name        = "root_stubs"
+version     = "0.1.0"
+description = "Example project using ROOT.RDF stubs with Pyright"
+authors     = ["Angel Campoverde <you@example.com>"]
+packages    = ['src']
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.dev-dependencies]
+pyright = "^1.1.312"
+
+[tool.pyright]
+# Enable strict type checking
+typeCheckingMode = "strict"
+
+# Treat the 'typings' folder as extra source for types
+extraPaths = ['src']
+
+# ROOT is a C++ module without source, ignore missing source warning
+reportMissingModuleSource = "none"
+
+# Optional: enforce all returns match declared type
+reportMissingReturn = "error"
