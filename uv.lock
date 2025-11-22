@@ -62,7 +62,7 @@ sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/3e/38/7859ff46355f76
 [[package]]
 name = "ap-utilities"
 version = "0.3.0"
-source = { editable = "packages/ap_utilities" }
+source = { editable = "src/ap_utilities" }
 dependencies = [
     { name = "apd" },
     { name = "logzero" },
@@ -512,7 +512,7 @@ wheels = [
 [[package]]
 name = "dmu"
 version = "0.3.2"
-source = { editable = "packages/dmu" }
+source = { editable = "src/dmu" }
 dependencies = [
     { name = "awkward" },
     { name = "awkward-pandas" },
@@ -1439,7 +1439,7 @@ wheels = [
 [[package]]
 name = "post-ap"
 version = "0.3.8"
-source = { virtual = "packages/post_ap" }
+source = { virtual = "src/post_ap" }
 dependencies = [
     { name = "apd" },
     { name = "data-manipulation-utilities" },
@@ -1718,7 +1718,7 @@ wheels = [
 [[package]]
 name = "rx-calibration"
 version = "0.0.1"
-source = { virtual = "packages/rx_calibration" }
+source = { virtual = "src/rx_calibration" }
 dependencies = [
     { name = "data-manipulation-utilities" },
     { name = "pyyaml" },
@@ -1748,7 +1748,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-classifier"
 version = "0.0.2"
-source = { virtual = "packages/rx_classifier" }
+source = { virtual = "src/rx_classifier" }
 dependencies = [
     { name = "joblib" },
     { name = "matplotlib" },
@@ -1776,7 +1776,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-common"
 version = "0.0.6"
-source = { virtual = "packages/rx_common" }
+source = { virtual = "src/rx_common" }
 dependencies = [
     { name = "pyyaml" },
 ]
@@ -1796,7 +1796,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-data"
 version = "0.0.0"
-source = { virtual = "packages/rx_data" }
+source = { virtual = "src/rx_data" }
 dependencies = [
     { name = "dask" },
     { name = "mplhep" },
@@ -1838,7 +1838,7 @@ provides-extras = ["tst", "net"]
 [[package]]
 name = "rx-efficiencies"
 version = "0.0.1"
-source = { virtual = "packages/rx_efficiencies" }
+source = { virtual = "src/rx_efficiencies" }
 dependencies = [
     { name = "matplotlib" },
     { name = "mplhep" },
@@ -1864,7 +1864,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-fitter"
 version = "0.0.1"
-source = { editable = "packages/fitter" }
+source = { editable = "src/fitter" }
 dependencies = [
     { name = "matplotlib" },
     { name = "mplhep" },
@@ -1902,7 +1902,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-misid"
 version = "0.0.1"
-source = { virtual = "packages/rx_misid" }
+source = { virtual = "src/rx_misid" }
 dependencies = [
     { name = "boost-histogram" },
     { name = "mplhep" },
@@ -1928,7 +1928,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-pid"
 version = "0.0.1"
-source = { virtual = "packages/rx_pid" }
+source = { virtual = "src/rx_pid" }
 dependencies = [
     { name = "fsspec-xrootd" },
     { name = "mplhep" },
@@ -1960,7 +1960,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-plotter"
 version = "0.0.0"
-source = { editable = "packages/rx_plots" }
+source = { editable = "src/rx_plots" }
 dependencies = [
     { name = "apd" },
     { name = "boost-histogram" },
@@ -2000,7 +2000,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-q2"
 version = "0.0.1"
-source = { editable = "packages/rx_q2" }
+source = { editable = "src/rx_q2" }
 dependencies = [
     { name = "jacobi" },
     { name = "matplotlib" },
@@ -2052,7 +2052,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-selection"
 version = "0.1.9"
-source = { editable = "packages/rx_selection" }
+source = { editable = "src/rx_selection" }
 dependencies = [
     { name = "jacobi" },
     { name = "joblib" },
