@@ -1,53 +1,38 @@
-[tool.poetry]
-name        = 'ecal_calibration'
-description = 'Project meant to apply offline corrections to electrons in LHCb'
-version     = '1.7.4'
-readme      = 'README.md'
-
-[tool.poetry.dependencies]
-python  = '>=3.10'
-pandas  = '*'
-bokeh   = '*'
-tqdm    = '*'
-mplhep  = '*'
-scipy   = '*'
-uproot  = '*'
-vector  = '*'
-pyarrow = '*'
-numpy   = '*'
-dask    = {version = '*', extras=['distributed']} 
-pytest  = {version = '*',       optional = true }
-torch   = {version = '*',       optional = true }
-
-[tool.poetry.extras]
-dev  = ['pytest']
-ml   = ['torch']
-# -----------------------------------------
-# Setuptools
-# -----------------------------------------
 [project]
-name        = 'ecal_calibration'
-description = 'Project meant to apply offline corrections to electrons in LHCb'
-readme      = 'README.md'
-dynamic     = ['version']
-
-[build-system]
-requires = ['setuptools>=61', 'setuptools_scm', 'wheel']
-build-backend = 'setuptools.build_meta'
-
-[tool.setuptools_scm]
-version_scheme = 'guess-next-dev'
-local_scheme   = 'no-local-version'
-
-[project.scripts]
-make_toy_decays ='ecal_calibration_scripts.make_toy_decays:main'
-
-[tool.setuptools.package-data]
-ecal_calibration_data=[
-'**/*.yaml',
-'**/*.json',
-'**/*.csv',
+name            = "ecal_calibration"
+version         = '1.7.4'
+description     = "Project meant to apply offline corrections to electrons in LHCb"
+readme          = "README.md"
+requires-python = ">=3.12"
+dependencies    = [
+    "pandas",
+    "bokeh",
+    "tqdm",
+    "mplhep",
+    "scipy",
+    "uproot",
+    "vector",
+    "pyarrow",
+    "numpy",
+    "dask[distributed]",
 ]
 
-[tool.setuptools.packages.find]
-where   = ['src']
+[project.optional-dependencies]
+dev = ["pytest"]
+ml  = ["torch"]
+
+[project.scripts]
+make_toy_decays = "ecal_calibration_scripts.make_toy_decays:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ecal_calibration"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/README.md",
+]
