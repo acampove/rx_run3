@@ -1,11 +1,10 @@
 [project]
-name = "rx_selection"
-version = "0.1.9"
-description = "Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project"
-readme = "README.md"
-requires-python = ">=3.10,<3.13"
-
-dependencies = [
+name            = "rx_selection"
+version         = "0.1.9"
+description     = "Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project"
+readme          = "README.md"
+requires-python = '>=3.12'
+dependencies    = [
     "numexpr>=0.0.0",
     "jacobi>=0.0.0",
     "joblib>=0.0.0",
@@ -24,21 +23,6 @@ make_jobs_list  = "rx_selection_scripts.make_jobs_list:main"
 validate_sample = "rx_selection_scripts.validate_sample:main"
 jmanager_ihep   = "rx_selection_scripts.jmanager_ihep:main"
 
-# Hatch build system
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [tool.uv.sources]
 rx_selection       = { workspace = true }
 rx_selection_data  = { workspace = true }
-
-# Include YAML data files
-[tool.hatch.include]
-files = ["src/rx_selection_data/**/*.yaml"]
-
-# Optional: dynamic versioning via git (like poetry-dynamic-versioning)
-[tool.hatch.version]
-path   = "src/rx_selection"
-scheme = "git" 
-format = "{tag}"  # can be customized if you want PEP440-like versions

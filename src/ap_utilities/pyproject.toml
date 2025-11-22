@@ -1,14 +1,15 @@
 [project]
-name        = 'ap_utilities'
-description = 'Utilities needed for analysis productions in LHCb'
-version     = '0.3.0'
-readme      = 'README.md'
-dependencies= [
-'apd',
-'PyYAML', 
-'tqdm',
-'omegaconf',
-'logzero'] 
+name            = 'ap_utilities'
+description     = 'Utilities needed for analysis productions in LHCb'
+version         = '0.3.0'
+readme          = 'README.md'
+requires-python = '>=3.12'
+dependencies    = [
+    'apd',
+    'PyYAML', 
+    'tqdm',
+    'omegaconf',
+    'logzero'] 
 
 [project.optional-dependencies]
 dev  = ['pytest']

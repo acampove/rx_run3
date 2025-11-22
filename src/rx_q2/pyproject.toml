@@ -1,11 +1,10 @@
 [project]
-name = "rx_q2"
-version = "0.0.1"
-description = "Project used to study mass scales and resolutions"
-readme = "README.md"
-requires-python = ">=3.12,<3.13"
-
-dependencies = [
+name            = "rx_q2"
+version         = "0.0.1"
+description     = "Project used to study mass scales and resolutions"
+readme          = "README.md"
+requires-python = '>=3.12'
+dependencies    = [
     "matplotlib",
     "pydantic",
     "pandas",

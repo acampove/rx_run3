@@ -3,6 +3,7 @@ name        = 'rx_calibration'
 description = 'Project with code needed to interface with calibration projects and provide maps to RX analyses' 
 version     = '0.0.1'
 readme      = 'README.md'
+requires-python = '>=3.12'
 dependencies= [
 'triggercalib',
 'PyYaml',

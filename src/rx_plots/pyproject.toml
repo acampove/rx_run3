@@ -1,11 +1,10 @@
 [project]
-name = "rx_plotter"
-version = "0.0.0"
-description = "Project meant to create simple plots for RX studies"
-readme = "README.md"
-requires-python = ">=3.10,<3.13"
-
-dependencies = [
+name            = "rx_plotter"
+version         = "0.0.0"
+description     = "Project meant to create simple plots for RX studies"
+readme          = "README.md"
+requires-python = '>=3.12'
+dependencies    = [
     "typer",
     "apd",
     "hist",
@@ -40,13 +39,9 @@ run123              = "rx_plotter_scripts.run123:main"
 
 # Hatch build system
 [build-system]
-requires = ["hatchling"]
+requires      = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv.sources]
 rx_plotter        = { workspace = true }
 rx_plotter_scripts= { workspace = true }
-
-# Include YAML data files in the wheel / editable install
-[tool.hatch.include]
-files = ["src/rx_plotter_data/**/*.yaml"]
