@@ -2416,6 +2416,7 @@ dependencies = [
     { name = "mplhep" },
     { name = "numpy" },
     { name = "pyyaml" },
+    { name = "scikit-learn" },
 ]
 
 [package.optional-dependencies]
@@ -2431,6 +2432,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pyyaml" },
+    { name = "scikit-learn" },
 ]
 provides-extras = ["dev"]
 
