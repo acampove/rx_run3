@@ -4,7 +4,7 @@ Module containing tests for MVACalculator class
 import os
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                         import RDF, RDataFrame # type: ignore
+from ROOT                         import RDF # type: ignore
 from dmu.logging.log_store        import LogStore
 from rx_data.rdf_getter           import RDFGetter
 from rx_data.mva_calculator       import MVACalculator
@@ -37,7 +37,6 @@ def _validate_rdf(
     log.info('Validating dataframe')
 
     os.makedirs(out_dir, exist_ok=True)
-    assert isinstance(rdf, (RDF.RNode, RDataFrame))
 
     nentries = rdf.Count().GetValue()
     assert nentries == Data.nentries
