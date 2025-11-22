@@ -3,9 +3,9 @@ Modules used to test AcceptanceReader class
 '''
 
 import pytest
-from dmu.logging.log_store             import LogStore
-from rx_efficiencies.acceptance_reader import AcceptanceReader
-from rx_efficiencies.decay_names       import DecayNames
+from dmu              import LogStore
+from rx_efficiencies  import AcceptanceReader
+from rx_efficiencies  import DecayNames
 
 log=LogStore.add_logger('rx_efficiencies:test_acceptance_reader')
 #------------------------------------
