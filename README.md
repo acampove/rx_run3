@@ -16,10 +16,10 @@ git clone git@github.com:acampove/rx_run3.git
 cd rx_run3
 
 # Install project in virtual environment
-uv sync
+uv sync --all-packages
 
 # Or install with development dependencies
-uv sync --extra dev
+uv sync --all-packages --extra dev
 
 # Activate the virtual environment
 source .venv/bin/activate
