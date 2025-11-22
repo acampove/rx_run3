@@ -13,6 +13,7 @@ members = [
     "ecal-calibration",
     "fitter",
     "post-ap",
+    "root-stubs",
     "rx-calibration",
     "rx-classifier",
     "rx-common",
@@ -24,6 +25,8 @@ members = [
     "rx-q2",
     "rx-run3",
     "rx-selection",
+    "vector-stubs",
+    "zfit-stubs",
 ]
 
 [[package]]
@@ -700,7 +703,6 @@ dependencies = [
     { name = "pandas" },
     { name = "pyarrow" },
     { name = "scipy" },
-    { name = "torch" },
     { name = "tqdm" },
     { name = "uproot" },
     { name = "vector" },
@@ -709,6 +711,9 @@ dependencies = [
 [package.optional-dependencies]
 dev = [
     { name = "pytest" },
+]
+ml = [
+    { name = "torch" },
 ]
 
 [package.metadata]
@@ -721,12 +726,12 @@ requires-dist = [
     { name = "pyarrow" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "scipy" },
-    { name = "torch" },
+    { name = "torch", marker = "extra == 'ml'" },
     { name = "tqdm" },
     { name = "uproot" },
     { name = "vector" },
 ]
-provides-extras = ["dev"]
+provides-extras = ["dev", "ml"]
 
 [[package]]
 name = "execnet"
@@ -2334,6 +2339,20 @@ wheels = [
 ]
 
 [[package]]
+name = "root-stubs"
+version = "0.1.0"
+source = { editable = "src/root_stubs" }
+
+[package.optional-dependencies]
+dev = [
+    { name = "pyright" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pyright", marker = "extra == 'dev'", specifier = ">=1.1.312" }]
+provides-extras = ["dev"]
+
+[[package]]
 name = "ruff"
 version = "0.14.5"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
@@ -3289,6 +3308,11 @@ wheels = [
 ]
 
 [[package]]
+name = "vector-stubs"
+version = "0.0.1"
+source = { editable = "src/vector_stubs" }
+
+[[package]]
 name = "werkzeug"
 version = "3.1.3"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
@@ -3485,6 +3509,20 @@ sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/74/3d/8e7c8b840ba2a9
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/96/68/5f095fa77f125a9416f4248ef03239c31328f80c3f4348ee30a3c1616cdb/zfit_physics-0.9.0-py3-none-any.whl", hash = "sha256:6708889e3e017eb940a0a91df50a0520598fa5725ba7f8c1f8d4f0fa2fd6282d", size = 39445, upload-time = "2025-07-18T06:43:55.173Z" },
 ]
+
+[[package]]
+name = "zfit-stubs"
+version = "0.0.1"
+source = { editable = "src/zfit-stubs" }
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'dev'" }]
+provides-extras = ["dev"]
 
 [[package]]
 name = "zict"
