@@ -6,13 +6,13 @@ requires-python = "==3.12.*"
 members = [
     "ap-utilities",
     "dmu",
+    "fitter",
     "post-ap",
     "rx-calibration",
     "rx-classifier",
     "rx-common",
     "rx-data",
     "rx-efficiencies",
-    "rx-fitter",
     "rx-misid",
     "rx-pid",
     "rx-plotter",
@@ -598,6 +598,44 @@ sdist = { url = "https://pypi.tuna.tsinghua.edu.cn/packages/bf/89/780e11f9588d9e
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/ab/84/02fc1827e8cdded4aa65baef11296a9bbe595c474f0d6d758af082d849fd/execnet-2.1.2-py3-none-any.whl", hash = "sha256:67fba928dd5a544b783f6056f449e5e3931a5c378b128bc18501f7ea79e296ec", size = 40708, upload-time = "2025-11-12T09:56:36.333Z" },
 ]
+
+[[package]]
+name = "fitter"
+version = "0.0.1"
+source = { editable = "src/fitter" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "mplhep" },
+    { name = "numpy" },
+    { name = "omegaconf" },
+    { name = "pdg" },
+    { name = "python-slugify" },
+    { name = "seaborn" },
+    { name = "typer" },
+    { name = "types-tensorflow" },
+    { name = "zfit" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "matplotlib" },
+    { name = "mplhep" },
+    { name = "numpy" },
+    { name = "omegaconf" },
+    { name = "pdg" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "python-slugify" },
+    { name = "seaborn" },
+    { name = "typer" },
+    { name = "types-tensorflow" },
+    { name = "zfit" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "flatbuffers"
@@ -1858,44 +1896,6 @@ requires-dist = [
     { name = "numpy" },
     { name = "pandas" },
     { name = "pytest", marker = "extra == 'dev'" },
-]
-provides-extras = ["dev"]
-
-[[package]]
-name = "rx-fitter"
-version = "0.0.1"
-source = { editable = "src/fitter" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "mplhep" },
-    { name = "numpy" },
-    { name = "omegaconf" },
-    { name = "pdg" },
-    { name = "python-slugify" },
-    { name = "seaborn" },
-    { name = "typer" },
-    { name = "types-tensorflow" },
-    { name = "zfit" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib" },
-    { name = "mplhep" },
-    { name = "numpy" },
-    { name = "omegaconf" },
-    { name = "pdg" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "python-slugify" },
-    { name = "seaborn" },
-    { name = "typer" },
-    { name = "types-tensorflow" },
-    { name = "zfit" },
 ]
 provides-extras = ["dev"]
 
