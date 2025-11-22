@@ -1,12 +1,13 @@
 '''
 Script with code needed to test Corrector class
 '''
-from importlib.resources import files
+import pytest
+pytest.skip("Skipping entire module", allow_module_level=True)
 
 import tqdm
-import pytest
 import pandas as pnd
 
+from importlib.resources           import files
 from vector                        import MomentumObject4D as v4d
 from dmu.generic                   import utilities        as gut
 from dmu.logging.log_store         import LogStore

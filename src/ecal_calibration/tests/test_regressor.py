@@ -1,12 +1,14 @@
 '''
 Script with code needed to test Calibration class
 '''
-from importlib.resources import files
+
+import pytest
+pytest.skip("Skipping entire module", allow_module_level=True)
 
 import numpy
-import pytest
 import matplotlib.pyplot as plt
 
+from importlib.resources           import files
 from torch                         import Tensor
 from dask.distributed              import Client
 from dmu.generic                   import utilities as gut

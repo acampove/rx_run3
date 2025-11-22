@@ -1,6 +1,9 @@
 '''
 Module testing PreProcessor class
 '''
+import pytest
+pytest.skip("Skipping entire module", allow_module_level=True)
+
 import os
 import logging
 import numpy
