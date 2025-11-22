@@ -4,7 +4,7 @@ Module containing MassCalculator class
 from typing import cast
 
 import pandas as pnd
-from ROOT                  import RDataFrame, RDF # type: ignore
+from ROOT                  import RDF # type: ignore
 from particle              import Particle         as part
 from vector                import MomentumObject4D as v4d
 from dmu.generic           import typing_utilities as tut
@@ -22,7 +22,7 @@ class MassCalculator:
     # ----------------------
     def __init__(
         self,
-        rdf : RDataFrame|RDF.RNode,
+        rdf             : RDF.RNode,
         with_validation : bool = False) -> None:
         '''
         Parameters
@@ -229,8 +229,8 @@ class MassCalculator:
         '''
         log.debug('Getting pandas dataframe from ROOT dataframe')
 
-        l_col = [ name for name in self._rdf.GetColumnNames() ]
-        l_col = [ name for name in l_col if self._is_valid_column(name=name) ]
+        l_col = [ name.c_str() for name in self._rdf.GetColumnNames() ]
+        l_col = [ name         for name in l_col if self._is_valid_column(name=name) ]
 
         data  = self._rdf.AsNumpy(l_col)
         df    = pnd.DataFrame(data)

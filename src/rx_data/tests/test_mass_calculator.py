@@ -8,7 +8,7 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from ROOT                    import RDataFrame, RDF # type: ignore
+from ROOT                    import RDF # type: ignore
 from dmu.logging.log_store   import LogStore
 from rx_data.rdf_getter      import RDFGetter
 from rx_data.mass_calculator import MassCalculator
@@ -60,8 +60,8 @@ def _closure_check(df : pnd.DataFrame) -> None:
 def _validate_rdf(
     test   : str,
     name   : str,
-    rdf_in : RDataFrame|RDF.RNode,
-    rdf_ot : RDataFrame|RDF.RNode) -> None:
+    rdf_in : RDF.RNode,
+    rdf_ot : RDF.RNode) -> None:
     '''
     Parameters
     -------------
