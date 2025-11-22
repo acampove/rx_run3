@@ -1,17 +1,17 @@
-[tool.poetry]
-name = 'vector-stubs'
-version = '0.0.1'
-description = 'Type stubs for the scikit-hep/vector package'
-authors = ['Angel Campoverde angelfcampoverde@gmail.com']
-readme = 'README.md'
-license = 'MIT'
-packages = [
-    { include = 'vector' }
+[project]
+name            = "vector-stubs"
+version         = "0.0.1"
+description     = "Type stubs for the scikit-hep/vector package"
+readme          = "README.md"
+license         = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies    = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["vector"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/vector",
+    "/README.md",
 ]
-
-[tool.poetry.dependencies]
-python = '^3.10'
-
-[build-system]
-requires = ['poetry-core>=1.5.0']
-build-backend = 'poetry.core.masonry.api'

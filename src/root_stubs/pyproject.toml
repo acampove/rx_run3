@@ -1,22 +1,24 @@
-[tool.poetry]
-name        = "root_stubs"
-version     = "0.1.0"
-description = "Example project using ROOT.RDF stubs with Pyright"
-authors     = ["Angel Campoverde <you@example.com>"]
-packages    = ['src']
+[project]
+name            = "root_stubs"
+version         = "0.1.0"
+description     = "Example project using ROOT.RDF stubs with Pyright"
+requires-python = ">=3.12"
+dependencies    = []
 
-[tool.poetry.dependencies]
-python = "^3.11"
+[project.optional-dependencies]
+dev = [
+    "pyright>=1.1.312",
+]
 
-[tool.poetry.dev-dependencies]
-pyright = "^1.1.312"
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [tool.pyright]
 # Enable strict type checking
 typeCheckingMode = "strict"
 
 # Treat the 'typings' folder as extra source for types
-extraPaths = ['src']
+extraPaths = ["src"]
 
 # ROOT is a C++ module without source, ignore missing source warning
 reportMissingModuleSource = "none"
