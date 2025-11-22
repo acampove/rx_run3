@@ -3,8 +3,6 @@ Module holding code meant to be reused elsewhere
 '''
 
 from importlib.resources import files
-
-from torch               import Tensor
 from dask                import dataframe
 from dask.dataframe      import DataFrame as DDF
 
@@ -52,16 +50,6 @@ def _inject_bias(ddf : DDF, bias : float, kind : str) -> DDF:
             raise ValueError(f'Invalid bias: {kind}')
 
     return ddf
-# ------------------------------------
-def normalize_tensor(x : Tensor) -> Tensor:
-    '''
-    Makes sure the mean of the distribution is zero and the standard deviation is 1
-    '''
-    mean = x.mean()
-    std  = x.std()
-    x    = (x - mean) / std
-
-    return x
 # ------------------------------------
 def get_ddf(
         name : str,
