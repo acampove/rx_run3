@@ -7,7 +7,9 @@ set -euo pipefail
 
 # Array of packages: "name|git_url|branch"
 PACKAGES=(
-"ecal_calibration|ssh://git@gitlab.cern.ch:7999/rx_run3/ecal_calibration.git|master"
+"root_stubs|git@github.com:acampove/root_stubs.git|master"
+"zfit-stubs|git@github.com:acampove/zfit-stubs.git|master"
+"vector_stubs|git@github.com:acampove/vector_stubs.git|master"
 )
 
 echo "Starting package import process..."
