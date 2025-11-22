@@ -11,9 +11,10 @@ Find in the following links:
 
 This project contains the following packages:
 
-rx_data        : Allows access to the data and also has tools for further processing
-rx_efficiencies: Used to calculate geometric acceptances and reconstruction efficiencies
-
+| Project         | Description                                                                 |
+|-----------------|-----------------------------------------------------------------------------|
+| [rx_data](src/rx_data/README.md)         | Allows access to the data and also has tools for further processing |
+| [rx_efficiencies](src/rx_efficiencies/README.md) | Used to calculate geometric acceptances and reconstruction efficiencies |
 
 ## Development packages
 
