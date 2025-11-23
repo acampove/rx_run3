@@ -13,10 +13,16 @@ This project contains the following packages:
 
 | Project         | Description                                                                 |
 |-----------------|-----------------------------------------------------------------------------|
+| [post_ap](src/post_ap/README.md)                 | Contains code needed to slim ntuples made by the analysis productions   | 
+| [fitter](src/fitter/README.md)                   | Has code needed to run fits to rare and resonant channel                |
 | [rx_classifier](src/rx_classifier/README.md)     | Used to train classifiers                                               |
 | [rx_data](src/rx_data/README.md)                 | Allows access to the data and also has tools for further processing     |
 | [rx_efficiencies](src/rx_efficiencies/README.md) | Used to calculate geometric acceptances and reconstruction efficiencies |
-| [rx_misid](src/rx_misid/README.md)               | Used to |
+| [rx_misid](src/rx_misid/README.md)               | Has utilities to work with hadronic mis-ID backgrounds |
+| [rx_pid](src/rx_pid/README.md)                   | Has utilities to make PID maps through PIDCalib2 |
+| [rx_plots](src/rx_plots/README.md)               | Has code needed to make plots | 
+| [rx_q2](src/rx_q2/README.md)                     | Has code needed to study mass scales and resolutions| 
+| [rx_selection](src/rx_selection/README.md)       | Has code needed apply selection | 
 
 ## Development packages
 
