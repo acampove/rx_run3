@@ -8,7 +8,7 @@ import numpy
 from ROOT                   import RDF  # type: ignore
 from ROOT.Math              import LorentzVector, XYZVector # type: ignore
 from dmu.logging.log_store  import LogStore
-from rx_common              import info
+from rx_common              import Project, info
 
 log = LogStore.add_logger('rx_data:hop_calculator')
 
@@ -60,13 +60,13 @@ class HOPCalculator:
         List of vectors in dataframe, associated to object
         '''
         project  = info.project_from_trigger(trigger=self._trigger, lower_case=True)
-        if   name == 'Hadrons' and project == 'rkst':
+        if   name == 'Hadrons' and project in [Project.rkst, Project.rkst_no_pid]:
             l_h1 = self._get_xvector(name='H1_P', ndim=ndim)
             l_h2 = self._get_xvector(name='H2_P', ndim=ndim)
             l_hh = [ h1 + h2 for h1, h2 in zip(l_h1, l_h2) ]
 
             return l_hh
-        elif name == 'Hadrons' and project == 'rk':
+        elif name == 'Hadrons' and project in [Project.rk, Project.rk_no_pid]:
             name = 'H_P'
         elif name in ['L1_P', 'L2_P', 'H1_P', 'H2_P', 'B_BPV', 'B_END_V']:
             pass
