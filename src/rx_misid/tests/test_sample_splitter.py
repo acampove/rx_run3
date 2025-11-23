@@ -8,10 +8,11 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 import pandas as pnd
-from ROOT                     import RDataFrame # type: ignore
+from ROOT                     import RDF     # type: ignore
 from dmu.generic              import utilities   as gut
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection   as sel
+from rx_common.types          import Trigger
 from rx_data.rdf_getter       import RDFGetter
 from rx_misid.sample_splitter import SampleSplitter
 
@@ -37,8 +38,8 @@ def initialize():
 
     os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
-def _get_rdf(sample : str, trigger : str, project : str):
-    gtr = RDFGetter(sample=sample, trigger=trigger, analysis=project)
+def _get_rdf(sample : str, trigger : Trigger):
+    gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     uid = gtr.get_uid()
     with sel.custom_selection(d_sel = {'pid_l' : '(1)'}):
@@ -73,7 +74,7 @@ def _plot_simulation_pide(df : pnd.DataFrame, sample : str) -> None:
         plt.savefig(plot_path)
         plt.close()
 # -------------------------------------------------------
-def _check_mc_stats(rdf : RDataFrame, df : pnd.DataFrame) -> None:
+def _check_mc_stats(rdf : RDF.RNode, df : pnd.DataFrame) -> None:
     '''
     Parameters
     -------------
@@ -128,8 +129,7 @@ def test_simulation(sample : str):
 
     rdf   = _get_rdf(
         sample = sample,
-        trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
-        project= 'nopid')
+        trigger= Trigger.rk_ee_nopid)
 
     cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
     spl   = SampleSplitter(rdf = rdf, cfg = cfg)
