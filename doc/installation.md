@@ -1,40 +1,19 @@
 # Installation
 
-For this do:
-
+For this, install micromamba, following the instructions [here](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html)
+Then create a micromamba environment and install the code inside it.
 ```bash
-# Install UV
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# create an environment with ROOT and python
+micromamba create -n rx_run3 root==6.32.10 python==3.12.11
+
+# Activate it
+micromamba activate rx_run3
 
 git clone git@github.com:acampove/rx_run3.git
 
+# go to the directory with the code
 cd rx_run3
 
-# Install project in virtual environment
-uv sync --all-packages
-
-# Or install with development dependencies
-uv sync --all-packages --extra dev
-
-# Activate the virtual environment
-source .venv/bin/activate
+# And install it
+pip install -r requirements.txt
 ```
-
-One can also use `uv run command` to run commands inside the environment.
-However it is more practical to be fully inside the environment.
-To make this process less cumbersome one can add:
-
-```bash
-uvshell()
-{
-    if [ ! -f "$PWD/.venv/bin/activate" ];then
-        echo "No UV environment found"
-        return
-    fi
-
-    source "$PWD/.venv/bin/activate"
-}
-```
-
-to `$HOME/.bashrc` such that one would only call `uvshell` to enter the evironment
-
