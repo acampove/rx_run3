@@ -1,0 +1,9 @@
+# This config file controls how the friend trees 
+# of the first stage get made
+
+args:
+  - {kind : mass          , project : rk  , version : v8, parts : 10}
+  - {kind : hop           , project : rk  , version : v8, parts : 10}
+  - {kind : brem_track_2  , project : rk  , version : v8, parts : 10}
+  - {kind : swp_cascade   , project : rk  , version : v8, parts : 10}
+  - {kind : swp_jpsi_misid, project : rk  , version : v8, parts : 10}
