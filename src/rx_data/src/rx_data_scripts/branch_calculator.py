@@ -85,10 +85,14 @@ def _parse_args() -> None:
     parser.add_argument('-l', '--lvl' , type=int, help='log level', choices=[5, 10, 20, 30], default=20)
     args = parser.parse_args()
 
+    igroup, ngroup = args.part
+    igroup    = int(igroup)
+    ngroup    = int(ngroup)
+
     Data.kind = args.kind
     Data.proj = args.proj
     Data.vers = args.vers
-    Data.part = args.part
+    Data.part = igroup, ngroup 
     Data.nmax = args.nmax
     Data.pbar = args.pbar
     Data.dry  = args.dry
