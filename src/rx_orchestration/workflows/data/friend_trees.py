@@ -9,7 +9,7 @@ import argparse
 from law.parameter  import Parameter
 from dmu.generic    import utilities as gut
 from dmu            import LogStore
-from omegaconf import DictConfig
+from omegaconf      import DictConfig, OmegaConf
 from rx_data        import NtuplePartitioner
 
 log=LogStore.add_logger('rx_orchestration:friend_trees')
@@ -22,6 +22,17 @@ class Friend(law.Task):
         '''
         This method builds the arguments for the runner 
         '''
+        data = json.loads(s=self.config_string)
+
+        config = {
+            'kind'  : data['kind'   ],
+            'proj'  : data['project'],
+            'vers'  : data['vers'   ],
+            'igroup': self.index,
+            'ngroup': data['parts']
+        }
+
+        return OmegaConf.create(config)
     # -------------------------------------
     def output(self) -> list[law.LocalFileTarget]:
         '''
@@ -40,7 +51,7 @@ class Friend(law.Task):
     # -------------------------------------
     def run(self):
         '''
-        Runs comparison
+        Runs creation of friend tree
         '''
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
         from rx_data_scripts.branch_calculator import main as runner
