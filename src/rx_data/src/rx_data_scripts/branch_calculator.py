@@ -4,7 +4,6 @@ Script used to create small trees with extra branches from input trees
 
 import os
 import glob
-import fnmatch
 import argparse
 
 import tqdm
@@ -12,11 +11,11 @@ import dmu.generic.utilities as gut
 from pathlib                import Path
 from ROOT                   import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
 from dmu.logging.log_store  import LogStore
-from dmu.generic            import version_management as vman
 
 from rx_q2.q2smear_corrector     import Q2SmearCorrector
-from rx_common                   import info
+from rx_common                   import Project, info
 from rx_data                     import utilities
+from rx_data                     import NtuplePartitioner
 from rx_data.mva_calculator      import MVACalculator
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mis_calculator      import MisCalculator
@@ -33,7 +32,7 @@ class Data:
     Class used to hold shared data
     '''
     vers : str
-    proj : str
+    proj : Project 
     kind : str
     nmax : int
     part : tuple[int,int]
@@ -45,8 +44,6 @@ class Data:
     out_dir   : Path 
 
     l_kind    = ['mass', 'hop', 'swp_jpsi_misid', 'swp_cascade', 'brem_track_2', 'mva', 'smear']
-    l_ecorr   = ['brem_track_2']
-
     tree_name = 'DecayTree'
     ana_dir   = Path(os.environ['ANADIR'])
 # ---------------------------------
