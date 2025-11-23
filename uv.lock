@@ -2112,7 +2112,7 @@ provides-extras = ["dev"]
 [[package]]
 name = "rx-orchestration"
 version = "0.0.1"
-source = { virtual = "src/rx_orchestration" }
+source = { editable = "src/rx_orchestration" }
 dependencies = [
     { name = "law" },
 ]

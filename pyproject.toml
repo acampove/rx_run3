@@ -19,6 +19,7 @@ rx_common       = { workspace = true }
 rx_data         = { workspace = true }
 rx_efficiencies = { workspace = true }
 rx_misid        = { workspace = true }
+rx_orchestration= { workspace = true }
 rx_pid          = { workspace = true }
 rx_plots        = { workspace = true }
 rx_q2           = { workspace = true }
