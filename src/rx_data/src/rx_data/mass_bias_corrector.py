@@ -13,7 +13,7 @@ from vector._methods                 import VectorProtocolSpatial
 from vector                          import MomentumObject3D as v3d
 from vector                          import MomentumObject4D as v4d
 from dmu.logging.log_store           import LogStore
-from rx_common                       import info
+from rx_common                       import Project, info
 from dmu.generic                     import typing_utilities as tut
 
 from rx_data.electron_bias_corrector import ElectronBiasCorrector
@@ -147,9 +147,9 @@ class MassBiasCorrector:
         l1 = self._build_4dvec(particle='L1', row=row, mass=EMASS)
         l2 = self._build_4dvec(particle='L2', row=row, mass=EMASS)
 
-        if   self._project == 'rk':
+        if   self._project in [Project.rk, Project.rk_no_pid]:
             hd = self._build_4dvec(particle= 'H', row=row, mass=KMASS)
-        elif self._project == 'rkst':
+        elif self._project in [Project.rkst, Project.rkst_no_pid]:
             h1 = self._build_4dvec(particle='H1', row=row, mass=KMASS)
             h2 = self._build_4dvec(particle='H2', row=row, mass=PIMASS)
 
