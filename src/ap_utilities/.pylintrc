@@ -1,2 +1,0 @@
-[MESSAGES CONTROL]
-disable=logging-fstring-interpolation, too-few-public-methods, line-too-long, too-many-locals, too-many-instance-attributes

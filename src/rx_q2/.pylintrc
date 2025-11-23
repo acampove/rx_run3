@@ -1,8 +1,0 @@
-[MESSAGES CONTROL]
-disable=logging-fstring-interpolation, too-few-public-methods, line-too-long, no-name-in-module, too-many-locals
-
-[MASTER]
-init-hook='import sys; sys.path.append("/home/acampove/micromamba/envs/rx_data/lib/python3.13/site-packages")'
-
-[TYPECHECK]
-ignored-modules = numpy
