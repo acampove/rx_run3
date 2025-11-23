@@ -23,6 +23,7 @@ compare_law = "workflows.plots.compare_law:main"
 overlay_law = "workflows.plots.overlay_law:main"
 plot_2d_law = "workflows.plots.plot_2d_law:main"
 checks_law  = "workflows.plots.checks_law:main"
+friend_trees= "workflows.data.friend_trees:main"
 
 # ----------------
 # Classifier
