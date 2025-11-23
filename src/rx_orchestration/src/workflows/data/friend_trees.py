@@ -40,14 +40,23 @@ class Friend(law.Task):
         ---------------
         List of objects symbolizing files that have to be created
         '''
-        conf  = json.loads(s=self.config_string)
-        prt   = NtuplePartitioner(
-            kind    = conf['kind'], 
+        conf= json.loads(s=self.config_string)
+        prt = NtuplePartitioner(
+            kind    = 'main', 
             project = conf['project'])
 
         paths = prt.get_paths(index=self.index, total=conf['parts'])
 
-        return [ law.LocalFileTarget(path) for path in paths ]
+        l_fpath = []
+        for path in paths:
+            kind  = conf['kind']
+            spath = str(path)
+            spath = spath.replace('/main/', f'/{kind}/')
+            fpath = law.LocalFileTarget(spath)
+
+            l_fpath.append(fpath)
+
+        return l_fpath
     # -------------------------------------
     def run(self):
         '''
