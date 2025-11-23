@@ -75,7 +75,11 @@ def _parse_args() -> None:
     Data.lvl  = args.lvl
     Data.wild_card = args.wc
     Data.chunk_size= args.chunk
-
+# ---------------------------------
+def _set_logs():
+    '''
+    This method will set the logging level of multiple tools
+    '''
     LogStore.set_level('rx_data:mass_bias_corrector', Data.lvl)
     LogStore.set_level('rx_data:branch_calculator'  , Data.lvl)
     LogStore.set_level('rx_data:mass_calculator'    , Data.lvl)
@@ -357,6 +361,8 @@ def main():
     Script starts here
     '''
     _parse_args()
+
+    _set_logs()
     gut.TIMER_ON=True
 
     prt = NtuplePartitioner(
