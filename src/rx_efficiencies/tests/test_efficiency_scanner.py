@@ -31,12 +31,15 @@ def _plot_values(
             columns='mva_cmb',
             values ='eff')
 
+    v1 : float = pivoted.columns.min()
+    v2 : float = pivoted.columns.max()
+    v3 : float = pivoted.index.min()
+    v4 : float = pivoted.index.max()
+
     plt.imshow(
         pivoted.values,
         origin='lower',
-        extent=[
-            pivoted.columns.min(), pivoted.columns.max(),
-            pivoted.index.min()  , pivoted.index.max()],
+        extent=(v1, v2, v3, v4),
         cmap='viridis',
         interpolation='bilinear',
     )
