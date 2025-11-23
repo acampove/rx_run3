@@ -27,7 +27,7 @@ class Friend(law.Task):
         config = {
             'kind'  : data['kind'   ],
             'proj'  : data['project'],
-            'vers'  : data['vers'   ],
+            'vers'  : data['version'],
             'igroup': self.index,
             'ngroup': data['parts']
         }
