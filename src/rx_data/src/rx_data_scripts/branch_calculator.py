@@ -111,15 +111,6 @@ def _get_out_path(path : Path) -> str:
 
     return out_path
 # ---------------------------------
-def _is_mc(path : Path) -> bool:
-    if '/data_24_mag' in str(path):
-        return False
-
-    if '/mc_mag' in str(path):
-        return True
-
-    raise ValueError(f'Cannot determine if MC or data for: {path}')
-# ---------------------------------
 def _process_rdf(
     rdf     : RDF.RNode,
     path    : Path) -> RDF.RNode|None:
