@@ -394,7 +394,7 @@ def main(args : DictConfig | None = None):
     gut.TIMER_ON=True
 
     prt = NtuplePartitioner(
-        kind      = Data.kind,
+        kind      = 'main',
         project   = Data.proj,
         wild_card = Data.wild_card)
 
