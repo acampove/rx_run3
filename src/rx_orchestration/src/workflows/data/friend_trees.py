@@ -2,10 +2,12 @@
 This module contains code needed to steer the creation of the friend trees
 '''
 import os
+import re
 import law
 import json
 import argparse
 
+from pathlib        import Path
 from law.parameter  import Parameter
 from dmu.generic    import utilities as gut
 from dmu            import LogStore
@@ -33,6 +35,33 @@ class Friend(law.Task):
         }
 
         return OmegaConf.create(config)
+    # ----------------------
+    def _get_friend_path(
+        self, 
+        path : Path,
+        conf : DictConfig) -> law.LocalFileTarget:
+        '''
+        Parameters
+        -------------
+        path: Path to file from the main category to be processes
+        conf: Dictionary with configuration
+
+        Returns
+        -------------
+        File object, corresponding to file to be made
+        '''
+        kind  = conf['kind']
+        vers  = conf['version']
+        spath = str(path)
+        spath = spath.replace('/main/', f'/{kind}/')
+        spath = re.sub(
+            pattern = r'/v\d+(\.\d+)?/', 
+            repl    = f'/{vers}/', 
+            string  = spath) 
+
+        log.debug(spath)
+
+        return law.LocalFileTarget(spath)
     # -------------------------------------
     def output(self) -> list[law.LocalFileTarget]:
         '''
@@ -45,15 +74,10 @@ class Friend(law.Task):
             kind    = 'main', 
             project = conf['project'])
 
-        paths = prt.get_paths(index=self.index, total=conf['parts'])
-
+        paths   = prt.get_paths(index=self.index, total=conf['parts'])
         l_fpath = []
         for path in paths:
-            kind  = conf['kind']
-            spath = str(path)
-            spath = spath.replace('/main/', f'/{kind}/')
-            fpath = law.LocalFileTarget(spath)
-
+            fpath = self._get_friend_path(path = path, conf = conf)
             l_fpath.append(fpath)
 
         return l_fpath
