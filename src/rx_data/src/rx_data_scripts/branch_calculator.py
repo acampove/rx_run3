@@ -153,17 +153,12 @@ def _process_rdf(
     if   Data.kind == 'hop':
         obj = HOPCalculator(rdf=rdf, trigger=trigger)
         rdf = obj.get_rdf(preffix=Data.kind)
-    elif Data.kind in Data.l_ecorr:
-        skip_correction = _is_mc(path) and Data.kind == 'ecalo_bias'
-        if skip_correction:
-            log.warning('Turning off ecalo_bias correction for MC sample')
-
+    elif Data.kind == 'brem_track_2':
         df   = utilities.df_from_rdf(rdf=rdf, drop_nans=False)
         is_mc= utilities.rdf_is_mc(rdf=rdf)
         cor  = MassBiasCorrector(
             df             = df, 
             is_mc          = is_mc,
-            skip_correction= skip_correction, 
             trigger        = trigger,
             ecorr_kind     = Data.kind)
         df  = cor.get_df(suffix=Data.kind)
