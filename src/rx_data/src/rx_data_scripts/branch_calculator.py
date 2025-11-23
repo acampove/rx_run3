@@ -357,8 +357,8 @@ def _split_rdf(rdf : RDF.RNode) -> list[RDF.RNode]:
     l_size   = range(0, nentries, Data.chunk_size)
 
     l_rdf    = [
-                rdf.Range(start, min(start + Data.chunk_size, nentries))
-                for start in l_size ]
+        rdf.Range(start, min(start + Data.chunk_size, nentries))
+        for start in l_size ]
 
     return l_rdf
 # ----------------------
