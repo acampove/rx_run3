@@ -2,11 +2,11 @@
 # of the first stage get made
 
 stage_1:
-  - {kind : mass          , project : rk  , version : v2, parts : 10}
-  - {kind : hop           , project : rk  , version : v2, parts : 10}
-  - {kind : brem_track_2  , project : rk  , version : v2, parts : 10}
-  - {kind : swp_cascade   , project : rk  , version : v2, parts : 10}
-  - {kind : swp_jpsi_misid, project : rk  , version : v2, parts : 10}
+  - {kind : mass          , project : rk_nopid, version : v2, parts : 10}
+  - {kind : hop           , project : rk_nopid, version : v2, parts : 10}
+  - {kind : brem_track_2  , project : rk_nopid, version : v2, parts : 10}
+  - {kind : swp_cascade   , project : rk_nopid, version : v2, parts : 10}
+  - {kind : swp_jpsi_misid, project : rk_nopid, version : v2, parts : 10}
 state_2:
-  - {kind : mva           , project : rk  , version : v8, parts : 30}
-  - {kind : smear         , project : rk  , version : v1, parts : 20}
+  - {kind : mva           , project : rk_nopid, version : v8, parts : 30}
+  - {kind : smear         , project : rk_nopid, version : v1, parts : 20}
