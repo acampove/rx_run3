@@ -93,10 +93,14 @@ class Friend(law.Task):
 
         runner(args=args)
 # -------------------------------------
-class Friends(law.WrapperTask):
+class Friends(law.Task):
     '''
     This class takes care of steering the workflow
     '''
+    kind : str = Parameter() # type: ignore
+    # --------------------------
+    def output(self):
+        return law.LocalFileTarget(f'/tmp/law/friends_{self.kind}.txt')
     # --------------------------
     def requires(self):
         '''
@@ -106,7 +110,7 @@ class Friends(law.WrapperTask):
 
         log.info(20 * '-')
         tasks = []
-        for conf in data['stage_1']:
+        for conf in data[self.kind]:
             config_string = json.dumps(conf)
             ngroups       = conf['parts']
             for index in range(ngroups):
@@ -114,6 +118,18 @@ class Friends(law.WrapperTask):
                 tasks.append(task)
 
         return tasks
+    # --------------------------
+    def run(self):
+        path = Path(f'/tmp/law/friends_{self.kind}.txt')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.touch()
+# ----------------------
+class AllFriends(law.WrapperTask):
+    '''
+    This task will steer the creation of all the friend trees
+    '''
+    def requires(self):
+        return [ Friends(kind='stage_1'), Friends(kind='stage_2') ]
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script use to create friend trees')
@@ -124,7 +140,7 @@ def _parse_args() -> None:
 # ----------------------
 def main():
     _parse_args()
-    law.run(argv=['Friends', '--workers', '8', '--log-level', 'INFO'])
+    law.run(argv=['AllFriends', '--workers', '10', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()
