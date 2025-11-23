@@ -102,7 +102,7 @@ class Friends(law.WrapperTask):
         '''
         Defines the sets of tasks in the workflow
         '''
-        data = gut.load_data(package='configs', fpath='rx_data/friends.yaml')
+        data = gut.load_data(package='configs', fpath='rx_data/friend_trees.yaml')
 
         log.info(20 * '-')
         tasks = []
