@@ -11,6 +11,7 @@ import dmu.generic.utilities as gut
 from pathlib                     import Path
 from ROOT                        import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
 from dmu.logging.log_store       import LogStore
+from omegaconf                   import DictConfig
 
 from rx_q2.q2smear_corrector     import Q2SmearCorrector
 from rx_common                   import Project, info
@@ -34,12 +35,12 @@ class Data:
     vers : str
     proj : Project 
     kind : str
-    nmax : int
+    nmax : int | None
     part : tuple[int,int]
     pbar : bool
     dry  : bool
     lvl  : int
-    wild_card : str
+    wild_card : str | None
     chunk_size: int
     out_dir   : Path 
 
