@@ -48,6 +48,26 @@ class Data:
     tree_name = 'DecayTree'
     ana_dir   = Path(os.environ['ANADIR'])
 # ---------------------------------
+def _set_config(args : DictConfig) -> None:
+    '''
+    This method uses `args` to initialize fields in class Data
+
+    Parameters
+    ---------------
+    args: Dictionary holding configuration
+    '''
+    Data.kind      = args.kind
+    Data.proj      = args.proj
+    Data.vers      = args.vers
+    Data.part      = args.igroup, args.ngroup
+    # -----------------------
+    Data.nmax      = None 
+    Data.pbar      = False 
+    Data.dry       = False 
+    Data.lvl       = 20 
+    Data.wild_card = None 
+    Data.chunk_size= 100_000 
+# ---------------------------------
 def _parse_args() -> None:
     '''
     Parse arguments
@@ -355,12 +375,20 @@ def _process_and_merge(
 
     log.info(f'Merging temporary files into: {out_path}')
     fmrg.Merge()
-# ---------------------------------
-def main():
+# ----------------------
+def main(args : DictConfig | None = None):
     '''
-    Script starts here
+    Entry point
+
+    Parameters
+    ---------------------
+    args: Arguments needed to start calculation when used as module, 
+          If not passed, this will be used as an script
     '''
-    _parse_args()
+    if args is None:
+        _parse_args()
+    else:
+        _set_config(args=args)
 
     _set_logs()
     gut.TIMER_ON=True
