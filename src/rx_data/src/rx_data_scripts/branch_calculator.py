@@ -376,6 +376,8 @@ def _process_and_merge(
             continue
 
         tmp_path = out_path.replace('.root', f'_{index:03}_pre_merge.root')
+
+        log.debug(f'Saving tree {Data.tree_name} to {tmp_path}')
         rdf_out.Snapshot(Data.tree_name, tmp_path)
 
         fmrg.AddFile(tmp_path, cpProgress=False)
