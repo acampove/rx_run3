@@ -7,6 +7,6 @@ stage_1:
   - {kind : brem_track_2  , project : rk_nopid, version : v2, parts : 10}
   - {kind : swp_cascade   , project : rk_nopid, version : v2, parts : 10}
   - {kind : swp_jpsi_misid, project : rk_nopid, version : v2, parts : 10}
-state_2:
+stage_2:
   - {kind : mva           , project : rk_nopid, version : v8, parts : 30}
   - {kind : smear         , project : rk_nopid, version : v1, parts : 20}
