@@ -295,7 +295,7 @@ class SpecMaker:
         '''
         data_dir     = Path(os.environ['ANADIR'])
         ftree_wc     = data_dir / f'Data/{self._project}'
-        l_ftree_dir  = ftree_wc.glob(pattern='*')
+        l_ftree_dir  = list(ftree_wc.glob(pattern='*'))
         if not l_ftree_dir:
             raise ValueError(f'No directories with samples found in: {ftree_wc}')
 
