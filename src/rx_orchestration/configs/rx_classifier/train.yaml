@@ -1,0 +1,31 @@
+args:
+  - {kind : cmb, q2bin : low    , project : rk  , version : v8}
+  - {kind : cmb, q2bin : central, project : rk  , version : v8}
+  - {kind : cmb, q2bin : high   , project : rk  , version : v8}
+  # -------------------
+  - {kind : prc, q2bin : low    , project : rk  , version : v8}
+  - {kind : prc, q2bin : central, project : rk  , version : v8}
+  - {kind : prc, q2bin : high   , project : rk  , version : v8}
+  # -------------------
+  - {kind : cmb, q2bin : low    , project : rkst, version : v3}
+  - {kind : cmb, q2bin : central, project : rkst, version : v3}
+  - {kind : cmb, q2bin : high   , project : rkst, version : v3}
+  # -------------------
+  - {kind : prc, q2bin : low    , project : rkst, version : v3}
+  - {kind : prc, q2bin : central, project : rkst, version : v3}
+  - {kind : prc, q2bin : high   , project : rkst, version : v3}
+  # -------------------
+  - {kind : prc, q2bin : low    , project : rkst, version : v4}
+  - {kind : prc, q2bin : central, project : rkst, version : v4}
+  - {kind : prc, q2bin : high   , project : rkst, version : v4}
+outputs:
+  - model_000.pkl
+  - model_001.pkl
+  - model_002.pkl
+  - model_003.pkl
+  - model_004.pkl
+  - model_005.pkl
+  - model_006.pkl
+  - model_007.pkl
+  - model_008.pkl
+  - model_009.pkl

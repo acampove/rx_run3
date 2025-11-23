@@ -1,0 +1,32 @@
+args:
+  - { sample : 'Bd_JpsiKst_mm_eq_DPC', trigger : Hlt2RD_B0ToKpPimMuMu_MVA, q2bin : jpsi, brem : 0 }
+  - { sample : 'Bu_JpsiK_mm_eq_DPC'  , trigger : Hlt2RD_BuToKpMuMu_MVA   , q2bin : jpsi, brem : 0 }
+  # -------
+  - { sample : 'DATA_24*'            , trigger : Hlt2RD_B0ToKpPimMuMu_MVA, q2bin : jpsi, brem : 0 }
+  - { sample : 'DATA_24*'            , trigger : Hlt2RD_BuToKpMuMu_MVA   , q2bin : jpsi, brem : 0 }
+  # -------
+  # -------
+  - { sample : 'Bd_JpsiKst_ee_eq_DPC', trigger : Hlt2RD_B0ToKpPimEE_MVA  , q2bin : jpsi, brem : 1 }
+  - { sample : 'Bu_JpsiK_ee_eq_DPC'  , trigger : Hlt2RD_BuToKpEE_MVA     , q2bin : jpsi, brem : 1 }
+  # -------
+  - { sample : 'Bd_JpsiKst_ee_eq_DPC', trigger : Hlt2RD_B0ToKpPimEE_MVA  , q2bin : jpsi, brem : 2 }
+  - { sample : 'Bu_JpsiK_ee_eq_DPC'  , trigger : Hlt2RD_BuToKpEE_MVA     , q2bin : jpsi, brem : 2 }
+  # -------
+  - { sample : 'DATA_24*'            , trigger : Hlt2RD_B0ToKpPimEE_MVA  , q2bin : jpsi, brem : 1 }
+  - { sample : 'DATA_24*'            , trigger : Hlt2RD_BuToKpEE_MVA     , q2bin : jpsi, brem : 1 }
+  # -------
+  - { sample : 'DATA_24*'            , trigger : Hlt2RD_B0ToKpPimEE_MVA  , q2bin : jpsi, brem : 2 }
+  - { sample : 'DATA_24*'            , trigger : Hlt2RD_BuToKpEE_MVA     , q2bin : jpsi, brem : 2 }
+output:
+  - bchi2.png
+  - bmass_dtf.png
+  - bmass.png
+  - jmass.png
+  - k_ghost.png
+  - k_pidk.png
+  - l1_ghost.png
+  - l1_pide.png
+  - l2_ghost.png
+  - l2_pide.png
+  - mva_cmb.png
+  - mva_prc.png

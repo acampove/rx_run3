@@ -1,0 +1,119 @@
+'''
+This script is meant to run the orchestration of comparison plots with
+Luigi Analysis Workflow
+'''
+import os
+import json
+from pathlib               import Path
+
+import law
+from law.parameter         import Parameter
+from omegaconf             import DictConfig, OmegaConf
+from dmu.generic           import utilities as gut
+from dmu.logging.log_store import LogStore
+
+log=LogStore.add_logger('rx_orchestration:compare_law')
+# -------------------------------------
+class CompareTask(law.Task):
+    config_string : str = Parameter() # type: ignore
+    # -------------------------------------
+    def _get_config(self) -> DictConfig:
+        '''
+        Returns
+        --------------------
+        Transform JSON string `config_string` with configuration to DictConfig
+        and returns it
+        '''
+        if hasattr(self, '_cfg'):
+            return self._cfg
+
+        if not isinstance(self.config_string, str):
+            raise ValueError('Configuration string not a string')
+
+        cfg = OmegaConf.create(self.config_string)
+        if not isinstance(cfg, DictConfig):
+            raise ValueError('cfg not a DictConfig')
+
+        self._cfg = cfg
+
+        return self._cfg
+    # -------------------------------------
+    def output(self) -> list[law.LocalFileTarget]:
+        '''
+        Returns
+        ---------------
+        Name of required output, built from ANADIR and config settings
+        '''
+        cfg    = self._get_config()
+        ANADIR = os.environ['ANADIR']
+        PLTDIR = Path(ANADIR) / f'plots/comparison/{cfg.args.config}'
+        names  = cfg.output[cfg.args.config]
+
+        dir_path = PLTDIR / f'{cfg.args.sample}/{cfg.args.trigger}/{cfg.args.q2_bin}/{cfg.args.brem}_{cfg.args.block}/drop_mva'
+
+        return [ law.LocalFileTarget(dir_path / name) for name in names ]
+    # -------------------------------------
+    def run(self):
+        '''
+        Runs comparison
+        '''
+        from rx_plotter_scripts.compare import main as compare 
+
+        cfg = self._get_config() 
+
+        compare(settings=cfg.args)
+# -------------------------------------
+class WrapCompare(law.WrapperTask):
+    '''
+    This class takes care of steering the workflow
+    '''
+    def _get_settings(self) -> list[str]:
+        '''
+        Returns
+        --------------
+        List of JSON strings defining what each job will do
+        '''
+        config = gut.load_conf(package='configs', fpath='rx_plots/compare.yaml')
+    
+        l_cfg = [] 
+        for args in config['args']:
+            sample  = args['sample' ]
+            trigger = args['trigger']
+            q2bin   = args['q2_bin' ]
+    
+            for block in [12, 5, 6, 78]:
+                if block == 78 and sample == 'Bd_JpsiKst_ee_eq_DPC':
+                    log.warning(f'Skipping blocks 7 and 8 for {sample}')
+                    continue
+                for kind in ['resolution', 'smear']:
+                    for brem in [1, 2]:
+                        cfg            = {}
+                        cfg['sample' ] = sample
+                        cfg['trigger'] = trigger
+                        cfg['q2_bin' ] = q2bin 
+                        cfg['config' ] = kind 
+                        cfg['substr' ] = None 
+                        cfg['brem'   ] = brem 
+                        cfg['block'  ] = block
+                        cfg['nomva'  ] = True
+                        cfg['emulate'] = False
+
+                        output   = OmegaConf.to_container(config.output, resolve=True)
+                        json_str = json.dumps({'args' : cfg, 'output' : output}) 
+                        l_cfg.append(json_str)
+
+        return l_cfg 
+    # --------------------------
+    def requires(self):
+        '''
+        Defines the sets of tasks in the workflow
+        '''
+        l_settings = self._get_settings()
+        for settings in l_settings:
+            yield CompareTask(config_string = settings)
+# -------------------------------------
+def main():
+    law.run(argv=['WrapCompare', '--workers', '12'])
+# -------------------------------------
+if __name__ == "__main__":
+    main()

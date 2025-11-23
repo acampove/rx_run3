@@ -1,0 +1,17 @@
+vers   : v6
+scales :
+  - parameters_ee.json
+  - parameters_mm.json
+args:
+  - {project : rk_ee  , year : '2024'}
+  - {project : rk_mm  , year : '2024'}
+  - {project : rkst_ee, year : '2024'}
+  - {project : rkst_mm, year : '2024'}
+outputs:
+  - parameters.json
+  - mu_dat.png
+  - mu_sim.png
+  - sg_dat.png
+  - sg_sim.png
+  - smu.png
+  - ssg.png

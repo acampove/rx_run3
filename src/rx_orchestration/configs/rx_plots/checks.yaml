@@ -1,0 +1,82 @@
+efficiency_vs_q2:
+  args:
+    - {analysis : rk  , channel : mm}
+    - {analysis : rk  , channel : ee}
+    - {analysis : rkst, channel : mm}
+    - {analysis : rkst, channel : ee}
+  outputs:
+    - low/q2.png
+    - low/q2_true.png
+    - cen_low/q2.png
+    - cen_low/q2_true.png
+    - cen_high/q2.png
+    - cen_high/q2_true.png
+    - central/q2.png
+    - central/q2_true.png
+    - jpsi/q2.png
+    - jpsi/q2_true.png
+    - psi2/q2.png
+    - psi2/q2_true.png
+    - high/q2.png
+    - high/q2_true.png
+    - none/q2.png
+    - none/q2_true.png
+validate_nopid:
+  args:
+    - {'dummy_setting' : 1}
+  outputs:
+    - ee/k_pidk_Bd_Kstee_eq_btosllball05_DPC.png
+    - ee/k_pidk_Bu_JpsiPi_ee_eq_DPC.png
+    - ee/k_pidk_Bu_Kee_eq_btosllball05_DPC.png
+    - ee/k_pidk_Bu_KplKplKmn_eq_sqDalitz_DPC.png
+    - ee/k_pidk_Bu_KplpiplKmn_eq_sqDalitz_DPC.png
+    - ee/k_pidk_Bu_piplpimnKpl_eq_sqDalitz_DPC.png
+    - ee/l1_pide_Bd_Kstee_eq_btosllball05_DPC.png
+    - ee/l1_pide_Bu_JpsiPi_ee_eq_DPC.png
+    - ee/l1_pide_Bu_Kee_eq_btosllball05_DPC.png
+    - ee/l1_pide_Bu_KplKplKmn_eq_sqDalitz_DPC.png
+    - ee/l1_pide_Bu_KplpiplKmn_eq_sqDalitz_DPC.png
+    - ee/l1_pide_Bu_piplpimnKpl_eq_sqDalitz_DPC.png
+    - ee/l2_pide_Bd_Kstee_eq_btosllball05_DPC.png
+    - ee/l2_pide_Bu_JpsiPi_ee_eq_DPC.png
+    - ee/l2_pide_Bu_Kee_eq_btosllball05_DPC.png
+    - ee/l2_pide_Bu_KplKplKmn_eq_sqDalitz_DPC.png
+    - ee/l2_pide_Bu_KplpiplKmn_eq_sqDalitz_DPC.png
+    - ee/l2_pide_Bu_piplpimnKpl_eq_sqDalitz_DPC.png
+    - mm/k_pidk_Bd_Kstmumu_eq_btosllball05_DPC.png
+    - mm/k_pidk_Bu_JpsiPi_mm_eq_DPC.png
+    - mm/k_pidk_Bu_Kmumu_eq_btosllball05_DPC.png
+    - mm/l1_pidmu_Bd_Kstmumu_eq_btosllball05_DPC.png
+    - mm/l1_pidmu_Bu_JpsiPi_mm_eq_DPC.png
+    - mm/l1_pidmu_Bu_Kmumu_eq_btosllball05_DPC.png
+    - mm/l2_pidmu_Bd_Kstmumu_eq_btosllball05_DPC.png
+    - mm/l2_pidmu_Bu_JpsiPi_mm_eq_DPC.png
+    - mm/l2_pidmu_Bu_Kmumu_eq_btosllball05_DPC.png
+leakage:
+  args:
+    - {sample : Bu_JpsiK_ee_eq_DPC   , trigger : Hlt2RD_BuToKpEE_MVA}
+    - {sample : Bu_psi2SK_ee_eq_DPC  , trigger : Hlt2RD_BuToKpEE_MVA}
+    - {sample : Bd_JpsiKst_ee_eq_DPC , trigger : Hlt2RD_B0ToKpPimEE_MVA}
+    - {sample : Bd_psi2SKst_ee_eq_DPC, trigger : Hlt2RD_B0ToKpPimEE_MVA}
+  outputs:
+    - 0.png
+    - 1.png
+    - 2.png
+    - all.png
+high_q2cut:
+  args:
+    - {run : run3, sample : Bu_JpsiX_ee_eq_JpsiInAcc}
+    - {run : run3, sample : Bd_JpsiX_ee_eq_JpsiInAcc}
+    - {run : run3, sample : Bs_JpsiX_ee_eq_JpsiInAcc}
+    - {run : run3, sample : Bu_Kee_eq_btosllball05_DPC}
+    - {run : run3, sample : Bu_JpsiK_ee_eq_DPC}
+    - {run : run3, sample : Bu_psi2SK_ee_eq_DPC}
+  outputs:
+    - reco_q2_0.png
+    - reco_q2_1.png
+    - reco_q2_2.png
+    - reco_q2_all.png
+    - true_q2_0.png
+    - true_q2_1.png
+    - true_q2_2.png
+    - true_q2_all.png
