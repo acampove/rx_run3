@@ -3,7 +3,6 @@ Module with tests for PFNSplitter class
 '''
 import os
 import json
-import glob
 from pathlib               import Path
 from importlib.resources   import files
 from functools             import cache
@@ -42,7 +41,9 @@ def _get_pfns(analysis : str) -> list[Path]:
     lfn_dir= files('rx_data_lfns').joinpath(analysis)
     lfn_dir= Path(str(lfn_dir))
     lfn_ver= vmn.get_last_version(dir_path=lfn_dir, version_only=False)
-    l_path = lfn_ver.glob(pattern='*.json')
+    l_path = list(lfn_ver.glob(pattern='*.json'))
+    if not l_path:
+        raise ValueError(f'No JSON path found in {lfn_ver}')
 
     l_pfn  = []
     for path in l_path:
