@@ -44,15 +44,24 @@ class SignalCalculator:
 
         return df
     # -----------------------------------
+    # TODO: This could return tuple with value and error
+    # and it could be used to do error propagation
+    # Not, urgent, control channel is abundant and denominator error
+    # is very small
     def _get_control_eff(self) -> float:
+        '''
+        Returns
+        -----------------
+        Value of efficiency for control mode
+        '''
         sample = self._cfg['samples']['control']
 
         # Control mode (i.e. Jpsi) should always
         # be evaluated at Jpsi bin
         obj = EfficiencyCalculator(q2bin='jpsi')
-        eff = obj.get_efficiency(sample=sample)
+        val, _ = obj.get_efficiency(sample=sample)
 
-        return eff
+        return val 
     # -----------------------------------
     def _get_eff_ratio(self) -> pnd.DataFrame:
         df_sig_eff = self._get_signal_eff()
