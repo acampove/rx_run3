@@ -168,9 +168,9 @@ def _process_rdf(
 
         return rdf
     else:
-        log.info(30 * '-')
-        log.info(f'Found {nentries} entries in: {path}')
-        log.info(30 * '-')
+        log.debug(30 * '-')
+        log.debug(f'Found {nentries} entries in: {path}')
+        log.debug(30 * '-')
 
     msc = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = msc.get_rdf()
