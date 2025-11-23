@@ -5,6 +5,7 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 import pytest
 
+from rx_data                         import RDFGetter
 from dmu.workflow                    import Cache
 from pathlib                         import Path
 from dmu.generic                     import utilities as gut
@@ -52,7 +53,8 @@ def test_simple(q2bin : str, tmp_path : Path):
     '''
     cfg = gut.load_data(package='rx_classifier_data', fpath='optimization/scanning.yaml')
 
-    with Cache.cache_root(path = tmp_path):
+    with Cache.cache_root(path = tmp_path),\
+        RDFGetter.max_entries(value = 10_000):
         cal = SignalCalculator(cfg=cfg, q2bin=q2bin)
         df  = cal.get_signal(control=100_000)
 
