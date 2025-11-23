@@ -82,10 +82,12 @@ class Project(StrEnum):
     This class represents the projects
     '''
     rk            = 'rk'
+    rk_no_pid     = 'rk_nopid'
     rk_no_refit   = 'rk_no_refit'
     rk_sim10d     = 'rk_sim10d'
     # ---------------
     rkst          = 'rkst'
+    rkst_no_pid   = 'rkst_nopid'
     rkst_no_refit = 'rkst_no_refit'
     rkst_sim10d   = 'rkst_sim10d'
 
