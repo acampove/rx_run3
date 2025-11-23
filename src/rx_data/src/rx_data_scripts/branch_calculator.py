@@ -8,9 +8,9 @@ import argparse
 
 import tqdm
 import dmu.generic.utilities as gut
-from pathlib                import Path
-from ROOT                   import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
-from dmu.logging.log_store  import LogStore
+from pathlib                     import Path
+from ROOT                        import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
+from dmu.logging.log_store       import LogStore
 
 from rx_q2.q2smear_corrector     import Q2SmearCorrector
 from rx_common                   import Project, info
