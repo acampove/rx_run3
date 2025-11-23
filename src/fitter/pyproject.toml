@@ -3,7 +3,6 @@ name = "fitter"
 version = "0.0.1"
 description = "Framework used to handle fits to data and simulation"
 readme = "README.md"
-requires-python = '==3.12'
 dependencies = [
     "typer",
     "pdg",

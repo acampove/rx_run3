@@ -3,7 +3,6 @@ name            = "ecal_calibration"
 version         = '1.7.4'
 description     = "Project meant to apply offline corrections to electrons in LHCb"
 readme          = "README.md"
-requires-python = "==3.12"
 dependencies    = [
     "pandas",
     "bokeh",

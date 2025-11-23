@@ -3,7 +3,6 @@ name            = "rx_data"
 description     = "Project with lists of LFNs and utilities needed to download filtered ntuples"
 version         = "0.0.0"
 readme          = "README.md"
-requires-python = '==3.12'
 dependencies    = [
     "tqdm>=0.0.0",
     "dask>=0.0.0",

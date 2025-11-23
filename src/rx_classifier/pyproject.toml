@@ -3,7 +3,6 @@ name            = 'rx_classifier'
 version         = '0.0.2'
 description     = 'Project used to train classifiers'
 readme          = "README.md"
-requires-python = '==3.12'
 dependencies    = [
     'mplhep',
     'matplotlib',

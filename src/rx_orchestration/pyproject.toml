@@ -5,7 +5,6 @@ version         = "0.0.1"
 description     = "An orchestration project"
 readme          = "README.md"
 license         = { text = "MIT" }
-requires-python = ">=3.12,<3.13"
 authors         = [
   { name = "angel.campoverde@cern.ch" }
 ]

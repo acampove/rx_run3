@@ -3,7 +3,6 @@ name        = 'rx_misid'
 description = 'Project used to calculate fully hadronic misid shapes'
 version     = '0.0.1'
 readme      = 'README.md'
-requires-python = '>=3.12'
 dependencies= [
 'PyYAML',
 'mplhep',
