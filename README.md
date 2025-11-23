@@ -13,8 +13,10 @@ This project contains the following packages:
 
 | Project         | Description                                                                 |
 |-----------------|-----------------------------------------------------------------------------|
-| [rx_data](src/rx_data/README.md)         | Allows access to the data and also has tools for further processing |
+| [rx_classifier](src/rx_classifier/README.md)     | Used to train classifiers                                               |
+| [rx_data](src/rx_data/README.md)                 | Allows access to the data and also has tools for further processing     |
 | [rx_efficiencies](src/rx_efficiencies/README.md) | Used to calculate geometric acceptances and reconstruction efficiencies |
+| [rx_misid](src/rx_misid/README.md)               | Used to |
 
 ## Development packages
 
