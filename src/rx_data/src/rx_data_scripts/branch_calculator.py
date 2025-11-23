@@ -109,7 +109,12 @@ def _set_logs():
     LogStore.set_level('rx_data:hop_calculator'     , Data.lvl)
     LogStore.set_level('dmu:ml:cv_predict'          , Data.lvl)
     LogStore.set_level('dmu:ml:CVClassifier'        , Data.lvl)
+
+    LogStore.set_level('rx_data:path_splitter'      ,       30)
     LogStore.set_level('rx_data:rdf_getter'         ,       30)
+    LogStore.set_level('rx_data:sample_emulator'    ,       30)
+    LogStore.set_level('rx_data:sample_patcher'     ,       30)
+    LogStore.set_level('rx_data:spec_maker'         ,       30)
 
     if Data.lvl < 10:
         LogStore.set_level('rx_data:spec_maker', Data.lvl)
