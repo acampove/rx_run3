@@ -367,7 +367,14 @@ def main():
     _parse_args()
     gut.TIMER_ON=True
 
-    l_path       = _get_paths()
+    prt = NtuplePartitioner(
+        kind      = Data.kind,
+        project   = Data.proj,
+        wild_card = Data.wild_card)
+
+    igroup, ngroup = Data.part
+    l_path = prt.get_paths(index=igroup, total=ngroup)
+
     Data.out_dir = _get_out_dir()
 
     log.info('Processing paths')
