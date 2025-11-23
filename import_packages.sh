@@ -7,9 +7,7 @@ set -euo pipefail
 
 # Array of packages: "name|git_url|branch"
 PACKAGES=(
-"root_stubs|git@github.com:acampove/root_stubs.git|master"
-"zfit-stubs|git@github.com:acampove/zfit-stubs.git|master"
-"vector_stubs|git@github.com:acampove/vector_stubs.git|master"
+    "rx_orchestration|ssh://git@gitlab.cern.ch:7999/rx_run3/rx_orchestration.git|master"
 )
 
 echo "Starting package import process..."
