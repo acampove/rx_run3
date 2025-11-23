@@ -3,30 +3,51 @@ This module contains code needed to steer the creation of the friend trees
 '''
 import os
 import law
+import json
 import argparse
 
 from law.parameter  import Parameter
-from pathlib        import Path
 from dmu.generic    import utilities as gut
 from dmu            import LogStore
+from omegaconf import DictConfig
+from rx_data        import NtuplePartitioner
 
 log=LogStore.add_logger('rx_orchestration:friend_trees')
 # -------------------------------------
 class Friend(law.Task):
     config_string : str = Parameter() # type: ignore
+    index         : int = Parameter() # type: ignore
+    # ----------------------
+    def _get_args(self) -> DictConfig:
+        '''
+        This method builds the arguments for the runner 
+        '''
     # -------------------------------------
     def output(self) -> list[law.LocalFileTarget]:
-        pass
+        '''
+        Returns
+        ---------------
+        List of objects symbolizing files that have to be created
+        '''
+        conf  = json.loads(s=self.config_string)
+        prt   = NtuplePartitioner(
+            kind    = conf['kind'], 
+            project = conf['project'])
+
+        paths = prt.get_paths(index=self.index, total=conf['parts'])
+
+        return [ law.LocalFileTarget(path) for path in paths ]
     # -------------------------------------
     def run(self):
         '''
         Runs comparison
         '''
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-        from fitter_scripts.fit_rx_reso import main as runner
+        from rx_data_scripts.branch_calculator import main as runner
 
-        cfg = self._get_config() 
-        runner(args=cfg.args)
+        args = self._get_args()
+
+        runner(args=args)
 # -------------------------------------
 class Friends(law.WrapperTask):
     '''
@@ -37,12 +58,18 @@ class Friends(law.WrapperTask):
         '''
         Defines the sets of tasks in the workflow
         '''
-        cfg = gut.load_conf(package='configs', fpath='rx_data/friends.yaml')
+        data = gut.load_data(package='configs', fpath='rx_data/friends.yaml')
 
         log.info(20 * '-')
-        l_settings = Friends.get_settings(cfg=cfg)
+        tasks = []
+        for conf in data['stage_1']:
+            config_string = json.dumps(conf)
+            ngroups       = conf['parts']
+            for index in range(ngroups):
+                task          = Friend(config_string = config_string, index = index)
+                tasks.append(task)
 
-        return [ Friend(config_string = settings) for settings in l_settings ]
+        return tasks
 # ----------------------
 def _parse_args() -> None:
     parser = argparse.ArgumentParser(description='Script use to create friend trees')
