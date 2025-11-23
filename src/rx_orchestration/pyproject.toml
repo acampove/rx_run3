@@ -1,41 +1,40 @@
-[tool.poetry]
-name        = 'rx_orchestration'
-version     = '0.0.1'
-description = 'An orchestration project'
-authors     = ['angel.campoverde@cern.ch']
-readme      = 'README.md'
-license     = 'MIT'
-packages    = [{include = 'workflows'}]
 
-[[tool.poetry.include]]
-path   = "configs/**/*.yaml"
+[project]
+name            = "rx_orchestration"
+version         = "0.0.1"
+description     = "An orchestration project"
+readme          = "README.md"
+license         = { text = "MIT" }
+requires-python = ">=3.12,<3.13"
+authors         = [
+  { name = "angel.campoverde@cern.ch" }
+]
 
-[tool.poetry.dependencies]
-python = '3.12.*'
-law    = '^0.1.20'
+dependencies = [
+  "law>=0.1.20,<0.2.0",
+]
 
-[build-system]
-requires      = ['poetry-core>=1.6.0']
-build-backend = 'poetry.core.masonry.api'
-
-[tool.poetry.scripts]
+[project.scripts]
 # ----------------
 # Plotting
 # ----------------
-cutflow_law = 'workflows.plots.cutflow_law:main'
-compare_law = 'workflows.plots.compare_law:main'
-overlay_law = 'workflows.plots.overlay_law:main'
-plot_2d_law = 'workflows.plots.plot_2d_law:main'
-checks_law  = 'workflows.plots.checks_law:main'
+cutflow_law = "workflows.plots.cutflow_law:main"
+compare_law = "workflows.plots.compare_law:main"
+overlay_law = "workflows.plots.overlay_law:main"
+plot_2d_law = "workflows.plots.plot_2d_law:main"
+checks_law  = "workflows.plots.checks_law:main"
+
 # ----------------
 # Classifier
 # ----------------
-train_law   = 'workflows.classification.train_law:main'
+train_law = "workflows.classification.train_law:main"
+
 # ----------------
 # Mass scales and resolutions
 # ----------------
-scales_law  = 'workflows.q2.scales_law:main'
+scales_law = "workflows.q2.scales_law:main"
+
 # ----------------
 # Fits
 # ----------------
-reso_fits_law = 'workflows.fits.reso_fits_law:main'
+reso_fits_law = "workflows.fits.reso_fits_law:main"
