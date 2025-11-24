@@ -84,13 +84,16 @@ def test_two_regions_common_pars() -> None:
     Test simultaneous fit with two regions
     and common parameters
     '''
+    nsig    = zfit.param.Parameter('nsig', 0, 0, 1000_000)
     obs     = None
 
-    pdf_001 = sut.get_model(obs=obs, kind='s+b', suffix='001')
+    pdf_001 = sut.get_model(obs=obs, kind='signal', suffix='001')
+    pdf_001 = pdf_001.create_extended(yield_ = nsig)
     dat_001 = pdf_001.create_sampler(10_000)
     nll_001 = zfit.loss.ExtendedUnbinnedNLL(data=dat_001, model=pdf_001)
 
-    pdf_002 = sut.get_model(obs=obs, kind='s+b', suffix='002')
+    pdf_002 = sut.get_model(obs=obs, kind='signal', suffix='002')
+    pdf_002 = pdf_002.create_extended(yield_ = nsig)
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
 
@@ -121,7 +124,7 @@ def test_with_constraints() -> None:
 
     cns     = cad.ConstraintAdder.dict_to_cons(d_cns=_constraints, name='test', kind='GaussianConstraint')
     adr     = cad.ConstraintAdder(nll=nll, cns=cns)
-    nll     = adr.get_nll(mode='real') 
+    nll     = adr.get_nll() 
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
     cfg.constraints = cns
