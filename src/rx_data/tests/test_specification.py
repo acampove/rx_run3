@@ -34,7 +34,7 @@ def _get_sample(tmp_path : Path) -> Sample:
     Instance of Sample
     '''
     paths = [ _make_file(index=index, tmp_path=tmp_path) for index in range(4) ]
-    data  = {'files' : paths, 'trees' : ['tree']}
+    data  = {'files' : paths, 'trees' : ['tree'], 'metadata' : {'kind' : 'test'}}
 
     return Sample(**data)
 # ----------------------
