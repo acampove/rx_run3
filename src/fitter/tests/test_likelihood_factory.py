@@ -184,15 +184,15 @@ def test_high_q2_track():
 #@pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
 @pytest.mark.parametrize('q2bin' , ['central'])
 @pytest.mark.parametrize('region, tag_cut', [
-    ('kkk'  , 'PROBNN_K > 0.1'), 
-    ('kpipi', 'PROBNN_K < 0.1')])
+    ('hdkk'  , 'PROBNN_K > 0.1'), 
+    ('hdpipi', 'PROBNN_K < 0.1')])
 def test_rare_misid_electron(q2bin : str, region : str, tag_cut : str):
     '''
     Test building likelihood in misid control regions
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='misid/electron/data.yaml')
+        fpath  ='misid/rk/electron/data_misid.yaml')
 
     l1_in_cr = f'((L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)) && L1_{tag_cut}'
     l2_in_cr = f'((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L2_{tag_cut}'
@@ -204,8 +204,7 @@ def test_rare_misid_electron(q2bin : str, region : str, tag_cut : str):
          sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
             'mass'  : '(1)',
-            'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})',
-            'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
+            'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})'}):
         ftr = LikelihoodFactory(
             obs    = obs,
             name   = f'likelihood_factory/{region}',
