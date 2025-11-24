@@ -4,12 +4,20 @@ Module needed to test truth matching
 import re
 
 import pytest
-from ROOT                  import RDF # type: ignore
+from ROOT                  import RDF
+from rx_common.types import Trigger # type: ignore
 from rx_selection          import truth_matching as tm
 from rx_data.rdf_getter    import RDFGetter
 from dmu.logging.log_store import LogStore
 
 # TODO: Add more samples
+_RK_MISIDSAMPLES=[
+    'Bu_KplKplKmn_eq_sqDalitz_DPC',
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+    'Bu_KplpiplKmn_eq_sqDalitz_DPC',
+    'Bu_Kee_eq_btosllball05_DPC',
+]
+
 l_sample_kpee = [
     'Bd_JpsiX_ee_eq_JpsiInAcc',
     'Bd_Kstee_eq_btosllball05_DPC',
@@ -109,26 +117,39 @@ def _check_rdf(rdf : RDF.RNode, cut : str) -> None:
             _print_values(rdf=rdf, cut=cut, number=20)
             log.info(cut)
 # --------------------------
-@pytest.mark.parametrize('sample', [
-    'Bu_Kee_eq_btosllball05_DPC',
-    'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
+@pytest.mark.parametrize('sample', _RK_MISIDSAMPLES)
 def test_nopid(sample : str):
     '''
     Tests truth matching for noPID samples
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA_noPID'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
+    with RDFGetter.max_entries(value = -1):
+        gtr   = RDFGetter(sample=sample, trigger=Trigger.rk_ee_nopid)
+        d_rdf = gtr.get_rdf(per_file=True)
 
     cut = tm.get_truth(sample, kind='bukll')
-    ini = rdf.Count().GetValue()
-    rdf = rdf.Filter(cut, 'truth match')
-    try:
-        fin = rdf.Count().GetValue()
-    except Exception: 
-        raise RuntimeError(f'Cannot apply cut: "{cut}"')
 
-    assert 20 * fin > ini
+    fail = False
+    for path, rdf in d_rdf.items():
+        ini = rdf.Count().GetValue()
+        rdf = rdf.Filter(cut, 'truth match')
+        try:
+            fin = rdf.Count().GetValue()
+        except Exception: 
+            raise RuntimeError(f'Cannot apply cut: "{cut}"')
+
+        this_fail = 20 * fin < ini
+        if this_fail:
+            log.error('')
+            log.error(path)
+            log.error(f'{ini} ---> {fin}')
+        else:
+            log.debug('')
+            log.debug(path)
+            log.debug(f'{ini} ---> {fin}')
+
+        fail = fail or this_fail
+
+    assert not fail
 # --------------------------
 @pytest.mark.parametrize('sample', l_sample_kpee)
 def test_bukee(sample : str):
