@@ -111,28 +111,25 @@ def test_rare_muon(q2bin : str):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-@pytest.mark.parametrize('block', ['b12', 'b3', 'b4', 'b5', 'b6', 'b78'])
-def test_reso_electron(block : str):
+@pytest.mark.parametrize('nbrem', [0, 1, 2])
+def test_reso_electron(nbrem : int):
     '''
     Test fitting resonant electron channel
     '''
-    cfg = gut.load_conf(
+    cfg   = gut.load_conf(
         package='fitter_data',
-        fpath  ='reso/electron/data.yaml')
-
-    block_cut = Data.d_block_cut[block]
+        fpath  ='reso/rk/electron/data.yaml')
 
     obs = zfit.Space('B_Mass_smr', limits=(4800, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
          RDFGetter.multithreading(nthreads=8),\
          sel.custom_selection(d_sel={
-            'block' : block_cut,
-            'brm12' : 'nbrem != 0',
+            'brm12' : f'nbrem = {nbrem}',
             'mass'  : '(1)'}):
 
         ftr = LikelihoodFactory(
+            name   = f'brem_{nbrem:03}',
             obs    = obs,
-            name   = block,
             sample = 'DATA_24_*',
             trigger= Trigger.rk_ee_os,
             q2bin  = 'jpsi',
@@ -168,7 +165,7 @@ def test_high_q2_track():
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='rare/electron/data.yaml')
+        fpath  ='rare/rk/electron/data.yaml')
 
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
