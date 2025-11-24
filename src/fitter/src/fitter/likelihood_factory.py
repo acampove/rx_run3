@@ -87,7 +87,7 @@ class LikelihoodFactory:
     # ------------------------
     def run(self) -> ExtendedUnbinnedNLL:
         '''
-        Runs fit
+        Creates negative log-likelihood
 
         Returns
         ------------
@@ -107,6 +107,7 @@ class LikelihoodFactory:
 
         log.info('Getting full data model using fits to simulation')
         with SpecMaker.project(name = project):
+            log.debug(f'Getting model for fitting data with project: {project}')
             mod  = DataModel(
                 name   = self._name,
                 cfg    = self._cfg,
