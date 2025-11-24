@@ -13,9 +13,8 @@ class Stats:
     '''
     Class meant to provide number of candidates
     '''
-    d_sample : dict[str:str] = {}
     # ----------------------------------------
-    def __init__(self, sample : str, trigger : str):
+    def __init__(self, sample : str, trigger : Trigger):
         '''
         sample  (str): MC sample identifier
         trigger (str): HLT2 trigger
@@ -23,36 +22,17 @@ class Stats:
         self._sample  = sample
         self._trigger = trigger
     # ----------------------------------------
-    def _get_paths(self) -> list[str]:
-        if 'main' not in Stats.d_sample:
-            raise ValueError('Cannot find main section among samples')
-
-        yaml_path = Stats.d_sample['main']
-
-        with open(yaml_path, encoding='utf-8') as ifile:
-            d_data = yaml.safe_load(ifile)
-
-        if self._sample not in d_data:
-            raise ValueError(f'Cannot find {self._sample} in list of samples')
-
-        if self._trigger not in d_data[self._sample]:
-            raise ValueError(f'Cannot find {self._trigger} in list of triggers')
-
-        l_path = d_data[self._sample][self._trigger]
-        npath  = len(l_path)
-        log.info(f'Found {npath} paths')
-        for path in l_path:
-            log.debug(path)
-
-        return l_path
-    # ----------------------------------------
     def get_entries(self, tree : str) -> int:
         '''
         Takes tree name, returns number of entries
         '''
+        mkr = SpecMaker(
+            sample  = self._sample, 
+            trigger = self._trigger,
+            tree    = tree)
+        json_path = mkr.get_spec_path(per_file=False)
 
-        l_path = self._get_paths()
-        rdf    = RDataFrame(tree, l_path)
+        rdf    = RDF.Experimental.FromSpec(str(json_path))
         val    = rdf.Count().GetValue()
 
         return val
