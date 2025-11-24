@@ -3,8 +3,9 @@ This module tests the functions in the info.py module
 '''
 
 import pytest
-from ROOT      import RDataFrame, RDF # type: ignore
-from rx_common import info
+from ROOT            import RDataFrame, RDF # type: ignore
+from rx_common       import info
+from rx_common.types import Trigger
 
 # ----------------------
 def _get_rdf(is_data : bool) -> RDF.RNode:
@@ -103,7 +104,8 @@ def test_channel_from_trigger(channel : str, trigger : str):
     ('RKst', 'Hlt2RD_B0ToKpPimEE_MVA_cal'),
     ('RKst', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
     ('RKst', 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA')])
-def test_project_from_trigger(project : str, trigger : str):
+# -----------------------------------------
+def test_project_from_trigger(project : str, trigger : Trigger):
     '''
     Test for function providing RK/RKst for a given HLT2 trigger
     '''
