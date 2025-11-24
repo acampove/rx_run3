@@ -175,7 +175,7 @@ class ScalesData:
         out_dir = f'{out_dir}/prec_scales/plots/prec_scales'
         os.makedirs(out_dir, exist_ok=True)
 
-        log.warning(f'Sending plots to: {out_dir}')
+        log.debug(f'Sending plots to: {out_dir}')
 
         plt.grid()
         plt.title(mva_cut)
