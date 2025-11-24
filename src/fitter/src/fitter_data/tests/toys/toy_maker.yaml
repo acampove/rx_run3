@@ -1,7 +1,8 @@
 # This config is used for testing the ToyMaker class
-out_dir: /tmp/acampove/tests/fitter/toys/test
+out_dir: toys/test
 ntoys  : 20
 run_gof: false
+constraints : {}
 fitting:
   minimization:
     mode     : 0
