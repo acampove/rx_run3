@@ -4,6 +4,7 @@ Module containing the MisIDConstraints class
 from dmu.stats.fitter      import GofCalculator
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
+from rx_common.types       import Trigger
 
 from dmu.generic           import utilities        as gut
 from dmu.stats.parameters  import ParameterLibrary as PL
@@ -51,7 +52,7 @@ class MisIDConstraints(Cache):
         self._obs       = obs
         self._cfg       = cfg
         self._q2bin     = q2bin
-        self._trigger   = 'Hlt2RD_BuToKpEE_MVA_noPID'
+        self._trigger   = Trigger.rk_ee_nopid
         self._project   = 'nopid'
 
         d_sel = sel.selection(
@@ -180,8 +181,7 @@ class MisIDConstraints(Cache):
                 obs    = self._obs,
                 out_dir= nickname,
                 sample = sample,
-                trigger= 'Hlt2RD_BuToKpEE_MVA_noPID',
-                project= 'nopid',
+                trigger= Trigger.rk_ee_nopid,
                 wgt_cfg= wgt_cfg,
                 is_sig = is_sig,
                 cut    = pid_sel,
@@ -249,8 +249,7 @@ class MisIDConstraints(Cache):
                 obs    = obs,
                 name   = kind,
                 sample = 'DATA_24_*',
-                trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
-                project= 'rx',
+                trigger= Trigger.rk_ee_ext,
                 q2bin  = self._q2bin,
                 cfg    = self._cfg)
             nll = ftr.run()
