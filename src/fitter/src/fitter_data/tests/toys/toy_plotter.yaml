@@ -5,7 +5,7 @@ general:
   size: [15, 10]
 
 saving:
-  plt_dir: toys/tests
+  plt_dir: toys/test
 
 correlation:
   size     : [20, 15]

@@ -27,7 +27,7 @@ generated:
   lw    : 1
 
 saving:
-  plt_dir: toys/tests/integration
+  plt_dir: toys/test/integration
 
 pulls:
   binning   : [-4, +4, 60]
@@ -104,6 +104,6 @@ summary:
     - mu_err
     - sg_err
   mean : 
-    - valid 
+    - Valid 
   pulls:
     - mu_pul
