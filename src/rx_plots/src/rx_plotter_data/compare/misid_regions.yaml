@@ -14,10 +14,10 @@ comparison:
       bmass : B_Mass
   Pion like:
     vars:
-      bmass : B_Mass_kpipi
+      bmass : B_Mass_hdpipi
   Kaon like:
     vars:
-      bmass : B_Mass_kkk
+      bmass : B_Mass_hdkk
 saving:
   plt_dir : plots/misid_regions
 plots:
