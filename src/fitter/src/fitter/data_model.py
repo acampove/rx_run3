@@ -8,6 +8,8 @@ from dmu.logging.log_store  import LogStore
 from dmu.stats.parameters   import ParameterLibrary as PL
 from omegaconf              import DictConfig
 from rx_common.types        import Trigger
+from rx_common              import info
+from rx_data.stats          import SpecMaker
 from zfit.pdf               import BasePDF       as zpdf
 from zfit.interface         import ZfitSpace     as zobs
 from fitter.sim_fitter      import SimFitter
