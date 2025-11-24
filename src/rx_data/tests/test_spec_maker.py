@@ -4,9 +4,14 @@ Module with tests for SpecMaker class
 
 import pytest
 
-from rx_common.info     import LogStore
 from rx_common.types    import Project, Trigger
 from rx_data.spec_maker import SpecMaker, Specification
+from dmu                import LogStore
+
+_NOPIDSAMPLES=[
+    'Bu_KplKplKmn_eq_sqDalitz_DPC', 
+    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+]
 
 # These samples need minimal patching/emulation, etc
 _GOODSAMPLES=[
@@ -30,6 +35,8 @@ _INCLUSIVE_SAMPLES = [
     ('Bd_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
     ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
 ]
+
+log=LogStore.add_logger('rx_data:test_spec_maker')
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -147,3 +154,16 @@ def test_project(sample : str, trigger : Trigger, project : Project):
         path= gtr.get_spec_path(per_file=False)
 
     assert path.exists()
+# ----------------------
+@pytest.mark.parametrize('sample', _NOPIDSAMPLES)
+def test_nopid(sample : str):
+    '''
+    Test specification building for noPID samples
+    '''
+    gtr = SpecMaker(sample=sample, trigger=Trigger.rk_ee_nopid)
+    path= gtr.get_spec_path(per_file=False)
+
+    assert path.exists()
+
+    log.info(f'Specification saved to: {path}')
+   
