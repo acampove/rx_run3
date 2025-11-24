@@ -49,11 +49,11 @@ class MisIDConstraints(Cache):
         cfg      : configuration needed to build PDF
         q2bin    : E.g. central
         '''
+        self._name      = 'misid_constraints'
         self._obs       = obs
         self._cfg       = cfg
         self._q2bin     = q2bin
         self._trigger   = Trigger.rk_ee_nopid
-        self._project   = 'nopid'
 
         d_sel = sel.selection(
             q2bin   = self._q2bin, 
@@ -103,11 +103,11 @@ class MisIDConstraints(Cache):
         '''
         cfg = self._cfg.model.components[kind]
         ftr = SimFitter(
+            name     = self._name,
             component= kind,
             cfg      = cfg,
             obs      = self._obs,
             trigger  = self._trigger,
-            project  = self._project,
             q2bin    = self._q2bin)
         pdf = ftr.get_model()
         if pdf is None:
