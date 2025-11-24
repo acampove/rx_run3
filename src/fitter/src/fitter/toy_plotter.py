@@ -46,6 +46,11 @@ class ToyPlotter:
         df : Pandas dataframe with information from toy fits
         cfg: Configuration specifying how to plot
         '''
+        # WARNING: Update this when a new toy-wise quantity added
+        # These columns have the same values for all the fitting parameters
+        # belonging to a given fit
+        self._columns = ['Toy', 'GOF', 'Valid']
+
         self._l_par = df['Parameter'].unique().tolist()
         self._df    = self._preprocess_df(df=df)
         self._d_tex = self._get_latex_names(cfg=cfg)
@@ -169,9 +174,20 @@ class ToyPlotter:
             df_ref = df_ref.reset_index(drop=True)
             l_df.append(df_ref)
 
-        valid_sr    = df['Valid'].reset_index(drop=True)
-        df          = pnd.concat(objs=l_df, axis=1, ignore_index=False)
-        df['valid'] = valid_sr
+        # Use the last dataframe from the past loop
+        # To extract toy-wise columns
+        d_col : dict[str,pnd.Series] = {}
+        for column in self._columns: 
+            d_col[column] = df[column].reset_index(drop=True)
+
+        # Remove toy-wise columns
+        l_df_strip = [ df.drop(columns=self._columns) for df in l_df ]
+
+        # Concatenate and add them back. 
+        # Prevents these columns from been added once per parameter
+        df = pnd.concat(objs=l_df_strip, axis=1, ignore_index=False)
+        for name, series in d_col.items():
+            df[name] = series
 
         return df
     # ----------------------
