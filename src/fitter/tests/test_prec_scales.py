@@ -7,7 +7,6 @@ import pytest
 
 from conftest                    import ScalesData
 from dmu.logging.log_store       import LogStore
-from dmu.workflow.cache          import Cache
 from rx_efficiencies.decay_names import DecayNames as dn
 from rx_selection                import selection  as sel
 from fitter.prec_scales          import PrecScales
