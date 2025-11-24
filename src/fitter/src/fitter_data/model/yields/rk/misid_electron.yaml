@@ -12,15 +12,15 @@ cns_yields: &cns_yields
   min : 0
   max : 0 
 
-yld_combinatorial_kkk:
+yld_combinatorial_hdkk:
   <<: *flt_yields
-yld_combinatorial_kpipi:
+yld_combinatorial_hdpipi:
   <<: *flt_yields
-yld_kpipi_kpipi:
+yld_kpipi_hdpipi:
   <<: *flt_yields
-yld_kkk_kkk:
+yld_kkk_hdkk:
   <<: *flt_yields
-yld_kpipi_kkk:     # Kpipi yield in KKK region
+yld_kpipi_hdkk:     # Kpipi yield in KKK region
   <<: *cns_yields
-yld_kkk_kpipi:     # KKK yield in Kpipi region
+yld_kkk_hdpipi:     # KKK yield in Kpipi region
   <<: *cns_yields
