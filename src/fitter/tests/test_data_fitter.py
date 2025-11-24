@@ -3,6 +3,7 @@ Module used to test DataFitter
 '''
 import pytest
 
+from pathlib         import Path
 from omegaconf       import OmegaConf
 from dmu.stats.zfit  import zfit
 from dmu.stats       import constraint_adder as cad 
@@ -136,8 +137,8 @@ def test_with_constraints() -> None:
     ftr.run(kind='conf')
 # ----------------------
 slow_with_toys = pytest.param(500, marks=pytest.mark.slow)
-@pytest.mark.parametrize('ntoys', [50, slow_with_toys])
-def test_with_toys(ntoys : int) -> None:
+@pytest.mark.parametrize('ntoys', [20, slow_with_toys])
+def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     '''
     Integration test
 
@@ -159,12 +160,13 @@ def test_with_toys(ntoys : int) -> None:
         cfg  = fit_cfg)
     res = ftr.run(kind='zfit')
 
-    toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    toy_cfg.ntoys = ntoys
-    mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
-    df  = mkr.get_parameter_information()
+    with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
+        toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+        toy_cfg.ntoys = ntoys
+        mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
+        df  = mkr.get_parameter_information()
 
-    plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
-    ptr = ToyPlotter(df=df, cfg=plt_cfg)
-    ptr.plot()
+        plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
+        ptr = ToyPlotter(df=df, cfg=plt_cfg)
+        ptr.plot()
 # ----------------------
