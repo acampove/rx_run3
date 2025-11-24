@@ -32,8 +32,9 @@ def initialize():
     '''
     LogStore.set_level('rx_data:rdf_getter'      , 30)
     LogStore.set_level('rx_misid:sample_weighter', 30)
+    LogStore.set_level('fitter:LikelihoodFactory', 10)
 
-    with RDFGetter.max_entries(value = 100_000):
+    with RDFGetter.max_entries(value = 10_000):
         yield
 # -------------------------------------------
 def test_config():
