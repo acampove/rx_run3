@@ -7,9 +7,10 @@ import pytest
 from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.stats.zfit     import zfit
 from dmu.generic        import utilities  as gut
+from rx_common.types    import Trigger
 from rx_data.rdf_getter import RDFGetter
 from rx_selection       import selection  as sel
-from fitter.likelihood_factory import LikelihoodFactory
+from fitter             import LikelihoodFactory
 
 # -------------------------------------------
 class Data:
@@ -25,7 +26,10 @@ class Data:
         'b78': 'block == 7 || block == 8'}
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
+    '''
+    This runs before any test
+    '''
     LogStore.set_level('rx_data:rdf_getter'      , 30)
     LogStore.set_level('rx_misid:sample_weighter', 30)
 # -------------------------------------------
