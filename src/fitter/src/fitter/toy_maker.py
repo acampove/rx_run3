@@ -133,7 +133,8 @@ class ToyMaker:
         ------------
         Pandas dataframe where each row represents a parameter
         '''
-        df = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid'])
+        columns = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid']
+        df = pnd.DataFrame(columns=columns)
 
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
         nll       = self._nll.create_new(data=l_sampler)
