@@ -200,14 +200,15 @@ def test_rare_misid_electron(q2bin : str, region : str, tag_cut : str):
     obs = zfit.Space(f'B_Mass_{region}', limits=(4500, 7000))
 
     with PL.parameter_schema(cfg=cfg.model.yields),\
-         RDFGetter.default_excluded(names=[]),\
+         RDFGetter.max_entries(value = -1),\
+         RDFGetter.multithreading(nthreads = 6),\
          sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
             'mass'  : '(1)',
             'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})'}):
         ftr = LikelihoodFactory(
             obs    = obs,
-            name   = f'likelihood_factory/{region}',
+            name   = region,
             sample = 'DATA_24_*',
             trigger= Trigger.rk_ee_ext,
             q2bin  = q2bin,
