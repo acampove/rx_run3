@@ -62,28 +62,25 @@ class LikelihoodFactory:
 
         return sample
     # ------------------------
-    def _update_trigger_project(self) -> tuple[Trigger,str]:
+    def _update_mc_trigger(self) -> Trigger:
         '''
         Returns
         -------------
-        Tuple with trigger and project. If trigger does not end with ext
-        return _trigger and default project, i.e. rk, rkst 
+        Trigger that will be used for simulation components
 
-        If trigger ends with ext, switch to noPID trigger and rk/rkst_nopid project
-        because we are working with PID control region with simulation.
+        If trigger does not end with ext return _trigger
+        If trigger ends with ext, switch to noPID trigger. Because we are working with PID control region with simulation.
         '''
-        default_project = info.project_from_trigger(trigger = self._trigger, lower_case=True)
         if self._trigger not in [Trigger.rk_ee_ext, Trigger.rkst_ee_ext]:
-            log.debug(f'Found non-Extended trigger {self._trigger}, using default project {default_project}')
-            return self._trigger, default_project
+            log.debug(f'Found non-Extended trigger {self._trigger}, using default project')
+            return self._trigger 
 
         value   = self._trigger.replace('_ext', '_noPID')
         trigger = Trigger(value)
-        project = f'{default_project}_nopid'
 
-        log.info(f'Found ext trigger, overriding with: {trigger}/{project}')
+        log.info(f'Found ext trigger, overriding with: {trigger}')
 
-        return trigger, project
+        return trigger
     # ------------------------
     def run(self) -> ExtendedUnbinnedNLL:
         '''
@@ -103,18 +100,18 @@ class LikelihoodFactory:
             wgt_cfg= None) # Do not need weights for data
         data = dpr.get_data()
 
-        trigger, project = self._update_trigger_project()
+        trigger = self._update_mc_trigger()
 
         log.info('Getting full data model using fits to simulation')
-        with SpecMaker.project(name = project):
-            log.debug(f'Getting model for fitting data with project: {project}')
-            mod  = DataModel(
-                name   = self._name,
-                cfg    = self._cfg,
-                obs    = self._obs,
-                q2bin  = self._q2bin,
-                trigger= trigger)
-            model= mod.get_model()
+        log.debug(f'{"Trigger":<20}{trigger}')
+        log.debug(f'{"q2bin  ":<20}{self._q2bin}')
+        mod  = DataModel(
+            name   = self._name,
+            cfg    = self._cfg,
+            obs    = self._obs,
+            q2bin  = self._q2bin,
+            trigger= trigger)
+        model= mod.get_model()
 
         log.info(50 * '-')
         log.info(f'Making likelihood for: {self._sample}/{self._trigger}/{self._q2bin}')
