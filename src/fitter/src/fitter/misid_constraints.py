@@ -9,18 +9,18 @@ from rx_common.types       import Trigger
 from dmu.generic           import utilities        as gut
 from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.stats.zfit        import zfit
-from dmu.logging.log_store import LogStore
 from dmu.workflow.cache    import Cache
+from dmu                   import LogStore
 
-from omegaconf      import DictConfig, OmegaConf
-from zfit           import Space               as zobs
-from zfit.pdf       import BasePDF             as zpdf
-from zfit.loss      import ExtendedUnbinnedNLL as zlos
+from omegaconf  import DictConfig, OmegaConf
+from zfit       import Space               as zobs
+from zfit.pdf   import BasePDF             as zpdf
+from zfit.loss  import ExtendedUnbinnedNLL as zlos
 
-from fitter.sim_fitter         import SimFitter
-from fitter.data_fitter        import DataFitter
-from fitter.likelihood_factory import LikelihoodFactory
-from fitter.data_preprocessor  import DataPreprocessor
+from fitter     import SimFitter
+from fitter     import DataFitter
+from fitter     import LikelihoodFactory
+from fitter     import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid_constraints')
 # -------------------------        
