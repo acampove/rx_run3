@@ -7,6 +7,8 @@ import pytest
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter12 import RDFGetter12
 
+pytest.skip('Skipped because Run1/2 ntuples are not coppied yet', allow_module_level=True)
+
 log=LogStore.add_logger('rx_data:test_rdf_getter12')
 # ---------------------------------------------
 class Data:
