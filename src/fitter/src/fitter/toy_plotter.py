@@ -176,9 +176,17 @@ class ToyPlotter:
         -------------
         ROOT dataframe meant to be passed to Plotter1d
         '''
-        py_data    = self._df.to_dict(orient='list')
-        np_data    = { name : numpy.array(vals, dtype='float') for name, vals in py_data.items() }
-        rdf        = RDF.FromNumpy(np_data)
+        data : dict[str,numpy.ndarray] = {}
+        for name in self._df.columns:
+            values = self._df[name]
+            try:
+                array  : numpy.ndarray = numpy.asarray(values, dtype=float)
+            except Exception as exc:
+                raise ValueError(f'Cannot convert column \"{name}\" into array of floats') from exc
+
+            data[name] = array
+
+        rdf = RDF.FromNumpy(data)
 
         return rdf
     # ----------------------
