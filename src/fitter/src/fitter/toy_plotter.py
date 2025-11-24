@@ -9,7 +9,7 @@ import seaborn           as sns
 import matplotlib.pyplot as plt
 
 from scipy.stats             import norm
-from ROOT                    import RDataFrame, RDF # type: ignore
+from ROOT                    import RDF # type: ignore
 from omegaconf               import DictConfig, OmegaConf
 from dmu.logging.log_store   import LogStore
 from dmu.plotting.plotter_1d import Plotter1D
@@ -170,7 +170,7 @@ class ToyPlotter:
 
         return df
     # ----------------------
-    def _get_rdf(self) -> RDataFrame:
+    def _get_rdf(self) -> RDF.RNode:
         '''
         Returns
         -------------
@@ -221,7 +221,7 @@ class ToyPlotter:
     # ----------------------
     def _plot_correlation_matrix(
         self, 
-        rdf      : RDataFrame,
+        rdf      : RDF.RNode,
         plt_path : str) -> None:
         '''
         - Formats the config for the correlation matrix plotting
