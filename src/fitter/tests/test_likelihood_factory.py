@@ -8,7 +8,7 @@ from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.stats.zfit     import zfit
 from dmu.generic        import utilities  as gut
 from rx_common.types    import Trigger
-from rx_data.rdf_getter import RDFGetter
+from rx_data            import RDFGetter
 from rx_selection       import selection  as sel
 from fitter             import LikelihoodFactory
 
@@ -50,8 +50,7 @@ def test_config():
             name   = 'likelihood_factory',
             obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
-            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-            project= 'rx',
+            trigger= Trigger.rk_mm_os,
             q2bin  = 'jpsi',
             cfg    = cfg)
         cfg = ftr.get_config()
@@ -83,8 +82,7 @@ def test_reso_muon():
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
-            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-            project= 'rx',
+            trigger= Trigger.rk_mm_os,
             q2bin  = 'jpsi',
             cfg    = cfg)
         ftr.run()
@@ -103,8 +101,7 @@ def test_rare_muon(q2bin : str):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpMuMu_MVA',
-            project= 'rx',
+            trigger= Trigger.rk_mm_os,
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
@@ -132,8 +129,7 @@ def test_reso_electron(block : str):
             obs    = obs,
             name   = block,
             sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
+            trigger= Trigger.rk_ee_os,
             q2bin  = 'jpsi',
             cfg    = cfg)
         ftr.run()
@@ -155,8 +151,7 @@ def test_rare_electron(q2bin : str):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
+            trigger= Trigger.rk_ee_os,
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
@@ -179,8 +174,7 @@ def test_high_q2_track():
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA',
-            project= 'rx',
+            trigger= Trigger.rk_ee_os,
             q2bin  = 'high',
             cfg    = cfg)
         ftr.run()
@@ -214,8 +208,7 @@ def test_rare_misid_electron(q2bin : str, region : str, tag_cut : str):
             obs    = obs,
             name   = f'likelihood_factory/{region}',
             sample = 'DATA_24_*',
-            trigger= 'Hlt2RD_BuToKpEE_MVA_ext',
-            project= 'rx',
+            trigger= Trigger.rk_ee_ext,
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
