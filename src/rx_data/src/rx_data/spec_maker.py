@@ -77,7 +77,7 @@ class SpecMaker:
             self._spec    = self._patcher.get_patched_specification()
             self._emulator.extend_redefinitions(redefinitions = self._patcher.redefinitions)
     # ----------------------
-    def _set_project(self, trigger : str) -> str:
+    def _set_project(self, trigger : Trigger) -> str:
         '''
         Parameters
         -------------
@@ -176,10 +176,11 @@ class SpecMaker:
         Gets list of paths to ROOT files for a given HLT2 trigger
         '''
         if self._trigger in d_trigger:
+            log.debug(f'Found paths for ROOT files associated to: {self._trigger}/{sample}/{ftree}')
             return d_trigger[self._trigger]
 
         if not self._trigger.endswith('_ext'):
-            raise ValueError(f'Invalid trigger name {self._trigger} for sample {sample} and friend tree {ftree}')
+            raise ValueError(f'Invalid trigger {self._trigger} for sample {sample}, project {self._project} and friend tree {ftree}')
 
         # TODO: When misid trigger be processed also for MC, this has to be updated
         if self._sample.startswith('mc_'):

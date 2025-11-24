@@ -83,6 +83,7 @@ def test_reso_muon():
          RDFGetter.max_entries(value=100_000):
 
         ftr = LikelihoodFactory(
+            name   = 'brem_000',
             obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
             trigger= Trigger.rk_mm_os,
