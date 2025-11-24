@@ -6,10 +6,10 @@ import pytest
 from omegaconf             import OmegaConf
 from dmu.stats.zfit        import zfit
 from dmu.stats             import constraint_adder as cad 
-from dmu.stats             import gof_calculator as goc
-from dmu.stats             import utilities      as sut
-from dmu.generic           import utilities      as gut
-from dmu.logging.log_store import LogStore
+from dmu.stats             import gof_calculator   as goc
+from dmu.stats             import utilities        as sut
+from dmu.generic           import utilities        as gut
+from dmu                   import LogStore
 from fitter.data_fitter    import DataFitter
 from fitter.toy_maker      import ToyMaker
 from fitter.toy_plotter    import ToyPlotter
