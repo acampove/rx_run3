@@ -6,6 +6,7 @@ import tqdm
 import pandas     as pnd
 import tensorflow as tf
 
+from pathlib                    import Path
 from omegaconf                  import DictConfig, OmegaConf
 from dmu.stats                  import utilities  as sut
 from dmu.logging.log_store      import LogStore
@@ -39,6 +40,8 @@ class ToyMaker:
                toys are generaged with the correct initial parameters
         cfg  : omegaconf dictionary controlling configuration
         '''
+        self._ana_dir = Path(os.environ['ANADIR'])
+
         self._nll   = nll
         self._res   = res
         self._cfg   = self._check_config(cfg=cfg) 
@@ -54,14 +57,20 @@ class ToyMaker:
 
         Returns
         -------------
-        Config after check, if checks passed
+        Config after:
+        - Checks
+        - Update of out_dir with full path WRT ANADIR
         '''
         if 'out_dir' not in cfg:
             raise ValueError('No "out_dir" key found')
 
-        out_dir = cfg.out_dir
-        log.debug(f'Using output directory: {out_dir}')
-        os.makedirs(out_dir, exist_ok=True)
+        out_dir  : str  = cfg.out_dir
+        out_path : Path = self._ana_dir / out_dir
+
+        log.debug(f'Using output directory: {out_path}')
+        out_path.mkdir(parents = True, exist_ok = True)
+
+        cfg.out_dir = out_path
 
         return cfg
     # ----------------------
@@ -116,13 +125,13 @@ class ToyMaker:
 
         return df
     # ----------------------
-    def _get_out_path(self) -> str:
+    def _get_out_path(self) -> Path:
         '''
         Returns
         -------------
         Full path to parquet file where dataframe will be saved
         '''
-        out_path = f'{self._cfg.out_dir}/toys.parquet'
+        out_path = self._cfg.out_dir / 'toys.parquet'
         log.info(f'Saving parameters to: {out_path}')
 
         return out_path
