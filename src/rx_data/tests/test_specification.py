@@ -3,8 +3,7 @@ Module with tests for classes in specification.py module
 '''
 
 from pathlib               import Path
-
-from ROOT import RDataFrame
+from ROOT                  import RDataFrame
 from rx_data.specification import Sample
 
 # ----------------------
