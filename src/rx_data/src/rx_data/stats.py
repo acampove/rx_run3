@@ -1,10 +1,11 @@
 '''
 Module with Stats class
 '''
-import yaml
-from ROOT                  import RDataFrame
-from dmu.generic           import version_management as vman
-from dmu.logging.log_store import LogStore
+from ROOT      import RDF # type: ignore
+from dmu       import LogStore
+from rx_common import Trigger
+
+from rx_data.spec_maker import SpecMaker
 
 log=LogStore.add_logger('rx_data:stats')
 # ----------------------------------------
