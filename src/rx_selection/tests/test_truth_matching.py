@@ -73,8 +73,9 @@ def initialize():
     '''
     This will run before any test
     '''
-    LogStore.set_level('rx_data:rdf_getter', 40)
-    LogStore.set_level('rx_selection:truth_matching', 10)
+    LogStore.set_level('rx_data:rdf_getter'              , 40)
+    LogStore.set_level('rx_selection:truth_matching'     , 10)
+    LogStore.set_level('rx_selection:test_truth_matching', 10)
 # ----------------------
 def _print_values(rdf : RDF.RNode, cut : str, number : int) -> None:
     '''
