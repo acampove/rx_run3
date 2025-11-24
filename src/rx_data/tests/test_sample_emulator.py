@@ -22,11 +22,11 @@ _SAMPLE_PAIRS = [
 ]
 
 _SWAPPED_MASSES=[
-'B_M',
-'B_Mass',
-'B_M_brem_track_2',
-'B_const_mass_M',
-'B_const_mass_psi2S_M',
+    'B_M',
+    'B_Mass',
+    'B_M_brem_track_2',
+    'B_const_mass_M',
+    'B_const_mass_psi2S_M',
 ]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
