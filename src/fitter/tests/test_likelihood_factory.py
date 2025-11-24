@@ -32,6 +32,9 @@ def initialize():
     '''
     LogStore.set_level('rx_data:rdf_getter'      , 30)
     LogStore.set_level('rx_misid:sample_weighter', 30)
+
+    with RDFGetter.max_entries(value = 100_000):
+        yield
 # -------------------------------------------
 def test_config():
     '''
@@ -39,7 +42,7 @@ def test_config():
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='reso/muon/data.yaml')
+        fpath  ='reso/rk/muon/data.yaml')
 
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
@@ -72,7 +75,7 @@ def test_reso_muon():
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='reso/muon/data.yaml')
+        fpath  ='reso/rk/muon/data.yaml')
 
     obs = zfit.Space('B_Mass', limits=(5000, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
@@ -94,7 +97,7 @@ def test_rare_muon(q2bin : str):
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='rare/muon/data.yaml')
+        fpath  ='rare/rk/muon/data.yaml')
 
     obs = zfit.Space('B_Mass', limits=(5000, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields):
@@ -141,7 +144,7 @@ def test_rare_electron(q2bin : str):
     '''
     cfg = gut.load_conf(
         package='fitter_data',
-        fpath  ='rare/electron/data.yaml')
+        fpath  ='rare/rk/electron/data.yaml')
 
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
