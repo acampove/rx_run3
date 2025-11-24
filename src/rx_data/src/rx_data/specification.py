@@ -26,8 +26,7 @@ class Sample(BaseModel):
         tree_name = self.trees[0]
 
         paths = [ str(path) for path in self.files ]
-
-        rdf = RDataFrame(tree_name, paths)
+        rdf   = RDataFrame(tree_name, paths)
 
         return rdf.Count().GetValue()
 # --------------------------
