@@ -1,6 +1,7 @@
 '''
 Module holding ToyPlotter class
 '''
+import os
 import copy
 import numpy
 import omegaconf
@@ -8,6 +9,7 @@ import pandas            as pnd
 import seaborn           as sns
 import matplotlib.pyplot as plt
 
+from pathlib                 import Path
 from scipy.stats             import norm
 from ROOT                    import RDF # type: ignore
 from omegaconf               import DictConfig, OmegaConf
@@ -51,6 +53,9 @@ class ToyPlotter:
 
         cfg = self._add_pull_config(cfg=cfg)
         cfg = self._add_gen_config(cfg=cfg)
+
+        self._ana_dir      = Path(os.environ['ANADIR'])
+        cfg.saving.plt_dir = self._ana_dir / cfg.saving.plt_dir
         self._cfg   = cfg
     # ----------------------
     def _get_latex_names(
@@ -230,7 +235,7 @@ class ToyPlotter:
     def _plot_correlation_matrix(
         self, 
         rdf      : RDF.RNode,
-        plt_path : str) -> None:
+        plt_path : Path) -> None:
         '''
         - Formats the config for the correlation matrix plotting
         - Calculates correlation matrix from input data
@@ -324,7 +329,9 @@ class ToyPlotter:
             self._print_params()
             raise MissingVariableConfiguration('Cannot plot variable, one of the variables was likely missing') from exc
 
-        plt_path = f'{self._cfg.saving.plt_dir}/correlations.png'
+        plt_path = Path(f'{self._cfg.saving.plt_dir}/correlations.png')
+        plt_path.parent.mkdir(parents = True, exist_ok = True)
+
         self._plot_correlation_matrix(rdf=rdf, plt_path=plt_path)
         cfg_sum = self._get_toys_summary()
 
