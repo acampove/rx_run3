@@ -1,0 +1,27 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+output_directory : test/single_region
+model:
+  yields    : 
+    nsig001:
+      val : 10
+      min : 0
+      max : 100000
+  observable:
+    name : mass001 
+    range:
+      - 4500 
+      - 7000
+  components:
+    background : {} 
+    signal     : {}
+  constraints:
+    yields : []
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    Gauss_ext       : Signal
+    Exponential_ext : Combinatorial
