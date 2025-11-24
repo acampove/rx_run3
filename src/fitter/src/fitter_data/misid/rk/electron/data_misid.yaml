@@ -9,12 +9,12 @@ model:
   yields    : model/yields/rk/misid_electron.yaml
   observable:
     kpipi:
-      name : B_Mass_kpipi
+      name : B_Mass_hdpipi
       range:
         - 4500
         - 6000
     kkk:
-      name : B_Mass_kkk
+      name : B_Mass_hdkk
       range:
         - 4500
         - 6000
