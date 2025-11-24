@@ -3,7 +3,7 @@
 
 stage_1:
   - {kind : hop           , project : rk_nopid, version : v1, parts : 10}
-  - {kind : mass          , project : rk_nopid, version : v1, parts : 10}
+  - {kind : mass          , project : rk_nopid, version : v2, parts : 10}
   - {kind : brem_track_2  , project : rk_nopid, version : v1, parts : 10}
   - {kind : swp_cascade   , project : rk_nopid, version : v1, parts : 10}
   - {kind : swp_jpsi_misid, project : rk_nopid, version : v1, parts : 10}
