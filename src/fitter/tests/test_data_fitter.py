@@ -44,7 +44,7 @@ def test_single_region() -> None:
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
     ftr = DataFitter(
         name = 'single_region',
         d_nll= d_nll, 
@@ -72,7 +72,7 @@ def test_two_regions() -> None:
     }
 
     with goc.GofCalculator.disabled(True):
-        cfg = gut.load_conf(package='fitter_data', fpath='tests/two_regions.yaml')
+        cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/two_regions.yaml')
         ftr = DataFitter(
             name = 'two_regions',
             d_nll= d_nll, 
@@ -101,9 +101,9 @@ def test_two_regions_common_pars() -> None:
     }
 
     with goc.GofCalculator.disabled(True):
-        cfg = gut.load_conf(package='fitter_data', fpath='tests/two_regions.yaml')
+        cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/two_regions.yaml')
         ftr = DataFitter(
-            name = 'sim_common_pars',
+            name = 'common_pars',
             d_nll= d_nll, 
             cfg  = cfg)
         ftr.run(kind='conf')
@@ -123,7 +123,7 @@ def test_with_constraints() -> None:
     adr     = cad.ConstraintAdder(nll=nll, cns=cns)
     nll     = adr.get_nll(mode='real') 
 
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
     cfg.constraints = cns
     ftr = DataFitter(
         name = 'with_const',
@@ -149,7 +149,7 @@ def test_with_toys(ntoys : int) -> None:
     sel_cfg = OmegaConf.create(obj=_sel_cfg)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
-    fit_cfg = gut.load_conf(package='fitter_data', fpath='tests/single_region.yaml')
+    fit_cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
     ftr = DataFitter(
         name = 'with_toys',
         d_nll= d_nll, 
