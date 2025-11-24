@@ -16,14 +16,17 @@ _SAMPLES_MOTHER_SWAP=[
     'Bs_JpsiKst_ee_eq_DPC' ,
 ]
 
-_SAMPLES_HADRON_SWAP=[
-    'Bd_JpsiKst_mm_had_swp',
-    'Bd_JpsiKst_ee_had_swp',
-]
-
 _SAMPLE_PAIRS = [
     ('Bs_JpsiKst_mm_eq_DPC' , 'Bd_JpsiKst_mm_eq_DPC'),
     ('Bs_JpsiKst_ee_eq_DPC' , 'Bd_JpsiKst_ee_eq_DPC'),
+]
+
+_SWAPPED_MASSES=[
+'B_M',
+'B_Mass',
+'B_M_brem_track_2',
+'B_const_mass_M',
+'B_const_mass_psi2S_M',
 ]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
@@ -83,31 +86,10 @@ def test_swap_mother(sample : str):
     rdf_new = emu.post_process(rdf = rdf_old)
 
     data    = rdf_new.AsNumpy()
-    expected= 87.23
+    expected= 87.23 # Mass difference between Bs and Bd
     for name, arr_val in data.items():
-        if name.endswith('ID'):
+        if name not in _SWAPPED_MASSES:
             continue
 
         assert numpy.isclose(arr_val, expected).all()
 # --------------------------------------------
-@pytest.mark.parametrize('sample', _SAMPLES_HADRON_SWAP)
-def test_swap_hadrons(sample : str):
-    '''
-    sample: Name of sample to emulate
-    '''
-    log.info('')
-    rdf_old = _get_rdf()
-    emu     = SampleEmulator(sample=sample)
-    rdf_new = emu.post_process(rdf = rdf_old)
-
-    data_old = rdf_old.AsNumpy()
-    data_new = rdf_new.AsNumpy()
-    for variable in ['TRUEID', 'PT']:
-        arr_1o= data_old[f'H1_{variable}']
-        arr_2o= data_old[f'H2_{variable}']
-
-        arr_1n= data_new[f'H1_{variable}']
-        arr_2n= data_new[f'H2_{variable}']
-
-        assert numpy.isclose(arr_1o, arr_2n, rtol=1e-5).all()
-        assert numpy.isclose(arr_2o, arr_1n, rtol=1e-5).all()
