@@ -1,17 +1,17 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
-output_directory : rare/muon/data
+output_directory : rare/rk/muon/data
 model:
-  yields    : model/yields/rare_muon.yaml
+  yields    : model/yields/rk/rare_muon.yaml
   observable:
     name : B_Mass
     range:
       - 5080
       - 5800
   components:
-    combinatorial : rare/muon/combinatorial.yaml
-    signal        : rare/muon/signal.yaml
+    combinatorial : rare/rk/muon/combinatorial.yaml
+    signal        : rare/rk/muon/signal.yaml
   constraints:
     yields : []
 fit: {}
