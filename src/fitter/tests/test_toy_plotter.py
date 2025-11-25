@@ -83,7 +83,7 @@ def test_simple(test_dir : Path) -> None:
 
     assert math.isclose(cfg.median_a_unc, 153.3263369554583, rel_tol=1e-5)
     assert math.isclose(cfg.median_b_unc, 2.998985959009677, rel_tol=1e-5)
-    assert math.isclose(cfg.mean_valid  , 0.948            , rel_tol=1e-5)
+    assert math.isclose(cfg.mean_Valid  , 0.948            , rel_tol=1e-5)
 
     assert math.isclose(cfg.a_pul.mu, 0.02316429312808755, rel_tol=1e-5)
     assert math.isclose(cfg.a_pul.sg, 0.982856552637077  , rel_tol=1e-5)

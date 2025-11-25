@@ -35,7 +35,7 @@ pulls:
   normalized: true
 
 plots:
-  valid:
+  Valid:
     binning: [-1, 3, 4]
     yscale: 'linear'
     labels: ['Validity', 'Entries']
@@ -76,14 +76,14 @@ plugin:
       format : '{:.2f}'
       symbol : '\delta(a)'
   stats:
-    valid:
-      mean : validity rate={:.1%}
+    Valid:
+      mean : Validity rate={:.1%}
 
 summary:
   median : 
     - a_unc
     - b_unc
   mean : 
-    - valid 
+    - Valid 
   pulls:
     - a_pul
