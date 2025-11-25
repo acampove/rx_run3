@@ -4,7 +4,6 @@ Module containing the MisIDConstraints class
 
 from typing         import Final
 from rx_selection   import selection as sel
-from rx_common      import Trigger
 
 from dmu.stats      import GofCalculator
 from dmu.generic    import utilities        as gut
