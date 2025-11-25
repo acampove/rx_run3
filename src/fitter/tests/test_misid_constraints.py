@@ -39,7 +39,7 @@ def test_simple(q2bin : str) -> None:
     Basic test for building misID component
     '''
     obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
-    cfg = gut.load_conf(package='fitter_data', fpath='misid/electron/data_misid.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath='misid/rk/electron/data_misid.yaml')
     cfg.output_directory = Data.rel_dir
 
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}):
