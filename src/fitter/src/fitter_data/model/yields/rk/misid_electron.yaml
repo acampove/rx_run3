@@ -16,11 +16,11 @@ yld_combinatorial_hdkk:
   <<: *flt_yields
 yld_combinatorial_hdpipi:
   <<: *flt_yields
-yld_kpipi_hdpipi:
+yld_hdpipi:
   <<: *flt_yields
-yld_kkk_hdkk:
+yld_hdkk:
   <<: *flt_yields
-yld_kpipi_hdkk:     # Kpipi yield in KKK region
+yld_hdkk:     # Kpipi yield in KKK region
   <<: *cns_yields
-yld_kkk_hdpipi:     # KKK yield in Kpipi region
+yld_hdpipi:     # KKK yield in Kpipi region
   <<: *cns_yields
