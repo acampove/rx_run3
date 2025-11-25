@@ -143,8 +143,8 @@ def selection(
         log.warning(f'Process {process} recognized as toy sample, returning empty selection')
         return {}
 
-    project  = info.project_from_trigger(trigger=trigger, lower_case=False)
-    analysis = info.channel_from_trigger(trigger=trigger)
+    project = info.project_from_trigger(trigger=trigger, lower_case=False)
+    channel = info.channel_from_trigger(trigger=trigger)
 
     d_cut : dict[str,str] = {}
 
@@ -162,7 +162,7 @@ def selection(
         log.debug('Adding truth matching requirement for MC')
         d_cut['truth'] = _get_truth(event_type=event_type, trigger=trigger)
 
-    d_tmp = _get_selection(analysis, project, q2bin)
+    d_tmp = _get_selection(chan = channel, proj = project, q2_bin = q2bin)
     d_cut.update(d_tmp)
 
     if Data.d_custom_selection is not None:
