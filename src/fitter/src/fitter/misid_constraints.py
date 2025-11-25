@@ -130,8 +130,10 @@ class MisIDConstraints(Cache):
         Needed to translate MisID yields in control region to expectation
         in signal region
         '''
-        sample  = self._cfg.model.components[nickname].sample
-        wgt_cfg = self._cfg.model.components[nickname].categories.main.weights
+        cfg     = self._cfg.model.components[nickname]
+        sample  = cfg.sample
+        wgt_cfg = cfg.categories.main.weights
+        trigger = cfg.trigger
 
         sig_yld, ctr_yld = 0, 0 
         pid_sel          = {'pid_l' : '(1)'}
@@ -143,7 +145,7 @@ class MisIDConstraints(Cache):
                 obs    = self._obs,
                 out_dir= nickname,
                 sample = sample,
-                trigger= Trigger.rk_ee_nopid,
+                trigger= trigger,
                 wgt_cfg= wgt_cfg,
                 is_sig = is_sig,
                 cut    = pid_sel,
