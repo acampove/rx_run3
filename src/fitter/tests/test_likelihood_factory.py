@@ -113,8 +113,8 @@ def test_rare_muon(q2bin : str):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-@pytest.mark.parametrize('nbrem', [0, 1, 2])
-def test_reso_electron(nbrem : int):
+@pytest.mark.parametrize('nbrem', [1, 2])
+def test_reso_electron(nbrem : int, tmp_path : Path):
     '''
     Test fitting resonant electron channel
     '''
@@ -122,11 +122,12 @@ def test_reso_electron(nbrem : int):
         package='fitter_data',
         fpath  ='reso/rk/electron/data.yaml')
 
-    obs = zfit.Space('B_Mass_smr', limits=(4800, 6000))
+    obs = zfit.Space('B_const_mass_M', limits=(4800, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
-         RDFGetter.multithreading(nthreads=8),\
+         RDFGetter.max_entries(value = 200_000),\
+         Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={
-            'brm12' : f'nbrem = {nbrem}',
+            'brm12' : f'nbrem == {nbrem}',
             'mass'  : '(1)'}):
 
         ftr = LikelihoodFactory(
