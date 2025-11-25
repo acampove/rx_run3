@@ -194,10 +194,10 @@ class SpecMaker:
 
         log.debug(f'Found extended trigger: {self._trigger}')
         trig_misid   = self._trigger.replace('_ext', '_misid')
-        trig_channel = self._trigger.replace('_ext',       '')
+        trig_default = self._trigger.replace('_ext',       '')
 
         l_path = []
-        l_path+= d_trigger[trig_channel]
+        l_path+= d_trigger[trig_default]
         l_path+= d_trigger[trig_misid  ]
 
         return l_path
