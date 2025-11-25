@@ -3,7 +3,6 @@ Module containing the MisIDConstraints class
 '''
 
 from typing         import Final
-from rx_data        import RDFGetter
 from rx_selection   import selection as sel
 from rx_common      import Trigger
 
@@ -16,10 +15,8 @@ from dmu            import LogStore
 
 from omegaconf      import DictConfig, OmegaConf
 from zfit           import Space               as zobs
-from zfit.pdf       import BasePDF             as zpdf
 from zfit.loss      import ExtendedUnbinnedNLL as zlos
 
-from fitter         import SimFitter
 from fitter         import DataFitter
 from fitter         import LikelihoodFactory
 from fitter         import DataPreprocessor
