@@ -236,9 +236,9 @@ class MisIDConstraints(Cache):
             return d_cns 
 
         log.info(f'Running full calculation, nothing cached in: {cons_path}')
-        nll_kpp = self._get_control_nll(kind='kpipi')
-        nll_kkk = self._get_control_nll(kind='kkk'  )
-        d_nll   = {'kpipi' : nll_kpp, 'kkk' : nll_kkk}
+        d_nll   = {}
+        for region in self._regions:
+            d_nll[region] = self.__get_control_nll(kind=region)
 
         with GofCalculator.disabled(value=True):
             ftr  = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=self._cfg)
