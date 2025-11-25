@@ -8,7 +8,7 @@ flt_yields: &flt_yields
   max : 10000
 
 cns_yields: &cns_yields
-  val : 1
+  val : 0
   min : 0
   max : 0 
 
@@ -16,11 +16,13 @@ yld_combinatorial_hdkk:
   <<: *flt_yields
 yld_combinatorial_hdpipi:
   <<: *flt_yields
-yld_hdpipi:
+# Xpipi fit component
+yld_hdpipi_hdpipi:
   <<: *flt_yields
-yld_hdkk:
-  <<: *flt_yields
-yld_hdkk:     # Kpipi yield in KKK region
+yld_hdpipi_hdkk:
   <<: *cns_yields
-yld_hdpipi:     # KKK yield in Kpipi region
+# XKK fit component
+yld_hdkk_hdkk:
+  <<: *flt_yields
+yld_hdkk_hdpipi:
   <<: *cns_yields
