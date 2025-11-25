@@ -101,9 +101,9 @@ class MisIDConstraints(Cache):
         -------------
         Tuple with expected signal region yield and error
         '''
-        control_yield = pars[f'yld_{nickname}_{nickname}'].value
-        control_error = pars[f'yld_{nickname}_{nickname}'].error
-        scale         = self._get_transfer_factor(nickname=nickname)
+        control_yield = pars[f'yld_{region}_{nickname}'].value
+        control_error = pars[f'yld_{region}_{nickname}'].error
+        scale         = self.__get_transfer_factor(nickname=nickname)
 
         # Use it to scale yield from control region in data
         value = control_yield * scale
@@ -198,7 +198,7 @@ class MisIDConstraints(Cache):
         '''
 
         obs     = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
-        pid_cut = self._get_pid_cut(cfg=self._cfg, kind=kind)
+        pid_cut = self.__get_pid_cut(cfg=self._cfg, kind=kind)
 
         with PL.parameter_schema(cfg=self._cfg.model.yields),\
              RDFGetter.default_excluded(names=[]),\
@@ -242,7 +242,7 @@ class MisIDConstraints(Cache):
             ftr  = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=self._cfg)
             pars = ftr.run(kind='conf')
 
-        d_cns = self._get_constraints(pars=pars)
+        d_cns = self.__get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)
 
         self._cache()
