@@ -168,6 +168,9 @@ class PRec(Cache):
         if name in self._l_mass:
             needed = True
 
+        if needed:
+            log.info(f'Picking up column: {name}')
+
         return needed
     #-----------------------------------------------------------
     def __filter_rdf(
