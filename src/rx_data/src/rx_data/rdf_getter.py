@@ -315,7 +315,7 @@ class RDFGetter(SpecMaker):
 
         # TODO: The weight (taking into account prescale) should be removed
         # for 2025 data
-        if self._trigger.endswith('_ext'):
+        if self._trigger in [Trigger.rk_ee_ext, Trigger.rkst_ee_ext]:
             log.info('Adding weight of 10 to MisID sample')
             rdf = rdf.Define('weight', self._ext_weight)
         else:
