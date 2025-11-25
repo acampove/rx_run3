@@ -93,6 +93,7 @@ class MisIDConstraints(Cache):
         '''
         Parameters
         -------------
+        region   : Identifies the control region, e.g. kk or pipi
         nickname : Nickname of fully hadronic misID sample, e.g. kpipi
         pars     : Dictionary with fitting parameters for fit to control region
 
