@@ -5,10 +5,21 @@ output_directory : rare/rk/muon/data
 model:
   yields    : model/yields/rk/rare_muon.yaml
   observable:
-    name : B_Mass
-    range:
-      - 5080
-      - 5800
+    low:
+      name : B_Mass
+      range:
+        - 5080
+        - 5800
+    central:
+      name : B_Mass
+      range:
+        - 5080
+        - 5800
+    high:
+      name : B_Mass
+      range:
+        - 5080
+        - 5800
   components:
     combinatorial : rare/rk/muon/combinatorial.yaml
     signal        : rare/rk/muon/signal.yaml
