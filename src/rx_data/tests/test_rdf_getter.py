@@ -76,11 +76,8 @@ class Data:
         'L2_TRACK_P']
 
     l_brem_track_2 = [
-        'B_Mass_smr',
-        'Jpsi_Mass_smr',
         'B_Mass',
         'Jpsi_Mass',
-        'q2_smr',
         'B_M_brem_track_2']
 
     l_branch_mm = l_branch_common + ['B_Mass', 'Jpsi_Mass']
