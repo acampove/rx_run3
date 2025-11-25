@@ -75,7 +75,7 @@ def test_rare_electron():
     sut.print_pdf(pdf)
 # --------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('observable', ['kpipi', 'kkk'])
+@pytest.mark.parametrize('observable', ['hdpipi', 'hdkk'])
 @pytest.mark.parametrize('q2bin'     , ['low', 'central', 'high'])
 def test_misid_rare(observable : str, q2bin : str):
     '''
