@@ -69,7 +69,7 @@ class MisIDConstraints(Cache):
             config   = OmegaConf.to_container(cfg, resolve=True),
         )
     # ----------------------
-    def _get_constraints(self, pars : DictConfig) -> dict[str,tuple[float,float]]:
+    def __get_constraints(self, pars : DictConfig) -> dict[str,tuple[float,float]]:
         '''
         Parameters
         -------------
@@ -85,7 +85,11 @@ class MisIDConstraints(Cache):
 
         return d_yield 
     # ----------------------
-    def _get_signal_region_yield(self, nickname : str, pars : DictConfig) -> tuple[float,float]:
+    def __get_signal_region_yield(
+        self, 
+        region   : str,
+        nickname : str, 
+        pars     : DictConfig) -> tuple[float,float]:
         '''
         Parameters
         -------------
@@ -110,7 +114,7 @@ class MisIDConstraints(Cache):
 
         return value, error
     # ----------------------
-    def _get_transfer_factor(self, nickname : str) -> float:
+    def __get_transfer_factor(self, nickname : str) -> float:
         '''
         Parameters
         -------------
@@ -153,7 +157,7 @@ class MisIDConstraints(Cache):
 
         return sig_yld / ctr_yld
     # ----------------------
-    def _get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
+    def __get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
         '''
         Parameters
         -------------
@@ -179,7 +183,7 @@ class MisIDConstraints(Cache):
 
         return cut
     # ----------------------
-    def _get_control_nll(self, kind : str) -> tuple[zlos,DictConfig]:
+    def __get_control_nll(self, kind : str) -> tuple[zlos,DictConfig]:
         '''
         Parameters
         -------------
