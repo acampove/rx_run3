@@ -201,7 +201,6 @@ class MisIDConstraints(Cache):
         pid_cut = self.__get_pid_cut(cfg=self._cfg, kind=kind)
 
         with PL.parameter_schema(cfg=self._cfg.model.yields),\
-             RDFGetter.default_excluded(names=[]),\
              sel.update_selection(d_sel={'pid_l' : pid_cut}):
 
             ftr = LikelihoodFactory(
