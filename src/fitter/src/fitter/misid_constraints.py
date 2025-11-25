@@ -80,8 +80,11 @@ class MisIDConstraints(Cache):
         Dictionary with yields in signal region
         '''
         d_yield   = {}
-        for nickname in ['kpipi', 'kkk']:
-            d_yield[f'yld_{nickname}'] = self._get_signal_region_yield(nickname = nickname, pars=pars) 
+        for region in self._regions:
+            d_yield[f'yld_{region}_{region}'  ] = self.__get_signal_region_yield(
+                nickname = region, 
+                region   = region,
+                pars     = pars) 
 
         return d_yield 
     # ----------------------
