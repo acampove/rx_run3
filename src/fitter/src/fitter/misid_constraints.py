@@ -48,16 +48,18 @@ class MisIDConstraints(Cache):
         cfg      : configuration needed to build PDF
         q2bin    : E.g. central
         '''
-        self._name      = 'misid_constraints'
-        self._obs       = obs
-        self._cfg       = cfg
-        self._q2bin     = q2bin
-        self._trigger   = Trigger.rk_ee_nopid
+        self._name        : Final[str]       = 'misid_constraints'
+        self._regions     : Final[list[str]] = ['hdpipi', 'hdkk']
+        self._data_sample : Final[str]       = 'DATA_24_*'
+
+        self._obs   = obs
+        self._cfg   = cfg
+        self._q2bin = q2bin
 
         d_sel = sel.selection(
             q2bin   = self._q2bin, 
-            trigger = self._trigger, 
-            process = 'DATA_24_*'),
+            trigger = self._cfg.trigger, 
+            process = self._data_sample),
 
         Cache.__init__(
             self,
