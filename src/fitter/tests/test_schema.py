@@ -33,7 +33,7 @@ def _get_all_confs(name : str) -> list[str]:
     return l_rel_path
 # ----------------------
 @pytest.mark.schema
-@pytest.mark.parametrize('name', ['data.yaml'])
+@pytest.mark.parametrize('name', ['data_config.yaml'])
 def test_config(name : str) -> None:
     '''
     This test validates the schema of `data.yaml`
