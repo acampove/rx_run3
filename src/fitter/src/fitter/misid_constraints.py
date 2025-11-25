@@ -31,10 +31,10 @@ class MisIDConstraints(Cache):
     Class meant to provide constraints for the yields of different
     misID components, e.g.:
 
-    - kpipi:
+    - hdpipi:
         - 3
         - 1
-    - kkk:
+    - hdkk:
         - 4
         - 2
     '''
@@ -67,7 +67,7 @@ class MisIDConstraints(Cache):
             out_path = f'{self._cfg.output_directory}/{q2bin}',
             q2bin    = self._q2bin,
             d_sel    = d_sel, 
-            config   = OmegaConf.to_container(cfg, resolve=True)
+            config   = OmegaConf.to_container(cfg, resolve=True),
         )
     # ----------------------
     def _model_from_pars(self, npars : DictConfig) -> zpdf:
