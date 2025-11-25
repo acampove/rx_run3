@@ -3,13 +3,12 @@ Module with ParameterLibrary class
 '''
 import math
 
-from contextlib          import contextmanager
-from importlib.resources import files
-
-from dmu.stats.zfit               import zfit
-from dmu.logging.log_store        import LogStore
-from zfit.interface               import ZfitParameter as zpar
-from omegaconf                    import DictConfig, OmegaConf
+from contextlib            import contextmanager
+from importlib.resources   import files
+from dmu.logging.log_store import LogStore
+from dmu.stats.zfit        import zfit
+from zfit.interface        import ZfitParameter as zpar
+from omegaconf             import DictConfig, OmegaConf
 
 log=LogStore.add_logger('dmu:parameters')
 # --------------------------------
