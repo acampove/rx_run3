@@ -2,9 +2,10 @@
 # is built for the fit to the misID control regions
 
 output_directory : rare/rk/electron/misid/data
+trigger          : Hlt2RD_BuToKpEE_MVA_ext
 selection:
-  kkk  : (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K > 0.1
-  kpipi: (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K < 0.1
+  hdkk  : (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K > 0.1
+  hdpipi: (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K < 0.1
 model:
   yields    : model/yields/rk/misid_electron.yaml
   observable:
