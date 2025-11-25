@@ -69,53 +69,6 @@ class MisIDConstraints(Cache):
             config   = OmegaConf.to_container(cfg, resolve=True),
         )
     # ----------------------
-    def _model_from_pars(self, npars : DictConfig) -> zpdf:
-        '''
-        Parameters
-        -------------
-        npars: Dictionary where:
-              key  : Name of normalization parameter, e.g. nkpipi, nkkk
-              value: Value of parameter
-
-        Returns
-        -------------
-        Zfit PDF representing misID PDF
-        '''
-        pdf_hdkk   = self._get_misid_pdf(kind='hdkk'  ) 
-        pdf_hdpipi = self._get_misid_pdf(kind='hdpipi') 
-
-        nhdkk      = zfit.param.ConstantParameter('nhdkk'  , npars.nkkk  )
-        nhdpipi    = zfit.param.ConstantParameter('nhdpipi', npars.nkpipi)
-
-        pdf_hdkk.set_yield(nhdkk)
-        pdf_hdpipi.set_yield(nhdpipi)
-
-        return zfit.pdf.SumPDF([pdf_hdkk, pdf_hdpipi])
-    # ----------------------
-    def _get_misid_pdf(self, kind : str) -> zpdf:
-        '''
-        Parameters
-        -------------
-        kind: kind of PDF, e.g. kkk
-
-        Returns
-        -------------
-        PDF
-        '''
-        cfg = self._cfg.model.components[kind]
-        ftr = SimFitter(
-            name     = self._name,
-            component= kind,
-            cfg      = cfg,
-            obs      = self._obs,
-            trigger  = self._trigger,
-            q2bin    = self._q2bin)
-        pdf = ftr.get_model()
-        if pdf is None:
-            raise ValueError(f'Could not retrieve PDF for: {kind}')
-
-        return pdf
-    # ----------------------
     def _get_constraints(self, pars : DictConfig) -> dict[str,tuple[float,float]]:
         '''
         Parameters
