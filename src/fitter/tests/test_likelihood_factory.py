@@ -1,16 +1,18 @@
 '''
 Module meant to test DataFitter class
 '''
-from dmu.stats.fitter import LogStore
 import pytest
 
+from pathlib               import Path
+from dmu.stats.fitter      import LogStore
 from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.stats.zfit     import zfit
-from dmu.generic        import utilities  as gut
-from rx_common.types    import Trigger
-from rx_data            import RDFGetter
-from rx_selection       import selection  as sel
-from fitter             import LikelihoodFactory
+from dmu.stats.zfit        import zfit
+from dmu.generic           import utilities  as gut
+from dmu.workflow          import Cache
+from rx_common.types       import Trigger
+from rx_data               import RDFGetter
+from rx_selection          import selection  as sel
+from fitter                import LikelihoodFactory
 
 # -------------------------------------------
 class Data:
