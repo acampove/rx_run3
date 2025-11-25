@@ -87,14 +87,18 @@ class DataModel:
                 log.warning(f'Skipping {component} component')
                 continue
 
-            ftr = SimFitter(
-                name     = self._name,
-                component= component,
-                trigger  = cfg.get('trigger', self._trigger),
-                q2bin    = self._q2bin,
-                cfg      = cfg,
-                obs      = self._obs)
-            pdf = ftr.get_model()
+            name    = '' if self._name is None else self._name
+            trigger = cfg.get('trigger', self._trigger)
+            project = info.project_from_trigger(trigger = trigger, lower_case=True)
+            with SpecMaker.project(name = project):
+                ftr  = SimFitter(
+                    name     = name,
+                    component= component,
+                    trigger  = trigger,
+                    q2bin    = self._q2bin,
+                    cfg      = cfg,
+                    obs      = self._obs)
+                pdf = ftr.get_model()
 
             if pdf is None:
                 log.warning(f'Skipping component: {component}')
