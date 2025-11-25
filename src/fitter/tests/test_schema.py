@@ -21,7 +21,7 @@ def _get_all_confs(name : str) -> list[str]:
     -------------
     List of paths inside `fitter_data`
     '''
-    root_dir = 'src/fitter_data'
+    root_dir = 'src/fitter/src/fitter_data'
     paths    = Path(root_dir).rglob(name)
     l_path   = list(paths)
 
@@ -33,7 +33,7 @@ def _get_all_confs(name : str) -> list[str]:
     return l_rel_path
 # ----------------------
 @pytest.mark.schema
-@pytest.mark.parametrize('name', ['data_config.yaml'])
+@pytest.mark.parametrize('name', ['data.yaml'])
 def test_config(name : str) -> None:
     '''
     This test validates the schema of `data.yaml`
