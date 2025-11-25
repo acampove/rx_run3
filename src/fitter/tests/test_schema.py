@@ -3,9 +3,9 @@ This module holds tests to validate the configs used
 by the YAML config files
 '''
 
-from pathlib import Path
-
 import pytest
+
+from pathlib               import Path
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
