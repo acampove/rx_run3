@@ -80,7 +80,7 @@ def test_reso_muon():
         package='fitter_data',
         fpath  ='reso/rk/muon/data.yaml')
 
-    obs = zfit.Space('B_Mass', limits=(5000, 6000))
+    obs = zfit.Space('B_Mass_smr', limits=(5000, 6000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
          RDFGetter.max_entries(value=100_000):
