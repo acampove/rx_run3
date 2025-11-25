@@ -1,26 +1,28 @@
 '''
 Module containing the MisIDConstraints class
 '''
-from dmu.stats.fitter      import GofCalculator
-from rx_data.rdf_getter    import RDFGetter
-from rx_selection          import selection as sel
-from rx_common.types       import Trigger
 
-from dmu.generic           import utilities        as gut
-from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.stats.zfit        import zfit
-from dmu.workflow.cache    import Cache
-from dmu                   import LogStore
+from typing         import Final
+from rx_data        import RDFGetter
+from rx_selection   import selection as sel
+from rx_common      import Trigger
 
-from omegaconf  import DictConfig, OmegaConf
-from zfit       import Space               as zobs
-from zfit.pdf   import BasePDF             as zpdf
-from zfit.loss  import ExtendedUnbinnedNLL as zlos
+from dmu.stats      import GofCalculator
+from dmu.generic    import utilities        as gut
+from dmu.stats      import ParameterLibrary as PL
+from dmu.stats.zfit import zfit
+from dmu.workflow   import Cache
+from dmu            import LogStore
 
-from fitter     import SimFitter
-from fitter     import DataFitter
-from fitter     import LikelihoodFactory
-from fitter     import DataPreprocessor
+from omegaconf      import DictConfig, OmegaConf
+from zfit           import Space               as zobs
+from zfit.pdf       import BasePDF             as zpdf
+from zfit.loss      import ExtendedUnbinnedNLL as zlos
+
+from fitter         import SimFitter
+from fitter         import DataFitter
+from fitter         import LikelihoodFactory
+from fitter         import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid_constraints')
 # -------------------------        
