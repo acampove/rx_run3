@@ -87,11 +87,10 @@ class SpecMaker:
         -------------
         E.g. rk, rkst
         '''
-        if self._custom_project is None:
-            project = info.project_from_trigger(trigger=trigger, lower_case=True) 
-            log.debug(f'Using project {project} for trigger {trigger}')
-
-            return project
+        default_project = info.project_from_trigger(trigger=trigger, lower_case=True) 
+        if not self._custom_project or self._custom_project == default_project:
+            log.debug(f'Using project {default_project} for trigger {trigger}')
+            return default_project
 
         log.warning(f'Using custom project: {self._custom_project}')
 
