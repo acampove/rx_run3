@@ -82,16 +82,16 @@ class MisIDConstraints(Cache):
         -------------
         Zfit PDF representing misID PDF
         '''
-        pdf_kkk   = self._get_misid_pdf(kind='kkk'  ) 
-        pdf_kpipi = self._get_misid_pdf(kind='kpipi') 
+        pdf_hdkk   = self._get_misid_pdf(kind='hdkk'  ) 
+        pdf_hdpipi = self._get_misid_pdf(kind='hdpipi') 
 
-        nkkk      = zfit.param.ConstantParameter('nkkk'  , npars.nkkk  )
-        nkpipi    = zfit.param.ConstantParameter('nkpipi', npars.nkpipi)
+        nhdkk      = zfit.param.ConstantParameter('nhdkk'  , npars.nkkk  )
+        nhdpipi    = zfit.param.ConstantParameter('nhdpipi', npars.nkpipi)
 
-        pdf_kkk.set_yield(nkkk)
-        pdf_kpipi.set_yield(nkpipi)
+        pdf_hdkk.set_yield(nhdkk)
+        pdf_hdpipi.set_yield(nhdpipi)
 
-        return zfit.pdf.SumPDF([pdf_kkk, pdf_kpipi])
+        return zfit.pdf.SumPDF([pdf_hdkk, pdf_hdpipi])
     # ----------------------
     def _get_misid_pdf(self, kind : str) -> zpdf:
         '''
