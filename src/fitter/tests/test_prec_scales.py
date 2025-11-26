@@ -5,11 +5,13 @@ Module used to test PrecScales class
 import numpy
 import pytest
 
-from conftest                    import ScalesData
-from dmu.logging.log_store       import LogStore
-from rx_efficiencies.decay_names import DecayNames as dn
-from rx_selection                import selection  as sel
-from fitter.prec_scales          import PrecScales
+from typing              import Any
+from pathlib             import Path
+from rx_selection        import selection  as sel
+from fitter.prec_scales  import PrecScales
+
+from dmu                 import LogStore
+from dmu.workflow        import Cache
 
 log=LogStore.add_logger('fitter:test_prec_scales')
 # -----------------------------------
