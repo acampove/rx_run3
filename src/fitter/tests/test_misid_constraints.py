@@ -45,6 +45,7 @@ def test_simple(q2bin : str, tmp_path : Path) -> None:
     cfg.output_directory = Data.rel_dir
 
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}),\
+         RDFGetter.max_entries(value = -1),\
          RDFGetter.multithreading(nthreads=8),\
          Cache.cache_root(path = tmp_path):
             obj = MisIDConstraints(
