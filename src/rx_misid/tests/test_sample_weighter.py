@@ -1,8 +1,9 @@
 '''
 Script holding functions needed to test SampleWeighter class
 '''
-from functools import cache, lru_cache
 import os
+from functools import cache, lru_cache
+from pathlib   import Path
 
 import pickle
 import numpy
@@ -20,7 +21,6 @@ class Data:
     Data class
     '''
     user     = os.environ['USER']
-    out_dir  = f'/tmp/{user}/tests/rx_misid/sample_weighter'
     nentries = 5_000
 
     l_block = [
@@ -40,7 +40,6 @@ def initialize():
     '''
     numpy.random.seed(42)
     LogStore.set_level('rx_misid:sample_weighter', 10)
-    os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
 @lru_cache(maxsize=100)
 def _get_dataframe(
@@ -95,9 +94,9 @@ def _check_weights(df : pnd.DataFrame) -> None:
     assert 'pid_eff_l1'  in df.columns
     assert 'pid_eff_l2'  in df.columns
 
-    arr_wgt_tot = df['pid_weights'].to_numpy()
-    arr_wgt_l1  = df['pid_eff_l1' ].to_numpy()
-    arr_wgt_l2  = df['pid_eff_l2' ].to_numpy()
+    arr_wgt_tot = df['pid_weights'].to_numpy().astype(float)
+    arr_wgt_l1  = df['pid_eff_l1' ].to_numpy().astype(float)
+    arr_wgt_l2  = df['pid_eff_l2' ].to_numpy().astype(float)
 
     assert numpy.isclose(arr_wgt_tot, arr_wgt_l1 * arr_wgt_l2, rtol=1e-5).all()
 # ----------------------
@@ -215,15 +214,17 @@ def _build_map(df : pnd.DataFrame, has_brem : int, block : int) -> numpy.ndarray
     arr_et_l1    = df_1['L1_TRACK_ETA'].to_numpy()
     arr_et_l2    = df_2['L2_TRACK_ETA'].to_numpy()
 
-    arr_eff      = numpy.concatenate((arr_pid_eff1, arr_pid_eff2))
+    arr_eff      = numpy.concatenate((arr_pid_eff1, arr_pid_eff2)).astype(float)
     arr_et       = numpy.concatenate((arr_et_l1   , arr_et_l2   ))
     arr_pt       = numpy.concatenate((arr_pt_l1   , arr_pt_l2   ))
     arr_pt       = numpy.log10(arr_pt)
 
     l_xedge, l_yedge = _get_binning()
+    arr_xedge = numpy.array(l_xedge)
+    arr_yedge = numpy.array(l_yedge)
 
-    eff_wgt, _, _ = numpy.histogram2d(arr_pt, arr_et, bins=[l_xedge, l_yedge], weights=arr_eff)
-    eff_raw, _, _ = numpy.histogram2d(arr_pt, arr_et, bins=[l_xedge, l_yedge], weights=None   )
+    eff_wgt, _, _ = numpy.histogram2d(arr_pt, arr_et, bins=[arr_xedge, arr_yedge], weights=arr_eff)
+    eff_raw, _, _ = numpy.histogram2d(arr_pt, arr_et, bins=[arr_xedge, arr_yedge], weights=None   )
 
     return numpy.where(eff_raw > 0, eff_wgt / eff_raw, 0)
 # ----------------------
@@ -246,7 +247,11 @@ def _get_binning() -> tuple[list[float], list[float]]:
 @pytest.mark.parametrize('sample', [
     'Bu_KplKplKmn_eq_sqDalitz_DPC',
     'Bu_piplpimnKpl_eq_sqDalitz_DPC'])
-def test_simple(is_sig : bool, sample : str, block : int):
+def test_simple(
+    is_sig : bool, 
+    sample : str, 
+    block  : int,
+    tmp_path : Path):
     '''
     Parameters
     -------------
@@ -257,9 +262,9 @@ def test_simple(is_sig : bool, sample : str, block : int):
     '''
     cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
     df  = _get_dataframe(good_phase_space=False, sample=sample, block=block)
-    arr_block_inp = df['block'].to_numpy()
+    arr_block_inp = df['block'].to_numpy().astype(float)
 
-    cfg.plots_path = Data.out_dir
+    cfg.plots_path = tmp_path 
 
     wgt = SampleWeighter(
         df    = df,
