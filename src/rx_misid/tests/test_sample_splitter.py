@@ -8,6 +8,7 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 import pandas as pnd
+from pathlib                  import Path
 from ROOT                     import RDF     # type: ignore
 from dmu.generic              import utilities   as gut
 from dmu.logging.log_store    import LogStore
@@ -24,7 +25,6 @@ class Data:
     '''
     plt.style.use(mplhep.style.LHCb2)
     user    = os.environ['USER']
-    out_dir = f'/tmp/{user}/tests/rx_misid/sample_splitter'
 # -------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -35,8 +35,6 @@ def initialize():
     LogStore.set_level('rx_misid:splitter'     , 10)
     LogStore.set_level('rx_data:rdf_getter'    , 30)
     LogStore.set_level('rx_data:path_splitter' , 30)
-
-    os.makedirs(Data.out_dir, exist_ok=True)
 # -------------------------------------------------------
 def _get_rdf(sample : str, trigger : Trigger):
     gtr = RDFGetter(sample=sample, trigger=trigger)
@@ -52,7 +50,10 @@ def _get_rdf(sample : str, trigger : Trigger):
 
     return rdf
 # -------------------------------------------------------
-def _plot_simulation_pide(df : pnd.DataFrame, sample : str) -> None:
+def _plot_simulation_pide(
+    df       : pnd.DataFrame, 
+    tmp_path : Path,
+    sample   : str) -> None:
     '''
     Parameters
     ---------------
@@ -64,7 +65,7 @@ def _plot_simulation_pide(df : pnd.DataFrame, sample : str) -> None:
         ax = df_hadr.plot.scatter(x='L1_PID_E', y='L1_PROBNN_E', color='blue', s=1, label='$e_{SS}$', ax=ax)
         ax = df_hadr.plot.scatter(x='L2_PID_E', y='L2_PROBNN_E', color='red' , s=1, label='$e_{OS}$', ax=ax)
 
-        plot_path = f'{Data.out_dir}/{sample}_{hadron}.png'
+        plot_path = tmp_path / f'{sample}_{hadron}.png'
 
         ax.set_xlabel(r'$\Delta LL (e)$')
         ax.set_ylabel('ProbNN(e)')
@@ -121,7 +122,7 @@ def _check_columns(df : pnd.DataFrame) -> None:
 @pytest.mark.parametrize('sample', [
     'Bu_piplpimnKpl_eq_sqDalitz_DPC',
     'Bu_KplKplKmn_eq_sqDalitz_DPC'])
-def test_simulation(sample : str):
+def test_simulation(sample : str, tmp_path : Path):
     '''
     Tests getting split dataset
     '''
@@ -136,7 +137,7 @@ def test_simulation(sample : str):
     df    = spl.get_sample()
 
     log.info('Dataframe found, checking')
-    _plot_simulation_pide(df=df, sample=sample)
+    _plot_simulation_pide(df=df, sample=sample, tmp_path = tmp_path)
     _check_mc_stats(rdf=rdf, df=df)
     _check_columns(df=df)
 # -------------------------------------------------------
