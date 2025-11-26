@@ -244,7 +244,7 @@ def test_bdt(q2bin : str, bdt_cut : str, tmp_path : Path):
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
 @pytest.mark.parametrize('brem_cut', ['nbrem == 0', 'nbrem == 1', 'nbrem >= 2'])
-def test_brem(brem_cut : str):
+def test_brem(brem_cut : str, tmp_path : Path):
     '''
     Testing by brem category
     '''
@@ -258,11 +258,12 @@ def test_brem(brem_cut : str):
             'Bs_JpsiX_ee_eq_JpsiInAcc']
 
     d_wgt= {'dec' : 1, 'sam' : 1}
-    with sel.custom_selection(d_sel={'brem' : brem_cut}):
+    with sel.custom_selection(d_sel={'brem' : brem_cut}),\
+        Cache.cache_root(path = tmp_path):
         obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
-def test_cache():
+def test_cache(tmp_path : Path):
     '''
     Testing caching of PDF
     '''
@@ -277,11 +278,11 @@ def test_cache():
             'Bs_JpsiX_ee_eq_JpsiInAcc',
             ]
 
-    d_wgt= {'dec' : 1, 'sam' : 1}
-    obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+    d_wgt  = {'dec' : 1, 'sam' : 1}
+    with Cache.cache_root(path = tmp_path):
+        obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 
-    with Cache.turn_off_cache(val = []):
         obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
