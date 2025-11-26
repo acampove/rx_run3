@@ -216,7 +216,7 @@ class RDFGetter(SpecMaker):
 
         # Variables containing these in their definitions, cannot be defined
         # without brem_track_2
-        l_substr = ['brem_track_2', 'Jpsi_Mass', 'B_Mass']
+        l_substr = ['brem_track_2']
 
         for substr in l_substr:
             # This variable does not depend on this brem_track_2 substring
