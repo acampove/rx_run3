@@ -29,9 +29,6 @@ def initialize():
     LogStore.set_level('rx_fitter:prec'                    , 10)
 
     plt.style.use(mplhep.style.LHCb2)
-
-    with Cache.turn_off_cache(val=None):
-        yield
 #-----------------------------------------------
 @pytest.mark.parametrize('trig', [Trigger.rk_ee_os, Trigger.rkst_ee_os])
 def test_electron(tmp_path : Path, trig : Trigger):
@@ -194,8 +191,9 @@ def test_fit(tmp_path : Path):
     test = f'reso/fit/{q2bin}'
 
     d_wgt= {'dec' : 1, 'sam' : 1}
-    obp  = PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
-    pdf  = obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+    with Cache.cache_root(path = tmp_path):
+        obp = PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        pdf = obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 
     if pdf is None:
         raise ValueError('No PDF found')
