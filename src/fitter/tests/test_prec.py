@@ -19,12 +19,6 @@ from fitter.prec            import PRec
 
 log=LogStore.add_logger('fitter:test_prec')
 #-----------------------------------------------
-class Data:
-    '''
-    Class used to hold data
-    '''
-    out_dir = '/tmp/tests/fitter/prec'
-#-----------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
     '''
@@ -183,7 +177,7 @@ def test_reso(q2bin : str, tmp_path : Path):
         obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
-def test_fit():
+def test_fit(tmp_path : Path):
     '''
     Tests that the PDF is fittable
     '''
@@ -219,7 +213,7 @@ def test_fit():
         model  =pdf,
         res    =res,
         plt_cfg=None,
-        fit_dir=f'{Data.out_dir}/{test}',
+        fit_dir= tmp_path / test,
         d_const={})
 #-----------------------------------------------
 @pytest.mark.parametrize('bdt_cut', [
