@@ -44,36 +44,23 @@ class Data:
 
         return l_wp
 # -----------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
+    '''
+    This is called before any test
+    '''
     LogStore.set_level('rx_fitter:prec_scales', 10)
     LogStore.set_level('rx_efficiencies:efficiency_calculator', 10)
-#-------------------------------
-def _print_selection(
-        signal : str,
-        prec   : str,
-        q2bin  : str) -> bool:
+# ----------------------
+def _validate_scales(scales : Any) -> None:
     '''
-    Parameters
-    --------------
-
-    prec   : Nickname for background sample
-    q2bin  : e.g. central
-    trigger: HLT2 trigger
+    Validates prec scale and error
     '''
-    process= dn.sample_from_decay(signal)
-    d_sel  = sel.selection(q2bin=q2bin, process=process, trigger=Data.trigger)
-    _print_cuts(d_sel=d_sel)
+    assert len(scales) == 2
+    val, err = scales
 
-    process= dn.sample_from_decay(prec  )
-    d_sel  = sel.selection(q2bin=q2bin, process=process, trigger=Data.trigger)
-    _print_cuts(d_sel=d_sel)
-
-    return False
-#-------------------------------
-def _print_cuts(d_sel : dict[str,str]) -> None:
-    for name, expr in d_sel.items():
-        log.info(f'{name:<20}{expr}')
+    assert isinstance(val, float)
+    assert isinstance(err, float)
 #-------------------------------
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
 @pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
@@ -83,38 +70,26 @@ def test_all_datasets(q2bin : str, process : str):
     '''
     signal   = 'bpkpee'
     obj      = PrecScales(proc=process, q2bin=q2bin)
-    val, err = obj.get_scale(signal=signal)
+    scales   = obj.get_scale(signal=signal)
 
-    log.info('-' * 20)
-    log.info(f'Process: {process}')
-    log.info(f'Scale  : {val:.3f}')
-    log.info('-' * 20)
-
-    threshold = 1.0
-    # We might have large Jpsi leakage in central bin
-    if process == 'bpkpjpsiee' and q2bin == 'central':
-        threshold = 1.5
-
-    if process != signal:
-        # Prec should be smaller than signal
-        assert val  < threshold or _print_selection(signal=signal, prec=process, q2bin=q2bin)
-    else:
-        # If this runs on signal, scale is 1
-        assert val ==         1 or _print_selection(signal=signal, prec=process, q2bin=q2bin)
-
-    ScalesData.collect_def_wp(process, '(1)', q2bin, val, err)
+    _validate_scales(scales = scales)
 #-------------------------------
 @pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
 @pytest.mark.parametrize('mva_cut', Data.get_seq_wp(min_cmb=0.8, min_prc=0.8, step=0.02))
-def test_seq_scan_scales(mva_cut : str, q2bin : str, process : str) -> None:
+def test_seq_scan_scales(
+    mva_cut : str, 
+    q2bin   : str, 
+    process : str,
+    tmp_path: Path) -> None:
     '''
     Tests retrieval of scales between signal and PRec yields, by cutting first on combinatorial and then on PRec
     '''
     signal = 'bpkpee'
-    with sel.custom_selection(d_sel={'bdt' : mva_cut}):
-        obj      = PrecScales(proc=process, q2bin=q2bin)
-        val, err = obj.get_scale(signal=signal)
+    with sel.custom_selection(d_sel={'bdt' : mva_cut}),\
+         Cache.cache_root(path = tmp_path):
+        obj    = PrecScales(proc=process, q2bin=q2bin)
+        scales = obj.get_scale(signal=signal)
 
-    ScalesData.collect_mva_wp(process, mva_cut, q2bin, val, err)
+    _validate_scales(scales = scales)
 #-------------------------------
