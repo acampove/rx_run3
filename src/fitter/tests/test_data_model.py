@@ -24,7 +24,7 @@ def initialize():
     LogStore.set_level('rx_data:rdf_getter', 30)
 
     with RDFGetter.max_entries(value = 30_000),\
-        DataModel.skip_components(names = ['kkk', 'kpipi']):
+         DataModel.skip_components(names = ['kkk', 'kpipi']):
         yield
 # --------------------------
 @pytest.mark.parametrize('kind, trigger', [
