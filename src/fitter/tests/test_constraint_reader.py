@@ -3,28 +3,103 @@ Module with functions needed to test ConstraintReader class
 '''
 
 import pytest
+from pathlib                  import Path
+from dmu.stats.zfit           import zfit
+from dmu.workflow             import Cache
 from dmu.logging.log_store    import LogStore
 from fitter.constraint_reader import ConstraintReader
 
+from zfit                     import Space     as zobs
 from zfit.param               import Parameter as zpar
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
-
 # ----------------------
 class Parameters:
     '''
-    Class meant to be used for test
+    Class used to instantiate objects holding parameters and observables
+    They are needed in tests
     '''
+    # ----------------------
+    def __init__(self, kind : str, obs : zobs) -> None:
+        '''
+        Parameters
+        -------------
+        kind: Defines what parameters will be returning depending on test
+        obs : Observable
+        '''
+        self._obs   = obs
+        self._s_par = self._get_pars(kind=kind)
+    # ----------------------
+    @property
+    def space(self) -> zobs:
+        '''
+        Returns
+        -------------
+        Observable
+        '''
+        return self._obs
+    # ----------------------
+    def _get_pars(self, kind : str) -> set[zpar]:
+        '''
+        Parameters
+        -------------
+        kind: Type of parameters
+
+        Returns
+        -------------
+        Set of zfit parameters
+        '''
+        if   kind == 'dummy':
+            return set()
+        elif kind == 'rare_prec':
+            l_par_name = [
+                'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
+                'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
+                'pscale_yld_Bs_phiee_eq_Ball_DPC']
+        elif kind == 'rare_misid':
+            l_par_name = [
+                'yld_kpipi',
+                'yld_kkk']
+        elif kind == 'brem_frac':
+            l_par_name = [
+                'frac_brem_000',
+                'frac_brem_001',
+                'frac_brem_002']
+        elif kind == 'sig_par':
+            l_par_name = [
+                'ar_dscb_Signal_002_1_reso_flt',
+                'mu_Signal_000_scale_flt',
+                'mu_Signal_001_scale_flt',
+                'mu_Signal_002_scale_flt',
+                'nl_dscb_Signal_001_1_reso_flt',
+                'nr_dscb_Signal_002_1_reso_flt',
+                'sg_Signal_000_reso_flt',
+                'sg_Signal_001_reso_flt',
+                'sg_Signal_002_reso_flt',
+            ]
+        elif kind == 'invalid':
+            l_par_name = [
+                'ap_hypexp',
+                'bt_hypexp',
+                'mu_hypexp',
+                'ncmb',
+                'nsig']
+        else:
+            raise ValueError(f'Invalid kind of parameters: {kind}')
+
+        return { zfit.Parameter(name, 0, 0, 1) for name in l_par_name }
+    # ----------------------
     def get_params(self, floating : bool) -> set[zpar]:
         '''
-        Returns set of zfit parameter instances
+        Parameters
+        -------------
+        floating: Bool, meant to be True
+
+        Returns
+        -------------
+        Set of zfit parameters
         '''
-        _ = floating
-
-        a = zpar('a', 0, 0, 1)
-        b = zpar('b', 0, 0, 1)
-
-        return {a, b}
+        return self._s_par 
 # ----------------------
 class Data:
     '''
@@ -49,7 +124,7 @@ def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , Data.l_kind)
-def test_simple(kind : str, q2bin : str):
+def test_simple(tmp_path : Path, kind : str, q2bin : str):
     '''
     Tests getting constraints
 
@@ -58,9 +133,12 @@ def test_simple(kind : str, q2bin : str):
     kind : Type of parameters
     q2bin: q2 bin
     '''
-    obj     = Parameters()
-    obj     = ConstraintReader(obj=obj, q2bin=q2bin)
-    d_cns   = obj.get_constraints()
+
+    obs     = zfit.Space('dummy', limits=(4500, 6000))
+    obj     = Parameters(kind=kind, obs = obs)
+    with Cache.cache_root(path = tmp_path):
+        obj     = ConstraintReader(obj=obj, q2bin=q2bin)
+        d_cns   = obj.get_constraints()
     _print_constraints(d_cns)
 
     # TODO: Needs to be updated when other parameter constraints be implemented
