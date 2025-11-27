@@ -14,8 +14,13 @@ from dmu.logging.log_store import LogStore
 from dmu.stats.fitter      import Fitter
 
 log=LogStore.add_logger('fitter:test_toymaker')
+
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
+def ntoys() -> int:
+    return 10
+# ----------------------
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This will run before any test
