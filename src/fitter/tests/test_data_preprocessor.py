@@ -4,10 +4,12 @@ Module meant to hold tests for the DataPreprocessor class
 import os
 import pytest
 import matplotlib.pyplot as plt
+from pathlib                  import Path
 from dmu.stats.zfit           import zfit
 from dmu.generic              import utilities as gut
 from dmu.stats                import utilities as sut
 from dmu.logging.log_store    import LogStore
+from dmu.workflow             import Cache
 from omegaconf                import OmegaConf
 from rx_common.types          import Trigger
 from rx_data.rdf_getter       import RDFGetter
@@ -53,21 +55,22 @@ def _validate_data(data : zdata, name : str) -> None:
 @pytest.mark.parametrize('sample', [
     'DATA_24_MagDown_24c2',
     'Bu_JpsiK_mm_eq_DPC'])
-def test_muon_data(sample : str):
+def test_muon_data(tmp_path : Path, sample : str):
     '''
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
     name= f'data_preprocessor/{sample}_muon_data'
 
-    prp = DataPreprocessor(
-        obs    = obs,
-        out_dir= name,
-        sample = sample,
-        trigger= Trigger.rk_mm_os,
-        wgt_cfg= None,
-        q2bin  = 'jpsi')
-    dat = prp.get_data()
+    with Cache.cache_root(path = tmp_path):
+        prp = DataPreprocessor(
+            obs    = obs,
+            out_dir= name,
+            sample = sample,
+            trigger= Trigger.rk_mm_os,
+            wgt_cfg= None,
+            q2bin  = 'jpsi')
+        dat = prp.get_data()
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
@@ -75,7 +78,7 @@ def test_muon_data(sample : str):
     'DATA_24_MagDown_24c2',
     'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('brem_cat', [0, 1, 2])
-def test_brem_cat_data(sample : str, brem_cat : int):
+def test_brem_cat_data(tmp_path : Path, sample : str, brem_cat : int):
     '''
     Tests class with toys
     '''
@@ -83,15 +86,16 @@ def test_brem_cat_data(sample : str, brem_cat : int):
     name= f'data_preprocessor/{sample}_brem_{brem_cat:03}'
     cut = {'brem' : f'nbrem == {brem_cat}'}
 
-    prp = DataPreprocessor(
-        obs    = obs,
-        out_dir= name,
-        sample = sample,
-        trigger= Trigger.rk_ee_os,
-        cut    =  cut, 
-        wgt_cfg= None,
-        q2bin  = 'jpsi')
-    dat = prp.get_data()
+    with Cache.cache_root(path = tmp_path):
+        prp = DataPreprocessor(
+            obs    = obs,
+            out_dir= name,
+            sample = sample,
+            trigger= Trigger.rk_ee_os,
+            cut    =  cut, 
+            wgt_cfg= None,
+            q2bin  = 'jpsi')
+        dat = prp.get_data()
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
@@ -102,9 +106,10 @@ def test_brem_cat_data(sample : str, brem_cat : int):
 @pytest.mark.parametrize('region', ['kpipi' ,     'kkk'])
 @pytest.mark.parametrize('kind'  , ['signal', 'control'])
 def test_with_pid_weights(
-    sample : str,
-    region : str, 
-    kind   : str) -> None:
+    tmp_path : Path,
+    sample   : str,
+    region   : str, 
+    kind     : str) -> None:
     '''
     Parameters
     -------------
@@ -126,16 +131,18 @@ def test_with_pid_weights(
         'pid_l': '(1)'}
 
     name = f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}'
-    prp  = DataPreprocessor(
-        obs    = obs,
-        out_dir= name,
-        sample = sample,
-        trigger= Trigger.rk_ee_nopid,
-        cut    = cut, 
-        wgt_cfg= wgt_cfg,
-        is_sig = kind == 'signal',
-        q2bin  = 'jpsi')
-    dat  = prp.get_data()
+
+    with Cache.cache_root(path = tmp_path):
+        prp  = DataPreprocessor(
+            obs    = obs,
+            out_dir= name,
+            sample = sample,
+            trigger= Trigger.rk_ee_nopid,
+            cut    = cut, 
+            wgt_cfg= wgt_cfg,
+            is_sig = kind == 'signal',
+            q2bin  = 'jpsi')
+        dat  = prp.get_data()
 
     _validate_data(data=dat, name=name)
 # -------------------------------------------------
