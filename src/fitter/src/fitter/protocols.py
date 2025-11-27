@@ -3,7 +3,7 @@ Module holding protocol classes
 '''
 
 from typing         import Protocol
-from zfit.interface import ZfitParameter as zpar
+from zfit.param     import Parameter as zpar
 
 # -------------------------------------------------------------
 class ParameterHolder(Protocol):
