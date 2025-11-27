@@ -3,11 +3,28 @@ Module with functions needed to test ConstraintReader class
 '''
 
 import pytest
-from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from fitter.constraint_reader import ConstraintReader
 
+from zfit.param               import Parameter as zpar
+
 log=LogStore.add_logger('fitter:test_constraint_reader')
+
+# ----------------------
+class Parameters:
+    '''
+    Class meant to be used for test
+    '''
+    def get_params(self, floating : bool) -> set[zpar]:
+        '''
+        Returns set of zfit parameter instances
+        '''
+        _ = floating
+
+        a = zpar('a', 0, 0, 1)
+        b = zpar('b', 0, 0, 1)
+
+        return {a, b}
 # ----------------------
 class Data:
     '''
@@ -32,7 +49,7 @@ def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , Data.l_kind)
-def test_simple(kind : str, q2bin : str, get_parameters_holder):
+def test_simple(kind : str, q2bin : str):
     '''
     Tests getting constraints
 
@@ -41,9 +58,7 @@ def test_simple(kind : str, q2bin : str, get_parameters_holder):
     kind : Type of parameters
     q2bin: q2 bin
     '''
-    obs     = zfit.Space('dummy', limits=(4500, 6000))
-    obj     = get_parameters_holder(kind=kind, obs=obs)
-
+    obj     = Parameters()
     obj     = ConstraintReader(obj=obj, q2bin=q2bin)
     d_cns   = obj.get_constraints()
     _print_constraints(d_cns)
