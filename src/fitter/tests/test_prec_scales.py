@@ -64,13 +64,14 @@ def _validate_scales(scales : Any) -> None:
 #-------------------------------
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
 @pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
-def test_all_datasets(q2bin : str, process : str):
+def test_all_datasets(q2bin : str, process : str, tmp_path : Path):
     '''
     Tests retrieval of scales between signal and PRec yields
     '''
     signal   = 'bpkpee'
-    obj      = PrecScales(proc=process, q2bin=q2bin)
-    scales   = obj.get_scale(signal=signal)
+    with Cache.cache_root(path = tmp_path):
+        obj    = PrecScales(proc=process, q2bin=q2bin)
+        scales = obj.get_scale(signal=signal)
 
     _validate_scales(scales = scales)
 #-------------------------------
