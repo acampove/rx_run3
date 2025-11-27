@@ -10,6 +10,7 @@ from dmu.stats       import constraint_adder as cad
 from dmu.stats       import gof_calculator   as goc
 from dmu.stats       import utilities        as sut
 from dmu.generic     import utilities        as gut
+from dmu.workflow    import Cache
 from dmu             import LogStore
 from fitter          import DataFitter
 from fitter          import ToyMaker
@@ -34,7 +35,7 @@ def initialize():
     '''
     LogStore.set_level('dmu:stats:gofcalculator', 30)
 # ----------------------
-def test_single_region() -> None:
+def test_single_region(tmp_path : Path) -> None:
     '''
     Test fitting with single signal region
     '''
@@ -46,13 +47,14 @@ def test_single_region() -> None:
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
-    ftr = DataFitter(
-        name = 'single_region',
-        d_nll= d_nll, 
-        cfg  = cfg)
-    ftr.run(kind='conf')
+    with Cache.cache_root(path = tmp_path):
+        ftr = DataFitter(
+            name = 'single_region',
+            d_nll= d_nll, 
+            cfg  = cfg)
+        ftr.run(kind='conf')
 # ----------------------
-def test_two_regions() -> None:
+def test_two_regions(tmp_path : Path) -> None:
     '''
     Test simultaneous fit with two regions
     '''
@@ -72,7 +74,8 @@ def test_two_regions() -> None:
         'region_002' : (nll_002, sel_cfg),
     }
 
-    with goc.GofCalculator.disabled(True):
+    with goc.GofCalculator.disabled(True),\
+         Cache.cache_root(path = tmp_path):
         cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/two_regions.yaml')
         ftr = DataFitter(
             name = 'two_regions',
@@ -80,7 +83,7 @@ def test_two_regions() -> None:
             cfg  = cfg)
         ftr.run(kind='conf')
 # ----------------------
-def test_two_regions_common_pars() -> None:
+def test_two_regions_common_pars(tmp_path : Path) -> None:
     '''
     Test simultaneous fit with two regions
     and common parameters
@@ -104,7 +107,8 @@ def test_two_regions_common_pars() -> None:
         'region_002' : (nll_002, sel_cfg),
     }
 
-    with goc.GofCalculator.disabled(True):
+    with goc.GofCalculator.disabled(True),\
+         Cache.cache_root(path = tmp_path):
         cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/two_regions.yaml')
         ftr = DataFitter(
             name = 'common_pars',
@@ -112,7 +116,7 @@ def test_two_regions_common_pars() -> None:
             cfg  = cfg)
         ftr.run(kind='conf')
 # ----------------------
-def test_with_constraints() -> None:
+def test_with_constraints(tmp_path : Path) -> None:
     '''
     Test fitting with constraints
     '''
@@ -129,12 +133,14 @@ def test_with_constraints() -> None:
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
     cfg.constraints = cns
-    ftr = DataFitter(
-        name = 'with_const',
-        d_nll= d_nll, 
-        cfg  = cfg)
 
-    ftr.run(kind='conf')
+    with Cache.cache_root(path = tmp_path):
+        ftr = DataFitter(
+            name = 'with_const',
+            d_nll= d_nll, 
+            cfg  = cfg)
+
+        ftr.run(kind='conf')
 # ----------------------
 slow_with_toys = pytest.param(500, marks=pytest.mark.slow)
 @pytest.mark.parametrize('ntoys', [20, slow_with_toys])
@@ -154,11 +160,12 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     fit_cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
-    ftr = DataFitter(
-        name = 'with_toys',
-        d_nll= d_nll, 
-        cfg  = fit_cfg)
-    res = ftr.run(kind='zfit')
+    with Cache.cache_root(path = tmp_path):
+        ftr = DataFitter(
+            name = 'with_toys',
+            d_nll= d_nll, 
+            cfg  = fit_cfg)
+        res = ftr.run(kind='zfit')
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
