@@ -3,6 +3,7 @@ This module has tests for the DataModel class
 '''
 import pytest
 
+from pathlib               import Path
 from rx_common.types       import Trigger
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter 
@@ -10,6 +11,7 @@ from dmu.stats.parameters  import ParameterLibrary as PL
 from dmu.stats.zfit        import zfit
 from dmu.generic           import utilities as gut
 from dmu.stats             import utilities as sut
+from dmu.workflow          import Cache
 from dmu.logging.log_store import LogStore
 from fitter.data_model     import DataModel
 
@@ -31,7 +33,7 @@ def initialize():
     ('reso/rk/muon'  , Trigger.rk_mm_os  ), 
     ('reso/rkst/muon', Trigger.rkst_mm_os),
 ])
-def test_resonant(kind : str, trigger : Trigger):
+def test_resonant(kind : str, trigger : Trigger, tmp_path : Path):
     '''
     Simplest test
     '''
@@ -41,7 +43,8 @@ def test_resonant(kind : str, trigger : Trigger):
         package='fitter_data',
         fpath  =f'{kind}/data.yaml')
 
-    with PL.parameter_schema(cfg=cfg.model.yields):
+    with Cache.cache_root(path = tmp_path),\
+        PL.parameter_schema(cfg=cfg.model.yields):
         dmd = DataModel(
             name    = 'brem_000',
             cfg     = cfg,
@@ -52,7 +55,7 @@ def test_resonant(kind : str, trigger : Trigger):
 
     sut.print_pdf(pdf)
 # --------------------------
-def test_rare_electron():
+def test_rare_electron(tmp_path : Path):
     '''
     Simplest test for rare electron mode
     '''
@@ -64,7 +67,8 @@ def test_rare_electron():
         fpath  ='rare/rk/electron/data.yaml')
 
     with PL.parameter_schema(cfg=cfg.model.yields),\
-         sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
+        Cache.cache_root(path = tmp_path),\
+        sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
         dmd = DataModel(
             cfg     = cfg,
             obs     = obs,
@@ -77,7 +81,7 @@ def test_rare_electron():
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
 @pytest.mark.parametrize('observable', ['hdpipi', 'hdkk'])
 @pytest.mark.parametrize('q2bin'     , ['low', 'central', 'high'])
-def test_misid_rare(observable : str, q2bin : str):
+def test_misid_rare(observable : str, q2bin : str, tmp_path : Path):
     '''
     Test getting model for misid control region
     '''
@@ -90,7 +94,7 @@ def test_misid_rare(observable : str, q2bin : str):
     cfg.output_directory = out_dir
 
     with PL.parameter_schema(cfg=cfg.model.yields),\
-        RDFGetter.default_excluded(names=[]),\
+        Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {
         'nobr0' : 'nbrem != 0',
         'mass'  : '(1)',
