@@ -69,14 +69,14 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
 
     return df
 # ----------------------
-def test_simple(test_dir : Path) -> None:
+def test_simple(tmp_path : Path) -> None:
     '''
     This is the simplest test of ToyPlotter
     '''
     log.info('')
     df = _get_df(ntoys=1000, l_var=('a', 'b'))
     cfg= gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter.yaml')
-    cfg.saving.plt_dir = test_dir/cfg.saving.plt_dir
+    cfg.saving.plt_dir = tmp_path/cfg.saving.plt_dir
 
     ptr = ToyPlotter(df=df, cfg=cfg)
     cfg = ptr.plot()
@@ -88,7 +88,7 @@ def test_simple(test_dir : Path) -> None:
     assert math.isclose(cfg.a_pul.mu, 0.02316429312808755, rel_tol=1e-5)
     assert math.isclose(cfg.a_pul.sg, 0.982856552637077  , rel_tol=1e-5)
  # ----------------------
-def test_missing_variable(caplog, test_dir : Path) -> None:
+def test_missing_variable(caplog, tmp_path : Path) -> None:
     '''
     Test that plotter class:
 
@@ -98,7 +98,7 @@ def test_missing_variable(caplog, test_dir : Path) -> None:
     log.info('')
     df = _get_df(ntoys=1000, l_var=('c', 'b'))
     cfg= gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter.yaml')
-    cfg.saving.plt_dir = test_dir/cfg.saving.plt_dir
+    cfg.saving.plt_dir = tmp_path/cfg.saving.plt_dir
 
     logger = LogStore.get_logger(name='fitter:toy_plotter')
     if logger is None:

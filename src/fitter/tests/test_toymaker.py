@@ -61,7 +61,7 @@ def test_simple(ntoys : int) -> None:
 # ----------------------
 def test_integration(
     ntoys           : int, 
-    test_dir        : Path) -> None:
+    tmp_path        : Path) -> None:
     '''
     Makes toys and then plots using ToyPlotter
 
@@ -92,7 +92,7 @@ def test_integration(
     df  = mkr.get_parameter_information()
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
-    cfg.saving.plt_dir = test_dir/'toymaker/integration/plots'
+    cfg.saving.plt_dir = tmp_path/'toymaker/integration/plots'
     ptr = ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
 # ----------------------
