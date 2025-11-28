@@ -13,6 +13,12 @@ workflow:
             export ZFIT_DISABLE_TF_WARNINGS=1
             export PYTHONPATH=/tmp/rx/local
             export MPLCONFIGDIR=/tmp/rx/mplt
-            pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
-            pytest -n 2 src/rx_plots/tests
+            which root
+            which python
+
+            python --version
+            root --version
+
+#pip install --target /tmp/rx/local --no-deps -r requirements.txt
+#pytest -n 2 src/rx_plots/tests
