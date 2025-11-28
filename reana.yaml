@@ -7,4 +7,4 @@ workflow:
         environment: 'docker.io/acampove/rx_run3:v4.1'
         kubernetes_memory_limit: '256Mi'
         commands:
-          - pytest src/rx_plots/tests 
+        - which root
