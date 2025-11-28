@@ -16,18 +16,8 @@ workflow:
 
             source /root_install/bin/thisroot.sh
 
-            which root
-            if [[ $? -ne 0 ]];then
-              echo "ROOT unavailable after first setup"
-              exit 1
-            fi
-
+            which root || { echo "ROOT unavailable after first setup"; exit 1; }
             pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
-            which root
-            if [[ $? -ne 0 ]];then
-              echo "ROOT unavailable after project install"
-              exit 1
-            fi
-
+            which root || { echo "ROOT unavailable after project install"; exit 1 }
             pytest -n 2 src/rx_plots/tests
