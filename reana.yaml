@@ -15,5 +15,4 @@ workflow:
             export MPLCONFIGDIR=/tmp/rx/mplt
             pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
-            python -c "import zfit"
-            python -c "import dmu"
+            pytest -n 2 src/rx_plots/tests
