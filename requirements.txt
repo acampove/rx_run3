@@ -3,7 +3,6 @@ src/dmu
 src/ecal_calibration
 src/fitter
 src/post_ap
-src/root_stubs
 src/rx_classifier
 src/rx_common
 src/rx_data
