@@ -31,4 +31,3 @@ workflow:
             fi
 
             pytest -n 2 src/rx_plots/tests
-
