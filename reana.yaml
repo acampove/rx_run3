@@ -16,4 +16,4 @@ workflow:
             pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
             python -c "import zfit"
-
+            python -c "import dmu"
