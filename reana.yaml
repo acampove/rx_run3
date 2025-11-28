@@ -1,0 +1,10 @@
+workflow:
+  type: serial
+  specification:
+    steps:
+      - name       : test 
+        kerberos   : true
+        environment: 'docker.io/acampove/rx_run3:v4.1'
+        kubernetes_memory_limit: '256Mi'
+        commands:
+          - echo "Workflow running" 
