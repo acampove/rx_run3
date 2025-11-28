@@ -6,7 +6,7 @@ workflow:
       - name       : rx_tests 
         kerberos   : true
         environment: 'docker.io/acampove/rx_run3:v4.3'
-        kubernetes_memory_limit: '2Gi'
+        kubernetes_memory_limit: '1Gi'
         kubernetes_cpu_request : '4'
         commands:
         - |
