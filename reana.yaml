@@ -15,12 +15,14 @@ workflow:
             export MPLCONFIGDIR=/tmp/rx/mplt
 
             source /root_install/bin/thisroot.sh
-            echo "1. ROOT found at"
+            echo "1. Python/ROOT found at"
+            which python
             which root
             pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
             source /root_install/bin/thisroot.sh
-            echo "2. ROOT found at"
+            echo "2. Python/ROOT found at"
+            which python
             which root
 
             pytest -n 2 src/rx_plots/tests
