@@ -15,11 +15,5 @@ workflow:
             export PYTHONPATH=/tmp/rx/local
             export MPLCONFIGDIR=/tmp/rx/mplt
 
-            which root
-            which python
-
-            python --version
-            root --version
-
-#pip install --target /tmp/rx/local --no-deps -r requirements.txt
-#pytest -n 2 src/rx_plots/tests
+            pip install --target /tmp/rx/local --no-deps -r requirements.txt
+            pytest -n 2 src/rx_plots/tests
