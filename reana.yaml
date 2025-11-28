@@ -8,4 +8,7 @@ workflow:
         kubernetes_memory_limit: '256Mi'
         commands:
         - |
-            pip install -r requirements
+            pip install --target /tmp/.rx_local --no-deps -r requirements.txt
+
+            export PYTHONPATH=/tmp/.rx_local
+            python -c "import dmu"
