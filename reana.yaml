@@ -10,6 +10,7 @@ workflow:
         kubernetes_cpu_request : '4'
         commands:
         - |
+            source /root_install/bin/thisroot.sh
             export ZFIT_DISABLE_TF_WARNINGS=1
             export PYTHONPATH=/tmp/rx/local
             export MPLCONFIGDIR=/tmp/rx/mplt
