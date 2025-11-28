@@ -1,14 +1,19 @@
+version: 0.9.4
 workflow:
   type: serial
   specification:
     steps:
       - name       : test 
         kerberos   : true
-        environment: 'docker.io/acampove/rx_run3:v4.1'
-        kubernetes_memory_limit: '256Mi'
+        environment: 'docker.io/acampove/rx_run3:v4.2'
+        kubernetes_memory_limit: '2Gi'
+        kubernetes_cpu_request : '4'
         commands:
         - |
-            pip install --target /tmp/.rx_local --no-deps -r requirements.txt
+            export PYTHONPATH=/tmp/rx/local
+            export MPLCONFIGDIR=/tmp/rx/mplt
+            pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
-            export PYTHONPATH=/tmp/.rx_local
             python -c "import dmu"
+
+# pytest -o cache_dir=/tmp/rx/pytest -n 2 src/test.py 
