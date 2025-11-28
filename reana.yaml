@@ -16,4 +16,3 @@ workflow:
 
             python -c "import dmu"
 
-# pytest -o cache_dir=/tmp/rx/pytest -n 2 src/test.py 
