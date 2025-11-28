@@ -10,7 +10,8 @@ workflow:
         kubernetes_cpu_request : '4'
         commands:
         - |
-            export PYTHONPATH=/tmp/rx/local
+            export ZFIT_DISABLE_TF_WARNINGS=1
+            export PYTHONPATH=/tmp/rx/local:/usr/local/lib/python3.12/site-packages/
             export MPLCONFIGDIR=/tmp/rx/mplt
             pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
