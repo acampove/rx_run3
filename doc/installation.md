@@ -17,3 +17,7 @@ cd rx_run3
 # And install it
 pip install -r requirements.txt
 ```
+For development use `requirements.txt`, which
+
+- Will install stub files to hide type annotation errors
+- Will install in editable mode
