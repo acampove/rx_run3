@@ -15,5 +15,5 @@ workflow:
             export MPLCONFIGDIR=/tmp/rx/mplt
             pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
-            python -c "import dmu"
+            python -c "import zfit"
 
