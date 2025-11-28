@@ -3,7 +3,7 @@ workflow:
   type: serial
   specification:
     steps:
-      - name       : test 
+      - name       : rx_tests 
         kerberos   : true
         environment: 'docker.io/acampove/rx_run3:v4.2'
         kubernetes_memory_limit: '2Gi'
