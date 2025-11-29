@@ -32,17 +32,6 @@ summarize_toys = "fitter_scripts.summarize_toys:main"
 [project.optional-dependencies]
 dev = ["pytest"]
 
-# Use Hatch to build
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.setuptools.package-data]
+'fitter_data' = ['**/*.yaml']
 
-[tool.uv.sources]
-# Make these packages editable in the virtual environment
-fitter       = { workspace = true }
-fitter_data  = { workspace = true }
-fitter_schema= { workspace = true }
-
-# Include YAML data files
-[tool.hatch.include]
-files = ["src/fitter_data/**/*.yaml"]
