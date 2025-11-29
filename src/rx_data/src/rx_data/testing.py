@@ -2,9 +2,10 @@
 This module contains functions needed by tests
 '''
 
+from rx_common.types        import Trigger
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
-from ROOT                   import RDataFrame # type: ignore
+from ROOT                   import RDF # type: ignore
 
 from dmu.logging.log_store import LogStore
 
