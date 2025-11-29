@@ -3,10 +3,8 @@
 #If a column ins not found in a dataframe, it will be added according to the following definitions
 redefinitions:
   block         : 'block < 0 ? 0 : block' # This is needed to process pre-UT data as Block 0 data, temporary
-  B_Mass_smr    : smear.B_Mass_smr
-  Jpsi_Mass_smr : smear.Jpsi_Mass_smr
-  q2            : Jpsi_Mass * Jpsi_Mass   # Ntuples from post_ap already have q2 calculated without correction
-  q2_smr        : Jpsi_Mass_smr * Jpsi_Mass_smr
+  q2            : Jpsi_M_brem_track_2 * Jpsi_M_brem_track_2 # Ntuples from post_ap already have q2 calculated without correction
+                                                            # Use brem_track_2 in definition to keep skipping code simple
 definitions:
   common: &common
     L1_TRACK_ETA      : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.eta();
@@ -21,6 +19,10 @@ definitions:
                         ROOT::Math::PtEtaPhiMVector l2(L2_TRACK_PT, L2_TRACK_ETA, L2_TRACK_PHI, 0.511);
                         auto ll = l1 + l2;
                         return ll.M2();
+    # -------
+    B_Mass_smr        : smear.B_Mass_smr                           # keep definitions in function of
+    Jpsi_Mass_smr     : smear.Jpsi_Mass_smr                        # smear. to allow skipping of definition
+    q2_smr            : smear.Jpsi_Mass_smr * smear.Jpsi_Mass_smr  # in case smear tree is not present
   DATA:
     L1_TRACK_PT       : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.rho();
     L2_TRACK_PT       : ROOT::Math::XYZVector lep(L2_TRACK_PX, L2_TRACK_PY, L2_TRACK_PZ); return lep.rho();
@@ -38,6 +40,7 @@ definitions:
   EE:
     Jpsi_Mass         : Jpsi_M_brem_track_2 # Use brem corrected masses only for electron channel
     B_Mass            : B_M_brem_track_2
+    # -------
     nbrem             : int(L1_HASBREMADDED_brem_track_2) + int(L2_HASBREMADDED_brem_track_2) # Will use the new definition of brem
     <<: *common
   MM:
