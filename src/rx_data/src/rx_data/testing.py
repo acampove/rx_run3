@@ -1,6 +1,7 @@
 '''
 This module contains functions needed by tests
 '''
+import yaml
 
 from rx_common.types        import Trigger
 from rx_selection           import selection as sel
@@ -106,18 +107,21 @@ def rdf_from_sample(sample : str, trigger : Trigger) -> RDF.RNode:
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
-    rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
+    rdf, d_cut = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
 
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         rep = rdf.Report()
         rep.Print()
+
+        print(yaml.dump(d_cut))
+
         raise ValueError(f'No entry passed for {sample}/{trigger}')
 
     return rdf
 # ----------------------------------
-def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> RDF.RNode:
-    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
+def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> tuple[RDF.RNode, dict[str,str]]:
+    d_sel               = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['pid_l']      = '(1)'
     d_sel['jpsi_misid'] = '(1)'
     d_sel['cascade']    = '(1)'
@@ -130,7 +134,7 @@ def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> RDF.RNode:
     rep   = rdf.Report()
     rep.Print()
 
-    return rdf
+    return rdf, d_sel
 # ----------------------
 def get_trigger(kind : str, prefix : str) -> str:
     '''
