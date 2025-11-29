@@ -34,11 +34,14 @@ def max_entries():
     with RDFGetter.max_entries(value=100_000):
         yield
 # -------------------------------------------------
-def _validate_data(data : zdata, name : str) -> None:
+def _validate_data(
+    data     : zdata, 
+    name     : str,
+    tmp_path : Path) -> None:
     '''
     Makes validation plots from zfit data
     '''
-    plt_path = f'{Data.out_dir}/{name}.png'
+    plt_path = tmp_path / f'{name}.png'
 
     arr_data = data.numpy()
     rng      = sut.range_from_obs(obs=data.space)
@@ -72,7 +75,7 @@ def test_muon_data(tmp_path : Path, sample : str):
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
-    _validate_data(data=dat, name=name)
+    _validate_data(data=dat, name=name, tmp_path = tmp_path)
 # -------------------------------------------------
 @pytest.mark.parametrize('sample', [
     'DATA_24_MagDown_24c2',
@@ -97,7 +100,7 @@ def test_brem_cat_data(tmp_path : Path, sample : str, brem_cat : int):
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
-    _validate_data(data=dat, name=name)
+    _validate_data(data=dat, name=name, tmp_path = tmp_path)
 # -------------------------------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
 @pytest.mark.parametrize('sample', [
@@ -144,5 +147,5 @@ def test_with_pid_weights(
             q2bin  = 'jpsi')
         dat  = prp.get_data()
 
-    _validate_data(data=dat, name=name)
+    _validate_data(data=dat, name=name, tmp_path = tmp_path)
 # -------------------------------------------------
