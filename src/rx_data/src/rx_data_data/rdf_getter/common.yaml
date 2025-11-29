@@ -7,7 +7,7 @@ redefinitions:
   # --------
   B_Mass_smr    : smear.B_Mass_smr                          # Same as above, additionally, B_Mass_smr does not exist already, but
   Jpsi_Mass_smr : smear.Jpsi_Mass_smr                       # ROOT recognizes smear.B_Mass_smr == B_Mass_smr, so a definition alone does not work
-  q2_smr        : smear.q2_smr * smear.q2_smr
+  q2_smr        : smear.q2_smr
 definitions:
   common: &common
     L1_TRACK_ETA      : ROOT::Math::XYZVector lep(L1_TRACK_PX, L1_TRACK_PY, L1_TRACK_PZ); return lep.eta();
