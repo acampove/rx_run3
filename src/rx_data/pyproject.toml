@@ -38,3 +38,4 @@ list_lfns            = "rx_data_scripts.list_lfns:main"
 
 [tool.setuptools.package-data]
 rx_data_data = ['**/*.json', '**/*.yaml']
+rx_data_lfns = ['**/*.json']

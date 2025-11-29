@@ -17,12 +17,7 @@ from dmu.generic           import version_management as vmn
 from rx_data.path_splitter import PathSplitter
 
 # TODO: Add rkst_nopid project
-_PROJECTS : Final[list[str]] = [
-    'rk'        , 'rkst', 
-    'rk_nopid'  ,
-    'rk_norefit', 'rkst_norefit',
-    'rk_sim10d' , 'rkst_sim10d',
-]
+_PROJECTS : Final[list[str]] = ['rx', 'nopid']
 
 log   = LogStore.add_logger('')
 log   = LogStore.add_logger('rx_data:test_path_splitter')
