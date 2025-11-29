@@ -50,11 +50,12 @@ def test_multithreaded():
         obj=BkkChecker(name=name, cfg=cfg)
         obj.save(dry=True, nthreads=4)
 # ----------------------------------------
-def test_with_sample_config():
+@pytest.mark.parametrize('settings', ['2024_sim10d', '2024_sim10f'])
+def test_with_sample_config(settings : str):
     '''
     Tests using config made with SampleConfig
     '''
-    obj = scf.SampleConfig(settings='2024', samples='by_priority')
+    obj = scf.SampleConfig(settings=settings, samples='by_priority')
     cfg = obj.get_config(categories=['high', 'medium', 'low'])
 
     for name, section in cfg.sections.items():
