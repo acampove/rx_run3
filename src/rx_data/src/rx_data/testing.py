@@ -67,7 +67,7 @@ l_prefix_kind_bzero = [
 class Data:
     nentries= 100_000
 # ----------------------------------
-def get_rdf(kind : str, prefix : str) -> RDataFrame:
+def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     '''
     Parameters
     ------------------
@@ -99,9 +99,9 @@ def get_rdf(kind : str, prefix : str) -> RDataFrame:
     else:
         raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
-    return rdf_from_sample(sample=sample, trigger=trigger)
+    return rdf_from_sample(sample=sample, trigger=Trigger(trigger))
 # ----------------------------------
-def rdf_from_sample(sample : str, trigger : str) -> RDataFrame:
+def rdf_from_sample(sample : str, trigger : Trigger) -> RDF.RNode:
     with RDFGetter.max_entries(value = Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -116,7 +116,7 @@ def rdf_from_sample(sample : str, trigger : str) -> RDataFrame:
 
     return rdf
 # ----------------------------------
-def _apply_selection(rdf : RDataFrame, trigger : str, sample : str) -> RDataFrame:
+def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> RDF.RNode:
     d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
     d_sel['pid_l']      = '(1)'
     d_sel['jpsi_misid'] = '(1)'
