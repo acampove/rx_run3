@@ -3,15 +3,26 @@ Module with tests for PFNSplitter class
 '''
 import os
 import json
+
+from typing                import Final
 from pathlib               import Path
 from importlib.resources   import files
 from functools             import cache
 
 import yaml
 import pytest
+
 from dmu.logging.log_store import LogStore
 from dmu.generic           import version_management as vmn
 from rx_data.path_splitter import PathSplitter
+
+# TODO: Add rkst_nopid project
+_PROJECTS : Final[list[str]] = [
+    'rk'        , 'rkst', 
+    'rk_nopid'  ,
+    'rk_norefit', 'rkst_norefit',
+    'rk_sim10d' , 'rkst_sim10d',
+]
 
 log   = LogStore.add_logger('')
 log   = LogStore.add_logger('rx_data:test_path_splitter')
@@ -52,7 +63,7 @@ def _get_pfns(analysis : str) -> list[Path]:
 
     return l_pfn
 # ----------------------------------------
-@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+@pytest.mark.parametrize('analysis', _PROJECTS)
 def test_default(analysis : str):
     '''
     Default usage
@@ -63,7 +74,7 @@ def test_default(analysis : str):
 
     _save_samples(f'default_{analysis}', data)
 # ----------------------------------------
-@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+@pytest.mark.parametrize('analysis', _PROJECTS)
 def test_nested(analysis : str):
     '''
     Dumps it with nesting sample:trigger:list of files
@@ -74,7 +85,7 @@ def test_nested(analysis : str):
 
     _save_samples(f'nested_{analysis}', data)
 # ----------------------------------------
-@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+@pytest.mark.parametrize('analysis', _PROJECTS)
 def test_max_files(analysis : str):
     '''
     Will only read 100 files
@@ -85,7 +96,7 @@ def test_max_files(analysis : str):
 
     _save_samples(f'max_files_{analysis}', data)
 # ----------------------------------------
-@pytest.mark.parametrize('analysis', ['rx', 'nopid'])
+@pytest.mark.parametrize('analysis', _PROJECTS)
 @pytest.mark.parametrize('naming'  , ['new', 'old'])
 def test_sample_naming(naming : str, analysis : str):
     '''
