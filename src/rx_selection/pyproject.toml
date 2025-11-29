@@ -22,6 +22,6 @@ make_jobs_list  = "rx_selection_scripts.make_jobs_list:main"
 validate_sample = "rx_selection_scripts.validate_sample:main"
 jmanager_ihep   = "rx_selection_scripts.jmanager_ihep:main"
 
-[tool.uv.sources]
-rx_selection       = { workspace = true }
-rx_selection_data  = { workspace = true }
+[tool.setuptools.package-data]
+'rx_selection_data' = ['**/*.yaml']
+

@@ -25,5 +25,8 @@ rx_efficiencies_data=[
 'scan/*.yaml',
 ]
 
+[tool.setuptools.package-data]
+'rx_efficiencies_data' = ['**/*.yaml', '**/*.decay']
+
 [tool.setuptools]
 script-files=['src/rx_efficiencies_scripts/create_rapidsim_ntuples']
