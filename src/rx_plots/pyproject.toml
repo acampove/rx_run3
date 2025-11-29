@@ -36,11 +36,6 @@ mass_bias_correction= "rx_plotter_scripts.mass_bias_correction:main"
 efficiency_vs_q2    = "rx_plotter_scripts.efficiency_vs_q2:main"
 run123              = "rx_plotter_scripts.run123:main"
 
-# Hatch build system
-[build-system]
-requires      = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.setuptools.package-data]
+'rx_plotter_data' = ['**/*.yaml']
 
-[tool.uv.sources]
-rx_plotter        = { workspace = true }
-rx_plotter_scripts= { workspace = true }
