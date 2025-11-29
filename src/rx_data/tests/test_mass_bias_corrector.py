@@ -22,6 +22,7 @@ from dmu.plotting.plotter_1d     import Plotter1D as Plotter
 from rx_data                     import utilities as ut
 from rx_data.rdf_getter          import RDFGetter
 from rx_data.mass_bias_corrector import MassBiasCorrector
+from rx_common.types             import Trigger
 
 log=LogStore.add_logger('rx_data:test_mass_bias_corrector')
 
@@ -200,7 +201,7 @@ def _check_output_columns(rdf : RDF.RNode) -> None:
         log.debug(f'   {colname}')
 #-----------------------------------------
 def _get_rdf(
-    trigger  : str,
+    trigger  : Trigger,
     sample   : str) -> RDF.RNode:
     '''
     Return ROOT dataframe needed for test
@@ -238,7 +239,7 @@ def _check_size(rdf_org : RDF.RNode, rdf_cor : RDF.RNode) -> None:
     log.info(f'Sizes agree at: {in_size}')
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_EE)
-def test_simple(sample : str, trigger : str):
+def test_simple(sample : str, trigger : Trigger):
     '''
     Simplest test
     '''
@@ -278,7 +279,7 @@ def test_simple(sample : str, trigger : str):
     _compare_masses(d_rdf, f'simple/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_DATA) 
-def test_medium_input(sample : str, trigger : str):
+def test_medium_input(sample : str, trigger : Trigger):
     '''
     Medium input
     '''
@@ -318,7 +319,7 @@ def test_medium_input(sample : str, trigger : str):
     _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
-def test_suffix(sample : str, trigger : str):
+def test_suffix(sample : str, trigger : Trigger):
     '''
     Tests that output dataframe has columns with suffix added
     '''
@@ -342,7 +343,7 @@ def test_suffix(sample : str, trigger : str):
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 @pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
-def test_brem_threshold(sample:str, trigger : str, brem_energy_threshold: float):
+def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: float):
     '''
     Vary energy threhold of brem photon needed to be added
     '''
