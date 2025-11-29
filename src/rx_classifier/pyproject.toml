@@ -22,11 +22,6 @@ train_classifier   ='rx_classifier_scripts.train_classifier:main'
 apply_classifier   ='rx_classifier_scripts.apply_classifier:main'
 compare_classifier ='rx_classifier_scripts.compare_classifier:main'
 
-# Hatch build system
-[build-system]
-requires      = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.setuptools.package-data]
+rx_classifier_data = ['**/*.yaml']
 
-[tool.uv.sources]
-rx_classifier     = { workspace = true }
-rx_classifier_data= { workspace = true }
