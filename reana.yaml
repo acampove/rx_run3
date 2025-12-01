@@ -13,7 +13,10 @@ workflow:
             export ZFIT_DISABLE_TF_WARNINGS=1
             export PYTHONPATH=/tmp/rx/local
             export MPLCONFIGDIR=/tmp/rx/mplt
+            unset  https_proxy
+            unset  http_proxy
 
+            source /root_install/bin/thisroot.sh
             echo "1. Python/ROOT found at"
             which python
             which root
