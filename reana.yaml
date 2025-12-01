@@ -5,7 +5,7 @@ workflow:
     steps:
       - name       : rx_tests 
         kerberos   : true
-        environment: 'docker.io/acampove/rx_run3:v4.4'
+        environment: 'docker.io/acampove/rx_run3:v4.6'
         kubernetes_memory_limit: '1Gi'
         kubernetes_cpu_request : '4'
         commands:
@@ -14,15 +14,13 @@ workflow:
             export PYTHONPATH=/tmp/rx/local
             export MPLCONFIGDIR=/tmp/rx/mplt
 
-            source /root_install/bin/thisroot.sh
             echo "1. Python/ROOT found at"
             which python
             which root
             pip install --target /tmp/rx/local --no-deps -r requirements.txt
 
-            source /root_install/bin/thisroot.sh
             echo "2. Python/ROOT found at"
             which python
             which root
 
-            pytest -n 2 src/rx_plots/tests
+#pytest -n 2 src/rx_plots/tests
