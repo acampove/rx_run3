@@ -11,4 +11,4 @@ workflow:
         commands:
         - |
             source setup.sh
-#pytest -n 2 src/rx_plots/tests
+            pytest -n 2 src/rx_plots/tests
