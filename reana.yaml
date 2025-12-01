@@ -10,20 +10,5 @@ workflow:
         kubernetes_cpu_request : '4'
         commands:
         - |
-            export ZFIT_DISABLE_TF_WARNINGS=1
-            export PYTHONPATH=/tmp/rx/local
-            export MPLCONFIGDIR=/tmp/rx/mplt
-            unset  https_proxy
-            unset  http_proxy
-
-            source /root_install/bin/thisroot.sh
-            echo "1. Python/ROOT found at"
-            which python
-            which root
-            pip install --target /tmp/rx/local --no-deps -r requirements.txt
-
-            echo "2. Python/ROOT found at"
-            which python
-            which root
-
+            source setup.sh
 #pytest -n 2 src/rx_plots/tests
