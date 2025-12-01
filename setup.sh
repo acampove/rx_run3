@@ -29,10 +29,11 @@ check_env()
 export ZFIT_DISABLE_TF_WARNINGS=1
 export PYTHONPATH=/tmp/rx/local
 export MPLCONFIGDIR=/tmp/rx/mplt
+export USER=rx_run3
 unset  https_proxy
 unset  http_proxy
-                                                                 
+
 source /root_install/bin/thisroot.sh
 check_env
 pip install --target /tmp/rx/local --no-deps -r requirements.txt
-check_env                                                                 
+check_env
