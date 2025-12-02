@@ -1,0 +1,28 @@
+NJOBS=4
+TEST_PATH='src/rx_classifier/tests'
+
+rule all:
+    input:
+        expand(".test_{index}.txt", index=range(NJOBS))
+
+rule test:
+    output:
+        ".test_{index}.txt"
+    params:
+        path   = TEST_PATH,
+        ngroups= NJOBS
+    container:
+        "docker.io/acampove/rx_run3:v4.7"
+    resources:
+        kubernetes_memory_limit="256Mi"
+    shell:
+        """
+        export USER=acampove
+        cmd=$(python code/cmd_from_index.py -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}")
+
+        > {output} 
+        for cmd in $(jq -r '.[]' .commands_{wildcards.index}.json); do
+            pytest "$cmd"
+            echo "$cmd" >> {output} 
+        done
+        """
