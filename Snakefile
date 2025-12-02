@@ -17,7 +17,7 @@ rule test:
         kubernetes_memory_limit="256Mi"
     shell:
         """
-        source setup.sh
+        source setup.sh "{wildcards.index}"
 
         cmd=$(cmd_from_index -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}")
 
