@@ -63,7 +63,7 @@ def main():
     args = _parse_args()
     data = _get_json(args=args)
 
-    with open(f'.commands_{args.index:003}.json', 'w') as ofile:
+    with open(f'.commands_{args.index}.json', 'w') as ofile:
         json.dump(data, ofile, indent=2)
 # ----------------------
 if __name__ == '__main__':
