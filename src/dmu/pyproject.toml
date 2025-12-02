@@ -28,8 +28,6 @@ fit      = ['zfit', 'tensorflow']
 dev      = ['pytest', 'pytest-xdist', 'pandas-stubs', 'memory-profiler']
 
 [project.scripts]
-transform_text      = 'dmu_scripts.text.transform_text:main'
-coned               = 'dmu_scripts.ssh.coned:main'
 check_truth         = 'dmu_scripts.physics.check_truth:main'
 print_trees         = 'dmu_scripts.rfile.print_trees:main'
 compare_root_files  = 'dmu_scripts.rfile.compare_root_files:main'
