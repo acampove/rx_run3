@@ -1,4 +1,4 @@
-NJOBS=3
+NJOBS=1
 TEST_PATH='src/rx_classifier/tests'
 
 rule all:
