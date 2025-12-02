@@ -2282,112 +2282,17 @@ oversion=get_last_version(dir_path=dir_path, version_only=False) # This will ret
 The `get_last_version` function works for versions of the form `vN`, `vN.M` and `vNpM`. 
 Where `N` and `M` are integers.
 
-# Text manipulation
+# Testing
 
-## Transformations
+## Pytest utilities
 
-Run:
-
-```bash
-transform_text -i ./transform.txt -c ./transform.toml
-```
-to apply a transformation to `transform.txt` following the transformations in `transform.toml`.
-
-The tool can be imported from another file like:
+In order to collect the pytest tests in a given directory, do:
 
 ```python
-from dmu.text.transformer import transformer as txt_trf
+from dmu import pytest_utilities
 
-trf=txt_trf(txt_path=data.txt, cfg_path=data.cfg)
-trf.save_as(out_path=data.out)
+data : dict[int,str] = pytest_utilities.get_tests(path = '/path/to/tests/')
 ```
 
-Currently the supported transformations are:
-
-### append
-
-Which will apppend to a given line a set of lines, the config lines could look like:
-
-```toml
-[settings]
-as_substring=true
-format      ='--> {} <--'
-
-[append]
-'primes are'=['2', '3', '5']
-'days are'=['Monday', 'Tuesday', 'Wednesday']
-```
-
-`as_substring` is a flag that will allow matches if the line in the text file only contains the key in the config
-e.g.:
-
-```
-the
-first
-primes are:
-and
-the first
-days are:
-```
-
-`format` will format the lines to be inserted, e.g.:
-
-```
-the
-first
-primes are:
---> 2 <--
---> 3 <--
---> 5 <--
-and
-the first
-days are:
---> Monday <--
---> Tuesday <--
---> Wednesday <--
-```
-
-## coned
-
-Utility used to edit SSH connection list, has the following behavior:
-
-```bash
-#Prints all connections
-coned -p
-
-#Adds a task name to a given server
-coned -a server_name server_index task
-
-#Removes a task name from a given server
-coned -d server_name server_index task
-```
-
-the list of servers with tasks and machines is specified in a YAML file that can look like:
-
-```yaml
-ihep:
-    '001' :
-        - checks
-        - extractor
-        - dsmanager
-        - classifier
-    '002' :
-        - checks
-        - hqm2
-        - dotfiles
-        - data_checks
-    '003' :
-        - setup
-        - ntupling
-        - preselection
-    '004' :
-        - scripts
-        - tools
-        - dmu
-        - ap
-lxplus:
-    '984' :
-        - ap
-```
-
-and should be placed in `$HOME/.config/dmu/ssh/servers.yaml`
+Here `data` will map an index starting at zero to the name of the test
+as required to run `pytest {name_of_test}`.
