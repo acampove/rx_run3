@@ -1,17 +1,4 @@
 version: 0.9.4
 workflow:
-  type: serial
-  specification:
-    steps:
-      - name                   : rx_tests 
-        kerberos               : true
-        environment            : 'docker.io/acampove/rx_run3:v4.6'
-        compute_backend        : kubernetes
-        kubernetes_cpu_request : '10'
-        kubernetes_memory_limit: '4Gi'
-        commands:
-        - |
-            source setup.sh
-            pytest -n 20 src/rx_data/tests
-  retention_days:
-    /tmp: 1
+  type: snakemake
+  file: Snakefile
