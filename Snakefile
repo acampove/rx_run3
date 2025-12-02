@@ -14,7 +14,7 @@ rule test:
     container:
         "docker.io/acampove/rx_run3:v4.7"
     resources:
-        kubernetes_memory_limit="256Mi"
+        kubernetes_memory_limit="4000Mi"
     shell:
         """
         source setup.sh "{wildcards.index}"
