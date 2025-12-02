@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+JOB=$1
+
 check_env()
 {
     FAIL=0
@@ -27,8 +29,8 @@ check_env()
 }
 
 export ZFIT_DISABLE_TF_WARNINGS=1
-export PYTHONPATH=/tmp/rx/local
-export PATH=/tmp/rx/local/bin/:$PATH
+export PYTHONPATH=/tmp/rx/local_$JOB
+export PATH=/tmp/rx/local_$JOB/bin/:$PATH
 export MPLCONFIGDIR=/tmp/rx/mplt
 export USER=rx_run3
 unset  https_proxy
@@ -38,5 +40,5 @@ unset  HTTPS_PROXY
 
 source /root_install/bin/thisroot.sh
 check_env
-pip install --target /tmp/rx/local --no-deps -r requirements.txt
+pip install --target /tmp/rx/local_$JOB --no-deps -r requirements.txt
 check_env
