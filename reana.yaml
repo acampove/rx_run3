@@ -1,4 +1,6 @@
 version: 0.9.4
 workflow:
   type: snakemake
+  resources:
+    kerberos : true
   file: Snakefile
