@@ -13,3 +13,5 @@ workflow:
         - |
             source setup.sh
             pytest -n 20 src/rx_data/tests
+  retention_days:
+    /tmp: 1
