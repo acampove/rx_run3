@@ -1,4 +1,4 @@
-NJOBS=4
+NJOBS=3
 TEST_PATH='src/rx_classifier/tests'
 
 rule all:
@@ -18,7 +18,7 @@ rule test:
     shell:
         """
         export USER=acampove
-        cmd=$(python code/cmd_from_index.py -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}")
+        cmd=$(cmd_from_index -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}")
 
         > {output} 
         for cmd in $(jq -r '.[]' .commands_{wildcards.index}.json); do
