@@ -28,10 +28,13 @@ check_env()
 
 export ZFIT_DISABLE_TF_WARNINGS=1
 export PYTHONPATH=/tmp/rx/local
+export PATH=/tmp/rx/local/bin/:$PATH
 export MPLCONFIGDIR=/tmp/rx/mplt
 export USER=rx_run3
 unset  https_proxy
 unset  http_proxy
+unset  HTTP_PROXY 
+unset  HTTPS_PROXY 
 
 source /root_install/bin/thisroot.sh
 check_env
