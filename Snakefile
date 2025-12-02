@@ -17,6 +17,11 @@ rule test:
         kubernetes_memory_limit="256Mi"
     shell:
         """
+        set -euo pipefail
+        source setup.sh
+
+        pip install -r requirements.txt
+
         export USER=acampove
         cmd=$(cmd_from_index -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}")
 
