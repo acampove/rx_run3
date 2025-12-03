@@ -1,6 +1,6 @@
 FROM gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v1
 
-COPY . /workspace
+COPY  . /workspace
 WORKDIR /workspace
 
 ENV http_proxy=
