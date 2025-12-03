@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-JOB=$1
-
 check_env()
 {
     FAIL=0
@@ -29,16 +27,15 @@ check_env()
 }
 
 export ZFIT_DISABLE_TF_WARNINGS=1
-export PYTHONPATH=/tmp/rx/local_$JOB
-export PATH=/tmp/rx/local_$JOB/bin/:$PATH
 export MPLCONFIGDIR=/tmp/rx/mplt
 export USER=rx_run3
+
+# These variables are needed in China
+# unset them for runs in REANA/Condor, etc
 unset  https_proxy
 unset  http_proxy
 unset  HTTP_PROXY 
 unset  HTTPS_PROXY 
 
 source /root_install/bin/thisroot.sh
-check_env
-pip install --target /tmp/rx/local_$JOB --no-deps -r requirements.txt
 check_env
