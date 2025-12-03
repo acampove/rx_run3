@@ -11,7 +11,7 @@ build-image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker info
-    - docker build -t $CI_REGISTRY_IMAGE:0d4a8bbc5 .
-    - docker push     $CI_REGISTRY_IMAGE:0d4a8bbc5
+    - docker build -t $CI_REGISTRY_IMAGE:089d3a5ae .
+    - docker push     $CI_REGISTRY_IMAGE:089d3a5ae
   only:
     - master
