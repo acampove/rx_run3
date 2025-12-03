@@ -13,4 +13,9 @@ echo "Running SHA replacement"
 if [[ ! -f Snakefile ]];then
     echo "Missing Snakefile"
     exit 1
+else
+    echo "Will change Snakefile's image tag"
 fi
+
+SHA=$(git rev-parse --short HEAD)
+
