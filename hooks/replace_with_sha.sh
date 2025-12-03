@@ -19,3 +19,4 @@ fi
 
 SHA=$(git rev-parse --short HEAD)
 
+touch file.txt
