@@ -26,8 +26,8 @@ fi
 
 SHA=$(git rev-parse --short HEAD)
 
-sed -i -E "s|:[a-f0-9]{8}'|:$SHA'|"            Snakefile
-sed -i -E "s|_IMAGE:[a-f0-9]{8}|_IMAGE:$SHA|" .gitlab-ci.yml
+sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"            Snakefile
+sed -i -E "s|_IMAGE:[a-f0-9]{9}|_IMAGE:$SHA|" .gitlab-ci.yml
 
 git add Snakefile
 git add .gitlab-ci.yml
