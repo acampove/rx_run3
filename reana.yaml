@@ -4,4 +4,3 @@ workflow:
   resources:
     kerberos : true
   file: Snakefile
-
