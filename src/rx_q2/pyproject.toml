@@ -33,17 +33,6 @@ q2_merger          = "rx_q2_scripts.q2_merger:main"
 remake_q2_json     = "rx_q2_scripts.remake_q2_json:main"
 validate_smear     = "rx_q2_scripts.validate_smear:main"
 
-# Hatch build system
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.setuptools.package-data]
+'rx_q2_data' = ['*/**.csv', '*/**.yaml']
 
-[tool.uv.sources]
-rx_q2 = { workspace = true }
-
-# Include data files in the wheel / editable install
-[tool.hatch.include]
-files = [
-    "rx_q2_data/config/*.yaml",
-    "rx_q2_data/scales/*/*.csv"
-]
