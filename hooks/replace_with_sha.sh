@@ -19,4 +19,4 @@ fi
 
 SHA=$(git rev-parse --short HEAD)
 
-touch file.txt
+echo $SHA > file.txt
