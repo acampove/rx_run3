@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This hook is meant to swap xxx in:
+# This pre-push hook is meant to swap xxx in:
 #
 # gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:XXX
 #
@@ -17,6 +17,19 @@ else
     echo "Will change Snakefile's image tag"
 fi
 
+if [[ ! -f .gitlab-ci.yml ]];then
+    echo "Missing gitlab CI/CD file"
+    exit 1
+else
+    echo "Will change CI/CD image tag"
+fi
+
 SHA=$(git rev-parse --short HEAD)
 
-echo $SHA > file.txt
+sed -i -E "s|:[a-f0-9]{8}'|:$SHA'|"            Snakefile
+sed -i -E "s|_IMAGE:[a-f0-9]{8}|_IMAGE:$SHA|" .gitlab-ci.yml
+
+git add Snakefile
+git add .gitlab-ci.yml
+
+git commit -m "Update image version with $SHA"
