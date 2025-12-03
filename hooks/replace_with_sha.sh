@@ -8,7 +8,11 @@
 
 set -euo pipefail
 
+SHA=$(git rev-parse --short HEAD)
+
 echo "-----------------"
+echo "Found SHA: $SHA"
+echo ""
 if [[ ! -f Snakefile ]];then
     echo "Missing Snakefile"
     exit 1
@@ -23,8 +27,6 @@ else
     echo "Will change CI/CD image tag"
 fi
 echo "-----------------"
-
-SHA=$(git rev-parse --short HEAD)
 
 sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"            Snakefile
 sed -i -E "s|_IMAGE:[a-f0-9]{9}|_IMAGE:$SHA|" .gitlab-ci.yml
