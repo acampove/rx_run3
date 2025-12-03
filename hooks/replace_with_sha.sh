@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This pre-push hook is meant to swap xxx in:
+# This pre-commit hook is meant to swap xxx in:
 #
 # gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:XXX
 #
