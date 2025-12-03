@@ -1,5 +1,5 @@
-NJOBS=2
-TEST_PATH='$PWD/src/rx_classifier'
+NJOBS=40
+TEST_PATH='$PWD/src/rx_data'
 
 rule all:
     input:
