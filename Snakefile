@@ -12,12 +12,12 @@ rule test:
         path   = TEST_PATH,
         ngroups= NJOBS
     container:
-        "docker.io/acampove/rx_run3:v4.7"
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:latest'
     resources:
         kubernetes_memory_limit="4000Mi"
     shell:
         """
-        source setup.sh "{wildcards.index}"
+        source setup.sh
 
         cmd=$(cmd_from_index -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}")
 
