@@ -5,5 +5,5 @@ repos:
         name    : Replace :latest with SHA from Snakefile
         entry   : hooks/replace_with_sha.sh
         language: script
-        stages  : [commit]  # Runs on git commit
+        stages  : [pre-commit]  # Runs on git commit
         types   : [yaml]  # Optional: Only run if YAML files are staged; adjust as needed
