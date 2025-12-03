@@ -1,10 +1,14 @@
+# Taken from
+# https://gitlab.cern.ch/gitlabci-examples/build_docker_image/-/blob/master/.gitlab-ci.yml?ref_type=heads#L54
+
 build-image:
   stage: build
   image: registry.cern.ch/quay.io/buildah/stable
   before_script:
+    - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:751ca63a8 .
-    - buildah push    $CI_REGISTRY_IMAGE:751ca63a8
+    - buildah bud  -t $CI_REGISTRY_IMAGE:d5acfd033 .
+    - buildah push    $CI_REGISTRY_IMAGE:d5acfd033
   only:
     - master
