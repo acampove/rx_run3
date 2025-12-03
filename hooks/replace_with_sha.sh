@@ -8,7 +8,10 @@
 
 set -euo pipefail
 
-echo "Running SHA replacement"
+REMOTE=$1
+BRANCH=$(git branch --show-current)
+
+echo "Running SHA replacement on push to: $REMOTE/$BRANCH"
 
 if [[ ! -f Snakefile ]];then
     echo "Missing Snakefile"
