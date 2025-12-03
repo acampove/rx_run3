@@ -6,11 +6,3 @@ readme          = "README.md"
 license         = {text = "MIT"}
 dependencies    = []
 
-[tool.hatch.build.targets.wheel]
-packages = ["vector"]
-
-[tool.hatch.build.targets.sdist]
-include = [
-    "/vector",
-    "/README.md",
-]
