@@ -1,3 +1,4 @@
+pre-commit
 -e src/ap_utilities
 -e src/dmu
 -e src/ecal_calibration
