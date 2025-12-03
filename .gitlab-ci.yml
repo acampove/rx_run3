@@ -8,7 +8,14 @@ build-image:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:82bb969fc .
-    - buildah push    $CI_REGISTRY_IMAGE:82bb969fc
+    - buildah bud  -t $CI_REGISTRY_IMAGE:f4c343b29 .
+    - buildah push    $CI_REGISTRY_IMAGE:f4c343b29
   only:
     - master
+reana_workflow:
+  image: python:3.12
+  script:
+    - pip install reana-client
+    - reana-client create -w $CI_REGISTRY_IMAGE 
+    - reana-client upload -w $CI_REGISTRY_IMAGE  src/**/test_*.py
+    - reana-client start  -w $CI_REGISTRY_IMAGE  
