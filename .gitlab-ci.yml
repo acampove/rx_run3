@@ -8,7 +8,7 @@ build-image:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:d5acfd033 .
-    - buildah push    $CI_REGISTRY_IMAGE:d5acfd033
+    - buildah bud  -t $CI_REGISTRY_IMAGE:82bb969fc .
+    - buildah push    $CI_REGISTRY_IMAGE:82bb969fc
   only:
     - master
