@@ -12,7 +12,7 @@ rule test:
         path   = TEST_PATH,
         ngroups= NJOBS
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:4a4d17b1a'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:751ca63a8'
     resources:
         kubernetes_memory_limit="4000Mi"
     shell:
