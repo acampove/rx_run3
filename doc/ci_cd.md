@@ -26,18 +26,27 @@ Due to `REANA` capabilities of:
 
 ## A software environment
 
-Which will be provided by docker containers. This will ensure that:
+Which will be provided by docker containers. These containers are built from a base image:
+
+```bash
+gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v1
+```
+
+which holds the basic dependencies, ROOT, python, etc. On top of it, the analysis code is build
+in the CI/CD step in the gitlab through the `Dockerfile`. The latest tag of the image will contain
+the latest version of the code that can be build successfuly.
+
+This will ensure that:
 
 - We have available an environment with frozen versions of the depdencies (e.g. pandas, numpy, ROOT)
-- We do not need to install everything all over again, only the analysis code needs to be installed.
+- We do not need to install everything all over again.
 - We do not rely on anyone to provide the software infrastructure (e.g. LCGEnv, Lbconda) and thus we are flexible
 on what we need and when.
 
-Currently, the docker container is hosted [here](https://hub.docker.com/r/acampove/rx_run3) and it can be used with:
+Currently, the docker container is hosted [here](https://gitlab.cern.ch/LHCb-RD/cal-rx-run3/container_registry/26425) and it can be used with:
 
 ```bash
-podman pull acampove/rx_run3:v4.6
-
+podman pull gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:latest
 podman run -it --privileged --name rx_run3_001 -v $ANADIR:/eos/lhcb/wg/RD/RX_run3 rx_run3:v4.6
 ```
 
