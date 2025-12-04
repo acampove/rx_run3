@@ -221,8 +221,8 @@ def _plot_bmass(
     plt.savefig(f'{test_dir}/bmass.png')
     plt.close()
 # ------------------------------------------------
-def _plot_q2_track(rdf : RDF.RNode, sample : str) -> None:
-    test_dir = f'{Data.out_dir}/{sample}'
+def _plot_q2_track(rdf : RDF.RNode, sample : str, out_dir : Path) -> None:
+    test_dir = f'{out_dir}/{sample}'
     os.makedirs(test_dir, exist_ok=True)
 
     arr_q2_track = rdf.AsNumpy(['q2_track'])['q2_track']
@@ -314,8 +314,8 @@ def _apply_selection(
 
     return rdf
 # ------------------------------------------------
-def _plot_brem_track_2(rdf : RDF.RNode, test : str, tree : str) -> None:
-    test_dir = f'{Data.out_dir}/{test}/{tree}'
+def _plot_brem_track_2(rdf : RDF.RNode, test : str, tree : str, out_dir : Path) -> None:
+    test_dir = f'{out_dir}/{test}/{tree}'
     os.makedirs(test_dir, exist_ok=True)
 
     d_var= {
@@ -341,8 +341,8 @@ def _plot_brem_track_2(rdf : RDF.RNode, test : str, tree : str) -> None:
         plt.savefig(f'{test_dir}/{var}.png')
         plt.close()
 # ------------------------------------------------
-def _plot_mc_qsq(rdf : RDF.RNode, test : str, sample : str) -> None:
-    test_dir = f'{Data.out_dir}/{test}'
+def _plot_mc_qsq(rdf : RDF.RNode, test : str, sample : str, out_dir : Path) -> None:
+    test_dir = f'{out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
     l_qsq= ['q2_true', 'q2_smr', 'q2_track', 'q2_dtf']
@@ -361,9 +361,9 @@ def _plot_mc_qsq(rdf : RDF.RNode, test : str, sample : str) -> None:
     plt.savefig(f'{test_dir}/q2.png')
     plt.close()
 # ------------------------------------------------
-def _plot_ext(rdf : RDF.RNode, sample : str) -> None:
+def _plot_ext(rdf : RDF.RNode, sample : str, out_dir : Path) -> None:
     cfg = {
-            'saving'   : {'plt_dir' : f'{Data.out_dir}/ext'},
+            'saving'   : {'plt_dir' : f'{out_dir}/ext'},
             'general'  : {'size' : [20, 10]},
             'plots_2d' :
             [['L1_PID_E', 'L2_PID_E', 'weight', f'PIDe_wgt_{sample}', True],
@@ -412,7 +412,7 @@ def _check_mva_scores(
     assert numpy.array_equal(ev1, ev2)
     assert numpy.array_equal(rn1, rn2)
 # ------------------------------------------------
-def _check_mcdt(rdf : RDF.RNode, name : str) -> None:
+def _check_mcdt(rdf : RDF.RNode, name : str, out_dir : Path) -> None:
     '''
     Parameters
     -------------
@@ -426,7 +426,7 @@ def _check_mcdt(rdf : RDF.RNode, name : str) -> None:
     arr_q2 = rdf.AsNumpy(['q2'])['q2']
     arr_q2 = arr_q2 / 1000_000
 
-    test_dir = f'{Data.out_dir}/{name}'
+    test_dir = f'{out_dir}/{name}'
     os.makedirs(test_dir, exist_ok=True)
 
     plt.hist(arr_q2, bins=60, range=(0, 22), histtype='step')
@@ -637,14 +637,14 @@ def test_mc(sample : str, trigger : Trigger, tmp_path : Path):
     _print_dotted_branches(rdf)
     _check_branches(rdf, is_ee=True, is_mc=True)
 
-    _plot_mc_qsq(rdf, f'test_mc/{sample}', sample)
+    _plot_mc_qsq(rdf, f'test_mc/{sample}', sample, out_dir = tmp_path)
     _plot_mva_mass(rdf, f'test_mc/{sample}', out_dir = tmp_path)
     _plot_mva(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
     _plot_hop(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_q2_track_electron(sample : str, trigger : Trigger):
+def test_q2_track_electron(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
@@ -656,7 +656,7 @@ def test_q2_track_electron(sample : str, trigger : Trigger):
     rep.Print()
 
     sample = sample.replace('*', 'p')
-    _plot_q2_track(rdf, sample)
+    _plot_q2_track(rdf, sample, out_dir = tmp_path)
 
     if 'B0ToKpPim' in trigger:
         return
@@ -666,7 +666,7 @@ def test_q2_track_electron(sample : str, trigger : Trigger):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstmumu_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_q2_track_muon(sample : str, trigger : Trigger):
+def test_q2_track_muon(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
@@ -679,7 +679,7 @@ def test_q2_track_muon(sample : str, trigger : Trigger):
     sample     = sample.replace('*', 'p')
     identifier = f'{trigger}_{sample}'
 
-    _plot_q2_track(rdf, identifier)
+    _plot_q2_track(rdf, identifier, out_dir = tmp_path)
 
     if 'B0ToKpPim' in trigger:
         return
@@ -689,7 +689,7 @@ def test_q2_track_muon(sample : str, trigger : Trigger):
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
-def test_brem_track_2(sample : str, trigger : Trigger):
+def test_brem_track_2(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Test brem_track_2 correction
     '''
@@ -703,7 +703,7 @@ def test_brem_track_2(sample : str, trigger : Trigger):
     _check_branches(rdf, is_ee=True, is_mc=is_mc)
 
     sample = sample.replace('*', 'p')
-    _plot_brem_track_2(rdf, sample, 'brem_track_2')
+    _plot_brem_track_2(rdf, sample, 'brem_track_2', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
@@ -729,7 +729,7 @@ def test_check_vars(sample : str, trigger : Trigger):
     ('Bu_Kee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA'),
     ('Bd_Kstee_eq_btosllball05_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'),
     ('Bu_Kmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA')])
-def test_mcdecaytree(sample : str, trigger : Trigger):
+def test_mcdecaytree(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Builds dataframe from MCDecayTree
     '''
@@ -744,12 +744,12 @@ def test_mcdecaytree(sample : str, trigger : Trigger):
 
     assert nentries > 0
 
-    _check_mcdt(rdf=rdf, name=f'mcdt/{sample}')
+    _check_mcdt(rdf=rdf, name=f'mcdt/{sample}', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('period'  ,['24c2','24c3','24c4'])
 @pytest.mark.parametrize('polarity',['MagUp', 'MagDown'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA_ext', 'Hlt2RD_B0ToKpPimEE_MVA_ext'])
-def test_ext_trigger(period : str, polarity : str, trigger : Trigger):
+def test_ext_trigger(period : str, polarity : str, trigger : Trigger, tmp_path : Path):
     '''
     Test of getter class for combination of analysis and misID trigger
     '''
@@ -759,7 +759,7 @@ def test_ext_trigger(period : str, polarity : str, trigger : Trigger):
         rdf = gtr.get_rdf(per_file=False)
 
     _check_ext(rdf)
-    _plot_ext(rdf, sample=sample)
+    _plot_ext(rdf, sample=sample, out_dir=tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 def test_custom_columns(trigger : Trigger):
@@ -932,7 +932,7 @@ def test_multithreading(nthreads : int, trigger : Trigger, tmp_path : Path):
         _plot_sim(rdf     , f'test_mc/{sample}', out_dir = tmp_path, particle=   'B')
         _plot_sim(rdf     , f'test_mc/{sample}', out_dir = tmp_path, particle='Jpsi')
 
-        _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample)
+        _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample, out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('nthreads', [-3, 0])
 def test_multithreading_invalid(nthreads : int):
