@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import pandas as pnd
 from pathlib                  import Path
 from ROOT                     import RDF     # type: ignore
+from dmu.workflow             import Cache
 from dmu.generic              import utilities   as gut
 from dmu.logging.log_store    import LogStore
 from rx_selection             import selection   as sel
@@ -133,8 +134,9 @@ def test_simulation(sample : str, tmp_path : Path):
         trigger= Trigger.rk_ee_nopid)
 
     cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
-    spl   = SampleSplitter(rdf = rdf, cfg = cfg)
-    df    = spl.get_sample()
+    with Cache.cache_root(path = tmp_path):
+        spl = SampleSplitter(rdf = rdf, cfg = cfg)
+        df  = spl.get_sample()
 
     log.info('Dataframe found, checking')
     _plot_simulation_pide(df=df, sample=sample, tmp_path = tmp_path)
