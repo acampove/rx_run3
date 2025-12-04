@@ -1,16 +1,17 @@
-NJOBS=60
+NJOBS=20
 # src/post_ap
 PATHS=[
-'src/ap_utilities',
-'src/fitter',
-'src/rx_classifier',
-'src/rx_data',
-'src/rx_efficiencies',
-'src/rx_misid',
-'src/rx_pid',
-'src/rx_plots',
-'src/rx_q2',
-'src/rx_selection',
+'src/dmu',
+#'src/ap_utilities',
+#'src/fitter',
+#'src/rx_classifier',
+#'src/rx_data',
+#'src/rx_efficiencies',
+#'src/rx_misid',
+#'src/rx_pid',
+#'src/rx_plots',
+#'src/rx_q2',
+#'src/rx_selection',
 ]
 
 rule all:
