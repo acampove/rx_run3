@@ -83,18 +83,16 @@ class Data:
     l_branch_mm = l_branch_common + ['B_Mass', 'Jpsi_Mass']
     l_q2bin     = ['low', 'cen_low', 'central', 'cen_high', 'psi2', 'high']
 # --------------------------
-@pytest.fixture(scope='session', autouse=True)
-def initialize(out_dir):
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
     '''
     This will run before any test
     '''
     LogStore.set_level('rx_data:rdf_getter'     , 10)
     LogStore.set_level('rx_data:spec_maker'     , 10)
     LogStore.set_level('rx_data:sample_emulator', 10)
-    plt.style.use(mplhep.style.LHCb2)
 
-    Data.out_dir = f'{out_dir}/rdf_getter'
-    os.makedirs(Data.out_dir, exist_ok=True)
+    plt.style.use(mplhep.style.LHCb2)
 # ------------------------------------------------
 def _check_truem_columns(rdf : RDF.RNode):
     l_name = [ name.c_str() for name in rdf.GetColumnNames() if name.c_str().endswith('_TRUEM') ]
