@@ -24,4 +24,5 @@ reana_workflow:
     - reana-client create -w cal-rx-run3 
     - reana-client upload -w cal-rx-run3 $(find . -name "test_*.py" -type f)
     - reana-client upload -w cal-rx-run3 $(find . -name "Snakefile" -type f)
+    - reana-client upload -w cal-rx-run3 $(find . -name "setup.sh"  -type f)
     - reana-client start  -w cal-rx-run3
