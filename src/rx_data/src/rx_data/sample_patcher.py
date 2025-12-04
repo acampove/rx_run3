@@ -116,8 +116,16 @@ class SamplePatcher:
         log.info(f'Finding patching files for block {block}')
         patching_paths : list[Path] = []
         for path in paths:
-            rdf       = RDataFrame(tree, str(path))
-            arr_block = rdf.AsNumpy(['block'])['block']
+            rdf = RDataFrame(tree, str(path))
+            if rdf.Count().GetValue() == 0:
+                log.debug(f'Found empty file: {path}:{tree}, skipping')
+                continue
+
+            try:
+                arr_block = rdf.AsNumpy(['block'])['block']
+            except Exception as exc:
+                raise ValueError(f'Cannot access block from: {path}:{tree}') from exc
+
             if block not in arr_block:
                 continue
 
