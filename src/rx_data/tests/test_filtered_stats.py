@@ -2,10 +2,18 @@
 This script tests FilteredStats class
 '''
 
+import os
 import pytest
 import pandas as pnd
 from rx_data.filtered_stats import FilteredStats
 from dmu.logging.log_store  import LogStore
+
+pytestmark = pytest.mark.skipif(
+    not os.environ.get('USER') == 'acampove',
+    reason ='''
+    These tests use FilteredStats, which uses GangaInfo, 
+    which needs sandbox and cannot run in REANA cluster
+    ''')
 
 log=LogStore.add_logger('rx_data:test_filtered_stats')
 # ----------------------
