@@ -1,4 +1,4 @@
-# Taken from
+# Taken from:
 # https://gitlab.cern.ch/gitlabci-examples/build_docker_image/-/blob/master/.gitlab-ci.yml?ref_type=heads#L54
 stages:
   - test
