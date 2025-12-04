@@ -18,9 +18,8 @@ build-image:
     - master
 reana_workflow:
   stage: reana 
-  image: python:3.12
+  image: $CI_REGISTRY_IMAGE:50d037201
   script:
-    - pip install reana-client
     - reana-client create -w cal-rx-run3 
     - reana-client upload -w cal-rx-run3 $(find . -name "test_*.py" -type f)
     - reana-client upload -w cal-rx-run3 $(find . -name "Snakefile" -type f)
