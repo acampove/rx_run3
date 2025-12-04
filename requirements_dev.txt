@@ -1,4 +1,6 @@
-pre-commit
+pytest-cov
+pytest-split
+pytest-xdist
 -e src/ap_utilities
 -e src/dmu
 -e src/ecal_calibration
