@@ -30,12 +30,5 @@ export ZFIT_DISABLE_TF_WARNINGS=1
 export MPLCONFIGDIR=/tmp/rx/mplt
 export USER=rx_run3
 
-# These variables are needed in China
-# unset them for runs in REANA/Condor, etc
-unset  https_proxy
-unset  http_proxy
-unset  HTTP_PROXY 
-unset  HTTPS_PROXY 
-
 source /root_install/bin/thisroot.sh
 check_env
