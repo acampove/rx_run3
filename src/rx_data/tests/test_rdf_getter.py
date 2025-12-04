@@ -163,8 +163,8 @@ def _print_dotted_branches(rdf : RDF.RNode) -> None:
 
         log.info(name)
 # ------------------------------------------------
-def _plot_mva_mass(rdf : RDF.RNode, test : str) -> None:
-    test_dir = f'{Data.out_dir}/{test}'
+def _plot_mva_mass(rdf : RDF.RNode, test : str, out_dir : Path) -> None:
+    test_dir = f'{out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
     rdf = rdf.Filter(Data.jpsi_q2)
@@ -185,21 +185,23 @@ def _plot_mva_mass(rdf : RDF.RNode, test : str) -> None:
     plt.savefig(f'{test_dir}/mva_mass.png')
     plt.close()
 # ------------------------------------------------
-def _plot_block(rdf : RDF.RNode, name : str) -> None:
+def _plot_block(rdf : RDF.RNode, name : str, out_dir : Path) -> None:
     arr_block = rdf.AsNumpy(['block'])['block']
 
-    os.makedirs(f'{Data.out_dir}/{name}', exist_ok=True)
+    os.makedirs(f'{out_dir}/{name}', exist_ok=True)
 
     plt.hist(arr_block, bins=30)
-    plt.savefig(f'{Data.out_dir}/{name}/block.png')
+    plt.savefig(f'{out_dir}/{name}/block.png')
     plt.close()
 # ------------------------------------------------
 def _plot_bmass(
-        rdf         : RDF.RNode,
-        is_electron : bool,
-        brem_track_2: bool,
-        test_name   : str) -> None:
-    test_dir = f'{Data.out_dir}/{test_name}'
+    rdf         : RDF.RNode,
+    is_electron : bool,
+    brem_track_2: bool,
+    out_dir     : Path,
+    test_name   : str) -> None:
+
+    test_dir = f'{out_dir}/{test_name}'
     os.makedirs(test_dir, exist_ok=True)
 
     minx = 4500
@@ -234,8 +236,8 @@ def _plot_q2_track(rdf : RDF.RNode, sample : str) -> None:
     plt.savefig(f'{test_dir}/q2_track.png')
     plt.close()
 # ------------------------------------------------
-def _plot_sim(rdf : RDF.RNode, test : str, particle : str) -> None:
-    test_dir = f'{Data.out_dir}/{test}'
+def _plot_sim(rdf : RDF.RNode, test : str, particle : str, out_dir : Path) -> None:
+    test_dir = f'{out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
     arr_mass = rdf.AsNumpy([f'{particle}_TRUEM'])[f'{particle}_TRUEM']
@@ -256,8 +258,8 @@ def _plot_sim(rdf : RDF.RNode, test : str, particle : str) -> None:
     plt.savefig(f'{test_dir}/{particle}_truem.png')
     plt.close()
 # ------------------------------------------------
-def _plot_mva(rdf : RDF.RNode, test : str) -> None:
-    test_dir = f'{Data.out_dir}/{test}'
+def _plot_mva(rdf : RDF.RNode, test : str, out_dir : Path) -> None:
+    test_dir = f'{out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
     rdf = rdf.Filter(Data.jpsi_q2)
@@ -272,8 +274,8 @@ def _plot_mva(rdf : RDF.RNode, test : str) -> None:
     plt.savefig(f'{test_dir}/mva.png')
     plt.close()
 # ------------------------------------------------
-def _plot_hop(rdf : RDF.RNode, test : str) -> None:
-    test_dir = f'{Data.out_dir}/{test}'
+def _plot_hop(rdf : RDF.RNode, test : str, out_dir : Path) -> None:
+    test_dir = f'{out_dir}/{test}'
     os.makedirs(test_dir, exist_ok=True)
 
     rdf = rdf.Filter(Data.jpsi_q2)
@@ -436,6 +438,7 @@ def _run_default_checks(
     test_name    : str,
     trigger      : str,
     sample       : str,
+    tmp_path     : Path,
     friends      : bool = True,
     brem_track_2 : bool = True) -> None:
 
@@ -449,6 +452,7 @@ def _run_default_checks(
     sample = sample.replace('*', 'p')
 
     _plot_bmass(
+        out_dir      = tmp_path,
         brem_track_2 = brem_track_2,
         rdf          = rdf,
         is_electron  = 'MuMu' not in trigger,
@@ -458,9 +462,9 @@ def _run_default_checks(
         return
 
     _check_mva_scores(rdf=rdf)
-    _plot_mva_mass(rdf, f'{test_name}_{sample}')
-    _plot_mva(rdf     , f'{test_name}_{sample}')
-    _plot_hop(rdf     , f'{test_name}_{sample}')
+    _plot_mva_mass(rdf, f'{test_name}_{sample}', out_dir = tmp_path)
+    _plot_mva(rdf     , f'{test_name}_{sample}', out_dir = tmp_path)
+    _plot_hop(rdf     , f'{test_name}_{sample}', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('per_file', [True, False])
 @pytest.mark.parametrize('trigger' , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
@@ -517,7 +521,7 @@ def test_max_entries(sample : str, requested : int, trigger : Trigger):
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_per_file(kind : str, trigger : Trigger):
+def test_per_file(kind : str, trigger : Trigger, tmp_path : Path):
     '''
     Test of per_file flag set to True
     '''
@@ -547,13 +551,13 @@ def test_per_file(kind : str, trigger : Trigger):
 
         sample = sample.replace('*', 'p')
 
-        _plot_mva_mass(rdf, f'{name}_{sample}')
-        _plot_mva(rdf     , f'{name}_{sample}')
-        _plot_hop(rdf     , f'{name}_{sample}')
+        _plot_mva_mass(rdf, f'{name}_{sample}', out_dir = tmp_path)
+        _plot_mva(rdf     , f'{name}_{sample}', out_dir = tmp_path)
+        _plot_hop(rdf     , f'{name}_{sample}', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_electron(kind : str, trigger : Trigger):
+def test_electron(kind : str, trigger : Trigger, tmp_path : Path):
     '''
     Tests for electron samples
     '''
@@ -573,10 +577,11 @@ def test_electron(kind : str, trigger : Trigger):
         return
 
     _run_default_checks(
-        rdf      =rdf,
-        test_name='electron',
-        trigger  =trigger,
-        sample   =sample)
+        rdf      = rdf,
+        test_name= 'electron',
+        trigger  = trigger,
+        tmp_path = tmp_path,
+        sample   = sample)
 # ------------------------------------------------
 @pytest.mark.parametrize(
     'sample' , [
@@ -591,7 +596,7 @@ def test_electron(kind : str, trigger : Trigger):
      'Hlt2RD_BuToKpMuMu_MVA',
      'Hlt2RD_B0ToKpPimEE_MVA',
      'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_data(sample : str, trigger : Trigger):
+def test_data(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Test of getter class in data
     '''
@@ -610,11 +615,12 @@ def test_data(sample : str, trigger : Trigger):
         rdf      =rdf,
         sample   =sample,
         trigger  =trigger,
+        tmp_path =tmp_path,
         test_name=f'data_{sample}_{trigger}')
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_mc(sample : str, trigger : Trigger):
+def test_mc(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Test of getter class in mc
     '''
@@ -622,9 +628,8 @@ def test_mc(sample : str, trigger : Trigger):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
-    _plot_sim(rdf     , f'test_mc/{sample}', particle=   'B')
-    _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
-
+    _plot_sim(rdf, f'test_mc/{sample}', out_dir = tmp_path, particle=   'B')
+    _plot_sim(rdf, f'test_mc/{sample}', out_dir = tmp_path, particle='Jpsi')
 
     if 'B0ToKpPim' in trigger:
         return
@@ -633,9 +638,9 @@ def test_mc(sample : str, trigger : Trigger):
     _check_branches(rdf, is_ee=True, is_mc=True)
 
     _plot_mc_qsq(rdf, f'test_mc/{sample}', sample)
-    _plot_mva_mass(rdf, f'test_mc/{sample}')
-    _plot_mva(rdf     , f'test_mc/{sample}')
-    _plot_hop(rdf     , f'test_mc/{sample}')
+    _plot_mva_mass(rdf, f'test_mc/{sample}', out_dir = tmp_path)
+    _plot_mva(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
+    _plot_hop(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstee_eq_btosllball05_DPC'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
@@ -774,7 +779,7 @@ def test_custom_columns(trigger : Trigger):
 # TODO: This test is very slow, needs to be disabled for now
 @pytest.mark.parametrize('sample' , ['Bd_JpsiKst_ee_eq_DPC'  ])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_B0ToKpPimEE_MVA'])
-def test_block(sample : str, trigger : Trigger):
+def test_block(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Test of getter class with check for block assignment
     '''
@@ -791,7 +796,7 @@ def test_block(sample : str, trigger : Trigger):
     sample = sample.replace('*', 'p')
     name   = f'block/{sample}_{trigger}'
 
-    _plot_block(rdf=rdf, name=name)
+    _plot_block(rdf=rdf, name=name, out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('project', ['rk', 'rkst'])
 def test_add_truem(project : str):
@@ -840,7 +845,7 @@ def test_exclude_friends(sample : str, trigger : Trigger):
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
-def test_skip_brem_track_2(kind : str, trigger : Trigger):
+def test_skip_brem_track_2(kind : str, trigger : Trigger, tmp_path : Path):
     '''
     Tests for electron samples
     '''
@@ -856,15 +861,16 @@ def test_skip_brem_track_2(kind : str, trigger : Trigger):
         rdf = gtr.get_rdf(per_file=False)
 
     _run_default_checks(
-            rdf          =rdf,
-            brem_track_2 = False,
-            test_name    ='electron',
-            trigger      =trigger,
-            sample       =sample)
+        rdf          = rdf,
+        brem_track_2 = False,
+        test_name    = 'electron',
+        trigger      = trigger,
+        tmp_path     = tmp_path,
+        sample       = sample)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_custom_friend(sample : str, trigger : Trigger):
+def test_custom_friend(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Tests getting data with a custom version for a given tree, either friend or main
     '''
@@ -872,7 +878,7 @@ def test_custom_friend(sample : str, trigger : Trigger):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
-    _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend')
+    _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend', tmp_path = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger' , [
     ('Bu_KplKplKmn_eq_sqDalitz_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
@@ -883,7 +889,7 @@ def test_custom_friend(sample : str, trigger : Trigger):
     # -------------
     ('Bu_Kmumu_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
     ('Bd_Kstmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA_noPID')])
-def test_no_pid(sample : str, trigger : Trigger):
+def test_no_pid(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Tests loading of noPID samples
     '''
@@ -893,6 +899,7 @@ def test_no_pid(sample : str, trigger : Trigger):
         rdf         = rdf,
         sample      = sample,
         trigger     = trigger,
+        tmp_path    = tmp_path,
         friends     = False,
         brem_track_2= False,
         test_name   = 'no_pid')
@@ -900,7 +907,7 @@ def test_no_pid(sample : str, trigger : Trigger):
 # TODO: Check for negative numbers
 @pytest.mark.parametrize('nthreads', [1, 6])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_multithreading(nthreads : int, trigger : Trigger):
+def test_multithreading(nthreads : int, trigger : Trigger, tmp_path : Path):
     '''
     This will test the context manager used to enable multithreading
     '''
@@ -919,11 +926,11 @@ def test_multithreading(nthreads : int, trigger : Trigger):
         _print_dotted_branches(rdf)
         _check_branches(rdf, is_ee=True, is_mc=True)
 
-        _plot_mva_mass(rdf, f'test_mc/{sample}')
-        _plot_mva(rdf     , f'test_mc/{sample}')
-        _plot_hop(rdf     , f'test_mc/{sample}')
-        _plot_sim(rdf     , f'test_mc/{sample}', particle=   'B')
-        _plot_sim(rdf     , f'test_mc/{sample}', particle='Jpsi')
+        _plot_mva_mass(rdf, f'test_mc/{sample}', out_dir = tmp_path)
+        _plot_mva(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
+        _plot_hop(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
+        _plot_sim(rdf     , f'test_mc/{sample}', out_dir = tmp_path, particle=   'B')
+        _plot_sim(rdf     , f'test_mc/{sample}', out_dir = tmp_path, particle='Jpsi')
 
         _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample)
 # ------------------------------------------------
