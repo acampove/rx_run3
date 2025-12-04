@@ -5,6 +5,7 @@ by the YAML config files
 
 import pytest
 
+from importlib.resources   import files
 from pathlib               import Path
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
@@ -21,7 +22,7 @@ def _get_all_confs(name : str) -> list[str]:
     -------------
     List of paths inside `fitter_data`
     '''
-    root_dir = 'src/fitter/src/fitter_data'
+    root_dir = str(files('fitter_data'))
     paths    = Path(root_dir).rglob(name)
     l_path   = list(paths)
 
