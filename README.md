@@ -1,3 +1,6 @@
+![Launch on REANA badge](https://www.reana.io/static/img/badges/launch-on-reana.svg)
+![Python Version](https://img.shields.io/badge/python-3.13-blue.svg)
+
 # $R_X$ run3
 
 This is the repository for the combined measurement of $R_K$ and $R_{K^*}$
@@ -43,3 +46,4 @@ as soon as they are introduced.
 within a day, to check stability of results and get insights on how to improve the analysis.
 
 More details on this can be found [here](doc/ci_cd.md)
+
