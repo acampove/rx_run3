@@ -1,7 +1,8 @@
-NJOBS=40
+NJOBS=20
 #TEST_PATH="src/rx_selection"
 #TEST_PATH="src/rx_classifier"
-TEST_PATH="src/rx_data"
+#TEST_PATH="src/rx_data"
+TEST_PATH="src/rx_efficiencies"
 
 rule all:
     input: expand("results/group_{index}.xml", index=range(1, NJOBS + 1))
