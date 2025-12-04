@@ -1,4 +1,6 @@
 NJOBS=40
+#TEST_PATH="src/rx_selection"
+#TEST_PATH="src/rx_classifier"
 TEST_PATH="src/rx_data"
 
 rule all:
