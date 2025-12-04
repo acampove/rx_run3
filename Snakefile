@@ -1,13 +1,12 @@
 NJOBS=10
-TEST_PATH='$PWD/src/rx_selection'
+TEST_PATH="src/rx_selection"
 
 rule all:
-    input:
-        expand(".test_{index}.txt", index=range(NJOBS))
+    input: expand("results/group_{index}.xml", index=range(1, NJOBS + 1))
 
 rule test:
     output:
-        ".test_{index}.txt"
+        'results/group_{index}.xml'
     params:
         path   = TEST_PATH,
         ngroups= NJOBS
@@ -19,11 +18,5 @@ rule test:
         """
         source setup.sh
 
-        cmd_from_index -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}"
-
-        > {output} 
-        for cmd in $(jq -r '.[]' .commands_{wildcards.index}.json); do
-            pytest "$cmd"
-            echo "$cmd" >> {output} 
-        done
+        pytest {params.path} --splits {params.ngroups} --group {wildcards.index} --junitxml={output}
         """
