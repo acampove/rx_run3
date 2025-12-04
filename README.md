@@ -36,12 +36,10 @@ and root_stubs.
 
 This project is meant to allow for:
 
-- **Continuous Integration: ** I.e. we will make it easy to build and test the project on each commit to find bugs
+- **Continuous Integration:** I.e. we will make it easy to build and test the project on each commit to find bugs
 as soon as they are introduced.
 
-- **Continuous Delivery: ** I.e. we will recalculate everything all the way up to blinded versions of $R_K$ and $R_{K^*}$
+- **Continuous Delivery:** I.e. we will recalculate everything all the way up to blinded versions of $R_K$ and $R_{K^*}$
 within a day, to check stability of results and get insights on how to improve the analysis.
 
 More details on this can be found [here](doc/ci_cd.md)
-
-
