@@ -1,7 +1,6 @@
 '''
 Module containing tests for MVACalculator class
 '''
-import os
 import pytest
 import matplotlib.pyplot as plt
 from pathlib                      import Path
@@ -36,8 +35,6 @@ def _validate_rdf(
     rdf: ROOT dataframe with MVA scores
     '''
     log.info('Validating dataframe')
-
-    os.makedirs(out_dir, exist_ok=True)
 
     nentries = rdf.Count().GetValue()
     assert nentries == Data.nentries
