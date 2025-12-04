@@ -39,3 +39,5 @@ unset  HTTPS_PROXY
 
 source /root_install/bin/thisroot.sh
 check_env
+
+pip install pytest-split
