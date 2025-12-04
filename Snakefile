@@ -1,5 +1,5 @@
-NJOBS=20
-TEST_PATH="src/rx_selection"
+NJOBS=40
+TEST_PATH="src/rx_data"
 
 rule all:
     input: expand("results/group_{index}.xml", index=range(1, NJOBS + 1))
@@ -11,7 +11,7 @@ rule test:
         path   = TEST_PATH,
         ngroups= NJOBS
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:66caac9fb'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:f77051761'
     resources:
         kubernetes_memory_limit="4000Mi"
     shell:

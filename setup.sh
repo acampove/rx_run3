@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# This script is meant to be ran by a Snakefile in order to
+# stup the environment before running tests in the REANA cluster
+#
+# TL;DR the user should not source this
+
 set -euo pipefail
 
 check_env()
