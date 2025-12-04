@@ -2,6 +2,7 @@
 Module with functions needed to test EfficiencyCalculator class
 '''
 import pytest
+from pathlib                               import Path
 from dmu.workflow.cache                    import Cache
 from dmu.logging.log_store                 import LogStore
 from rx_common.types                       import Trigger
@@ -34,12 +35,12 @@ def initialize():
 #-------------------------------------------------
 @pytest.mark.parametrize('sample',                _SAMPLES_RX)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_rx_efficiency_value(q2bin : str, sample : str):
+def test_rx_efficiency_value(q2bin : str, sample : str, tmp_path : Path):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
     for RX project samples
     '''
-    with Cache.turn_off_cache(val=['EfficiencyCalculator']),\
+    with Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={'bdt' : '(1)'}):
         obj      = EfficiencyCalculator(q2bin=q2bin)
         eff, err = obj.get_efficiency(sample=sample)
@@ -49,12 +50,12 @@ def test_rx_efficiency_value(q2bin : str, sample : str):
 #-------------------------------------------------
 @pytest.mark.parametrize('sample',             _SAMPLES_NOPID)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_nopid_efficiency(q2bin : str, sample : str):
+def test_nopid_efficiency(q2bin : str, sample : str, tmp_path : Path):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
     for RX project samples
     '''
-    with Cache.turn_off_cache(val=['EfficiencyCalculator']),\
+    with Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={'bdt' : '(1)'}):
         obj      = EfficiencyCalculator(
             q2bin   = q2bin, 
