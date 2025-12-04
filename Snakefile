@@ -1,5 +1,5 @@
 NJOBS=10
-TEST_PATH='src/rx_selection'
+TEST_PATH='$PWD/src/rx_selection'
 
 rule all:
     input:
