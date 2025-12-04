@@ -1,5 +1,7 @@
-NJOBS=40
-TEST_PATH="src/fitter"
+NJOBS=10
+TEST_PATH="src/ap_utilities"
+#TEST_PATH="src/fitter"
+#TEST_PATH="src/post_ap"
 #TEST_PATH="src/rx_classifier"
 #TEST_PATH="src/rx_data"
 #TEST_PATH="src/rx_efficiencies"
