@@ -4,6 +4,7 @@ Module containing tests for MVACalculator class
 import os
 import pytest
 import matplotlib.pyplot as plt
+from pathlib                      import Path
 from ROOT                         import RDF # type: ignore
 from dmu.logging.log_store        import LogStore
 from rx_data.rdf_getter           import RDFGetter
@@ -28,7 +29,7 @@ class Data:
 def _validate_rdf(
     rdf     : RDF.RNode,
     name    : str,
-    out_dir : str) -> None:
+    out_dir : Path) -> None:
     '''
     Parameters
     -------------
@@ -56,7 +57,7 @@ def _validate_rdf(
     plt.close()
 # ----------------------
 @pytest.mark.parametrize('trigger', Data.l_trigger)
-def test_data(trigger : Trigger, out_dir : str) -> None:
+def test_data(trigger : Trigger, tmp_path : Path) -> None:
     '''
     Test MVACalculator with data
     '''
@@ -73,10 +74,10 @@ def test_data(trigger : Trigger, out_dir : str) -> None:
     version = Data.version)
 
     rdf = cal.get_rdf(kind = 'root')
-    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/data', name=f'data_{trigger}')
+    _validate_rdf(rdf=rdf, out_dir=tmp_path, name=f'data_{trigger}')
 # --------------------------------
 @pytest.mark.parametrize('trigger, sample', Data.l_mc)
-def test_mc(trigger : Trigger, sample : str, out_dir : str) -> None:
+def test_mc(trigger : Trigger, sample : str, tmp_path : Path) -> None:
     '''
     Test MVACalculator with simulation
     '''
@@ -91,10 +92,10 @@ def test_mc(trigger : Trigger, sample : str, out_dir : str) -> None:
     version = Data.version)
 
     rdf = cal.get_rdf(kind = 'root')
-    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc', name=f'{sample}_{trigger}')
+    _validate_rdf(rdf=rdf, out_dir=tmp_path, name=f'{sample}_{trigger}')
 # ----------------------
 @pytest.mark.parametrize('trigger, sample', Data.l_mc)
-def test_mc_noversion(trigger : Trigger, sample : str, out_dir : str) -> None:
+def test_mc_noversion(trigger : Trigger, sample : str, tmp_path : Path) -> None:
     '''
     Test MVACalculator with default (should be lates) version
     '''
@@ -108,10 +109,10 @@ def test_mc_noversion(trigger : Trigger, sample : str, out_dir : str) -> None:
     trigger = trigger)
 
     rdf = cal.get_rdf(kind = 'root')
-    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc_def_vers', name=f'{sample}_{trigger}')
+    _validate_rdf(rdf=rdf, out_dir=tmp_path, name=f'{sample}_{trigger}')
 # --------------------------------
 @pytest.mark.parametrize('trigger, sample', Data.l_nopid)
-def test_nopid(trigger : Trigger, sample : str, out_dir : str) -> None:
+def test_nopid(trigger : Trigger, sample : str, tmp_path : Path) -> None:
     '''
     Test MVACalculator with default (should be lates) version
     '''
@@ -126,5 +127,5 @@ def test_nopid(trigger : Trigger, sample : str, out_dir : str) -> None:
     trigger = trigger)
 
     rdf = cal.get_rdf(kind = 'root')
-    _validate_rdf(rdf=rdf, out_dir=f'{out_dir}/mc_def_vers', name=f'{sample}_{trigger}')
+    _validate_rdf(rdf=rdf, out_dir=tmp_path, name=f'{sample}_{trigger}')
 # --------------------------------
