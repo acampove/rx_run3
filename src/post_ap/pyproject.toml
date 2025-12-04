@@ -6,6 +6,7 @@ readme      = 'README.md'
 dependencies= [
 'tqdm',
 'apd',
+'numba',
 'omegaconf',
 ]
 
