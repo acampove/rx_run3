@@ -1,5 +1,5 @@
 NJOBS=10
-TEST_PATH='$PWD/src/rx_selection'
+TEST_PATH='src/rx_selection'
 
 rule all:
     input:
@@ -19,7 +19,7 @@ rule test:
         """
         source setup.sh
 
-        cmd=$(cmd_from_index -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}")
+        cmd_from_index -i "{wildcards.index}" -n "{params.ngroups}" -p "{params.path}"
 
         > {output} 
         for cmd in $(jq -r '.[]' .commands_{wildcards.index}.json); do
