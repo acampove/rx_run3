@@ -1,4 +1,4 @@
-NJOBS=20
+NJOBS=25
 # src/post_ap
 PATHS=[
 'src/dmu',
@@ -24,7 +24,7 @@ rule test:
         path   = ' '.join(PATHS),
         ngroups= NJOBS
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:b9615debb'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:a41f1276f'
     resources:
         kubernetes_memory_limit="4000Mi"
     shell:
