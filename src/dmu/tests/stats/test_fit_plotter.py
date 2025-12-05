@@ -584,7 +584,7 @@ def test_blind():
     lm  = zfit.Parameter("lm",-0.1, -5, 0)
 
     pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
-    nev = zfit.Parameter('nev', 10000, 0, 10000)
+    nev = zfit.Parameter('nev', 5000, 0, 10000)
     pdf = pdf.create_extended(nev,)
 
     bkg= zfit.pdf.Exponential(obs=obs, lam=lm, name='expo')
