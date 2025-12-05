@@ -15,7 +15,7 @@ log=LogStore.add_logger('dmu:workflow:test_cache')
 def initialize():
     LogStore.set_level('dmu:workflow:cache', 10)
 # -----------------------------------
-class Tester(Wcache):
+class Tester(Cache):
     '''
     Testing class, produces outputs from simple inputs
     '''
@@ -69,7 +69,7 @@ class Tester(Wcache):
         return res
 # -----------------------------------
 @pytest.mark.parametrize('nval', range(1, 11))
-def test_cache_parallel(nval : int):
+def test_cache_parallel(nval : int, tmp_path : Path):
     '''
     Tests running caching in parallel
     '''
@@ -77,72 +77,78 @@ def test_cache_parallel(nval : int):
 
     log.info('')
     res = nval * [val]
-    obj = Tester(nval=nval, val=val, name=f'worker_{nval:03}')
-    out = obj.run()
+    with Cache.cache_root(path = tmp_path):
+        obj = Tester(nval=nval, val=val, name=f'worker_{nval:03}')
+        out = obj.run()
 
     assert res == out
 # -----------------------------------
-def test_cache_once():
+def test_cache_once(tmp_path : Path):
     '''
     Will run once
     '''
     log.info('')
     res = 4 * [1]
-    obj = Tester(nval=4, name='cache_once')
-    out = obj.run()
+
+    with Cache.cache_root(path = tmp_path):
+        obj = Tester(nval=4, name='cache_once')
+        out = obj.run()
 
     assert res == out
 # -----------------------------------
-def test_cache():
+def test_cache(tmp_path : Path):
     '''
     Tests that value is the correct one when using same inputs
     '''
     log.info('')
     res = 4 * [1]
     for _ in range(2):
-        obj = Tester(nval=4, name='cache')
-        out = obj.run()
+        with Cache.cache_root(path = tmp_path):
+            obj = Tester(nval=4, name='cache')
+            out = obj.run()
 
         assert res == out
 # -----------------------------------
-def test_update():
+def test_update(tmp_path : Path):
     '''
     Tests case where inputs change
     '''
     for val in range(10):
         log.info(f'Testing with: {val}')
-        obj = Tester(nval=val, name='update')
-        out = obj.run()
+        with Cache.cache_root(path = tmp_path):
+            obj = Tester(nval=val, name='update')
+            out = obj.run()
 
         assert out == [1] * val
         log.info('')
 # -----------------------------------
 # TODO: Improve this test
-def test_dont_cache():
+def test_dont_cache(tmp_path : Path):
     '''
     Tests running with caching turned off
     '''
     log.info('')
     res = 4 * [1]
     for _ in range(2):
-        with Wcache.turn_off_cache(val=['Tester']):
+        with Cache.cache_root(path = tmp_path):
             obj = Tester(nval=4, name='dont_cache')
             out = obj.run()
 
         assert res == out
 # -----------------------------------
-def test_cache_with_dir():
+def test_cache_with_dir(tmp_path : Path):
     '''
     Will cache where the outputs contain a directory
     '''
     log.info('')
     res = 4 * [1]
     for _ in range(2):
-        obj = Tester(
-            nval   = 4,
-            add_dir= True,
-            name   = 'cache_with_dir')
-        out = obj.run()
+        with Cache.cache_root(path = tmp_path):
+            obj = Tester(
+                nval   = 4,
+                add_dir= True,
+                name   = 'cache_with_dir')
+            out = obj.run()
 
         assert res == out
 # -----------------------------------
@@ -153,7 +159,7 @@ def test_cache_context(tmp_path : Path):
     log.info('')
     res = 4 * [1]
 
-    with Wcache.cache_root(path=tmp_path):
+    with Cache.cache_root(path = tmp_path):
         obj = Tester(nval=4, name='cache_context')
         out = obj.run()
 
