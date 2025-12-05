@@ -18,44 +18,44 @@ hypexp:
     high: 0.003
 modexp:
   mu:
-    val : 4250
+    val : 4300
     low : 4250
     high: 4500
   ap:
-    val : 0.002
+    val : 0.010
     low : 0.002
     high: 0.026
   bt:
-    val : 0.002
+    val : 0.010
     low : 0.002
     high: 0.020
 pol1:
   a:
     val : -0.005
-    low : -0.95
-    high: 0.00
+    low : -0.950
+    high: +0.000
 pol2:
   a:
     val : -0.005
     low : -0.95
-    high: 0.00
+    high: +0.00
   b:
     val : 0.000
     low : -0.95
-    high: 0.95
+    high: +0.95
 pol3:
   a:
     val : -0.005
     low : -0.95
-    high: 0.00
+    high: -0.00
   b:
     val : 0.000
     low : -0.95
-    high: 0.95
+    high: +0.95
   c:
     val : 0.000
     low : -0.95
-    high: 0.95
+    high: +0.95
 cbr:
   mu:
     val : 5300
@@ -164,7 +164,7 @@ qgauss:
     low : 10
     high: 400
   q:
-    val : 1
+    val : 2
     low : 1
     high: 3
 cauchy:
