@@ -38,17 +38,15 @@ def test_simple():
     fun = Function(x=x, y=y)
     print(fun)
 #----------------------------------------------------
-def test_tag():
+def test_tag(tmp_path : Path):
     '''
     Will test adding tag to function
     '''
-
-    out_dir_path = _make_out_dir('save_tag')
     x = [0, 1, 2, 3]
     y = [0, 1, 2, 3]
 
     tag       = 'this_is_a_tag'
-    path      = f'{out_dir_path}/function.json'
+    path      = tmp_path / 'function.json'
 
     fun_1     = Function(x=x, y=y)
     fun_1.tag = tag
@@ -59,16 +57,15 @@ def test_tag():
     assert tag == fun_1.tag
     assert tag == fun_2.tag
 #----------------------------------------------------
-def test_save_plot():
+def test_save_plot(tmp_path : Path):
     '''
     Test saving plot feature
     '''
-    out_dir_path = _make_out_dir('save_plot')
     x = [0, 1, 2, 3]
     y = [0, 1, 2, 3]
 
     fun=Function(x=x, y=y)
-    fun.save(path = f'{out_dir_path}/function.json', plot = True)
+    fun.save(path = tmp_path / 'function.json', plot = True)
 #----------------------------------------------------
 def test_repeated():
     '''
@@ -100,27 +97,25 @@ def test_equal():
     assert fun_1 == fun_2
     assert fun_1 != fun_3
 #----------------------------------------------------
-def test_save():
+def test_save(tmp_path : Path):
     '''
     Test saving feature
     '''
-    out_dir_path = _make_out_dir('save')
     x = [0, 1, 2, 3]
     y = [0, 1, 2, 3]
 
     fun=Function(x=x, y=y)
-    fun.save(path = f'{out_dir_path}/function_1.json')
-    fun.save(path = f'{out_dir_path}/function_2.json')
+    fun.save(path = tmp_path / 'function_1.json')
+    fun.save(path = tmp_path / 'function_2.json')
 #----------------------------------------------------
-def test_load():
+def test_load(tmp_path : Path):
     '''
     Test loading function
     '''
-    out_dir_path = _make_out_dir('load')
     x = [0, 1, 2, 3]
     y = [0, 1, 2, 3]
 
-    path = f'{out_dir_path}/function.json'
+    path = tmp_path / 'function.json'
 
     fun_1=Function(x=x, y=y)
     fun_1.save(path = path)
@@ -130,7 +125,7 @@ def test_load():
     assert fun_1 == fun_2
 #----------------------------------------------------
 @pytest.mark.parametrize('xval', Data.l_arg_eval)
-def test_eval(xval):
+def test_eval(xval : float, tmp_path : Path):
     '''
     Will test () operator
     '''
@@ -144,24 +139,21 @@ def test_eval(xval):
     if yval.size < 20:
         return
 
-    out_dir_path = _make_out_dir('eval')
     plt.scatter(xval, yval, label='Function')
     plt.scatter(   x,    y, label=    'Data')
     plt.legend()
-    plt.savefig(f'{out_dir_path}/function.png')
+    plt.savefig(tmp_path / 'function.png')
     plt.close()
 #----------------------------------------------------
 @pytest.mark.parametrize('xval', Data.l_arg_eval)
-def test_load_eval(xval):
+def test_load_eval(xval : float, tmp_path : Path):
     '''
     Will test () operator on loaded function
     '''
-
     x    = numpy.linspace(0, 9, num=10)
     y    = numpy.sin(x)
 
-    out_dir_path = _make_out_dir('load_eval')
-    path = f'{out_dir_path}/function.json'
+    path = tmp_path / 'function.json'
 
     fun  = Function(x=x, y=y)
     fun.save(path = path)
@@ -174,7 +166,7 @@ def test_load_eval(xval):
     plt.scatter(xval, yval, label='Function')
     plt.scatter(   x,    y, label=    'Data')
     plt.legend()
-    plt.savefig(f'{out_dir_path}/function.png')
+    plt.savefig(tmp_path / 'function.png')
     plt.close()
 #----------------------------------------------------
 def _shuffle(x, y):
@@ -190,7 +182,7 @@ def _shuffle(x, y):
     return x, y
 #----------------------------------------------------
 @pytest.mark.parametrize('xval', Data.l_arg_eval)
-def test_unsorted(xval):
+def test_unsorted(xval : float, tmp_path : Path):
     '''
     Will test () operator on loaded function
     '''
@@ -198,8 +190,7 @@ def test_unsorted(xval):
     y    = numpy.sin(x)
     x, y = _shuffle(x, y)
 
-    out_dir_path = _make_out_dir('unsorted')
-    path = f'{out_dir_path}/function.json'
+    path = tmp_path / 'function.json'
 
     fun  = Function(x=x, y=y)
     fun.save(path = path)
@@ -212,18 +203,17 @@ def test_unsorted(xval):
     plt.scatter(xval, yval, label='Function')
     plt.scatter(   x,    y, label=    'Data')
     plt.legend()
-    plt.savefig(f'{out_dir_path}/function.png')
+    plt.savefig(tmp_path / 'function.png')
     plt.close()
 #----------------------------------------------------
-def test_large_load():
+def test_large_load(tmp_path : Path):
     '''
     Test loading function
     '''
-    out_dir_path = _make_out_dir('large_load')
     x = numpy.linspace(0, 1, 100_000)
     y = numpy.linspace(0, 1, 100_000)
 
-    path = f'{out_dir_path}/function.json'
+    path = tmp_path / 'function.json'
 
     fun_1=Function(x=x, y=y)
     fun_1.save(path = path)
@@ -245,3 +235,4 @@ def test_eval_off():
         _ = fun(z, off_bounds_raise=True)
 
     _ = fun(z, off_bounds_raise=False)
+#----------------------------------------------------
