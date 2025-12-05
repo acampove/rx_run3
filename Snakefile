@@ -1,8 +1,8 @@
 NJOBS=25
 # src/post_ap
 PATHS=[
-'src/dmu',
 #'src/ap_utilities',
+'src/dmu',
 #'src/fitter',
 #'src/rx_classifier',
 #'src/rx_data',
