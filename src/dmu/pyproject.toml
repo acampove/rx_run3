@@ -35,5 +35,5 @@ compare_classifiers = 'dmu_scripts.ml.compare_classifiers:main'
 cmd_from_index      = 'dmu_scripts.testing.cmd_from_index:main'
 
 [tool.setuptools.package-data]
-dmu_data = ['**/*.json', '**/*.toml', '**/*.yaml']
+dmu_data = ['**/*.json', '**/*.toml', '**/*.yaml', '**/*.txt']
 
