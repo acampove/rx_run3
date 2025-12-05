@@ -588,7 +588,7 @@ def test_blind():
     pdf = pdf.create_extended(nev,)
 
     bkg= zfit.pdf.Exponential(obs=obs, lam=lm, name='expo')
-    nbk = zfit.Parameter('nbk', 10000, 0, 10000)
+    nbk = zfit.Parameter('nbk', 5000, 0, 10000)
     bkg = bkg.create_extended(nbk,)
 
     pdf = zfit.pdf.SumPDF([bkg, pdf])
