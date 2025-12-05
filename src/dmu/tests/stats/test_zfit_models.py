@@ -16,20 +16,20 @@ class Data:
     '''
     Data class
     '''
-    out_dir = '/tmp/tests/dmu/stats/zfit_models'
-
-    l_ap_mod_exp = numpy.arange(0.002, 0.028, 0.002)
-    l_bt_mod_exp = numpy.arange(0.002, 0.022, 0.002)
-    l_mu_mod_exp = numpy.arange( 4250,  4500,    20)
+    l_ap_mod_exp = numpy.arange(0.002, 0.028, 0.002, dtype=float)
+    l_bt_mod_exp = numpy.arange(0.002, 0.022, 0.002, dtype=float)
+    l_mu_mod_exp = numpy.arange( 4250,  4500,    20, dtype=float)
 
     npoint =  300
     minx   = 4500
     maxx   = 6000
     obs    = zfit.Space('x', limits=(minx, maxx))
 # -------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
-    os.makedirs(Data.out_dir, exist_ok=True)
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
+    '''
+    This will run before the tests
+    '''
     mplhep.style.use('LHCb2')
 # -------------------------------
 def _plot_pdf(pdf : zpdf, par_val : float) -> None:
