@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from dmu.stats.zfit         import zfit
 from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
+from zfit.data              import Data         as zdat
 
 log = LogStore.add_logger('dmu:test_fit_plotter')
 #--------------------------------
@@ -186,13 +187,14 @@ def test_weights():
     arr   = numpy.random.normal(loc=5, scale=1, size=1000)
     wgt   = numpy.random.binomial(1, 0.5, size=arr.size)
     dat   = zfit.Data.from_numpy(obs=obs, array=arr, weights=wgt)
+    assert isinstance(dat, zdat)
 
     nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
     mnm = zfit.minimize.Minuit()
     res = mnm.minimize(nll)
 
     #Fake GOF for ploting purposes
-    res.gof = (11, 10, 0.5)
+    setattr(res, 'gof', (11, 10, 0.5))
 
     obj   = ZFitPlotter(data=dat, model=pdf, result=res)
     obj.plot(nbins=50)
@@ -219,12 +221,14 @@ def test_low_stat():
     pdf = pdf.create_extended(nev,)
 
     dat = zfit.Data.from_numpy(obs=obs, array=arr)
+    assert isinstance(dat, zdat)
+
     nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
     mnm = zfit.minimize.Minuit()
     res = mnm.minimize(nll)
 
     #Fake GOF for ploting purposes
-    res.gof = (11, 10, 0.5)
+    setattr(res, 'gof', (11, 10, 0.5))
 
     obj   = ZFitPlotter(data=arr, model=pdf, result=res)
     d_leg = {'gauss': 'New Gauss'}
@@ -255,11 +259,13 @@ def test_skip_pulls():
     pdf = pdf.create_extended(nev,)
 
     dat = zfit.Data.from_numpy(obs=obs, array=arr)
+    assert isinstance(dat, zdat)
+
     nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
     mnm = zfit.minimize.Minuit()
     res = mnm.minimize(nll)
 
-    res.gof = (11, 10, 0.5)
+    setattr(res, 'gof', (11, 10, 0.5))
 
     obj   = ZFitPlotter(data=arr, model=pdf, result=res)
     obj.plot(plot_range=(0, 10), skip_pulls=True)
@@ -282,6 +288,8 @@ def test_nodata():
     pdf = pdf.create_extended(nev,)
 
     dat = zfit.Data.from_numpy(obs=obs, array=arr)
+    assert isinstance(dat, zdat)
+
     nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
     mnm = zfit.minimize.Minuit()
     res = mnm.minimize(nll)
@@ -307,6 +315,8 @@ def test_empty_region():
     pdf = pdf.create_extended(nev,)
 
     dat = zfit.Data.from_numpy(obs=obs, array=arr)
+    assert isinstance(dat, zdat)
+
     nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
     mnm = zfit.minimize.Minuit()
     res = mnm.minimize(nll)
@@ -465,6 +475,7 @@ def test_composed_blind():
     sam = pdf.create_sampler()
     dat = sam.numpy().flatten()
     dat = zfit.Data.from_numpy(obs=obs, array=dat)
+    assert isinstance(dat, zdat)
 
     nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
     mnm = zfit.minimize.Minuit()
@@ -588,7 +599,7 @@ def test_blind():
     res = mnm.minimize(nll)
 
     #Fake GOF for ploting purposes
-    res.gof = (11, 10, 0.5)
+    setattr(res, 'gof', (11, 10, 0.5))
 
     obj   = ZFitPlotter(data=dat, model=pdf, result=res)
     d_leg = {'gauss': 'New Gauss'}
