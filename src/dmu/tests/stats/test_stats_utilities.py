@@ -27,10 +27,9 @@ log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
 class Data:
     '''
-    data class
+    Class needed to hold shared variables
     '''
     user    = os.environ['USER']
-    fit_dir = f'/tmp/{user}/tests/dmu/stats'
 #----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -38,9 +37,6 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('dmu:stats:utilities', 10)
-
-    os.makedirs(Data.fit_dir, exist_ok=True)
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 #----------------------------------
 def _get_pdf_simple(is_extended : bool = True) -> zpdf:
     obs = zfit.Space('m',    limits=(-10, 10))
