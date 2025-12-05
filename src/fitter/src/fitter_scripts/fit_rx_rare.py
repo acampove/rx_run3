@@ -202,8 +202,8 @@ def main():
 
     _update_selection_with_brem(cuts = overriding_selection, cfg = cfg)
 
-    Cache.set_cache_root(root=cfg.output_directory)
     with ExitStack() as stack:
+        stack.enter_context(Cache.cache_root(path=cfg.output_directory))
         stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
         stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
         stack.enter_context(Cache.turn_off_cache(val=[]))
