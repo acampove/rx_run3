@@ -5,7 +5,7 @@ Script holding ConstraintReader class
 from dmu.logging.log_store       import LogStore
 from rx_efficiencies.decay_names import DecayNames    as dn
 from fitter.prec_scales          import PrecScales
-from fitter.protocols            import ParameterHolder
+from zfit.loss                   import ExtendedUnbinnedNLL
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
@@ -16,7 +16,7 @@ class ConstraintReader:
     # -------------------------------------------------------------
     def __init__(
         self, 
-        obj   : ParameterHolder, 
+        obj   : ExtendedUnbinnedNLL, 
         q2bin : str,
         signal: str = 'bpkpee',
         pprefx: str = 'pscale'):
