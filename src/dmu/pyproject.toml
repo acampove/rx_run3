@@ -13,7 +13,7 @@ dependencies = [
     'mplhep',
     'numpy<=2.2',
     'optuna',
-    'joblib'
+    'joblib',
     'scikit-learn',
     'omegaconf',
     'pandas',
