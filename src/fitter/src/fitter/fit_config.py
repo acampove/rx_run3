@@ -4,7 +4,8 @@ Module containing FitConfig class
 import os
 import dataclasses
 from functools import cached_property
-from typing import Any
+from pathlib   import Path
+from typing    import Any
 
 from dmu.stats.zfit         import zfit
 from omegaconf              import DictConfig
@@ -194,7 +195,7 @@ class FitConfig:
         return name
     # ----------------------
     @cached_property
-    def output_directory(self) -> str:
+    def output_directory(self) -> Path:
         '''
         Returns
         -----------------
@@ -212,7 +213,7 @@ class FitConfig:
 
         out_dir = f'{ana_dir}/fits/data/{self.fit_name}_{block_name}'
     
-        return out_dir
+        return Path(out_dir)
     # ----------------------
     @cached_property
     def observable(self) -> zobs:
