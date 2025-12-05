@@ -1,11 +1,11 @@
 '''
 Module with tests for Function class
 '''
-import os
 import numpy
 import pytest
 import matplotlib.pyplot as plt
 
+from pathlib               import Path
 from dmu.stats.function    import FunOutOfBounds, Function
 from dmu.logging.log_store import LogStore
 
@@ -20,20 +20,12 @@ class Data:
             [0.1, 0.2, 0.3],
             numpy.linspace(0, 9, num=200)]
 #----------------------------------------------------
-@pytest.fixture
-def _initialize():
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This runs before tests
+    '''
     LogStore.set_level('dmu:stats:function', 10)
-#----------------------------------------------------
-def _make_out_dir(name : str):
-    '''
-    Will take test name and make output directory
-
-    returns path to directory
-    '''
-    path = f'tests/stats/{name}'
-    os.makedirs(path, exist_ok=True)
-
-    return path
 #----------------------------------------------------
 def test_simple():
     '''
