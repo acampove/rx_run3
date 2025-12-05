@@ -2,13 +2,15 @@
 This module contains utility functions related to typing
 '''
 
-from typing import TypeVar, Type, cast
+import numpy
 import pandas as pnd
 
+from typing                import TypeVar, Type, cast
 from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:generic:typing')
-Num = TypeVar('Num', int, float, bool)
+numeric_types =               (int, float, bool, numpy.integer, numpy.floating)
+Num           = TypeVar('Num', int, float, bool, numpy.integer, numpy.floating)
 # ----------------------
 def numeric_from_series(
     row     : pnd.Series,
@@ -32,9 +34,8 @@ def numeric_from_series(
         raise ValueError(f'Cannot find {name} in row: {row}')
 
     val = row[name]
-    numerical_types = int, float
 
-    if not isinstance(val, numerical_types):
+    if not isinstance(val, numeric_types):
         type_name = type(val)
         raise ValueError(f'Value {name}={val} is not numeric, but {type_name}')
 
