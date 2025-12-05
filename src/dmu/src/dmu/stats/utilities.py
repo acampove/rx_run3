@@ -727,7 +727,7 @@ def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
 #---------------------------------------------
 def placeholder_fit(
     kind     : str,
-    fit_dir  : str|None,
+    fit_dir  : Path|None,
     df       : pnd.DataFrame|None = None,
     plot_fit : bool               = True) -> zres:
     '''
