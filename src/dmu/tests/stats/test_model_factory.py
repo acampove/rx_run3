@@ -2,14 +2,13 @@
 Module containing tests for ZModel class
 '''
 
-from dataclasses import dataclass
-
-import zfit
-from zfit.interface   import ZfitPDF    as zpdf
-
 import pytest
+
+from dmu.stats.zfit          import zfit
+from zfit.pdf                import BasePDF    as zpdf
+from dataclasses             import dataclass
 from dmu.stats.utilities     import print_pdf
-from dmu.logging.log_store   import LogStore
+from dmu                     import LogStore
 from dmu.stats.model_factory import ModelFactory, MethodRegistry
 from dmu.stats.parameters    import ParameterLibrary
 
