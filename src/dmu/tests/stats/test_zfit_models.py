@@ -1,15 +1,14 @@
 '''
 Module holding functions meant to test PDFs in zfit_models.py module
 '''
-import os
 import zfit
 import numpy
 import mplhep
 import pytest
 import matplotlib.pyplot as plt
 
+from pathlib                import Path
 from zfit.core.basepdf      import BasePDF   as zpdf
-from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp
 
 # -------------------------------
