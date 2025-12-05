@@ -12,9 +12,14 @@ dependencies = [
     'matplotlib',
     'mplhep',
     'numpy<=2.2',
+    'optuna',
+    'joblib'
+    'scikit-learn',
     'omegaconf',
     'pandas',
     'PyYAML',
+    'zfit',
+    'tensorflow',
     'scipy',
     'tqdm',
     'toml',
@@ -23,8 +28,6 @@ dependencies = [
 
 [project.optional-dependencies]
 parallel = ['dask[dataframe,distributed]']
-ml       = ['scikit-learn', 'joblib', 'optuna']
-fit      = ['zfit', 'tensorflow']
 dev      = ['pytest', 'pytest-xdist', 'pandas-stubs', 'memory-profiler']
 
 [project.scripts]
