@@ -26,6 +26,7 @@ from fitter.misid_constraints  import MisIDConstraints
 from fitter.toy_maker          import ToyMaker
 from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
+from rx_common                 import info
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 # ----------------------
@@ -88,6 +89,30 @@ def _use_constraints(
         return True
 
     return False
+# ----------------------
+def _update_selection_with_brem(cuts : dict[str,str], cfg : FitConfig) -> None:
+    '''
+    Parameters
+    -------------
+    cuts: Dictionary mapping cut label with cut expression
+    cfg : Object storing configuration for fit
+
+    Returns
+    -------------
+    Nothing, this function will modify dictionary in-place
+    '''
+    channel = info.channel_from_trigger(trigger = cfg.fit_cfg.trigger, lower_case=True)
+
+    if channel   == 'ee':
+        cut = 'nbrem != 0'
+    elif channel == 'mm':
+        cut = 'nbrem == 0'
+    else:
+        raise NotImplementedError(f'Invalid channel: {channel}')
+
+    log.info(f'Using brem cut {cut} for trigger {cfg.fit_cfg.trigger}')
+
+    cuts['brem'] = cut
 # ----------------------
 def _get_constraints(
     nll : ExtendedUnbinnedNLL,
@@ -173,8 +198,9 @@ def main():
 
     overriding_selection = {
         'block' : cfg.block_cut,
-        'nobrm0': 'nbrem != 0',
         'bdt'   : cfg.mva_cut}
+
+    _update_selection_with_brem(cuts = overriding_selection, cfg = cfg)
 
     Cache.set_cache_root(root=cfg.output_directory)
     with ExitStack() as stack:
