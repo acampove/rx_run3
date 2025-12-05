@@ -9,6 +9,7 @@ from typing import Any
 import numpy
 import matplotlib.pyplot as plt
 
+from pathlib               import Path
 from scipy.interpolate     import interp1d
 from dmu.logging.log_store import LogStore
 
@@ -170,11 +171,12 @@ class Function:
         self._tag = value
     #------------------------------------------------
     @staticmethod
-    def load(path : str):
+    def load(path : str | Path):
         '''
         Will take path to JSON file with serialized function
         Will return function instance
         '''
+        path = str(path)
 
         if not os.path.isfile(path):
             raise FileNotFoundError(f'Cannot find: {path}')
@@ -290,12 +292,13 @@ class Function:
 
         log.info(f'Saved to: {path}')
     #------------------------------------------------
-    def save(self, path : str, plot : bool = False):
+    def save(self, path : str | Path, plot : bool = False):
         '''
         Saves current object to JSON
 
         path (str): Path to file, needs to end in .json
         '''
+        path = str(path)
 
         if not path.endswith('.json'):
             raise ValueError(f'Output path does not end in .json: {path}')
