@@ -66,8 +66,6 @@ class ZFitPlotter:
         self._figsize          = None
         self._leg_loc          = None
 
-        self.dat_xerr : bool
-
         # zfit.settings.advanced_warnings['extend_wrapped_extended'] = False
         warnings.filterwarnings("ignore")
     #----------------------------------------
@@ -223,8 +221,7 @@ class ZFitPlotter:
                 color    = 'black',
                 histtype = 'errorbar',
                 label    = self._leg.get('Data', 'Data'),
-                ax       = ax,
-                xerr     = self.dat_xerr)
+                ax       = ax)
     #----------------------------------------
     def _pull_hist(self, pdf_hist, nbins, data_yield, l_range=None):
         pdf_values= pdf_hist.values()
@@ -574,8 +571,7 @@ class ZFitPlotter:
         yscale : str      = 'linear',
         axs               = None,
         figsize:tuple     = (13, 7),
-        leg_loc:str       = 'best',
-        xerr: bool        = False):
+        leg_loc:str       = 'best'):
         '''
         title (str)           : Title
         stacked (bool)        : If true will stack the PDFs
@@ -597,7 +593,6 @@ class ZFitPlotter:
         blind (list)          : PDF name for the signal if blinding is needed, followed by blinding range, min and max.
         figsize (tuple)       : Tuple with figure size, default (13, 7)
         leg_loc (str)         : Location of legend, default 'best'
-        xerr (bool or float)  : Used to pass xerr to mplhep histplot. True will use error with bin size, False, no error, otherwise it's the size of the xerror bar
         yscale (str)          : Scale for y axis of main plot, either log or linear
         '''
         # pylint: disable=too-many-locals, too-many-positional-arguments, too-many-arguments
@@ -623,7 +618,6 @@ class ZFitPlotter:
         self._l_blind = blind
         total_entries = self._get_data_yield(plot_range)
         self.errors   = self._get_errors(nbins, ranges)
-        self.dat_xerr = xerr
 
         if not stacked:
             log.debug('Plotting full model, for non-stacked case')
