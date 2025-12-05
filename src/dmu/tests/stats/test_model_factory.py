@@ -49,14 +49,17 @@ class Data:
             ('2018', 'MTOS', 'psi2'),
             ]
 #--------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
+    '''
+    This runs before tests
+    '''
     LogStore.set_level('dmu:stats:model_factory', 10)
 #--------------------------
 def _add_pdfs(l_pdf : list[zpdf]) -> None:
-    l_par = [ zfit.param.Parameter(f'p{pdf.name}', 1000, 0, 1000) for pdf in l_pdf ]
+    l_par = [ zfit.param.Parameter(f'p{pdf.name}', 500, 0, 1000) for pdf in l_pdf ]
 
-    pdf = zfit.pdf.SumPDF(l_pdf, l_par)
+    zfit.pdf.SumPDF(l_pdf, l_par)
 #--------------------------
 def test_fix_params():
     '''
