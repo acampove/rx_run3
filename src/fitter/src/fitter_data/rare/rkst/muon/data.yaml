@@ -1,6 +1,7 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
+trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
 output_directory : rare/rkst/muon/data
 model:
   yields    : model/yields/rkst/rare_muon.yaml
