@@ -4,10 +4,10 @@ Module used to test Cache class
 import os
 import pytest
 
-from pathlib               import Path
-from dmu.generic           import utilities as gut
-from dmu.workflow.cache    import Cache     as Wcache
-from dmu.logging.log_store import LogStore
+from pathlib       import Path
+from dmu.generic   import utilities as gut
+from dmu.workflow  import Cache
+from dmu           import LogStore
 
 log=LogStore.add_logger('dmu:workflow:test_cache')
 # -----------------------------------
