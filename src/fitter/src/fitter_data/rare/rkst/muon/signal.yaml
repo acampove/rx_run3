@@ -3,7 +3,7 @@ categories:
   main:
     model :
       - dscb
-sample        : Bu_Kmumu_eq_btosllball05_DPC
+sample        : Bd_Kstmumu_eq_btosllball05_DPC
 shared        : []
 float         :
   - mu
