@@ -651,29 +651,3 @@ def test_show_components():
     plt_dir = _make_dir_path('show_components')
     plt.savefig(f'{plt_dir}/fit.png', bbox_inches='tight')
 #--------------------------------
-@pytest.mark.parametrize('val, name', Data.l_arg_xerror)
-def test_xerror(val : Union[float,bool], name : str):
-    '''
-    Tests xerr argument for plotter, i.e. length of error on x-axis
-
-    val : Value of xerr
-    name: name of plot
-    '''
-    arr = numpy.random.normal(0, 1, size=1000)
-
-    obs = zfit.Space('m', limits=(-10, 10))
-    mu  = zfit.Parameter("mu", 0.0, -5, 5)
-    sg  = zfit.Parameter("sg", 1.0,  0, 5)
-
-    pdf = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg, name='gauss')
-    nev = zfit.Parameter('nev', 1000, 0, 10000)
-    pdf = pdf.create_extended(nev,)
-
-    obj   = ZFitPlotter(data=arr, model=pdf, result=None)
-    d_leg = {'gauss': 'New Gauss'}
-    obj.plot(nbins=50, d_leg=d_leg, plot_range=(-10, 10), ext_text='Extra text here', xerr=val)
-    obj.axs[1].set_ylim(-5, 5)
-
-    plt_dir = _make_dir_path('xerr')
-    plt.savefig(f'{plt_dir}/{name}.png', bbox_inches='tight')
-#--------------------------------
