@@ -9,18 +9,18 @@ model:
     low:
       name : B_Mass
       range:
-        - 5080
-        - 5800
+        - 5150
+        - 5850
     central:
       name : B_Mass
       range:
-        - 5080
-        - 5800
+        - 5150
+        - 5850
     high:
       name : B_Mass
       range:
-        - 5080
-        - 5800
+        - 5150
+        - 5850
   components:
     combinatorial : rare/rk/muon/combinatorial.yaml
     signal        : rare/rk/muon/signal.yaml
