@@ -140,7 +140,13 @@ RK: &rk
     acceptance: L1_INMUON && L2_INMUON
     jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
     cascade   :
-      <<: *cascade_common
+      low     : (1) 
+      central : (1) 
+      cen_low : (1) 
+      cen_high: (1) 
+      jpsi    : (1) 
+      psi2    : (1) 
+      high    : (1) 
     hop       :
       <<: *hop_common
     bdt       :
