@@ -422,7 +422,11 @@ def save_fit(
         return None
 
     print_pdf(model, txt_path=f'{fit_dir}/post_fit.txt', d_const=d_const)
-    pdf_to_tex(path=f'{fit_dir}/post_fit.txt', d_par={'mu' : r'$\mu$'}, skip_fixed=True)
+    pdf_to_tex(
+        in_path   = Path(f'{fit_dir}/post_fit.txt'),
+        out_dir   = Path(fit_dir), 
+        d_par     ={'mu' : r'$\mu$'}, 
+        skip_fixed=True)
 
     return pars
 # ----------------------
@@ -607,7 +611,11 @@ def _df_from_lines(l_line : list[str]) -> pnd.DataFrame:
 
     return df
 #-------------------------------------------------------
-def pdf_to_tex(path : Path | str, d_par : dict[str,str], skip_fixed : bool = True) -> None:
+def pdf_to_tex(
+    in_path    : Path, 
+    out_dir    : Path,
+    d_par      : dict[str,str], 
+    skip_fixed : bool = True) -> None:
     '''
     Creates a latex table with the same name as `path` but `txt` extension replaced by `tex`
 
