@@ -7,6 +7,7 @@ import numpy
 import pandas                   as pnd
 import dmu.pdataframe.utilities as put
 
+from pathlib               import Path
 from colorama              import Fore
 from dmu.logging.log_store import LogStore
 
@@ -17,10 +18,12 @@ class Data:
     Data class
     '''
     user    = os.environ['USER']
-    out_dir = f'/tmp/{user}/tests/dmu/pdataframe/utilities'
 # --------------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
+    '''
+    This runs before tests
+    '''
     LogStore.set_level('dmu:pdataframe:utilities', 10)
 # --------------------------------------
 def _get_df() -> pnd.DataFrame:
@@ -31,21 +34,21 @@ def _get_df() -> pnd.DataFrame:
 
     return pnd.DataFrame(d_data)
 # --------------------------------------
-def test_df_to_tex_simple():
+def test_df_to_tex_simple(tmp_path : Path):
     '''
     Saving dataframe to latex table
     '''
     df = _get_df()
-    put.df_to_tex(df, f'{Data.out_dir}/df_to_tex/simple.tex')
+    put.df_to_tex(df, f'{tmp_path}/df_to_tex/simple.tex')
 # --------------------------------------
-def test_df_to_markdown():
+def test_df_to_markdown(tmp_path : Path):
     '''
     Saving dataframe to markdown 
     '''
     df = _get_df()
-    put.to_markdown(df, f'{Data.out_dir}/df_to_markdown/simple.md')
+    put.to_markdown(df, f'{tmp_path}/df_to_markdown/simple.md')
 # --------------------------------------
-def test_df_to_tex_format():
+def test_df_to_tex_format(tmp_path : Path):
     '''
     Saving dataframe to latex table with formatting for columns
     '''
@@ -56,24 +59,24 @@ def test_df_to_tex_format():
     df = _get_df()
     put.df_to_tex(
             df,
-            f'{Data.out_dir}/df_to_tex/format.tex',
+            f'{tmp_path}/df_to_tex/format.tex',
             d_format = d_format)
 # --------------------------------------
-def test_df_to_tex_caption():
+def test_df_to_tex_caption(tmp_path : Path):
     '''
     Saving dataframe to latex table with caption
     '''
     df = _get_df()
     put.df_to_tex(df,
-                  f'{Data.out_dir}/df_to_tex/caption.tex',
+                  f'{tmp_path}/df_to_tex/caption.tex',
                   caption = 'Some caption')
 # --------------------------------------
-def test_column_format():
+def test_column_format(tmp_path : Path):
     '''
     Test alignment of columns
     '''
     df = _get_df()
-    put.df_to_tex(df, f'{Data.out_dir}/df_to_tex/column_format.tex', column_format='lrr')
+    put.df_to_tex(df, f'{tmp_path}/df_to_tex/column_format.tex', column_format='lrr')
 # --------------------------------------
 @pytest.mark.parametrize('yml_path',[
                               '/tmp/tests/dmu/pdataframe/utilities/to_yaml/file.yaml',
