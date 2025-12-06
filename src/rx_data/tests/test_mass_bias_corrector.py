@@ -62,7 +62,6 @@ class Data:
     Data class
     '''
     user       = os.environ['USER']
-    plt_dir    = Path(f'/tmp/{user}/tests/rx_data/mass_bias_corrector')
     nthreads   = 13
     nentries   = -1
 #-----------------------------------------
@@ -75,8 +74,6 @@ def initialize():
     LogStore.set_level('rx_data:electron_bias_corrector' , 20)
     LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
     LogStore.set_level('rx_data:rdf_getter'              , 10)
-
-    Data.plt_dir.mkdir(parents=True, exist_ok=True)
 
     plt.style.use(mplhep.style.LHCb2)
 #-----------------------------------------
@@ -149,6 +146,7 @@ def _compare_masses(
     d_rdf      : dict[str, RDF.RNode], 
     test_name  : str, 
     correction : str,
+    out_dir    : Path,
     skip_jpsi  : bool=False) -> None:
     '''
     d_rdf     : Dictionary with corrected and original dataframes
@@ -162,7 +160,7 @@ def _compare_masses(
     dat = copy.deepcopy(dat)
     cfg = OmegaConf.create(dat)
 
-    plt_dir = f'{Data.plt_dir}/{test_name}'
+    plt_dir = f'{out_dir}/{test_name}'
 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
