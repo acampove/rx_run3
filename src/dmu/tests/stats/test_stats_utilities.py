@@ -150,12 +150,12 @@ def test_pdf_to_tex():
     into latex table
     '''
     d_par = {
-            'ar_dscb_Signal_002_1_reso_flt' : r'$\alpha_{DSCB}^{1}$',
-            'c_exp_cmb_1'                   : 'b',
-            'frac_brem_001'                 : 'c',
-            'mu_Signal_001_scale_flt'       : 'd',
-            'mu_Signal_002_scale_flt'       : 'e',
-            }
+        'ar_dscb_Signal_002_1_reso_flt' : r'$\alpha_{DSCB}^{1}$',
+        'c_exp_cmb_1'                   : 'b',
+        'frac_brem_001'                 : 'c',
+        'mu_Signal_001_scale_flt'       : 'd',
+        'mu_Signal_002_scale_flt'       : 'e',
+        }
 
     path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
     path = str(path)
