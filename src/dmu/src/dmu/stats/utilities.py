@@ -625,7 +625,7 @@ def pdf_to_tex(
     d_par: Dictionary mapping parameter names in this file to proper latex names
     '''
 
-    path_str = str(path)
+    path_str = str(in_path)
     with open(path_str, encoding='utf-8') as ifile:
         l_line = ifile.read().splitlines()
         l_line = l_line[4:] # Remove header
@@ -633,7 +633,7 @@ def pdf_to_tex(
     df = _df_from_lines(l_line)
     df['Parameter']=df.Parameter.apply(lambda x : d_par.get(x, x.replace('_', ' ')))
 
-    out_path = path_str.replace('.txt', '.tex')
+    out_name = in_path.name.replace('.txt', '.tex')
 
     if skip_fixed:
         df = df[df.Floating == '1']
@@ -646,7 +646,7 @@ def pdf_to_tex(
     df_2 = df_2.sort_values(by='Parameter', ascending=True)
     df   = pnd.concat([df_1, df_2])
 
-    put.df_to_tex(df, out_path)
+    put.df_to_tex(df, out_dir / out_name)
 #---------------------------------------------
 # Fake/Placeholder fit
 #---------------------------------------------
