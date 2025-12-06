@@ -83,9 +83,7 @@ def _load_config(test : str, out_dir : Path, as_dict : bool = True) -> dict|Dict
     with open(cfg_path, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
 
-    plt_dir = cfg['saving']['plt_dir']
-    user    = os.environ['USER']
-    cfg['saving']['plt_dir'] = f'/tmp/{user}/tests/dmu/{plt_dir}'
+    cfg['saving']['plt_dir'] = out_dir 
 
     if as_dict:
         return cfg
