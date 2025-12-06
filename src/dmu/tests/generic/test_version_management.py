@@ -5,6 +5,7 @@ import os
 import shutil
 
 import pytest
+from pathlib                        import Path
 from dmu.generic.version_management import get_last_version
 from dmu.generic.version_management import get_next_version
 from dmu.generic.version_management import get_latest_file
@@ -17,7 +18,6 @@ class Data:
     Class used to share attributes
     '''
     user    = os.environ['USER']
-    out_dir = f'/tmp/{user}/tests/version_manager/'
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -27,11 +27,11 @@ def initialize():
     LogStore.set_level('dmu:test_version_management', 10)
     LogStore.set_level('dmu:version_management'     , 10)
 #-----------------------------------------------------------
-def _create_files(nfiles : int) -> str:
+def _create_files(nfiles : int, tmp_path : Path) -> str:
     '''
     Helper function that makes files
     '''
-    test_dir = f'{Data.out_dir}/latest_file'
+    test_dir = f'{tmp_path}/latest_file'
     os.makedirs(test_dir, exist_ok=True)
 
     for ind in range(nfiles):
@@ -41,7 +41,7 @@ def _create_files(nfiles : int) -> str:
 
     return test_dir
 # ----------------------
-def _make_dirs(name : str, versions : list[str]) -> str:
+def _make_dirs(name : str, versions : list[str], tmp_path : Path) -> str:
     '''
     Parameters
     -------------
@@ -52,7 +52,7 @@ def _make_dirs(name : str, versions : list[str]) -> str:
     -------------
     path to directory containing versioned directories
     '''
-    path = f'{Data.out_dir}/{name}'
+    path = f'{tmp_path}/{name}'
     shutil.rmtree(path, ignore_errors=True)
 
     for version in versions:
@@ -61,7 +61,7 @@ def _make_dirs(name : str, versions : list[str]) -> str:
 
     return path
 #-----------------------------------------------------------
-def _get_dir(name : str) -> tuple[str,str]:
+def _get_dir(name : str, tmp_path : Path) -> tuple[str,str]:
     # -------------------------------------------
     # This should fail the test
     # -------------------------------------------
@@ -85,17 +85,17 @@ def _get_dir(name : str) -> tuple[str,str]:
     else:
         raise ValueError(f'Invalid kind of version: {name}')
 
-    path = _make_dirs(name=name, versions=l_ver)
+    path = _make_dirs(name=name, versions=l_ver, tmp_path = tmp_path)
 
     return path, l_ver[-1]
 #-----------------------------------------------------------
 @pytest.mark.parametrize('kind', ['with_p', 'numeric', 'numeric_period'])
-def test_versioning_formats(kind : str):
+def test_versioning_formats(kind : str, tmp_path : Path):
     '''
     Tests getting last version for different versioning formats
     '''
     log.info('')
-    dir_path, iversion = _get_dir(name=kind)
+    dir_path, iversion = _get_dir(name=kind, tmp_path = tmp_path)
     oversion           = get_last_version(dir_path=dir_path, version_only=True)
 
     log.info(f'{kind:<20}{iversion:<10}{oversion:<10}')
@@ -103,24 +103,24 @@ def test_versioning_formats(kind : str):
     assert iversion == oversion
 #-----------------------------------------------------------
 @pytest.mark.parametrize('kind', ['non_numeric', 'extra_file', 'collisions', 'with_commas'])
-def test_must_fail(kind : str):
+def test_must_fail(kind : str, tmp_path : Path):
     '''
     Check cases where the version finder will raise
     '''
     log.info('')
-    dir_path, _ = _get_dir(name=kind)
+    dir_path, _ = _get_dir(name=kind, tmp_path = tmp_path)
 
     with pytest.raises(ValueError):
         get_last_version(dir_path=dir_path, version_only=True)
 #-----------------------------------------------------------
-def test_files():
+def test_files(tmp_path : Path):
     '''
     Testing getting the latest file, from its version
     '''
-    file_dir  = _create_files(5)
+    file_dir  = _create_files(5, tmp_path = tmp_path)
     last_file = get_latest_file(dir_path = file_dir, wc='name_*.txt')
 
-    assert last_file == f'{Data.out_dir}/latest_file/name_v4.txt'
+    assert last_file == f'{tmp_path}/latest_file/name_v4.txt'
 #-----------------------------------------------------------
 def test_next():
     '''
