@@ -7,17 +7,12 @@ import pytest
 import numpy
 
 import dmu.testing.utilities as ut
+
+from pathlib               import Path
 from dmu.logging.log_store import LogStore
 from dmu.ml.cv_predict     import CVPredict
 
 log = LogStore.add_logger('dmu:ml:tests:cv_predict')
-# -------------------------------------------------
-class Data:
-    '''
-    Class used to share attributes
-    '''
-
-    out_dir = '/tmp/tests/dmu/ml/cv_predict'
 #--------------------------------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -145,7 +140,7 @@ def test_partial_patch(tmp_path):
 
     _check_probabilities(arr_prb, has_negative=True)
 #--------------------------------------------------------------------
-def test_sample_def():
+def test_sample_def(tmp_path : Path):
     '''
     Tests prediction when a features is the result of a definition
     that is different for different samples
@@ -156,7 +151,7 @@ def test_sample_def():
             rdf_sig,
             rdf_bkg,
             name    = 'train_mva_def',
-            out_dir = f'{Data.out_dir}/sample_def')
+            out_dir = f'{tmp_path}/sample_def')
 
     rdf     = ut.get_rdf(kind='sig')
     cvp     = CVPredict(
