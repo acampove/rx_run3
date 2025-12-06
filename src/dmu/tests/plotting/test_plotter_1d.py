@@ -70,10 +70,10 @@ def _get_rdf(
     return rdf
 #---------------------------------------
 @overload
-def _load_config(test : str, as_dict : Literal[True]) -> dict:...
+def _load_config(test : str, out_dir : Path, as_dict : Literal[True]) -> dict:...
 @overload
-def _load_config(test : str, as_dict : Literal[False]) -> DictConfig:...
-def _load_config(test : str, as_dict : bool = True) -> dict|DictConfig:
+def _load_config(test : str, out_dir : Path, as_dict : Literal[False]) -> DictConfig:...
+def _load_config(test : str, out_dir : Path, as_dict : bool = True) -> dict|DictConfig:
     '''
     test (str): Identifies specific test
     '''
