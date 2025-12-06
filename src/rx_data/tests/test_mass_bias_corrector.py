@@ -237,7 +237,7 @@ def _check_size(rdf_org : RDF.RNode, rdf_cor : RDF.RNode) -> None:
     log.info(f'Sizes agree at: {in_size}')
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_EE)
-def test_simple(sample : str, trigger : Trigger):
+def test_simple(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Simplest test
     '''
@@ -274,10 +274,10 @@ def test_simple(sample : str, trigger : Trigger):
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'simple/{trigger}', kind)
+    _compare_masses(d_rdf, f'simple/{trigger}', kind, out_dir = tmp_path)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_DATA) 
-def test_medium_input(sample : str, trigger : Trigger):
+def test_medium_input(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Medium input
     '''
@@ -314,7 +314,7 @@ def test_medium_input(sample : str, trigger : Trigger):
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
 
     d_rdf   = {'Original' : rdf_org, 'Uncorrected' : rdf_unc, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
+    _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind, out_dir = tmp_path)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 def test_suffix(sample : str, trigger : Trigger):
@@ -341,7 +341,7 @@ def test_suffix(sample : str, trigger : Trigger):
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 @pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
-def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: float):
+def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: float, tmp_path : Path):
     '''
     Vary energy threhold of brem photon needed to be added
     '''
@@ -375,5 +375,5 @@ def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: fl
 
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name=   'B_M')
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
-    _compare_masses(d_rdf, f'{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
+    _compare_masses(d_rdf, f'{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV', out_dir = tmp_path)
 #-----------------------------------------
