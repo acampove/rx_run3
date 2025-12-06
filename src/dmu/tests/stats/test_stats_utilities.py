@@ -140,7 +140,7 @@ def test_blind_manager():
     for line in l_msg:
         assert not re.match(regex, line)
 #----------------------------------
-def test_pdf_to_tex():
+def test_pdf_to_tex(tmp_path : Path):
     '''
     Tests converting text file with PDF description
     into latex table
@@ -153,8 +153,7 @@ def test_pdf_to_tex():
             'mu_Signal_002_scale_flt'       : 'e',
             }
 
-    path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
-    path = str(path)
+    path = tmp_path / 'pdf_to_tex.txt'
     pdf_to_tex(path=path, d_par=d_par)
 #----------------------------------
 @pytest.mark.parametrize('make_plot', [True, False])
