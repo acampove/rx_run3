@@ -607,7 +607,7 @@ def _df_from_lines(l_line : list[str]) -> pnd.DataFrame:
 
     return df
 #-------------------------------------------------------
-def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> None:
+def pdf_to_tex(path : Path | str, d_par : dict[str,str], skip_fixed : bool = True) -> None:
     '''
     Creates a latex table with the same name as `path` but `txt` extension replaced by `tex`
 
@@ -617,15 +617,15 @@ def pdf_to_tex(path : str, d_par : dict[str,str], skip_fixed : bool = True) -> N
     d_par: Dictionary mapping parameter names in this file to proper latex names
     '''
 
-    path = str(path)
-    with open(path, encoding='utf-8') as ifile:
+    path_str = str(path)
+    with open(path_str, encoding='utf-8') as ifile:
         l_line = ifile.read().splitlines()
         l_line = l_line[4:] # Remove header
 
     df = _df_from_lines(l_line)
     df['Parameter']=df.Parameter.apply(lambda x : d_par.get(x, x.replace('_', ' ')))
 
-    out_path = path.replace('.txt', '.tex')
+    out_path = path_str.replace('.txt', '.tex')
 
     if skip_fixed:
         df = df[df.Floating == '1']
