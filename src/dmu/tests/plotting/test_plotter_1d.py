@@ -4,9 +4,7 @@ Unit test for plotter class in dmu.plotting
 #pylint: disable=no-name-in-module
 
 import os
-from typing              import cast
 from importlib.resources import files
-from dataclasses         import dataclass
 
 import pytest
 import matplotlib.pyplot as plt
@@ -14,18 +12,13 @@ import yaml
 import numpy
 import mplhep
 
+from typing                  import cast, overload, Literal
 from ROOT                    import RDF # type: ignore
 from omegaconf               import DictConfig, OmegaConf
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
 
 log = LogStore.add_logger('dmu:plotting:test_plotter_1d')
-#---------------------------------------
-@dataclass
-class Data:
-    '''
-    Class used to store shared data
-    '''
 #---------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -79,6 +72,10 @@ def _get_rdf(
 
     return rdf
 #---------------------------------------
+@overload
+def _load_config(test : str, as_dict : Literal[True]) -> dict:...
+@overload
+def _load_config(test : str, as_dict : Literal[False]) -> DictConfig:...
 def _load_config(test : str, as_dict : bool = True) -> dict|DictConfig:
     '''
     test (str): Identifies specific test
@@ -107,7 +104,7 @@ def test_simple():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='simple')
+    cfg_dat = _load_config(test='simple', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -128,7 +125,7 @@ def test_line():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='line')
+    cfg_dat = _load_config(test='line', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -138,7 +135,7 @@ def test_styling():
     Change style of histogram plots
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
-    cfg_dat = _load_config(test='styling')
+    cfg_dat = _load_config(test='styling', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -149,7 +146,7 @@ def test_high_stat():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind, test='high_stat') for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='high_stat')
+    cfg_dat = _load_config(test='high_stat', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -160,7 +157,7 @@ def test_no_bounds():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='no_bounds')
+    cfg_dat = _load_config(test='no_bounds', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -171,7 +168,7 @@ def test_fig_size():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='fig_size')
+    cfg_dat = _load_config(test='fig_size', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -182,7 +179,7 @@ def test_title():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='title')
+    cfg_dat = _load_config(test='title', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -193,7 +190,7 @@ def test_weights():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='weights')
+    cfg_dat = _load_config(test='weights', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -204,7 +201,7 @@ def test_name():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='name')
+    cfg_dat = _load_config(test='name', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -215,7 +212,7 @@ def test_normalized():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='normalized')
+    cfg_dat = _load_config(test='normalized', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -226,7 +223,7 @@ def test_legend():
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='legend')
+    cfg_dat = _load_config(test='legend', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -237,7 +234,7 @@ def test_plugin_fwhm():
     '''
     log.info('')
     d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
-    cfg_dat = _load_config(test='plug_fwhm')
+    cfg_dat = _load_config(test='plug_fwhm', as_dict=False)
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
@@ -247,7 +244,7 @@ def test_plugin_stats():
     '''
     log.info('')
     d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B', 'class C'] }
-    cfg_dat = _load_config(test='plug_stats')
+    cfg_dat = _load_config(test='plug_stats', as_dict=False)
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
@@ -256,7 +253,7 @@ def test_pull_plugin():
     Test plotting of pull distributions
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind, ) for kind in ['pull'] }
-    cfg_dat = _load_config(test='pulls')
+    cfg_dat = _load_config(test='pulls', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
@@ -266,7 +263,7 @@ def test_errors_plugin():
     Test plotting of pull distributions
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind, ) for kind in ['errors'] }
-    cfg_dat = _load_config(test='errors')
+    cfg_dat = _load_config(test='errors', as_dict=False)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
