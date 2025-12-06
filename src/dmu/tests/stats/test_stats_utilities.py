@@ -153,8 +153,8 @@ def test_pdf_to_tex(tmp_path : Path):
             'mu_Signal_002_scale_flt'       : 'e',
             }
 
-    path = tmp_path / 'pdf_to_tex.txt'
-    pdf_to_tex(path=path, d_par=d_par)
+    in_path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
+    pdf_to_tex(in_path=in_path, out_dir = tmp_path, d_par=d_par)
 #----------------------------------
 @pytest.mark.parametrize('make_plot', [True, False])
 def test_placeholder_fit(make_plot : bool, tmp_path : Path) -> None:
