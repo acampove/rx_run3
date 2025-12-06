@@ -1,17 +1,14 @@
 '''
 Unit test for plotter class in dmu.plotting
 '''
-#pylint: disable=no-name-in-module
-
-import os
-from importlib.resources import files
-
 import pytest
 import matplotlib.pyplot as plt
 import yaml
 import numpy
 import mplhep
 
+from importlib.resources     import files
+from pathlib                 import Path
 from typing                  import cast, overload, Literal
 from ROOT                    import RDF # type: ignore
 from omegaconf               import DictConfig, OmegaConf
