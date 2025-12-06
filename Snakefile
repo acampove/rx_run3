@@ -1,4 +1,4 @@
-NJOBS=25
+NJOBS=30
 # src/post_ap
 PATHS=[
 #'src/ap_utilities',
