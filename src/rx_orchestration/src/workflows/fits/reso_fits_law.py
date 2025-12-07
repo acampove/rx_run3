@@ -134,7 +134,7 @@ class Fits(law.WrapperTask):
         '''
         Defines the sets of tasks in the workflow
         '''
-        cfg = gut.load_conf(package='configs', fpath='rx_fitter/fits.yaml')
+        cfg = gut.load_conf(package='configs', fpath='rx_fitter/reso_fits.yaml')
 
         log.info(20 * '-')
         l_settings = Fits.get_settings(cfg=cfg)
