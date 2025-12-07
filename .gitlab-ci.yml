@@ -30,4 +30,3 @@ reana_workflow:
     - reana-client upload -w cal-rx-run3 $(find       . -name "Snakefile" -type f)
     - reana-client upload -w cal-rx-run3 $(find       . -name "setup.sh"  -type f)
     - reana-client start  -w cal-rx-run3 --follow
-
