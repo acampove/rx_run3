@@ -515,6 +515,29 @@ class SpecMaker:
     # Context managers
     # ----------------------
     @classmethod
+    def cache_directory(cls, path : Path):
+        '''
+        Context manager used to override caching directory
+
+        Parameters
+        -------------
+        path: Path to directory where JSON files will be stored
+        '''
+        log.warning(f'Overriding caching directory with: {path}')
+
+        @contextmanager
+        def _context():
+            old_val = cls._cache_dir
+            cls._cache_dir = path
+
+            try:
+                yield
+            finally:
+                cls._cache_dir = old_val
+
+        return _context()
+    # ----------------------
+    @classmethod
     def default_excluded(cls, names : list[str]):
         '''
         Contextmanager that will (re)define which
