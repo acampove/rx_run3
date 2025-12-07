@@ -1,5 +1,7 @@
 # Installation
 
+## For use as a library
+
 For this, install micromamba, following the instructions [here](https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html)
 Then create a micromamba environment and install the code inside it.
 ```bash
@@ -17,7 +19,22 @@ cd rx_run3
 # And install it
 pip install -r requirements.txt
 ```
-For development use `requirements.txt`, which
+
+## For development
+For development use `requirements_dev.txt`, which
 
 - Will install stub files to hide type annotation errors
 - Will install in editable mode
+- Will also install packages for development like `pytest`, `pre-commit`, etc
+
+For development also do:
+
+```bash
+pre-commit install
+```
+
+after the code installation, to install pre-commit hooks. These hooks live in `hooks/`
+and will:
+
+- When running in the master branch, rename the image tag as the SHA. Thus, the container 
+used to run the workflow in REANA will contain the latest version of the code.
