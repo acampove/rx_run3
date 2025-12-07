@@ -1,4 +1,4 @@
-NJOBS=25
+NJOBS=20
 # src/post_ap
 PATHS=[
 'src/dmu',
