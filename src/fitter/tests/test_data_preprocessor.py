@@ -23,8 +23,6 @@ class Data:
     Meant to hold shared attributes
     '''
     user    = os.environ['USER']
-    out_dir = f'/tmp/{user}/tests/fitter'
-    os.makedirs(out_dir, exist_ok=True)
 # -------------------------------------------------
 @pytest.mark.fixture(autouse=True)
 def max_entries():

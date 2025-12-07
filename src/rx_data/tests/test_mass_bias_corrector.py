@@ -62,7 +62,6 @@ class Data:
     Data class
     '''
     user       = os.environ['USER']
-    plt_dir    = Path(f'/tmp/{user}/tests/rx_data/mass_bias_corrector')
     nthreads   = 13
     nentries   = -1
 #-----------------------------------------
@@ -75,8 +74,6 @@ def initialize():
     LogStore.set_level('rx_data:electron_bias_corrector' , 20)
     LogStore.set_level('rx_data:test_mass_bias_corrector', 10)
     LogStore.set_level('rx_data:rdf_getter'              , 10)
-
-    Data.plt_dir.mkdir(parents=True, exist_ok=True)
 
     plt.style.use(mplhep.style.LHCb2)
 #-----------------------------------------
@@ -149,6 +146,7 @@ def _compare_masses(
     d_rdf      : dict[str, RDF.RNode], 
     test_name  : str, 
     correction : str,
+    out_dir    : Path,
     skip_jpsi  : bool=False) -> None:
     '''
     d_rdf     : Dictionary with corrected and original dataframes
@@ -162,7 +160,7 @@ def _compare_masses(
     dat = copy.deepcopy(dat)
     cfg = OmegaConf.create(dat)
 
-    plt_dir = f'{Data.plt_dir}/{test_name}'
+    plt_dir = f'{out_dir}/{test_name}'
 
     cfg['saving'] = {'plt_dir' : plt_dir}
 
@@ -239,7 +237,7 @@ def _check_size(rdf_org : RDF.RNode, rdf_cor : RDF.RNode) -> None:
     log.info(f'Sizes agree at: {in_size}')
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_EE)
-def test_simple(sample : str, trigger : Trigger):
+def test_simple(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Simplest test
     '''
@@ -276,10 +274,10 @@ def test_simple(sample : str, trigger : Trigger):
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
 
     d_rdf   = {'Original' : rdf_org, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'simple/{trigger}', kind)
+    _compare_masses(d_rdf, f'simple/{trigger}', kind, out_dir = tmp_path)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_DATA) 
-def test_medium_input(sample : str, trigger : Trigger):
+def test_medium_input(sample : str, trigger : Trigger, tmp_path : Path):
     '''
     Medium input
     '''
@@ -316,7 +314,7 @@ def test_medium_input(sample : str, trigger : Trigger):
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
 
     d_rdf   = {'Original' : rdf_org, 'Uncorrected' : rdf_unc, 'Corrected' : rdf_cor}
-    _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind)
+    _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind, out_dir = tmp_path)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 def test_suffix(sample : str, trigger : Trigger):
@@ -343,7 +341,7 @@ def test_suffix(sample : str, trigger : Trigger):
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 @pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
-def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: float):
+def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: float, tmp_path : Path):
     '''
     Vary energy threhold of brem photon needed to be added
     '''
@@ -377,5 +375,5 @@ def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: fl
 
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name=   'B_M')
     _check_corrected(rdf_cor=rdf_cor, rdf_unc=rdf_unc, trigger=trigger, name='Jpsi_M')
-    _compare_masses(d_rdf, f'{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV')
+    _compare_masses(d_rdf, f'{trigger}/energy_{brem_energy_threshold:03}', f'$E_{{\\gamma}}>{brem_energy_threshold}$ MeV', out_dir = tmp_path)
 #-----------------------------------------
