@@ -1,4 +1,7 @@
 version: 0.9.4
+workspace:
+  retention_days:
+    'workspace/*': 1
 workflow:
   type: snakemake
   resources:

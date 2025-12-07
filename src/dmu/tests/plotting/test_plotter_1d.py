@@ -1,31 +1,21 @@
 '''
 Unit test for plotter class in dmu.plotting
 '''
-#pylint: disable=no-name-in-module
-
-import os
-from typing              import cast
-from importlib.resources import files
-from dataclasses         import dataclass
-
 import pytest
 import matplotlib.pyplot as plt
 import yaml
 import numpy
 import mplhep
 
+from importlib.resources     import files
+from pathlib                 import Path
+from typing                  import cast, overload, Literal
 from ROOT                    import RDF # type: ignore
 from omegaconf               import DictConfig, OmegaConf
 from dmu.plotting.plotter_1d import Plotter1D as Plotter
 from dmu.logging.log_store   import LogStore
 
 log = LogStore.add_logger('dmu:plotting:test_plotter_1d')
-#---------------------------------------
-@dataclass
-class Data:
-    '''
-    Class used to store shared data
-    '''
 #---------------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -79,7 +69,11 @@ def _get_rdf(
 
     return rdf
 #---------------------------------------
-def _load_config(test : str, as_dict : bool = True) -> dict|DictConfig:
+@overload
+def _load_config(test : str, out_dir : Path, as_dict : Literal[True]) -> dict:...
+@overload
+def _load_config(test : str, out_dir : Path, as_dict : Literal[False]) -> DictConfig:...
+def _load_config(test : str, out_dir : Path, as_dict : bool = True) -> dict|DictConfig:
     '''
     test (str): Identifies specific test
     '''
@@ -89,9 +83,7 @@ def _load_config(test : str, as_dict : bool = True) -> dict|DictConfig:
     with open(cfg_path, encoding='utf-8') as ifile:
         cfg = yaml.safe_load(ifile)
 
-    plt_dir = cfg['saving']['plt_dir']
-    user    = os.environ['USER']
-    cfg['saving']['plt_dir'] = f'/tmp/{user}/tests/dmu/{plt_dir}'
+    cfg['saving']['plt_dir'] = out_dir 
 
     if as_dict:
         return cfg
@@ -101,172 +93,172 @@ def _load_config(test : str, as_dict : bool = True) -> dict|DictConfig:
 
     return ocfg
 #---------------------------------------
-def test_simple():
+def test_simple(tmp_path : Path):
     '''
     Minimal test
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='simple')
+    cfg_dat = _load_config(test='simple',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_omega_conf():
+def test_omega_conf(tmp_path : Path):
     '''
     Testing config passed through DictConfig
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
-    cfg_dat = _load_config(test='simple', as_dict=False)
+    cfg_dat = _load_config(test='simple',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_line():
+def test_line(tmp_path : Path):
     '''
     Tests config that places lines on figure
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='line')
+    cfg_dat = _load_config(test='line',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_styling():
+def test_styling(tmp_path : Path):
     '''
     Change style of histogram plots
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
-    cfg_dat = _load_config(test='styling')
+    cfg_dat = _load_config(test='styling',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_high_stat():
+def test_high_stat(tmp_path : Path):
     '''
     Test for large datasets
     '''
     d_rdf =  { kind : _get_rdf(kind=kind, test='high_stat') for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='high_stat')
+    cfg_dat = _load_config(test='high_stat',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_no_bounds():
+def test_no_bounds(tmp_path : Path):
     '''
     Test for case where plot bounds are not explicitly passed
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='no_bounds')
+    cfg_dat = _load_config(test='no_bounds',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_fig_size():
+def test_fig_size(tmp_path : Path):
     '''
     Test for fig size setting
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='fig_size')
+    cfg_dat = _load_config(test='fig_size',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_title():
+def test_title(tmp_path : Path):
     '''
     Test for title
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='title')
+    cfg_dat = _load_config(test='title',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_weights():
+def test_weights(tmp_path : Path):
     '''
     Tests plotting with weights
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='weights')
+    cfg_dat = _load_config(test='weights',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_name():
+def test_name(tmp_path : Path):
     '''
     Testing the use of the name key, to name PNG files
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='name')
+    cfg_dat = _load_config(test='name',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_normalized():
+def test_normalized(tmp_path : Path):
     '''
     Will test the plot of normalized histograms
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='normalized')
+    cfg_dat = _load_config(test='normalized',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_legend():
+def test_legend(tmp_path : Path):
     '''
     Tests legend options
     '''
     d_rdf =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
 
-    cfg_dat = _load_config(test='legend')
+    cfg_dat = _load_config(test='legend',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_plugin_fwhm():
+def test_plugin_fwhm(tmp_path : Path):
     '''
     Will test fwhm plugin
     '''
     log.info('')
     d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B'] }
-    cfg_dat = _load_config(test='plug_fwhm')
+    cfg_dat = _load_config(test='plug_fwhm',  as_dict=False, out_dir = tmp_path)
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_plugin_stats():
+def test_plugin_stats(tmp_path : Path):
     '''
     Will test stats plugin
     '''
     log.info('')
     d_rdf   =  { kind : _get_rdf(kind=kind) for kind in ['class A', 'class B', 'class C'] }
-    cfg_dat = _load_config(test='plug_stats')
+    cfg_dat = _load_config(test='plug_stats',  as_dict=False, out_dir = tmp_path)
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_pull_plugin():
+def test_pull_plugin(tmp_path : Path):
     '''
     Test plotting of pull distributions
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind, ) for kind in ['pull'] }
-    cfg_dat = _load_config(test='pulls')
+    cfg_dat = _load_config(test='pulls',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()
 #---------------------------------------
-def test_errors_plugin():
+def test_errors_plugin(tmp_path : Path):
     '''
     Test plotting of pull distributions
     '''
     d_rdf   =  { kind : _get_rdf(kind=kind, ) for kind in ['errors'] }
-    cfg_dat = _load_config(test='errors')
+    cfg_dat = _load_config(test='errors',  as_dict=False, out_dir = tmp_path)
 
     ptr=Plotter(d_rdf=d_rdf, cfg=cfg_dat)
     ptr.run()

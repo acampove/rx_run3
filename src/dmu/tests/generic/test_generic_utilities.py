@@ -2,6 +2,7 @@
 Module with tests for functions in generic/utilities.py
 '''
 import os
+import sys
 from time    import sleep
 from pathlib import Path
 
@@ -28,6 +29,26 @@ def test_environment_context():
 
     with pytest.raises(KeyError):
         os.environ['VAR']
+# ----------------------
+@pytest.fixture
+def no_schema_pkg(tmp_path):
+    '''
+    This fixture creates a fake package missing the schema
+    validating data package
+    '''
+    pkg_dir = tmp_path / 'fake_data' 
+    pkg_dir.mkdir()
+    (pkg_dir / '__init__.py').write_text('')
+    (pkg_dir / 'config.yaml').write_text('dummy: data')
+
+    sys.path.insert(0, str(tmp_path))
+    try:
+        yield pkg_dir
+    finally:
+        try:
+            sys.path.remove(str(tmp_path))
+        except ValueError:
+            pass
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():

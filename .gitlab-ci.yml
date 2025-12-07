@@ -11,16 +11,22 @@ build-image:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:3d1e42b64 .
-    - buildah push    $CI_REGISTRY_IMAGE:3d1e42b64
+    - buildah bud  -t $CI_REGISTRY_IMAGE:f0b36d525 .
+    - buildah push    $CI_REGISTRY_IMAGE:f0b36d525
   only:
     - master
 reana_workflow:
   stage: reana 
-  image: $CI_REGISTRY_IMAGE:3d1e42b64
+  image: $CI_REGISTRY_IMAGE:f0b36d525
   script:
     - reana-client create -w cal-rx-run3 
-    - reana-client upload -w cal-rx-run3 $(find . -name "test_*.py" -type f)
-    - reana-client upload -w cal-rx-run3 $(find . -name "Snakefile" -type f)
-    - reana-client upload -w cal-rx-run3 $(find . -name "setup.sh"  -type f)
+    # -----------
+    - reana-client upload -w cal-rx-run3 $(find src/dmu -name  "*.txt"    -type f)
+    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.yaml"    -type f)
+    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.toml"    -type f)
+    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.json"    -type f)
+    # -----------
+    - reana-client upload -w cal-rx-run3 $(find       . -name "test_*.py" -type f)
+    - reana-client upload -w cal-rx-run3 $(find       . -name "Snakefile" -type f)
+    - reana-client upload -w cal-rx-run3 $(find       . -name "setup.sh"  -type f)
     - reana-client start  -w cal-rx-run3 --follow

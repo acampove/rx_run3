@@ -5,6 +5,7 @@ import os
 import pytest
 from pathlib                import Path
 from dmu.logging.log_store  import LogStore
+from rx_common.types        import Trigger
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter 
 
@@ -16,8 +17,6 @@ class Data:
     '''
     DATADIR = os.environ['ANADIR'] + '/Data'
     l_q2bin = ['low', 'cen_low', 'central', 'cen_high', 'psi2', 'high']
-
-    out_dir = '/tmp/tests/rx_selection/selection'
 # --------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -26,8 +25,6 @@ def initialize():
     '''
     LogStore.set_level('rx_selection:selection'     , 10)
     LogStore.set_level('rx_selection:test_selection', 10)
-
-    os.makedirs(Data.out_dir, exist_ok=True)
 # --------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA'])
 @pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
@@ -184,7 +181,7 @@ def test_apply_full_selection(tmp_path : Path):
     trigger= 'Hlt2RD_BuToKpEE_MVA'
 
     with RDFGetter.max_entries(10_000):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
+        gtr = RDFGetter(sample=sample, trigger=Trigger(trigger))
         rdf = gtr.get_rdf(per_file=False)
 
     out_path = tmp_path / f'{q2bin}_{sample}_{trigger}'

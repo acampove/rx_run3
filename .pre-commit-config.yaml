@@ -5,5 +5,5 @@ repos:
         name    : Latest -> SHA 
         entry   : hooks/replace_with_sha.sh
         language: script
-        stages  : [pre-commit]  # Runs on git commit
-        types   : [yaml]  # Optional: Only run if YAML files are staged; adjust as needed
+        stages  : [pre-commit]
+        types   : [yaml]

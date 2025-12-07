@@ -27,10 +27,9 @@ log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
 class Data:
     '''
-    data class
+    Class needed to hold shared variables
     '''
     user    = os.environ['USER']
-    fit_dir = f'/tmp/{user}/tests/dmu/stats'
 #----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -38,9 +37,6 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('dmu:stats:utilities', 10)
-
-    os.makedirs(Data.fit_dir, exist_ok=True)
-    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 #----------------------------------
 def _get_pdf_simple(is_extended : bool = True) -> zpdf:
     obs = zfit.Space('m',    limits=(-10, 10))
@@ -101,7 +97,7 @@ def _get_pdf(kind : str ='simple') -> zpdf:
 
     raise ValueError(f'Invalid PDF kind: {kind}')
 #----------------------------------
-def test_print_pdf():
+def test_print_pdf(tmp_path : Path):
     '''
     Tests for PDF printer
     '''
@@ -119,15 +115,15 @@ def test_print_pdf():
               blind   = ['sg.*', 'mu.*'])
     #-----------------
     print_pdf(pdf,
-              txt_path = f'{Data.fit_dir}/utilities/print_pdf/pdf.txt')
+              txt_path = f'{tmp_path}/utilities/print_pdf/pdf.txt')
 
     print_pdf(pdf,
               blind    =['sg.*', 'mu.*'],
-              txt_path = f'{Data.fit_dir}/utilities/print_pdf/pdf_blind.txt')
+              txt_path = f'{tmp_path}/utilities/print_pdf/pdf_blind.txt')
 
     print_pdf(pdf,
               d_const  = d_const,
-              txt_path = f'{Data.fit_dir}/utilities/print_pdf/pdf_const.txt')
+              txt_path = f'{tmp_path}/utilities/print_pdf/pdf_const.txt')
 # ----------------------
 def test_blind_manager():
     '''
@@ -144,7 +140,7 @@ def test_blind_manager():
     for line in l_msg:
         assert not re.match(regex, line)
 #----------------------------------
-def test_pdf_to_tex():
+def test_pdf_to_tex(tmp_path : Path):
     '''
     Tests converting text file with PDF description
     into latex table
@@ -157,22 +153,18 @@ def test_pdf_to_tex():
             'mu_Signal_002_scale_flt'       : 'e',
             }
 
-    path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
-    path = str(path)
-    pdf_to_tex(path=path, d_par=d_par)
+    in_path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
+    pdf_to_tex(in_path=in_path, out_dir = tmp_path, d_par=d_par)
 #----------------------------------
 @pytest.mark.parametrize('make_plot', [True, False])
-def test_placeholder_fit(make_plot : bool) -> None:
+def test_placeholder_fit(make_plot : bool, tmp_path : Path) -> None:
     '''
     Runs a placeholder fit needed to produce outputs useful
     to develop tools
     '''
-    kind    = 'plotted' if make_plot else 'unplotted'
-    fit_dir = f'{Data.fit_dir}/placeholder_{kind}'
-
     placeholder_fit(
         kind     = 's+b',
-        fit_dir  = fit_dir,
+        fit_dir  = tmp_path,
         plot_fit = make_plot)
 # ----------------------
 @pytest.mark.parametrize('suffix', [None ,   'suff'])
@@ -193,17 +185,15 @@ def test_get_placeholder_nll(kind : str) -> None:
     '''
     _ = sut.get_nll(kind=kind)
 #----------------------------------
-def test_reuse_data() -> None:
+def test_reuse_data(tmp_path : Path) -> None:
     '''
     Tests running fit on cached data
     '''
-    fit_dir = f'{Data.fit_dir}/placeholder_reuse_data'
+    placeholder_fit(kind='s+b', fit_dir=tmp_path, plot_fit=False)
 
-    placeholder_fit(kind='s+b', fit_dir=fit_dir, plot_fit=False)
+    df   = pnd.read_json(f'{tmp_path}/data.json')
 
-    df   = pnd.read_json(f'{fit_dir}/data.json')
-
-    placeholder_fit(kind='s+b', fit_dir=fit_dir, plot_fit=True, df=df)
+    placeholder_fit(kind='s+b', fit_dir=tmp_path, plot_fit=True, df=df)
 #----------------------------------
 def test_is_pdf_usable():
     '''
@@ -245,7 +235,7 @@ def test_save_fit_simple(tmp_path : Path, is_extended : bool):
     else:
         assert 'nentries' not in measurement
 #----------------------------------
-def test_save_fit_param():
+def test_save_fit_param(tmp_path : Path):
     '''
     Tests saving fit with parameters
     '''
@@ -260,9 +250,9 @@ def test_save_fit_param():
         model  =pdf,
         res    =res,
         plt_cfg={'nbins' : 50, 'stacked' : True},
-        fit_dir=f'{Data.fit_dir}/save_fit/parametric')
+        fit_dir=tmp_path)
 #----------------------------------
-def test_save_fit_nomodel():
+def test_save_fit_nomodel(tmp_path : Path):
     '''
     Tests saving fit without model 
     '''
@@ -274,9 +264,9 @@ def test_save_fit_nomodel():
         model  =None,
         res    =None,
         plt_cfg={'nbins' : 50, 'stacked' : True},
-        fit_dir=f'{Data.fit_dir}/save_fit/parametric')
+        fit_dir=tmp_path)
 #----------------------------------
-def test_save_fit_param_refreeze():
+def test_save_fit_param_refreeze(tmp_path : Path):
     '''
     Tests saving fit with parameters
     when the result object has already been frozen
@@ -293,7 +283,7 @@ def test_save_fit_param_refreeze():
         model  =pdf,
         res    =res,
         plt_cfg={'nbins' : 50, 'stacked' : True},
-        fit_dir=f'{Data.fit_dir}/save_fit/parametric')
+        fit_dir=tmp_path)
 #----------------------------------
 def test_name_from_obs():
     '''
@@ -304,7 +294,7 @@ def test_name_from_obs():
 
     assert name == 'xyz'
 #----------------------------------
-def test_zres_to_cres():
+def test_zres_to_cres(tmp_path : Path):
     '''
     Tests conversion of zfit result object to
     DictConfig
@@ -318,7 +308,7 @@ def test_zres_to_cres():
 
     cres = sut.zres_to_cres(res=res)
 
-    OmegaConf.save(config=cres, f='/tmp/results.yaml')
+    OmegaConf.save(config=cres, f= tmp_path / 'results.yaml')
 #----------------------------------
 def test_zres_to_cres_fallback():
     '''

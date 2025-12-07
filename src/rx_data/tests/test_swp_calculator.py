@@ -6,7 +6,7 @@ import os
 import mplhep
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                   import RDataFrame # type: ignore
+from ROOT                   import RDF # type: ignore
 from pathlib                import Path
 from dmu.logging.log_store  import LogStore
 from rx_data.swp_calculator import SWPCalculator
@@ -19,14 +19,12 @@ class Data:
     Class used to share attributes
     '''
     user    = os.environ['USER']
-    out_dir = Path(f'/tmp/{user}/tests/rx_data/swap_calculator')
 # ----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
     '''
     This runs before any test
     '''
-    os.makedirs(Data.out_dir, exist_ok=True)
     LogStore.set_level('rx_data:swp_calculator'     , 20)
     LogStore.set_level('rx_data:test_swp_calculator', 10)
     LogStore.set_level('rx_data:rdf_getter'         , 10)
@@ -52,7 +50,7 @@ def _get_hadron_mapping(prefix : str) -> dict[str,int]:
     raise ValueError(f'Invalid prefix: {prefix}')
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind)
-def test_dzero_misid(prefix : str, kind : str):
+def test_dzero_misid(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests dzero decay contamination
     '''
@@ -68,10 +66,10 @@ def test_dzero_misid(prefix : str, kind : str):
 
     assert ientries == oentries
 
-    _plot(rdf, test='dzero_misid', kind=kind, prefix=prefix)
+    _plot(rdf, test='dzero_misid', kind=kind, prefix=prefix, tmp_path = tmp_path)
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind)
-def test_phi_misid(prefix : str, kind : str):
+def test_phi_misid(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests phi decay contamination
     '''
@@ -86,10 +84,10 @@ def test_phi_misid(prefix : str, kind : str):
 
     rdf = obj.get_rdf(preffix='phi_misid', progress_bar=True, use_ss= 'ss' in kind)
 
-    _plot(rdf, test='phi_misid', kind=kind, prefix=prefix)
+    _plot(rdf, test='phi_misid', kind=kind, prefix=prefix, tmp_path = tmp_path)
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind_bplus)
-def test_jpsi_misid_bplus(prefix : str, kind : str):
+def test_jpsi_misid_bplus(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests jpsi misid contamination when the decay is B -> K ell ell
     '''
@@ -105,10 +103,10 @@ def test_jpsi_misid_bplus(prefix : str, kind : str):
 
     rdf = obj.get_rdf(preffix=name, progress_bar=True, use_ss= 'ss' in kind)
 
-    _plot(rdf, test=name, kind=kind, prefix=prefix)
+    _plot(rdf, test=name, kind=kind, prefix=prefix, tmp_path = tmp_path)
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind_bzero)
-def test_jpsi_misid_bzero(prefix : str, kind : str):
+def test_jpsi_misid_bzero(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests jpsi misid contamination
     '''
@@ -123,10 +121,15 @@ def test_jpsi_misid_bzero(prefix : str, kind : str):
     obj_2 = SWPCalculator(rdf, d_lep={'L1' : lep_id, 'L2' : lep_id}, d_had={'H2' : lep_id})
     rdf_2 = obj_2.get_rdf(preffix=name_2, progress_bar=True, use_ss= 'ss' in kind)
 
-    _plot(rdf_1, test=name_1, kind=kind, prefix=prefix)
-    _plot(rdf_2, test=name_2, kind=kind, prefix=prefix)
+    _plot(rdf_1, test=name_1, kind=kind, tmp_path = tmp_path, prefix=prefix)
+    _plot(rdf_2, test=name_2, kind=kind, tmp_path = tmp_path, prefix=prefix)
 # ----------------------------------
-def _plot(rdf : RDataFrame, test : str, kind : str, prefix : str):
+def _plot(
+    rdf     : RDF.RNode, 
+    test    : str, 
+    kind    : str, 
+    tmp_path: Path,
+    prefix  : str):
     d_data = rdf.AsNumpy([f'{test}_mass_swp', f'{test}_mass_org'])
     arr_swp= d_data[f'{test}_mass_swp']
     arr_org= d_data[f'{test}_mass_org']
@@ -151,10 +154,7 @@ def _plot(rdf : RDataFrame, test : str, kind : str, prefix : str):
     else:
         raise ValueError(f'Invalid test name: {test}')
 
-    out_dir = Data.out_dir/test
-    out_dir.mkdir(parents=True, exist_ok=True)
-
     plt.legend()
-    plt.savefig(out_dir/f'{kind}_{prefix}.png')
+    plt.savefig(tmp_path /f'{kind}_{prefix}.png')
     plt.close('all')
 # ----------------------------------

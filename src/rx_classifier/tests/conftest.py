@@ -1,10 +1,7 @@
 '''
 File needed by pytest
 '''
-import os
 import logging
-
-import pytest
 import numpy
 import mplhep
 import matplotlib.pyplot as plt
@@ -33,16 +30,4 @@ def pytest_configure(config : Config):
     _set_logs()
 
     plt.style.use(mplhep.style.LHCb2)
-# ------------------------------
-@pytest.fixture(scope='session')
-def out_dir() -> str:
-    '''
-    This is a fixture meant to be passed as an argument
-    to the tests to make the path to the output directory
-    available to them
-    '''
-    path = '/tmp/acampove/tests/rx_classifier'
-    os.makedirs(path, exist_ok=True)
-
-    return path
 # ------------------------------

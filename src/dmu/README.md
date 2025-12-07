@@ -913,7 +913,7 @@ d_par = {
     }
 
 # It will skip fixed parameters by default
-pdf_to_tex(path='/path/to/pdf.txt', d_par=d_par, skip_fixed=True)
+pdf_to_tex(in_path='/path/to/pdf.txt', out_dir = '/path/to', d_par=d_par, skip_fixed=True)
 ```
 
 where `d_par` will rename the `Parameters` column, such that it's in latex.
