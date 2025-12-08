@@ -16,6 +16,11 @@ from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('rx_orchestration:rare_fits_law')
+
+LOGLEVEL=20
+NTHREAD =4
+TOYCFG  =''
+NTOYS   =0
 # -------------------------------------
 class Fit(law.Task):
     config_string : str = Parameter() # type: ignore
@@ -38,10 +43,10 @@ class Fit(law.Task):
             raise ValueError('cfg not a DictConfig')
 
         self._cfg                     = cfg
-        self._cfg['args']['toy_cfg']  = ''
-        self._cfg['args']['ntoys'  ]  = 0 
-        self._cfg['args']['nthread']  = 1 
-        self._cfg['args']['log_lvl']  = 20 
+        self._cfg['args']['toy_cfg']  = TOYCFG 
+        self._cfg['args']['ntoys'  ]  = NTOYS
+        self._cfg['args']['nthread']  = NTHREAD 
+        self._cfg['args']['log_lvl']  = LOGLEVEL
 
         return self._cfg
     # ----------------------
@@ -150,7 +155,7 @@ def _parse_args() -> None:
 # ----------------------
 def main():
     _parse_args()
-    law.run(argv=['Fits', '--workers', '12', '--log-level', 'INFO'])
+    law.run(argv=['Fits', '--workers', '6', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()
