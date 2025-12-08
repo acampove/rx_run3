@@ -145,16 +145,18 @@ class FitConfig:
         -------------
         String used to select block, e.g. `block == 3`
         '''
-        if self.block == -1:
+        block = int(self.block)
+
+        if block == -1:
             return '(1)'
 
-        if self.block == 12:
+        if block == 12:
             return  '(block == 1) || (block == 2)'
 
-        if self.block == 78:
+        if block == 78:
             return  '(block == 7) || (block == 8)'
 
-        if self.block in [1, 2, 3, 4, 5, 6, 7, 8]:
+        if block in [1, 2, 3, 4, 5, 6, 7, 8]:
             return f'block == {self.block}'
 
         raise ValueError(f'Invalid block {self.block}')
