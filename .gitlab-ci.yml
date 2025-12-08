@@ -11,13 +11,13 @@ build-image:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:dffdb3589 .
-    - buildah push    $CI_REGISTRY_IMAGE:dffdb3589
+    - buildah bud  -t $CI_REGISTRY_IMAGE:eb61d6207 .
+    - buildah push    $CI_REGISTRY_IMAGE:eb61d6207
   only:
     - master
 reana_workflow:
   stage: reana 
-  image: $CI_REGISTRY_IMAGE:dffdb3589
+  image: $CI_REGISTRY_IMAGE:eb61d6207
   script:
     - reana-client create -w cal-rx-run3 
     # -----------
