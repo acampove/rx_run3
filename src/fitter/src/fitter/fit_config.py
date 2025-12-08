@@ -120,19 +120,24 @@ class FitConfig:
         '''
         Will put classes in a given logging level
         '''
-        LogStore.set_level('dmu:workflow:cache'                   ,           30)
-        LogStore.set_level('dmu:stats:utilities'                  ,           30)
-        LogStore.set_level('dmu:stats:model_factory'              ,           30)
-        LogStore.set_level('dmu:stats:gofcalculator'              ,           30)
-        LogStore.set_level('rx_data:rdf_getter'                   ,           30)
-        LogStore.set_level('rx_efficiencies:efficiency_calculator',           30)
-        LogStore.set_level('rx_selection:truth_matching'          ,           30)
-        LogStore.set_level('rx_selection:selection'               ,           30)
-        LogStore.set_level('fitter:prec'                          ,           30)
-        LogStore.set_level('dmu:stats:constraint_adder'           , self.log_lvl)
-        LogStore.set_level('fitter:prec_scales'                   , self.log_lvl)
-        LogStore.set_level('fitter:constraint_reader'             , self.log_lvl)
-        LogStore.set_level('fitter:fit_rx_data'                   , self.log_lvl)
+        DEPENDENCIES_LEVEL=30
+
+        LogStore.set_level('dmu:workflow:cache'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:utilities'                  , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:model_factory'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:gofcalculator'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:rdf_getter'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:path_splitter'                , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:sample_emulator'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:spec_maker'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_efficiencies:efficiency_calculator', DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_selection:truth_matching'          , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_selection:selection'               , DEPENDENCIES_LEVEL)
+        LogStore.set_level('fitter:prec'                          , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:constraint_adder'           ,       self.log_lvl)
+        LogStore.set_level('fitter:prec_scales'                   ,       self.log_lvl)
+        LogStore.set_level('fitter:constraint_reader'             ,       self.log_lvl)
+        LogStore.set_level('fitter:fit_rx_data'                   ,       self.log_lvl)
     # ----------------------
     @cached_property
     def mva_cut(self) -> str:
