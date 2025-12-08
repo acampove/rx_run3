@@ -35,7 +35,6 @@ class SpecMaker:
     - Find samples and use them to create a JSON file with them
     - Save file and make path available to user
     '''
-    _cache_dir       : Path | None   = None 
     _custom_versions : dict[str,str] = {}
     _custom_project  : str | None    = None        # If set, will use this project instead of the one deduced from trigger
     _default_excluded: list[str]     = []          # These friend trees will always be excluded, unless explicitly changed
@@ -61,14 +60,15 @@ class SpecMaker:
         self._emulator  = SampleEmulator(sample=sample)
         self._sample    = self._emulator.get_sample_name()
 
+        cache_dir       = tempfile.mkdtemp(prefix=f'{sample}_{trigger}_{tree}')
+        self._cache_dir = Path(cache_dir)
+
         self._trigger   = trigger
         self._tree_name = tree
+
         self._project   = self._set_project(trigger=trigger) 
         self._samples   = self._get_json_paths()
         self._l_path : list[Path] = [] # list of paths to all the ROOT files
-
-        cache_dir       = tempfile.mkdtemp(prefix=f'{sample}_{trigger}_{tree}')
-        self._cache_dir = Path(cache_dir)
 
         if skip_patch:
             log.warning(f'Skipping patching of {sample}')
@@ -518,29 +518,6 @@ class SpecMaker:
         return paths
     # ----------------------
     # Context managers
-    # ----------------------
-    @classmethod
-    def cache_directory(cls, path : Path):
-        '''
-        Context manager used to override caching directory
-
-        Parameters
-        -------------
-        path: Path to directory where JSON files will be stored
-        '''
-        log.warning(f'Overriding caching directory with: {path}')
-
-        @contextmanager
-        def _context():
-            old_val = cls._cache_dir
-            cls._cache_dir = path
-
-            try:
-                yield
-            finally:
-                cls._cache_dir = old_val
-
-        return _context()
     # ----------------------
     @classmethod
     def default_excluded(cls, names : list[str]):

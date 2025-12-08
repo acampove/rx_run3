@@ -24,7 +24,7 @@ rule test:
         path   = ' '.join(PATHS),
         ngroups= NJOBS
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:614ddee5e'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:4c3627aff'
     resources:
         kubernetes_memory_limit="4000Mi"
     shell:
