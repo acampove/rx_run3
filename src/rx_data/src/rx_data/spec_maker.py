@@ -66,7 +66,7 @@ class SpecMaker:
         self._project   = self._set_project(trigger=trigger) 
         self._samples   = self._get_json_paths()
         self._l_path : list[Path]    = [] # list of paths to all the ROOT files
-        self._cache_dir.mkdir(parents=True, exist_ok=True)
+        self._cache_dir.mkdir(parents=True, exist_ok=True, mode=700)
 
         if skip_patch:
             log.warning(f'Skipping patching of {sample}')
