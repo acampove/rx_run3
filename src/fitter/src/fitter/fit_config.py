@@ -121,6 +121,7 @@ class FitConfig:
         Will put classes in a given logging level
         '''
         DEPENDENCIES_LEVEL=30
+        TOOL_LEVEL = self.log_lvl
 
         LogStore.set_level('dmu:workflow:cache'                   , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:utilities'                  , DEPENDENCIES_LEVEL)
@@ -134,10 +135,10 @@ class FitConfig:
         LogStore.set_level('rx_selection:truth_matching'          , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_selection:selection'               , DEPENDENCIES_LEVEL)
         LogStore.set_level('fitter:prec'                          , DEPENDENCIES_LEVEL)
-        LogStore.set_level('dmu:stats:constraint_adder'           ,       self.log_lvl)
-        LogStore.set_level('fitter:prec_scales'                   ,       self.log_lvl)
-        LogStore.set_level('fitter:constraint_reader'             ,       self.log_lvl)
-        LogStore.set_level('fitter:fit_rx_data'                   ,       self.log_lvl)
+        LogStore.set_level('dmu:stats:constraint_adder'           ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:prec_scales'                   ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:constraint_reader'             ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:fit_rx_data'                   ,         TOOL_LEVEL)
     # ----------------------
     @cached_property
     def mva_cut(self) -> str:
