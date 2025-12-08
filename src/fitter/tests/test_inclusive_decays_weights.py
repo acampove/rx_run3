@@ -11,7 +11,6 @@ from pathlib                         import Path
 from ROOT                            import RDF # type: ignore
 from dmu                             import LogStore
 from rx_data                         import RDFGetter
-from rx_data                         import SpecMaker 
 from rx_common                       import Trigger, info
 from fitter.inclusive_decays_weights import read_weight 
 
@@ -54,11 +53,9 @@ def _rdf_to_idf(rdf : RDF.RNode) -> pnd.DataFrame:
 
     return df
 #-----------------------------------------------
-def _get_df(sample : str, trigger : Trigger, tmp_path : Path) -> pnd.DataFrame:
-    with SpecMaker.cache_directory(path = tmp_path):
-        gtr = RDFGetter(sample = sample, trigger = trigger)
-        rdf = gtr.get_rdf(per_file=False)
-
+def _get_df(sample : str, trigger : Trigger) -> pnd.DataFrame:
+    gtr = RDFGetter(sample = sample, trigger = trigger)
+    rdf = gtr.get_rdf(per_file=False)
     df  = _rdf_to_idf(rdf)
 
     return df
@@ -96,7 +93,7 @@ def test_simple(sample : str, trigger : Trigger, tmp_path : Path):
     Simplest test of addition of weights
     '''
     with RDFGetter.max_entries(100_000):
-        df = _get_df(sample, trigger, tmp_path = tmp_path)
+        df = _get_df(sample, trigger)
 
     project      = info.project_from_trigger(trigger=trigger, lower_case=True)
     df['weight'] = df.apply(read_weight, args=(project,), axis=1)
