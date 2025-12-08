@@ -35,7 +35,6 @@ class SpecMaker:
     - Find samples and use them to create a JSON file with them
     - Save file and make path available to user
     '''
-    _pid                             = os.getpid()
     _cache_dir       : Path | None   = None 
     _custom_versions : dict[str,str] = {}
     _custom_project  : str | None    = None        # If set, will use this project instead of the one deduced from trigger
