@@ -81,7 +81,8 @@ class Fit(law.Task):
 
         l_output = []
         for brem in l_brem:
-            out_dir = ana_dir / f'fits/data/{mva_cut}_b{args.block}/{args.fit_cfg}/data/{args.q2bin}/{brem}'
+            block   = 'all' if args.block == -1 else args.block
+            out_dir = ana_dir / f'fits/data/{mva_cut}_b{block}/{args.fit_cfg}/data/{args.q2bin}/{brem}'
             out_dir.mkdir(parents=True, exist_ok=True)
 
             l_output += [ law.LocalFileTarget(out_dir / name) for name in cfg.outputs ]
