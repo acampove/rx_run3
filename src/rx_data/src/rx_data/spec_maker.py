@@ -7,6 +7,7 @@ import copy
 import secrets
 import fnmatch
 import pprint
+import tempfile
 
 from contextlib              import contextmanager
 from pathlib                 import Path
@@ -35,7 +36,7 @@ class SpecMaker:
     - Save file and make path available to user
     '''
     _pid                             = os.getpid()
-    _cache_dir                       = Path(f'.spec_maker/{_pid}/rx_data/cache/rdf_getter') # Here is where all the temporary output will go
+    _cache_dir       : Path | None   = None 
     _custom_versions : dict[str,str] = {}
     _custom_project  : str | None    = None        # If set, will use this project instead of the one deduced from trigger
     _default_excluded: list[str]     = []          # These friend trees will always be excluded, unless explicitly changed
@@ -66,7 +67,9 @@ class SpecMaker:
         self._project   = self._set_project(trigger=trigger) 
         self._samples   = self._get_json_paths()
         self._l_path : list[Path]    = [] # list of paths to all the ROOT files
-        self._cache_dir.mkdir(parents=True, exist_ok=True)
+
+        cache_dir       = tempfile.mkdtemp(prefix=f'{sample}_{trigger}_{tree}')
+        self._cache_dir = Path(cache_dir)
 
         if skip_patch:
             log.warning(f'Skipping patching of {sample}')
@@ -449,6 +452,9 @@ class SpecMaker:
         ----------------
         Path to JSON file that will be used to dump configuration
         '''
+        if not isinstance(self._cache_dir, Path):
+            raise ValueError(f'Caching directory not a path but: {type(self._cache_dir)}')
+
         if isinstance(data, Specification):
             serializable = data.model_dump_json()
         else:
