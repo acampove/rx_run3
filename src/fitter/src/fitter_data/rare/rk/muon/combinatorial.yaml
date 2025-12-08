@@ -4,7 +4,7 @@ common_settings: &settings
   reparametrize : {}
   fix           : {}
 
-output_directory : rare/muon/combinatorial
+output_directory : rare/rk/muon/combinatorial
 categories:
   main:
     models :
