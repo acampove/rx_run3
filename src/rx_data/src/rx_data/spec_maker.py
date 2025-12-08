@@ -65,7 +65,7 @@ class SpecMaker:
         self._tree_name = tree
         self._project   = self._set_project(trigger=trigger) 
         self._samples   = self._get_json_paths()
-        self._l_path : list[Path]    = [] # list of paths to all the ROOT files
+        self._l_path : list[Path] = [] # list of paths to all the ROOT files
 
         cache_dir       = tempfile.mkdtemp(prefix=f'{sample}_{trigger}_{tree}')
         self._cache_dir = Path(cache_dir)
