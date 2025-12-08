@@ -35,7 +35,8 @@ class SpecMaker:
     - Save file and make path available to user
     '''
     _user                            = os.environ['USER']
-    _cache_dir                       = Path(f'/tmp/{_user}/rx_data/cache/rdf_getter') # Here is where all the temporary output will go
+    _pid                             = os.getpid()
+    _cache_dir                       = Path(f'/tmp/{_user}/{_pid}/rx_data/cache/rdf_getter') # Here is where all the temporary output will go
     _custom_versions : dict[str,str] = {}
     _custom_project  : str | None    = None        # If set, will use this project instead of the one deduced from trigger
     _default_excluded: list[str]     = []          # These friend trees will always be excluded, unless explicitly changed
