@@ -93,6 +93,11 @@ class FitConfig:
         self._set_logs()
         self._initialize_toy_config()
 
+        try:
+            self.block = int(self.block)
+        except Exception as exc:
+            raise TypeError(f'Cannot cast block {self.block} as int') from exc
+
         if not (0 <= self.mva_cmb < 1):
             raise ValueError(f'Invalid value for combinatorial MVA WP: {self.mva_cmb}')
 
@@ -145,18 +150,16 @@ class FitConfig:
         -------------
         String used to select block, e.g. `block == 3`
         '''
-        block = int(self.block)
-
-        if block == -1:
+        if self.block == -1:
             return '(1)'
 
-        if block == 12:
+        if self.block == 12:
             return  '(block == 1) || (block == 2)'
 
-        if block == 78:
+        if self.block == 78:
             return  '(block == 7) || (block == 8)'
 
-        if block in [1, 2, 3, 4, 5, 6, 7, 8]:
+        if self.block in [1, 2, 3, 4, 5, 6, 7, 8]:
             return f'block == {self.block}'
 
         raise ValueError(f'Invalid block {self.block}')
