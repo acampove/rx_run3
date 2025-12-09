@@ -68,14 +68,11 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
 
     if channel   == 'ee':
         name     = 'brem_x12'
-        brem_cut = 'nbrem != 0'
     elif channel == 'mm':
         name     = 'brem_0xx'
-        brem_cut = 'nbrem == 0'
     else:
         raise NotImplementedError(f'Invalid channel: {channel}')
 
-    log.info(f'Using brem cut {brem_cut} for trigger {fit_cfg.trigger}')
     cfg = FitConfig(
         name                 = name,
         fit_cfg              = fit_cfg, 
