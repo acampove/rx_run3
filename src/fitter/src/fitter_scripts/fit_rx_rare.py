@@ -91,35 +91,6 @@ def _use_constraints(
 
     return False
 # ----------------------
-def _update_with_brem(cuts : dict[str,str], cfg : FitConfig) -> None:
-    '''
-    Parameters
-    -------------
-    cuts: Dictionary mapping cut label with cut expression
-    cfg : Object storing configuration for fit
-
-    Returns
-    -------------
-    Nothing, this function will modify inputs in-place
-
-    cuts: Add brem requirement
-    cfg : Add name of category
-    '''
-    channel = info.channel_from_trigger(trigger = cfg.fit_cfg.trigger, lower_case=True)
-
-    if channel   == 'ee':
-        cfg.name = 'brem_x12'
-        cut      = 'nbrem != 0'
-    elif channel == 'mm':
-        cfg.name = 'brem_0xx'
-        cut      = 'nbrem == 0'
-    else:
-        raise NotImplementedError(f'Invalid channel: {channel}')
-
-    log.info(f'Using brem cut {cut} for trigger {cfg.fit_cfg.trigger}')
-
-    cuts['brem'] = cut
-# ----------------------
 def _get_constraints(
     nll : ExtendedUnbinnedNLL,
     cfg : FitConfig) -> DictConfig:
