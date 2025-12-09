@@ -31,8 +31,6 @@ class FitConfig:
     mva_prc : float= 0.0
     log_lvl : int  = 20
     ntoys   : int  = 0
-
-    overriding_selection : dict[str,str] = dict()
     # ----------------------
     def replace(self, substring : str, value : str) -> None:
         '''
@@ -186,6 +184,21 @@ class FitConfig:
             return 'nbrem == 0'
 
         raise ValueError(f'Invalid trigger: {self.fit_cfg.trigger}')
+    # ----------------------
+    @cached_property
+    def overriding_selection(self) -> dict[str,str]:
+        '''
+        Returns
+        -------------
+        Dictionary mapping cut name with expression
+        Needed to override default selection
+        '''
+        return {
+            'block' : self.block_cut,
+            'brem'  : self.brem_cut,
+            'bdt'   : self.mva_cut,
+        }
+    # ----------------------
     # ----------------------
     @cached_property
     def is_electron(self) -> bool:
