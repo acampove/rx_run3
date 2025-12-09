@@ -91,7 +91,7 @@ def _use_constraints(
 
     return False
 # ----------------------
-def _update_selection_with_brem(cuts : dict[str,str], cfg : FitConfig) -> None:
+def _update_with_brem(cuts : dict[str,str], cfg : FitConfig) -> None:
     '''
     Parameters
     -------------
@@ -100,14 +100,19 @@ def _update_selection_with_brem(cuts : dict[str,str], cfg : FitConfig) -> None:
 
     Returns
     -------------
-    Nothing, this function will modify dictionary in-place
+    Nothing, this function will modify inputs in-place
+
+    cuts: Add brem requirement
+    cfg : Add name of category
     '''
     channel = info.channel_from_trigger(trigger = cfg.fit_cfg.trigger, lower_case=True)
 
     if channel   == 'ee':
-        cut = 'nbrem != 0'
+        cfg.name = 'brem_x12'
+        cut      = 'nbrem != 0'
     elif channel == 'mm':
-        cut = 'nbrem == 0'
+        cfg.name = 'brem_0xx'
+        cut      = 'nbrem == 0'
     else:
         raise NotImplementedError(f'Invalid channel: {channel}')
 
@@ -201,7 +206,7 @@ def main(args : DictConfig | None = None):
         'block' : cfg.block_cut,
         'bdt'   : cfg.mva_cut}
 
-    _update_selection_with_brem(cuts = overriding_selection, cfg = cfg)
+    _update_with_brem(cuts = overriding_selection, cfg = cfg)
 
     with ExitStack() as stack:
         stack.enter_context(Cache.cache_root(path=cfg.output_directory))
