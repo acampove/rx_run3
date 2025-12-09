@@ -9,6 +9,7 @@ from typing    import Any
 
 from dmu.stats.zfit         import zfit
 from omegaconf              import DictConfig
+from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
 from rx_common              import info
 from zfit                   import Space      as zobs
@@ -147,6 +148,16 @@ class FitConfig:
         LogStore.set_level('fitter:constraint_reader'             ,         TOOL_LEVEL)
         LogStore.set_level('fitter:fit_rx_data'                   ,         TOOL_LEVEL)
     # ----------------------
+    # ----------------------
+    def save(self) -> None:
+        '''
+        Saves to JSON fit configuration in directory where data fit will be saved
+        '''
+        data_fit_directory = self.output_directory / self.q2bin / self.name
+
+        data = dataclasses.asdict(self)
+
+        gut.dump_json(data = data, path = data_fit_directory / 'config.json', exists_ok = True)
     # ----------------------
     @cached_property
     def mva_cut(self) -> str:
