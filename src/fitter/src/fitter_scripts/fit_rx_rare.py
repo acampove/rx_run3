@@ -64,7 +64,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
     fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
     toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
 
-    channel = info.channel_from_trigger(trigger = args.trigger, lower_case=True)
+    channel = info.channel_from_trigger(trigger = fit_cfg.trigger, lower_case=True)
 
     if channel   == 'ee':
         name     = 'brem_x12'
@@ -75,13 +75,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
     else:
         raise NotImplementedError(f'Invalid channel: {channel}')
 
-    log.info(f'Using brem cut {brem_cut} for trigger {args.trigger}')
-
-    overriding_selection = {
-        'brem'  : brem_cut, 
-        'block' : args.block_cut,
-        'bdt'   : args.mva_cut}
-
+    log.info(f'Using brem cut {brem_cut} for trigger {fit_cfg.trigger}')
     cfg = FitConfig(
         name                 = name,
         fit_cfg              = fit_cfg, 
@@ -92,8 +86,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
         mva_cmb              = args.mva_cmb,
         mva_prc              = args.mva_prc,
         log_lvl              = args.log_lvl,
-        ntoys                = args.ntoys,
-        overriding_selection = overriding_selection)
+        ntoys                = args.ntoys)
 
     return cfg
 # ----------------------
