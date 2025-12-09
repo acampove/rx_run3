@@ -49,19 +49,51 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConf
         parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'              , required=True)
         args = parser.parse_args()
 
+    return _cfg_from_args(args = args)
+# ----------------------
+def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
+    '''
+    Parameters
+    -------------
+    args: Object storing configuration
+
+    Returns
+    -------------
+    Object storing full fit configuration
+    '''
     fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
     toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
 
-    cfg         = FitConfig(
-        fit_cfg = fit_cfg, 
-        toy_cfg = toy_cfg,
-        block   = args.block,
-        q2bin   = args.q2bin,
-        nthread = args.nthread,
-        mva_cmb = args.mva_cmb,
-        mva_prc = args.mva_prc,
-        log_lvl = args.log_lvl,
-        ntoys   = args.ntoys)
+    channel = info.channel_from_trigger(trigger = args.trigger, lower_case=True)
+
+    if channel   == 'ee':
+        name     = 'brem_x12'
+        brem_cut = 'nbrem != 0'
+    elif channel == 'mm':
+        name     = 'brem_0xx'
+        brem_cut = 'nbrem == 0'
+    else:
+        raise NotImplementedError(f'Invalid channel: {channel}')
+
+    log.info(f'Using brem cut {brem_cut} for trigger {args.trigger}')
+
+    overriding_selection = {
+        'brem'  : brem_cut, 
+        'block' : args.block_cut,
+        'bdt'   : args.mva_cut}
+
+    cfg = FitConfig(
+        name                 = name,
+        fit_cfg              = fit_cfg, 
+        toy_cfg              = toy_cfg,
+        block                = args.block,
+        q2bin                = args.q2bin,
+        nthread              = args.nthread,
+        mva_cmb              = args.mva_cmb,
+        mva_prc              = args.mva_prc,
+        log_lvl              = args.log_lvl,
+        ntoys                = args.ntoys,
+        overriding_selection = overriding_selection)
 
     return cfg
 # ----------------------
