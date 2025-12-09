@@ -8,6 +8,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 import argparse
 
+from typing                     import Final
 from contextlib                 import ExitStack
 from omegaconf                  import DictConfig, OmegaConf
 from dmu.stats.parameters       import ParameterLibrary as PL
@@ -29,6 +30,8 @@ from rx_selection              import selection as sel
 from rx_common                 import info
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
+
+DATA_SAMPLE : Final[str] = 'DATA_24_*'
 # ----------------------
 def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
     '''
@@ -159,7 +162,7 @@ def _fit(cfg : FitConfig) -> None:
     ftr = LikelihoodFactory(
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
-        sample = 'DATA_24_*',
+        sample = DATA_SAMPLE,
         trigger= cfg.fit_cfg.trigger,
         cfg    = cfg.fit_cfg)
     nll = ftr.run()
