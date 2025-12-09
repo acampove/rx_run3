@@ -183,7 +183,7 @@ def _fit(cfg : FitConfig) -> None:
     cfg.fit_cfg['constraints'] = cfg_cns
     ftr = DataFitter(
         name = cfg.q2bin,
-        d_nll= {'' : (nll, cfg_mod)}, 
+        d_nll= {cfg.name : (nll, cfg_mod)}, 
         cfg  = cfg.fit_cfg)
     res = ftr.run(kind='zfit')
 
