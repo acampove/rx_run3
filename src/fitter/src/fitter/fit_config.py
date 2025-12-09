@@ -20,9 +20,9 @@ class FitConfig:
     '''
     Class used to store configuration needed for fits
     '''
+    name    : str
     fit_cfg : DictConfig
     toy_cfg : DictConfig|None = None
-    name    : str|None        = None 
 
     block   : int  = -1 
     nthread : int  = 1
@@ -31,6 +31,8 @@ class FitConfig:
     mva_prc : float= 0.0
     log_lvl : int  = 20
     ntoys   : int  = 0
+
+    overriding_selection : dict[str,str] = dict()
     # ----------------------
     def replace(self, substring : str, value : str) -> None:
         '''
