@@ -9,3 +9,8 @@ These jobs are used to process
 
 - Data after track refitting and momentum correction
 - MC with sim10f, resonant mode samples requested by rjpsi, semileptonic, etc
+
+# v3
+
+Second production of MC with sim10f. These samples are MC only and mostly to model
+the rare mode, both signal and backgrounds.
