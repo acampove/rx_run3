@@ -74,16 +74,16 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
         raise NotImplementedError(f'Invalid channel: {channel}')
 
     cfg = FitConfig(
-        name                 = name,
-        fit_cfg              = fit_cfg, 
-        toy_cfg              = toy_cfg,
-        block                = args.block,
-        q2bin                = args.q2bin,
-        nthread              = args.nthread,
-        mva_cmb              = args.mva_cmb,
-        mva_prc              = args.mva_prc,
-        log_lvl              = args.log_lvl,
-        ntoys                = args.ntoys)
+        name    = name,
+        fit_cfg = fit_cfg, 
+        toy_cfg = toy_cfg,
+        block   = args.block,
+        q2bin   = args.q2bin,
+        nthread = args.nthread,
+        mva_cmb = args.mva_cmb,
+        mva_prc = args.mva_prc,
+        log_lvl = args.log_lvl,
+        ntoys   = args.ntoys)
 
     return cfg
 # ----------------------
