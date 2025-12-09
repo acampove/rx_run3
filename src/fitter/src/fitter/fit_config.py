@@ -149,15 +149,17 @@ class FitConfig:
         LogStore.set_level('fitter:fit_rx_data'                   ,         TOOL_LEVEL)
     # ----------------------
     # ----------------------
-    def save(self) -> None:
+    def save(self, kind : str) -> None:
         '''
         Saves to JSON fit configuration in directory where data fit will be saved
         '''
-        data_fit_directory = self.output_directory / self.q2bin / self.name
+        data_fit_directory = self.output_directory / kind / self.q2bin / self.name
 
         data = dataclasses.asdict(self)
+        path = data_fit_directory / 'config.json'
+        log.info(f'Saving fit configuration to: {path}')
 
-        gut.dump_json(data = data, path = data_fit_directory / 'config.json', exists_ok = True)
+        gut.dump_json(data = data, path = path, exists_ok = True)
     # ----------------------
     @cached_property
     def mva_cut(self) -> str:

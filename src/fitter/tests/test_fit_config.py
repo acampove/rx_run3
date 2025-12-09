@@ -48,6 +48,6 @@ def test_save(tmp_path : Path):
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         cfg = FitConfig(name = name, fit_cfg = fit_cfg)
-        cfg.save()
+        cfg.save(kind = 'test')
 
     assert cfg.fit_cfg == _get_config(name=name)
