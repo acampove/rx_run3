@@ -78,9 +78,9 @@ class Fit(law.Task):
         mva_cut = self._get_mva_cut(args=args)
 
         if args.fit_cfg.endswith('muon'):
-            l_brem = ['brem_000']
+            l_brem = ['brem_0xx']
         elif args.fit_cfg.endswith('electron'):
-            l_brem = ['brem_001', 'brem_002']
+            l_brem = ['brem_x12']
         else:
             raise ValueError(f'Could not identify {args.fit_cfg} as electron or muon')
 
