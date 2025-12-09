@@ -1,0 +1,287 @@
+# -----------------------------------
+di_track_angles_rkst: &angles
+  th_l1_l2 : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(L2_PX, L2_PY, L2_PZ); return v1.Angle(v2);
+  th_l1_kp : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(H1_PX, H1_PY, H1_PZ); return v1.Angle(v2);
+  th_l1_pm : TVector3 v1(L1_PX, L1_PY, L1_PZ); TVector3 v2(H2_PX, H2_PY, H2_PZ); return v1.Angle(v2);
+  # ------
+  th_l2_kp : TVector3 v1(L2_PX, L2_PY, L2_PZ); TVector3 v2(H1_PX, H1_PY, H1_PZ); return v1.Angle(v2);
+  th_l2_pm : TVector3 v1(L2_PX, L2_PY, L2_PZ); TVector3 v2(H2_PX, H2_PY, H2_PZ); return v1.Angle(v2);
+  th_kp_pm : TVector3 v1(H1_PX, H1_PY, H1_PZ); TVector3 v2(H2_PX, H2_PY, H2_PZ); return v1.Angle(v2);
+RKst:
+  EE: &rkst_ee_cuts
+    ghost     : H1_TRACK_GhostProb<0.3 && H2_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : (1)
+    kinem_had : H1_PT > 250 && H1_P > 2000 && H2_PT > 250 && H2_P > 2000
+    kinem_kst : TMath::Abs(Kst_M - 892) < 400 && Kst_PT > 300
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l1_pm > 5e-4) && (th_l2_kp > 5e-4) && (th_l2_pm > 5e-4) && (th_kp_pm > 5e-4)
+    tr_ipchi2 : H1_IPCHI2_OWNPV > 9 && H2_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : (1) 
+    pid_k     : (1) 
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH 
+    acceptance: L1_INECAL    && L2_INECAL && H1_INMUON && H2_INMUON
+    cascade   : (1)
+    jpsi_misid: (1)
+  MM: &rkst_mm_cuts
+    ghost     : H1_TRACK_GhostProb<0.3 && H2_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
+    hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
+    hlt2      : (1)
+    kinem_lep : (1)
+    kinem_had : H1_PT > 250 && H1_P > 2000 && H2_PT > 250 && H2_P > 2000
+    kinem_kst : TMath::Abs(Kst_M - 892) < 400 && Kst_PT > 300
+    clones    : (th_l1_l2 > 5e-4) && (th_l1_kp > 5e-4) && (th_l1_pm > 5e-4) && (th_l2_kp > 5e-4) && (th_l2_pm > 5e-4) && (th_kp_pm > 5e-4)
+    tr_ipchi2 : H1_IPCHI2_OWNPV > 9 && H2_IPCHI2_OWNPV > 9 && L1_IPCHI2_OWNPV > 9 && L2_IPCHI2_OWNPV > 9
+    pid_l     : (1) 
+    pid_k     : (1) 
+    rich      : L1_PPHASRICH && L2_PPHASRICH && H1_PPHASRICH && H2_PPHASRICH 
+    acceptance: L1_INMUON    && L2_INMUON    && H1_INMUON    && H2_INMUON
+    cascade   : (1)
+    jpsi_misid: (1)
+working_group: rd
+productions:
+  rx_2024:
+    versions:
+      mc_001 : v1r4269
+      mc_002 : v1r4269
+      mc_003 : v1r4269
+      mc_004 : v1r4269
+      mc_005 : v1r4269
+      mc_006 : v1r4269
+    samples:
+      mc_001:
+        - mc_24_w41_42_magup_sim10f_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12155030_bu_psi2sk_jpsipipi_ee_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12143031_bu_psi2spi_mm_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w41_42_magup_sim10f_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+      mc_002:
+        - mc_24_w40_41_magdown_sim10f_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12155030_bu_psi2sk_jpsipipi_ee_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12143031_bu_psi2spi_mm_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w40_41_magdown_sim10f_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+      mc_003:
+        - mc_24_w37_39_magdown_sim10f_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12155030_bu_psi2sk_jpsipipi_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12143031_bu_psi2spi_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w37_39_magdown_sim10f_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+      mc_004:
+        - mc_24_w35_37_magup_sim10f_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12155030_bu_psi2sk_jpsipipi_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12143031_bu_psi2spi_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w35_37_magup_sim10f_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+      mc_005:
+        - mc_24_w32_34_magup_sim10f_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12155030_bu_psi2sk_jpsipipi_ee_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12143031_bu_psi2spi_mm_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w32_34_magup_sim10f_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+      mc_006:
+        - mc_24_w31_magup_sim10f_13124006_bs_phiee_eq_ball_dpc_tuple
+        - mc_24_w31_magup_sim10f_12425011_bu_k2stee_kpipi_eq_mk1430_dpc_tuple
+        - mc_24_w31_magup_sim10f_12425000_bu_k1ee_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_12155030_bu_psi2sk_jpsipipi_ee_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_12153012_bu_psi2sk_ee_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_12143031_bu_psi2spi_mm_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_12143020_bu_psi2sk_mm_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_12123445_bu_kstee_kpi0_eq_btosllball05_dpc_tuple
+        - mc_24_w31_magup_sim10f_12123003_bu_kee_eq_btosllball05_dpc_tuple
+        - mc_24_w31_magup_sim10f_12113002_bu_kmumu_eq_btosllball05_dpc_tuple
+        - mc_24_w31_magup_sim10f_11154011_bd_psi2skst_ee_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_11144011_bd_psi2skst_mm_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_11124037_bd_kpiee_eq_dpc_tuple
+        - mc_24_w31_magup_sim10f_11124002_bd_kstee_eq_btosllball05_dpc_tuple
+        - mc_24_w31_magup_sim10f_11114002_bd_kstmumu_eq_btosllball05_dpc_tuple
+# ------------------------------------------------
+transformations:
+  particle_variables:
+    # For EVERY particle, will define (or redefine) the variables below
+    P  : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) + TMath::Sq(PARTICLE_PZ) )
+    PT : TMath::Sqrt( TMath::Sq(PARTICLE_PX) + TMath::Sq(PARTICLE_PY) )
+  redefine_head:
+    # This is needed due to the way the isolation head is defined for
+    # cut based and mva based lines:
+    # https://gitlab.cern.ch/lhcb/Moore/-/blob/2024-patches/Hlt/Hlt2Conf/python/Hlt2Conf/lines/rd/b_to_xll_hlt2_mva.py
+    # X : Y
+    # Means X will be renamed as Y, change in order not possible due to repeated keys
+    Lb_HEAD_CC_Lb_ : B_HEAD_CC_B_
+    Lb_HEAD_NC_Lb_ : B_HEAD_NC_B_
+    Lb_VTXISO_Lb_  : B_VTXISO_B_
+
+    B_HEAD_CC_bp_  : B_HEAD_CC_B_
+    B_HEAD_NC_bp_  : B_HEAD_NC_B_
+    B_VTXISO_bp_   : B_VTXISO_B_
+
+    B_HEAD_CC_bd_  : B_HEAD_CC_B_
+    B_HEAD_NC_bd_  : B_HEAD_NC_B_
+    B_VTXISO_bd_   : B_VTXISO_B_
+    # Lb and Bx samples will have branches starting with B, simpler
+    Lb_            : B_
+    # Sprucing issue
+    Hp_            : H_
+    # Use H names, remove renaming function
+    K_             : H_
+  define_all:
+    #These defitions are done on top of the names stemming from the changes caused by `redefine_head`
+    q2       : Jpsi_M * Jpsi_M
+    nTracks  : nBackTracks + nDownstreamTracks + nLongTracks + nTTracks + nUpstreamTracks + nVeloTracks
+  define:
+    bdkstee:
+      <<: *angles
+    bdkstmm:
+      <<: *angles
+  rename:
+    B_DTF_Jpsi_MASS                   : B_const_mass_M
+    B_DTF_Jpsi_PX                     : B_const_mass_PX
+    B_DTF_Jpsi_PY                     : B_const_mass_PY
+    B_DTF_Jpsi_PZ                     : B_const_mass_PZ
+    B_DTF_Jpsi_PE                     : B_const_mass_PE
+
+    B_DTF_Psi2S_MASS                  : B_const_mass_psi2S_M
+    B_DTF_Psi2S_PX                    : B_const_mass_psi2S_PX
+    B_DTF_Psi2S_PY                    : B_const_mass_psi2S_PY
+    B_DTF_Psi2S_PZ                    : B_const_mass_psi2S_PZ
+    B_DTF_Psi2S_PE                    : B_const_mass_psi2S_PE
+    #---------
+    K_TRGHOSTPROB                     : H_TRACK_GhostProb
+    H1_TRGHOSTPROB                    : H1_TRACK_GhostProb
+    H2_TRGHOSTPROB                    : H2_TRACK_GhostProb
+    L1_TRGHOSTPROB                    : L1_TRACK_GhostProb
+    L2_TRGHOSTPROB                    : L2_TRACK_GhostProb
+    #
+    K_PID_E                           : H_PIDe
+    H1_PID_E                          : H1_PIDe
+    H2_PID_E                          : H2_PIDe
+    #
+    K_PROBNN_E                        : K_ProbNNe
+    H1_PROBNN_E                       : H1_ProbNNe
+    H2_PROBNN_E                       : H2_ProbNNe
+    #
+    K_PROBNN_K                        : H_ProbNNk
+    H1_PROBNN_K                       : H1_ProbNNk
+    H2_PROBNN_K                       : H2_ProbNNk
+    #
+    L1_PID_E                          : L1_PIDe
+    L2_PID_E                          : L2_PIDe
+    L1_PROBNN_E                       : L1_ProbNNe
+    L2_PROBNN_E                       : L2_ProbNNe
+    #
+    L1_PID_MU                         : L1_PIDmu
+    L2_PID_MU                         : L2_PIDmu
+    L1_PROBNN_MU                      : L1_ProbNNmu
+    L2_PROBNN_MU                      : L2_ProbNNmu
+    #
+    L1_ISMUON                         : L1_isMuon
+    L2_ISMUON                         : L2_isMuon
+    # -----
+    B_BPVFDCHI2                       : B_FDCHI2_OWNPV
+    Jpsi_BPVFDCHI2                    : Jpsi_FDCHI2_OWNPV
+    # -----
+    B_BPVDIRA                         : B_DIRA_OWNPV
+    Jpsi_BPVDIRA                      : Jpsi_DIRA_OWNPV
+    # -----
+    B_BPVIPCHI2                       : B_IPCHI2_OWNPV
+    Jpsi_BPVIPCHI2                    : Jpsi_IPCHI2_OWNPV
+    H_BPVIPCHI2                       : H_IPCHI2_OWNPV
+    H1_BPVIPCHI2                      : H1_IPCHI2_OWNPV
+    H2_BPVIPCHI2                      : H2_IPCHI2_OWNPV
+    L1_BPVIPCHI2                      : L1_IPCHI2_OWNPV
+    L2_BPVIPCHI2                      : L2_IPCHI2_OWNPV
+    # -----
+    B_END_VZ                          : B_ENDVERTEX_Z
+    B_CHI2                            : B_ENDVERTEX_CHI2
+    L1_ENERGY                         : L1_PE
+    L2_ENERGY                         : L2_PE
+    B_ENDVERTEX_Z                     : B_END_VZ
+    B_ENDVERTEX_CHI2                  : B_CHI2
+    L1_PE                             : L1_ENERGY
+    L2_PE                             : L2_ENERGY
+    L1_HASBREMADDED                   : L1_BremMultiplicity
+    L2_HASBREMADDED                   : L2_BremMultiplicity
+  drop_branches:
+    includes   : []
+    starts_with: []
+    ends_with  : []
+    wild_card  : []
+  hlt_lines:
+    lines_phys_ee_mva:
+      - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+    lines_phys_mm_mva:
+      - Hlt2RD_B0ToKpPimMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+  categories:
+    bdkstee:
+      - Hlt2RD_B0ToKpPimEE_MVA
+      - Hlt2RD_B0ToKpPimEE_SameSign_MVA
+      - Hlt2RD_B0ToKpPimEE_MVA_cal
+      - Hlt2RD_B0ToKpPimEE_MVA_misid
+    bdkstmm:
+      - Hlt2RD_B0ToKpPimMuMu_MVA
+      - Hlt2RD_B0ToKpPimMuMu_SameSign_MVA
+  selection:
+    evt_max : -1
+    cuts:
+      bdkstee:
+        <<: *rkst_ee_cuts
+      bdkstmm:
+        <<: *rkst_mm_cuts
+  saving:
+    evt_max : -1
+    compression : 2
+    store_branch: false
