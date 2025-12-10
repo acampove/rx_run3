@@ -11,7 +11,8 @@ from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
 from rx_common.types       import Trigger, Qsq
 from rx_common             import info
-from rx_plotter.refitting  import plot as refitting_plot
+from rx_plotter.refitting  import plot      as refitting_plot
+from rx_selection          import selection as sel
 
 plt.style.use(mplhep.style.LHCb2)
 app = typer.Typer(help=__doc__)
