@@ -102,15 +102,3 @@ def test_remote_source(tmp_path : Path , user : str) -> None:
     for source, target in zip(l_source, l_target):
         fcp.copy(source=source, target=target)
 # ----------------------
-@pytest.mark.skip(reason='Uses SSH')
-def test_remote_both(tmp_path : Path, user : str) -> None:
-    '''
-    Files are transferred between two remote servers 
-    Should fail, this tests that the failure happens
-    '''
-    l_source = _make_paths(dir=tmp_path / 'source', make_file= True, number=10)
-    l_target = _make_paths(dir=tmp_path / 'target', make_file=False, number=10)
-
-    for _, _ in zip(l_source, l_target):
-        with pytest.raises(RuntimeError):
-            _ = FCopy(source=f'{user}@localhost', target=f'{user}@localhost')
