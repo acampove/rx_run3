@@ -160,8 +160,7 @@ def test_bukee(sample : str):
     '''
     Tests truth matching
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
     rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample, kind='bukll')
@@ -180,8 +179,7 @@ def test_bukmm(sample : str):
     '''
     Tests truth matching
     '''
-    trigger = 'Hlt2RD_BuToKpMuMu_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rk_mm_os)
     rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample, kind='bukll')
@@ -197,8 +195,7 @@ def test_bdkstee(sample : str):
     Tests truth matching
     '''
     cut = tm.get_truth(sample, kind='bdkstll')
-    trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rkst_ee_os)
     org = gtr.get_rdf(per_file=False)
 
     ini = org.Count().GetValue()
@@ -219,8 +216,7 @@ def test_bdkstmm(sample : str):
     '''
     cut = tm.get_truth(sample, kind='bdkstll')
 
-    trigger = 'Hlt2RD_B0ToKpPimMuMu_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rkst_mm_os)
     org = gtr.get_rdf(per_file=False)
 
     ini = org.Count().GetValue()
