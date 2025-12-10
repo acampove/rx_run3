@@ -10,7 +10,7 @@ model:
       name : B_Mass_smr
       range:
         - 4500 
-        - 6900
+        - 6996
     central:
       name : B_Mass_smr
       range:
@@ -20,7 +20,7 @@ model:
       name : B_Mass_smr
       range:
         - 4500 
-        - 6900
+        - 6996
   components:
     combinatorial : rare/rkst/electron/combinatorial.yaml
     ccbar         : rare/rkst/electron/ccbar.yaml
