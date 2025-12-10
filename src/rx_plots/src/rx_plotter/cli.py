@@ -10,6 +10,7 @@ import matplotlib.pyplot   as plt
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
 from rx_common.types       import Trigger, Qsq
+from rx_common             import info
 from rx_plotter.refitting  import plot as refitting_plot
 
 plt.style.use(mplhep.style.LHCb2)
@@ -42,8 +43,18 @@ def refitting(
             refitting_plot(project=project, qsq=qsq, trigger=trigger)
 # ----------------------
 @app.command()
-def dummy():
-    pass
+def control_region(
+    chan : str = typer.Option(... , '--chan', '-c', help='E.g. EE'      ),
+    kind : str = typer.Option(... , '--kind', '-k', help='E.g, OS, SS, EXT'),
+    proj : str = typer.Option(... , '--proj', '-p', help='E.g. RK'      ),
+    qsq  : str = typer.Option(... , '--qsq' , '-q', help='E.g. central' )) -> None:
+    '''
+    This can be used to plot control regions for data
+    '''
+    trig = info.get_trigger(project = proj, channel = chan, kind = kind)
+
+    gtr = RDFGetter(sample = 'DATA_24*', trigger = Trigger(trig))
+    rdf = gtr.get_rdf(per_file = False)
 # ----------------------
 if __name__ == '__main__':
     app()
