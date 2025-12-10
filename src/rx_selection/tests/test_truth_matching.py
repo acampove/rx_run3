@@ -4,11 +4,11 @@ Module needed to test truth matching
 import re
 
 import pytest
-from ROOT                  import RDF
-from rx_common.types import Trigger # type: ignore
-from rx_selection          import truth_matching as tm
-from rx_data.rdf_getter    import RDFGetter
-from dmu.logging.log_store import LogStore
+from ROOT         import RDF     # type: ignore
+from rx_common    import Trigger # type: ignore
+from rx_selection import truth_matching as tm
+from rx_data      import RDFGetter
+from dmu          import LogStore
 
 # TODO: Add more samples
 _RK_MISIDSAMPLES=[
