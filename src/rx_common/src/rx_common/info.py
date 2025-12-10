@@ -139,6 +139,10 @@ def get_trigger(
         [trigger] = [ value for value in triggers if value.endswith(f'{channel}_MVA') ]
         return trigger
 
+    if kind == 'NOPID':
+        [trigger] = [ value for value in triggers if value.endswith('_MVA_noPID') ]
+        return trigger
+
     raise NotImplementedError(f'Invalid kind of trigger: {kind}')
 # ---------------------------------
 def is_reso(q2bin : str) -> bool:
