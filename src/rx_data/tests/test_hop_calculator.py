@@ -2,12 +2,13 @@
 Module containing tests for HOPVarAdder
 '''
 import os
-
 import pytest
 import matplotlib.pyplot as plt
-from ROOT                   import RDataFrame # type: ignore
+
+from ROOT                   import RDF# type: ignore
 from pathlib                import Path
 from dmu.logging.log_store  import LogStore
+from rx_common              import Trigger
 from rx_data.hop_calculator import HOPCalculator
 from rx_data.mis_calculator import MisCalculator
 from rx_data                import testing as tst
@@ -19,7 +20,6 @@ class Data:
     '''
     nentries= 100_000
     user    = os.environ['USER']
-    out_dir = Path(f'/tmp/{user}/tests/rx_data/hop_calculator')
 # ----------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -28,7 +28,7 @@ def initialize():
     '''
     LogStore.set_level('rx_data:hop_calculator', 10)
 # ----------------------------
-def _get_rdf(kind : str, prefix : str) -> RDataFrame:
+def _get_rdf(kind : str, prefix : str) -> RDF.RNode:
     trigger = tst.get_trigger(kind=kind, prefix=prefix)
 
     rdf = tst.get_rdf(kind=kind, prefix=prefix)
@@ -37,8 +37,8 @@ def _get_rdf(kind : str, prefix : str) -> RDataFrame:
 
     return rdf
 # ----------------------------
-def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
-    out_dir = Data.out_dir/name
+def _plot_variables(rdf : RDF.RNode, rdf_hop : RDF.RNode, name : str, tmp_path : Path) -> None:
+    out_dir = tmp_path/name
     out_dir.mkdir(parents=True, exist_ok=True)
 
     d_data = rdf_hop.AsNumpy(['hop_alpha', 'hop_mass'])
@@ -55,8 +55,8 @@ def _plot_variables(rdf : RDataFrame, rdf_hop : RDataFrame, name : str) -> None:
     plt.savefig(f'{out_dir}/mass.png')
     plt.close()
 # ----------------------------
-def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> None:
-    out_dir = f'{Data.out_dir}/{name}'
+def _compare_sig_bkg(rdf_sig : RDF.RNode, rdf_bkg : RDF.RNode, name : str, tmp_path : Path) -> None:
+    out_dir = f'{tmp_path}/{name}'
     os.makedirs(out_dir, exist_ok=True)
 
     arr_sig = rdf_sig.AsNumpy(['hop_mass'])['hop_mass']
@@ -69,14 +69,14 @@ def _compare_sig_bkg(rdf_sig : RDataFrame, rdf_bkg : RDataFrame, name : str) -> 
     plt.savefig(f'{out_dir}/mass.png')
     plt.close()
 # ----------------------------
-def _get_hop(rdf : RDataFrame, trigger : str) -> tuple[RDataFrame, RDataFrame]:
+def _get_hop(rdf : RDF.RNode, trigger : str) -> tuple[RDF.RNode, RDF.RNode]:
     obj     = HOPCalculator(rdf=rdf, trigger=trigger)
     rdf_hop = obj.get_rdf(preffix='hop')
 
     return rdf_hop, rdf
 # ----------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind)
-def test_mc(prefix : str, kind : str):
+def test_mc(prefix : str, kind : str, tmp_path : Path):
     '''
     Test on MC
     '''
@@ -85,13 +85,13 @@ def test_mc(prefix : str, kind : str):
     rdf              = _get_rdf(kind=kind, prefix=prefix)
     rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)
 
-    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{prefix}_{kind}')
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'mc_{prefix}_{kind}', tmp_path = tmp_path)
 # ----------------------------
-def test_compare_bukee():
+def test_compare_bukee(tmp_path : Path):
     '''
     Compare signal with background for Bu -> K ee decays
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
+    trigger = Trigger('Hlt2RD_BuToKpEE_MVA')
     sig_sam = 'Bu_Kee_eq_btosllball05_DPC'  
     bkg_sam = 'Bd_Kstee_eq_btosllball05_DPC'
 
@@ -101,13 +101,13 @@ def test_compare_bukee():
     rdf_sig, _ = _get_hop(rdf = rdf_sig, trigger=trigger)
     rdf_bkg, _ = _get_hop(rdf = rdf_bkg, trigger=trigger)
 
-    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bukee')
+    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bukee', tmp_path = tmp_path)
 # ----------------------------
-def test_compare_bdkstee():
+def test_compare_bdkstee(tmp_path : Path):
     '''
     Compare signal with background for Bd -> Kpi ee decays
     '''
-    trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
+    trigger = Trigger('Hlt2RD_B0ToKpPimEE_MVA')
     sig_sam = 'Bd_Kstee_eq_btosllball05_DPC'
     bkg_sam = 'Bu_K1ee_eq_DPC'
 
@@ -117,10 +117,10 @@ def test_compare_bdkstee():
     rdf_sig, _ = _get_hop(rdf = rdf_sig, trigger=trigger)
     rdf_bkg, _ = _get_hop(rdf = rdf_bkg, trigger=trigger)
 
-    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bdkstee')
+    _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bdkstee', tmp_path = tmp_path)
 # ----------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_extra_branches(trigger : str):
+def test_extra_branches(trigger : Trigger):
     '''
     Testing adding extra branches to RDF
     '''
@@ -135,7 +135,7 @@ def test_extra_branches(trigger : str):
     assert 'RUNNUMBER'   in l_col
 # ----------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind_data)
-def test_data(kind : str, prefix : str):
+def test_data(kind : str, prefix : str, tmp_path : Path):
     '''
     Test with data
     '''
@@ -144,5 +144,5 @@ def test_data(kind : str, prefix : str):
 
     rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)
 
-    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'data_{kind}_{trigger}')
+    _plot_variables(rdf=rdf_org, rdf_hop=rdf_hop, name=f'data_{kind}_{trigger}', tmp_path = tmp_path)
 # ----------------------------

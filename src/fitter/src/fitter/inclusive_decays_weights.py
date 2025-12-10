@@ -23,7 +23,7 @@ def _get_chain(name, row : pnd.Series) -> PChain:
 
     return chain
 #---------------------------
-def _get_reader(project : str, row : pnd.Series) -> KLLDecayReader:
+def _get_reader(project : str, row : pnd.Series) -> KLLDecayReader | KPiLLDecayReader:
     '''
     This method will return the BR weights
 

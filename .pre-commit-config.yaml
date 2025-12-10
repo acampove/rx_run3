@@ -6,4 +6,3 @@ repos:
         entry   : hooks/replace_with_sha.sh
         language: script
         stages  : [pre-commit]
-        types   : [yaml]
