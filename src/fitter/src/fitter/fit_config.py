@@ -136,6 +136,7 @@ class FitConfig:
         LogStore.set_level('rx_data:path_splitter'                , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_data:sample_emulator'              , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_data:spec_maker'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:sample_patcher'               , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_efficiencies:efficiency_calculator', DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_selection:truth_matching'          , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_selection:selection'               , DEPENDENCIES_LEVEL)
