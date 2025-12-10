@@ -53,9 +53,27 @@ def control_region(
     This can be used to plot control regions for data
     '''
     trig = info.get_trigger(project = proj, channel = chan, kind = kind)
+    #mass = 'B_Mass_hdpipi'
+    mass = 'B_Mass_hdkk'
 
-    gtr = RDFGetter(sample = 'DATA_24*', trigger = Trigger(trig))
-    rdf = gtr.get_rdf(per_file = False)
+    with RDFGetter.multithreading(nthreads = 10):
+        gtr = RDFGetter(sample = 'DATA_24*', trigger = Trigger(trig))
+        rdf = gtr.get_rdf(per_file = False)
+
+        l1_cut = 'L1_PROBNN_E < 0.2 || L1_PID_E < 3.0'
+        l2_cut = 'L2_PROBNN_E < 0.2 || L2_PID_E < 3.0'
+        mv_cut = '(mva_cmb > 0.90) && (mva_prc > 0.70)'
+
+        with sel.custom_selection(d_sel = {'pid_l' : f'({l1_cut}) && ({l2_cut}) && ({mv_cut})'}):
+            rdf = sel.apply_full_selection(rdf = rdf, q2bin = qsq, process = 'DATA_24*', trigger = trig)
+
+        arr_mass = rdf.AsNumpy([mass])[mass]
+
+    plt.hist(arr_mass, bins = 100, range=(5000, 5500), label = 'Control region', color='black', alpha=0.5)
+    plt.axvline(x=5280, color='red', linestyle=':', label = '$M(B^0)$')
+    plt.ylim(0, 10)
+    plt.legend()
+    plt.show()
 # ----------------------
 if __name__ == '__main__':
     app()
