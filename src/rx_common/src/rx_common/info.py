@@ -104,6 +104,43 @@ def project_from_trigger(trigger : str, lower_case : bool) -> str:
 
     raise ValueError(f'Trigger {trigger} not found')
 # ---------------------------------
+def get_trigger(
+    project : str, 
+    kind    : str,
+    channel : str) -> str:
+    '''
+    Parameters
+    --------------
+    project: E.g. RK 
+    channel: E.g. EE
+    kind   : E.g. OS, SS, EXT
+
+    Returns
+    --------------
+    Hlt2 trigger name
+    '''
+    if project not in _triggers:
+        raise ValueError(f'Invalid project: {project}')
+
+    if channel not in _triggers[project]:
+        raise ValueError(f'Invalid channel: {channel}')
+
+    triggers = _triggers[project][channel]
+
+    if kind == 'SS':
+        [trigger] = [ value for value in triggers if value.endswith('SameSign_MVA') ]
+        return trigger
+
+    if kind == 'EXT':
+        [trigger] = [ value for value in triggers if value.endswith('_MVA_ext') ]
+        return trigger
+
+    if kind == 'OS':
+        [trigger] = [ value for value in triggers if value.endswith(f'{channel}_MVA') ]
+        return trigger
+
+    raise NotImplementedError(f'Invalid kind of trigger: {kind}')
+# ---------------------------------
 def is_reso(q2bin : str) -> bool:
     '''
     Takes q2bin name, returns true if it has associated
