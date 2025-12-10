@@ -14,8 +14,8 @@ model:
     central:
       name : B_Mass_smr
       range:
-        - 4600 
-        - 6900
+        - 4500 
+        - 6996
     high:
       name : B_Mass_smr
       range:
@@ -31,7 +31,7 @@ model:
   constraints : {}
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins   : 30
+  nbins   : 78
   stacked : True
   d_leg :
     combinatorial : Combinatorial
@@ -40,4 +40,5 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
     psi2_leakage  : $B^0\to K^*(\to K^+\pi^-) \psi(2S)(\to e^+e^-)$ 
     kpikk         : $B^0\to K^*(\to K^+\pi^-)K^+K^-$ 
     kpipipi       : $B^0\to K^*(\to K^+\pi^-)\pi^+\pi^-$ 
-    signal        : $B^0\to K^{*+}(\to K^+\pi^-)e^+e^-$ 
+    prec          : $B^+\to K_1^+(1270)(\to K^+\pi^+\pi^-)e^+e^-$
+    signal        : $B^0\to K^*(\to K^+\pi^-)e^+e^-$ 
