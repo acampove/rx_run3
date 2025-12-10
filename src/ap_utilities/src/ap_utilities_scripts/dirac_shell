@@ -45,7 +45,7 @@ export_paths()
         exit 1
     fi
 
-    APUT_PATH=$SFTDIR"/ap_utilities"
+    APUT_PATH=$SFTDIR"/rx_run3/src/ap_utilities"
     if [[ ! -d $APUT_PATH ]];then
         echo "ap_utilities directory not found"
         exit 1
@@ -53,7 +53,7 @@ export_paths()
         export APUT_PATH
     fi
 
-    DMU_PATH=$SFTDIR"/dmu"
+    DMU_PATH=$SFTDIR"/rx_run3/src/dmu"
     if [[ ! -d $DMU_PATH ]];then
         echo "dmu directory not found"
         exit 1
