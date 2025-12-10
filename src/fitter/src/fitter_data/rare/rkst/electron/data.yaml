@@ -23,10 +23,9 @@ model:
   components:
     combinatorial : rare/rkst/electron/combinatorial.yaml
     ccbar         : rare/rkst/electron/ccbar.yaml
+    prec          : rare/rkst/electron/prec.yaml
     jpsi_leakage  : rare/rkst/electron/jpsi_leakage.yaml
     psi2_leakage  : rare/rkst/electron/psi2_leakage.yaml
-    kpikk         : rare/rkst/electron/kkk.yaml
-    kpipipi       : rare/rkst/electron/kpipi.yaml
     signal        : rare/rkst/electron/signal_non_parametric.yaml
   constraints:
     misid     : misid/rkst/electron/data_misid.yaml
