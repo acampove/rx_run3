@@ -44,6 +44,9 @@ l_sample_kstee = [
     # ----
     'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC',
     'Lb_JpsipK_ee_eq_phsp_DPC',
+    'Bu_Kpipiee_eq_DPC_LSFLAT',
+    'Bu_K1ee_eq_DPC',
+    'Bu_K2stee_Kpipi_eq_mK1430_DPC',
 ]
 
 l_sample_kpmm = [
