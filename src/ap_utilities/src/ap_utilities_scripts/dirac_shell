@@ -79,8 +79,8 @@ make_rcfile()
     echo "echo \"Installing projects in $LOCAL_PATH\""     >> $RCFILE
     echo "echo \"----------------------------------\""     >> $RCFILE
     echo ""                                                >> $RCFILE
-    echo "pip install --prefix $LOCAL_PATH    $APUT_PATH " >> $RCFILE
-    echo "pip install --prefix $LOCAL_PATH     $DMU_PATH " >> $RCFILE
+    echo "pip install --ignore-installed --prefix $LOCAL_PATH    $APUT_PATH " >> $RCFILE
+    echo "pip install --ignore-installed --prefix $LOCAL_PATH     $DMU_PATH " >> $RCFILE
     echo ""
     echo "Using rc file:"
     cat $RCFILE
