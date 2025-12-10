@@ -164,7 +164,11 @@ no_pid:
   # ----------
   12153020 : $B^+ \to J/\psi(\to e^+ e^-) \pi^+$
   12143010 : $B^+ \to J/\psi(\to \mu^+ \mu^-) \pi^+$
-  11104000 : $B^+ \to K^*(\to K^+\pi^-)\pi^+\pi^-$
+  12103017 : $B^+ \to K^+ K^+ K^-$
+  12103025 : $B^+ \to K^+ \pi^+ \pi^-$
+  11104000 : $B^0 \to K^{*0}(\to K^+\pi^-) \pi^+\pi^-$ 
+  13104048 : $B_s \to K^{*0}(\to K^+\pi^-) \rho(\to \pi^+\pi^-)$
+  11104041 : $B_d \to K^{*0}(\to K^+\pi^-) \rho(\to \pi^+\pi^-)$
 pending_sim10f:
   11584030  : Bd_Dstplenu_eq_PHSP_TC
 charmonium:
