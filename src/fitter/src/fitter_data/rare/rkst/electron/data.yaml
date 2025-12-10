@@ -27,8 +27,7 @@ model:
     jpsi_leakage  : rare/rkst/electron/jpsi_leakage.yaml
     psi2_leakage  : rare/rkst/electron/psi2_leakage.yaml
     signal        : rare/rkst/electron/signal_non_parametric.yaml
-  constraints:
-    misid     : misid/rkst/electron/data_misid.yaml
+  constraints : {}
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
