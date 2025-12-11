@@ -14,13 +14,14 @@ import argparse
 import mplhep
 import matplotlib.pyplot as plt
 
-from ROOT                    import RDataFrame # type: ignore
+from ROOT                    import RDF # type: ignore
 from dmu.logging.log_store   import LogStore
 from ap_utilities.decays     import utilities          as aput
 from dmu.plotting.plotter_1d import Plotter1D          as Plotter
 from dmu.generic             import utilities          as gut
 from dmu.generic             import version_management as vmn
-from omegaconf               import DictConfig
+from omegaconf               import DictConfig, OmegaConf
+from rx_common.types         import Trigger
 from rx_data.rdf_getter      import RDFGetter
 
 log = LogStore.add_logger('rx_plots:validate_nopid')
