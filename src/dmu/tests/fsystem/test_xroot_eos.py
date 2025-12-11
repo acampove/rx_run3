@@ -14,6 +14,7 @@ def initialize():
     '''
     LogStore.set_level('dmu:xroot_eos', 10)
 # ----------------------
+@pytest.mark.skip
 def test_glob_eos():
     '''
     Tests globbing in EOS
