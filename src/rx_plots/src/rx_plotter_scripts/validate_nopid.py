@@ -32,7 +32,7 @@ class Data:
     '''
     cfg     : dict
     weight  : str
-    samples : dict[str,str] # Dictionary with sample -> trigger name
+    samples : dict[str,Trigger] # Dictionary with sample -> trigger name
     regex   = r'mc_\w+_\d{8}_(.*)_(Hlt2.*MVA)_\w+\.root' # Needed to extract sample and trigger name
 
     plt.style.use(mplhep.style.LHCb2)
@@ -42,9 +42,9 @@ def _parse_args():
     parser = argparse.ArgumentParser(description='')
     _ = parser.parse_args()
 # ----------------------------
-def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
+def _get_rdf(sample : str, trigger : Trigger, has_pid : bool) -> RDF.RNode:
     if not has_pid:
-        trigger = f'{trigger}_noPID'
+        trigger = Trigger(f'{trigger}_noPID')
 
     weight = '1.0' if has_pid else Data.weight
 
@@ -62,9 +62,9 @@ def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
 # ----------------------------
 def _compare(
         sample    : str,
-        rdf_nopid : RDataFrame,
-        rdf_yspid : RDataFrame,
-        rdf_xcpid : RDataFrame) -> None:
+        rdf_nopid : RDF.RNode,
+        rdf_yspid : RDF.RNode,
+        rdf_xcpid : RDF.RNode) -> None:
 
     d_rdf={'Original'             : rdf_yspid,
            'New with PID'         : rdf_xcpid,
@@ -74,7 +74,7 @@ def _compare(
     ptr   = Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # ----------------------------
-def _get_config_with_title(sample : str) -> dict:
+def _get_config_with_title(sample : str) -> DictConfig:
     cfg  = copy.deepcopy(Data.cfg)
 
     for _, settings in cfg['plots'].items():
@@ -82,7 +82,7 @@ def _get_config_with_title(sample : str) -> dict:
         name = settings['name']
         settings['name'] = f'{name}_{sample}'
 
-    return cfg
+    return OmegaConf.create(cfg)
 # ----------------------------
 def _load_config(channel : str) -> None:
     cfg = gut.load_data(
@@ -94,7 +94,7 @@ def _load_config(channel : str) -> None:
 
     Data.cfg = cfg
 # ----------------------------
-def _apply_pid(rdf : RDataFrame) -> RDataFrame:
+def _apply_pid(rdf : RDF.RNode) -> RDF.RNode:
     d_cut = Data.cfg['selection']['cuts']
 
     for name, expr in d_cut.items():
@@ -106,7 +106,7 @@ def _apply_pid(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 # ----------------------------
-def _get_sample_trigger(fpath : str) -> tuple[str,str]:
+def _get_sample_trigger(fpath : str) -> tuple[str,Trigger]:
     '''
     Parameters
     ---------------
@@ -125,7 +125,7 @@ def _get_sample_trigger(fpath : str) -> tuple[str,str]:
     sample = aput.name_from_lower_case(sample)
     log.debug(f'Found: {sample}/{trigger}')
 
-    return sample, trigger
+    return sample, Trigger(trigger)
 # ----------------------------
 def _load_samples() -> None:
     '''
