@@ -4,7 +4,6 @@ This module tests the class ToyMaker
 import pytest
 
 from pathlib               import Path
-
 from zfit.loss             import ExtendedUnbinnedNLL
 from fitter.toy_plotter    import ToyPlotter
 from fitter.toy_maker      import ToyMaker
