@@ -38,9 +38,20 @@ class Data:
     plt.style.use(mplhep.style.LHCb2)
     ana_dir = os.environ['ANADIR']
 # ----------------------------
-def _parse_args():
-    parser = argparse.ArgumentParser(description='')
-    _ = parser.parse_args()
+def _parse_args() -> argparse.Namespace:
+    '''
+    Parses arguments passed by user
+
+    Returns
+    --------------
+    Instance of configuration data class, built from arguments
+    '''
+
+    parser = argparse.ArgumentParser(description='Runs validation of simulation without PID')
+    #parser.add_argument('-n', '--name' , type=str, help='Identifier for pipeline, e.g. 22781/btoxll_mva_2024_nopid')
+    args = parser.parse_args()
+
+    return args
 # ----------------------------
 def _get_rdf(sample : str, trigger : Trigger, has_pid : bool) -> RDF.RNode:
     if not has_pid:
