@@ -377,7 +377,7 @@ def apply_full_selection(
     --------------------
     uid     : Unique identifier, used for hashing. If not passed no hashing will be done
     ext_cut : Extra cut, optional
-    out_path: Path where selection and cutflow will be stored, optional
+    out_path: Directory path where selection and cutflow will be stored, optional
 
     Returns
     --------------------
