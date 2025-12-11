@@ -3,6 +3,7 @@ This script is meant to be the entry point for all the functionalities
 provided by this project
 '''
 
+from pathlib import Path
 import typer
 import mplhep
 import matplotlib.pyplot   as plt
@@ -53,25 +54,35 @@ def control_region(
     This can be used to plot control regions for data
     '''
     trig = info.get_trigger(project = proj, channel = chan, kind = kind)
-    #mass = 'B_Mass_hdpipi'
-    mass = 'B_Mass_hdkk'
+    mass = 'B_Mass_hdpipi'
+    #mass = 'B_Mass_hdkk'
+
+    #sample = 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+    sample = 'DATA_24*'
 
     with RDFGetter.multithreading(nthreads = 10):
-        gtr = RDFGetter(sample = 'DATA_24*', trigger = Trigger(trig))
+        gtr = RDFGetter(sample = sample, trigger = Trigger(trig))
         rdf = gtr.get_rdf(per_file = False)
+
+        tg_cut = 'L1_PROBNN_K < 0.1 && L1_PROBNN_K < 0.1'
+        #tg_cut = 'L1_PROBNN_K > 0.1 && L1_PROBNN_K > 0.1'
 
         l1_cut = 'L1_PROBNN_E < 0.2 || L1_PID_E < 3.0'
         l2_cut = 'L2_PROBNN_E < 0.2 || L2_PID_E < 3.0'
-        mv_cut = '(mva_cmb > 0.90) && (mva_prc > 0.70)'
+        mv_cut = '(mva_cmb > 0.50) && (mva_prc > 0.30)'
 
-        with sel.custom_selection(d_sel = {'pid_l' : f'({l1_cut}) && ({l2_cut}) && ({mv_cut})'}):
-            rdf = sel.apply_full_selection(rdf = rdf, q2bin = qsq, process = 'DATA_24*', trigger = trig)
+        with sel.custom_selection(d_sel = {'pid_l' : f'({l1_cut}) && ({l2_cut}) && ({tg_cut})', 'bdt' : mv_cut}):
+            rdf = sel.apply_full_selection(
+                rdf     = rdf, 
+                q2bin   = qsq, 
+                process = sample, 
+                out_path= Path('./cutflow'),
+                trigger = trig)
 
         arr_mass = rdf.AsNumpy([mass])[mass]
 
     plt.hist(arr_mass, bins = 100, range=(5000, 5500), label = 'Control region', color='black', alpha=0.5)
     plt.axvline(x=5280, color='red', linestyle=':', label = '$M(B^0)$')
-    plt.ylim(0, 10)
     plt.legend()
     plt.show()
 # ----------------------
