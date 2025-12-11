@@ -86,7 +86,7 @@ def control_region(
     lmass = {'B_Mass_hdpipi' : r'$M_{e\to\pi}$', 'B_Mass_hdkk' : r'$M_{e\to K}$'}[mass]
     label = {'RK' : f'{lmass}$(B^+)$[MeV]' , 'RKst' : f'{lmass}$(B^0)$[MeV]'}[proj]
 
-    title = f'{l1_cut}\n {l2_cut}\n {mv_cut}' 
+    title = f'{l1_cut}\n {l2_cut}\n {mv_cut}\n {tg_cut}' 
     plt.hist(arr_mass, bins = 100, range=(5000, 5500), label = 'Control region', color='blue', alpha=0.5)
     plt.axvline(x=5280, color='red', linestyle=':', label = 'PDG')
     plt.title(title)
