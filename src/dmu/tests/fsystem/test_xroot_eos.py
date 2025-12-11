@@ -1,9 +1,19 @@
 '''
 This module holds tests for functions in xroot_eos.py
 '''
+import pytest
 
-from dmu import XRootEOS 
+from dmu import XRootEOS
+from dmu.logging.log_store import LogStore 
 
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('dmu:xroot_eos', 10)
+# ----------------------
 def test_glob_eos():
     '''
     Tests globbing in EOS
@@ -14,3 +24,4 @@ def test_glob_eos():
     obj   = XRootEOS(host = host)
     paths = obj.glob(dir_path = path, ext = 'root')
 
+    assert len(paths) == 168 
