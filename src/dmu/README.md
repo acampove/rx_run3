@@ -6,6 +6,25 @@ These are tools that can be used for different data analysis tasks.
 
 # Networking 
 
+## EOS
+
+In order to interact with EOS one can use `xrootdpyfs`. However, this project
+provides a small wrapper to make its usage easier.
+
+### Globbing
+
+For that do:
+
+```python
+from dmu import XRootEOS
+
+host = "root://eoslhcb.cern.ch"
+path = "/eos/lhcb/wg/dpa/wp2/ci/22781/btoxll_mva_2024_nopid"
+
+obj   = XRootEOS(host = host)
+paths = obj.glob(dir_path = path, ext = 'root')
+```
+
 ## Transferring data through SSH
 
 A small wrapper to rsync is show below:
