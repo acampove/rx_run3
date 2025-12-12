@@ -23,6 +23,7 @@ rule test:
     params:
         path   = ' '.join(PATHS),
         ngroups= NJOBS
+        tst_dir= './tests/output'
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:c76a965c5'
     resources:
@@ -31,7 +32,7 @@ rule test:
         """
         source setup.sh
 
-        mkdir -p ./results/output
+        mkdir -p {params.tst_dir} 
 
-        pytest {params.path} --basetemp ./results/output --splits {params.ngroups} --group {wildcards.index} --junitxml={output} --splitting-algorithm=least_duration
+        pytest {params.path} --basetemp {params.tst_dir} --splits {params.ngroups} --group {wildcards.index} --junitxml={output} --splitting-algorithm=least_duration
         """
