@@ -196,7 +196,7 @@ class ConstraintAdder:
         cls,
         d_cns : dict[str,tuple[float,float]], 
         name  : str,
-        kind  : str) -> DictConfig:
+        kind  : str) -> DictConfig | None:
         '''
         Parameters
         -------------
@@ -206,11 +206,14 @@ class ConstraintAdder:
 
         Returns
         -------------
-        Config object
+        Config object or None, if no constraints were passed
         '''
 
         if kind not in cls._valid_constraints:
             raise ValueError(f'Invalid kind {kind} choose from: {cls._valid_constraints}')
+
+        if not d_cns:
+            return None
 
         data = None
         if kind == 'PoissonConstraint':
