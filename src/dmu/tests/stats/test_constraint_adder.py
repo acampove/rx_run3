@@ -18,8 +18,8 @@ from dmu.logging.log_store      import LogStore
 
 _CONSTRAINTS = [
     {
-        'a' : (0., 1.),
-        'b' : (5., 2.),
+        'mu' : (5200., 10.),
+        'sg' : (  50., 20.),
     },
     {},
 ]
