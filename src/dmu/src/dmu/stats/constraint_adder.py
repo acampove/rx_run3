@@ -24,7 +24,10 @@ class ConstraintAdder:
     '''
     _valid_constraints = ['GaussianConstraint', 'PoissonConstraint']
     # ----------------------
-    def __init__(self, nll : Loss, cns : DictConfig):
+    def __init__(
+        self, 
+        nll : Loss, 
+        cns : DictConfig | None):
         '''
         Parameters
         -------------
@@ -34,6 +37,8 @@ class ConstraintAdder:
             - What kind of constraint to use
             - What the means of the contraints should be
             - What the covariances should be
+
+            or None, for no constraints case
         '''
         self._nll = nll
         self._cns = cns
