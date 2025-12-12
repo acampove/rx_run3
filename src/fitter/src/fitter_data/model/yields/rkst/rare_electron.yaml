@@ -10,8 +10,6 @@ yld_signal:
 yld_ccbar:
   <<      : *yields
 yld_Bu_Kpipiee_eq_DPC_LSFLAT:
-  scl     : [yld_signal]
-  preffix : pscale
   <<      : *yields
 yld_combinatorial:
   <<      : *yields
