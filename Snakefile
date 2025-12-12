@@ -1,16 +1,16 @@
-NJOBS=30
+NJOBS=10
 #'src/post_ap'
 #'src/rx_pid',
 PATHS=[
 'src/ap_utilities',
-'src/dmu',
-'src/fitter',
-'src/rx_classifier',
-'src/rx_data',
-'src/rx_efficiencies',
-'src/rx_misid',
-'src/rx_plots',
-'src/rx_q2',
+#'src/dmu',
+#'src/fitter',
+#'src/rx_classifier',
+#'src/rx_data',
+#'src/rx_efficiencies',
+#'src/rx_misid',
+#'src/rx_plots',
+#'src/rx_q2',
 'src/rx_selection',
 ]
 
@@ -31,5 +31,7 @@ rule test:
         """
         source setup.sh
 
-        pytest {params.path} --splits {params.ngroups} --group {wildcards.index} --junitxml={output} --splitting-algorithm=least_duration
+        mkdir -p ./results/output
+
+        pytest {params.path} --basetemp ./results/output --splits {params.ngroups} --group {wildcards.index} --junitxml={output} --splitting-algorithm=least_duration
         """
