@@ -1,16 +1,16 @@
-NJOBS=10
+NJOBS=100
 #'src/post_ap'
 #'src/rx_pid',
 PATHS=[
 'src/ap_utilities',
-#'src/dmu',
-#'src/fitter',
-#'src/rx_classifier',
-#'src/rx_data',
-#'src/rx_efficiencies',
-#'src/rx_misid',
-#'src/rx_plots',
-#'src/rx_q2',
+'src/dmu',
+'src/fitter',
+'src/rx_classifier',
+'src/rx_data',
+'src/rx_efficiencies',
+'src/rx_misid',
+'src/rx_plots',
+'src/rx_q2',
 'src/rx_selection',
 ]
 
