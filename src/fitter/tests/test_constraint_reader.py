@@ -65,8 +65,7 @@ class Parameters:
                 'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
                 'pscale_yld_Bs_phiee_eq_Ball_DPC']
         elif kind == 'rare_prec_rkst':
-            l_par_name = [
-                'pscale_yld_Bu_Kpipiee_eq_DPC_LSFLAT']
+            l_par_name = []
         elif kind == 'rare_misid':
             l_par_name = [
                 'yld_kpipi',
@@ -145,7 +144,7 @@ def test_simple(tmp_path : Path, kind : str, q2bin : str):
     _print_constraints(d_cns)
 
     # TODO: Needs to be updated when other parameter constraints be implemented
-    if kind != 'rare_prec':
+    if kind != 'rare_prec_rk':
         return
 
     assert len(d_cns) > 0 
