@@ -3,6 +3,7 @@ name            = 'dmu'
 version         = '0.3.2'
 description     = 'Project storing utilities needed to reduce boilerplate code when analyzing data'
 readme          = 'README.md'
+
 dependencies = [
     'awkward',
     'awkward-pandas',
@@ -12,23 +13,24 @@ dependencies = [
     'matplotlib',
     'mplhep',
     'numpy<=2.2',
-    'optuna',
-    'joblib',
-    'scikit-learn',
     'omegaconf',
     'pandas',
     'PyYAML',
-    'zfit',
-    'tensorflow',
     'scipy',
     'tqdm',
     'toml',
     'uproot',
+    'dask[dataframe,distributed]',
+    'scikit-learn', 
+    'joblib', 
+    'optuna',
+    'zfit', 
+    'tensorflow',
+    'pytest', 
+    'pytest-xdist', 
+    'pandas-stubs', 
+    'memory-profiler',
 ]
-
-[project.optional-dependencies]
-parallel = ['dask[dataframe,distributed]']
-dev      = ['pytest', 'pytest-xdist', 'pandas-stubs', 'memory-profiler']
 
 [project.scripts]
 check_truth         = 'dmu_scripts.physics.check_truth:main'

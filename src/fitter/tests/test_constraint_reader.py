@@ -3,16 +3,24 @@ Module with functions needed to test ConstraintReader class
 '''
 
 import pytest
+from typing                   import Final
 from pathlib                  import Path
 from dmu.stats.zfit           import zfit
 from dmu.workflow             import Cache
-from dmu.logging.log_store    import LogStore
+from dmu                      import LogStore
+from zfit.loss                import ExtendedUnbinnedNLL
 from fitter.constraint_reader import ConstraintReader
-
 from zfit                     import Space     as zobs
 from zfit.param               import Parameter as zpar
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
+
+_CONSTRAINTS : Final[list[str]] = [
+    'sig_par', 
+    'rare_prec_rk', 
+    'rare_prec_rkst', 
+    'invalid', 
+    'brem_frac']
 # ----------------------
 class Parameters:
     '''
@@ -51,11 +59,13 @@ class Parameters:
         '''
         if   kind == 'dummy':
             return set()
-        elif kind == 'rare_prec':
+        elif kind == 'rare_prec_rk':
             l_par_name = [
                 'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
                 'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
                 'pscale_yld_Bs_phiee_eq_Ball_DPC']
+        elif kind == 'rare_prec_rkst':
+            l_par_name = []
         elif kind == 'rare_misid':
             l_par_name = [
                 'yld_kpipi',
@@ -101,16 +111,6 @@ class Parameters:
         '''
         return self._s_par 
 # ----------------------
-class Data:
-    '''
-    Class meant to be used to share attributes
-    '''
-    l_kind = [
-        'sig_par', 
-        'rare_prec', 
-        'invalid', 
-        'brem_frac']
-# ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
     '''
@@ -123,7 +123,7 @@ def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
         log.info(f'{name:<50}{value:<20.3f}{error:<20.3f}')
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-@pytest.mark.parametrize('kind' , Data.l_kind)
+@pytest.mark.parametrize('kind' , _CONSTRAINTS)
 def test_simple(tmp_path : Path, kind : str, q2bin : str):
     '''
     Tests getting constraints
@@ -134,15 +134,17 @@ def test_simple(tmp_path : Path, kind : str, q2bin : str):
     q2bin: q2 bin
     '''
 
-    obs     = zfit.Space('dummy', limits=(4500, 6000))
-    obj     = Parameters(kind=kind, obs = obs)
+    obs = zfit.Space('dummy', limits=(4500, 6000))
+    obj = Parameters(kind=kind, obs = obs)
+    nll : ExtendedUnbinnedNLL = obj # type: ignore
+
     with Cache.cache_root(path = tmp_path):
-        obj     = ConstraintReader(obj=obj, q2bin=q2bin)
+        obj     = ConstraintReader(obj=nll, q2bin=q2bin)
         d_cns   = obj.get_constraints()
     _print_constraints(d_cns)
 
     # TODO: Needs to be updated when other parameter constraints be implemented
-    if kind != 'rare_prec':
+    if kind != 'rare_prec_rk':
         return
 
     assert len(d_cns) > 0 

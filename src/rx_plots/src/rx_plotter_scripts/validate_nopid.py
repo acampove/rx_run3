@@ -14,13 +14,14 @@ import argparse
 import mplhep
 import matplotlib.pyplot as plt
 
-from ROOT                    import RDataFrame # type: ignore
+from ROOT                    import RDF # type: ignore
 from dmu.logging.log_store   import LogStore
 from ap_utilities.decays     import utilities          as aput
 from dmu.plotting.plotter_1d import Plotter1D          as Plotter
 from dmu.generic             import utilities          as gut
 from dmu.generic             import version_management as vmn
-from omegaconf               import DictConfig
+from omegaconf               import DictConfig, OmegaConf
+from rx_common.types         import Trigger
 from rx_data.rdf_getter      import RDFGetter
 
 log = LogStore.add_logger('rx_plots:validate_nopid')
@@ -31,19 +32,30 @@ class Data:
     '''
     cfg     : dict
     weight  : str
-    samples : dict[str,str] # Dictionary with sample -> trigger name
+    samples : dict[str,Trigger] # Dictionary with sample -> trigger name
     regex   = r'mc_\w+_\d{8}_(.*)_(Hlt2.*MVA)_\w+\.root' # Needed to extract sample and trigger name
 
     plt.style.use(mplhep.style.LHCb2)
     ana_dir = os.environ['ANADIR']
 # ----------------------------
-def _parse_args():
-    parser = argparse.ArgumentParser(description='')
-    _ = parser.parse_args()
+def _parse_args() -> argparse.Namespace:
+    '''
+    Parses arguments passed by user
+
+    Returns
+    --------------
+    Instance of configuration data class, built from arguments
+    '''
+
+    parser = argparse.ArgumentParser(description='Runs validation of simulation without PID')
+    #parser.add_argument('-n', '--name' , type=str, help='Identifier for pipeline, e.g. 22781/btoxll_mva_2024_nopid')
+    args = parser.parse_args()
+
+    return args
 # ----------------------------
-def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
+def _get_rdf(sample : str, trigger : Trigger, has_pid : bool) -> RDF.RNode:
     if not has_pid:
-        trigger = f'{trigger}_noPID'
+        trigger = Trigger(f'{trigger}_noPID')
 
     weight = '1.0' if has_pid else Data.weight
 
@@ -61,9 +73,9 @@ def _get_rdf(sample : str, trigger : str, has_pid : bool) -> RDataFrame:
 # ----------------------------
 def _compare(
         sample    : str,
-        rdf_nopid : RDataFrame,
-        rdf_yspid : RDataFrame,
-        rdf_xcpid : RDataFrame) -> None:
+        rdf_nopid : RDF.RNode,
+        rdf_yspid : RDF.RNode,
+        rdf_xcpid : RDF.RNode) -> None:
 
     d_rdf={'Original'             : rdf_yspid,
            'New with PID'         : rdf_xcpid,
@@ -73,7 +85,7 @@ def _compare(
     ptr   = Plotter(d_rdf=d_rdf, cfg=cfg)
     ptr.run()
 # ----------------------------
-def _get_config_with_title(sample : str) -> dict:
+def _get_config_with_title(sample : str) -> DictConfig:
     cfg  = copy.deepcopy(Data.cfg)
 
     for _, settings in cfg['plots'].items():
@@ -81,7 +93,7 @@ def _get_config_with_title(sample : str) -> dict:
         name = settings['name']
         settings['name'] = f'{name}_{sample}'
 
-    return cfg
+    return OmegaConf.create(cfg)
 # ----------------------------
 def _load_config(channel : str) -> None:
     cfg = gut.load_data(
@@ -93,7 +105,7 @@ def _load_config(channel : str) -> None:
 
     Data.cfg = cfg
 # ----------------------------
-def _apply_pid(rdf : RDataFrame) -> RDataFrame:
+def _apply_pid(rdf : RDF.RNode) -> RDF.RNode:
     d_cut = Data.cfg['selection']['cuts']
 
     for name, expr in d_cut.items():
@@ -105,7 +117,7 @@ def _apply_pid(rdf : RDataFrame) -> RDataFrame:
 
     return rdf
 # ----------------------------
-def _get_sample_trigger(fpath : str) -> tuple[str,str]:
+def _get_sample_trigger(fpath : str) -> tuple[str,Trigger]:
     '''
     Parameters
     ---------------
@@ -124,7 +136,7 @@ def _get_sample_trigger(fpath : str) -> tuple[str,str]:
     sample = aput.name_from_lower_case(sample)
     log.debug(f'Found: {sample}/{trigger}')
 
-    return sample, trigger
+    return sample, Trigger(trigger)
 # ----------------------------
 def _load_samples() -> None:
     '''

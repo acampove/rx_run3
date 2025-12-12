@@ -16,6 +16,14 @@ from dmu.stats                  import utilities as sut
 from dmu.generic                import utilities as gut
 from dmu.logging.log_store      import LogStore
 
+_CONSTRAINTS = [
+    {
+        'mu' : (5200., 10.),
+        'sg' : (  50., 20.),
+    },
+    {},
+]
+
 log=LogStore.add_logger('dmu:stats:test_constraint_adder')
 Loss=Union[ExtendedUnbinnedNLL,UnbinnedNLL]
 # ----------------------
@@ -85,7 +93,7 @@ def _validate(df : pnd.DataFrame, cfg : DictConfig) -> None:
             assert math.isclose(mean, expc, rel_tol=0.15) 
 
             tmp  = df_par['Value'].var()
-            mean = float(tmp)
+            mean = float(tmp) # type:ignore
             expc = d_par_var[par]
 
             log.debug(f'Variance: {mean:.0f}/{expc}')
@@ -114,20 +122,24 @@ def test_simple() -> None:
     assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
     assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
 # ----------------------
-@pytest.mark.parametrize('kind', ['GaussianConstraint', 'PoissonConstraint'])
-def test_dict_to_const(kind : str) -> None:
+@pytest.mark.parametrize('kind' , ['GaussianConstraint', 'PoissonConstraint'])
+@pytest.mark.parametrize('d_cns', _CONSTRAINTS)
+def test_dict_to_const(kind : str, d_cns : dict[str,tuple[float,float]]) -> None:
     '''
     This tests utility that converts python dictionary to
     DictConfig used to hold constraints
     '''
-    d_cns = {
-        'a' : (0., 1.),
-        'b' : (5., 2.),
-    }    
 
     # TODO: Improve test with assertions
     cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='test', kind=kind)
-    log.info('\n\n' + OmegaConf.to_yaml(cns))
+    if cns is not None:
+        log.info('\n\n' + OmegaConf.to_yaml(cns))
+
+    nll = sut.get_nll(kind='s+b')
+    cad = ConstraintAdder(nll=nll, cns=cns)
+    nll = cad.get_nll()
+    for _ in range(3):
+        cad.resample()
 # ----------------------
 @pytest.mark.timeout(100)
 def test_toy() -> None:

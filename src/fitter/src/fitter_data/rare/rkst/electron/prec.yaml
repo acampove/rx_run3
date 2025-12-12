@@ -1,0 +1,13 @@
+output_directory : rare/rkst/electron/prec
+categories:
+  main: 
+    model : KDE1DimFFT
+sample    : Bu_Kpipiee_eq_DPC_LSFLAT
+fit:
+  strategy  : KDE1DimFFT
+  options : # These options will be passed to the KDE1DimFFT as **kwargs
+    padding:
+      lowermirror : 0.3
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 30
+  stacked : True

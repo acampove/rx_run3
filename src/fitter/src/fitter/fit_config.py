@@ -4,10 +4,12 @@ Module containing FitConfig class
 import os
 import dataclasses
 from functools import cached_property
-from typing import Any
+from pathlib   import Path
+from typing    import Any
 
 from dmu.stats.zfit         import zfit
 from omegaconf              import DictConfig
+from dmu.generic            import utilities  as gut
 from dmu.logging.log_store  import LogStore
 from rx_common              import info
 from zfit                   import Space      as zobs
@@ -19,9 +21,9 @@ class FitConfig:
     '''
     Class used to store configuration needed for fits
     '''
+    name    : str
     fit_cfg : DictConfig
     toy_cfg : DictConfig|None = None
-    name    : str|None        = None 
 
     block   : int  = -1 
     nthread : int  = 1
@@ -92,6 +94,11 @@ class FitConfig:
         self._set_logs()
         self._initialize_toy_config()
 
+        try:
+            self.block = int(self.block)
+        except Exception as exc:
+            raise TypeError(f'Cannot cast block {self.block} as int') from exc
+
         if not (0 <= self.mva_cmb < 1):
             raise ValueError(f'Invalid value for combinatorial MVA WP: {self.mva_cmb}')
 
@@ -114,19 +121,46 @@ class FitConfig:
         '''
         Will put classes in a given logging level
         '''
-        LogStore.set_level('dmu:workflow:cache'                   ,           30)
-        LogStore.set_level('dmu:stats:utilities'                  ,           30)
-        LogStore.set_level('dmu:stats:model_factory'              ,           30)
-        LogStore.set_level('dmu:stats:gofcalculator'              ,           30)
-        LogStore.set_level('rx_data:rdf_getter'                   ,           30)
-        LogStore.set_level('rx_efficiencies:efficiency_calculator',           30)
-        LogStore.set_level('rx_selection:truth_matching'          ,           30)
-        LogStore.set_level('rx_selection:selection'               ,           30)
-        LogStore.set_level('fitter:prec'                          ,           30)
-        LogStore.set_level('dmu:stats:constraint_adder'           , self.log_lvl)
-        LogStore.set_level('fitter:prec_scales'                   , self.log_lvl)
-        LogStore.set_level('fitter:constraint_reader'             , self.log_lvl)
-        LogStore.set_level('fitter:fit_rx_data'                   , self.log_lvl)
+        TOOL_LEVEL = self.log_lvl
+
+        if TOOL_LEVEL < 20:
+            DEPENDENCIES_LEVEL = TOOL_LEVEL
+        else:
+            DEPENDENCIES_LEVEL = 30
+
+        LogStore.set_level('dmu:workflow:cache'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:utilities'                  , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:model_factory'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:gofcalculator'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:rdf_getter'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:path_splitter'                , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:sample_emulator'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:spec_maker'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:sample_patcher'               , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_efficiencies:efficiency_calculator', DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_selection:truth_matching'          , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_selection:selection'               , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:constraint_adder'           , DEPENDENCIES_LEVEL)
+        # ---------
+        LogStore.set_level('fitter:likelihood_factory'            ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:data_preprocessor'             ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:prec'                          ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:prec_scales'                   ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:constraint_reader'             ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:fit_rx_data'                   ,         TOOL_LEVEL)
+    # ----------------------
+    # ----------------------
+    def save(self, kind : str) -> None:
+        '''
+        Saves to JSON fit configuration in directory where data fit will be saved
+        '''
+        data_fit_directory = self.output_directory / kind / self.q2bin / self.name
+
+        data = dataclasses.asdict(self)
+        path = data_fit_directory / 'config.json'
+        log.info(f'Saving fit configuration to: {path}')
+
+        gut.dump_json(data = data, path = path, exists_ok = True)
     # ----------------------
     @cached_property
     def mva_cut(self) -> str:
@@ -174,6 +208,21 @@ class FitConfig:
         raise ValueError(f'Invalid trigger: {self.fit_cfg.trigger}')
     # ----------------------
     @cached_property
+    def overriding_selection(self) -> dict[str,str]:
+        '''
+        Returns
+        -------------
+        Dictionary mapping cut name with expression
+        Needed to override default selection
+        '''
+        return {
+            'block' : self.block_cut,
+            'brem'  : self.brem_cut,
+            'bdt'   : self.mva_cut,
+        }
+    # ----------------------
+    # ----------------------
+    @cached_property
     def is_electron(self) -> bool:
         '''
         Returns
@@ -194,13 +243,16 @@ class FitConfig:
         return name
     # ----------------------
     @cached_property
-    def output_directory(self) -> str:
+    def output_directory(self) -> Path:
         '''
         Returns
         -----------------
         This function will return the directory WRT which
         the `output_directory` key in the fit config will be defined
         '''
+        if not isinstance(self.block, int):
+            raise ValueError(f'Block is not an int but {type(self.block)} = {self.block}')
+
         if self.block == -1:
             block_name = 'all'
         else:
@@ -212,7 +264,7 @@ class FitConfig:
 
         out_dir = f'{ana_dir}/fits/data/{self.fit_name}_{block_name}'
     
-        return out_dir
+        return Path(out_dir)
     # ----------------------
     @cached_property
     def observable(self) -> zobs:

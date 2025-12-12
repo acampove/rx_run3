@@ -1,10 +1,10 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
-trigger          : Hlt2RD_BuToKpMuMu_MVA
-output_directory : rare/rk/muon/data
+trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
+output_directory : rare/rkst/muon/data
 model:
-  yields    : model/yields/rk/rare_muon.yaml
+  yields    : model/yields/rkst/rare_muon.yaml
   observable:
     low:
       name : B_Mass
@@ -22,8 +22,8 @@ model:
         - 5150
         - 5850
   components:
-    combinatorial : rare/rk/muon/combinatorial.yaml
-    signal        : rare/rk/muon/signal.yaml
+    combinatorial : rare/rkst/muon/combinatorial.yaml
+    signal        : rare/rkst/muon/signal.yaml
   constraints:
     yields : []
 fit: {}
@@ -31,5 +31,5 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   nbins   : 50
   stacked : True
   d_leg :
-    signal        : $B^+\to K^+\mu^+\mu^-$ 
+    signal        : $B^0\to K^0(\to K^+\pi^-)\mu^+\mu^-$ 
     combinatorial : Combinatorial

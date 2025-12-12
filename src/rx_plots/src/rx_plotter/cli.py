@@ -3,14 +3,18 @@ This script is meant to be the entry point for all the functionalities
 provided by this project
 '''
 
+import os
 import typer
 import mplhep
 import matplotlib.pyplot   as plt
 
+from pathlib               import Path
 from dmu.logging.log_store import LogStore
 from rx_data.rdf_getter    import RDFGetter
 from rx_common.types       import Trigger, Qsq
-from rx_plotter.refitting  import plot as refitting_plot
+from rx_common             import info
+from rx_plotter.refitting  import plot      as refitting_plot
+from rx_selection          import selection as sel
 
 plt.style.use(mplhep.style.LHCb2)
 app = typer.Typer(help=__doc__)
@@ -42,8 +46,59 @@ def refitting(
             refitting_plot(project=project, qsq=qsq, trigger=trigger)
 # ----------------------
 @app.command()
-def dummy():
-    pass
+def control_region(
+    chan : str = typer.Option(... , '--chan', '-c', help='E.g. EE'      ),
+    kind : str = typer.Option(... , '--kind', '-k', help='E.g, OS, SS, EXT'),
+    mass : str = typer.Option(... , '--mass', '-m', help='E.g, B_Mass_hdkk, B_Mass_hdpipi'),
+    proj : str = typer.Option(... , '--proj', '-p', help='E.g. RK'      ),
+    qsq  : str = typer.Option(... , '--qsq' , '-q', help='E.g. central' )) -> None:
+    '''
+    This can be used to plot control regions for data
+    '''
+    trig   = info.get_trigger(project = proj, channel = chan, kind = kind)
+    sample = 'DATA_24*'
+
+    with RDFGetter.multithreading(nthreads = 10):
+        gtr = RDFGetter(sample = sample, trigger = Trigger(trig))
+        rdf = gtr.get_rdf(per_file = False)
+
+        if   mass == 'B_Mass_hdpipi':
+            tg_cut = 'L1_PROBNN_K < 0.1 && L1_PROBNN_K < 0.1'
+        elif mass == 'B_Mass_hdkk':
+            tg_cut = 'L1_PROBNN_K > 0.1 && L1_PROBNN_K > 0.1'
+        else:
+            raise ValueError(f'Invalid mass: {mass}')
+
+        l1_cut = 'L1_PROBNN_E < 0.2 || L1_PID_E < 3.0'
+        l2_cut = 'L2_PROBNN_E < 0.2 || L2_PID_E < 3.0'
+        mv_cut = '(mva_cmb > 0.50) && (mva_prc > 0.50)'
+
+        with sel.custom_selection(d_sel = {'pid_l' : f'({l1_cut}) && ({l2_cut}) && ({tg_cut})', 'bdt' : mv_cut}):
+            rdf = sel.apply_full_selection(
+                rdf     = rdf, 
+                q2bin   = qsq, 
+                process = sample, 
+                out_path= Path('./cutflow'),
+                trigger = trig)
+
+        arr_mass = rdf.AsNumpy([mass])[mass]
+
+    lmass = {'B_Mass_hdpipi' : r'$M_{e\to\pi}$', 'B_Mass_hdkk' : r'$M_{e\to K}$'}[mass]
+    label = {'RK' : f'{lmass}$(B^+)$[MeV]' , 'RKst' : f'{lmass}$(B^0)$[MeV]'}[proj]
+
+    title = f'{l1_cut}\n {l2_cut}\n {mv_cut}\n {tg_cut}' 
+    plt.hist(arr_mass, bins = 100, range=(5000, 5500), label = 'Control region', color='blue', alpha=0.5)
+    plt.axvline(x=5280, color='red', linestyle=':', label = 'PDG')
+    plt.title(title)
+    plt.xlabel(label)
+    plt.legend()
+
+    name     = f'{chan}_{mass}_{proj}_{qsq}'
+    ana_dir  = Path(os.environ['ANADIR'])
+    out_path = ana_dir / f'plots/contro_region/PID/{name}.png'
+    out_path.parent.mkdir(parents = True, exist_ok = True)
+
+    plt.savefig(out_path)
 # ----------------------
 if __name__ == '__main__':
     app()

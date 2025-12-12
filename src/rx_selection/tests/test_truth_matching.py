@@ -4,11 +4,11 @@ Module needed to test truth matching
 import re
 
 import pytest
-from ROOT                  import RDF
-from rx_common.types import Trigger # type: ignore
-from rx_selection          import truth_matching as tm
-from rx_data.rdf_getter    import RDFGetter
-from dmu.logging.log_store import LogStore
+from ROOT         import RDF     # type: ignore
+from rx_common    import Trigger # type: ignore
+from rx_selection import truth_matching as tm
+from rx_data      import RDFGetter
+from dmu          import LogStore
 
 # TODO: Add more samples
 _RK_MISIDSAMPLES=[
@@ -44,6 +44,9 @@ l_sample_kstee = [
     # ----
     'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC',
     'Lb_JpsipK_ee_eq_phsp_DPC',
+    'Bu_Kpipiee_eq_DPC_LSFLAT',
+    'Bu_K1ee_eq_DPC',
+    'Bu_K2stee_Kpipi_eq_mK1430_DPC',
 ]
 
 l_sample_kpmm = [
@@ -157,8 +160,7 @@ def test_bukee(sample : str):
     '''
     Tests truth matching
     '''
-    trigger = 'Hlt2RD_BuToKpEE_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
     rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample, kind='bukll')
@@ -177,8 +179,7 @@ def test_bukmm(sample : str):
     '''
     Tests truth matching
     '''
-    trigger = 'Hlt2RD_BuToKpMuMu_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rk_mm_os)
     rdf = gtr.get_rdf(per_file=False)
 
     cut = tm.get_truth(sample, kind='bukll')
@@ -194,8 +195,7 @@ def test_bdkstee(sample : str):
     Tests truth matching
     '''
     cut = tm.get_truth(sample, kind='bdkstll')
-    trigger = 'Hlt2RD_B0ToKpPimEE_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rkst_ee_os)
     org = gtr.get_rdf(per_file=False)
 
     ini = org.Count().GetValue()
@@ -216,8 +216,7 @@ def test_bdkstmm(sample : str):
     '''
     cut = tm.get_truth(sample, kind='bdkstll')
 
-    trigger = 'Hlt2RD_B0ToKpPimMuMu_MVA'
-    gtr = RDFGetter(sample=sample, trigger=trigger)
+    gtr = RDFGetter(sample=sample, trigger=Trigger.rkst_mm_os)
     org = gtr.get_rdf(per_file=False)
 
     ini = org.Count().GetValue()

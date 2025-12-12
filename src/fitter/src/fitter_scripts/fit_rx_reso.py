@@ -9,7 +9,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import argparse
 
 from contextlib                import ExitStack
-from dmu.stats.fitter          import GofCalculator
+from dmu.stats.gof_calculator  import GofCalculator
 from omegaconf                 import DictConfig
 from dmu.stats.parameters      import ParameterLibrary as PL
 from dmu.generic               import utilities as gut

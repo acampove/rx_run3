@@ -152,7 +152,7 @@ class PRec(Cache):
         df   = pnd.concat(d_df.values(), axis=0)
         df   = self.__add_sam_weights(df)
 
-        arr_wgt      = df.wgt_dec.to_numpy() * df.wgt_sam.to_numpy()
+        arr_wgt      = df.wgt_dec.to_numpy().astype(float) * df.wgt_sam.to_numpy().astype(float)
         df['wgt_br'] = self.__normalize_weights(arr_wgt)
 
         d_df = { component : df.query(cut) for component, cut in self._d_match.items() }
@@ -169,7 +169,7 @@ class PRec(Cache):
             needed = True
 
         if needed:
-            log.info(f'Picking up column: {name}')
+            log.debug(f'Picking up column: {name}')
 
         return needed
     #-----------------------------------------------------------

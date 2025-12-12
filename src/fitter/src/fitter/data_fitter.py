@@ -83,6 +83,10 @@ class DataFitter(BaseFitter, Cache):
             return
 
         cfg_cns = self._cfg.constraints
+        if cfg_cns is None:
+            cfg_cns = dict() # Need to store these constraints
+                             # This will be None in no constraint case
+
         out_path= f'{out_dir}/constraints.yaml'
         log.info(f'Saving constraints to: {out_path}')
 

@@ -377,7 +377,7 @@ def apply_full_selection(
     --------------------
     uid     : Unique identifier, used for hashing. If not passed no hashing will be done
     ext_cut : Extra cut, optional
-    out_path: Path where selection and cutflow will be stored, optional
+    out_path: Directory path where selection and cutflow will be stored, optional
 
     Returns
     --------------------
@@ -389,7 +389,11 @@ def apply_full_selection(
     if ext_cut is not None:
         d_sel['extra'] = ext_cut
 
+    log.info(60 * '-')
+    log.info('Applying cuts')
+    log.info(60 * '-')
     for cut_name, cut_value in d_sel.items():
+        log.debug(f'{cut_name:<40}{cut_value}')
         rdf = rdf.Filter(cut_value, cut_name)
 
     if out_path:

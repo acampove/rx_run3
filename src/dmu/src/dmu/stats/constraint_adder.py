@@ -1,18 +1,17 @@
 '''
 This module contains the ConstraintAdder class
 '''
-from typing          import Union, cast
-
 import numpy
 import zfit
-from omegaconf       import DictConfig, DictKeyType, OmegaConf
+
+from typing          import Union, cast
+from omegaconf       import DictConfig, OmegaConf
 from zfit            import Parameter
 from zfit.constraint import GaussianConstraint, PoissonConstraint
 from zfit.loss       import ExtendedUnbinnedNLL, UnbinnedNLL
+from dmu             import LogStore
 
-from dmu.logging.log_store import LogStore
-
-log=LogStore.add_logger('dmu:stats:constraint_adder')
+log        = LogStore.add_logger('dmu:stats:constraint_adder')
 Constraint = Union[GaussianConstraint, PoissonConstraint]
 Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
 # ----------------------
@@ -25,7 +24,10 @@ class ConstraintAdder:
     '''
     _valid_constraints = ['GaussianConstraint', 'PoissonConstraint']
     # ----------------------
-    def __init__(self, nll : Loss, cns : DictConfig):
+    def __init__(
+        self, 
+        nll : Loss, 
+        cns : DictConfig | None):
         '''
         Parameters
         -------------
@@ -35,6 +37,8 @@ class ConstraintAdder:
             - What kind of constraint to use
             - What the means of the contraints should be
             - What the covariances should be
+
+            or None, for no constraints case
         '''
         self._nll = nll
         self._cns = cns
@@ -169,17 +173,16 @@ class ConstraintAdder:
 
         return cns
     # ----------------------
-    def _create_constraint(self, block : DictKeyType) -> Constraint:
+    def _create_constraint(self, cfg : DictConfig) -> Constraint:
         '''
         Parameters
         -------------
-        block: Name of the constrain block in the configuration passed in initializer
+        cfg : Dictionary storing constraint information 
 
         Returns
         -------------
         Zfit constrain object
         '''
-        cfg = self._cns[block]
         if cfg.kind == 'GaussianConstraint':
             return self._get_gaussian_constraint(cfg=cfg)
 
@@ -193,7 +196,7 @@ class ConstraintAdder:
         cls,
         d_cns : dict[str,tuple[float,float]], 
         name  : str,
-        kind  : str) -> DictConfig:
+        kind  : str) -> DictConfig | None:
         '''
         Parameters
         -------------
@@ -203,11 +206,14 @@ class ConstraintAdder:
 
         Returns
         -------------
-        Config object
+        Config object or None, if no constraints were passed
         '''
 
         if kind not in cls._valid_constraints:
             raise ValueError(f'Invalid kind {kind} choose from: {cls._valid_constraints}')
+
+        if not d_cns:
+            return None
 
         data = None
         if kind == 'PoissonConstraint':
@@ -245,7 +251,11 @@ class ConstraintAdder:
         -------------
         Likelihood with constrain added
         '''
-        l_const = [ self._create_constraint(block=block) for block in self._cns ]
+        if self._cns is None:
+            log.info('No constraints found, using original (unconstrained) NLL')
+            return self._nll
+
+        l_const = [ self._create_constraint(cfg = cfg) for cfg in self._cns.values() ]
 
         nll = self._nll.create_new(constraints=l_const) # type: ignore
         if nll is None:
@@ -257,6 +267,10 @@ class ConstraintAdder:
         '''
         Will update the parameters associated to constraint
         '''
+        if self._cns is None:
+            log.debug('Not resampling constraints for case without constraints')
+            return
+
         for name, cfg_block in self._cns.items():
             log.verbose(f'Resampling block: {name}')
             self._resample_block(cfg=cfg_block)

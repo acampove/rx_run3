@@ -5,25 +5,11 @@ yields: &yields
   min : 0
   max : 100000
 
-yld_kpipi:
-  <<      : *yields
-yld_kkk:
-  <<      : *yields
 yld_signal:
   <<      : *yields
-yld_Bd_Kstee_eq_btosllball05_DPC:
-  scl     : [yld_signal]
-  preffix : pscale
-  <<      : *yields
-yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC:
-  scl     : [yld_signal]
-  preffix : pscale
-  <<      : *yields
-yld_Bs_phiee_eq_Ball_DPC:
-  scl     : [yld_signal]
-  preffix : pscale
-  <<      : *yields
 yld_ccbar:
+  <<      : *yields
+yld_Bu_Kpipiee_eq_DPC_LSFLAT:
   <<      : *yields
 yld_combinatorial:
   <<      : *yields

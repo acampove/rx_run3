@@ -54,5 +54,6 @@ samples :
     - 12123445 # K*+ee
     - 12425000 # B+ -> K1 K pipi ee
     - 12425011 # B+ -> K2 K pipi ee
+    - 12125000 # B+ -> Kpipi ee LSFLAT
   misid:
     - 11104000 # B0 -> pipi K*(-> Kpi)

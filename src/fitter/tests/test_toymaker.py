@@ -2,9 +2,9 @@
 This module tests the class ToyMaker
 '''
 import pytest
+import ROOT # type: ignore Import ROOT before tensorflow
 
 from pathlib               import Path
-
 from zfit.loss             import ExtendedUnbinnedNLL
 from fitter.toy_plotter    import ToyPlotter
 from fitter.toy_maker      import ToyMaker
@@ -28,8 +28,11 @@ def initialize():
     LogStore.set_level('dmu:stats:gofcalculator', 30)
     LogStore.set_level('dmu:statistics:fitter'  , 20)
     LogStore.set_level('fitter:toy_maker'       , 10)
+    LogStore.set_level('fitter:constraint_adder', 10)
 # ----------------------
-def test_simple(ntoys : int) -> None:
+def test_simple(
+    ntoys   : int,
+    tmp_path: Path) -> None:
     '''
     Simplest test of ToyMaker
 
@@ -55,8 +58,10 @@ def test_simple(ntoys : int) -> None:
         ntoys = cfg.ntoys
         log.info(f'Not overriding number of toys from config: {ntoys}')
 
-    mkr   = ToyMaker(nll=nll, res=res, cfg=cfg)
-    df    = mkr.get_parameter_information()
+    with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
+        mkr   = ToyMaker(nll=nll, res=res, cfg=cfg)
+        df    = mkr.get_parameter_information()
+
     l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid']
 
     assert df.columns.to_list() == l_col

@@ -15,7 +15,12 @@ from functools             import cache
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
 
-log=LogStore.add_logger('rx_orchestration:reso_fits_law')
+log=LogStore.add_logger('rx_orchestration:rare_fits_law')
+
+LOGLEVEL=20
+NTHREAD =4
+TOYCFG  =''
+NTOYS   =0
 # -------------------------------------
 class Fit(law.Task):
     config_string : str = Parameter() # type: ignore
@@ -38,10 +43,10 @@ class Fit(law.Task):
             raise ValueError('cfg not a DictConfig')
 
         self._cfg                     = cfg
-        self._cfg['args']['toy_cfg']  = ''
-        self._cfg['args']['ntoys'  ]  = 0 
-        self._cfg['args']['nthread']  = 1 
-        self._cfg['args']['log_lvl']  = 20 
+        self._cfg['args']['toy_cfg']  = TOYCFG 
+        self._cfg['args']['ntoys'  ]  = NTOYS
+        self._cfg['args']['nthread']  = NTHREAD 
+        self._cfg['args']['log_lvl']  = LOGLEVEL
 
         return self._cfg
     # ----------------------
@@ -73,15 +78,16 @@ class Fit(law.Task):
         mva_cut = self._get_mva_cut(args=args)
 
         if args.fit_cfg.endswith('muon'):
-            l_brem = ['brem_000']
+            l_brem = ['brem_0xx']
         elif args.fit_cfg.endswith('electron'):
-            l_brem = ['brem_001', 'brem_002']
+            l_brem = ['brem_x12']
         else:
             raise ValueError(f'Could not identify {args.fit_cfg} as electron or muon')
 
         l_output = []
         for brem in l_brem:
-            out_dir = ana_dir / f'fits/data/{mva_cut}_b{args.block}/{args.fit_cfg}/data/{args.q2bin}/{brem}'
+            name    = 'all' if args.block == -1 else f'b{args.block}'
+            out_dir = ana_dir / f'fits/data/{mva_cut}_{name}/{args.fit_cfg}/data/{args.q2bin}/{brem}'
             out_dir.mkdir(parents=True, exist_ok=True)
 
             l_output += [ law.LocalFileTarget(out_dir / name) for name in cfg.outputs ]
@@ -98,7 +104,7 @@ class Fit(law.Task):
         Runs comparison
         '''
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-        from fitter_scripts.fit_rx_reso import main as runner
+        from fitter_scripts.fit_rx_rare import main as runner
 
         cfg = self._get_config() 
         runner(args=cfg.args)
@@ -134,7 +140,7 @@ class Fits(law.WrapperTask):
         '''
         Defines the sets of tasks in the workflow
         '''
-        cfg = gut.load_conf(package='configs', fpath='rx_fitter/reso_fits.yaml')
+        cfg = gut.load_conf(package='configs', fpath='rx_fitter/rare_fits.yaml')
 
         log.info(20 * '-')
         l_settings = Fits.get_settings(cfg=cfg)
@@ -145,11 +151,11 @@ def _parse_args() -> None:
     parser.add_argument('-l', '--loglvl' , type=int, help='Logging level', default=20)
     args = parser.parse_args()
 
-    LogStore.set_level('rx_orchestration:reso_fits_law', args.loglvl)
+    LogStore.set_level('rx_orchestration:rare_fits_law', args.loglvl)
 # ----------------------
 def main():
     _parse_args()
-    law.run(argv=['Fits', '--workers', '12', '--log-level', 'INFO'])
+    law.run(argv=['Fits', '--workers', '6', '--log-level', 'INFO'])
 # ----------------------
 if __name__ == "__main__":
     main()

@@ -55,6 +55,8 @@ mass_mm  : &mass_mm
 # --------------------
 RKst: &rkst
   EE:
+    q2:
+      <<: *q2_common
     ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
     hlt2      : (1)
@@ -74,11 +76,11 @@ RKst: &rkst
     hop       :
       <<: *hop_common
     bdt       : (1)
-    q2:
-      <<: *q2_common
     mass:
       <<: *mass_ee
   MM:
+    q2:
+      <<: *q2_common
     ghost     : H1_TRGHOSTPROB < 0.3 && H2_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
     hlt2      : (1)
@@ -104,12 +106,12 @@ RKst: &rkst
     hop       :
       <<: *hop_common
     bdt       : (1)
-    q2:
-      <<: *q2_common
     mass:
       <<: *mass_mm
 RK: &rk
   EE:
+    q2:
+      <<: *q2_common
     ghost     : H_TRACK_GhostProb<0.3 && L1_TRACK_GhostProb <0.3 && L2_TRACK_GhostProb<0.3
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
     hlt2      : (1)
@@ -128,11 +130,11 @@ RK: &rk
       <<: *hop_common
     bdt       :
       <<: *bdt_common
-    q2:
-      <<: *q2_common
     mass:
       <<: *mass_ee
   MM:
+    q2:
+      <<: *q2_common
     ghost     : H_TRGHOSTPROB < 0.3 && L1_TRACK_GhostProb < 0.3 && L2_TRACK_GhostProb< 0.3
     hlt1      : (B_Hlt1TrackMVADecision_TOS == 1) || (B_Hlt1TwoTrackMVADecision_TOS == 1)
     hlt2      : (1)
@@ -146,13 +148,17 @@ RK: &rk
     acceptance: L1_INMUON && L2_INMUON
     jpsi_misid: swp_jpsi_misid_mass_swp < 3050 || swp_jpsi_misid_mass_swp > 3150
     cascade   :
-      <<: *cascade_common
+      low     : (1) 
+      central : (1) 
+      cen_low : (1) 
+      cen_high: (1) 
+      jpsi    : (1) 
+      psi2    : (1) 
+      high    : (1) 
     hop       :
       <<: *hop_common
     bdt       :
       <<: *bdt_common
-    q2:
-      <<: *q2_common
     mass:
       <<: *mass_mm
 # --------------------

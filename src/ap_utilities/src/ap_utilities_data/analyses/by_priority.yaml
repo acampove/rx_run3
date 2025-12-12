@@ -146,6 +146,29 @@ missing for W40_42_md:
 # These samples are all the samples, sorted by priority
 # Samples in the sorted section might be missing
 # ----------------
+no_pid:
+  11154001 : $B^0 \to J/\psi(\to e^+ e^-) K^{*0}$
+  12153001 : $B^+ \to J/\psi(\to e^+ e^-) K^+$
+  11144001 : $B^0 \to J/\psi(\to \mu^+ \mu^-) K^{*0}$
+  12143001 : $B^+ \to J/\psi(\to \mu^+ \mu^-) K^+$ 
+  # ----------
+  11154011 : $B^0 \to \psi(2S)(\to e^+ e^-) K^{*0}$
+  12153012 : $B^+ \to \psi(2S)(\to e^+ e^-) K^+$
+  11144011 : $B^0 \to \psi(2S)(\to \mu^+ \mu^-) K^{*0}$
+  12143020 : $B^+ \to \psi(2S)(\to \mu^+ \mu^-) K^+$
+  # ----------
+  12123003 : $B^+ \to K^+ e^+ e^-$
+  11124002 : $B^0 \to K^{*0} e^+ e^-$
+  12113002 : $B^+ \to K^+ \mu^+ \mu^-$
+  11114002 : $B^0 \to K^{*0} \mu^+ \mu^-$
+  # ----------
+  12153020 : $B^+ \to J/\psi(\to e^+ e^-) \pi^+$
+  12143010 : $B^+ \to J/\psi(\to \mu^+ \mu^-) \pi^+$
+  12103017 : $B^+ \to K^+ K^+ K^-$
+  12103025 : $B^+ \to K^+ \pi^+ \pi^-$
+  11104000 : $B^0 \to K^{*0}(\to K^+\pi^-) \pi^+\pi^-$ 
+  13104048 : $B_s \to K^{*0}(\to K^+\pi^-) \rho(\to \pi^+\pi^-)$
+  11104041 : $B_d \to K^{*0}(\to K^+\pi^-) \rho(\to \pi^+\pi^-)$
 pending_sim10f:
   11584030  : Bd_Dstplenu_eq_PHSP_TC
 charmonium:

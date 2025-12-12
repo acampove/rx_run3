@@ -1,36 +1,42 @@
-|                                            |   main |   mass |   brem_track_2 |   swp_cascade |   swp_jpsi_misid |   hop |   mva |   Size [Mb] |
-|:-------------------------------------------|-------:|-------:|---------------:|--------------:|-----------------:|------:|------:|------------:|
-| Bd_JpsiX_ee_eq_JpsiInAcc                   |     54 |    nan |            108 |            54 |              108 |   108 |    54 |        2823 |
-| Bd_JpsiX_mm_eq_JpsiInAcc                   |     65 |    nan |            nan |            65 |               65 |    65 |   nan |        9665 |
-| Bd_Kstee_eq_btosllball05_DPC               |      9 |    nan |              6 |             6 |                6 |     6 |     6 |        8445 |
-| Bd_Kstmumu_eq_btosllball05_DPC             |      8 |    nan |            nan |             8 |                8 |     8 |     8 |        9596 |
-| Bs_JpsiX_ee_eq_JpsiInAcc                   |     54 |    nan |            108 |            54 |              108 |   108 |    54 |        1396 |
-| Bs_JpsiX_mm_eq_JpsiInAcc                   |     12 |    nan |            nan |           nan |              nan |   nan |   nan |        7290 |
-| Bs_phiee_eq_Ball_DPC                       |      7 |    nan |              5 |             5 |                5 |     5 |     5 |        7771 |
-| Bu_D0enu_Kenu_eq_DPC_ptCut200MeV_visMass4G |     11 |    nan |             11 |            11 |               11 |    11 |   nan |        6228 |
-| Bu_D0enu_Kpi_eq_DPC_TC                     |      9 |    nan |              9 |             9 |                9 |     9 |   nan |        5740 |
-| Bu_D0munu_Kmunu_eq_DPC                     |      9 |    nan |            nan |             9 |                9 |     9 |   nan |        6184 |
-| Bu_D0pi_Kenu_eq_DPC_TC                     |     11 |    nan |             10 |            11 |               11 |    11 |   nan |        5775 |
-| Bu_D0pi_Kmunu_eq_DPC                       |      7 |    nan |            nan |             7 |                7 |     7 |   nan |        5662 |
-| Bu_JpsiK_ee_eq_DPC                         |     14 |    nan |             28 |            14 |               28 |    28 |    14 |       19238 |
-| Bu_JpsiK_mm_eq_DPC                         |     37 |    nan |            nan |            37 |               37 |    37 |    37 |       75051 |
-| Bu_JpsiPi_ee_eq_DPC                        |      8 |    nan |              6 |             6 |                6 |     6 |     6 |        6507 |
-| Bu_JpsiPi_mm_eq_DPC                        |     10 |    nan |            nan |            10 |               10 |    10 |    10 |        8058 |
-| Bu_JpsiX_ee_eq_JpsiInAcc                   |     77 |    nan |            154 |            77 |              154 |   154 |    77 |       10732 |
-| Bu_JpsiX_mm_eq_JpsiInAcc                   |     12 |    nan |            nan |           nan |              nan |   nan |   nan |       12739 |
-| Bu_K1ee_eq_DPC                             |     10 |    nan |             10 |            10 |               10 |    10 |    10 |        7270 |
-| Bu_K2stee_Kpipi_eq_mK1430_DPC              |     11 |    nan |             11 |            11 |               11 |    11 |    11 |        7186 |
-| Bu_Kee_eq_btosllball05_DPC                 |      8 |    nan |              6 |             6 |                6 |     6 |     6 |        7537 |
-| Bu_Kmumu_eq_btosllball05_DPC               |      7 |    nan |            nan |             5 |                5 |     5 |     5 |        9684 |
-| Bu_Kstee_Kpi0_eq_btosllball05_DPC          |     10 |    nan |             10 |            10 |               10 |    10 |    10 |        6670 |
-| Bu_psi2SK_ee_eq_DPC                        |      9 |    nan |              6 |             6 |                6 |     6 |     6 |        8438 |
-| Bu_psi2SK_mm_eq_DPC                        |      8 |    nan |            nan |             6 |                6 |     6 |     6 |       10373 |
-| DATA_24_MagDown_24c1                       |      5 |      2 |              4 |             5 |                6 |     6 |     5 |        4126 |
-| DATA_24_MagDown_24c2                       |      5 |      2 |              4 |             5 |                6 |     6 |     5 |       20814 |
-| DATA_24_MagDown_24c3                       |      5 |      2 |              4 |             5 |                6 |     6 |     5 |       35829 |
-| DATA_24_MagDown_24c4                       |      5 |      2 |              4 |             5 |                6 |     6 |     5 |       30299 |
-| DATA_24_MagUp_24c1                         |      5 |      2 |              4 |             5 |                6 |     6 |     5 |       10107 |
-| DATA_24_MagUp_24c2                         |      5 |      2 |              4 |             5 |                6 |     6 |     5 |       51522 |
-| DATA_24_MagUp_24c3                         |      5 |      2 |              4 |             5 |                6 |     6 |     5 |       44012 |
-| DATA_24_MagUp_24c4                         |      5 |      2 |              4 |             5 |                6 |     6 |     5 |       16849 |
-
+|                                                        |   main |   mass |   brem_track_2 |   swp_cascade |   swp_jpsi_misid |   smear |   hop |   mva |   Size [Mb] |
+|:-------------------------------------------------------|-------:|-------:|---------------:|--------------:|-----------------:|--------:|------:|------:|------------:|
+| EE/Bd_JpsiX_ee_eq_JpsiInAcc/11453001                   |     54 |     54 |             54 |            54 |               54 |      54 |    54 |    54 |        2803 |
+| EE/Bd_Kstee_eq_btosllball05_DPC/11124002               |      9 |      9 |              9 |             9 |                9 |       9 |     9 |     9 |        8451 |
+| EE/Bs_JpsiX_ee_eq_JpsiInAcc/13454001                   |     54 |     54 |             54 |            54 |               54 |      54 |    54 |    54 |        1396 |
+| EE/Bs_phiee_eq_Ball_DPC/13124006                       |      7 |      7 |              7 |             7 |                7 |       7 |     7 |     7 |        7773 |
+| EE/Bu_D0enu_Kenu_eq_DPC_ptCut200MeV_visMass4G/12583020 |     11 |     11 |             11 |            11 |               11 |      11 |    11 |    11 |        6228 |
+| EE/Bu_D0enu_Kpi_eq_DPC_TC/12583013                     |      9 |      9 |              9 |             9 |                9 |       9 |     9 |     9 |        5740 |
+| EE/Bu_D0pi_Kenu_eq_DPC_TC/12183004                     |     11 |     11 |             11 |            11 |               11 |      11 |    11 |    11 |        5775 |
+| EE/Bu_JpsiK_ee_eq_DPC/12153001                         |      6 |      6 |              6 |             6 |                6 |       6 |     6 |     6 |       10046 |
+| EE/Bu_JpsiPi_ee_eq_DPC/12153020                        |      8 |      8 |              8 |             8 |                8 |       8 |     8 |     8 |        6509 |
+| EE/Bu_JpsiX_ee_eq_JpsiInAcc/12952000                   |     77 |     77 |             77 |            77 |               77 |      77 |    77 |    77 |       10575 |
+| EE/Bu_K1ee_eq_DPC/12425000                             |     10 |     10 |             10 |            10 |               10 |      10 |    10 |    10 |        7270 |
+| EE/Bu_K2stee_Kpipi_eq_mK1430_DPC/12425011              |     11 |     11 |             11 |            11 |               11 |      11 |    11 |    11 |        7186 |
+| EE/Bu_Kee_eq_btosllball05_DPC/12123003                 |      8 |      8 |              8 |             8 |                8 |       8 |     8 |     8 |        7580 |
+| EE/Bu_KplKplKmn_eq_sqDalitz_DPC/12103017               |      9 |      9 |              9 |             9 |                9 |       9 |     9 |     9 |        4733 |
+| EE/Bu_KplpiplKmn_eq_sqDalitz_DPC/12103030              |      9 |      9 |              9 |             9 |                9 |       9 |     9 |     9 |        4701 |
+| EE/Bu_Kstee_Kpi0_eq_btosllball05_DPC/12123445          |     10 |     10 |             10 |            10 |               10 |      10 |    10 |    10 |        6670 |
+| EE/Bu_piplpimnKpl_eq_sqDalitz_DPC/12103025             |      9 |      9 |              9 |             9 |                9 |       9 |     9 |     9 |        4746 |
+| EE/Bu_psi2SK_ee_eq_DPC/12153012                        |      9 |      9 |              9 |             9 |                9 |       9 |     9 |     9 |        8481 |
+| EE/DATA_24_MagDown_24c2                                |      3 |      3 |              3 |             3 |                3 |       3 |     3 |     3 |        5424 |
+| EE/DATA_24_MagDown_24c3                                |      3 |      3 |              3 |             3 |                3 |       3 |     3 |     3 |       22541 |
+| EE/DATA_24_MagDown_24c4                                |      3 |      3 |              3 |             3 |                3 |       3 |     3 |     3 |       16768 |
+| EE/DATA_24_MagUp_24c2                                  |      3 |      3 |              3 |             3 |                3 |       3 |     3 |     3 |       19919 |
+| EE/DATA_24_MagUp_24c3                                  |      3 |      3 |              3 |             3 |                3 |       3 |     3 |     3 |       16722 |
+| EE/DATA_24_MagUp_24c4                                  |      3 |      3 |              3 |             3 |                3 |       3 |     3 |     3 |       10248 |
+| MM/Bd_JpsiX_mm_eq_JpsiInAcc/11442001                   |     65 |     65 |            nan |            65 |               65 |      65 |    65 |    65 |        9665 |
+| MM/Bd_Kstmumu_eq_btosllball05_DPC/11114002             |      8 |      8 |            nan |             8 |                8 |       8 |     8 |     8 |        9607 |
+| MM/Bs_JpsiX_mm_eq_JpsiInAcc/13442001                   |     12 |     12 |            nan |            12 |               12 |      12 |    12 |    12 |        7401 |
+| MM/Bu_D0munu_Kmunu_eq_DPC/12573040                     |      9 |      9 |            nan |             9 |                9 |       9 |     9 |     9 |        6184 |
+| MM/Bu_D0pi_Kmunu_eq_DPC/12573050                       |      7 |      7 |            nan |             7 |                7 |       7 |     7 |     7 |        5662 |
+| MM/Bu_JpsiK_mm_eq_DPC/12143001                         |     10 |     10 |            nan |            10 |               10 |      10 |    10 |    10 |       19957 |
+| MM/Bu_JpsiPi_mm_eq_DPC/12143010                        |     10 |     10 |            nan |            10 |               10 |      10 |    10 |    10 |        8058 |
+| MM/Bu_JpsiX_mm_eq_JpsiInAcc/12442001                   |     12 |     12 |            nan |            12 |               12 |      12 |    12 |    12 |       12950 |
+| MM/Bu_Kmumu_eq_btosllball05_DPC/12113002               |      7 |      7 |            nan |             7 |                7 |       7 |     7 |     7 |        9730 |
+| MM/Bu_psi2SK_mm_eq_DPC/12143020                        |      8 |      8 |            nan |             8 |                8 |       8 |     8 |     8 |       10418 |
+| MM/DATA_24_MagDown_24c2                                |      2 |      2 |            nan |             2 |                2 |       2 |     2 |     2 |       10437 |
+| MM/DATA_24_MagDown_24c3                                |      2 |      2 |            nan |             2 |                2 |       2 |     2 |     2 |       16407 |
+| MM/DATA_24_MagDown_24c4                                |      2 |      2 |            nan |             2 |                2 |       2 |     2 |     2 |       12130 |
+| MM/DATA_24_MagUp_24c2                                  |      2 |      2 |            nan |             2 |                2 |       2 |     2 |     2 |       32251 |
+| MM/DATA_24_MagUp_24c3                                  |      2 |      2 |            nan |             2 |                2 |       2 |     2 |     2 |       11973 |
+| MM/DATA_24_MagUp_24c4                                  |      2 |      2 |            nan |             2 |                2 |       2 |     2 |     2 |        7180 |

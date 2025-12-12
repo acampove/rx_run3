@@ -1,0 +1,46 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+trigger          : Hlt2RD_B0ToKpPimEE_MVA
+output_directory : rare/rkst/electron/data
+model:
+  yields    : model/yields/rkst/rare_electron.yaml
+  observable:
+    low:
+      name : B_Mass_smr
+      range:
+        - 4500 
+        - 6996
+    central:
+      name : B_Mass_smr
+      range:
+        - 4500 
+        - 6996
+    high:
+      name : B_Mass_smr
+      range:
+        - 4500 
+        - 6996
+  components:
+    combinatorial            : rare/rkst/electron/combinatorial.yaml
+    ccbar                    : rare/rkst/electron/ccbar.yaml
+    Bu_Kpipiee_eq_DPC_LSFLAT : rare/rkst/electron/prec.yaml
+    jpsi_leakage             : rare/rkst/electron/jpsi_leakage.yaml
+    psi2_leakage             : rare/rkst/electron/psi2_leakage.yaml
+    signal                   : rare/rkst/electron/signal_non_parametric.yaml
+  constraints :
+    prec_rare:
+      - Bu_Kpipiee_eq_DPC_LSFLAT
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 78
+  stacked : True
+  d_leg :
+    combinatorial            : Combinatorial
+    ccbar                    : $B\to c\bar{c}(\to e^+e^-) + X$
+    jpsi_leakage             : $B^0\to K^*(\to K^+\pi^-) J/\psi(\to e^+e^-)$ 
+    psi2_leakage             : $B^0\to K^*(\to K^+\pi^-) \psi(2S)(\to e^+e^-)$ 
+    kpikk                    : $B^0\to K^*(\to K^+\pi^-)K^+K^-$ 
+    kpipipi                  : $B^0\to K^*(\to K^+\pi^-)\pi^+\pi^-$ 
+    Bu_Kpipiee_eq_DPC_LSFLAT : $B^+\to K_1^+(1270)(\to K^+\pi^+\pi^-)e^+e^-$
+    signal                   : $B^0\to K^*(\to K^+\pi^-)e^+e^-$ 
