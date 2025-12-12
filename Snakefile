@@ -23,7 +23,7 @@ rule test:
     params:
         path   = ' '.join(PATHS),
         ngroups= NJOBS,
-        tst_dir= './tests'
+        tst_dir= './temporary'
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:c76a965c5'
     resources:
