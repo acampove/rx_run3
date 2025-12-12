@@ -132,7 +132,14 @@ def test_dict_to_const(kind : str, d_cns : dict[str,tuple[float,float]]) -> None
 
     # TODO: Improve test with assertions
     cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='test', kind=kind)
-    log.info('\n\n' + OmegaConf.to_yaml(cns))
+    if cns is not None:
+        log.info('\n\n' + OmegaConf.to_yaml(cns))
+
+    nll = sut.get_nll(kind='s+b')
+    cad = ConstraintAdder(nll=nll, cns=cns)
+    nll = cad.get_nll()
+    for _ in range(3):
+        cad.resample()
 # ----------------------
 @pytest.mark.timeout(100)
 def test_toy() -> None:
