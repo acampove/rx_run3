@@ -248,7 +248,11 @@ class ConstraintAdder:
         -------------
         Likelihood with constrain added
         '''
-        l_const = [ self._create_constraint(block=block) for block in self._cns ]
+        if self._cns is None:
+            log.info('No constraints found, using original (unconstrained) NLL')
+            return self._nll
+
+        l_const = [ self._create_constraint(cfg = cfg) for cfg in self._cns.values() ]
 
         nll = self._nll.create_new(constraints=l_const) # type: ignore
         if nll is None:
