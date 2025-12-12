@@ -43,6 +43,15 @@ class ConstraintReader:
         raise NotImplementedError('This needs to be implemented with DataFitter')
     # -------------------------------------------------------------
     def _proc_from_par(self, par_name : str) -> str:
+        '''
+        Parameters
+        ------------------
+        par_name : Name of parameter to constrain
+
+        Returns
+        ------------------
+        Name of MC sample to modelling component to constrain, e.g. Bu_Kpipiee_eq_DPC_LSFLAT
+        '''
         prefix = f'{self._prc_pref}_yld_'
         if not par_name.startswith(prefix):
             raise ValueError(f'Prec scale parameter does not start with {prefix} but {par_name}')
@@ -60,7 +69,7 @@ class ConstraintReader:
 
             log.debug(f'Adding constrint for: {par}')
 
-            process  = self._proc_from_par(par)
+            process  = self._proc_from_par(par_name = par)
             obj      = PrecScales(proc=process, q2bin=self._q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
