@@ -17,7 +17,8 @@ log=LogStore.add_logger('fitter:test_constraint_reader')
 
 _CONSTRAINTS : Final[list[str]] = [
     'sig_par', 
-    'rare_prec', 
+    'rare_prec_rk', 
+    'rare_prec_rkst', 
     'invalid', 
     'brem_frac']
 # ----------------------
@@ -58,11 +59,14 @@ class Parameters:
         '''
         if   kind == 'dummy':
             return set()
-        elif kind == 'rare_prec':
+        elif kind == 'rare_prec_rk':
             l_par_name = [
                 'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
                 'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
                 'pscale_yld_Bs_phiee_eq_Ball_DPC']
+        elif kind == 'rare_prec_rkst':
+            l_par_name = [
+                'pscale_yld_Bu_Kpipiee_eq_DPC_LSFLAT']
         elif kind == 'rare_misid':
             l_par_name = [
                 'yld_kpipi',
