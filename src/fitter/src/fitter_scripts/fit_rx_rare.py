@@ -118,7 +118,7 @@ def _use_constraints(
 # ----------------------
 def _get_constraints(
     nll : ExtendedUnbinnedNLL,
-    cfg : FitConfig) -> DictConfig:
+    cfg : FitConfig) -> DictConfig | None:
     '''
     Parameters
     -------------
@@ -145,6 +145,10 @@ def _get_constraints(
         cons    = OmegaConf.merge(cons, tmp)
     else:
         log.info('Skipping misid constraints')
+
+    if cons is None:
+        log.warning('Not using any constraints')
+        return cons
 
     if not isinstance(cons, DictConfig):
         raise ValueError('Configuration is not a DictConfig')
