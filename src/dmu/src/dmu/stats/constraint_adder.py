@@ -173,17 +173,16 @@ class ConstraintAdder:
 
         return cns
     # ----------------------
-    def _create_constraint(self, block : DictKeyType) -> Constraint:
+    def _create_constraint(self, cfg : DictConfig) -> Constraint:
         '''
         Parameters
         -------------
-        block: Name of the constrain block in the configuration passed in initializer
+        cfg : Dictionary storing constraint information 
 
         Returns
         -------------
         Zfit constrain object
         '''
-        cfg = self._cns[block]
         if cfg.kind == 'GaussianConstraint':
             return self._get_gaussian_constraint(cfg=cfg)
 
