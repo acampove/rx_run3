@@ -120,7 +120,7 @@ def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
         log.info(f'{name:<50}{value:<20.3f}{error:<20.3f}')
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-@pytest.mark.parametrize('kind' , Data.l_kind)
+@pytest.mark.parametrize('kind' , _CONSTRAINTS)
 def test_simple(tmp_path : Path, kind : str, q2bin : str):
     '''
     Tests getting constraints
@@ -131,10 +131,12 @@ def test_simple(tmp_path : Path, kind : str, q2bin : str):
     q2bin: q2 bin
     '''
 
-    obs     = zfit.Space('dummy', limits=(4500, 6000))
-    obj     = Parameters(kind=kind, obs = obs)
+    obs = zfit.Space('dummy', limits=(4500, 6000))
+    obj = Parameters(kind=kind, obs = obs)
+    nll : ExtendedUnbinnedNLL = obj # type: ignore
+
     with Cache.cache_root(path = tmp_path):
-        obj     = ConstraintReader(obj=obj, q2bin=q2bin)
+        obj     = ConstraintReader(obj=nll, q2bin=q2bin)
         d_cns   = obj.get_constraints()
     _print_constraints(d_cns)
 
