@@ -93,7 +93,7 @@ def _validate(df : pnd.DataFrame, cfg : DictConfig) -> None:
             assert math.isclose(mean, expc, rel_tol=0.15) 
 
             tmp  = df_par['Value'].var()
-            mean = float(tmp)
+            mean = float(tmp) # type:ignore
             expc = d_par_var[par]
 
             log.debug(f'Variance: {mean:.0f}/{expc}')
