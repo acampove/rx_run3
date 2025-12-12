@@ -3,16 +3,23 @@ Module with functions needed to test ConstraintReader class
 '''
 
 import pytest
+from typing                   import Final
 from pathlib                  import Path
 from dmu.stats.zfit           import zfit
 from dmu.workflow             import Cache
-from dmu.logging.log_store    import LogStore
+from dmu                      import LogStore
+from zfit.loss                import ExtendedUnbinnedNLL
 from fitter.constraint_reader import ConstraintReader
-
 from zfit                     import Space     as zobs
 from zfit.param               import Parameter as zpar
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
+
+_CONSTRAINTS : Final[list[str]] = [
+    'sig_par', 
+    'rare_prec', 
+    'invalid', 
+    'brem_frac']
 # ----------------------
 class Parameters:
     '''
@@ -100,16 +107,6 @@ class Parameters:
         Set of zfit parameters
         '''
         return self._s_par 
-# ----------------------
-class Data:
-    '''
-    Class meant to be used to share attributes
-    '''
-    l_kind = [
-        'sig_par', 
-        'rare_prec', 
-        'invalid', 
-        'brem_frac']
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
