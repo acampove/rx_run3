@@ -30,6 +30,8 @@ rule test:
     shell:
         """
         source setup.sh
+        mkdir -p results
+        touch results/group_{wildcards.index}.xml
 
         # pytest {params.path} --splits {params.ngroups} --group {wildcards.index} --junitxml={output} --splitting-algorithm=least_duration
         """
