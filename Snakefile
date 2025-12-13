@@ -15,8 +15,7 @@ PATHS=[
 ]
 
 rule all:
-    input: expand('results/group_{index}.xml', index=range(1, NJOBS + 1))
-
+    input: 'report.txt' 
 rule test:
     output:
         'results/group_{index}.xml'
@@ -38,9 +37,11 @@ rule test:
         '''
 rule report:
     input    : expand('results/group_{index}.xml', index=range(1, NJOBS + 1))
-    output   : 'results/report.txt'
+    output   : 'report.txt'
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:687353f9d'
+    resources:
+        kubernetes_memory_limit='1000Mi'
     shell:
         '''
         source setup.sh
