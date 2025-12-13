@@ -1,4 +1,4 @@
-NJOBS=4
+NJOBS=5
 #'src/post_ap'
 #'src/rx_pid',
 PATHS=[
