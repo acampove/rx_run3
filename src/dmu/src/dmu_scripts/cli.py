@@ -10,7 +10,7 @@ app = typer.Typer(help=__doc__)
 log = LogStore.add_logger('dmu:cli')
 # ----------------------
 @app.command()
-def check_job_status(
+def check_jobs_status(
         xml_dir : Path = typer.Option(..., '--xml_dir', '-d')):
     '''
     This function will check the status of the tests produced by pytest
@@ -61,6 +61,10 @@ def check_job_status(
         raise typer.Exit(code=1)
     else:
         log.info('All tests passed')
+# ----------------------
+@app.command()
+def _dummy():
+    pass
 # ----------------------
 if __name__ == '__main__':
     app()
