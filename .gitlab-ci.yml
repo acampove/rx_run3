@@ -15,6 +15,7 @@ build-image:
     - buildah push    $CI_REGISTRY_IMAGE:c76a965c5
   only:
     - master
+    - dev_test
 reana_workflow:
   stage: reana 
   image: $CI_REGISTRY_IMAGE:c76a965c5
