@@ -1,17 +1,16 @@
 mva_cmb=config['mva_cmb']
 mva_prc=config['mva_prc']
 ntoys  =config['ntoys']
-
 rule all:
     input: 
         expand(
         'results/file_{cmb}_{prc}.txt',
         cmb=mva_cmb,
         prc=mva_prc)
-rule run:
+rule toys:
     output: 'results/file_{cmb}_{prc}.txt'
     params:
-        name  = 'test_001',
+        name  = 'test_003',
         ntoys = ntoys,
         qsq   = 'central',
         conf  = 'rare/rkst/electron'
