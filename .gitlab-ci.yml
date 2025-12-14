@@ -20,4 +20,5 @@ toys:
   image: $CI_REGISTRY_IMAGE:c76a965c5
   script:
     - reana-client create -w toys 
+    - reana-client upload -w toys 
     - reana-client start  -w toys --follow
