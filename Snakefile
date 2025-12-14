@@ -1,5 +1,6 @@
 mva_cmb=config['mva_cmb']
 mva_prc=config['mva_prc']
+ntoys  =config['ntoys']
 
 rule all:
     input: 
@@ -10,11 +11,15 @@ rule all:
 rule run:
     output: 'results/file_{cmb}_{prc}.txt'
     params:
-        ntoys = 3,
+        ntoys = ntoys,
         qsq   = 'central',
         conf  = 'rare/rkst/electron'
+    container:
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:c76a965c5'
     shell : 
         '''
+        source setup.sh
+
         mkdir -p results
 
         touch {output}
