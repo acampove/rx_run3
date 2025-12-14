@@ -9,9 +9,15 @@ rule all:
         prc=mva_prc)
 rule run:
     output: 'results/file_{cmb}_{prc}.txt'
+    params:
+        ntoys = 3,
+        qsq   = 'central',
+        conf  = 'rare/rkst/electron'
     shell : 
         '''
         mkdir -p results
 
         touch {output}
+
+        fit_rx_rare -c {params.conf} -q {params.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys}
         '''
