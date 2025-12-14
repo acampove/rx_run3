@@ -1,9 +1,15 @@
 version: 0.9.4
+inputs:
+  files:
+    - Snakefile
+    - setup.sh
+  parameters:
+    input: ./snakemake/config.yaml
 workspace:
   retention_days:
     '*': 1
 workflow:
-  type: snakemake
   resources:
     kerberos : true
+  type: snakemake
   file: Snakefile
