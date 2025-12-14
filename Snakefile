@@ -15,7 +15,7 @@ rule run:
         qsq   = 'central',
         conf  = 'rare/rkst/electron'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:c76a965c5'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:8da03bc8d'
     shell : 
         '''
         source setup.sh
