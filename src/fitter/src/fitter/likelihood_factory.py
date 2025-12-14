@@ -6,9 +6,7 @@ from omegaconf                import DictConfig, OmegaConf
 from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from rx_common.types          import Trigger
-from rx_common                import info
 from rx_selection             import selection  as sel
-from rx_data.spec_maker       import SpecMaker
 
 from zfit.loss                import ExtendedUnbinnedNLL
 from zfit.interface           import ZfitSpace  as zobs
