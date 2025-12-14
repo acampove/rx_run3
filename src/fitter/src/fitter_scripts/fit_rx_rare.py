@@ -207,7 +207,6 @@ def main(args : DictConfig | None = None):
         stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
         stack.enter_context(sel.custom_selection(d_sel=cfg.overriding_selection))
         stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
-        stack.enter_context(Cache.turn_off_cache(val=[]))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
 
         _fit(cfg=cfg)
