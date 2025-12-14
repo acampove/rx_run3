@@ -9,7 +9,7 @@
 set -euo pipefail
 
 BRANCH=$(git branch --show-current)
-if [[ "$BRANCH" != "master" ]] && [[ "$BRANCH" != "issue-002" ]];then
+if [[ "$BRANCH" != "master" ]];then
     echo "Not in the master branch, not updating SHA"
     exit 0
 fi
