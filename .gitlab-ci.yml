@@ -3,7 +3,7 @@
 stages:
   - test
   - build
-  - reana
+  - toys 
 build-image:
   stage: build
   image: registry.cern.ch/quay.io/buildah/stable
@@ -15,18 +15,9 @@ build-image:
     - buildah push    $CI_REGISTRY_IMAGE:c76a965c5
   only:
     - master
-reana_workflow:
-  stage: reana 
+toys:
+  stage: toys 
   image: $CI_REGISTRY_IMAGE:c76a965c5
   script:
-    - reana-client create -w cal-rx-run3 
-    # -----------
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name  "*.txt"    -type f)
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.yaml"    -type f)
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.toml"    -type f)
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.json"    -type f)
-    # -----------
-    - reana-client upload -w cal-rx-run3 $(find       . -name "test_*.py" -type f)
-    - reana-client upload -w cal-rx-run3 $(find       . -name "Snakefile" -type f)
-    - reana-client upload -w cal-rx-run3 $(find       . -name "setup.sh"  -type f)
-    - reana-client start  -w cal-rx-run3 --follow
+    - reana-client create -w toys 
+    - reana-client start  -w toys --follow
