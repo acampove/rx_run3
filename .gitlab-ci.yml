@@ -23,3 +23,5 @@ toys:
     - reana-client create -w toys 
     - reana-client upload -w toys 
     - reana-client start  -w toys --follow
+  only:
+    - toys
