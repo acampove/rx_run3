@@ -11,6 +11,7 @@ rule all:
 rule run:
     output: 'results/file_{cmb}_{prc}.txt'
     params:
+        name  = 'test_001',
         ntoys = ntoys,
         qsq   = 'central',
         conf  = 'rare/rkst/electron'
@@ -24,5 +25,5 @@ rule run:
 
         touch {output}
 
-        fit_rx_rare -c {params.conf} -q {params.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys}
+        fit_rx_rare -c {params.conf} -q {params.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys} -g {params.name}
         '''
