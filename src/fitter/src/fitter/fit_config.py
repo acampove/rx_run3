@@ -22,6 +22,7 @@ class FitConfig:
     Class used to store configuration needed for fits
     '''
     name    : str
+    group   : str
     fit_cfg : DictConfig
     toy_cfg : DictConfig|None = None
 
@@ -262,7 +263,7 @@ class FitConfig:
         if ana_dir is None:
             raise RuntimeError('ANADIR variable not set')
 
-        out_dir = f'{ana_dir}/fits/data/{self.fit_name}_{block_name}'
+        out_dir = f'{ana_dir}/fits/data/{self.group}/{self.fit_name}_{block_name}'
     
         return Path(out_dir)
     # ----------------------
