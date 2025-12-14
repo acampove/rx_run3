@@ -17,6 +17,8 @@ rule run:
         conf  = 'rare/rkst/electron'
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:8da03bc8d'
+    resources:
+        kubernetes_memory_limit='5000Mi'
     shell : 
         '''
         source setup.sh
