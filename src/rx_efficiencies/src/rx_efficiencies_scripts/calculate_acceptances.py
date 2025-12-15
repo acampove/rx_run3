@@ -42,7 +42,7 @@ def _get_args():
     Data.out_dir  = Data.ana_dir / f'efficiencies/acceptances/{Data.version}'
     Data.out_dir.mkdir(parents = True, exist_ok=True)
 #---------------------------------
-def _get_id(path : Path) -> Sample:
+def _sample_from_path(path : Path) -> Sample:
     '''
     Parameters
     ------------------
