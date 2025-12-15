@@ -50,12 +50,12 @@ class AcceptanceReader:
         '''
         Reads JSON files, returns acceptance value
         '''
-        prc_dir = f'{self._ana_dir}/efficiencies/acceptances'
+        prc_dir = self._ana_dir / 'efficiencies/acceptances'
         vers    = get_last_version(dir_path=prc_dir, version_only=True)
         energy  = self._get_energy()
-        prc_path= f'{prc_dir}/{vers}/acceptances_{energy}.json'
+        prc_path= prc_dir / f'{vers}/acceptances_{energy}.json'
 
-        if not os.path.isfile(prc_path):
+        if not prc_path.exists():
             log.error(f'File not found: {prc_path}')
             raise FileNotFoundError
 
