@@ -21,8 +21,7 @@ class Data:
     '''
     Data class
     '''
-    out_dir = '/tmp/tests/rx_efficiencies/acceptance_calculator'
-    rsm_dir : str
+    rsm_dir : Path 
 
     plt.style.use(mplhep.style.LHCb2)
 #--------------------------
@@ -33,8 +32,8 @@ def initialize():
     '''
     LogStore.set_level('rx_efficiencies:test_acceptance_calculator', 10)
 
-    ana_dir      = os.environ['ANADIR']
-    Data.rsm_dir = vmn.get_last_version(dir_path=f'{ana_dir}/Rapidsim', version_only=False)
+    ana_dir      = Path(os.environ['ANADIR'])
+    Data.rsm_dir = vmn.get_last_version(dir_path=ana_dir / 'Rapidsim', version_only=False)
 #--------------------------
 def _get_rdf(sample : str, energy : str) -> RDataFrame:
     file_path = f'{Data.rsm_dir}/{sample}/{energy}/{sample}_tree.root'
@@ -44,13 +43,13 @@ def _get_rdf(sample : str, energy : str) -> RDataFrame:
 #--------------------------
 @pytest.mark.parametrize('sample', dn.get_decays())
 @pytest.mark.parametrize('energy', ['8TeV', '13TeV', '14TeV'])
-def test_sample(sample : str, energy : str):
+def test_sample(sample : str, energy : str, tmp_path : Path):
     '''
     Simplest test of geometric acceptance calculation for different samples
     '''
-    rdf=_get_rdf(sample=sample, energy=energy)
-    obj=AcceptanceCalculator(rdf=rdf)
-    obj.plot_dir     = f'{Data.out_dir}/{sample}/{energy}'
+    rdf              = _get_rdf(sample=sample, energy=energy)
+    obj              = AcceptanceCalculator(rdf=rdf)
+    obj.plot_dir     = tmp_path / f'{sample}/{energy}'
     acc_phy, acc_lhc = obj.get_acceptances()
 
     log.info(f'{sample:<20}{acc_phy:10.3f}{acc_lhc:10.3f}')
