@@ -5,19 +5,22 @@ import pytest
 from pathlib         import Path
 from dmu.workflow    import Cache
 from dmu             import LogStore
-from rx_common       import Trigger, Sample
+from rx_common       import Qsq, Trigger, Sample
 from rx_data         import RDFGetter
 from rx_selection    import selection as sel
 from rx_efficiencies import EfficiencyCalculator
 
 _SAMPLES_RX    = [
-    Sample.bukee,
-    Sample.bukjpsiee,
+    (Sample.bukee    , Trigger.rk_ee_os),
+    (Sample.bukjpsiee, Trigger.rk_ee_os),
+    (Sample.bukmm    , Trigger.rk_mm_os),
+    (Sample.bukjpsimm, Trigger.rk_mm_os),
 ]
 
 _SAMPLES_NOPID = [
-    'Bu_JpsiK_ee_eq_DPC',
-    'Bu_Kee_eq_btosllball05_DPC']
+    Sample.bukee,
+    Sample.bukjpsiee,
+]
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_calculator')
 #-------------------------------------------------
