@@ -28,5 +28,5 @@ rule toys:
 
         touch {output}
 
-        fit_rx_rare -c {params.conf} -q {wildcards.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys} -g {params.name}
+        fit_rx_rare -c {params.conf} -q {wildcards.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys} -g {params.name} || true
         '''
