@@ -26,8 +26,9 @@ class Data:
     '''
     Data class
     '''
-    ana_dir = os.environ['ANADIR']
-    out_dir : str
+    ana_dir = Path(os.environ['ANADIR'])
+    out_dir : Path 
+    version : str
     l_energy= ['8TeV', '13TeV', '14TeV']
 
     plt.style.use(mplhep.style.LHCb2)
@@ -38,14 +39,10 @@ def _get_args():
     parser.add_argument('-v', '--version', type=str, help='Version for directory containing JSON files with acceptances', required=True)
     args = parser.parse_args()
 
+    Data.version  = args.version
     Data.l_energy = args.energy
-    Data.out_dir  = _get_out_dir(args.version)
-#----------------------------------
-def _get_out_dir(version : str) -> str:
-    out_dir = f'{Data.ana_dir}/efficiencies/acceptances/{version}'
-    os.makedirs(out_dir, exist_ok=True)
-
-    return out_dir
+    Data.out_dir  = Data.ana_dir / f'efficiencies/acceptances/{Data.version}'
+    Data.out_dir.mkdir(parents = True, exist_ok=True)
 #---------------------------------
 def _get_id(path):
     filename   = os.path.basename(path)
