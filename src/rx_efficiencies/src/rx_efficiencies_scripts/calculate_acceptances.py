@@ -87,10 +87,24 @@ def _get_paths(energy : str) -> dict[Sample,Path]:
 
     return d_path
 #----------------------------------
-def _get_acceptances(decay, path, energy):
-    rdf = RDataFrame('DecayTree', path)
-    obj = AcceptanceCalculator(rdf=rdf)
-    obj.plot_dir     = f'{Data.out_dir}/plots_{energy}/{decay}'
+def _get_acceptances(
+    sample : Sample, 
+    path   : Path, 
+    energy : str) -> tuple[float,float]:
+    '''
+    Parameters
+    --------------
+    sample: Simulated sample enum
+    path  : Path to corresponding Rapidsim ntuple
+    energy: Center of mass energy
+
+    Returns
+    --------------
+    Tuple with physical and LHCb acceptance
+    '''
+    rdf              = RDataFrame('DecayTree', str(path))
+    obj              = AcceptanceCalculator(rdf=rdf)
+    obj.plot_dir     = f'{Data.out_dir}/plots_{energy}/{sample}'
     acc_phy, acc_lhc = obj.get_acceptances()
 
     return acc_phy, acc_lhc
