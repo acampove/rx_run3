@@ -7,9 +7,11 @@ import os
 import pytest
 import mplhep
 import matplotlib.pyplot as plt
-from ROOT                                  import RDataFrame
+
+from pathlib                               import Path
+from ROOT                                  import RDataFrame # type: ignore
 from dmu.generic                           import version_management    as vmn
-from dmu.logging.log_store                 import LogStore
+from dmu                                   import LogStore
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
 from rx_efficiencies.decay_names           import DecayNames as dn
 
