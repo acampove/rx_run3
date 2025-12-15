@@ -110,24 +110,23 @@ class Sample(StrEnum):
     '''
     Class meant to represent MC or data sample
     '''
-    data_24     = 'DATA_24*'
+    data_24        = 'DATA_24*'
     # -----
-    bukee       = 'Bu_Kee_eq_btosllball05_DPC'
-    bukjpsiee   = 'Bu_JpsiK_ee_eq_DPC'
-    bukpsi2ee   = 'Bu_psi2SK_ee_eq_DPC'
+    bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
+    bpkpjpsiee     = 'Bu_JpsiK_ee_eq_DPC'
+    bpkppsi2ee     = 'Bu_psi2SK_ee_eq_DPC'
     # -----
-    bukmm       = 'Bu_Kmumu_eq_btosllball05_DPC'
-    bukjpsimm   = 'Bu_JpsiK_mm_eq_DPC'
-    bukpsi2mm   = 'Bu_psi2SK_mm_eq_DPC'
+    bpkpmm         = 'Bu_Kmumu_eq_btosllball05_DPC'
+    bpkpjpsimm     = 'Bu_JpsiK_mm_eq_DPC'
+    bpkppsi2mm     = 'Bu_psi2SK_mm_eq_DPC'
     # -----
-    bdkstee     = 'Bd_Kstee_eq_btosllball05_DPC'
-    bdkstjpsiee = 'Bd_JpsiKst_ee_eq_DPC'
-    bdkstpsi2ee = 'Bd_psi2SKst_ee_eq_DPC'
+    bdkstkpiee     = 'Bd_Kstee_eq_btosllball05_DPC'
+    bdkstkpijpsiee = 'Bd_JpsiKst_ee_eq_DPC'
+    bdkstkpipsi2ee = 'Bd_psi2SKst_ee_eq_DPC'
     # -----
-    bdkstmm     = 'Bd_Kstmumu_eq_btosllball05_DPC'
-    bdkstjpsimm = 'Bd_JpsiKst_mm_eq_DPC'
-    bdkstpsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
-
+    bdkstkpimm     = 'Bd_Kstmumu_eq_btosllball05_DPC'
+    bdkstkpijpsimm = 'Bd_JpsiKst_mm_eq_DPC'
+    bdkstkpipsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
     # --------------------------------------------
     @classmethod
     def get_mc_samples(cls) -> list['Sample']:
