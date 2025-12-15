@@ -18,7 +18,6 @@ from rx_common                         import Sample, Trigger
 from rx_data                           import RDFGetter
 from rx_selection                      import selection as sel
 from rx_efficiencies.acceptance_reader import AcceptanceReader
-from rx_efficiencies.decay_names       import DecayNames
 
 log=LogStore.add_logger('rx_efficiencies:efficiency_calculator')
 #------------------------------------------
