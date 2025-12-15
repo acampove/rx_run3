@@ -8,8 +8,6 @@ import pandas as pnd
 from pathlib                        import Path
 from dmu.generic.version_management import get_last_version
 from dmu                            import LogStore
-
-from rx_efficiencies.decay_names    import DecayNames
 from rx_common                      import Sample
 
 log=LogStore.add_logger('rx_efficiencies:acceptance_reader')
@@ -59,10 +57,8 @@ class AcceptanceReader:
             log.error(f'File not found: {prc_path}')
             raise FileNotFoundError
 
-        df            = pnd.read_json(prc_path)
-        df['Process'] = df['Process'].replace(DecayNames.tex_nic)
-
-        df  = df[ df.Process == self._proc ]
+        df  = pnd.read_json(prc_path)
+        df  = df[ df.Sample == self._sample ]
         if len(df) == 0:
             raise ValueError(f'Process {self._sample} not found in {prc_path}')
 
