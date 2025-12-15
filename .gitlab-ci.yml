@@ -15,7 +15,7 @@ build-image:
     - buildah push    $CI_REGISTRY_IMAGE:8da03bc8d
   only:
     - master
-    - issue-002
+    - toys 
 toys:
   stage: toys 
   image: $CI_REGISTRY_IMAGE:8da03bc8d
