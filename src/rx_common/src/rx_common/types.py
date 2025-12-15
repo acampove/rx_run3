@@ -128,6 +128,7 @@ class Sample(StrEnum):
     bdkstkpijpsimm = 'Bd_JpsiKst_mm_eq_DPC'
     bdkstkpipsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
     # -----
+    bpk1kpipiee    = 'Bu_K1ee_eq_DPC'
     bpk2kpipiee    = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
     bpkstkpiee     = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
     bsphiee        = 'Bs_phiee_eq_Ball_DPC'
