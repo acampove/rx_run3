@@ -128,6 +128,31 @@ class Sample(StrEnum):
     bdkstjpsimm = 'Bd_JpsiKst_mm_eq_DPC'
     bdkstpsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
 
+    # --------------------------------------------
+    @classmethod
+    def get_mc_samples(cls) -> list['Sample']:
+        '''
+        Returns
+        ---------------
+        List of MC samples known to analysis
+        '''
+
+        return [ sample for sample in cls if not sample.name.startswith('DATA_') ] 
+    # --------------------------------------------
     def __str__(self):
+        '''
+        Returns
+        ----------------
+        String representing sample name, e.g. Bu_JpsiK_ee_eq_DPC
+        '''
         return self.value
+    # --------------------------------------------
+    @property
+    def latex(self) -> str:
+        '''
+        Returns
+        ----------------
+        Latex string for decay associated to sample
+        '''
+        return self.name
 # ---------------------------------------
