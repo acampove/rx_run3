@@ -37,9 +37,9 @@ def initialize():
     with RDFGetter.max_entries(value = 1000):
         yield
 #-------------------------------------------------
-@pytest.mark.parametrize('sample',                _SAMPLES_RX)
+@pytest.mark.parametrize('sample, trigger',       _SAMPLES_RX)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_rx_efficiency_value(q2bin : str, sample : str, tmp_path : Path):
+def test_rx_efficiency_value(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
     for RX project samples
@@ -54,7 +54,7 @@ def test_rx_efficiency_value(q2bin : str, sample : str, tmp_path : Path):
 #-------------------------------------------------
 @pytest.mark.parametrize('sample',             _SAMPLES_NOPID)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_nopid_efficiency(q2bin : str, sample : str, tmp_path : Path):
+def test_nopid_efficiency(q2bin : Qsq, sample : Sample, tmp_path : Path):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
     for RX project samples
