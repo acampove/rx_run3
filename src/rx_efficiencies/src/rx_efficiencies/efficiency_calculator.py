@@ -10,12 +10,12 @@ import pandas            as pnd
 import matplotlib.pyplot as plt
 
 from ROOT                              import RDF # type: ignore
-from dmu.logging.log_store             import LogStore
-from dmu.workflow.cache                import Cache
+from dmu                               import LogStore
+from dmu.workflow                      import Cache
 from dmu.generic                       import hashing
 
-from rx_common.types                   import Trigger
-from rx_data.rdf_getter                import RDFGetter
+from rx_common                         import Sample, Trigger
+from rx_data                           import RDFGetter
 from rx_selection                      import selection as sel
 from rx_efficiencies.acceptance_reader import AcceptanceReader
 from rx_efficiencies.decay_names       import DecayNames
