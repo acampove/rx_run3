@@ -1,7 +1,6 @@
 '''
 This module contains classes derived from Enum
 '''
-
 from enum import IntEnum, StrEnum
 
 # ---------------------------------------
@@ -103,6 +102,31 @@ class Qsq(StrEnum):
     jpsi    = 'jpsi'
     psi2    = 'psi2'
     high    = 'high'
+
+    def __str__(self):
+        return self.value
+# ---------------------------------------
+class Sample(StrEnum):
+    '''
+    Class meant to represent MC or data sample
+    '''
+    data_24     = 'DATA_24*'
+    # -----
+    bukee       = 'Bu_Kee_eq_btosllball05_DPC'
+    bukjpsiee   = 'Bu_JpsiK_ee_eq_DPC'
+    bukpsi2ee   = 'Bu_psi2SK_ee_eq_DPC'
+    # -----
+    bukmm       = 'Bu_Kmumu_eq_btosllball05_DPC'
+    bukjpsimm   = 'Bu_JpsiK_mm_eq_DPC'
+    bukpsi2mm   = 'Bu_psi2SK_mm_eq_DPC'
+    # -----
+    bdkstee     = 'Bd_Kstee_eq_btosllball05_DPC'
+    bdkstjpsiee = 'Bd_JpsiKst_ee_eq_DPC'
+    bdkstpsi2ee = 'Bd_psi2SKst_ee_eq_DPC'
+    # -----
+    bdkstmm     = 'Bd_Kstmumu_eq_btosllball05_DPC'
+    bdkstjpsimm = 'Bd_JpsiKst_mm_eq_DPC'
+    bdkstpsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
 
     def __str__(self):
         return self.value
