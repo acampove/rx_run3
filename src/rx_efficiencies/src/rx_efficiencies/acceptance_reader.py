@@ -64,12 +64,12 @@ class AcceptanceReader:
 
         df  = df[ df.Process == self._proc ]
         if len(df) == 0:
-            raise ValueError(f'Process {self._proc} not found in {prc_path}')
+            raise ValueError(f'Process {self._sample} not found in {prc_path}')
 
         try:
             [val] = df.Physical.tolist()
         except ValueError as exc:
-            raise ValueError(f'More than one acceptance for process: {self._proc}') from exc
+            raise ValueError(f'More than one acceptance for process: {self._sample}') from exc
 
         return val
 #----------------------------------
