@@ -71,7 +71,7 @@ initialize()
         exit 1
     fi
 
-    which rapidsim > /dev/null 2>&1
+    which Rapidsim.exe > /dev/null 2>&1
 
     if [ $? -ne 0 ];then
         echo ""
@@ -113,7 +113,7 @@ create_ntuple()
 
     cd $DECAYDIR
     if [[ "$DRY_RUN" == "0" ]];then
-        rapidsim $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
+        Rapidsim.exe $RAPIDSIM_CONFIG/$DECAY $NEVENTS 1 > $DECAY".log" 2>&1
 
         if [[ $? -ne 0 ]];then
             echo "Cannot generate events, see $PWD/$DECAY".log""
