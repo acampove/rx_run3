@@ -44,11 +44,29 @@ def _get_args():
     Data.out_dir  = Data.ana_dir / f'efficiencies/acceptances/{Data.version}'
     Data.out_dir.mkdir(parents = True, exist_ok=True)
 #---------------------------------
-def _get_id(path):
-    filename   = os.path.basename(path)
+def _get_id(path : Path) -> Sample:
+    '''
+    Parameters
+    ------------------
+    path: Path to ROOT file created with Rapidsim
+
+    Returns
+    ------------------
+    nickname of decay, e.g. bpkpee
+    '''
+    filename   = path.name
     identifier = filename.replace('_tree.root', '')
 
-    return identifier
+    value = None
+    for sample in Sample:
+        if identifier == sample.name:
+            value = sample
+            break
+
+    if value is None:
+        raise ValueError(f'Cannot recognize {identifier} as a Sample')
+
+    return value 
 #----------------------------------
 def _get_paths(energy : str):
     dat_dir = f'{Data.ana_dir}/Rapidsim'
