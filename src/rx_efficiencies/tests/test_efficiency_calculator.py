@@ -2,17 +2,18 @@
 Module with functions needed to test EfficiencyCalculator class
 '''
 import pytest
-from pathlib                               import Path
-from dmu.workflow.cache                    import Cache
-from dmu.logging.log_store                 import LogStore
-from rx_common.types                       import Trigger
-from rx_data.rdf_getter                    import RDFGetter
-from rx_selection                          import selection as sel
-from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
+from pathlib         import Path
+from dmu.workflow    import Cache
+from dmu             import LogStore
+from rx_common       import Trigger, Sample
+from rx_data         import RDFGetter
+from rx_selection    import selection as sel
+from rx_efficiencies import EfficiencyCalculator
 
 _SAMPLES_RX    = [
-    'Bu_JpsiK_ee_eq_DPC',
-    'Bu_Kee_eq_btosllball05_DPC']
+    Sample.bukee,
+    Sample.bukjpsiee,
+]
 
 _SAMPLES_NOPID = [
     'Bu_JpsiK_ee_eq_DPC',
