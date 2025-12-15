@@ -6,18 +6,19 @@ import os
 import glob
 import pprint
 import argparse
-from typing                import Union
 
 import mplhep
 import pandas                   as pnd
 import matplotlib.pyplot        as plt
 
-from ROOT                           import RDataFrame
-from dmu.pdataframe                 import utilities as put
-from dmu.logging.log_store          import LogStore
+from typing                import Union
+from pathlib               import Path
+from ROOT                  import RDataFrame # type: ignore
+from dmu.pdataframe        import utilities as put
+from dmu                   import LogStore
+from rx_common import Sample
 
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
-from rx_efficiencies.decay_names           import DecayNames
 
 log = LogStore.add_logger('rx_efficiencies:calculate_acceptance')
 #----------------------------------
