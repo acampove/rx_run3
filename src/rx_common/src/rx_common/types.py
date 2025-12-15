@@ -137,7 +137,7 @@ class Sample(StrEnum):
         List of MC samples known to analysis
         '''
 
-        return [ sample for sample in cls if not sample.name.startswith('DATA_') ] 
+        return [ sample for sample in cls if not sample.name.startswith('data') ] 
     # --------------------------------------------
     def __str__(self):
         '''
