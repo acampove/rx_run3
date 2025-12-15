@@ -119,19 +119,20 @@ def _load_df(energy : str) -> Union[None, pnd.DataFrame]:
     return df
 #----------------------------------
 def _get_df(energy : str) -> pnd.DataFrame:
-    df = _load_df(energy)
+    df = _load_df(energy = energy)
     if df is not None:
         return df
 
-    d_path = _get_paths(energy)
-    d_out  = {'Process' : [], 'Physical' : [], 'LHCb' : []}
-    for decay, path in d_path.items():
-        log.debug(f'Checking {decay}')
-        acc_phy, acc_lhc = _get_acceptances(decay, path, energy)
+    d_path = _get_paths(energy = energy)
+    d_out  = {'Sample' : [], 'Physical' : [], 'LHCb' : []}
+    for sample, path in d_path.items():
+        log.debug(f'Checking {sample}')
+        acc_phy, acc_lhc = _get_acceptances(
+            path  = path, 
+            sample= sample, 
+            energy= energy)
 
-        tex_decay = DecayNames.tex_from_decay(decay)
-
-        d_out['Process' ].append(tex_decay)
+        d_out['Sample'  ].append(sample)
         d_out['Physical'].append(acc_phy)
         d_out['LHCb'    ].append(acc_lhc)
 
@@ -139,18 +140,36 @@ def _get_df(energy : str) -> pnd.DataFrame:
 
     return df
 #----------------------------------
-def _save_tables(df, energy):
+def _save_tables(
+    df     : pnd.DataFrame, 
+    energy : str) -> None:
+    '''
+    Saves pandas dataframe as latex table and JSON
+
+    Parameters
+    ------------------
+    df    : Dataframe with acceptances
+    energy: Center of mass energy
+    '''
     tex_path = f'{Data.out_dir}/acceptances_{energy}.tex'
     log.info(f'Saving to: {tex_path}')
-    put.df_to_tex(df, tex_path, hide_index=True, d_format={'Process' : '{}', 'Physical' : '{:.3f}', 'LHCb' : '{:.3f}'})
+    put.df_to_tex(df, tex_path, hide_index=True, d_format={'Sample' : '{}', 'Physical' : '{:.3f}', 'LHCb' : '{:.3f}'})
 
     jsn_path = f'{Data.out_dir}/acceptances_{energy}.json'
     log.info(f'Saving to: {jsn_path}')
     df.to_json(jsn_path, indent=4)
 #----------------------------------
-def _plot_acceptance(df, kind):
+def _plot_acceptance(
+    df   : pnd.DataFrame, 
+    kind : str) -> None:
+    '''
+    Parameters
+    ----------------
+    df  : DataFrame with acceptances
+    kind: Type of acceptance, e.g. physical
+    '''
     _, ax = plt.subplots(figsize=(8,6))
-    for process, df_p in df.groupby('Process'):
+    for process, df_p in df.groupby('Sample'):
         df_p.plot(x='Energy', y=kind, ax=ax, label=process, figsize=(12, 8))
 
     plt.ylim(0.0, 0.20)
