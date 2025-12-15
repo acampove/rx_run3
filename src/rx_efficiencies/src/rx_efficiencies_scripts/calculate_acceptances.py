@@ -3,20 +3,18 @@ Script used to calculate Geometric acceptances through AcceptanceCalculator and 
 '''
 
 import os
-import glob
-import pprint
 import argparse
 
 import mplhep
 import pandas                   as pnd
 import matplotlib.pyplot        as plt
 
-from typing                import Union
-from pathlib               import Path
-from ROOT                  import RDataFrame # type: ignore
-from dmu.pdataframe        import utilities as put
-from dmu                   import LogStore
-from rx_common import Sample
+from typing         import Union
+from pathlib        import Path
+from ROOT           import RDataFrame # type: ignore
+from dmu.pdataframe import utilities as put
+from dmu            import LogStore
+from rx_common      import Sample
 
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
 
