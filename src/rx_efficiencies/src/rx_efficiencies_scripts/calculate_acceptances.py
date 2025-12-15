@@ -66,25 +66,24 @@ def _sample_from_path(path : Path) -> Sample:
 
     return value 
 #----------------------------------
-def _get_paths(energy : str):
-    dat_dir = f'{Data.ana_dir}/Rapidsim'
-    root_wc = f'{dat_dir}/*/*/*/*'
+def _get_paths(energy : str) -> dict[Sample,Path]:
+    '''
+    Parameters
+    --------------------
+    energy: Center of mass energy e.g. 7TeV
 
-    l_org   = glob.glob(root_wc)
-    l_path  = l_org
-    l_path  = [ path for path in l_path if  '_tree.root' in path ]
-    l_path  = [ path for path in l_path if f'/{energy}/' in path ]
+    Returns
+    --------------------
+    Dictionary mapping 
+    '''
+    root_wc = f'Rapidsim/{Data.version}/*/{energy}/*_tree.root'
+    l_path  = Data.ana_dir.rglob(pattern=root_wc)
 
-    if len(l_path) == 0:
-        for path in l_org:
-            log.info(path)
-        raise FileNotFoundError(f'No files found in: {root_wc} at {energy}')
+    if not l_path:
+        raise FileNotFoundError(f'No files found for: {root_wc} at {energy} in {Data.ana_dir}')
 
     log.info(f'Picking up files from: {root_wc}')
-    d_path  = { _get_id(path) : path for path in l_path }
-
-    log.info('Found paths:')
-    pprint.pprint(d_path)
+    d_path  = { _sample_from_path(path=path) : path for path in l_path }
 
     return d_path
 #----------------------------------
