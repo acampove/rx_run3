@@ -19,12 +19,17 @@ class AcceptanceReader:
     Class meant to read Geometric acceptances calculated from rapidsim ntuples
     '''
     #----------------------------------
-    def __init__(self, year : str, proc : str):
+    def __init__(self, year : str, sample : Sample):
         self._year    = year
-        self._proc    = proc
-        self._ana_dir = os.environ['ANADIR']
+        self._sample  = sample
+        self._ana_dir = Path(os.environ['ANADIR'])
     #----------------------------------
-    def _get_energy(self) -> dict[str,str]:
+    def _get_energy(self) -> str:
+        '''
+        Returns
+        -----------------
+        Center of mass energy string associated to _year
+        '''
         d_energy  = {
                 '2011' : '7TeV',
                 '2012' : '8TeV',
