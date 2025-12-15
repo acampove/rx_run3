@@ -13,7 +13,7 @@ rule all:
 rule toys:
     output: 'results/file_{qsq}_{cmb}_{prc}.txt'
     params:
-        name  = 'toys',
+        name  = 'scan',
         ntoys = ntoys,
         conf  = 'rare/rkst/electron'
     container:
