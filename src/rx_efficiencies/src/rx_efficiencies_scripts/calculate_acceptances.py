@@ -43,7 +43,7 @@ def _get_args():
     Data.l_energy = args.energy
     Data.version  = args.version
     Data.project  = args.project
-    Data.out_dir  = Data.ana_dir / f'efficiencies/acceptances/{Data.version}'
+    Data.out_dir  = Data.ana_dir / f'efficiencies/acceptances/{Data.version}/{Data.project}'
     Data.out_dir.mkdir(parents = True, exist_ok=True)
 #---------------------------------
 def _sample_from_path(path : Path) -> Sample:
