@@ -18,8 +18,8 @@ _SAMPLES_RX    = [
 ]
 
 _SAMPLES_NOPID = [
-    Sample.bpkpee,
-    Sample.bpkpjpsiee,
+    (Sample.bpkpee    , Trigger.rk_ee_nopid),
+    (Sample.bpkpjpsiee, Trigger.rk_ee_nopid),
 ]
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_calculator')
@@ -51,9 +51,9 @@ def test_rx_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path
     assert 0 <= eff < 1
     assert err > 0 or eff == 0
 #-------------------------------------------------
-@pytest.mark.parametrize('sample',             _SAMPLES_NOPID)
+@pytest.mark.parametrize('sample, trigger',    _SAMPLES_NOPID)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_nopid_efficiency(q2bin : Qsq, sample : Sample, tmp_path : Path):
+def test_nopid_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
     for RX project samples
@@ -63,8 +63,8 @@ def test_nopid_efficiency(q2bin : Qsq, sample : Sample, tmp_path : Path):
         obj      = EfficiencyCalculator(
             q2bin   = q2bin, 
             sample  = sample,
-            trigger = Trigger.rk_ee_os)
-        eff, err = obj.get_efficiency(sample=sample)
+            trigger = trigger)
+        eff, err = obj.get_efficiency()
 
     assert 0 <= eff < 1
     assert err > 0 or eff == 0
