@@ -150,19 +150,18 @@ class EfficiencyCalculator(Cache):
         self._d_sel['Value' ].append(eff)
         self._d_sel['Error' ].append(err)
     #------------------------------------------
-    def _get_yields(self, proc : str) -> tuple[int,int]:
-        sel_yld = self._get_sel_yld(proc)
-        gen_yld = self._get_gen_yld(proc)
-        geo_acc = self._get_geo_eff(proc)
+    def _get_yields(self, sample : Sample) -> tuple[int,int]:
+        sel_yld = self._get_sel_yld(sample)
+        gen_yld = self._get_gen_yld(sample)
+        geo_acc = self._get_geo_eff(sample)
         tot_yld = int(gen_yld / geo_acc)
 
-        self._add_sel_eff(passed=sel_yld, total=gen_yld, proc=proc)
+        self._add_sel_eff(passed=sel_yld, total=gen_yld, sample=sample)
 
         return sel_yld, tot_yld
     #------------------------------------------
-    def _get_sel_yld(self, proc : str) -> int:
-        sample   = DecayNames.sample_from_decay(proc)
-        rdf      = self._get_rdf(proc=proc, tree_name='DecayTree')
+    def _get_sel_yld(self, sample : Sample) -> int:
+        rdf      = self._get_rdf(sample=sample, tree_name='DecayTree')
         d_sel    = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=sample)
 
         log.info('Calculating selected yield')
@@ -178,9 +177,7 @@ class EfficiencyCalculator(Cache):
 
         return nsel
     #------------------------------------------
-    def _get_rdf(self, proc : str, tree_name : str) -> RDF.RNode:
-        sample = DecayNames.sample_from_decay(proc)
-
+    def _get_rdf(self, sample : Sample, tree_name : str) -> RDF.RNode:
         gtr = RDFGetter(
             sample  = sample, 
             trigger = self._trigger, 
@@ -189,8 +186,8 @@ class EfficiencyCalculator(Cache):
 
         return rdf
     #------------------------------------------
-    def _get_gen_yld(self, proc : str) -> int:
-        rdf      = self._get_rdf(proc=proc, tree_name='MCDecayTree')
+    def _get_gen_yld(self, sample : Sample) -> int:
+        rdf      = self._get_rdf(sample=sample, tree_name='MCDecayTree')
         nentries = rdf.Count().GetValue()
 
         return nentries
@@ -199,12 +196,12 @@ class EfficiencyCalculator(Cache):
         '''
         Returns pandas dataframe with `Passed` and `Total` yields for a given `Process`
         '''
-        d_data = {'Process' : [], 'Passed' : [], 'Total' : []}
-        for proc in self._l_proc:
-            log.info(f'Calculating yields for process: {proc}')
-            pas, tot = self._get_yields(proc=proc)
+        d_data = {'Sample' : [], 'Passed' : [], 'Total' : []}
+        for sample in self._samples:
+            log.info(f'Calculating yields for sample: {sample}')
+            pas, tot = self._get_yields(sample=sample)
 
-            d_data['Process'].append(proc)
+            d_data['Sample' ].append(sample)
             d_data['Passed' ].append(pas)
             d_data['Total'  ].append(tot)
 
@@ -216,7 +213,7 @@ class EfficiencyCalculator(Cache):
     #------------------------------------------
     def _efficiency_from_sample(
             self,
-            sample : str,
+            sample : Sample,
             df     : pnd.DataFrame) -> tuple[float,float]:
         '''
         Parameters
@@ -230,14 +227,18 @@ class EfficiencyCalculator(Cache):
            Efficiency value
            Error in efficiency
         '''
-        nickname = DecayNames.nic_from_sample(sample)
+        df_org = df
 
-        df = df[ df['Process'] == nickname ]
+        df = df[ df['sample'] == sample.name ]
         df = cast(pnd.DataFrame, df)
 
         if len(df) != 1:
+            log.error(df_org)
+            log.error('')
+            log.error('--->')
+            log.error('')
             log.error(df)
-            raise ValueError(f'After specifying process {nickname} dataframe does not have one and only one column')
+            raise ValueError(f'After specifying process {sample.name} dataframe does not have one and only one column')
 
         pas = df['Passed'].iloc[0]
         tot = df['Total' ].iloc[0]
@@ -247,7 +248,7 @@ class EfficiencyCalculator(Cache):
 
         return eff, err
     #------------------------------------------
-    def get_efficiency(self, sample : str) -> tuple[float,float]:
+    def get_efficiency(self, sample : Sample) -> tuple[float,float]:
         '''
         Parameters
         -------------
