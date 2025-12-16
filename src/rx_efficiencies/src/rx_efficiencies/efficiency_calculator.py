@@ -176,13 +176,11 @@ class EfficiencyCalculator(Cache):
     #------------------------------------------
     def _efficiency_from_sample(
         self,
-        sample : Sample,
-        df     : pnd.DataFrame) -> tuple[float,float]:
+        df : pnd.DataFrame) -> tuple[float,float]:
         '''
         Parameters
         -----------------
         df     : Dataframe with yields, passed and failed for each sample
-        sample : Nickname to MC signal sample
 
         Returns
         -----------------
@@ -192,7 +190,7 @@ class EfficiencyCalculator(Cache):
         '''
         df_org = df
 
-        df = df[ df['Sample'] == sample ]
+        df = df[ df['Sample'] == self._sample ]
         df = cast(pnd.DataFrame, df)
 
         if len(df) != 1:
@@ -201,7 +199,7 @@ class EfficiencyCalculator(Cache):
             log.error('--->')
             log.error('')
             log.error(df)
-            raise ValueError(f'After specifying process {sample.name} dataframe does not have one and only one column')
+            raise ValueError(f'After specifying process {self._sample.name} dataframe does not have one and only one column')
 
         pas = df['Passed'].iloc[0]
         tot = df['Total' ].iloc[0]
@@ -211,14 +209,8 @@ class EfficiencyCalculator(Cache):
 
         return eff, err
     #------------------------------------------
-    def get_efficiency(self, sample : Sample) -> tuple[float,float]:
+    def get_efficiency(self) -> tuple[float,float]:
         '''
-        Parameters
-        -------------
-        sample: Sample name, e.g. Bu_JpsiK_ee_eq_DPC
-        kind  : Either `value` (default) or `dataframe`. 
-                It controls what object should be returned
-
         Returns
         -------------
         Tuple with effiency and error associated
