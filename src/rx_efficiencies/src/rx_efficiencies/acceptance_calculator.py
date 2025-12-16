@@ -99,7 +99,18 @@ class AcceptanceCalculator:
 
         self._plot_dir = value
     #-----------------------------
-    def _plot_split(self, rdf, theta, flag) -> None:
+    def _plot_split(
+        self, 
+        rdf   : RDF.RNode, 
+        theta : str, 
+        flag  : str) -> None:
+        '''
+        Parameters
+        --------------
+        rdf  : DataFrame with kinematics
+        theta: e.g. ep_0_th 
+        flag : e.g. ep_0_in
+        '''
         rdf_in = rdf.Filter(f'{flag} == 1')
         rdf_ot = rdf.Filter(f'{flag} == 0')
 
@@ -117,7 +128,13 @@ class AcceptanceCalculator:
         plt.savefig(plot_path)
         plt.close('all')
     #-----------------------------
-    def _plot(self, rdf, var) -> None:
+    def _plot(
+        self, 
+        rdf : RDF.RNode, 
+        var : str) -> None:
+        '''
+        Plots variable in dataframe
+        '''
         arr_var = rdf.AsNumpy([var])[var]
 
         plt.hist(arr_var, bins=100, range=(-6, +6), alpha=0.7, color='b', label='Out')
