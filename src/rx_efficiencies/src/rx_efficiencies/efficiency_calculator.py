@@ -66,8 +66,7 @@ class EfficiencyCalculator(Cache):
         Hash associated to selection for all the processes used, trigger and q2bin
         '''
         hsh = ''
-        for decay in self._l_proc:
-            sample = DecayNames.sample_from_decay(decay=decay)
+        for sample in self._samples:
             d_sel  = sel.selection(q2bin=self._q2bin, trigger=self._trigger, process=sample)
             hsh   += hashing.hash_object(d_sel)
 
@@ -106,7 +105,6 @@ class EfficiencyCalculator(Cache):
         os.makedirs(self._out_dir, exist_ok=True)
 
         df          = pnd.DataFrame(self._d_sel)
-        df['Decay'] = df.Process.map(DecayNames.tex)
         df['Value'] = df.Value * 100
         df['Error'] = df.Error * 100
         df          = df.sort_values(by='Value')
