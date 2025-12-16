@@ -8,14 +8,58 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 
-from pathlib                               import Path
-from ROOT                                  import RDataFrame # type: ignore
-from dmu.generic                           import version_management    as vmn
-from dmu                                   import LogStore
-from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
-from rx_efficiencies.decay_names           import DecayNames as dn
+from pathlib         import Path
+from ROOT            import RDataFrame # type: ignore
+from dmu.generic     import version_management    as vmn
+from dmu             import LogStore
+from rx_efficiencies import AcceptanceCalculator
+from rx_common       import Channel
+from rx_common       import Project 
+from rx_common       import Sample 
 
 log=LogStore.add_logger('rx_efficiencies:test_acceptance_calculator')
+
+_BACKGROUNDS = [
+    (Sample.bsphiee       , Channel.ee, Project.rk),
+    (Sample.bpkstkpiee    , Channel.ee, Project.rk),
+    # ------
+    (Sample.bpk1kpipiee   , Channel.ee, Project.rk),
+    (Sample.bpk2kpipiee   , Channel.ee, Project.rk),
+    # ------
+    (Sample.bpk1kpipiee   , Channel.ee, Project.rkst),
+    (Sample.bpk2kpipiee   , Channel.ee, Project.rkst),
+]
+
+_SIGNALS = [
+    (Sample.bpkpee        , Channel.ee, Project.rk),
+    (Sample.bpkpmm        , Channel.mm, Project.rk),
+    # ---
+    (Sample.bpkpjpsiee    , Channel.ee, Project.rk),
+    (Sample.bpkpjpsimm    , Channel.mm, Project.rk),
+    # ---
+    (Sample.bpkppsi2ee    , Channel.ee, Project.rk),
+    (Sample.bpkppsi2mm    , Channel.mm, Project.rk),
+    # ---
+    # ---
+    (Sample.bdkstkpiee    , Channel.ee, Project.rk),
+    (Sample.bdkstkpimm    , Channel.mm, Project.rk),
+    # ---
+    (Sample.bdkstkpijpsiee, Channel.ee, Project.rk),
+    (Sample.bdkstkpijpsimm, Channel.mm, Project.rk),
+    # ---
+    (Sample.bdkstkpipsi2ee, Channel.ee, Project.rk),
+    (Sample.bdkstkpipsi2mm, Channel.mm, Project.rk),
+    # ---
+    # ---
+    (Sample.bdkstkpiee    , Channel.ee, Project.rkst),
+    (Sample.bdkstkpimm    , Channel.mm, Project.rkst),
+    # ---
+    (Sample.bdkstkpijpsiee, Channel.ee, Project.rkst),
+    (Sample.bdkstkpijpsimm, Channel.mm, Project.rkst),
+    # ---
+    (Sample.bdkstkpipsi2ee, Channel.ee, Project.rkst),
+    (Sample.bdkstkpipsi2mm, Channel.mm, Project.rkst),
+]
 #--------------------------
 class Data:
     '''
@@ -41,15 +85,24 @@ def _get_rdf(sample : str, energy : str) -> RDataFrame:
 
     return rdf
 #--------------------------
-@pytest.mark.parametrize('sample', dn.get_decays())
 @pytest.mark.parametrize('energy', ['8TeV', '13TeV', '14TeV'])
-def test_sample(sample : str, energy : str, tmp_path : Path):
+@pytest.mark.parametrize('sample, channel, project', _SIGNALS + _BACKGROUNDS)
+def test_sample(
+    energy   : str, 
+    sample   : Sample, 
+    channel  : Channel,
+    project  : Project,
+    tmp_path : Path):
     '''
     Simplest test of geometric acceptance calculation for different samples
     '''
-    rdf              = _get_rdf(sample=sample, energy=energy)
-    obj              = AcceptanceCalculator(rdf=rdf)
-    obj.plot_dir     = tmp_path / f'{sample}/{energy}'
+    rdf = _get_rdf(sample=sample.name, energy=energy)
+    obj = AcceptanceCalculator(
+        rdf    = rdf, 
+        channel= channel, 
+        project= project)
+
+    obj.plot_dir     = tmp_path / f'{sample.name}/{energy}'
     acc_phy, acc_lhc = obj.get_acceptances()
 
     log.info(f'{sample:<20}{acc_phy:10.3f}{acc_lhc:10.3f}')
