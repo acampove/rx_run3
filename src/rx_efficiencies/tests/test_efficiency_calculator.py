@@ -11,15 +11,15 @@ from rx_selection    import selection as sel
 from rx_efficiencies import EfficiencyCalculator
 
 _SAMPLES_RX    = [
-    (Sample.bukee    , Trigger.rk_ee_os),
-    (Sample.bukjpsiee, Trigger.rk_ee_os),
-    (Sample.bukmm    , Trigger.rk_mm_os),
-    (Sample.bukjpsimm, Trigger.rk_mm_os),
+    (Sample.bpkpee    , Trigger.rk_ee_os),
+    (Sample.bpkpjpsiee, Trigger.rk_ee_os),
+    (Sample.bpkpmm    , Trigger.rk_mm_os),
+    (Sample.bpkpjpsimm, Trigger.rk_mm_os),
 ]
 
 _SAMPLES_NOPID = [
-    Sample.bukee,
-    Sample.bukjpsiee,
+    Sample.bpkpee,
+    Sample.bpkpjpsiee,
 ]
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_calculator')
