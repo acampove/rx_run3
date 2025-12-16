@@ -124,8 +124,15 @@ class EfficiencyCalculator(Cache):
         plt.savefig(plt_path)
         plt.close('all')
     #------------------------------------------
-    def _get_geo_eff(self, proc : str) -> float:
-        obj = AcceptanceReader(year=self._year, proc=proc)
+    def _get_geo_eff(self, sample : Sample) -> float:
+        '''
+        Takes sample and returns geometric acceptance
+        '''
+        obj = AcceptanceReader(
+            sample =sample, 
+            year   =self._year, 
+            project=self._trigger.project)
+
         acc = obj.read()
 
         return acc
