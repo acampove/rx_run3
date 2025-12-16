@@ -8,7 +8,7 @@ import pandas as pnd
 from pathlib                        import Path
 from dmu.generic.version_management import get_last_version
 from dmu                            import LogStore
-from rx_common                      import Sample
+from rx_common                      import Project, Sample
 
 log=LogStore.add_logger('rx_efficiencies:acceptance_reader')
 #----------------------------------
@@ -17,9 +17,21 @@ class AcceptanceReader:
     Class meant to read Geometric acceptances calculated from rapidsim ntuples
     '''
     #----------------------------------
-    def __init__(self, year : str, sample : Sample):
+    def __init__(
+        self, 
+        year   : str, 
+        project: Project,
+        sample : Sample):
+        '''
+        Parameters
+        ---------------
+        year   : E.g. 2024, needed to pick correct file
+        project: E.g. rk, rkst
+        sample : E.g. bpkpee
+        '''
         self._year    = year
         self._sample  = sample
+        self._project = project
         self._ana_dir = Path(os.environ['ANADIR'])
     #----------------------------------
     def _get_energy(self) -> str:
@@ -51,7 +63,7 @@ class AcceptanceReader:
         prc_dir = self._ana_dir / 'efficiencies/acceptances'
         vers    = get_last_version(dir_path=prc_dir, version_only=True)
         energy  = self._get_energy()
-        prc_path= prc_dir / f'{vers}/acceptances_{energy}.json'
+        prc_path= prc_dir / f'{vers}/{self._project}/acceptances_{energy}.json'
 
         if not prc_path.exists():
             log.error(f'File not found: {prc_path}')
