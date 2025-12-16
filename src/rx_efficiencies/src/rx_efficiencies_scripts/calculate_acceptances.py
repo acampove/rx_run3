@@ -139,11 +139,15 @@ def _get_df(energy : str) -> pnd.DataFrame:
     d_path = _get_paths(energy = energy)
     d_out  = {'Sample' : [], 'Physical' : [], 'LHCb' : []}
     for sample, path in d_path.items():
+        if _skip_sample(sample=sample):
+            continue
+
         log.debug(f'Checking {sample}')
         acc_phy, acc_lhc = _get_acceptances(
-            path  = path, 
-            sample= sample, 
-            energy= energy)
+            path    = path, 
+            project = Data.project,
+            sample  = sample, 
+            energy  = energy)
 
         d_out['Sample'  ].append(sample)
         d_out['Physical'].append(acc_phy)
