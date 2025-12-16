@@ -109,6 +109,10 @@ class Qsq(StrEnum):
 class Sample(StrEnum):
     '''
     Class meant to represent MC or data sample
+
+    Naming constraints:
+
+    - Except for data, all samples meant to be used with the electron/muon channel should end with ee/mm
     '''
     data_24        = 'DATA_24*'
     # -----
@@ -159,4 +163,19 @@ class Sample(StrEnum):
         Latex string for decay associated to sample
         '''
         return self.name
+    # --------------------------------------------
+    @property
+    def channel(self) -> Channel:
+        '''
+        Returns
+        ----------------
+        Channel to which current sample belongs
+        '''
+        if self.name.endswith('ee'):
+            return Channel.ee
+
+        if self.name.endswith('mm'):
+            return Channel.mm
+
+        raise ValueError(f'Sample {self} does not belong to electron or muon Channel')
 # ---------------------------------------

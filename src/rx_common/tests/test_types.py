@@ -6,6 +6,7 @@ import pytest
 from rx_common import Component
 from rx_common import Sample 
 from rx_common import Brem 
+from rx_common import Channel 
 from dmu       import LogStore
 
 log=LogStore.add_logger('rx_common::test_types')
@@ -55,3 +56,21 @@ def test_mc_samples():
     for sample in mc_samples:
         log.info(sample)
 # -------------------------------------------
+@pytest.mark.parametrize('sample', Sample)
+def test_channel(sample : Sample):
+    '''
+    Tests channel property of samples
+    '''
+    if   sample.name.endswith('ee'):
+        expected = Channel.ee
+    elif sample.name.endswith('mm'):
+        expected = Channel.mm
+    else:
+        expected = None
+
+    if expected is not None:
+        assert sample.channel == expected
+        return
+
+    with pytest.raises(ValueError):
+        sample.channel
