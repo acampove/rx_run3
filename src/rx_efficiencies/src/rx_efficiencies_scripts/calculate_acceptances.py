@@ -128,6 +128,35 @@ def _load_df(energy : str) -> Union[None, pnd.DataFrame]:
     df = pnd.read_json(jsn_path)
 
     return df
+# ----------------------
+def _skip_sample(sample : Sample) -> bool:
+    '''
+    Parameters
+    -------------
+    sample: Sample whose acceptance will be calculated, e.g. bpkpee
+
+    Returns
+    -------------
+    True or false. False if for this project this samples' acceptance does not make sense 
+    '''
+    if Data.project == Project.rk:
+        return False
+
+    # These samples do not have a pion
+    # and cannot be used to calculate geometric
+    # acceptance under rkst hypothesis
+    rk_only_samples = {
+        Sample.bsphiee,
+        Sample.bpkstkpiee, # This is a neutral pion
+        Sample.bpkpmm    , Sample.bpkpee, 
+        Sample.bpkpjpsiee, Sample.bpkpjpsimm,
+        Sample.bpkppsi2ee, Sample.bpkppsi2mm,
+    }
+
+    if sample in rk_only_samples:
+        return True 
+
+    return False 
 #----------------------------------
 def _get_df(energy : str) -> pnd.DataFrame:
     df = _load_df(energy = energy)
