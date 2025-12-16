@@ -212,9 +212,9 @@ class EfficiencyCalculator(Cache):
         return df
     #------------------------------------------
     def _efficiency_from_sample(
-            self,
-            sample : Sample,
-            df     : pnd.DataFrame) -> tuple[float,float]:
+        self,
+        sample : Sample,
+        df     : pnd.DataFrame) -> tuple[float,float]:
         '''
         Parameters
         -----------------
