@@ -3,7 +3,7 @@
 #--------------------------------------------------
 display_help()
 {
-    echo "Script used to steer the creation of ntuples with different decays from what is in the $RAPIDSIM_CONFIG directory"
+    echo "Script used to steer the creation of ntuples with different decays from what is in the \"$RAPIDSIM_CONFIG\" directory"
     echo ""
     echo "-n: Number of entries in the ntuples"
     echo "-v: Version of input config files, which is the same as the output's version"
