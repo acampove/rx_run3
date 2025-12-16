@@ -215,16 +215,17 @@ class EfficiencyCalculator(Cache):
         -------------
         Tuple with effiency and error associated
         '''
-        data_path = f'{self._out_path}/yields.parquet'
+        data_path = f'{self._out_path}/yields.json'
         if self._copy_from_cache():
             log.info(f'Found yields cached, loading: {data_path}')
-            df = pnd.read_parquet(data_path)
-            return self._efficiency_from_sample(df=df, sample=sample)
+            df = pnd.read_json(path_or_buf=data_path)
+
+            return self._efficiency_from_sample(df=df)
 
         log.warning('Recalculating dataframe with yields')
         df = self._get_stats()
-        df.to_parquet(data_path)
+        df.to_json(path_or_buf=data_path, indent=2)
 
         self._cache()
-        return self._efficiency_from_sample(df=df, sample=sample)
+        return self._efficiency_from_sample(df=df)
 #------------------------------------------
