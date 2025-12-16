@@ -179,14 +179,19 @@ class AcceptanceCalculator:
     #-----------------------------
     def _get_numerators(self) -> tuple[int,int]:
         rdf          = self._rdf
-        l_all_trk_in = [ f'{trk}_in' for trk in self._l_all_trk ]
+        l_all_trk_in = [ f'{trk}_in' for trk in self._all_tracks ]
         all_in       = '&&'.join(l_all_trk_in)
+        rdf          = rdf.Define('is_lhc', all_in)
 
-        rdf = rdf.Define('is_lhc', all_in)
-        if 'Km_0' in self._l_all_trk:
-            rdf = rdf.Define('is_phy', 'em_0_in && ep_0_in && (Kp_0_in || Km_0_in)')
+        _lep_plus, _lep_minus = self._leptons
+        lep_acceptance = f'{_lep_plus}_in && {_lep_minus}_in'
+
+        if   self._project == Project.rk:
+            rdf = self._define_phy_rk(  rdf=rdf, lep_acceptance=lep_acceptance)
+        elif self._project == Project.rkst:
+            rdf = self._define_phy_rkst(rdf=rdf, lep_acceptance=lep_acceptance)
         else:
-            rdf = rdf.Define('is_phy', 'em_0_in && ep_0_in && Kp_0_in')
+            raise ValueError(f'Invalid project: {self._project}')
 
         nlhc = rdf.Sum('is_lhc').GetValue()
         nphy = rdf.Sum('is_phy').GetValue()
