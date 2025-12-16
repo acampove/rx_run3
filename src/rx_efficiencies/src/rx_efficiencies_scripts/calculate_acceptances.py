@@ -35,12 +35,14 @@ class Data:
 #----------------------------------
 def _get_args():
     parser = argparse.ArgumentParser(description='Used to dump JSON file with acceptances')
-    parser.add_argument('-e', '--energy' , nargs='+', help='Center of mass energy', default=Data.l_energy, choices=Data.l_energy)
-    parser.add_argument('-v', '--version', type=str, help='Version for directory containing JSON files with acceptances', required=True)
+    parser.add_argument('-e', '--energy' , nargs='+'    , help='Center of mass energy', default=Data.l_energy, choices=Data.l_energy)
+    parser.add_argument('-p', '--project', type =Project, help='E.g. rk or rkst'                                             , required=True) 
+    parser.add_argument('-v', '--version', type =str    , help='Version for directory containing JSON files with acceptances', required=True)
     args = parser.parse_args()
 
-    Data.version  = args.version
     Data.l_energy = args.energy
+    Data.version  = args.version
+    Data.project  = args.project
     Data.out_dir  = Data.ana_dir / f'efficiencies/acceptances/{Data.version}'
     Data.out_dir.mkdir(parents = True, exist_ok=True)
 #---------------------------------
