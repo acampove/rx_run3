@@ -14,7 +14,7 @@ from pathlib        import Path
 from ROOT           import RDataFrame # type: ignore
 from dmu.pdataframe import utilities as put
 from dmu            import LogStore
-from rx_common      import Sample
+from rx_common      import Project, Sample
 
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
 
@@ -22,11 +22,13 @@ log = LogStore.add_logger('rx_efficiencies:calculate_acceptance')
 #----------------------------------
 class Data:
     '''
-    Data class
+    Class used to share data
     '''
-    ana_dir = Path(os.environ['ANADIR'])
     out_dir : Path 
     version : str
+    project : Project
+
+    ana_dir = Path(os.environ['ANADIR'])
     l_energy= ['8TeV', '13TeV', '14TeV']
 
     plt.style.use(mplhep.style.LHCb2)
