@@ -17,6 +17,7 @@ from dmu            import LogStore
 from rx_common      import Project, Sample
 
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
+from rx_efficiencies.utilities             import is_acceptance_defined
 
 log = LogStore.add_logger('rx_efficiencies:calculate_acceptance')
 #----------------------------------
@@ -129,35 +130,6 @@ def _load_df(energy : str) -> Union[None, pnd.DataFrame]:
 
     return df
 # ----------------------
-def _skip_sample(sample : Sample) -> bool:
-    '''
-    Parameters
-    -------------
-    sample: Sample whose acceptance will be calculated, e.g. bpkpee
-
-    Returns
-    -------------
-    True or false. False if for this project this samples' acceptance does not make sense 
-    '''
-    if Data.project == Project.rk:
-        return False
-
-    # These samples do not have a pion
-    # and cannot be used to calculate geometric
-    # acceptance under rkst hypothesis
-    rk_only_samples = {
-        Sample.bsphiee,
-        Sample.bpkstkpiee, # This is a neutral pion
-        Sample.bpkpmm    , Sample.bpkpee, 
-        Sample.bpkpjpsiee, Sample.bpkpjpsimm,
-        Sample.bpkppsi2ee, Sample.bpkppsi2mm,
-    }
-
-    if sample in rk_only_samples:
-        return True 
-
-    return False 
-#----------------------------------
 def _get_df(energy : str) -> pnd.DataFrame:
     df = _load_df(energy = energy)
     if df is not None:
@@ -166,7 +138,7 @@ def _get_df(energy : str) -> pnd.DataFrame:
     d_path = _get_ntuple_paths(energy = energy)
     d_out  = {'Sample' : [], 'Physical' : [], 'LHCb' : []}
     for sample, path in d_path.items():
-        if _skip_sample(sample=sample):
+        if not is_acceptance_defined(sample=sample, project=Data.project):
             continue
 
         log.debug(f'Checking {sample}')
