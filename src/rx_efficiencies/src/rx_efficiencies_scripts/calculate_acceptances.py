@@ -96,14 +96,12 @@ def _get_paths(energy : str) -> dict[Sample,Path]:
 #----------------------------------
 def _get_acceptances(
     sample : Sample, 
-    project: Project,
     path   : Path, 
     energy : str) -> tuple[float,float]:
     '''
     Parameters
     --------------
     sample : Simulated sample enum
-    project: Either rk or rkst
     path   : Path to corresponding Rapidsim ntuple
     energy : Center of mass energy
 
@@ -114,7 +112,7 @@ def _get_acceptances(
     rdf = RDataFrame('DecayTree', str(path))
     obj = AcceptanceCalculator(
         rdf     = rdf, 
-        project = project,
+        project = Data.project,
         channel = sample.channel)
     obj.plot_dir     = f'{Data.out_dir}/plots_{energy}/{sample}'
     acc_phy, acc_lhc = obj.get_acceptances()
@@ -145,7 +143,6 @@ def _get_df(energy : str) -> pnd.DataFrame:
         log.debug(f'Checking {sample}')
         acc_phy, acc_lhc = _get_acceptances(
             path    = path, 
-            project = Data.project,
             sample  = sample, 
             energy  = energy)
 
