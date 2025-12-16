@@ -39,15 +39,14 @@ def initialize():
 #-------------------------------------------------
 @pytest.mark.parametrize('sample, trigger',       _SAMPLES_RX)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_rx_efficiency_value(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
+def test_rx_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
     '''
-    Tests retrieval of total efficiency (acceptance x reco x selection)
-    for RX project samples
+    Calculates efficiency over one sample at a time
     '''
     with Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={'bdt' : '(1)'}):
         obj      = EfficiencyCalculator(q2bin=q2bin, trigger=trigger, sample=sample)
-        eff, err = obj.get_efficiency(sample=sample)
+        eff, err = obj.get_efficiency()
 
     assert 0 <= eff < 1
     assert err > 0 or eff == 0
