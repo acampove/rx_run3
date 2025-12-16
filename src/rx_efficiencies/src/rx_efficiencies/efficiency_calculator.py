@@ -90,38 +90,6 @@ class EfficiencyCalculator(Cache):
 
         self._out_dir = value
     #------------------------------------------
-    def _plot_sel_eff(self) -> None:
-        '''
-        Will plot selection efficiency for each process if _out_dir was specified
-        '''
-        if not hasattr(self, '_out_dir'):
-            log.info('No plotting directory passed through out_dir property, skipping plots')
-            return
-
-        log.debug('Plotting selection efficiencies')
-
-        os.makedirs(self._out_dir, exist_ok=True)
-
-        df          = pnd.DataFrame(self._d_sel)
-        df['Value'] = df.Value * 100
-        df['Error'] = df.Error * 100
-        df          = df.sort_values(by='Value')
-        df.plot(x='Decay', y='Value', yerr='Error', figsize=(20, 8), kind='barh', legend=False)
-
-        plt_path = f'{self._out_dir}/rec_sel_eff_{self._q2bin}.png'
-        log.debug(f'Saving to: {plt_path}')
-
-        title = f'$q^2$: {self._q2bin}'
-
-        plt.grid()
-        plt.xlim(0, 1.3)
-        plt.title(title)
-        plt.ylabel('')
-        plt.xlabel(r'$\varepsilon_{sel}$[%]')
-        plt.tight_layout()
-        plt.savefig(plt_path)
-        plt.close('all')
-    #------------------------------------------
     def _get_geo_eff(self, sample : Sample) -> float:
         '''
         Takes sample and returns geometric acceptance
