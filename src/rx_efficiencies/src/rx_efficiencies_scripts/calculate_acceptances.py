@@ -85,6 +85,9 @@ def _get_paths(energy : str) -> dict[Sample,Path]:
     log.info(f'Picking up files from: {root_wc}')
     d_path  = { _sample_from_path(path=path) : path for path in l_path }
 
+    for sample in d_path:
+        log.debug(sample)
+
     return d_path
 #----------------------------------
 def _get_acceptances(
@@ -114,6 +117,7 @@ def _load_df(energy : str) -> Union[None, pnd.DataFrame]:
     if not os.path.isfile(jsn_path):
         return None
 
+    log.warning(f'Using cached acceptances in: {jsn_path}')
     df = pnd.read_json(jsn_path)
 
     return df
