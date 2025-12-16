@@ -46,7 +46,7 @@ def test_rx_efficiency_value(q2bin : Qsq, sample : Sample, trigger : Trigger, tm
     '''
     with Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={'bdt' : '(1)'}):
-        obj      = EfficiencyCalculator(q2bin=q2bin, trigger=trigger)
+        obj      = EfficiencyCalculator(q2bin=q2bin, trigger=trigger, sample=sample)
         eff, err = obj.get_efficiency(sample=sample)
 
     assert 0 <= eff < 1
