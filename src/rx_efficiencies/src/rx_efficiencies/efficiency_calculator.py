@@ -65,10 +65,8 @@ class EfficiencyCalculator(Cache):
         ------------
         Hash associated to selection for all the processes used, trigger and q2bin
         '''
-        hsh = ''
-        for sample in self._samples:
-            d_sel  = sel.selection(q2bin=self._q2bin, trigger=self._trigger, process=sample)
-            hsh   += hashing.hash_object(d_sel)
+        d_sel = sel.selection(q2bin=self._q2bin, trigger=self._trigger, process=self._sample)
+        hsh   = hashing.hash_object(d_sel)
 
         return hsh
     #------------------------------------------
@@ -196,16 +194,13 @@ class EfficiencyCalculator(Cache):
         '''
         Returns pandas dataframe with `Passed` and `Total` yields for a given `Process`
         '''
-        d_data = {'Sample' : [], 'Passed' : [], 'Total' : []}
-        for sample in self._samples:
-            log.info(f'Calculating yields for sample: {sample}')
-            pas, tot = self._get_yields(sample=sample)
+        d_data   = {'Sample' : [], 'Passed' : [], 'Total' : []}
+        log.info(f'Calculating yields for sample: {self._sample}')
+        pas, tot = self._get_yields(sample = self._sample)
 
-            d_data['Sample' ].append(sample)
-            d_data['Passed' ].append(pas)
-            d_data['Total'  ].append(tot)
-
-        self._plot_sel_eff()
+        d_data['Sample' ].append(self._sample)
+        d_data['Passed' ].append(pas)
+        d_data['Total'  ].append(tot)
 
         df = pnd.DataFrame(d_data)
 
