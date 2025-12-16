@@ -3,12 +3,18 @@ Module holding AcceptanceCalculator class
 '''
 
 import os
-import pprint
 import matplotlib.pyplot as plt
 
-from dmu import LogStore
+from ROOT      import RDF # type: ignore
+from dmu       import LogStore
+from typing    import Final
+from functools import cached_property
+from rx_common import Channel, Project
 
 log = LogStore.add_logger('prec_acceptances::calculator')
+
+MIN_THETA : Final[float] = 0.010
+MAX_THETA : Final[float] = 0.400
 #-----------------------------
 class AcceptanceCalculator:
     '''
