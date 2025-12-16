@@ -33,7 +33,7 @@ class EfficiencyCalculator(Cache):
         self, 
         q2bin   : str, 
         trigger : Trigger,
-        sample  : Sample | None = None):
+        sample  : Sample):
         '''
         Parameters
         -----------------
@@ -42,11 +42,11 @@ class EfficiencyCalculator(Cache):
         sample  : MC sample for which the efficiency is calculated
                   If None, will calculate it for all samples from rx_common::types.Sample 
         '''
-        self._q2bin      = q2bin
-        self._year       = '2024'
-        self._trigger    = trigger 
-        self._d_sel      = {'Sample' : [], 'Decay' : [], 'Value' : [], 'Error' : []}
-        self._samples    = Sample.get_mc_samples() if sample is None else [sample]
+        self._q2bin   = q2bin
+        self._year    = '2024'
+        self._trigger = trigger 
+        self._d_sel   = {'Sample' : [], 'Decay' : [], 'Value' : [], 'Error' : []}
+        self._sample  = sample 
 
         plt.style.use(mplhep.style.LHCb2)
 
