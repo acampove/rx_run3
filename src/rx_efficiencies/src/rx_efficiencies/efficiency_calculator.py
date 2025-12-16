@@ -229,7 +229,7 @@ class EfficiencyCalculator(Cache):
         '''
         df_org = df
 
-        df = df[ df['sample'] == sample.name ]
+        df = df[ df['Sample'] == sample ]
         df = cast(pnd.DataFrame, df)
 
         if len(df) != 1:
