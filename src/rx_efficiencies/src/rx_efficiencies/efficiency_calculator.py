@@ -32,21 +32,21 @@ class EfficiencyCalculator(Cache):
     def __init__(
         self, 
         q2bin   : str, 
-        trigger : Trigger  =  Trigger.rk_ee_os,
-        sample  : str|None = None):
+        trigger : Trigger,
+        sample  : Sample | None = None):
         '''
         Parameters
         -----------------
         q2bin   : Either low, central or high
-        trigger : By default Hlt2RD_BuToKpEE_MVA
-        sample  : MC sample for which the efficiency is calculated, e.g. Bu_JpsiK_ee_eq_DPC. 
-                 If None, will calculate it for all samples found through DecayNames.get_decays() 
+        trigger : By default
+        sample  : MC sample for which the efficiency is calculated
+                  If None, will calculate it for all samples from rx_common::types.Sample 
         '''
         self._q2bin      = q2bin
         self._year       = '2024'
         self._trigger    = trigger 
-        self._d_sel      = {'Process' : [], 'Value' : [], 'Error' : []}
-        self._l_proc     = DecayNames.get_decays() if sample is None else [DecayNames.nic_from_sample(sample=sample)]
+        self._d_sel      = {'Sample' : [], 'Decay' : [], 'Value' : [], 'Error' : []}
+        self._samples    = Sample.get_mc_samples() if sample is None else [sample]
 
         plt.style.use(mplhep.style.LHCb2)
 
