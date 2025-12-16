@@ -141,13 +141,14 @@ class EfficiencyCalculator(Cache):
             self,
             passed : int,
             total  : int,
-            proc   : str) -> None:
+            sample : Sample) -> None:
         eff = passed / total
         err = math.sqrt(eff * (1 - eff) / total)
 
-        self._d_sel['Process'].append(proc)
-        self._d_sel['Value'  ].append(eff)
-        self._d_sel['Error'  ].append(err)
+        self._d_sel['Sample'].append(sample)
+        self._d_sel['Decay' ].append(sample.latex)
+        self._d_sel['Value' ].append(eff)
+        self._d_sel['Error' ].append(err)
     #------------------------------------------
     def _get_yields(self, proc : str) -> tuple[int,int]:
         sel_yld = self._get_sel_yld(proc)
