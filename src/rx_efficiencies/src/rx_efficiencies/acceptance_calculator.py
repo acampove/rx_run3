@@ -197,6 +197,45 @@ class AcceptanceCalculator:
         nphy = rdf.Sum('is_phy').GetValue()
 
         return nphy, nlhc
+    # ----------------------
+    def _define_phy_rk(self, rdf : RDF.RNode, lep_acceptance : str) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT DataFrame
+        lep_acceptance: String defining condition for lepton acceptance
+
+        Returns
+        -------------
+        DataFrame with is_phy defined
+        '''
+        both_kaons   = 'Kp_0' in self._all_tracks and 'Km_0'     in self._all_tracks
+        if both_kaons:
+            # For Bs -> phi(KK) ll case
+            return rdf.Define('is_phy', f'{lep_acceptance} && (Kp_0_in || Km_0_in)')
+
+        single_kaon  = 'Kp_0' in self._all_tracks
+        if single_kaon:
+            return rdf.Define('is_phy', f'{lep_acceptance} && Kp_0_in')
+
+        raise ValueError(f'For project {self._project}, found tracks: {self._all_tracks}')
+    # ----------------------
+    def _define_phy_rkst(self, rdf : RDF.RNode, lep_acceptance : str) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT DataFrame
+        lep_acceptance: String defining condition for lepton acceptance
+
+        Returns
+        -------------
+        DataFrame with is_phy defined
+        '''
+        both_hadrons = 'Kp_0' in self._all_tracks and 'pim_0' in self._all_tracks
+        if both_hadrons:
+            return rdf.Define('is_phy', f'{lep_acceptance} && Kp_0_in && pim_0_in')
+
+        raise ValueError(f'For project {self._project} found tracks: {self._all_tracks}')
     #-----------------------------
     def get_acceptances(self) -> tuple[float,float]:
         '''
