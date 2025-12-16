@@ -1,7 +1,6 @@
 '''
 This module contains classes derived from Enum
 '''
-
 from enum import IntEnum, StrEnum
 
 # ---------------------------------------
@@ -65,6 +64,21 @@ class Trigger(StrEnum):
 
     def __str__(self):
         return self.value
+    # -----------
+    @property
+    def project(self) -> 'Project':
+        '''
+        Returns
+        -----------------
+        Project for which this trigger is meant to be used, e.g. rk, rkst etc
+        '''
+        if self.name.startswith('rk_'):
+            return Project.rk
+
+        if self.name.startswith('rkst_'):
+            return Project.rkst
+
+        raise ValueError(f'Cannot assign trigger {self} to any project')
 # ---------------------------------------
 class Channel(StrEnum):
     '''
@@ -106,4 +120,77 @@ class Qsq(StrEnum):
 
     def __str__(self):
         return self.value
+# ---------------------------------------
+class Sample(StrEnum):
+    '''
+    Class meant to represent MC or data sample
+
+    Naming constraints:
+
+    - Except for data, all samples meant to be used with the electron/muon channel should end with ee/mm
+    '''
+    data_24        = 'DATA_24*'
+    # -----
+    bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
+    bpkpjpsiee     = 'Bu_JpsiK_ee_eq_DPC'
+    bpkppsi2ee     = 'Bu_psi2SK_ee_eq_DPC'
+    # -----
+    bpkpmm         = 'Bu_Kmumu_eq_btosllball05_DPC'
+    bpkpjpsimm     = 'Bu_JpsiK_mm_eq_DPC'
+    bpkppsi2mm     = 'Bu_psi2SK_mm_eq_DPC'
+    # -----
+    bdkstkpiee     = 'Bd_Kstee_eq_btosllball05_DPC'
+    bdkstkpijpsiee = 'Bd_JpsiKst_ee_eq_DPC'
+    bdkstkpipsi2ee = 'Bd_psi2SKst_ee_eq_DPC'
+    # -----
+    bdkstkpimm     = 'Bd_Kstmumu_eq_btosllball05_DPC'
+    bdkstkpijpsimm = 'Bd_JpsiKst_mm_eq_DPC'
+    bdkstkpipsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
+    # -----
+    bpk1kpipiee    = 'Bu_K1ee_eq_DPC'
+    bpk2kpipiee    = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
+    bpkstkpiee     = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
+    bsphiee        = 'Bs_phiee_eq_Ball_DPC'
+    # --------------------------------------------
+    @classmethod
+    def get_mc_samples(cls) -> list['Sample']:
+        '''
+        Returns
+        ---------------
+        List of MC samples known to analysis
+        '''
+
+        return [ sample for sample in cls if not sample.name.startswith('data') ] 
+    # --------------------------------------------
+    def __str__(self):
+        '''
+        Returns
+        ----------------
+        String representing sample name, e.g. Bu_JpsiK_ee_eq_DPC
+        '''
+        return self.value
+    # --------------------------------------------
+    @property
+    def latex(self) -> str:
+        '''
+        Returns
+        ----------------
+        Latex string for decay associated to sample
+        '''
+        return self.name
+    # --------------------------------------------
+    @property
+    def channel(self) -> Channel:
+        '''
+        Returns
+        ----------------
+        Channel to which current sample belongs
+        '''
+        if self.name.endswith('ee'):
+            return Channel.ee
+
+        if self.name.endswith('mm'):
+            return Channel.mm
+
+        raise ValueError(f'Sample {self} does not belong to electron or muon Channel')
 # ---------------------------------------

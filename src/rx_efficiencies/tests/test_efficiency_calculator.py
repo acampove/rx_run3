@@ -2,21 +2,25 @@
 Module with functions needed to test EfficiencyCalculator class
 '''
 import pytest
-from pathlib                               import Path
-from dmu.workflow.cache                    import Cache
-from dmu.logging.log_store                 import LogStore
-from rx_common.types                       import Trigger
-from rx_data.rdf_getter                    import RDFGetter
-from rx_selection                          import selection as sel
-from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
+from pathlib         import Path
+from dmu.workflow    import Cache
+from dmu             import LogStore
+from rx_common       import Qsq, Trigger, Sample
+from rx_data         import RDFGetter
+from rx_selection    import selection as sel
+from rx_efficiencies import EfficiencyCalculator
 
 _SAMPLES_RX    = [
-    'Bu_JpsiK_ee_eq_DPC',
-    'Bu_Kee_eq_btosllball05_DPC']
+    (Sample.bpkpee    , Trigger.rk_ee_os),
+    (Sample.bpkpjpsiee, Trigger.rk_ee_os),
+    (Sample.bpkpmm    , Trigger.rk_mm_os),
+    (Sample.bpkpjpsimm, Trigger.rk_mm_os),
+]
 
 _SAMPLES_NOPID = [
-    'Bu_JpsiK_ee_eq_DPC',
-    'Bu_Kee_eq_btosllball05_DPC']
+    (Sample.bpkpee    , Trigger.rk_ee_nopid),
+    (Sample.bpkpjpsiee, Trigger.rk_ee_nopid),
+]
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_calculator')
 #-------------------------------------------------
@@ -33,24 +37,23 @@ def initialize():
     with RDFGetter.max_entries(value = 1000):
         yield
 #-------------------------------------------------
-@pytest.mark.parametrize('sample',                _SAMPLES_RX)
+@pytest.mark.parametrize('sample, trigger',       _SAMPLES_RX)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_rx_efficiency_value(q2bin : str, sample : str, tmp_path : Path):
+def test_rx_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
     '''
-    Tests retrieval of total efficiency (acceptance x reco x selection)
-    for RX project samples
+    Calculates efficiency over one sample at a time
     '''
     with Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={'bdt' : '(1)'}):
-        obj      = EfficiencyCalculator(q2bin=q2bin)
-        eff, err = obj.get_efficiency(sample=sample)
+        obj      = EfficiencyCalculator(q2bin=q2bin, trigger=trigger, sample=sample)
+        eff, err = obj.get_efficiency()
 
     assert 0 <= eff < 1
     assert err > 0 or eff == 0
 #-------------------------------------------------
-@pytest.mark.parametrize('sample',             _SAMPLES_NOPID)
+@pytest.mark.parametrize('sample, trigger',    _SAMPLES_NOPID)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_nopid_efficiency(q2bin : str, sample : str, tmp_path : Path):
+def test_nopid_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
     for RX project samples
@@ -60,8 +63,8 @@ def test_nopid_efficiency(q2bin : str, sample : str, tmp_path : Path):
         obj      = EfficiencyCalculator(
             q2bin   = q2bin, 
             sample  = sample,
-            trigger = Trigger.rk_ee_os)
-        eff, err = obj.get_efficiency(sample=sample)
+            trigger = trigger)
+        eff, err = obj.get_efficiency()
 
     assert 0 <= eff < 1
     assert err > 0 or eff == 0

@@ -3,12 +3,18 @@ Module holding AcceptanceCalculator class
 '''
 
 import os
-import pprint
 import matplotlib.pyplot as plt
 
-from dmu import LogStore
+from ROOT      import RDF # type: ignore
+from dmu       import LogStore
+from typing    import Final
+from functools import cached_property
+from rx_common import Channel, Project
 
 log = LogStore.add_logger('prec_acceptances::calculator')
+
+MIN_THETA : Final[float] = 0.010
+MAX_THETA : Final[float] = 0.400
 #-----------------------------
 class AcceptanceCalculator:
     '''
@@ -16,10 +22,30 @@ class AcceptanceCalculator:
     acceptance.
     '''
     #-----------------------------
-    def __init__(self, rdf):
+    def __init__(
+        self, 
+        rdf    : RDF.RNode,
+        channel: Channel,
+        project: Project):
+        '''
+        Parameters
+        ----------------
+        rdf    : DataFrame with ntuple made by RapidSim
+        channel: Either ee or mm
+        project: Either rk or rkst, needed to define tracks used to calculate acceptance
+        '''
+        if channel not in {Channel.ee, Channel.mm}:
+            raise ValueError(f'Invalid channel: {channel}')
+
+        self._channel = channel
+
+        if project not in {Project.rk, Project.rkst}:
+            raise ValueError(f'Invalid project: {project}')
+
+        self._project     = project 
+
         self._rdf         = rdf
         self._plot_dir    : str
-        self._l_all_trk   : list[str]
 
         self._initialized = False
     #-----------------------------
@@ -27,16 +53,34 @@ class AcceptanceCalculator:
         if self._initialized:
             return
 
-        self._l_all_trk = self._get_all_tracks()
-        for track in self._l_all_trk:
+        self._validate_ntuple()
+
+        for track in self._all_tracks:
             self._rdf = self._rdf.Define(f'{track}_et', f'{track}_eta_TRUE')
             self._rdf = self._rdf.Define(f'{track}_th', f'2 * TMath::ATan( TMath::Exp(-{track}_et) )')
-            self._rdf = self._rdf.Define(f'{track}_in', f'({track}_th > 0.010) && ({track}_th < 0.400)')
+            self._rdf = self._rdf.Define(f'{track}_in', f'({track}_th > {MIN_THETA}) && ({track}_th < {MAX_THETA})')
 
-            self._plot_split(self._rdf, f'{track}_th', f'{track}_in')
+            self._plot_split(
+                rdf   = self._rdf, 
+                theta = f'{track}_th', 
+                flag  = f'{track}_in')
+
             self._plot(self._rdf, f'{track}_et')
 
         self._initialized = True
+    # ----------------------
+    def _validate_ntuple(self) -> None:
+        '''
+        Validates consistency of ntuple and project choice
+        '''
+        fail = False
+        for lepton in self._leptons:
+            if lepton not in self._all_tracks:
+                log.error(f'Lepton {lepton} not found')
+                fail = True
+
+        if fail:
+            raise ValueError('At least one lepton was not found')
     #-----------------------------
     @property
     def plot_dir(self) -> str:
@@ -55,7 +99,18 @@ class AcceptanceCalculator:
 
         self._plot_dir = value
     #-----------------------------
-    def _plot_split(self, rdf, theta, flag) -> None:
+    def _plot_split(
+        self, 
+        rdf   : RDF.RNode, 
+        theta : str, 
+        flag  : str) -> None:
+        '''
+        Parameters
+        --------------
+        rdf  : DataFrame with kinematics
+        theta: e.g. ep_0_th 
+        flag : e.g. ep_0_in
+        '''
         rdf_in = rdf.Filter(f'{flag} == 1')
         rdf_ot = rdf.Filter(f'{flag} == 0')
 
@@ -73,7 +128,13 @@ class AcceptanceCalculator:
         plt.savefig(plot_path)
         plt.close('all')
     #-----------------------------
-    def _plot(self, rdf, var) -> None:
+    def _plot(
+        self, 
+        rdf : RDF.RNode, 
+        var : str) -> None:
+        '''
+        Plots variable in dataframe
+        '''
         arr_var = rdf.AsNumpy([var])[var]
 
         plt.hist(arr_var, bins=100, range=(-6, +6), alpha=0.7, color='b', label='Out')
@@ -83,32 +144,98 @@ class AcceptanceCalculator:
         plt.savefig(f'{self._plot_dir}/{var}.png')
         plt.close('all')
     #-----------------------------
-    def _get_all_tracks(self) -> list[str]:
+    @cached_property
+    def _all_tracks(self) -> list[str]:
+        '''
+        Returns
+        -------------
+        List of strings, each of them is the name of a track, e.g. ep_0
+        '''
         v_col = self._rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
         l_trk = [ trk         for trk in l_col if trk.endswith('_eta_TRUE')]
         l_trk = [ trk.replace('_eta_TRUE', '') for trk in l_trk ]
 
         log.info('Found following tracks:')
-        pprint.pprint(l_trk)
+        for trk in l_trk:
+            log.info(trk)
 
         return l_trk
     #-----------------------------
+    @cached_property
+    def _leptons(self) -> tuple[str,str]:
+        '''
+        Returns
+        -----------
+        Tuple with strings with names for leptons in ntuple 
+        '''
+        if self._channel == Channel.ee:
+            return 'ep_0', 'em_0'
+
+        if self._channel == Channel.mm:
+            return 'mup_0', 'mum_0'
+
+        raise ValueError(f'Invalid channel: {self._channel}')
+    #-----------------------------
     def _get_numerators(self) -> tuple[int,int]:
         rdf          = self._rdf
-        l_all_trk_in = [ f'{trk}_in' for trk in self._l_all_trk ]
+        l_all_trk_in = [ f'{trk}_in' for trk in self._all_tracks ]
         all_in       = '&&'.join(l_all_trk_in)
+        rdf          = rdf.Define('is_lhc', all_in)
 
-        rdf = rdf.Define('is_lhc', all_in)
-        if 'Km_0' in self._l_all_trk:
-            rdf = rdf.Define('is_phy', 'em_0_in && ep_0_in && (Kp_0_in || Km_0_in)')
+        _lep_plus, _lep_minus = self._leptons
+        lep_acceptance = f'{_lep_plus}_in && {_lep_minus}_in'
+
+        if   self._project == Project.rk:
+            rdf = self._define_phy_rk(  rdf=rdf, lep_acceptance=lep_acceptance)
+        elif self._project == Project.rkst:
+            rdf = self._define_phy_rkst(rdf=rdf, lep_acceptance=lep_acceptance)
         else:
-            rdf = rdf.Define('is_phy', 'em_0_in && ep_0_in && Kp_0_in')
+            raise ValueError(f'Invalid project: {self._project}')
 
         nlhc = rdf.Sum('is_lhc').GetValue()
         nphy = rdf.Sum('is_phy').GetValue()
 
         return nphy, nlhc
+    # ----------------------
+    def _define_phy_rk(self, rdf : RDF.RNode, lep_acceptance : str) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT DataFrame
+        lep_acceptance: String defining condition for lepton acceptance
+
+        Returns
+        -------------
+        DataFrame with is_phy defined
+        '''
+        both_kaons   = 'Kp_0' in self._all_tracks and 'Km_0'     in self._all_tracks
+        if both_kaons:
+            # For Bs -> phi(KK) ll case
+            return rdf.Define('is_phy', f'{lep_acceptance} && (Kp_0_in || Km_0_in)')
+
+        single_kaon  = 'Kp_0' in self._all_tracks
+        if single_kaon:
+            return rdf.Define('is_phy', f'{lep_acceptance} && Kp_0_in')
+
+        raise ValueError(f'For project {self._project}, found tracks: {self._all_tracks}')
+    # ----------------------
+    def _define_phy_rkst(self, rdf : RDF.RNode, lep_acceptance : str) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT DataFrame
+        lep_acceptance: String defining condition for lepton acceptance
+
+        Returns
+        -------------
+        DataFrame with is_phy defined
+        '''
+        both_hadrons = 'Kp_0' in self._all_tracks and 'pim_0' in self._all_tracks
+        if both_hadrons:
+            return rdf.Define('is_phy', f'{lep_acceptance} && Kp_0_in && pim_0_in')
+
+        raise ValueError(f'For project {self._project} found tracks: {self._all_tracks}')
     #-----------------------------
     def get_acceptances(self) -> tuple[float,float]:
         '''

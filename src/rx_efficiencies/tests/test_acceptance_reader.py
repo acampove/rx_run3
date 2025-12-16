@@ -4,21 +4,29 @@ Modules used to test AcceptanceReader class
 
 import pytest
 from dmu              import LogStore
+from rx_common        import Project, Sample
 from rx_efficiencies  import AcceptanceReader
-from rx_efficiencies  import DecayNames
+from rx_efficiencies.utilities import is_acceptance_defined
 
 log=LogStore.add_logger('rx_efficiencies:test_acceptance_reader')
 #------------------------------------
+@pytest.mark.parametrize('sample' , Sample.get_mc_samples())
 @pytest.mark.parametrize('year'   , ['2018', '2024'])
-@pytest.mark.parametrize('process', DecayNames.get_decays())
-def test_simple(year : str, process : str):
+@pytest.mark.parametrize('project', [Project.rk, Project.rkst])
+def test_simple(year : str, sample : Sample, project : Project):
     '''
     Test reading acceptances from JSON files for multiple processes and years
     '''
-    obj=AcceptanceReader(year=year, proc=process)
+    if not is_acceptance_defined(sample = sample, project = project):
+        return
+
+    obj=AcceptanceReader(
+        year   =year, 
+        project=project,
+        sample =sample)
     acc=obj.read()
 
-    log.info(f'{year:<20}{process:<20}{acc:10.3f}')
+    log.info(f'{year:<20}{sample:<20}{acc:10.3f}')
 
     assert 0.1 < acc < 0.2
 #------------------------------------
