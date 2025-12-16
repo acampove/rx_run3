@@ -70,7 +70,7 @@ def _sample_from_path(path : Path) -> Sample:
 
     return value 
 #----------------------------------
-def _get_paths(energy : str) -> dict[Sample,Path]:
+def _get_ntuple_paths(energy : str) -> dict[Sample,Path]:
     '''
     Parameters
     --------------------
@@ -78,7 +78,7 @@ def _get_paths(energy : str) -> dict[Sample,Path]:
 
     Returns
     --------------------
-    Dictionary mapping 
+    Dictionary mapping sample with path to ROOT file from RapidSim
     '''
     root_wc = f'Rapidsim/{Data.version}/*/{energy}/*_tree.root'
     l_path  = Data.ana_dir.rglob(pattern=root_wc)
@@ -163,7 +163,7 @@ def _get_df(energy : str) -> pnd.DataFrame:
     if df is not None:
         return df
 
-    d_path = _get_paths(energy = energy)
+    d_path = _get_ntuple_paths(energy = energy)
     d_out  = {'Sample' : [], 'Physical' : [], 'LHCb' : []}
     for sample, path in d_path.items():
         if _skip_sample(sample=sample):
