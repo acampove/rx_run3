@@ -22,10 +22,30 @@ class AcceptanceCalculator:
     acceptance.
     '''
     #-----------------------------
-    def __init__(self, rdf):
+    def __init__(
+        self, 
+        rdf    : RDF.RNode,
+        channel: Channel,
+        project: Project):
+        '''
+        Parameters
+        ----------------
+        rdf    : DataFrame with ntuple made by RapidSim
+        channel: Either ee or mm
+        project: Either rk or rkst, needed to define tracks used to calculate acceptance
+        '''
+        if channel not in {Channel.ee, Channel.mm}:
+            raise ValueError(f'Invalid channel: {channel}')
+
+        self._channel = channel
+
+        if project not in {Project.rk, Project.rkst}:
+            raise ValueError(f'Invalid project: {project}')
+
+        self._project     = project 
+
         self._rdf         = rdf
         self._plot_dir    : str
-        self._l_all_trk   : list[str]
 
         self._initialized = False
     #-----------------------------
