@@ -53,16 +53,34 @@ class AcceptanceCalculator:
         if self._initialized:
             return
 
-        self._l_all_trk = self._get_all_tracks()
-        for track in self._l_all_trk:
+        self._validate_ntuple()
+
+        for track in self._all_tracks:
             self._rdf = self._rdf.Define(f'{track}_et', f'{track}_eta_TRUE')
             self._rdf = self._rdf.Define(f'{track}_th', f'2 * TMath::ATan( TMath::Exp(-{track}_et) )')
-            self._rdf = self._rdf.Define(f'{track}_in', f'({track}_th > 0.010) && ({track}_th < 0.400)')
+            self._rdf = self._rdf.Define(f'{track}_in', f'({track}_th > {MIN_THETA}) && ({track}_th < {MAX_THETA})')
 
-            self._plot_split(self._rdf, f'{track}_th', f'{track}_in')
+            self._plot_split(
+                rdf   = self._rdf, 
+                theta = f'{track}_th', 
+                flag  = f'{track}_in')
+
             self._plot(self._rdf, f'{track}_et')
 
         self._initialized = True
+    # ----------------------
+    def _validate_ntuple(self) -> None:
+        '''
+        Validates consistency of ntuple and project choice
+        '''
+        fail = False
+        for lepton in self._leptons:
+            if lepton not in self._all_tracks:
+                log.error(f'Lepton {lepton} not found')
+                fail = True
+
+        if fail:
+            raise ValueError('At least one lepton was not found')
     #-----------------------------
     @property
     def plot_dir(self) -> str:
