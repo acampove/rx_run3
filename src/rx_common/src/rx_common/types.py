@@ -64,6 +64,21 @@ class Trigger(StrEnum):
 
     def __str__(self):
         return self.value
+    # -----------
+    @property
+    def project(self) -> 'Project':
+        '''
+        Returns
+        -----------------
+        Project for which this trigger is meant to be used, e.g. rk, rkst etc
+        '''
+        if self.name.startswith('rk_'):
+            return Project.rk
+
+        if self.name.startswith('rkst_'):
+            return Project.rkst
+
+        raise ValueError(f'Cannot assign trigger {self} to any project')
 # ---------------------------------------
 class Channel(StrEnum):
     '''

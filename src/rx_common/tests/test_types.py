@@ -9,6 +9,9 @@ from rx_common import Brem
 from rx_common import Channel 
 from dmu       import LogStore
 
+from rx_common import Trigger
+from rx_common import Project 
+
 log=LogStore.add_logger('rx_common::test_types')
 # -------------------------------------------
 def test_component():
@@ -74,3 +77,23 @@ def test_channel(sample : Sample):
 
     with pytest.raises(ValueError):
         sample.channel
+# -------------------------------------------
+@pytest.mark.parametrize('trigger', Trigger)
+def test_trigger(trigger : Trigger):
+    '''
+    Test trigger enum
+    '''
+
+    if   trigger.name.startswith('rk_'):
+        expected = Project.rk
+    elif trigger.name.startswith('rkst_'):
+        expected = Project.rkst
+    else:
+        expected = None
+
+    if expected is not None:
+        assert trigger.project == expected
+        return
+
+    with pytest.raises(ValueError):
+        trigger.project
