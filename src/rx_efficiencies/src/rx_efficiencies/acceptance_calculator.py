@@ -144,16 +144,38 @@ class AcceptanceCalculator:
         plt.savefig(f'{self._plot_dir}/{var}.png')
         plt.close('all')
     #-----------------------------
-    def _get_all_tracks(self) -> list[str]:
+    @cached_property
+    def _all_tracks(self) -> list[str]:
+        '''
+        Returns
+        -------------
+        List of strings, each of them is the name of a track, e.g. ep_0
+        '''
         v_col = self._rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
         l_trk = [ trk         for trk in l_col if trk.endswith('_eta_TRUE')]
         l_trk = [ trk.replace('_eta_TRUE', '') for trk in l_trk ]
 
         log.info('Found following tracks:')
-        pprint.pprint(l_trk)
+        for trk in l_trk:
+            log.info(trk)
 
         return l_trk
+    #-----------------------------
+    @cached_property
+    def _leptons(self) -> tuple[str,str]:
+        '''
+        Returns
+        -----------
+        Tuple with strings with names for leptons in ntuple 
+        '''
+        if self._channel == Channel.ee:
+            return 'ep_0', 'em_0'
+
+        if self._channel == Channel.mm:
+            return 'mup_0', 'mum_0'
+
+        raise ValueError(f'Invalid channel: {self._channel}')
     #-----------------------------
     def _get_numerators(self) -> tuple[int,int]:
         rdf          = self._rdf
