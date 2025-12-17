@@ -27,17 +27,19 @@ def fit_summary(
 # ----------------------
 @app.command()
 def make_dummy_plot(
-    path : Path = typer.Option(..., '--path', '-p', help='Path to PNG file')) -> None:
+    text : str  = typer.Option('Placeholder', '--text', '-t', help='Text that will go in plot'),
+    path : Path = typer.Option(...          , '--path', '-p', help='Path to PNG file')) -> None:
     '''
     This will check if a plot exists and if not, will create a placeholder
     '''
+
     if path.exists():
         log.info(f'Path found: {path}')
         return
 
     log.info(f'Path not found, making it: {path}')
     plt.figure(figsize=(15, 10))
-    plt.text(0.5, 0.5, 'Failed', 
+    plt.text(0.5, 0.5, text, 
              fontsize=72, 
              color='red', 
              ha='center', 
