@@ -1,12 +1,11 @@
 mva_cmb  = config['mva_cmb']
 mva_prc  = config['mva_prc']
 qsq_bin  = config['qsq_bin']
-ntoys    = config['ntoys'  ]
 
+ntoys    = config['ntoys'  ]
 conf_val = 'rare/rkst/electron'
 kind_val = 'rare_rkst_electron'
-#out_path = '/home/acampove/plots'
-out_path = '/eos/lhcb/wg/RD/RX_run3/fits/data'
+out_path = '.eos/lhcb/wg/RD/RX_run3/fits/data'
 name     = 'scan'
 
 # ---------------------
@@ -27,7 +26,12 @@ rule collect:
         qsq = '[a-z]+', 
     shell:
         '''
+        REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
+        mkdir -p $(dirname  $REMOTE)
+        mkdir -p $(dirname {output})
+
         cp {input} {output}
+        cp {input} $REMOTE 
         '''
 # ---------------------
 rule toys:
@@ -41,20 +45,23 @@ rule toys:
         ntoys = ntoys,
         conf  = conf_val,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:946f5eec1'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:380d28902'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 
         '''
-        #source setup.sh
+        source setup.sh
 
-        #fit_rx_rare -c {params.conf} \
-                    -q {wildcards.qsq} \
-                    -C {wildcards.cmb} \
-                    -P {wildcards.prc} \
-                    -t toys/maker.yaml \
-                    -N {params.ntoys} \
-                    -g {params.name} || true
-        
+        #fit_rx_rare -c {params.conf}   \
+                     -q {wildcards.qsq} \
+                     -C {wildcards.cmb} \
+                     -P {wildcards.prc} \
+                     -t toys/maker.yaml \
+                     -N {params.ntoys}  \
+                     -g {params.name} || true
+
+        REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
+
+        rxfitter make-dummy-plot -p $REMOTE  -t {wildcards.cmb}_{wildcards.prc}
         rxfitter make-dummy-plot -p {output} -t {wildcards.cmb}_{wildcards.prc}
         '''
