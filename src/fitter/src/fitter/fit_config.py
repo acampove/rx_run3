@@ -24,15 +24,15 @@ class FitConfig:
     name    : str
     group   : str
     fit_cfg : DictConfig
-    toy_cfg : DictConfig|None = None
+    mva_cmb : float
+    mva_prc : float
 
-    block   : int  = -1 
-    nthread : int  = 1
-    q2bin   : str  = ''
-    mva_cmb : float= 0.0
-    mva_prc : float= 0.0
-    log_lvl : int  = 20
-    ntoys   : int  = 0
+    block   : int             = -1 
+    nthread : int             = 1
+    q2bin   : str             = ''
+    log_lvl : int             = 20
+    ntoys   : int             = 0
+    toy_cfg : DictConfig|None = None
     # ----------------------
     def replace(self, substring : str, value : str) -> None:
         '''
