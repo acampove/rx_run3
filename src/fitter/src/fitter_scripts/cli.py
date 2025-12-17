@@ -37,6 +37,8 @@ def make_dummy_plot(
         log.info(f'Path found: {path}')
         return
 
+    path.parent.mkdir(parents=True, exist_ok=True)
+
     log.info(f'Path not found, making it: {path}')
     plt.figure(figsize=(15, 10))
     plt.text(0.5, 0.5, text, 

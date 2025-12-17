@@ -39,13 +39,13 @@ rule toys:
     params:
         ntoys = ntoys
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:2892422fd'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:e47449f1c'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 
         '''
         source setup.sh
 
-        #fit_rx_rare -c {params.conf} -q {wildcards.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys} -g {params.name} || true
+        #fit_rx_rare -c {wildcards.conf} -q {wildcards.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys} -g {wildcards.name} || true
         rxfitter make-dummy-plot -p {output} -t {wildcards.cmb}"_"{wildcards.prc}
         '''
