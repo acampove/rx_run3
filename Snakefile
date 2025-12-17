@@ -5,43 +5,43 @@ ntoys    = config['ntoys'  ]
 
 conf_val = 'rare/rkst/electron'
 kind_val = 'rare_rkst_electron'
+#out_path = '/home/acampove/plots'
+out_path = '/eos/lhcb/wg/RD/RX_run3/fits/data'
+name     = 'scan'
 
-out_paths = ['/home/acampove/plots']
-names     = ['scan']
-
+# ---------------------
 rule all:
     input: 
         expand(
-            f'{{out_path}}/{{name}}_summary/{kind_val}/{{qsq}}/{{cmb}}_{{prc}}.png',
-            out_path = out_paths,
-            name     = names,
+            f'{out_path}/{name}_summary/{kind_val}/{{qsq}}/{{cmb}}_{{prc}}.png',
             cmb      = mva_cmb,
             prc      = mva_prc,
             qsq      = qsq_bin)
+# ---------------------
 rule collect:
-    input : f'{{out_path}}/{{name}}/{{cmb}}_{{prc}}_all/{conf_val}/data/{{qsq}}/brem_x12/fit_linear.png'
-    output: f'{{out_path}}/{{name}}_summary/{kind_val}/{{qsq}}/{{cmb}}_{{prc}}.png'
+    input : f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{conf_val}/data/{{qsq}}/brem_x12/fit_linear.png'
+    output: f'{out_path}/{name}_summary/{kind_val}/{{qsq}}/{{cmb}}_{{prc}}.png'
     wildcard_constraints:
         cmb = r'\d{3}', 
         prc = r'\d{3}', 
         qsq = '[a-z]+', 
-        name= '[a-z]+'
     shell:
         '''
         cp {input} {output}
         '''
+# ---------------------
 rule toys:
-    output: f'{{out_path}}/{{name}}/{{cmb}}_{{prc}}_all/{conf_val}/data/{{qsq}}/brem_x12/fit_linear.png'
+    output: f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{conf_val}/data/{{qsq}}/brem_x12/fit_linear.png'
     wildcard_constraints:
         cmb   = r'\d{3}', 
         prc   = r'\d{3}', 
         qsq   = '[a-z]+', 
-        name  = '[a-z]+'
     params:
+        name  = name,
         ntoys = ntoys,
-        conf  = conf_val
+        conf  = conf_val,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:cb46cdc9f'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:946f5eec1'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 
@@ -54,7 +54,7 @@ rule toys:
                     -P {wildcards.prc} \
                     -t toys/maker.yaml \
                     -N {params.ntoys} \
-                    -g {wildcards.name} || true
+                    -g {params.name} || true
         
         rxfitter make-dummy-plot -p {output} -t {wildcards.cmb}_{wildcards.prc}
         '''
