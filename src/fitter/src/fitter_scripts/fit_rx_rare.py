@@ -85,8 +85,8 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
         block   = args.block,
         q2bin   = args.q2bin,
         nthread = args.nthread,
-        mva_cmb = args.mva_cmb,
-        mva_prc = args.mva_prc,
+        mva_cmb = args.mva_cmb / 1_000.,
+        mva_prc = args.mva_prc / 1_000.,
         log_lvl = args.log_lvl,
         ntoys   = args.ntoys)
 
