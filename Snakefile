@@ -1,21 +1,43 @@
-mva_cmb=config['mva_cmb']
-mva_prc=config['mva_prc']
-qsq_bin=config['qsq_bin']
-ntoys  =config['ntoys']
+mva_cmb  = config['mva_cmb']
+mva_prc  = config['mva_prc']
+qsq_bin  = config['qsq_bin']
+ntoys    = config['ntoys']
+conf     = ['rare/rkst/electron']
+eos_path = ['/tmp']
+name     = ['scan']
 
 rule all:
     input: 
         expand(
-        'results/file_{qsq}_{cmb}_{prc}.txt',
-        qsq=qsq_bin,
+        '{eos_path}/{conf}/{name}/{cmb}_{prc}_{qsq}.png',
+        eos_path=eos_path,
+        conf=conf,
+        name=name,
         cmb=mva_cmb,
-        prc=mva_prc)
+        prc=mva_prc,
+        qsq=qsq_bin)
+
+rule collect:
+    input : '{eos_path}/fits/data/{name}/{cmb}_{prc}_all/{conf}/data/{qsq}/brem_x12/fit_linear.png'
+    output: '{eos_path}/{conf}/{name}/{cmb}_{prc}_{qsq}.png'
+    wildcard_constraints:
+        cmb ='\d{3}' ,
+        prc ='\d{3}' ,
+        qsq ='[a-z]+',
+        name='[a-z]+',
+    shell:
+        '''
+        cp {input} {output}
+        '''
 rule toys:
-    output: 'results/file_{qsq}_{cmb}_{prc}.txt'
+    output: '{eos_path}/fits/data/{name}/{cmb}_{prc}_all/{conf}/data/{qsq}/brem_x12/fit_linear.png'
+    wildcard_constraints:
+        cmb ='\d{3}' ,
+        prc ='\d{3}' ,
+        qsq ='[a-z]+',
+        name='[a-z]+',
     params:
-        name  = 'scan',
-        ntoys = ntoys,
-        conf  = 'rare/rkst/electron'
+        ntoys = ntoys
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:8da03bc8d'
     resources:
@@ -24,9 +46,6 @@ rule toys:
         '''
         source setup.sh
 
-        mkdir -p results
-
-        touch {output}
-
         fit_rx_rare -c {params.conf} -q {wildcards.qsq} -C {wildcards.cmb} -P {wildcards.prc} -t toys/maker.yaml -N {params.ntoys} -g {params.name} || true
+        rxfitter make-dummy-plot -p {output} -t {wildcards.cmb}"_"{wildcards.prc}
         '''
