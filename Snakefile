@@ -54,13 +54,13 @@ rule toys:
         '''
         source setup.sh
 
-        #fit_rx_rare -c {params.conf}   \
-                     -q {wildcards.qsq} \
-                     -C {wildcards.cmb} \
-                     -P {wildcards.prc} \
-                     -t toys/maker.yaml \
-                     -N {params.ntoys}  \
-                     -g {params.name} || true
+        fit_rx_rare -c {params.conf}   \
+                    -q {wildcards.qsq} \
+                    -C {wildcards.cmb} \
+                    -P {wildcards.prc} \
+                    -t toys/maker.yaml \
+                    -N {params.ntoys}  \
+                    -g {params.name} || true
 
         REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
 
