@@ -141,8 +141,8 @@ class CXCalculator:
         eff_mm_rare = self._get_efficiency(channel = Channel.mm, qsq = self._qsq)
 
         rat = eff_ee_rare / eff_mm_rare # type: ignore
-        val = rat.value * self._scale 
-        err = rat.error
+        val = rat.nominal_value * self._scale 
+        err = rat.std_dev
 
         return val, err 
 # ----------------------
