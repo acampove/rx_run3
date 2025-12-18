@@ -26,5 +26,5 @@ class CXCalculator:
         -------------
         Tuple with value of cx and its error
         '''
-        return 1, 0
+        return 1, 1
 # ----------------------
