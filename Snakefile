@@ -65,5 +65,7 @@ rule toys:
         REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
 
         rxfitter make-dummy-plot -p $REMOTE  -t {wildcards.cmb}_{wildcards.prc}
-        rxfitter make-dummy-plot -p {output} -t {wildcards.cmb}_{wildcards.prc}
+
+        mkdir -p $(dirname {output})
+        cp $REMOTE {output}
         '''
