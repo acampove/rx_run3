@@ -1,6 +1,7 @@
 '''
 Module holding CXCalculator
 '''
+import os
 import random
 
 from typing        import Final
@@ -31,7 +32,11 @@ class CXCalculator:
         self._project = project
         self._qsq     = qsq
 
-        random.seed(111)
+        seed = os.environ.get('RXSEED')
+        if seed is None:
+            raise ValueError('RXSEED not found in environment')
+
+        random.seed(seed)
         self._scale : Final[float] = random.uniform(0.5, 2.0)
     # ----------------------
     def _trigger_from_channel(self, channel : Channel) -> Trigger:
