@@ -103,5 +103,31 @@ def control_region(
 
     plt.savefig(out_path)
 # ----------------------
+@app.command()
+def cx():
+    '''
+    This is used to plot CK and CKstar
+    '''
+    ana_dir  = Path(os.environ['ANADIR'])
+    out_path = ana_dir / 'plots/efficiencies/cx.png'
+    cache_dir= Path('/tmp/rx/cache/plots/cx')
+
+    with Cache.cache_root(path=cache_dir):
+        data = {'Value' : [], 'Error' : [], 'Quantity' : [], 'qsq' : []}
+        for project in {Project.rk, Project.rkst}:
+            for qsq in {Qsq.low, Qsq.central, Qsq.high}:
+                quantity = {Project.rk : '$C_K$', Project.rkst : '$C_{K^*}$'}[project]
+                obj      = CXCalculator(project = project, qsq = qsq)
+                val, err = obj.calculate()
+
+                data['qsq'].append(qsq)
+                data['Value'].append(val)
+                data['Error'].append(err)
+                data['Quantity'].append(quantity)
+
+    df = pnd.DataFrame(data)
+
+    print(df)
+# ----------------------
 if __name__ == '__main__':
     app()
