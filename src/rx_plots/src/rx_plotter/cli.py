@@ -112,7 +112,9 @@ def cx():
     out_path = ana_dir / 'plots/efficiencies/cx.png'
     cache_dir= Path('/tmp/rx/cache/plots/cx')
 
-    with Cache.cache_root(path=cache_dir):
+    with Cache.cache_root(path=cache_dir),\
+        LogStore.level(name = 'rx_selection:selection'               , lvl = 30),\
+        LogStore.level(name = 'rx_efficiencies:efficiency_calculator', lvl = 30):
         data = {'Value' : [], 'Error' : [], 'Quantity' : [], 'qsq' : []}
         for project in {Project.rk, Project.rkst}:
             for qsq in {Qsq.low, Qsq.central, Qsq.high}:
