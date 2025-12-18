@@ -176,11 +176,13 @@ class EfficiencyCalculator(Cache):
     #------------------------------------------
     def _efficiency_from_sample(
         self,
-        df : pnd.DataFrame) -> tuple[float,float]:
+        as_yields : bool,
+        df        : pnd.DataFrame) -> tuple[float,float]:
         '''
         Parameters
         -----------------
-        df     : Dataframe with yields, passed and failed for each sample
+        as_yields : If true will return passed and failed, otherwise, efficiency and error
+        df        : Dataframe with yields, passed and failed for each sample
 
         Returns
         -----------------
@@ -204,13 +206,21 @@ class EfficiencyCalculator(Cache):
         pas = df['Passed'].iloc[0]
         tot = df['Total' ].iloc[0]
 
+        if as_yields:
+            return pas, tot - pas
+
         eff = pas / tot
         err = math.sqrt(eff * (1 - eff) / tot)
 
         return eff, err
     #------------------------------------------
-    def get_efficiency(self) -> tuple[float,float]:
+    def get_efficiency(self, as_yields : bool = False) -> tuple[float,float]:
         '''
+        Parameters
+        -------------
+        as_yields: If true, it will return passed and failed yields. 
+        Otherwise efficiency and error
+
         Returns
         -------------
         Tuple with effiency and error associated
@@ -220,12 +230,12 @@ class EfficiencyCalculator(Cache):
             log.info(f'Found yields cached, loading: {data_path}')
             df = pnd.read_json(path_or_buf=data_path)
 
-            return self._efficiency_from_sample(df=df)
+            return self._efficiency_from_sample(df=df, as_yields=as_yields)
 
         log.warning('Recalculating dataframe with yields')
         df = self._get_stats()
         df.to_json(path_or_buf=data_path, indent=2)
 
         self._cache()
-        return self._efficiency_from_sample(df=df)
+        return self._efficiency_from_sample(df=df, as_yields=as_yields)
 #------------------------------------------
