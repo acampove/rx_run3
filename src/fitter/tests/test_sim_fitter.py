@@ -29,7 +29,7 @@ def test_nomc(tmp_path : Path):
     '''
     Test for components that have no MC associated
     '''
-    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
     cfg = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/combinatorial.yaml')
     with Cache.cache_root(path = tmp_path):
