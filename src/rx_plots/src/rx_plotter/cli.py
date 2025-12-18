@@ -129,7 +129,23 @@ def cx():
 
     df = pnd.DataFrame(data)
 
-    print(df)
+    order_map   = {val: i for i, val in enumerate(['low', 'central', 'high'])}
+    df['order'] = df['qsq'].map(order_map)
+    df          = df.sort_values('order')
+
+    axis = None
+    for quantity, df_q in df.groupby('Quantity'):
+        axis = df_q.plot(x='qsq', y='Value', yerr='Error', label=quantity, ax=axis)
+
+    plt.ylim(0, 1)
+    plt.ylabel(r'$\varepsilon_{ee}/\varepsilon_{\mu\mu}$')
+    plt.xlabel(r'$q^2$ bin')
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    log.info(f'Saving to: {out_path}')
+    plt.savefig(out_path)
+    plt.close('all')
 # ----------------------
 if __name__ == '__main__':
     app()
