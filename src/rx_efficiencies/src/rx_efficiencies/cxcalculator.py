@@ -1,9 +1,15 @@
 '''
 Module holding CXCalculator
 '''
+import random
 
-from dmu       import LogStore
-from rx_common import Project
+from typing        import Final
+from dmu           import LogStore
+from rx_common     import Project, Trigger, Sample
+from rx_common     import Channel, Qsq
+from uncertainties import Variable, ufloat
+
+from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
 
 log=LogStore.add_logger('rx_efficiencies:cxcalculator')
 # ----------------------
