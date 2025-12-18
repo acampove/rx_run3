@@ -137,13 +137,17 @@ def cx():
     for quantity, df_q in df.groupby('Quantity'):
         axis = df_q.plot(x='qsq', y='Value', yerr='Error', label=quantity, ax=axis)
 
-    plt.ylim(0, 1)
-    plt.ylabel(r'$\varepsilon_{ee}/\varepsilon_{\mu\mu}$')
+    rare_label = r'$\varepsilon_{ee}^{rare}/\varepsilon_{\mu\mu}^{rare}$'
+    reso_label = r'$\varepsilon_{ee}^{J/\psi}/\varepsilon_{\mu\mu}^{J/\psi}$'
+
+    plt.ylim(0, 3)
+    plt.ylabel(r'random $\times C_x$')
     plt.xlabel(r'$q^2$ bin')
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     log.info(f'Saving to: {out_path}')
+    plt.title(f'{rare_label} over {reso_label}, uncorrected MC')
     plt.savefig(out_path)
     plt.close('all')
 # ----------------------
