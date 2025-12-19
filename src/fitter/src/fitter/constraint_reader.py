@@ -2,12 +2,17 @@
 Script holding ConstraintReader class
 '''
 
-from dmu.logging.log_store       import LogStore
-from rx_efficiencies.decay_names import DecayNames    as dn
-from fitter.prec_scales          import PrecScales
-from zfit.loss                   import ExtendedUnbinnedNLL
+from dmu           import LogStore
+from rx_common     import Qsq
+from zfit.loss     import ExtendedUnbinnedNLL
+from rx_common     import Sample
+from .prec_scales  import PrecScales
+from dmu.stats     import GaussianConstraint
+from dmu.stats     import PoissonConstraint
 
 log=LogStore.add_logger('fitter:constraint_reader')
+
+Constraint = GaussianConstraint | PoissonConstraint
 # -------------------------------------------------------------
 class ConstraintReader:
     '''
