@@ -26,10 +26,10 @@ class FitConfig:
     fit_cfg : DictConfig
     mva_cmb : float
     mva_prc : float
+    q2bin   : Qsq
 
     block   : int             = -1 
     nthread : int             = 1
-    q2bin   : str             = ''
     log_lvl : int             = 20
     ntoys   : int             = 0
     toy_cfg : DictConfig|None = None
