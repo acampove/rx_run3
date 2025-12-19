@@ -2,6 +2,10 @@
 Module containing constraint classes 
 '''
 
+from zfit.constraint       import GaussianConstraint as GConstraint
+from zfit.constraint       import PoissonConstraint  as PConstraint
+from zfit.param            import Parameter as zpar
+
 from pydantic              import BaseModel
 from dmu.logging.log_store import LogStore
 
@@ -37,6 +41,18 @@ class GaussianConstraint(BaseModel):
 
         return constraints
     # ----------------------
+    def to_zfit(self, par : zpar) -> GConstraint:
+        '''
+        Parameters
+        -------------
+        par : Zfit parameter
+
+        Returns
+        -------------
+        Zfit constraint corresponding to `par`
+        '''
+        return GConstraint(params=par, observation=self.mu, uncertainty=self.sg)
+    # ----------------------
     def __str__(self) -> str:
         '''
         Returns
@@ -59,6 +75,18 @@ class PoissonConstraint(BaseModel):
         String representation
         '''
         return f'{self.name:<20}{self.lam:<20}{"NA":<20}{"Poisson":<20}'
+    # ----------------------
+    def to_zfit(self, par : zpar) -> PConstraint:
+        '''
+        Parameters
+        -------------
+        par : Zfit parameter
+
+        Returns
+        -------------
+        Zfit constraint corresponding to `par`
+        '''
+        return PConstraint(params=par, observation=self.lam)
 # ----------------------------------------
 Constraint = GaussianConstraint | PoissonConstraint
 def print_constraints(constraints : list[Constraint]) -> None:
