@@ -92,8 +92,8 @@ class PrecScales:
         br_cov   = numpy.diag(l_br_err) ** 2
         val, var = jac.propagate(
             math.prod,
-            l_br_val,
-            br_cov)
+            l_br_val, #type: ignore
+            br_cov)   #type: ignore
 
         err      = math.sqrt(var)
         val      = float(val)
@@ -168,7 +168,7 @@ class PrecScales:
         self._print_vars(l_tup[:3], proc=    signal)
         self._print_vars(l_tup[3:], proc=self._proc)
 
-        val, var = jac.propagate(lambda x : (x[3] * x[4] * x[5]) / (x[0] * x[1] * x[2]), l_val, cov)
+        val, var = jac.propagate(lambda x : (x[3] * x[4] * x[5]) / (x[0] * x[1] * x[2]), l_val, cov) # type: ignore
         val = float(val)
         err = math.sqrt(var)
 
