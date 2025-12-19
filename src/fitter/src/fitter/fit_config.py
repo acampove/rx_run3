@@ -3,16 +3,16 @@ Module containing FitConfig class
 '''
 import os
 import dataclasses
-from functools import cached_property
-from pathlib   import Path
-from typing    import Any
 
-from dmu.stats.zfit         import zfit
-from omegaconf              import DictConfig
-from dmu.generic            import utilities  as gut
-from dmu.logging.log_store  import LogStore
-from rx_common              import info
-from zfit                   import Space      as zobs
+from functools      import cached_property
+from pathlib        import Path
+from typing         import Any
+from dmu.stats.zfit import zfit
+from omegaconf      import DictConfig
+from dmu.generic    import utilities  as gut
+from dmu            import LogStore
+from rx_common      import Qsq, info
+from zfit           import Space      as zobs
 
 log=LogStore.add_logger('rx_fitter::fit_config')
 # ----------------------
