@@ -213,7 +213,6 @@ class MisIDConstraints(Cache):
                 obs    = obs,
                 name   = kind,
                 sample = self._data_sample, 
-                trigger= self._cfg.trigger,
                 q2bin  = self._q2bin,
                 cfg    = self._cfg)
             nll = ftr.run()
