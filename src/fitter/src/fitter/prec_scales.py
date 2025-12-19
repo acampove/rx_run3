@@ -30,13 +30,13 @@ class PrecScales:
         self._q2bin       = q2bin
 
         self._d_frbf      : dict
-        self._trigger     = 'Hlt2RD_BuToKpEE_MVA'
+        self._trigger     = Trigger('Hlt2RD_BuToKpEE_MVA')
         self._initialized = False
 
         self._hash        = self._get_hash()
     #------------------------------------------
     def _get_hash(self) -> str:
-        process = dn.sample_from_decay(self._proc)
+        process = Sample[self._proc] 
         d_sel   = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=process)
         hsh     = hashing.hash_object([self._proc, self._q2bin, d_sel])
 
@@ -103,7 +103,7 @@ class PrecScales:
     def _get_br(self, proc : str) -> tuple[float,float]:
         log.debug(f'Calculating BR for {proc}')
 
-        l_dec = dn.subdecays_from_nickname(proc)
+        l_dec = Sample[proc].subdecays
         l_bf  = [ self._d_frbf['bf'][dec] for dec in l_dec ]
 
         return self._mult_brs(l_bf)
@@ -118,7 +118,7 @@ class PrecScales:
         --------------
         Tuple with efficiency value and error
         '''
-        sample = dn.sample_from_decay(proc)
+        sample = Sample[proc]
 
         log.debug(f'Calculating efficiencies for {sample}')
         obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample)
