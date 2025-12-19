@@ -6,12 +6,8 @@ from .toy_plotter        import ToyPlotter
 from .data_fitter        import DataFitter 
 from .sim_fitter         import SimFitter
 from .data_preprocessor  import DataPreprocessor
-from .constraint         import GaussianConstraint
-from .constraint         import PoissonConstraint
 
 __all__ = [
-    'GaussianConstraint',
-    'PoissonConstraint',
     'FitSummary', 
     'DataPreprocessor',
     'ParameterReader', 
