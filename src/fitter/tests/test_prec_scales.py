@@ -63,7 +63,7 @@ def _validate_scales(scales : Any) -> None:
     assert isinstance(err, float)
 #-------------------------------
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
-@pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
+@pytest.mark.parametrize('process', ['bdkstkpiee', 'bpkstkpiee', 'bsphiee'])
 def test_all_datasets(q2bin : str, process : str, tmp_path : Path):
     '''
     Tests retrieval of scales between signal and PRec yields
@@ -75,7 +75,7 @@ def test_all_datasets(q2bin : str, process : str, tmp_path : Path):
 
     _validate_scales(scales = scales)
 #-------------------------------
-@pytest.mark.parametrize('process', ['bdkskpiee', 'bpkskpiee', 'bsphiee'])
+@pytest.mark.parametrize('process', ['bdkstkpiee', 'bpkstkpiee', 'bsphiee'])
 @pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
 @pytest.mark.parametrize('mva_cut', Data.get_seq_wp(min_cmb=0.8, min_prc=0.8, step=0.02))
 def test_seq_scan_scales(
