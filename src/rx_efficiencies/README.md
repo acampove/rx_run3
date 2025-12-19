@@ -135,12 +135,3 @@ df  = obj.run()
 this would return a dataframe with columns `mva_cmb`, `mva_prc` 
 and `eff`, the last of which is the efficiency.
 
-## Ratios of efficiencies
-
-The ratios of efficiencies (assuming $r_{J/\psi}$ is unity) can be used to
-calculate $C_K$ and $C_{K^*}$ for a given sample with:
-
-```python
-obj      = CXCalculator(project = 'rk', qsq = 'central')
-val, err = obj.calculate()
-```
