@@ -10,7 +10,7 @@ import argparse
 
 from typing                     import Final
 from contextlib                 import ExitStack
-from omegaconf                  import DictConfig, OmegaConf
+from omegaconf                  import DictConfig
 from dmu.stats.parameters       import ParameterLibrary as PL
 from dmu.generic                import utilities as gut
 from dmu.stats                  import utilities as sut
@@ -25,12 +25,14 @@ from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 from fitter.misid_constraints  import MisIDConstraints 
 from fitter.toy_maker          import ToyMaker
+from fitter.constraint         import GaussianConstraint, PoissonConstraint, print_constraints
 from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
 from rx_common                 import info
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 
+Constraint               = GaussianConstraint | PoissonConstraint
 DATA_SAMPLE : Final[str] = 'DATA_24_*'
 # ----------------------
 def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
