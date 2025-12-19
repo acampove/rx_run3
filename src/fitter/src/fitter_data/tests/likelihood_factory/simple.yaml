@@ -1,0 +1,22 @@
+trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
+output_directory : rare/rkst/muon/data
+model:
+  yields    : tests/likelihood_factory/rare_muon.yaml
+  observable:
+    central:
+      name : B_Mass_smr
+      range:
+        - 5150
+        - 5850
+  components:
+    combinatorial : tests/likelihood_factory/combinatorial.yaml
+    signal        : tests/likelihood_factory/signal.yaml
+  constraints:
+    yields : []
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    signal        : $B^0\to K^0(\to K^+\pi^-)\mu^+\mu^-$ 
+    combinatorial : Combinatorial
