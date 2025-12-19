@@ -27,7 +27,6 @@ class LikelihoodFactory:
         self,
         obs     : zobs,
         sample  : str,
-        trigger : Trigger,
         q2bin   : str,
         cfg     : DictConfig,
         name    : str|None = None):
@@ -35,14 +34,13 @@ class LikelihoodFactory:
         name   : Identifier for fit, e.g. block. This is optional
         cfg    : configuration for the fit as a DictConfig object
         sample : Identifies sample e.g. DATA_24_MagUp...
-        trigger: Hlt2RD...
         project: E.g. rx
         q2bin  : E.g. central
         cfg    : Configuration for the fit to data
         '''
         self._obs       = obs
         self._sample    = sample
-        self._trigger   = trigger
+        self._trigger   = cfg.trigger
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._name      = name
