@@ -152,6 +152,50 @@ class Sample(StrEnum):
     bpkstkpiee     = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
     bsphiee        = 'Bs_phiee_eq_Ball_DPC'
     # --------------------------------------------
+    @property
+    def subdecays(self) -> list[str]:
+        '''
+        Returns list of subdecays
+        '''
+        match self.name:
+            case 'bpkpee':
+                return ['bpkp']
+            case 'bpkpmm':
+                return ['bpkp']
+            case 'bdkstkpiee':
+                return ['bdks', 'k+kp']
+            case 'bdkstkpimm':
+                return ['bdks', 'k+kp']
+            # ------
+            case 'bpkpjpsiee':
+                return ['bpjk', 'jpee']
+            case 'bpkpjpsimm':
+                return ['bpjk', 'jpmm']
+            case 'bpkppsi2ee':
+                return ['bppsk', 'psee']
+            case 'bpkppsi2mm':
+                return ['bppsk', 'psmm']
+            # ------
+            case 'bdkstkpijpsiee':
+                return ['bdjkst' , 'jpee', 'kstkpi']
+            case 'bdkstkpijpsimm':
+                return ['bdjkst' , 'jpmm', 'kstkpi']
+            case 'bdkstkpipsi2ee':
+                return ['bdpskst', 'psee', 'kstkpi']
+            case 'bdkstkpipsi2mm':
+                return ['bdpskst', 'psmm', 'kstkpi']
+            # ------
+            case 'bsphiee':
+                return ['bsph', 'phkk']
+            case 'bpk1kpipiee':
+                return ['bpk1', 'k13h']
+            case 'bpk2kpipiee':
+                return ['bpk2', 'k23h']
+            case 'bpkstkpiee':
+                return ['bpks', 'kokp']
+            case _:
+                raise NotImplementedError(f'Cannot find subdecays for: {self.name}') 
+    # --------------------------------------------
     @classmethod
     def get_mc_samples(cls) -> list['Sample']:
         '''

@@ -1,6 +1,7 @@
 '''
 Script with functions meant to test Enums
 '''
+import ROOT
 import pytest
 
 from rx_common import Component
@@ -97,3 +98,10 @@ def test_trigger(trigger : Trigger):
 
     with pytest.raises(ValueError):
         trigger.project
+# -------------------------------------------
+@pytest.mark.parametrize('sample', Sample.get_mc_samples())
+def test_subdecays(sample : Sample):
+    '''
+    Tests access to subdecays from sample
+    '''
+    assert isinstance(sample.subdecays, list)
