@@ -169,7 +169,6 @@ def _fit(cfg : FitConfig) -> None:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = DATA_SAMPLE,
-        trigger= cfg.fit_cfg.trigger,
         cfg    = cfg.fit_cfg)
     nll = ftr.run()
     cfg_mod = ftr.get_config()
