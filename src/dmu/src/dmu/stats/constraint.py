@@ -2,10 +2,10 @@
 Module containing constraint classes 
 '''
 
-from pydantic import BaseModel
-from dmu      import LogStore
+from pydantic              import BaseModel
+from dmu.logging.log_store import LogStore
 
-log=LogStore.add_logger('fitter::constraint')
+log=LogStore.add_logger('dmu:stats:constraint')
 # ----------------------------------------
 class GaussianConstraint(BaseModel):
     '''
