@@ -6,12 +6,13 @@ import math
 import numpy
 import jacobi   as jac
 
-from dmu.logging.log_store                 import LogStore
-from dmu.generic                           import hashing
-from dmu.generic                           import utilities  as gut
-from rx_selection                          import selection  as sel
-from rx_efficiencies.decay_names           import DecayNames as dn
-from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
+from dmu             import LogStore
+from dmu.generic     import hashing
+from dmu.generic     import utilities  as gut
+from rx_common.types import Sample
+from rx_common.types import Trigger 
+from rx_selection    import selection  as sel
+from rx_efficiencies import EfficiencyCalculator
 
 log=LogStore.add_logger('fitter:prec_scales')
 #------------------------------------------
