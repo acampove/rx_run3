@@ -121,8 +121,8 @@ class PrecScales:
         sample = Sample[proc]
 
         log.debug(f'Calculating efficiencies for {sample}')
-        obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample)
-        val = obj.get_efficiency(sample=sample)
+        obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample, trigger=self._trigger)
+        val = obj.get_efficiency()
 
         return val
     #------------------------------------------
