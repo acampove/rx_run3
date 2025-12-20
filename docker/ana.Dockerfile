@@ -1,4 +1,4 @@
-FROM gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v6.1
+FROM gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v6.2
 WORKDIR /workspace
 COPY src ./src
 
