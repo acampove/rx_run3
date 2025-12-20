@@ -33,6 +33,7 @@ pytest
 pytest-xdist
 python-slugify
 pyYAML
+root
 scikit-learn
 scipy
 seaborn
