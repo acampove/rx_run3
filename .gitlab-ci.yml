@@ -27,7 +27,7 @@ analysis:
     - buildah push    $CI_REGISTRY_IMAGE:123
 workflow:
   stage: workflow
-  image: $CI_REGISTRY_IMAGE:e30ce8699
+  image: $CI_REGISTRY_IMAGE:571e1e28d
   script:
     - reana-client create -w rx_tests
     # -----------
