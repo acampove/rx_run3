@@ -35,5 +35,4 @@ export ZFIT_DISABLE_TF_WARNINGS=1
 export MPLCONFIGDIR=/tmp/rx/mplt
 export USER=rx_run3
 
-source /root_install/bin/thisroot.sh
 check_env
