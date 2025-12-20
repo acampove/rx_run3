@@ -23,11 +23,11 @@ analysis:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:124b4a4c8 -f docker/ana.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:124b4a4c8
+    - buildah bud  -t $CI_REGISTRY_IMAGE:966e58555 -f docker/ana.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:966e58555
 workflow:
   stage: workflow
-  image: $CI_REGISTRY_IMAGE:124b4a4c8
+  image: $CI_REGISTRY_IMAGE:966e58555
   script:
     - reana-client create -w rx_tests
     # -----------
