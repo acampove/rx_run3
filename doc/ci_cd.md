@@ -33,7 +33,12 @@ gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v1
 ```
 
 which holds the basic dependencies, ROOT, python, etc. On top of it, the analysis code is build
-in the CI/CD step in the gitlab through the `Dockerfile`. The latest tag of the image will contain
+in the CI/CD step in the gitlab through the:
+
+**docker/env.Dockerfile** : Creates image which will be tagged as v*. It installs analysis code on top of dependencies   
+**docker/ana.Dockerfile** : Creates image on top of tagged image. Installs only analysis code.
+
+files. The latest tag of the image will contain
 the latest version of the code that can be build successfuly.
 
 This will ensure that:
@@ -46,8 +51,8 @@ on what we need and when.
 Currently, the docker container is hosted [here](https://gitlab.cern.ch/LHCb-RD/cal-rx-run3/container_registry/26425) and it can be used with:
 
 ```bash
-podman pull gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:latest
-podman run -it --privileged --name rx_run3_001 -v $ANADIR:/eos/lhcb/wg/RD/RX_run3 rx_run3:v4.6
+podman pull gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v5 # Change to latest tagged version
+podman run -it --privileged --name rx_run3_001 -v $ANADIR:/eos/lhcb/wg/RD/RX_run3 rx_run3:v5
 ```
 
 where `-v` in the last step will expose `ANADIR` (the path to the inputs) to the container.
