@@ -57,6 +57,15 @@ podman run -it --privileged --name rx_run3_001 -v $ANADIR:/eos/lhcb/wg/RD/RX_run
 
 where `-v` in the last step will expose `ANADIR` (the path to the inputs) to the container.
 
+### Requirements
+
+The following files exist:
+
+**requirements-dev.txt** Contains the analysis packages and development packages, e.g. pytest   
+**requirements-ana.txt** Conlains only the analysis packages, would be used to run code in HTCondor, REANA, etc   
+**requirements-dep.txt** Contains dependencies, pinned to a given version for reproducibility.   
+**requirements-dep.in** Same as above, but without pinning most packages, used as input for dependency resolver (e.g. uv).
+
 # Further documentation
 
 [On testing](doc/testing.md)
