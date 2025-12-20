@@ -1,17 +1,19 @@
 '''
 Module with functions needed to test ConstraintReader class
 '''
-
 import pytest
-from typing                   import Final
-from pathlib                  import Path
-from dmu.stats.zfit           import zfit
-from dmu.workflow             import Cache
-from dmu                      import LogStore
-from zfit.loss                import ExtendedUnbinnedNLL
-from fitter.constraint_reader import ConstraintReader
-from zfit                     import Space     as zobs
-from zfit.param               import Parameter as zpar
+import zfit
+
+from typing       import Final
+from pathlib      import Path
+from dmu.workflow import Cache
+from dmu          import LogStore
+from dmu.stats    import print_constraints
+from rx_common    import Qsq
+from zfit.loss    import ExtendedUnbinnedNLL
+from zfit.param   import Parameter           as zpar
+from zfit         import Space               as zobs
+from fitter       import ConstraintReader
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
@@ -118,13 +120,9 @@ def initialize():
     '''
     LogStore.set_level('fitter:constraint_reader', 10)
 # --------------------------------------------------------------
-def _print_constraints(d_cns : dict[str, tuple[float,float]]) -> None:
-    for name, (value, error) in d_cns.items():
-        log.info(f'{name:<50}{value:<20.3f}{error:<20.3f}')
-# --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , _CONSTRAINTS)
-def test_simple(tmp_path : Path, kind : str, q2bin : str):
+def test_simple(tmp_path : Path, kind : str, q2bin : Qsq):
     '''
     Tests getting constraints
 
@@ -139,13 +137,14 @@ def test_simple(tmp_path : Path, kind : str, q2bin : str):
     nll : ExtendedUnbinnedNLL = obj # type: ignore
 
     with Cache.cache_root(path = tmp_path):
-        obj     = ConstraintReader(obj=nll, q2bin=q2bin)
-        d_cns   = obj.get_constraints()
-    _print_constraints(d_cns)
+        obj         = ConstraintReader(obj=nll, q2bin=q2bin)
+        constraints = obj.get_constraints()
+
+    print_constraints(constraints = constraints)
 
     # TODO: Needs to be updated when other parameter constraints be implemented
     if kind != 'rare_prec_rk':
         return
 
-    assert len(d_cns) > 0 
+    assert len(constraints) > 0 
 # --------------------------------------------------------------
