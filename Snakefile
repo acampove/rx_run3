@@ -15,7 +15,7 @@ PATHS=[
 ]
 
 rule all:
-    input: 'report.txt' 
+    input: 'report.txt'
 rule test:
     output:
         'results/group_{index}.xml'
@@ -24,14 +24,14 @@ rule test:
         ngroups= NJOBS,
         tst_dir= './temporary'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:9702f507d'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:5ceaacbee'
     resources:
         kubernetes_memory_limit='4000Mi'
     shell:
         '''
         source setup.sh
 
-        mkdir -p {params.tst_dir} 
+        mkdir -p {params.tst_dir}
 
         pytest {params.path} --basetemp {params.tst_dir} --splits {params.ngroups} --group {wildcards.index} --junitxml={output} --splitting-algorithm=least_duration || true
         '''
@@ -39,7 +39,7 @@ rule report:
     input    : expand('results/group_{index}.xml', index=range(1, NJOBS + 1))
     output   : 'report.txt'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:9702f507d'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:5ceaacbee'
     resources:
         kubernetes_memory_limit='1000Mi'
     shell:
