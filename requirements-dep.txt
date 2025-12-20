@@ -33,6 +33,7 @@ pytest
 pytest-xdist
 python-slugify
 pyYAML
+reana-client
 root
 scikit-learn
 scipy
