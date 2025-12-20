@@ -24,7 +24,7 @@ rule test:
         ngroups= NJOBS,
         tst_dir= './temporary'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:aefecb950'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:cea022b1d'
     resources:
         kubernetes_memory_limit='4000Mi'
     shell:
@@ -39,7 +39,7 @@ rule report:
     input    : expand('results/group_{index}.xml', index=range(1, NJOBS + 1))
     output   : 'report.txt'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:aefecb950'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:cea022b1d'
     resources:
         kubernetes_memory_limit='1000Mi'
     shell:
