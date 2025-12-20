@@ -71,6 +71,8 @@ cachecontrol==0.14.4
     # via schema-salad
 certifi==2025.11.12
     # via requests
+cfgv==3.5.0
+    # via pre-commit
 charset-normalizer==3.4.4
     # via requests
 checksumdir==1.1.9
@@ -117,6 +119,8 @@ contourpy==1.3.3
     # via
     #   bokeh
     #   matplotlib
+coverage==7.13.0
+    # via pytest-cov
 cramjam==2.11.0
     # via uproot
 cwltool==3.1.20210628163208
@@ -141,6 +145,8 @@ dill==0.4.0
     # via zfit
 dirhash==0.4.1
     # via packtivity
+distlib==0.4.0
+    # via virtualenv
 distributed==2025.12.0
     # via dask
 dm-tree==0.1.9
@@ -158,7 +164,9 @@ execnet==2.1.2
 fastjsonschema==2.21.2
     # via nbformat
 filelock==3.20.1
-    # via cachecontrol
+    # via
+    #   cachecontrol
+    #   virtualenv
 flatbuffers==25.12.19
     # via tensorflow
 fonttools==4.61.1
@@ -215,6 +223,8 @@ humanfriendly==10.0
     # via
     #   coloredlogs
     #   snakemake
+identify==2.6.15
+    # via pre-commit
 idna==3.11
     # via
     #   jsonschema
@@ -368,6 +378,8 @@ networkx==3.6.1
     # via
     #   adage
     #   prov
+nodeenv==1.10.0
+    # via pre-commit
 numba==0.63.1
     # via -r requirements-dep.in
 numdifftools==0.9.42
@@ -477,11 +489,17 @@ pillow==12.0.0
     #   matplotlib
     #   tensorboard
 platformdirs==4.5.1
-    # via jupyter-core
+    # via
+    #   jupyter-core
+    #   virtualenv
 pluggy==1.6.0
-    # via pytest
+    # via
+    #   pytest
+    #   pytest-cov
 ply==3.11
     # via jsonpath-rw
+pre-commit==4.5.1
+    # via -r requirements-dep.in
 protobuf==6.33.2
     # via
     #   tensorboard
@@ -522,10 +540,16 @@ pyparsing==3.2.5
     #   rdflib
 pyrsistent==0.20.0
     # via jsonschema
-pytest==9.0.2
+pytest==8.4.2
     # via
     #   -r requirements-dep.in
+    #   pytest-cov
+    #   pytest-split
     #   pytest-xdist
+pytest-cov==7.0.0
+    # via -r requirements-dep.in
+pytest-split==0.10.0
+    # via -r requirements-dep.in
 pytest-xdist==3.8.0
     # via -r requirements-dep.in
 python-daemon==3.1.2
@@ -555,6 +579,7 @@ pyyaml==6.0.3
     #   omegaconf
     #   optuna
     #   packtivity
+    #   pre-commit
     #   reana-commons
     #   snakemake
     #   swagger-spec-validator
@@ -670,10 +695,11 @@ tablib==0.12.1
     # via reana-client
 tabulate==0.8.10
     # via
-    #   -r requirements-dep.in
     #   reana-commons
     #   snakemake
     #   zfit
+tabulate2==1.10.2
+    # via -r requirements-dep.in
 tblib==3.2.2
     # via distributed
 tenacity==8.5.0
@@ -780,8 +806,12 @@ vine==5.1.0
     # via
     #   amqp
     #   kombu
+virtualenv==20.35.4
+    # via pre-commit
 wcmatch==8.4.1
     # via reana-commons
+wcwidth==0.2.14
+    # via tabulate2
 webcolors==25.10.0
     # via jsonschema
 werkzeug==3.1.4
