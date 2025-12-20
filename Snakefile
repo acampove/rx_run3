@@ -1,4 +1,4 @@
-NJOBS=4
+NJOBS=20
 #'src/post_ap'
 #'src/rx_pid',
 PATHS=[
@@ -8,9 +8,9 @@ PATHS=[
 #'src/rx_classifier',
 #'src/rx_data',
 #'src/rx_efficiencies',
-#'src/rx_misid',
+'src/rx_misid',
 'src/rx_plots',
-#'src/rx_q2',
+'src/rx_q2',
 'src/rx_selection',
 ]
 
@@ -24,7 +24,7 @@ rule test:
         ngroups= NJOBS,
         tst_dir= './temporary'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:19c10c5db'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:371217b26'
     resources:
         kubernetes_memory_limit='4000Mi'
     shell:
@@ -39,7 +39,7 @@ rule report:
     input    : expand('results/group_{index}.xml', index=range(1, NJOBS + 1))
     output   : 'report.txt'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:19c10c5db'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:371217b26'
     resources:
         kubernetes_memory_limit='1000Mi'
     shell:
