@@ -15,19 +15,19 @@ environment:
     - buildah bud  -t $CI_REGISTRY_IMAGE:v6.0 -f docker/env.Dockerfile
     - buildah push    $CI_REGISTRY_IMAGE:v6.0
   only:
-    - issue-005
+    - update_base_image
 analysis:
   stage: build-analysis
-  image: $CI_REGISTRY_IMAGE:v6.0
+  image: registry.cern.ch/quay.io/buildah/stable
   before_script:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:00d3a3cc7 -f docker/ana.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:00d3a3cc7
+    - buildah bud  -t $CI_REGISTRY_IMAGE:124b4a4c8 -f docker/ana.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:124b4a4c8
 workflow:
   stage: workflow
-  image: $CI_REGISTRY_IMAGE:00d3a3cc7
+  image: $CI_REGISTRY_IMAGE:124b4a4c8
   script:
     - reana-client create -w rx_tests
     # -----------
