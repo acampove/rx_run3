@@ -12,7 +12,7 @@ dependencies = [
     'hist[plot]',
     'matplotlib',
     'mplhep',
-    'numpy<=2.2',
+    'numpy',
     'omegaconf',
     'pandas',
     'PyYAML',
