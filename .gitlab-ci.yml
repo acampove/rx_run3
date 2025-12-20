@@ -2,31 +2,41 @@
 # https://gitlab.cern.ch/gitlabci-examples/build_docker_image/-/blob/master/.gitlab-ci.yml?ref_type=heads#L54
 stages:
   - test
-  - build
-  - reana
-build-image:
-  stage: build
+  - build-environment
+  - build-analysis
+  - workflow
+environment:
+  stage: build-environment
   image: registry.cern.ch/quay.io/buildah/stable
   before_script:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:e3d46c5be .
-    - buildah push    $CI_REGISTRY_IMAGE:e3d46c5be
+    - buildah bud  -t $CI_REGISTRY_IMAGE:v6.0 -f docker/env.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:v6.0
   only:
-    - master
-reana_workflow:
-  stage: reana 
-  image: $CI_REGISTRY_IMAGE:e3d46c5be
+    - issue-005
+analysis:
+  stage: build-analysis
+  image: $CI_REGISTRY_IMAGE:v6.0
+  before_script:
+    - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
+    - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - reana-client create -w cal-rx-run3 
+    - buildah bud  -t $CI_REGISTRY_IMAGE:123 -f docker/ana.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:123
+workflow:
+  stage: workflow
+  image: $CI_REGISTRY_IMAGE:e30ce8699
+  script:
+    - reana-client create -w rx_tests
     # -----------
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name  "*.txt"    -type f)
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.yaml"    -type f)
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.toml"    -type f)
-    - reana-client upload -w cal-rx-run3 $(find src/dmu -name "*.json"    -type f)
+    - reana-client upload -w rx_tests $(find src/dmu -name  "*.txt"    -type f)
+    - reana-client upload -w rx_tests $(find src/dmu -name "*.yaml"    -type f)
+    - reana-client upload -w rx_tests $(find src/dmu -name "*.toml"    -type f)
+    - reana-client upload -w rx_tests $(find src/dmu -name "*.json"    -type f)
     # -----------
-    - reana-client upload -w cal-rx-run3 $(find       . -name "test_*.py" -type f)
-    - reana-client upload -w cal-rx-run3 $(find       . -name "Snakefile" -type f)
-    - reana-client upload -w cal-rx-run3 $(find       . -name "setup.sh"  -type f)
-    - reana-client start  -w cal-rx-run3 --follow
+    - reana-client upload -w rx_tests $(find       . -name "test_*.py" -type f)
+    - reana-client upload -w rx_tests $(find       . -name "Snakefile" -type f)
+    - reana-client upload -w rx_tests $(find       . -name "setup.sh"  -type f)
+    - reana-client start  -w rx_tests --follow
