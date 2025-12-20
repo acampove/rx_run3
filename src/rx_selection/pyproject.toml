@@ -4,12 +4,12 @@ version         = "0.1.9"
 description     = "Project used to apply selection to ntuples used for RX measurements filtered and skimmed by post_ap project"
 readme          = "README.md"
 dependencies    = [
-    "numexpr>=0.0.0",
-    "jacobi>=0.0.0",
-    "joblib>=0.0.0",
-    "pandas>=0.0.0",
-    "numpy>=0.0.0",
-    "matplotlib>=0.0.0",
+    "numexpr",
+    "jacobi",
+    "joblib",
+    "pandas",
+    "numpy",
+    "matplotlib",
 ]
 
 [project.optional-dependencies]

@@ -8,7 +8,7 @@ dependencies= [
 'numpy',
 'mplhep',
 'fsspec-xrootd',
-'omegaconf>=2.3.0',
+'omegaconf',
 'pidcalib2']
 
 [project.optional-dependencies]

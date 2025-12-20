@@ -4,13 +4,13 @@ description     = "Project with lists of LFNs and utilities needed to download f
 version         = "0.0.0"
 readme          = "README.md"
 dependencies    = [
-    "tqdm>=0.0.0",
-    "dask>=0.0.0",
-    "uproot>=0.0.0",
-    "tabulate>=0.9.0", # Or pandas will fail
-    "mplhep>=0.0.0",
-    "particle>=0.0.0",
-    "vector>=0.0.0",
+    "tqdm",
+    "dask",
+    "uproot",
+    "tabulate", # Or pandas will fail
+    "mplhep",
+    "particle",
+    "vector",
     "pandas",
     'typer',
     "numpy",
