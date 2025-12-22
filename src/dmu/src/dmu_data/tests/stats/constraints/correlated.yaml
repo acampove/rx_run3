@@ -3,7 +3,7 @@ signal_shape:
   parameters  :
     - mu
     - sg
-  observation : 
+  values : 
     - 5080
     - 10
   cov: 
