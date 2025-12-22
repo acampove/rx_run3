@@ -3,6 +3,7 @@ Module containing constraint classes
 '''
 
 import zfit
+import math
 import numpy
 
 from typing                import Protocol
@@ -11,7 +12,7 @@ from zfit.constraint       import GaussianConstraint as GConstraint
 from zfit.constraint       import PoissonConstraint  as PConstraint
 from zfit.param            import Parameter as zpar
 
-from pydantic              import BaseModel
+from pydantic              import BaseModel, model_validator
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:constraint')
@@ -27,6 +28,120 @@ class ConstraintND(BaseModel):
     '''
     Class meant to symbolize NDimensional Gaussian constraint
     '''
+    kind       : str
+    parameters : list[str]
+    values     : list[float]
+    cov        : list[list[float]]
+    # ---------------------
+    @model_validator(mode='after')
+    def check_dimensions(self) -> 'ConstraintND':
+        '''
+        Checks that all the inputs are of the same dimension
+        '''
+        dimension = len(self.parameters)
+        
+        if len(self.values) != dimension:
+            raise ValueError(f"observation length ({len(self.values)}) must match parameters length ({dimension})")
+        
+        if len(self.cov) != dimension:
+            raise ValueError(f"cov must have {dimension} rows, but has {len(self.cov)}")
+            
+        for irow, row in enumerate(self.cov):
+            if len(row) != dimension:
+                raise ValueError(f"cov row {irow} must have {dimension} columns, but has {len(row)}")
+        
+        return self
+    # ----------------------
+    def _obs_from_holder(self, holder : ParsHolder) -> list[zpar]:
+        '''
+        Parameters
+        ------------------
+        holder: Object holding parameters
+
+        Returns
+        ------------------
+        Observables of constraint, i.e. parameters to constrain
+        '''
+        s_par = holder.get_params()
+
+        obs : list[zpar] = []
+        for par in s_par:
+            if par.name not in self.parameters: 
+                continue
+
+            obs.append(par)
+
+        if not obs:
+            raise ValueError('No observable found')
+
+        return obs
+    # ----------------------
+    @cached_property
+    def observations(self) -> dict[str,zpar]:
+        '''
+        Returns
+        -------------
+        List with parameters synbolizing the mean of the ND Gaussian
+        '''
+        d_obs : dict[str,zpar] = dict()
+        for ipar, name in enumerate(self.parameters):
+            value = self.values[ipar]
+            error = math.sqrt(self.cov[ipar][ipar])
+
+            obs = zfit.Parameter(
+                f'{name}_mu', 
+                value, 
+                value - 5 * error, 
+                value + 5 * error)
+
+            d_obs[name] = obs
+
+        return d_obs
+    # ---------------------
+    def zfit_cons(self, holder : ParsHolder) -> GConstraint:
+        '''
+        Parameters
+        ------------
+        holder: Object holding zfit parameters, e.g. Likelihood
+
+        Returns
+        ------------
+        Multidimentional Gaussian constraint
+        '''
+        l_par = self._obs_from_holder(holder = holder)
+        l_obs = self.observations
+
+        cns   = zfit.constraint.GaussianConstraint(
+            params      = l_par, 
+            observation = l_obs,
+            cov         = self.cov)
+
+        return cns
+    # ----------------------
+    def observation(self, name : str) -> float:
+        '''
+        Parameters
+        -------------
+        name: Name of parameter that will be constrained
+
+        Returns
+        -------------
+        Value to which it will be constrained
+        '''
+        if name not in self.observations:
+            raise ValueError(f'Parameter {name} not found')
+
+        par = self.observations[name]
+
+        return float(par.value().numpy())
+    # ----------------------
+    def resample(self) -> None:
+        '''
+        Sets the value of the constrained parameter to
+        '''
+        new_values = numpy.random.multivariate_normal(self.values, self.cov, size=1)
+        for new_value, observation in zip(new_values[0], self.observations.values()):
+            observation.set_value(new_value)
 # ----------------------------------------
 class Constraint1D(BaseModel):
     '''

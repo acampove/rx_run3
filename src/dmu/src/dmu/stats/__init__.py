@@ -1,4 +1,5 @@
 from .constraint       import Constraint1D 
+from .constraint       import ConstraintND
 from .constraint       import print_constraints 
 from .constraint_adder import ConstraintAdder
 from .parameters       import ParameterLibrary
@@ -7,6 +8,7 @@ from .gof_calculator   import GofCalculator
 
 __all__ = [
     'Constraint1D',
+    'ConstraintND',
     'print_constraints',
     'ConstraintAdder',
     'ParameterLibrary',

@@ -12,6 +12,7 @@ from zfit.constraint import PoissonConstraint  as PConstraint
 
 from dmu.generic import utilities as gut
 from dmu.stats   import Constraint1D 
+from dmu.stats   import ConstraintND
 from dmu.stats   import print_constraints 
 
 from dmu import LogStore
@@ -76,8 +77,8 @@ def test_constraint1D(data : dict, mu : float, sg : float):
     holder = ParsHolder()
     cons   = Constraint1D(**data)
 
-    par = cons.zfit_cons(holder)
-    assert isinstance(par, (GConstraint, PConstraint))
+    zcons  = cons.zfit_cons(holder)
+    assert isinstance(zcons, (GConstraint, PConstraint))
 
     values = []
     for _ in range(100):
@@ -100,3 +101,35 @@ def test_print():
 
     log.info('')
     print_constraints(l_cons)
+# ---------------------------------
+def test_constraintND():
+    numpy.random.seed(42)
+
+    data = gut.load_data(package='dmu_data', fpath='tests/stats/constraints/correlated.yaml')
+    block= data['signal_shape']
+
+    holder = ParsHolder()
+    cons   = ConstraintND(**block)
+    zcons  = cons.zfit_cons(holder)
+
+    assert isinstance(zcons, GConstraint)
+
+    l_mu = []
+    l_sg = []
+    for _ in range(1000):
+        cons.resample()
+        mu = cons.observation('mu')
+        sg = cons.observation('sg')
+
+        l_mu.append(mu)
+        l_sg.append(sg)
+
+    mu_mu = numpy.mean(l_mu)
+    mu_sg = numpy.mean(l_sg)
+    sg_mu = numpy.std(l_mu)
+    sg_sg = numpy.std(l_sg)
+
+    assert numpy.isclose(mu_mu , 5079.658, rtol=1e-5)
+    assert numpy.isclose(mu_sg , 10.06348, rtol=1e-5)
+    assert numpy.isclose(sg_mu , 9.611858, rtol=1e-5)
+    assert numpy.isclose(sg_sg , 1.998920, rtol=1e-5)
