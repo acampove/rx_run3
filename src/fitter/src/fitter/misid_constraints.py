@@ -2,14 +2,17 @@
 Module containing the MisIDConstraints class
 '''
 
+import zfit
+
 from typing         import Final
 from rx_selection   import selection as sel
 
-from dmu.stats.gof_calculator import GofCalculator
-from dmu.stats.parameters     import ParameterLibrary as PL
+from dmu.stats      import GofCalculator
+from dmu.stats      import ParameterLibrary as PL
+from dmu.stats      import GaussianConstraint
+from dmu.stats      import PoissonConstraint
 
 from dmu.generic    import utilities        as gut
-from dmu.stats.zfit import zfit
 from dmu.workflow   import Cache
 from dmu            import LogStore
 
@@ -20,7 +23,6 @@ from zfit.loss      import ExtendedUnbinnedNLL as zlos
 from fitter         import DataFitter
 from fitter         import LikelihoodFactory
 from fitter         import DataPreprocessor
-from fitter         import GaussianConstraint
 
 log=LogStore.add_logger('fitter:misid_constraints')
 # -------------------------        
@@ -220,7 +222,7 @@ class MisIDConstraints(Cache):
 
         return nll, cfg
     # ----------------------
-    def get_constraints(self) -> list[GaussianConstraint]:
+    def get_constraints(self) -> list[GaussianConstraint | PoissonConstraint]:
         '''
         Returns
         -------------
