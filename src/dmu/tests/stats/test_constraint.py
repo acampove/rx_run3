@@ -1,8 +1,7 @@
 '''
 Module with tests for classes and functions in constraint.py module
 '''
-import ROOT # type: ignore
-from dmu.stats.zfit import zfit
+import zfit
 
 from zfit.constraint import GaussianConstraint as GConstraint 
 from zfit.constraint import PoissonConstraint  as PConstraint 
