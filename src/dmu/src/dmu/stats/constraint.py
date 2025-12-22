@@ -88,8 +88,7 @@ class PoissonConstraint(BaseModel):
         '''
         return PConstraint(params=par, observation=self.lam)
 # ----------------------------------------
-Constraint = GaussianConstraint | PoissonConstraint
-def print_constraints(constraints : list[Constraint]) -> None:
+def print_constraints(constraints : list[GaussianConstraint | PoissonConstraint]) -> None:
     '''
     Parameters
     -------------
