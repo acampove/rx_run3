@@ -1,14 +1,16 @@
 mu:
   kind : GaussianConstraint 
-  val  : 5080
+  mu   : 5080
   sg   : 10
 sg:
   kind : GaussianConstraint 
-  val  : 10 
+  mu   : 10 
   sg   : 2 
 nsig:
   kind : PoissonConstraint
-  val  : 1000 
+  mu   : 1000 
+  sg   : -999 
 nbkg:
   kind : PoissonConstraint
-  val  : 1000 
+  mu   : 1000 
+  sg   : -999 
