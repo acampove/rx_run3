@@ -6,12 +6,13 @@ import math
 import numpy
 import jacobi   as jac
 
-from dmu.logging.log_store                 import LogStore
-from dmu.generic                           import hashing
-from dmu.generic                           import utilities  as gut
-from rx_selection                          import selection  as sel
-from rx_efficiencies.decay_names           import DecayNames as dn
-from rx_efficiencies.efficiency_calculator import EfficiencyCalculator
+from dmu             import LogStore
+from dmu.generic     import hashing
+from dmu.generic     import utilities  as gut
+from rx_common.types import Sample
+from rx_common.types import Trigger 
+from rx_selection    import selection  as sel
+from rx_efficiencies import EfficiencyCalculator
 
 log=LogStore.add_logger('fitter:prec_scales')
 #------------------------------------------
@@ -29,13 +30,13 @@ class PrecScales:
         self._q2bin       = q2bin
 
         self._d_frbf      : dict
-        self._trigger     = 'Hlt2RD_BuToKpEE_MVA'
+        self._trigger     = Trigger('Hlt2RD_BuToKpEE_MVA')
         self._initialized = False
 
         self._hash        = self._get_hash()
     #------------------------------------------
     def _get_hash(self) -> str:
-        process = dn.sample_from_decay(self._proc)
+        process = Sample[self._proc] 
         d_sel   = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=process)
         hsh     = hashing.hash_object([self._proc, self._q2bin, d_sel])
 
@@ -91,8 +92,8 @@ class PrecScales:
         br_cov   = numpy.diag(l_br_err) ** 2
         val, var = jac.propagate(
             math.prod,
-            l_br_val,
-            br_cov)
+            l_br_val, #type: ignore
+            br_cov)   #type: ignore
 
         err      = math.sqrt(var)
         val      = float(val)
@@ -102,7 +103,7 @@ class PrecScales:
     def _get_br(self, proc : str) -> tuple[float,float]:
         log.debug(f'Calculating BR for {proc}')
 
-        l_dec = dn.subdecays_from_nickname(proc)
+        l_dec = Sample[proc].subdecays
         l_bf  = [ self._d_frbf['bf'][dec] for dec in l_dec ]
 
         return self._mult_brs(l_bf)
@@ -117,11 +118,11 @@ class PrecScales:
         --------------
         Tuple with efficiency value and error
         '''
-        sample = dn.sample_from_decay(proc)
+        sample = Sample[proc]
 
         log.debug(f'Calculating efficiencies for {sample}')
-        obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample)
-        val = obj.get_efficiency(sample=sample)
+        obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample, trigger=self._trigger)
+        val = obj.get_efficiency()
 
         return val
     #------------------------------------------
@@ -167,7 +168,7 @@ class PrecScales:
         self._print_vars(l_tup[:3], proc=    signal)
         self._print_vars(l_tup[3:], proc=self._proc)
 
-        val, var = jac.propagate(lambda x : (x[3] * x[4] * x[5]) / (x[0] * x[1] * x[2]), l_val, cov)
+        val, var = jac.propagate(lambda x : (x[3] * x[4] * x[5]) / (x[0] * x[1] * x[2]), l_val, cov) # type: ignore
         val = float(val)
         err = math.sqrt(var)
 

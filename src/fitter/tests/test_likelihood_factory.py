@@ -39,6 +39,29 @@ def initialize():
     with RDFGetter.max_entries(value = 10_000):
         yield
 # -------------------------------------------
+def test_simple(tmp_path : Path):
+    '''
+    Test using toy data
+    '''
+    cfg = gut.load_conf(
+        package='fitter_data',
+        fpath  ='tests/likelihood_factory/data.yaml')
+
+    obs = zfit.Space('B_Mass_smr', limits=(5000, 6000))
+    with PL.parameter_schema(cfg=cfg.model.yields),\
+         Cache.cache_root(path = tmp_path),\
+         RDFGetter.max_entries(value=100_000):
+
+        ftr = LikelihoodFactory(
+            name   = 'brem_000',
+            obs    = obs,
+            sample = 'DATA_24_MagDown_24c2',
+            q2bin  = 'jpsi',
+            cfg    = cfg)
+        nll = ftr.run()
+
+
+# -------------------------------------------
 def test_config(tmp_path : Path):
     '''
     Tests the config method

@@ -2,12 +2,17 @@
 Script holding ConstraintReader class
 '''
 
-from dmu.logging.log_store       import LogStore
-from rx_efficiencies.decay_names import DecayNames    as dn
-from fitter.prec_scales          import PrecScales
-from zfit.loss                   import ExtendedUnbinnedNLL
+from dmu           import LogStore
+from rx_common     import Qsq
+from zfit.loss     import ExtendedUnbinnedNLL
+from rx_common     import Sample
+from .prec_scales  import PrecScales
+from dmu.stats     import GaussianConstraint
+from dmu.stats     import PoissonConstraint
 
 log=LogStore.add_logger('fitter:constraint_reader')
+
+Constraint = GaussianConstraint | PoissonConstraint
 # -------------------------------------------------------------
 class ConstraintReader:
     '''
@@ -17,7 +22,7 @@ class ConstraintReader:
     def __init__(
         self, 
         obj   : ExtendedUnbinnedNLL, 
-        q2bin : str,
+        q2bin : Qsq,
         signal: str = 'bpkpee',
         pprefx: str = 'pscale'):
         '''
@@ -34,10 +39,10 @@ class ConstraintReader:
         s_par         = obj.get_params(floating=True) 
         self._l_par   = [ par.name for par in s_par ] 
         self._q2bin   = q2bin
-
-        self._d_const = {}
         self._signal  = signal 
         self._prc_pref= pprefx 
+
+        self._constraints : list[Constraint] = []
     # -------------------------------------------------------------
     def _add_signal_constraints(self) -> None:
         raise NotImplementedError('This needs to be implemented with DataFitter')
@@ -56,10 +61,10 @@ class ConstraintReader:
         if not par_name.startswith(prefix):
             raise ValueError(f'Prec scale parameter does not start with {prefix} but {par_name}')
 
-        sample = par_name.removeprefix(prefix)
-        decay  = dn.nic_from_sample(sample)
+        name   = par_name.removeprefix(prefix)
+        sample = Sample(name)
 
-        return decay
+        return sample.name 
     # -------------------------------------------------------------
     def _add_prec_constraints(self) -> None:
         log.info('Adding partially reconstructed component constraint')
@@ -76,9 +81,14 @@ class ConstraintReader:
             obj      = PrecScales(proc=process, q2bin=self._q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
-            self._d_const[par] = val, err
+            cns = GaussianConstraint(
+                name = par,
+                mu   = val,
+                sg   = err)
+
+            self._constraints.append(cns)
     # -------------------------------------------------------------
-    def get_constraints(self) -> dict[str,tuple[float,float]]:
+    def get_constraints(self) -> list[GaussianConstraint|PoissonConstraint]:
         '''
         Returns dictionary with constraints, i.e.
 
@@ -87,5 +97,5 @@ class ConstraintReader:
         '''
         self._add_prec_constraints()
 
-        return self._d_const
+        return self._constraints
 # -------------------------------------------------------------

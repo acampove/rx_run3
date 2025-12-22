@@ -1,0 +1,25 @@
+common_settings: &settings
+  shared        : []
+  float         : []
+  reparametrize : {}
+  fix           : {}
+
+output_directory : rare/rkst/muon/combinatorial
+categories:
+  main:
+    models :
+      low     : [exp]
+      central : [exp]
+      jpsi    : [exp]
+      psi2    : [exp]
+      high    : [exp]
+low:
+  <<: *settings
+central:
+  <<: *settings
+jpsi:
+  <<: *settings
+psi2:
+  <<: *settings
+high:
+  <<: *settings

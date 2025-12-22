@@ -1,7 +1,7 @@
 '''
 Module containing SamplePatcher
 '''
-from ROOT                   import RDataFrame
+from ROOT                   import RDataFrame # type: ignore
 from pathlib                import Path
 from dmu.generic            import utilities as gut 
 from rx_data.specification  import Specification, Sample

@@ -20,6 +20,7 @@ from zfit.loss      import ExtendedUnbinnedNLL as zlos
 from fitter         import DataFitter
 from fitter         import LikelihoodFactory
 from fitter         import DataPreprocessor
+from fitter         import GaussianConstraint
 
 log=LogStore.add_logger('fitter:misid_constraints')
 # -------------------------        
@@ -212,7 +213,6 @@ class MisIDConstraints(Cache):
                 obs    = obs,
                 name   = kind,
                 sample = self._data_sample, 
-                trigger= self._cfg.trigger,
                 q2bin  = self._q2bin,
                 cfg    = self._cfg)
             nll = ftr.run()
@@ -220,7 +220,7 @@ class MisIDConstraints(Cache):
 
         return nll, cfg
     # ----------------------
-    def get_constraints(self) -> dict[str,tuple[float,float]]:
+    def get_constraints(self) -> list[GaussianConstraint]:
         '''
         Returns
         -------------
@@ -235,7 +235,7 @@ class MisIDConstraints(Cache):
 
             d_cns = gut.load_json(cons_path)
 
-            return d_cns 
+            return GaussianConstraint.from_dict(data = d_cns)
 
         log.info(f'Running full calculation, nothing cached in: {cons_path}')
         d_nll   = {}
@@ -251,5 +251,5 @@ class MisIDConstraints(Cache):
 
         self._cache()
 
-        return d_cns 
+        return GaussianConstraint.from_dict(data = d_cns)
 # -------------------------

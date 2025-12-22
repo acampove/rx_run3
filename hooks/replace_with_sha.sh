@@ -9,18 +9,11 @@
 set -euo pipefail
 
 BRANCH=$(git branch --show-current)
-
 SHA=$(git rev-parse --short HEAD)
 
 echo "-----------------"
 echo "Found SHA: $SHA"
 echo ""
-if [[ ! -f Snakefile ]];then
-    echo "Missing Snakefile"
-    exit 1
-else
-    echo "Will change Snakefile's image tag"
-fi
 
 if [[ ! -f .gitlab-ci.yml ]];then
     echo "Missing gitlab CI/CD file"
@@ -30,8 +23,10 @@ else
 fi
 echo "-----------------"
 
-sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"            Snakefile
+sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"           Snakefile 
+sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"           toys.smk 
 sed -i -E "s|_IMAGE:[a-f0-9]{9}|_IMAGE:$SHA|" .gitlab-ci.yml
 
 git add Snakefile
+git add toys.smk 
 git add .gitlab-ci.yml

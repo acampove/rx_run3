@@ -10,7 +10,7 @@ import argparse
 
 from typing                     import Final
 from contextlib                 import ExitStack
-from omegaconf                  import DictConfig, OmegaConf
+from omegaconf                  import DictConfig
 from dmu.stats.parameters       import ParameterLibrary as PL
 from dmu.generic                import utilities as gut
 from dmu.stats                  import utilities as sut
@@ -25,12 +25,14 @@ from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 from fitter.misid_constraints  import MisIDConstraints 
 from fitter.toy_maker          import ToyMaker
+from fitter.constraint         import GaussianConstraint, PoissonConstraint, print_constraints
 from rx_data.rdf_getter        import RDFGetter
 from rx_selection              import selection as sel
 from rx_common                 import info
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 
+Constraint               = GaussianConstraint | PoissonConstraint
 DATA_SAMPLE : Final[str] = 'DATA_24_*'
 # ----------------------
 def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
@@ -42,8 +44,9 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConf
     if args is None:
         parser = argparse.ArgumentParser(description='Script used to fit RX data')
         parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[1,2,3,4,5,6,7,8], default=-1)
-        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/rk/electron'    , required=True)
-        parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =  '')
+        parser.add_argument('-g', '--group'  , type=str  , help='Name of group to which fit belongs, e.g. toys'   , required= True)
+        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/rk/electron'    , required= True)
+        parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =   '')
         parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
         parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                               , default =1)
         parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30]          , default =20)
@@ -80,11 +83,12 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
         name    = name,
         fit_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
+        group   = args.group,
         block   = args.block,
         q2bin   = args.q2bin,
         nthread = args.nthread,
-        mva_cmb = args.mva_cmb,
-        mva_prc = args.mva_prc,
+        mva_cmb = args.mva_cmb / 100.,
+        mva_prc = args.mva_prc / 100.,
         log_lvl = args.log_lvl,
         ntoys   = args.ntoys)
 
@@ -167,7 +171,6 @@ def _fit(cfg : FitConfig) -> None:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = DATA_SAMPLE,
-        trigger= cfg.fit_cfg.trigger,
         cfg    = cfg.fit_cfg)
     nll = ftr.run()
     cfg_mod = ftr.get_config()
@@ -207,7 +210,6 @@ def main(args : DictConfig | None = None):
         stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
         stack.enter_context(sel.custom_selection(d_sel=cfg.overriding_selection))
         stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
-        stack.enter_context(Cache.turn_off_cache(val=[]))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
 
         _fit(cfg=cfg)

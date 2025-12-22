@@ -21,7 +21,11 @@ given that:
 1. One might need special definitions for the acceptance and having the ntuples with the
 decay product values offers higher flexibility.
 
-More on how to install and configure rapidsim [here](doc/rapidsim.md).
+To install rapidsim do inside a micromamba environment:
+
+```bash
+micromamba install rapidsim
+```
 
 To create the ntuples with the decays, do:
 
@@ -130,3 +134,4 @@ df  = obj.run()
 
 this would return a dataframe with columns `mva_cmb`, `mva_prc` 
 and `eff`, the last of which is the efficiency.
+

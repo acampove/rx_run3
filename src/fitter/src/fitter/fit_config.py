@@ -3,16 +3,16 @@ Module containing FitConfig class
 '''
 import os
 import dataclasses
-from functools import cached_property
-from pathlib   import Path
-from typing    import Any
 
-from dmu.stats.zfit         import zfit
-from omegaconf              import DictConfig
-from dmu.generic            import utilities  as gut
-from dmu.logging.log_store  import LogStore
-from rx_common              import info
-from zfit                   import Space      as zobs
+from functools      import cached_property
+from pathlib        import Path
+from typing         import Any
+from dmu.stats.zfit import zfit
+from omegaconf      import DictConfig
+from dmu.generic    import utilities  as gut
+from dmu            import LogStore
+from rx_common      import Qsq, info
+from zfit           import Space      as zobs
 
 log=LogStore.add_logger('rx_fitter::fit_config')
 # ----------------------
@@ -22,16 +22,17 @@ class FitConfig:
     Class used to store configuration needed for fits
     '''
     name    : str
+    group   : str
     fit_cfg : DictConfig
-    toy_cfg : DictConfig|None = None
+    mva_cmb : float
+    mva_prc : float
+    q2bin   : Qsq
 
-    block   : int  = -1 
-    nthread : int  = 1
-    q2bin   : str  = ''
-    mva_cmb : float= 0.0
-    mva_prc : float= 0.0
-    log_lvl : int  = 20
-    ntoys   : int  = 0
+    block   : int             = -1 
+    nthread : int             = 1
+    log_lvl : int             = 20
+    ntoys   : int             = 0
+    toy_cfg : DictConfig|None = None
     # ----------------------
     def replace(self, substring : str, value : str) -> None:
         '''
@@ -262,7 +263,7 @@ class FitConfig:
         if ana_dir is None:
             raise RuntimeError('ANADIR variable not set')
 
-        out_dir = f'{ana_dir}/fits/data/{self.fit_name}_{block_name}'
+        out_dir = f'{ana_dir}/fits/data/{self.group}/{self.fit_name}_{block_name}'
     
         return Path(out_dir)
     # ----------------------

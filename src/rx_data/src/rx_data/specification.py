@@ -3,7 +3,7 @@ Module holding Specification and Sample classes
 '''
 
 from pathlib   import Path
-from ROOT      import RDataFrame
+from ROOT      import RDataFrame # type: ignore
 from pydantic  import BaseModel, ConfigDict
 
 # --------------------------

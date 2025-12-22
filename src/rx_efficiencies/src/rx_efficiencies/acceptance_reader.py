@@ -5,10 +5,10 @@ Module holding AcceptanceReader class
 import os
 import pandas as pnd
 
+from pathlib                        import Path
 from dmu.generic.version_management import get_last_version
-from dmu.logging.log_store          import LogStore
-
-from rx_efficiencies.decay_names    import DecayNames
+from dmu                            import LogStore
+from rx_common                      import Project, Sample
 
 log=LogStore.add_logger('rx_efficiencies:acceptance_reader')
 #----------------------------------
@@ -17,12 +17,29 @@ class AcceptanceReader:
     Class meant to read Geometric acceptances calculated from rapidsim ntuples
     '''
     #----------------------------------
-    def __init__(self, year : str, proc : str):
+    def __init__(
+        self, 
+        year   : str, 
+        project: Project,
+        sample : Sample):
+        '''
+        Parameters
+        ---------------
+        year   : E.g. 2024, needed to pick correct file
+        project: E.g. rk, rkst
+        sample : E.g. bpkpee
+        '''
         self._year    = year
-        self._proc    = proc
-        self._ana_dir = os.environ['ANADIR']
+        self._sample  = sample
+        self._project = project
+        self._ana_dir = Path(os.environ['ANADIR'])
     #----------------------------------
-    def _get_energy(self) -> dict[str,str]:
+    def _get_energy(self) -> str:
+        '''
+        Returns
+        -----------------
+        Center of mass energy string associated to _year
+        '''
         d_energy  = {
                 '2011' : '7TeV',
                 '2012' : '8TeV',
@@ -43,26 +60,24 @@ class AcceptanceReader:
         '''
         Reads JSON files, returns acceptance value
         '''
-        prc_dir = f'{self._ana_dir}/efficiencies/acceptances'
+        prc_dir = self._ana_dir / 'efficiencies/acceptances'
         vers    = get_last_version(dir_path=prc_dir, version_only=True)
         energy  = self._get_energy()
-        prc_path= f'{prc_dir}/{vers}/acceptances_{energy}.json'
+        prc_path= prc_dir / f'{vers}/{self._project}/acceptances_{energy}.json'
 
-        if not os.path.isfile(prc_path):
+        if not prc_path.exists():
             log.error(f'File not found: {prc_path}')
             raise FileNotFoundError
 
-        df            = pnd.read_json(prc_path)
-        df['Process'] = df['Process'].replace(DecayNames.tex_nic)
-
-        df  = df[ df.Process == self._proc ]
+        df  = pnd.read_json(prc_path)
+        df  = df[ df.Sample == self._sample ]
         if len(df) == 0:
-            raise ValueError(f'Process {self._proc} not found in {prc_path}')
+            raise ValueError(f'Process {self._sample} not found in {prc_path}')
 
         try:
             [val] = df.Physical.tolist()
         except ValueError as exc:
-            raise ValueError(f'More than one acceptance for process: {self._proc}') from exc
+            raise ValueError(f'More than one acceptance for process: {self._sample}') from exc
 
         return val
 #----------------------------------
