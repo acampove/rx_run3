@@ -3,17 +3,19 @@ signal_shape:
   parameters  :
     - mu
     - sg
-  observation : 
+  values : 
     - 5200
     - 50
   cov: 
     - [100, 10]
     - [ 10,  4]
-yields:
-  kind        : PoissonConstraint
-  parameters  :
-    - nsig 
-    - nbkg 
-  observation : 
-    - 1000 
-    - 1000 
+nsig:
+  kind : PoissonConstraint
+  name : nsig 
+  mu   : 1000
+  sg   : -999
+nbkg:
+  kind : PoissonConstraint
+  name : nbkg
+  mu   : 1000
+  sg   : -999
