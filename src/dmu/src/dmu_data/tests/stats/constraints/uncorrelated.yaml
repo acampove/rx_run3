@@ -1,12 +1,12 @@
 mu:
   name : mu
   kind : GaussianConstraint 
-  mu   : 5080
-  sg   : 10
+  mu   : 5200
+  sg   : 1
 sg:
   name : sg 
   kind : GaussianConstraint 
-  mu   : 10 
+  mu   : 150 
   sg   : 2 
 nsig:
   name : nsig 
