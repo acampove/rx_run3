@@ -6,6 +6,7 @@ import zfit
 import math
 import numpy
 
+from typing                import Sequence
 from tabulate              import tabulate
 from typing                import Protocol
 from functools             import cached_property
@@ -281,7 +282,7 @@ class Constraint1D(BaseModel):
 
         self.observation.set_value(new_val)
 # ----------------------------------------
-def print_constraints(constraints : list[Constraint1D | ConstraintND]) -> None:
+def print_constraints(constraints : Sequence[Constraint1D | ConstraintND]) -> None:
     '''
     Parameters
     -------------
@@ -296,7 +297,7 @@ def print_constraints(constraints : list[Constraint1D | ConstraintND]) -> None:
     if l_cons_nd:
         _print_nd_constraints(l_cons_nd)
 # ----------------------------------------
-def _print_1d_constraints(constraints : list[Constraint1D]) -> None:
+def _print_1d_constraints(constraints : Sequence[Constraint1D]) -> None:
     '''
     Prints list of constraints
     '''
@@ -305,7 +306,7 @@ def _print_1d_constraints(constraints : list[Constraint1D]) -> None:
     for constraint in constraints:
         log.info(constraint)
 # ----------------------------------------
-def _print_nd_constraints(constraints : list[ConstraintND]) -> None:
+def _print_nd_constraints(constraints : Sequence[ConstraintND]) -> None:
     '''
     Prints list of constraints
     '''
