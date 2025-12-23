@@ -10,6 +10,7 @@ import pandas as pnd
 import pytest
 
 from typing      import Union
+from rx_common   import rxran
 from zfit.loss   import ExtendedUnbinnedNLL, UnbinnedNLL 
 from omegaconf   import DictConfig
 from dmu.stats   import Constraint1D, ConstraintND
@@ -17,6 +18,7 @@ from dmu.stats   import ConstraintAdder
 from dmu.stats   import utilities as sut
 from dmu.generic import utilities as gut
 from dmu         import LogStore
+from dmu.stats.constraint import print_constraints
 
 log        = LogStore.add_logger('dmu:stats:test_constraint_adder')
 Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
@@ -27,10 +29,11 @@ def initialize():
     '''
     This will run before any test
     '''
-    numpy.random.seed(42)
-
     LogStore.set_level('dmu:stats:constraint_adder'     , 10)
     LogStore.set_level('dmu:stats:test_constraint_adder', 10)
+
+    with rxran.seed(42):
+        yield
 # ----------------------
 def _extract_observables(nll : Loss) -> pnd.DataFrame:
     '''
