@@ -18,16 +18,9 @@ from dmu.stats   import utilities as sut
 from dmu.generic import utilities as gut
 from dmu         import LogStore
 
-_CONSTRAINTS = [
-    {
-        'mu' : (5200., 10.),
-        'sg' : (  50., 20.),
-    },
-    {},
-]
-
-log=LogStore.add_logger('dmu:stats:test_constraint_adder')
-Loss=Union[ExtendedUnbinnedNLL,UnbinnedNLL]
+log        = LogStore.add_logger('dmu:stats:test_constraint_adder')
+Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+Constraint = Union[Constraint1D, ConstraintND]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
