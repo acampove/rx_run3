@@ -22,26 +22,19 @@ class ConstraintAdder:
     - Transforming a config object into constrain objects
     - Using those constraints to update the NLL
     '''
-    _valid_constraints = ['GaussianConstraint', 'PoissonConstraint']
     # ----------------------
     def __init__(
         self, 
-        nll : Loss, 
-        cns : DictConfig | None):
+        nll         : Loss, 
+        constraints : list[Constraint]):
         '''
         Parameters
         -------------
-        nll: Zfit likelihood, before constraints added
-        cns: Configuration, describing 
-            - What variables to constraint
-            - What kind of constraint to use
-            - What the means of the contraints should be
-            - What the covariances should be
-
-            or None, for no constraints case
+        nll        : Zfit likelihood, before constraints added
+        constraints: List of constraint objects
         '''
-        self._nll = nll
-        self._cns = cns
+        self._nll         = nll
+        self._constraints = constraints
 
         self._d_par = self._get_params(nll=nll)
         self._d_cns : dict[str,Parameter] = {}
