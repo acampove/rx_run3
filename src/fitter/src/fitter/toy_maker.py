@@ -9,13 +9,15 @@ import tensorflow as tf
 from pathlib     import Path
 from omegaconf   import DictConfig, OmegaConf
 from dmu.stats   import utilities  as sut
+from dmu.stats   import Constraint1D
+from dmu.stats   import ConstraintND
 from dmu         import LogStore
 from dmu.stats   import Fitter, GofCalculator
-from dmu.stats   import ConstraintAdder
 from zfit.result import FitResult           as zres
 from zfit.loss   import ExtendedUnbinnedNLL as Loss
 
 log=LogStore.add_logger('fitter:toy_maker')
+Constraint = Constraint1D | ConstraintND
 # ----------------------
 class ToyMaker:
     '''
@@ -31,6 +33,7 @@ class ToyMaker:
         self,
         nll   : Loss,
         res   : zres,
+        cns   : list[Constraint],
         cfg   : DictConfig):
         '''
         Parameters
@@ -39,12 +42,14 @@ class ToyMaker:
         res  : Result of actual fit to data. Used to make sure
                toys are generaged with the correct initial parameters
         cfg  : omegaconf dictionary controlling configuration
+        cns  : List of constraints, needed for resampling between toys
         '''
         self._ana_dir = Path(os.environ['ANADIR'])
 
         self._nll   = nll
         self._res   = res
         self._cfg   = self._check_config(cfg=cfg) 
+        self._cns   = cns
 
         self._check_gof()
         self._check_gpu()
@@ -159,11 +164,10 @@ class ToyMaker:
         cfg_str = OmegaConf.to_yaml(self._cfg)
         log.debug('\n' + cfg_str)
 
-        cad = ConstraintAdder(nll=nll, cns=self._cfg.constraints)
-        nll = cad.get_nll()
-
         for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
-            cad.resample()
+            for constraint in self._cns:
+                constraint.resample()
+
             for sampler in l_sampler:
                 sampler.resample()
 
