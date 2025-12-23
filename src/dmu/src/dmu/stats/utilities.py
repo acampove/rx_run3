@@ -676,7 +676,7 @@ def get_model(
         obs  = zfit.Space(f'mass{suffix}', limits=(4500, 7000))
 
     mu   = zfit.Parameter(f'mu{suffix}', 5200, 4500, 6000)
-    sg   = zfit.Parameter(f'sg{suffix}',   50,   10, 200)
+    sg   = zfit.Parameter(f'sg{suffix}',  150,   10, 200)
     gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
 
     if kind == 'signal':
@@ -697,11 +697,12 @@ def get_model(
 
     raise NotImplementedError(f'Invalid kind of fit: {kind}')
 # ----------------------
-def get_nll(kind : str) -> Loss:
+def get_nll(kind : str, nentries : int = 1000) -> Loss:
     '''
     Parameters
     -------------
-    kind : Type of model, e.g. s+b, signal
+    kind    : Type of model, e.g. s+b, signal
+    nentries: Dataset size
 
     Returns
     -------------
@@ -714,7 +715,7 @@ def get_nll(kind : str) -> Loss:
         return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
 
     if kind == 'signal':
-        dat = pdf.create_sampler(n=1000)
+        dat = pdf.create_sampler(n=nentries)
         return zfit.loss.UnbinnedNLL(model=pdf, data=dat)
 
     raise NotImplementedError(f'Invalid kind: {kind}')
