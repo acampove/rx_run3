@@ -2,19 +2,17 @@
 This module tests the class ToyMaker
 '''
 import pytest
-import ROOT # type: ignore Import ROOT before tensorflow
 
 from pathlib               import Path
 from zfit.loss             import ExtendedUnbinnedNLL
-from fitter.toy_plotter    import ToyPlotter
-from fitter.toy_maker      import ToyMaker
+from fitter                import ToyPlotter
+from fitter                import ToyMaker
 from dmu.stats             import utilities as sut
 from dmu.generic           import utilities as gut
-from dmu.logging.log_store import LogStore
-from dmu.stats.fitter      import Fitter
+from dmu.stats             import Fitter
+from dmu                   import LogStore
 
 log=LogStore.add_logger('fitter:test_toymaker')
-
 # ----------------------
 @pytest.fixture(scope='module', autouse=True)
 def ntoys() -> int:
