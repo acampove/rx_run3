@@ -17,6 +17,7 @@ dependencies = [
     'pandas',
     'PyYAML',
     'scipy',
+    'tabulate',
     'tqdm',
     'toml',
     'uproot',
