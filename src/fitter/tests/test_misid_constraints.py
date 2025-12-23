@@ -43,8 +43,7 @@ def test_simple(q2bin : str, tmp_path : Path) -> None:
                 obs      = obs,
                 cfg      = cfg,
                 q2bin    = q2bin)
-            d_cns = obj.get_constraints()
+            constraints = obj.get_constraints()
 
-    data = yaml.dump(d_cns)
-    log.info(data)
+    print_constraints(constraints)
 # ----------------------
