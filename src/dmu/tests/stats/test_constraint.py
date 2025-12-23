@@ -160,4 +160,3 @@ def test_from_dict():
     assert all( isinstance(const, Constraint1D) for const in constraints )
 
     print_constraints(constraints)
-
