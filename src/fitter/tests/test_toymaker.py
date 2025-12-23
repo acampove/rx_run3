@@ -7,7 +7,7 @@ from pathlib               import Path
 from zfit.loss             import ExtendedUnbinnedNLL
 from fitter                import ToyPlotter
 from fitter                import ToyMaker
-from dmu.stats             import build_constraint
+from dmu.stats             import ConstraintAdder, build_constraint
 from dmu.stats             import utilities as sut
 from dmu.generic           import utilities as gut
 from dmu.stats             import Fitter
@@ -57,6 +57,9 @@ def test_simple(
     else:
         ntoys = cfg.ntoys
         log.info(f'Not overriding number of toys from config: {ntoys}')
+
+    adr = ConstraintAdder(nll = nll, constraints = cns)
+    nll = adr.get_nll()
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         mkr   = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
