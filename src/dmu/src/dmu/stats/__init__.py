@@ -1,5 +1,6 @@
 from .constraint       import Constraint1D 
 from .constraint       import ConstraintND
+from .constraint       import build_constraint 
 from .constraint       import print_constraints 
 from .constraint_adder import ConstraintAdder
 from .parameters       import ParameterLibrary
@@ -9,6 +10,7 @@ from .fitter           import Fitter
 
 __all__ = [
     'Fitter',
+    'build_constraint',
     'Constraint1D',
     'ConstraintND',
     'print_constraints',
