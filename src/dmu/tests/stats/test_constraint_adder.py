@@ -94,47 +94,16 @@ def _validate(df : pnd.DataFrame, cfg : DictConfig) -> None:
             log.debug(f'Variance: {mean:.0f}/{expc}')
             assert math.isclose(mean, expc, rel_tol=0.15) 
 # ----------------------
-def test_simple() -> None:
+def test_uncorrelated() -> None:
     '''
     This is the simplest test of ConstraintAdder
     '''
     nll = sut.get_nll(kind='s+b')
-    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
+    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/uncorrelated.yaml')
+    cons : list[Constraint] = [ Constraint1D(kind=data.kind, name=data.name, mu=data.mu, sg=data.sg) for data in cns.values() ]
 
-    cad = ConstraintAdder(nll=nll, cns=cns)
+    cad = ConstraintAdder(nll=nll, constraints=cons)
     nll = cad.get_nll()
-
-    cov_gauss_out = nll.constraints[0].covariance.numpy()
-    cov_gauss_inp = numpy.array(cns.signal_shape.cov)
-
-    obs_gauss_out = numpy.array(nll.constraints[0].observation)
-    obs_gauss_inp = numpy.array(cns.signal_shape.observation)
-
-    obs_poiss_out = numpy.array(nll.constraints[1].observation)
-    obs_poiss_inp = numpy.array(cns.yields.observation)
-
-    assert numpy.isclose(cov_gauss_out, cov_gauss_inp, rtol=1e-5).all()
-    assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
-    assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
-# ----------------------
-@pytest.mark.parametrize('kind' , ['GaussianConstraint', 'PoissonConstraint'])
-@pytest.mark.parametrize('d_cns', _CONSTRAINTS)
-def test_dict_to_const(kind : str, d_cns : dict[str,tuple[float,float]]) -> None:
-    '''
-    This tests utility that converts python dictionary to
-    DictConfig used to hold constraints
-    '''
-
-    # TODO: Improve test with assertions
-    cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='test', kind=kind)
-    if cns is not None:
-        log.info('\n\n' + OmegaConf.to_yaml(cns))
-
-    nll = sut.get_nll(kind='s+b')
-    cad = ConstraintAdder(nll=nll, cns=cns)
-    nll = cad.get_nll()
-    for _ in range(3):
-        cad.resample()
 # ----------------------
 @pytest.mark.timeout(100)
 def test_toy() -> None:
@@ -144,11 +113,13 @@ def test_toy() -> None:
     '''
     ntoy= 400
     nll = sut.get_nll(kind='s+b')
-    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
+    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/uncorrelated.yaml')
+    cons : list[Constraint] = [ Constraint1D(kind=data.kind, name=data.name, mu=data.mu, sg=data.sg) for data in cns.values() ]
+
     sam = nll.data[0]
 
     mnm = zfit.minimize.Minuit()
-    cad = ConstraintAdder(nll=nll, cns=cns)
+    cad = ConstraintAdder(nll=nll, constraints=cons)
     nll = cad.get_nll()
 
     l_df = []
