@@ -5,27 +5,25 @@ import numpy
 import zfit
 from dmu.logging.log_store import LogStore
 
-from typing          import Union, cast
+from typing          import cast
 from omegaconf       import DictConfig
 from zfit            import Parameter
-from zfit.loss       import ExtendedUnbinnedNLL, UnbinnedNLL
+from zfit.loss       import ExtendedUnbinnedNLL
 from .constraint     import Constraint1D, ConstraintND
 
 log        = LogStore.add_logger('dmu:stats:constraint_adder')
-Constraint = Union[Constraint1D, ConstraintND]
-Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+Constraint = Constraint1D | ConstraintND
 # ----------------------
 class ConstraintAdder:
     '''
     This class is in charge of:
 
-    - Transforming a config object into constrain objects
     - Using those constraints to update the NLL
     '''
     # ----------------------
     def __init__(
         self, 
-        nll         : Loss, 
+        nll         : ExtendedUnbinnedNLL, 
         constraints : list[Constraint]):
         '''
         Parameters
@@ -39,7 +37,7 @@ class ConstraintAdder:
         self._d_par = self._get_params(nll=nll)
         self._d_cns : dict[str,Parameter] = {}
     # ----------------------
-    def _get_params(self, nll : Loss) -> dict[str, Parameter]:
+    def _get_params(self, nll : ExtendedUnbinnedNLL) -> dict[str, Parameter]:
         '''
         Parameters
         -------------
@@ -90,7 +88,7 @@ class ConstraintAdder:
             par = self._d_cns[name]
             par.set_value(value)
     # ----------------------
-    def get_nll(self) -> Loss:
+    def get_nll(self) -> ExtendedUnbinnedNLL:
         '''
         Returns
         -------------
@@ -109,15 +107,4 @@ class ConstraintAdder:
             raise ValueError('Could not create a new likelihood')
 
         return nll
-    # ----------------------
-    def resample(self) -> None:
-        '''
-        Will update the parameters associated to constraint
-        '''
-        if self._constraints is None:
-            log.debug('Not resampling constraints for case without constraints')
-            return
-
-        for constraint in self._constraints:
-            constraint.resample()
 # ----------------------
