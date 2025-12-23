@@ -7,12 +7,12 @@ from rx_common     import Qsq
 from zfit.loss     import ExtendedUnbinnedNLL
 from rx_common     import Sample
 from .prec_scales  import PrecScales
-from dmu.stats     import GaussianConstraint
-from dmu.stats     import PoissonConstraint
+from dmu.stats     import Constraint1D 
+from dmu.stats     import ConstraintND 
 
 log=LogStore.add_logger('fitter:constraint_reader')
 
-Constraint = GaussianConstraint | PoissonConstraint
+Constraint = Constraint1D | ConstraintND 
 # -------------------------------------------------------------
 class ConstraintReader:
     '''
@@ -88,7 +88,7 @@ class ConstraintReader:
 
             self._constraints.append(cns)
     # -------------------------------------------------------------
-    def get_constraints(self) -> list[GaussianConstraint|PoissonConstraint]:
+    def get_constraints(self) -> list[Constraint]:
         '''
         Returns dictionary with constraints, i.e.
 
