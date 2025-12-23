@@ -6,14 +6,14 @@ import tqdm
 import pandas     as pnd
 import tensorflow as tf
 
-from pathlib                    import Path
-from omegaconf                  import DictConfig, OmegaConf
-from dmu.stats                  import utilities  as sut
-from dmu.logging.log_store      import LogStore
-from dmu.stats.fitter           import Fitter, GofCalculator
-from dmu.stats.constraint_adder import ConstraintAdder
-from zfit.result                import FitResult           as zres
-from zfit.loss                  import ExtendedUnbinnedNLL as Loss
+from pathlib     import Path
+from omegaconf   import DictConfig, OmegaConf
+from dmu.stats   import utilities  as sut
+from dmu         import LogStore
+from dmu.stats   import Fitter, GofCalculator
+from dmu.stats   import ConstraintAdder
+from zfit.result import FitResult           as zres
+from zfit.loss   import ExtendedUnbinnedNLL as Loss
 
 log=LogStore.add_logger('fitter:toy_maker')
 # ----------------------
