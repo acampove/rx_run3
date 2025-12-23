@@ -6,7 +6,7 @@ import zfit
 import math
 import numpy
 
-from typing                import Sequence
+from typing                import Sequence, Annotated
 from tabulate              import tabulate
 from typing                import Protocol
 from functools             import cached_property
@@ -14,7 +14,7 @@ from zfit.constraint       import GaussianConstraint as GConstraint
 from zfit.constraint       import PoissonConstraint  as PConstraint
 from zfit.param            import Parameter as zpar
 
-from pydantic              import BaseModel, model_validator
+from pydantic              import BaseModel, model_validator, TypeAdapter
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:constraint')
