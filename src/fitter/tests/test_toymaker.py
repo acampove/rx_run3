@@ -7,6 +7,7 @@ from pathlib               import Path
 from zfit.loss             import ExtendedUnbinnedNLL
 from fitter                import ToyPlotter
 from fitter                import ToyMaker
+from dmu.stats             import build_constraint
 from dmu.stats             import utilities as sut
 from dmu.generic           import utilities as gut
 from dmu.stats             import Fitter
@@ -47,7 +48,8 @@ def test_simple(
     res, _= Fitter.minimize(nll=nll, cfg={})
 
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
+    data  = gut.load_data(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
+    cns   = [ build_constraint(data=block) for block in data.values() ] 
 
     if ntoys > 0:
         log.warning(f'Using user defined number of toys: {ntoys}')
@@ -57,7 +59,7 @@ def test_simple(
         log.info(f'Not overriding number of toys from config: {ntoys}')
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
-        mkr   = ToyMaker(nll=nll, res=res, cfg=cfg)
+        mkr   = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
         df    = mkr.get_parameter_information()
 
     l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid']
