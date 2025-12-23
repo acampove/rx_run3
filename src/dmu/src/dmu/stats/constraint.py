@@ -6,6 +6,7 @@ import zfit
 import math
 import numpy
 
+from tabulate              import tabulate
 from typing                import Protocol
 from functools             import cached_property
 from zfit.constraint       import GaussianConstraint as GConstraint
@@ -32,6 +33,25 @@ class ConstraintND(BaseModel):
     parameters : list[str]
     values     : list[float]
     cov        : list[list[float]]
+    # ----------------------
+    def __str__(self) -> str:
+        '''
+        Returns
+        -------------
+        String representation of constrint
+        '''
+        parameters = [ f'{name:<30}{value:<20.3f}' for name, value in zip(self.parameters, self.values) ]
+
+        msg  = '\n'
+        msg += '\n'
+        msg += 'Covariance:\n'
+        msg += tabulate(self.cov, tablefmt="grid") + '\n'
+        msg += '\n'
+        msg += 'Parameters\n'
+        msg += '---------------\n'
+        msg += '\n'.join(parameters)
+        
+        return msg
     # ---------------------
     @model_validator(mode='after')
     def check_dimensions(self) -> 'ConstraintND':
@@ -233,13 +253,33 @@ class Constraint1D(BaseModel):
 
         self.observation.set_value(new_val)
 # ----------------------------------------
-def print_constraints(constraints : list[Constraint1D]) -> None:
+def print_constraints(constraints : list[Constraint1D | ConstraintND]) -> None:
     '''
     Parameters
     -------------
     List of constraint objects
     '''
+    l_cons_1d = [ cons for cons in constraints if isinstance(cons, Constraint1D) ]
+    l_cons_nd = [ cons for cons in constraints if isinstance(cons, ConstraintND) ]
+
+    if l_cons_1d:
+        _print_1d_constraints(l_cons_1d)
+
+    if l_cons_nd:
+        _print_nd_constraints(l_cons_nd)
+# ----------------------------------------
+def _print_1d_constraints(constraints : list[Constraint1D]) -> None:
+    '''
+    Prints list of constraints
+    '''
     log.info(f'{"Parameter":<20}{"Value":<20}{"Error":<20}{"Kind":<20}')
+    for constraint in constraints:
+        log.info(constraint)
+# ----------------------------------------
+def _print_nd_constraints(constraints : list[ConstraintND]) -> None:
+    '''
+    Prints list of constraints
+    '''
     for constraint in constraints:
         log.info(constraint)
 # ----------------------------------------
