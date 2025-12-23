@@ -172,6 +172,34 @@ class Constraint1D(BaseModel):
     mu  : float
     sg  : float
     # ----------------------
+    @classmethod
+    def from_dict(
+        cls,
+        data : dict[str,tuple[float,float]],
+        kind : str) -> list['Constraint1D']:
+        '''
+        Parameters
+        -----------------
+        data: Dictionary storing parameter names, and tuples with measurements and errors
+        kind: String specifying type of constraint
+
+        Returns
+        -----------------
+        List of 1D constraints
+        '''
+
+        constraints = []
+        for name, (value, error) in data.items():
+            cns = cls(
+                kind = kind,
+                name = name,
+                mu   = value,
+                sg   = error)
+
+            constraints.append(cns)
+
+        return constraints
+    # ----------------------
     @cached_property
     def observation(self) -> zpar:
         '''

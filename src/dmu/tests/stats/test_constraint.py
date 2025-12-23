@@ -144,3 +144,20 @@ def test_constraintND():
     assert numpy.isclose(mu_sg , 10.06348, rtol=1e-5)
     assert numpy.isclose(sg_mu , 9.611858, rtol=1e-5)
     assert numpy.isclose(sg_sg , 1.998920, rtol=1e-5)
+# ---------------------------------
+def test_from_dict():
+    '''
+    Test method making constraints from dictionary
+    '''
+    data = {
+        'a' : (1., 1.),
+        'b' : (3., 2.),
+    }
+
+    constraints = Constraint1D.from_dict(data = data, kind = 'GaussianConstraint')
+    assert constraints
+    assert isinstance(constraints, list)
+    assert all( isinstance(const, Constraint1D) for const in constraints )
+
+    print_constraints(constraints)
+
