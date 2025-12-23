@@ -96,13 +96,15 @@ class ConstraintAdder:
         -------------
         Likelihood with constrain added
         '''
-        if self._cns is None:
+        if self._constraints is None:
             log.info('No constraints found, using original (unconstrained) NLL')
             return self._nll
 
-        l_const = [ self._create_constraint(cfg = cfg) for cfg in self._cns.values() ]
+        l_const = [ 
+            cns.zfit_cons(holder = self._nll) # type: ignore
+            for cns in self._constraints ]
 
-        nll = self._nll.create_new(constraints=l_const) # type: ignore
+        nll = self._nll.create_new(constraints=l_const)
         if nll is None:
             raise ValueError('Could not create a new likelihood')
 
