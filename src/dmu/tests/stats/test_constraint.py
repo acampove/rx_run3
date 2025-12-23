@@ -17,7 +17,8 @@ from dmu.stats   import print_constraints
 
 from dmu import LogStore
 
-log=LogStore.add_logger('dmu::test_constraint')
+log        = LogStore.add_logger('dmu::test_constraint')
+Constraint = Constraint1D | ConstraintND
 # ----------------------
 _EXPECTED_MU : Final[list[float]] = [
     5078.961534826059,
@@ -92,12 +93,22 @@ def test_constraint1D(data : dict, mu : float, sg : float):
     assert numpy.isclose(mu, mu_test, rtol=1e-5)
     assert numpy.isclose(sg, sg_test, rtol=1e-5)
 # ---------------------------------
-def test_print():
+def test_print_1d():
     '''
     Test printing of constraints
     '''
     numpy.random.seed(42)
-    l_cons = [ Constraint1D(**data) for data in _load_constraints() ]
+    l_cons : list[Constraint] = [ Constraint1D(**data) for data in _load_constraints() ]
+
+    log.info('')
+    print_constraints(l_cons)
+# ---------------------------------
+def test_print_nd():
+    '''
+    Test printing of constraints
+    '''
+    numpy.random.seed(42)
+    l_cons : list[Constraint] = [ ConstraintND(**data) for data in _load_constraints(kind = 'correlated') ]
 
     log.info('')
     print_constraints(l_cons)
