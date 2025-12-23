@@ -273,6 +273,7 @@ def _print_1d_constraints(constraints : list[Constraint1D]) -> None:
     Prints list of constraints
     '''
     log.info(f'{"Parameter":<20}{"Value":<20}{"Error":<20}{"Kind":<20}')
+    log.info(80 * '-')
     for constraint in constraints:
         log.info(constraint)
 # ----------------------------------------
