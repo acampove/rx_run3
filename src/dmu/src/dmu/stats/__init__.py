@@ -5,8 +5,10 @@ from .constraint_adder import ConstraintAdder
 from .parameters       import ParameterLibrary
 from .measurement      import Measurement
 from .gof_calculator   import GofCalculator
+from .fitter           import Fitter
 
 __all__ = [
+    'Fitter',
     'Constraint1D',
     'ConstraintND',
     'print_constraints',
