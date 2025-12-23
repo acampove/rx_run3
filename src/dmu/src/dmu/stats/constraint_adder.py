@@ -114,11 +114,10 @@ class ConstraintAdder:
         '''
         Will update the parameters associated to constraint
         '''
-        if self._cns is None:
+        if self._constraints is None:
             log.debug('Not resampling constraints for case without constraints')
             return
 
-        for name, cfg_block in self._cns.items():
-            log.verbose(f'Resampling block: {name}')
-            self._resample_block(cfg=cfg_block)
+        for constraint in self._constraints:
+            constraint.resample()
 # ----------------------
