@@ -282,6 +282,22 @@ class Constraint1D(BaseModel):
 
         self.observation.set_value(new_val)
 # ----------------------------------------
+Constraint = Constraint1D | ConstraintND 
+def build_constraint(data: dict) -> Constraint:
+    '''
+    Parameters
+    ---------------
+    data: Python dictionary with constraint information
+
+    Returns
+    ---------------
+    Constraint object
+    '''
+    try:
+        return TypeAdapter(Constraint).validate_python(data)
+    except Exception as exc:
+        raise ValueError('Cannot build constrain from input') from exc
+# ----------------------------------------
 def print_constraints(constraints : Sequence[Constraint1D | ConstraintND]) -> None:
     '''
     Parameters
