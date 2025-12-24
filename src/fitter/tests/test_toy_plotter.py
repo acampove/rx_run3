@@ -2,18 +2,18 @@
 Module with functions meant to test the ToyPlotter class
 '''
 import math
-
-from pathlib   import Path
-from functools import lru_cache
+import mplhep
+import matplotlib.pyplot as plt
 
 import logging
 import pytest
 import numpy
 import pandas as pnd
 
+from pathlib               import Path
+from functools             import lru_cache
 from dmu.generic           import utilities as gut
 from dmu.logging.log_store import LogStore
-
 from fitter.toy_plotter    import ToyPlotter, MissingVariableConfiguration
 
 log=LogStore.add_logger('fitter:test_toy_plotter')
@@ -23,6 +23,7 @@ def initialize():
     '''
     This will run before any test
     '''
+    plt.style.use(mplhep.style.LHCb2)
     LogStore.set_level('dmu:plotting:Plotter1D', 10)
 # ----------------------
 @lru_cache(maxsize=3)
