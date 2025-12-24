@@ -5,7 +5,7 @@ signal_shape:
     - sg
   values : 
     - 5200
-    - 50
+    - 150
   cov: 
     - [100, 10]
     - [ 10,  4]
