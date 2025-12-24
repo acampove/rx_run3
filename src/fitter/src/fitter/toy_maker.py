@@ -152,13 +152,9 @@ class ToyMaker:
 
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
         nll       = self._nll.create_new(data=l_sampler)
+
         if nll is None:
             raise ValueError('Faled to create NLL with sampler')
-
-        if 'constraints' not in self._cfg:
-            log.warning('Running toys without constraints on any model parameter')
-        else:
-            log.debug('Using constraints in toy fitting model')
 
         log.debug('Running toys with config:')
         cfg_str = OmegaConf.to_yaml(self._cfg)
