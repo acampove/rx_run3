@@ -211,10 +211,10 @@ class Plotter1D(Plotter):
         $\mu={mu:.3f}\pm {em:.3f}$
         $\sigma={sg:.3f}\pm {es:.3f}$
         '''
-        ax = plt.gca()
 
-        maxy  = max(arr_y)
-        ax.text(x=-4.5, y=0.93 * maxy, s=stats, fontsize=30)
+        ax   = plt.gca()
+        maxy = max(arr_y)
+        ax.text(x=-4.3, y=1.10 * maxy, s=stats, fontsize=30)
 
         ax.axvline(x=mu     , ls=':', lw=1, c='r')
         ax.axvline(x=mu - sg, ls='-', lw=1, c='r')
