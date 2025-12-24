@@ -6,7 +6,7 @@ import zfit
 import math
 import numpy
 
-from typing                import Sequence, Annotated
+from typing                import Sequence
 from tabulate              import tabulate
 from typing                import Protocol
 from functools             import cached_property
@@ -130,7 +130,7 @@ class ConstraintND(BaseModel):
         Multidimentional Gaussian constraint
         '''
         l_par = self._obs_from_holder(holder = holder)
-        l_obs = self.observations
+        l_obs = self.observations.values()
 
         cns   = zfit.constraint.GaussianConstraint(
             params      = l_par, 
