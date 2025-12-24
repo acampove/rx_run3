@@ -5,7 +5,7 @@ import numpy
 import zfit
 from dmu.logging.log_store import LogStore
 
-from typing          import cast
+from typing          import Sequence, cast
 from omegaconf       import DictConfig
 from zfit            import Parameter
 from zfit.loss       import ExtendedUnbinnedNLL
@@ -24,7 +24,7 @@ class ConstraintAdder:
     def __init__(
         self, 
         nll         : ExtendedUnbinnedNLL, 
-        constraints : list[Constraint]):
+        constraints : Sequence[Constraint]):
         '''
         Parameters
         -------------
