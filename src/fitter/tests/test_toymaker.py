@@ -61,62 +61,38 @@ def test_simple(tmp_path: Path) -> None:
     pars  = nll.get_params()
     assert len(df) == cfg.ntoys * len(pars) 
 # ----------------------
+@pytest.mark.parametrize('ntoys', [None, 1000])
 def test_integration(
-    ntoys           : int, 
-    tmp_path        : Path) -> None:
+    tmp_path : Path,
+    ntoys    : int | None) -> None:
     '''
     Makes toys and then plots using ToyPlotter
 
     Parameters 
     -------------
-    ntoys          : Mean to pick number from:
-                     pytest --ntoys XXX
-    test_dir       : Where output plots will go
+    tmp_path : Where output plots will go
+    ntoys    : Number of toys to override what is in config
     '''
     log.info('')
     nll   = sut.get_nll(kind='s+b')
-    if not isinstance(nll, ExtendedUnbinnedNLL):
-        raise ValueError('Likelihood is not unbinned and or extended')
+    assert isinstance(nll, ExtendedUnbinnedNLL)
 
-    res, _= Fitter.minimize(nll=nll, cfg={})
-
-    cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
-
-    if ntoys > 0:
-        log.warning(f'Using user defined number of toys: {ntoys}')
+    cfg  = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    if ntoys:
         cfg.ntoys = ntoys
-    else:
-        ntoys = cfg.ntoys
-        log.info('Not overriding number of toys from config: {ntoys}')
 
-    mkr = ToyMaker(nll=nll, res=res, cfg=cfg)
+    data = gut.load_data(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
+    cns  = [ build_constraint(data=block) for block in data.values() ] 
+    adr  = ConstraintAdder(nll = nll, constraints = cns)
+    nll  = adr.get_nll()
+
+    res, _ = Fitter.minimize(nll=nll, cfg={})
+
+    mkr = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
     df  = mkr.get_parameter_information()
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
-    cfg.saving.plt_dir = tmp_path/'toymaker/integration/plots'
+    cfg.saving.plt_dir = tmp_path / 'toymaker/integration/plots'
     ptr = ToyPlotter(df=df, cfg=cfg)
     ptr.plot()
 # ----------------------
-def test_profile(ntoys : int) -> None:
-    '''
-    Test used for profiling
-
-    Parameters 
-    -------------
-    ntoys : Mean to pick number from:
-            pytest --ntoys XXX
-    '''
-    log.info('')
-    nll   = sut.get_nll(kind='s+b')
-    if not isinstance(nll, ExtendedUnbinnedNLL):
-        raise ValueError('Likelihood is not unbinned and or extended')
-
-    res, _= Fitter.minimize(nll=nll, cfg={})
-    cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    cfg.constraints = gut.load_conf(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
-
-    cfg.ntoys = ntoys
-
-    mkr= ToyMaker(nll=nll, res=res, cfg=cfg)
-    mkr.get_parameter_information()
