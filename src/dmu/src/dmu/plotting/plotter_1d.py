@@ -3,7 +3,6 @@ Module containing plotter class
 '''
 
 import math
-import cppyy
 from hist      import Hist
 from omegaconf import DictConfig
 
