@@ -15,7 +15,7 @@ correlation:
   cmap     : Spectral 
   linewidth: 0.5
   annot_kws:
-    size : 12 
+    size : 15 
   rotation :
     x    : 45
 
