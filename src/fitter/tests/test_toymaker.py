@@ -2,6 +2,8 @@
 This module tests the class ToyMaker
 '''
 import pytest
+import mplhep
+import matplotlib.pyplot as plt
 
 from pathlib               import Path
 from zfit.loss             import ExtendedUnbinnedNLL
@@ -24,6 +26,9 @@ def initialize():
     '''
     This will run before any test
     '''
+
+    plt.style.use(mplhep.style.LHCb2)
+
     LogStore.set_level('dmu:stats:gofcalculator', 30)
     LogStore.set_level('dmu:statistics:fitter'  , 20)
     LogStore.set_level('fitter:toy_maker'       , 10)
