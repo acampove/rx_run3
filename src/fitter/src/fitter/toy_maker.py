@@ -154,7 +154,7 @@ class ToyMaker:
         nll       = self._nll.create_new(data=l_sampler)
 
         if nll is None:
-            raise ValueError('Faled to create NLL with sampler')
+            raise ValueError('Failed to create NLL with sampler')
 
         log.debug('Running toys with config:')
         cfg_str = OmegaConf.to_yaml(self._cfg)
