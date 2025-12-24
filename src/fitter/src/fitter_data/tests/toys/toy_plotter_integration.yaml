@@ -4,7 +4,6 @@
 general:
   size: [15, 10]
 
-
 correlation:
   size     : [20, 15]
   title    : Correlation matrix 
