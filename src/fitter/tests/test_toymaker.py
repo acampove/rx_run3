@@ -29,37 +29,21 @@ def initialize():
     LogStore.set_level('fitter:toy_maker'       , 10)
     LogStore.set_level('fitter:constraint_adder', 10)
 # ----------------------
-def test_simple(
-    ntoys   : int,
-    tmp_path: Path) -> None:
+def test_simple(tmp_path: Path) -> None:
     '''
     Simplest test of ToyMaker
-
-    Parameters 
-    -------------
-    ntoys : Mean to pick number from:
-            pytest --ntoys XXX
     '''
     log.info('')
     nll   = sut.get_nll(kind='s+b')
-    if not isinstance(nll, ExtendedUnbinnedNLL):
-        raise ValueError('Likelihood is not unbinned and or extended')
-
-    res, _= Fitter.minimize(nll=nll, cfg={})
-
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
     data  = gut.load_data(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
     cns   = [ build_constraint(data=block) for block in data.values() ] 
 
-    if ntoys > 0:
-        log.warning(f'Using user defined number of toys: {ntoys}')
-        cfg.ntoys = ntoys
-    else:
-        ntoys = cfg.ntoys
-        log.info(f'Not overriding number of toys from config: {ntoys}')
-
+    assert isinstance(nll, ExtendedUnbinnedNLL)
     adr = ConstraintAdder(nll = nll, constraints = cns)
     nll = adr.get_nll()
+
+    res, _ = Fitter.minimize(nll=nll, cfg={})
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         mkr   = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
