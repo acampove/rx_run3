@@ -132,7 +132,7 @@ def _get_constraints(
     -------------
     List of constraint objects
     '''
-    crd  = ConstraintReader(obj=nll, q2bin=cfg.q2bin)
+    crd  = ConstraintReader(obj=nll, cfg=cfg)
     cons = crd.get_constraints()
 
     if _use_constraints(kind='misid', cfg=cfg):
@@ -166,15 +166,18 @@ def _fit(cfg : FitConfig) -> None:
     nll = ftr.run()
     cfg_mod = ftr.get_config()
 
-    cfg_cns = _get_constraints(nll=nll, cfg=cfg)
-    cad     = ConstraintAdder(nll=nll, cns=cfg_cns)
-    nll     = cad.get_nll()
+    cons = _get_constraints(nll=nll, cfg=cfg)
+    cad  = ConstraintAdder(nll=nll, constraints=cons)
+    nll  = cad.get_nll()
 
     # Type analyser needs to be told this is the right type
     if not isinstance(nll, ExtendedUnbinnedNLL):
         raise ValueError('Likelihood is not extended and unbinned')
 
-    cfg.fit_cfg['constraints'] = cfg_cns
+    cons_str    = [ str(constraint) for constraint in cons ]
+    constraints = '\n\n'.join(cons_str)
+
+    cfg.fit_cfg['constraints'] = constraints
     ftr = DataFitter(
         name = cfg.q2bin,
         d_nll= {cfg.name : (nll, cfg_mod)}, 
@@ -187,7 +190,8 @@ def _fit(cfg : FitConfig) -> None:
 
     cfg.toy_cfg['constraints'] = cfg_cns
     log.info(f'Making {cfg.toy_cfg.ntoys} toys')
-    mkr = ToyMaker(nll=nll, res=res, cfg=cfg.toy_cfg)
+
+    mkr = ToyMaker(nll=nll, res=res, cfg=cfg.toy_cfg, cns = cons)
     mkr.get_parameter_information()
 # ----------------------
 def main(args : DictConfig | None = None):
