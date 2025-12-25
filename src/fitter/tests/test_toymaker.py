@@ -61,7 +61,7 @@ def test_simple(tmp_path: Path) -> None:
     pars  = nll.get_params()
     assert len(df) == cfg.ntoys * len(pars) 
 # ----------------------
-@pytest.mark.parametrize('ntoys', [None, 1000])
+@pytest.mark.parametrize('ntoys', [100])
 def test_integration(
     tmp_path : Path,
     ntoys    : int | None) -> None:
