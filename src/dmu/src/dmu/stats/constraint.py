@@ -82,7 +82,12 @@ class ConstraintND(BaseModel, Constraint):
         -------------
         Copy of this constraint with means calibrated
         '''
-        new_values = [ self._get_parameter_value(name = name, result = result ) for name in self.parameters ]
+        new_values = []
+        for name, old_value in zip(self.parameters, self.values):
+            new_value = self._get_parameter_value(name = name, result = result )
+            new_values.append(new_value)
+
+            log.info(f'{name:<20}{old_value:<20.3f}{"--->":<20}{new_value:<20.3f}')
 
         return ConstraintND(
             kind       = self.kind,
@@ -271,11 +276,14 @@ class Constraint1D(BaseModel, Constraint):
         -------------
         Copy of this constraint with means calibrated
         '''
+        new_value = self._get_parameter_value(name = self.name, result = result)
+
+        log.info(f'{self.name:<20}{self.mu:<20.3f}{"--->":<20}{new_value:<20.3f}')
 
         return Constraint1D(
             kind   = self.kind,
             name   = self.name,
-            mu     = self._get_parameter_value(name = self.name, result = result), 
+            mu     = new_value, 
             sg     = self.sg,
         )
     # ----------------------
