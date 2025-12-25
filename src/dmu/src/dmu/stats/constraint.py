@@ -13,9 +13,9 @@ from zfit.constraint       import GaussianConstraint as GConstraint
 from zfit.constraint       import PoissonConstraint  as PConstraint
 from zfit.param            import Parameter as zpar
 from zfit.result           import FitResult
-from dmu.stats             import ParsHolder
-
 from pydantic              import BaseModel, model_validator, TypeAdapter
+
+from dmu.stats.protocols   import ParsHolder
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:constraint')
