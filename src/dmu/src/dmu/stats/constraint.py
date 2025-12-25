@@ -100,7 +100,7 @@ class ConstraintND(BaseModel, Constraint):
         -------------
         String representation of constrint
         '''
-        parameters = [ f'{name:<30}{value:<20.3f}' for name, value in zip(self.parameters, self.values) ]
+        parameters = [ f'{name:<50}{value:<20.3f}' for name, value in zip(self.parameters, self.values) ]
 
         msg  = '\n'
         msg += '\n'
@@ -351,7 +351,7 @@ class Constraint1D(BaseModel, Constraint):
         -------------
         String representation
         '''
-        return f'{self.name:<20}{self.mu:<20}{self.sg:<20}{self.kind:<20}'
+        return f'{self.name:<50}{self.mu:<20:.3f}{self.sg:<20.3f}{self.kind:<20}'
     # ----------------------
     def resample(self) -> None:
         '''
@@ -403,7 +403,7 @@ def _print_1d_constraints(constraints : Sequence[Constraint1D]) -> None:
     '''
     Prints list of constraints
     '''
-    log.info(f'{"Parameter":<20}{"Value":<20}{"Error":<20}{"Kind":<20}')
+    log.info(f'{"Parameter":<50}{"Value":<20}{"Error":<20}{"Kind":<20}')
     log.info(80 * '-')
     for constraint in constraints:
         log.info(constraint)
