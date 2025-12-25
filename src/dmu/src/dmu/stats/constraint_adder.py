@@ -9,10 +9,9 @@ from typing          import Sequence, cast
 from omegaconf       import DictConfig
 from zfit            import Parameter
 from zfit.loss       import ExtendedUnbinnedNLL
-from .constraint     import Constraint1D, ConstraintND
+from .constraint     import Constraint
 
-log        = LogStore.add_logger('dmu:stats:constraint_adder')
-Constraint = Constraint1D | ConstraintND
+log = LogStore.add_logger('dmu:stats:constraint_adder')
 # ----------------------
 class ConstraintAdder:
     '''
