@@ -50,6 +50,9 @@ class ToyMaker:
         self._cfg   = self._check_config(cfg=cfg) 
         self._cns   = [ cons.calibrate(result = res) for cons in cns ]
 
+        for cons in self._cns:
+            log.debug(cons)
+
         self._check_gof()
         self._check_gpu()
     # ----------------------
