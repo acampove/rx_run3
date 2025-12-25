@@ -50,6 +50,14 @@ class Constraint:
             return float(par.value().numpy())
 
         raise ValueError(f'Parameter {name} not found in holder')
+    # ----------------------
+    def calibrate(self, result : FitResult) -> 'Constraint':
+        _ = result
+
+        raise NotImplementedError('Cannot calibrate base Constraint')
+    # ----------------------
+    def resample(self) -> None:
+        raise NotImplementedError('Cannot resample base Constraint')
 # ----------------------------------------
 class ConstraintND(BaseModel, Constraint):
     '''
