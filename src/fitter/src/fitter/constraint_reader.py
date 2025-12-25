@@ -18,7 +18,7 @@ class ConstraintReader:
     # -------------------------------------------------------------
     def __init__(
         self, 
-        obj   : ExtendedUnbinnedNLL, 
+        obj   : ParsHolder, 
         q2bin : Qsq,
         signal: str = 'bpkpee',
         pprefx: str = 'pscale'):
@@ -78,8 +78,9 @@ class ConstraintReader:
             obj      = PrecScales(proc=process, q2bin=self._q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
-            cns = GaussianConstraint(
+            cns = Constraint1D(
                 name = par,
+                kind = 'GaussianConstraint',
                 mu   = val,
                 sg   = err)
 
