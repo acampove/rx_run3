@@ -3,10 +3,10 @@ Script holding ConstraintReader class
 '''
 
 from dmu           import LogStore
-from rx_common     import Qsq
-from rx_common     import Sample
-from .prec_scales  import PrecScales
 from dmu.stats     import Constraint, Constraint1D, ParsHolder
+from rx_common     import Sample
+from .fit_config   import FitConfig
+from .prec_scales  import PrecScales
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
