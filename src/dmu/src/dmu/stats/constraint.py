@@ -149,7 +149,8 @@ class ConstraintND(BaseModel, Constraint):
             if par.name not in self.parameters: 
                 continue
 
-            obs.append(par)
+            if isinstance(par, zpar):
+                obs.append(par)
 
         if not obs:
             raise ValueError('No observable found')
@@ -318,7 +319,7 @@ class Constraint1D(BaseModel, Constraint):
         '''
         s_par = holder.get_params()
         for par in s_par:
-            if par.name == self.name:
+            if par.name == self.name and isinstance(par, zpar):
                 return par
 
         raise ValueError(f'Cannot find {self.name} in NLL')
