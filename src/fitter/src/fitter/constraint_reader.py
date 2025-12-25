@@ -2,11 +2,15 @@
 Script holding ConstraintReader class
 '''
 
-from dmu           import LogStore
-from dmu.stats     import Constraint, Constraint1D, ParsHolder
-from rx_common     import Sample
-from .fit_config   import FitConfig
-from .prec_scales  import PrecScales
+from typing              import Final
+from dmu                 import LogStore
+from dmu.stats           import Constraint, Constraint1D, ParsHolder
+from rx_common           import Sample
+from .fit_config         import FitConfig
+from .prec_scales        import PrecScales
+from .misid_constraints  import MisIDConstraints 
+
+_MISID_COMPONENTS : Final[set[str]] = {'kkk', 'kpipi'}
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
