@@ -1,0 +1,24 @@
+output_directory : rare/electron/combinatorial
+categories:
+  main:
+    models : 
+      low     : [hypexp]
+      central : [hypexp]
+      high    : [suj]
+low:
+  shared        : []
+  float         : []
+  reparametrize : {}
+  fix           : {}
+central:
+  shared        : []
+  float         : []
+  reparametrize : {}
+  fix           : {}
+high:
+  shared        : []
+  float         : []
+  reparametrize : {}
+  fix           :
+    dl_suj : 2.5
+    gm_suj : -10
