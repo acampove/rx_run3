@@ -370,8 +370,10 @@ def build_constraint(data: dict) -> Constraint:
     ---------------
     Constraint object
     '''
+    adapter = TypeAdapter(Constraint1D | ConstraintND)
+
     try:
-        return TypeAdapter(Constraint).validate_python(data)
+        return adapter.validate_python(data)
     except Exception as exc:
         raise ValueError('Cannot build constrain from input') from exc
 # ----------------------------------------
