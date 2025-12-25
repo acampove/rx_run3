@@ -49,11 +49,11 @@ class ConstraintReader:
         '''
         Parameters
         ------------------
-        par_name : Name of parameter to constrain
+        par_name : Name of part reco scale parameter to constrain, e.g. pscale_yld_Bp_KpEE_DT...
 
         Returns
         ------------------
-        Name of MC sample to modelling component to constrain, e.g. Bu_Kpipiee_eq_DPC_LSFLAT
+        MC sample nickname for part reco sample, e.g. bdkstkpee
         '''
         prefix = f'{self._prc_pref}_yld_'
         if not par_name.startswith(prefix):
@@ -65,6 +65,10 @@ class ConstraintReader:
         return sample.name 
     # -------------------------------------------------------------
     def _add_prec_constraints(self) -> None:
+        '''
+        Appends constraints to _constraints list for parameters in parameter holder
+        whose names start with `pscale`
+        '''
         log.info('Adding partially reconstructed component constraint')
         for par in self._l_par:
             if not par.startswith('pscale'): # PRec constraints are scales, starting with "s"
