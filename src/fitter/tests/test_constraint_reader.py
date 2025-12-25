@@ -10,10 +10,10 @@ from dmu.workflow import Cache
 from dmu          import LogStore
 from dmu.stats    import print_constraints
 from rx_common    import Qsq
-from zfit.loss    import ExtendedUnbinnedNLL
 from zfit.param   import Parameter           as zpar
 from zfit         import Space               as zobs
 from fitter       import ConstraintReader
+from zfit.core.loss import ZfitParameter
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
@@ -101,7 +101,7 @@ class Parameters:
 
         return { zfit.Parameter(name, 0, 0, 1) for name in l_par_name }
     # ----------------------
-    def get_params(self, floating : bool) -> set[zpar]:
+    def get_params(self, floating : bool) -> set[zpar] | set[ZfitParameter]:
         '''
         Parameters
         -------------
@@ -111,6 +111,8 @@ class Parameters:
         -------------
         Set of zfit parameters
         '''
+        _ = floating
+
         return self._s_par 
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
@@ -134,10 +136,9 @@ def test_simple(tmp_path : Path, kind : str, q2bin : Qsq):
 
     obs = zfit.Space('dummy', limits=(4500, 6000))
     obj = Parameters(kind=kind, obs = obs)
-    nll : ExtendedUnbinnedNLL = obj # type: ignore
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(obj=nll, q2bin=q2bin)
+        obj         = ConstraintReader(obj=obj, q2bin=q2bin)
         constraints = obj.get_constraints()
 
     print_constraints(constraints = constraints)
