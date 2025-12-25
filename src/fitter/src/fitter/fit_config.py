@@ -22,7 +22,7 @@ class FitConfig:
     Class used to store configuration needed for fits
     '''
     name    : str
-    group   : str
+    group   : str        # E.g. toys, needed to name directory where fit outputs will go
     fit_cfg : DictConfig
     mva_cmb : float
     mva_prc : float
