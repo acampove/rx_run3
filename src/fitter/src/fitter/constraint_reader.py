@@ -18,7 +18,7 @@ class ConstraintReader:
     '''
     Class meant to provide constraints for fitting model
     '''
-    # -------------------------------------------------------------
+    # ----------------------
     def __init__(
         self, 
         obj   : ParsHolder, 
@@ -45,10 +45,10 @@ class ConstraintReader:
         self._prc_pref= pprefx 
 
         self._constraints : list[Constraint] = []
-    # -------------------------------------------------------------
+    # ----------------------
     def _add_signal_constraints(self) -> None:
         raise NotImplementedError('This needs to be implemented with DataFitter')
-    # -------------------------------------------------------------
+    # ----------------------
     def _proc_from_par(self, par_name : str) -> str:
         '''
         Parameters
@@ -67,7 +67,7 @@ class ConstraintReader:
         sample = Sample(name)
 
         return sample.name 
-    # -------------------------------------------------------------
+    # ----------------------
     def _add_prec_constraints(self) -> None:
         '''
         Appends constraints to _constraints list for parameters in parameter holder
@@ -91,7 +91,7 @@ class ConstraintReader:
                 sg   = err)
 
             self._constraints.append(cns)
-    # -------------------------------------------------------------
+    # ----------------------
     def get_constraints(self) -> list[Constraint]:
         '''
         Returns dictionary with constraints, i.e.
