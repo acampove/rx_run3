@@ -4,12 +4,12 @@ Module with functions needed to test ConstraintReader class
 import pytest
 import zfit
 
-from omegaconf      import OmegaConf
 from typing         import Final
 from pathlib        import Path
 from dmu.workflow   import Cache
 from dmu            import LogStore
 from dmu.stats      import print_constraints
+from dmu.generic    import utilities           as gut
 from rx_common      import Qsq
 from fitter         import FitConfig
 from zfit.param     import Parameter           as zpar
@@ -133,7 +133,7 @@ def _get_fit_config(q2bin : Qsq) -> FitConfig:
     -------------
     Object storing fit configuration
     '''
-    fit_cfg = OmegaConf.create({})
+    fit_cfg = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
 
     return FitConfig(
         name    = 'test',
