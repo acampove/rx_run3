@@ -58,6 +58,11 @@ class Constraint:
     # ----------------------
     def resample(self) -> None:
         raise NotImplementedError('Cannot resample base Constraint')
+    # ----------------------
+    def zfit_cons(self, holder : ParsHolder) -> GConstraint | PConstraint:
+        _ = holder
+
+        raise NotImplementedError('Cannot extract zfit constraint from base Constraint')
 # ----------------------------------------
 class ConstraintND(BaseModel, Constraint):
     '''
