@@ -1,8 +1,9 @@
 '''
 Module holding statistics related protocol classes
 '''
-from typing                import Protocol
-from zfit.core.loss        import ZfitParameter
+from typing          import Protocol
+from zfit.core.loss  import ZfitParameter
+from zfit            import Parameter as zpar
 
 # ----------------------------------------
 class ParsHolder(Protocol):
