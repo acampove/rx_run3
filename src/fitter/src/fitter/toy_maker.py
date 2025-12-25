@@ -142,6 +142,17 @@ class ToyMaker:
 
         return out_path
     # ----------------------
+    def _print_parameters(self) -> None:
+        '''
+        Print likelihood's floating parameters at this moment
+        '''
+        s_par = self._nll.get_params()
+
+        log.debug(f'{"Parameter":<20}{"Value":<20}')
+        log.debug(40 * '-')
+        for par in s_par:
+            log.debug(f'{par.name:<20}{par.value():<20.3f}')
+    # ----------------------
     def get_parameter_information(self) -> pnd.DataFrame:
         '''
         Returns
@@ -151,6 +162,7 @@ class ToyMaker:
         columns = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid']
         df = pnd.DataFrame(columns=columns)
 
+        self._print_parameters()
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
         nll       = self._nll.create_new(data=l_sampler)
 
@@ -161,17 +173,28 @@ class ToyMaker:
         cfg_str = OmegaConf.to_yaml(self._cfg)
         log.debug('\n' + cfg_str)
 
+        l_total = []
         for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
             for constraint in self._cns:
                 constraint.resample()
 
+            total = 0
             for sampler in l_sampler:
                 sampler.resample()
+                total += sampler.nentries 
+            l_total.append(total)
 
             with GofCalculator.disabled(value = not self._cfg.run_gof):
                 res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
 
             df = self._add_parameters(df=df, res=res, gof=gof, itoy=itoy)
+
+        medn_total = numpy.median(l_total)
+        mean_total = numpy.mean(l_total)
+        stdv_total = numpy.std(l_total)
+
+        log.info(f'Total yield average: {mean_total:.2f} ± {stdv_total:.2f}')
+        log.info(f'Total yield median : {medn_total:.2f} ± {stdv_total:.2f}')
 
         out_path = self._get_out_path()
         df.to_parquet(out_path)
