@@ -18,14 +18,14 @@ class ConstraintReader:
     def __init__(
         self, 
         obj   : ParsHolder, 
-        q2bin : Qsq,
+        cfg   : FitConfig,
         signal: str = 'bpkpee',
         pprefx: str = 'pscale'):
         '''
         Parameters
         -------------------
         obj   : Object for which `get_parms` is defined, e.g. PDF, likelihood, etc
-        q2bin : q2 bin
+        cfg   : Object storing fit configuration
         signal: Process considered as the signal when calculating denominator of rare Partially
                 reconstructed scale constraints
         pprefx: Preffix of rare partially reconstructed parameters, to tell the code
@@ -36,7 +36,7 @@ class ConstraintReader:
             raise ValueError('No floating parameters found in parameters holder')
 
         self._l_par   = [ par.name for par in s_par ] 
-        self._q2bin   = q2bin
+        self._cfg     = cfg
         self._signal  = signal 
         self._prc_pref= pprefx 
 
@@ -77,7 +77,7 @@ class ConstraintReader:
             log.debug(f'Adding constraint for: {par}')
 
             process  = self._proc_from_par(par_name = par)
-            obj      = PrecScales(proc=process, q2bin=self._q2bin)
+            obj      = PrecScales(proc=process, q2bin=self._cfg.q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
             cns = Constraint1D(
