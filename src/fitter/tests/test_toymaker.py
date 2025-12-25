@@ -14,6 +14,7 @@ from dmu.stats             import utilities as sut
 from dmu.generic           import utilities as gut
 from dmu.stats             import Fitter
 from dmu                   import LogStore
+from rx_common             import rxran
 
 log=LogStore.add_logger('fitter:test_toymaker')
 # ----------------------
@@ -29,6 +30,9 @@ def initialize():
     LogStore.set_level('dmu:statistics:fitter'  , 20)
     LogStore.set_level('fitter:toy_maker'       , 10)
     LogStore.set_level('fitter:constraint_adder', 10)
+
+    with rxran.seed(value = 42):
+        yield
 # ----------------------
 def test_simple(tmp_path: Path) -> None:
     '''
