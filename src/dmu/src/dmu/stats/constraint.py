@@ -26,7 +26,31 @@ class ParsHolder(Protocol):
     def get_params(self, *args, **kwargs)-> set[zpar]:
         ...
 # ----------------------------------------
-class ConstraintND(BaseModel):
+class Constraint:
+    '''
+    Class with common code to 1D and ND constraints
+    '''
+    # ----------------------
+    def _get_parameter_value(self, name : str, result : FitResult) -> float:
+        '''
+        Parameters
+        -------------
+        name  : Name of parameter to be calibrated
+        holder: Object with `get_params` implemented
+
+        Returns
+        -------------
+        New value of parameters constraint mean
+        '''
+        for par in result.params:
+            if par.name != name:
+                continue
+
+            return float(par.value().numpy())
+
+        raise ValueError(f'Parameter {name} not found in holder')
+# ----------------------------------------
+class ConstraintND(BaseModel, Constraint):
     '''
     Class meant to symbolize NDimensional Gaussian constraint
     '''
