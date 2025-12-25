@@ -60,6 +60,29 @@ class ConstraintND(BaseModel, Constraint):
     values     : list[float]
     cov        : list[list[float]]
     # ----------------------
+    def calibrate(self, result : FitResult) -> 'ConstraintND':
+        '''
+        Re-centers mu values of this constraint to value of parameter in holder.
+        Needed before fitting toys. The constraints need to be consistent with the
+        parameter values used to generate toy data.
+
+        Parameters
+        -------------
+        result: Object holding result of fit
+
+        Returns
+        -------------
+        Copy of this constraint with means calibrated
+        '''
+        new_values = [ self._get_parameter_value(name = name, result = result ) for name in self.parameters ]
+
+        return ConstraintND(
+            kind       = self.kind,
+            parameters = self.parameters,
+            values     = new_values, 
+            cov        = self.cov,
+        )
+    # ----------------------
     def __str__(self) -> str:
         '''
         Returns
@@ -225,6 +248,28 @@ class Constraint1D(BaseModel):
             constraints.append(cns)
 
         return constraints
+    # ----------------------
+    def calibrate(self, result : FitResult) -> 'Constraint1D':
+        '''
+        Re-centers mu values of this constraint to value of parameter in holder.
+        Needed before fitting toys. The constraints need to be consistent with the
+        parameter values used to generate toy data.
+
+        Parameters
+        -------------
+        result: Object holding result of fit 
+
+        Returns
+        -------------
+        Copy of this constraint with means calibrated
+        '''
+
+        return Constraint1D(
+            kind   = self.kind,
+            name   = self.name,
+            mu     = self._get_parameter_value(name = self.name, result = result), 
+            sg     = self.sg,
+        )
     # ----------------------
     @cached_property
     def observation(self) -> zpar:
