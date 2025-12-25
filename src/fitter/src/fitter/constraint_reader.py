@@ -9,6 +9,7 @@ from rx_common           import Sample
 from .fit_config         import FitConfig
 from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
+from .cmb_constraints    import CmbConstraints
 
 _MISID_COMPONENTS : Final[set[str]] = {'kkk', 'kpipi'}
 
@@ -115,6 +116,17 @@ class ConstraintReader:
 
         self._constraints += mrd.get_constraints()
     # ----------------------
+    def _add_combinatorial_constraints(self) -> None:
+        '''
+        Adds combinatorial constraints
+        '''
+        calc      = CmbConstraints(
+            obs   = self._cfg.observable,
+            cfg   = self._cfg.fit_cfg.model.combinatorial,
+            q2bin = self._cfg.q2bin)
+
+        self._constraints += calc.get_constraints()
+    # ----------------------
     def get_constraints(self) -> list[Constraint]:
         '''
         Returns dictionary with constraints, i.e.
@@ -124,6 +136,7 @@ class ConstraintReader:
         '''
         self._add_misid_constraints()
         self._add_prec_constraints()
+        self._add_combinatorial_constraints()
 
         return self._constraints
 # -------------------------------------------------------------
