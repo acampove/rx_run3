@@ -3,6 +3,7 @@ Module holding ToyMaker class
 '''
 import os
 import tqdm
+import numpy
 import pandas     as pnd
 import tensorflow as tf
 
@@ -49,7 +50,7 @@ class ToyMaker:
         self._nll   = nll
         self._res   = res
         self._cfg   = self._check_config(cfg=cfg) 
-        self._cns   = cns
+        self._cns   = [ cons.calibrate(result = res) for cons in cns ]
 
         self._check_gof()
         self._check_gpu()
