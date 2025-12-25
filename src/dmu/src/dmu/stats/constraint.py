@@ -351,7 +351,7 @@ class Constraint1D(BaseModel, Constraint):
         -------------
         String representation
         '''
-        return f'{self.name:<50}{self.mu:<20:.3f}{self.sg:<20.3f}{self.kind:<20}'
+        return f'{self.name:<50}{self.mu:<20.3f}{self.sg:<20.3f}{self.kind:<20}'
     # ----------------------
     def resample(self) -> None:
         '''
