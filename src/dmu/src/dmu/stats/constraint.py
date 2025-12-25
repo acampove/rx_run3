@@ -12,6 +12,7 @@ from typing                import Protocol
 from functools             import cached_property
 from zfit.constraint       import GaussianConstraint as GConstraint
 from zfit.constraint       import PoissonConstraint  as PConstraint
+from zfit.core.loss        import ZfitParameter
 from zfit.param            import Parameter as zpar
 from zfit.result           import FitResult
 
@@ -24,7 +25,7 @@ class ParsHolder(Protocol):
     '''
     Class meant to symbolize generic holder of parameters
     '''
-    def get_params(self, *args, **kwargs)-> set[zpar]:
+    def get_params(self, *args, **kwargs)-> set[zpar] | set[ZfitParameter]:
         ...
 # ----------------------------------------
 class Constraint:
