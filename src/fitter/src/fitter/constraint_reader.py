@@ -92,6 +92,29 @@ class ConstraintReader:
 
             self._constraints.append(cns)
     # ----------------------
+    def _add_misid_constraints(self) -> None:
+        '''
+        Adds constraints for fully hadronic MisID components
+        '''
+        components= self._cfg.fit_cfg.model.components
+        all_found = all(component in components for component in _MISID_COMPONENTS)
+        any_found = any(component in components for component in _MISID_COMPONENTS)
+        if not all_found and     any_found:
+            raise ValueError('At least one misID component was found, but not all')
+
+        if not all_found and not any_found:
+            log.info('Skipping misID constraints')
+            return
+
+        log.info('Adding MisID constraints')
+        
+        mrd       = MisIDConstraints(
+            obs   = self._cfg.observable,
+            cfg   = self._cfg.fit_cfg.model.constraints.misid,
+            q2bin = self._cfg.q2bin)
+
+        self._constraints += mrd.get_constraints()
+    # ----------------------
     def get_constraints(self) -> list[Constraint]:
         '''
         Returns dictionary with constraints, i.e.
@@ -99,6 +122,7 @@ class ConstraintReader:
         Key  : Name of fitting parameter
         Value: Tuple with mu and error
         '''
+        self._add_misid_constraints()
         self._add_prec_constraints()
 
         return self._constraints
