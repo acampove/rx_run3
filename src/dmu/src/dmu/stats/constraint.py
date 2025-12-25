@@ -212,7 +212,7 @@ class ConstraintND(BaseModel, Constraint):
         for new_value, observation in zip(new_values[0], self.observations.values()):
             observation.set_value(new_value)
 # ----------------------------------------
-class Constraint1D(BaseModel):
+class Constraint1D(BaseModel, Constraint):
     '''
     Class representing Gaussian 1D constrain
     '''
@@ -352,7 +352,6 @@ class Constraint1D(BaseModel):
 
         self.observation.set_value(new_val)
 # ----------------------------------------
-Constraint = Constraint1D | ConstraintND 
 def build_constraint(data: dict) -> Constraint:
     '''
     Parameters
@@ -368,7 +367,7 @@ def build_constraint(data: dict) -> Constraint:
     except Exception as exc:
         raise ValueError('Cannot build constrain from input') from exc
 # ----------------------------------------
-def print_constraints(constraints : Sequence[Constraint1D | ConstraintND]) -> None:
+def print_constraints(constraints : Sequence[Constraint]) -> None:
     '''
     Parameters
     -------------
