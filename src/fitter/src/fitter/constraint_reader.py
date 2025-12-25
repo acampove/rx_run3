@@ -8,7 +8,6 @@ from rx_common     import Sample
 from .prec_scales  import PrecScales
 from dmu.stats     import Constraint, Constraint1D, ParsHolder
 
-
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
 class ConstraintReader:
@@ -32,8 +31,10 @@ class ConstraintReader:
         pprefx: Preffix of rare partially reconstructed parameters, to tell the code
                 to read their constraints, if found
         '''
-
         s_par         = obj.get_params(floating=True) 
+        if not s_par:
+            raise ValueError('No floating parameters found in parameters holder')
+
         self._l_par   = [ par.name for par in s_par ] 
         self._q2bin   = q2bin
         self._signal  = signal 
@@ -65,9 +66,6 @@ class ConstraintReader:
     # -------------------------------------------------------------
     def _add_prec_constraints(self) -> None:
         log.info('Adding partially reconstructed component constraint')
-        if not self._l_par:
-            log.warning('No PRec constraints will be used')
-
         for par in self._l_par:
             if not par.startswith('pscale'): # PRec constraints are scales, starting with "s"
                 continue
