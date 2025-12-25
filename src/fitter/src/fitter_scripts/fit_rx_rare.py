@@ -121,7 +121,7 @@ def _use_constraints(
 # ----------------------
 def _get_constraints(
     nll : ExtendedUnbinnedNLL,
-    cfg : FitConfig) -> DictConfig | None:
+    cfg : FitConfig) -> list[Constraint]:
     '''
     Parameters
     -------------
@@ -130,22 +130,17 @@ def _get_constraints(
 
     Returns
     -------------
-    Dictionary with:
-        key  : Name of parameter
-        Value: Tuple with mu and sigma for constraining parameter
+    List of constraint objects
     '''
-    crd   = ConstraintReader(obj=nll, q2bin=cfg.q2bin)
-    d_cns = crd.get_constraints()
-    cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='scales', kind='GaussianConstraint')
+    crd  = ConstraintReader(obj=nll, q2bin=cfg.q2bin)
+    cons = crd.get_constraints()
 
     if _use_constraints(kind='misid', cfg=cfg):
         mrd       = MisIDConstraints(
             obs   = cfg.observable,
             cfg   = cfg.fit_cfg.model.constraints.misid,
             q2bin = cfg.q2bin)
-        d_cns   = mrd.get_constraints()
-        tmp     = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='misid' , kind='PoissonConstraint')
-        cons    = OmegaConf.merge(cons, tmp)
+        cons += mrd.get_constraints()
     else:
         log.info('Skipping misid constraints')
 
@@ -153,12 +148,9 @@ def _get_constraints(
         log.warning('Not using any constraints')
         return cons
 
-    if not isinstance(cons, DictConfig):
-        raise ValueError('Configuration is not a DictConfig')
-
     log.info('Constraints:')
-    cons_str = OmegaConf.to_yaml(cons)
-    log.info('\n\n' + cons_str)
+    for constraint in cons:
+        log.info(constraint)
 
     return cons 
 # ----------------------
