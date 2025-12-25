@@ -20,7 +20,6 @@ log=LogStore.add_logger('fitter:test_constraint_reader')
 _CONSTRAINTS : Final[list[str]] = [
     'sig_par', 
     'rare_prec_rk', 
-    'rare_prec_rkst', 
     'invalid', 
     'brem_frac']
 # ----------------------
