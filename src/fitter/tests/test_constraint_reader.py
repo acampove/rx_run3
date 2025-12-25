@@ -123,6 +123,27 @@ def initialize():
     '''
     LogStore.set_level('fitter:constraint_reader', 10)
 # --------------------------------------------------------------
+def _get_fit_config(q2bin : Qsq) -> FitConfig:
+    '''
+    Parameters
+    -------------
+    q2bin: E.g. central
+
+    Returns
+    -------------
+    Object storing fit configuration
+    '''
+    fit_cfg = OmegaConf.create({})
+
+    return FitConfig(
+        name    = 'test',
+        group   = 'test',
+        fit_cfg = fit_cfg, 
+        mva_cmb = 0.0,
+        mva_prc = 0.0,
+        q2bin   = q2bin,
+    )
+# --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , _CONSTRAINTS)
 def test_simple(tmp_path : Path, kind : str, q2bin : Qsq):
@@ -137,9 +158,10 @@ def test_simple(tmp_path : Path, kind : str, q2bin : Qsq):
 
     obs = zfit.Space('dummy', limits=(4500, 6000))
     obj = Parameters(kind=kind, obs = obs)
+    cfg = _get_fit_config(q2bin = q2bin)
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(obj=obj, q2bin=q2bin)
+        obj         = ConstraintReader(obj=obj, cfg=cfg)
         constraints = obj.get_constraints()
 
     print_constraints(constraints = constraints)
