@@ -13,6 +13,7 @@ from functools             import cached_property
 from zfit.constraint       import GaussianConstraint as GConstraint
 from zfit.constraint       import PoissonConstraint  as PConstraint
 from zfit.param            import Parameter as zpar
+from zfit.result           import FitResult
 
 from pydantic              import BaseModel, model_validator, TypeAdapter
 from dmu.logging.log_store import LogStore
