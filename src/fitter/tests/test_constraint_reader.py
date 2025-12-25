@@ -4,15 +4,17 @@ Module with functions needed to test ConstraintReader class
 import pytest
 import zfit
 
-from typing       import Final
-from pathlib      import Path
-from dmu.workflow import Cache
-from dmu          import LogStore
-from dmu.stats    import print_constraints
-from rx_common    import Qsq
-from zfit.param   import Parameter           as zpar
-from zfit         import Space               as zobs
-from fitter       import ConstraintReader
+from omegaconf      import OmegaConf
+from typing         import Final
+from pathlib        import Path
+from dmu.workflow   import Cache
+from dmu            import LogStore
+from dmu.stats      import print_constraints
+from rx_common      import Qsq
+from fitter         import FitConfig
+from zfit.param     import Parameter           as zpar
+from zfit           import Space               as zobs
+from fitter         import ConstraintReader
 from zfit.core.loss import ZfitParameter
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
@@ -114,7 +116,7 @@ class Parameters:
 
         return self._s_par 
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This runs before any test
