@@ -9,7 +9,7 @@ from rx_selection   import selection as sel
 
 from dmu.stats      import GofCalculator
 from dmu.stats      import ParameterLibrary as PL
-from dmu.stats      import Constraint1D, ConstraintND
+from dmu.stats      import Constraint1D
 
 from dmu.generic    import utilities        as gut
 from dmu.workflow   import Cache
@@ -24,7 +24,6 @@ from fitter         import LikelihoodFactory
 from fitter         import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid_constraints')
-Constraint = Constraint1D | ConstraintND
 # -------------------------        
 class MisIDConstraints(Cache):
     '''
