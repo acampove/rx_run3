@@ -165,7 +165,9 @@ class ToyMaker:
 
         self._print_parameters()
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
-        nll       = self._nll.create_new(data=l_sampler)
+        zfit_cns  = [ cons.zfit_cons(holder = self._nll) for cons in self._cns ]
+
+        nll       = self._nll.create_new(data=l_sampler, constraints=zfit_cns)
 
         if nll is None:
             raise ValueError('Failed to create NLL with sampler')
