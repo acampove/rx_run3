@@ -10,15 +10,13 @@ import tensorflow as tf
 from pathlib     import Path
 from omegaconf   import DictConfig, OmegaConf
 from dmu.stats   import utilities  as sut
-from dmu.stats   import Constraint1D
-from dmu.stats   import ConstraintND
+from dmu.stats   import Constraint
 from dmu         import LogStore
 from dmu.stats   import Fitter, GofCalculator
 from zfit.result import FitResult           as zres
 from zfit.loss   import ExtendedUnbinnedNLL as Loss
 
 log=LogStore.add_logger('fitter:toy_maker')
-Constraint = Constraint1D | ConstraintND
 # ----------------------
 class ToyMaker:
     '''
