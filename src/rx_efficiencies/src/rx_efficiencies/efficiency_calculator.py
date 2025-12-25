@@ -232,7 +232,7 @@ class EfficiencyCalculator(Cache):
 
             return self._efficiency_from_sample(df=df, as_yields=as_yields)
 
-        log.warning('Recalculating dataframe with yields')
+        log.info(f'Recalculating dataframe with yields for {self._sample.name}')
         df = self._get_stats()
         df.to_json(path_or_buf=data_path, indent=2)
 
