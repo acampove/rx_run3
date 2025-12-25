@@ -4,15 +4,12 @@ Script holding ConstraintReader class
 
 from dmu           import LogStore
 from rx_common     import Qsq
-from zfit.loss     import ExtendedUnbinnedNLL
 from rx_common     import Sample
 from .prec_scales  import PrecScales
-from dmu.stats     import Constraint1D 
-from dmu.stats     import ConstraintND 
+from dmu.stats     import Constraint, Constraint1D, ParsHolder
+
 
 log=LogStore.add_logger('fitter:constraint_reader')
-
-Constraint = Constraint1D | ConstraintND 
 # -------------------------------------------------------------
 class ConstraintReader:
     '''
