@@ -23,7 +23,6 @@ from fitter.fit_config         import FitConfig
 from fitter.constraint_reader  import ConstraintReader
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
-from fitter.misid_constraints  import MisIDConstraints 
 from fitter.toy_maker          import ToyMaker
 from dmu.stats                 import Constraint
 from rx_data.rdf_getter        import RDFGetter
@@ -93,32 +92,6 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
 
     return cfg
 # ----------------------
-def _use_constraints(
-    kind : str,
-    cfg  : FitConfig) -> bool:
-    '''
-    Parameters
-    -------------
-    kind: Label for constraints, e.g. misid
-    cfg : Object holding configuration for fit 
-
-    Returns
-    -------------
-    It will check in the config and will return true to run on these constraints
-    E.g. components not in the model, do not need constraints
-    '''
-    if kind not in ['misid']:
-        raise ValueError(f'Invalid kind: {kind}')
-
-    l_misid   = ['kkk', 'kpipi']
-    components= cfg.fit_cfg.model.components
-    all_found = all(component in components for component in l_misid)
-
-    if kind == 'misid' and all_found:
-        return True
-
-    return False
-# ----------------------
 def _get_constraints(
     nll : ExtendedUnbinnedNLL,
     cfg : FitConfig) -> list[Constraint]:
@@ -135,18 +108,8 @@ def _get_constraints(
     crd  = ConstraintReader(obj=nll, cfg=cfg)
     cons = crd.get_constraints()
 
-    if _use_constraints(kind='misid', cfg=cfg):
-        mrd       = MisIDConstraints(
-            obs   = cfg.observable,
-            cfg   = cfg.fit_cfg.model.constraints.misid,
-            q2bin = cfg.q2bin)
-        cons += mrd.get_constraints()
-    else:
-        log.info('Skipping misid constraints')
-
     if cons is None:
         log.warning('Not using any constraints')
-        return cons
 
     log.info('Constraints:')
     for constraint in cons:
