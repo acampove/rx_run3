@@ -8,6 +8,7 @@ from .parameters       import ParameterLibrary
 from .measurement      import Measurement
 from .gof_calculator   import GofCalculator
 from .fitter           import Fitter
+from .protocols        import ParsHolder
 
 __all__ = [
     'Fitter',
@@ -18,6 +19,7 @@ __all__ = [
     'print_constraints',
     'ConstraintAdder',
     'ParameterLibrary',
+    'ParsHolder',
     'Measurement',
     'GofCalculator',
 ]
