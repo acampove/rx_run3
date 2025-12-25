@@ -146,7 +146,11 @@ def _get_fit_config(q2bin : Qsq) -> FitConfig:
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , _CONSTRAINTS)
-def test_simple(tmp_path : Path, kind : str, q2bin : Qsq):
+def test_simple(
+    tmp_path : Path, 
+    kind     : str, 
+    q2bin    : Qsq,
+    slow_mode: bool):
     '''
     Tests getting constraints
 
@@ -159,6 +163,13 @@ def test_simple(tmp_path : Path, kind : str, q2bin : Qsq):
     obs = zfit.Space('dummy', limits=(4500, 6000))
     obj = Parameters(kind=kind, obs = obs)
     cfg = _get_fit_config(q2bin = q2bin)
+
+    if not slow_mode:
+        log.info('Skipping misid constraints')
+        del cfg.fit_cfg.model.components['kkk']
+        del cfg.fit_cfg.model.components['kpipi']
+    else:
+        log.info('Running full test')
 
     with Cache.cache_root(path = tmp_path):
         obj         = ConstraintReader(obj=obj, cfg=cfg)
