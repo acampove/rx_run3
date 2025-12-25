@@ -8,25 +8,17 @@ import numpy
 
 from typing                import Sequence
 from tabulate              import tabulate
-from typing                import Protocol
 from functools             import cached_property
 from zfit.constraint       import GaussianConstraint as GConstraint
 from zfit.constraint       import PoissonConstraint  as PConstraint
-from zfit.core.loss        import ZfitParameter
 from zfit.param            import Parameter as zpar
 from zfit.result           import FitResult
+from dmu.stats             import ParsHolder
 
 from pydantic              import BaseModel, model_validator, TypeAdapter
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:constraint')
-# ----------------------------------------
-class ParsHolder(Protocol):
-    '''
-    Class meant to symbolize generic holder of parameters
-    '''
-    def get_params(self, *args, **kwargs)-> set[zpar] | set[ZfitParameter]:
-        ...
 # ----------------------------------------
 class Constraint:
     '''
