@@ -177,7 +177,7 @@ def _fit(cfg : FitConfig) -> None:
     cons_str    = [ str(constraint) for constraint in cons ]
     constraints = '\n\n'.join(cons_str)
 
-    cfg.fit_cfg['constraints'] = constraints
+    cfg.fit_cfg['used_constraints'] = constraints
     ftr = DataFitter(
         name = cfg.q2bin,
         d_nll= {cfg.name : (nll, cfg_mod)}, 
@@ -188,7 +188,6 @@ def _fit(cfg : FitConfig) -> None:
         log.info('Not making toys')
         return
 
-    cfg.toy_cfg['constraints'] = cfg_cns
     log.info(f'Making {cfg.toy_cfg.ntoys} toys')
 
     mkr = ToyMaker(nll=nll, res=res, cfg=cfg.toy_cfg, cns = cons)
