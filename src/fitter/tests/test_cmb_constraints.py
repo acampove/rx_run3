@@ -8,10 +8,19 @@ import pytest
 from dmu.stats   import ConstraintND
 from rx_common   import Qsq
 from fitter      import CmbConstraints
+from dmu         import LogStore
 from dmu.generic import utilities           as gut
 from dmu.stats   import ModelFactory
 from zfit.loss   import ExtendedUnbinnedNLL as zlos
 
+log=LogStore.add_logger('test_cmb_constraints')
+# ----------------------
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('fitter:cmb_constraints', 10)
 # ----------------------
 def _get_nll() -> zlos:
     '''
