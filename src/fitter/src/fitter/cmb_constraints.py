@@ -37,7 +37,7 @@ class CmbConstraints:
         self._obs    = obs
         self._q2bin  = q2bin
         self._cfg    = cfg
-        self._cmb_cfg= cfg.model.combinatorial
+        self._cmb_cfg= cfg.model.components.combinatorial
     # ----------------------
     def _get_data(self) -> zdat:
         '''
@@ -60,6 +60,13 @@ class CmbConstraints:
         )
 
         array = rdf.AsNumpy([self._obs.name])[self._obs.name]
+        if rdf.Count().GetValue() == 0:
+            rep = rdf.Report()
+            rep.Print()
+            raise ValueError('Found no entries in dataset')
+
+        if self._obs.obs is None:
+            raise ValueError('Cannot extract observable names')
         data  = zfit.Data.from_numpy(obs = self._obs, array = array)
 
         if not isinstance(data, zdat):
