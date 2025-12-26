@@ -10,7 +10,7 @@ import yaml
 from pathlib                import Path
 from contextlib             import contextmanager
 from importlib.resources    import files
-from ROOT                   import RDF, RDataFrame # type: ignore
+from ROOT                   import RDF # type: ignore
 from dmu                    import LogStore
 from dmu.generic            import hashing
 from dmu.rdataframe         import utilities          as rut
