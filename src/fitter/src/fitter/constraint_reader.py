@@ -123,7 +123,7 @@ class ConstraintReader:
         Adds combinatorial constraints
         '''
         calc      = CmbConstraints(
-            obs   = self._cfg.observable,
+            nll   = self._nll,
             cfg   = self._cfg.fit_cfg,
             q2bin = self._cfg.q2bin)
 
