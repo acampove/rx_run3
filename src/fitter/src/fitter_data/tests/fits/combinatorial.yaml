@@ -13,10 +13,10 @@ low:
   constraints:
     sample     : DATA_24* 
     trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
-    parameters : # Will constrain these parameters
-      - mu
-      - ap
-      - bt
+    parameters : # Will constrain parameters starting
+      - mu       # with any of these strings
+      - ap       # E.g mu_hypexp_combinatorial_1
+      #- bt
 central:
   shared        : []
   float         : []
