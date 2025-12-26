@@ -274,12 +274,17 @@ class ModelFactory:
 
         return is_rep
     #-----------------------------------------
-    def _get_reparametrization(self, par_name : str, init_name : str, value : float, low : float, high : float) -> zpar:
+    def _get_reparametrization(
+        self, 
+        par_name  : str, 
+        kind      : str, 
+        value     : float, 
+        low       : float, 
+        high      : float) -> zpar:
         log.debug(f'Reparametrizing {par_name}')
         par_const = zfit.Parameter(par_name, value, low, high)
         par_const.floating = False
 
-        kind = self._d_rep[init_name]
         if   kind == 'reso':
             par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
             par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
