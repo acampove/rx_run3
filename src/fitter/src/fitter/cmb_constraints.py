@@ -130,8 +130,11 @@ class CmbConstraints:
 
         log.info(res)
 
+        legends = {self._model.name : 'Model'}
+        title   = f'SS fit for {self._q2bin} bin and {self._cfg.trigger}'
+
         ptr = ZFitPlotter(data=data, model=self._model, result=res)
-        ptr.plot(nbins=50, d_leg={}, ext_text='SS Fit')
+        ptr.plot(nbins=50, d_leg=legends, title=title)
         ptr.axs[1].set_ylim(-5, 5)
         plt.show()
 
