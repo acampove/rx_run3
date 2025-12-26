@@ -3,12 +3,13 @@ Module with CmbConstraints class
 '''
 import numpy
 
-from rx_data     import RDFGetter
-from dmu.stats   import ConstraintND
-from omegaconf   import DictConfig
-from rx_common   import Qsq
-from zfit        import Space     as zobs
-from zfit.result import FitResult
+from dmu.stats    import ConstraintND
+from omegaconf    import DictConfig
+from zfit         import Space     as zobs
+from zfit.result  import FitResult
+from rx_common    import Qsq, Sample, Trigger
+from rx_data      import RDFGetter
+from rx_selection import selection as sel
 
 # ------------------------------------
 class CmbConstraints:
