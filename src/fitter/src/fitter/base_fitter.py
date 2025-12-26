@@ -204,8 +204,8 @@ class BaseFitter:
         cut_cfg  : DictConfig,
         plt_cfg  : DictConfig,
         out_path : str,
-        model    : zpdf|None,
-        res      : zres|None,
+        model    : zpdf | None,
+        res      : zres | None,
         data     : zdata,
         d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
         '''
