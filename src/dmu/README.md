@@ -974,7 +974,7 @@ A measurement is represented by the name of the quantity been measured, the valu
 This can be representing using the `Measurement` class like:
 
 ```python
-from dmu import Measurement
+from dmu.stats import Measurement
 
 # Add multiple measurements
 data = {'a' : (1., 1.), 'b' : (2., 1.)}
