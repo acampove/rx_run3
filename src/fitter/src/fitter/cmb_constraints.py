@@ -131,6 +131,20 @@ class CmbConstraints:
 
         return res
     # ----------------------
+    def _pick_parameter(self, name : str) -> bool:
+        '''
+        Parameters
+        -------------
+        name: Parameter name from SS fit
+
+        Returns
+        -------------
+        True if this parameter is meant to be constrained
+        '''
+        par_names = self._cmb_cfg[self._q2bin].constraints.parameters
+
+        return any( name.startswith(par_name) for par_name in par_names )
+    # ----------------------
     def get_constraint(self) -> ConstraintND:
         '''
         Returns
@@ -140,16 +154,16 @@ class CmbConstraints:
         data = self._get_data()
         res  = self._fit(data=data)
 
-        all_pars   = self._cmb_cfg[self._q2bin].constraints.parameters
-        values     = [ float(par.value().numpy()) for par in res.params if par.name in all_pars ]
-        parameters = [ par.name                   for par in res.params if par.name in all_pars ]
-        cov        = res.covariance(params=parameters)
+        values = [ float(par.value().numpy()) for par in res.params if self._pick_parameter(name = par.name) ]
+        names  = [ par.name                   for par in res.params if self._pick_parameter(name = par.name) ]
+        params = [ par                        for par in res.params if self._pick_parameter(name = par.name) ]
+        cov    = res.covariance(params = params)
 
         cns = ConstraintND(
             kind       = 'GaussianConstraint',
-            parameters = parameters, 
+            parameters = names, 
             values     = values, 
-            cov        = cov,
+            cov        = cov.tolist(),
         )
 
         return cns
