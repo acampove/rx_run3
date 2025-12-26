@@ -122,10 +122,10 @@ class ConstraintReader:
         '''
         calc      = CmbConstraints(
             obs   = self._cfg.observable,
-            cfg   = self._cfg.fit_cfg.model.combinatorial,
+            cfg   = self._cfg.fit_cfg,
             q2bin = self._cfg.q2bin)
 
-        self._constraints += calc.get_constraints()
+        self._constraints.append( calc.get_constraint() )
     # ----------------------
     def get_constraints(self) -> list[Constraint]:
         '''
