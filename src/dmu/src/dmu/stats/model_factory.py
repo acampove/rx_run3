@@ -266,17 +266,21 @@ class ModelFactory:
 
         return par
     #-----------------------------------------
-    def _is_reparametrized(self, name : str) -> bool:
+    def _get_reparametrization_type(self, name : str) -> str | None:
+        '''
+        Parameters
+        -------------------
+        name: Physical name of parameter, e.g. mu
+
+        Returns
+        -------------------
+        Type of reparametrization (e.g. scale, resolution...) 
+        or None, if no reparametrization is needed
+        '''
         if self._d_rep is None:
-            return False
+            return None 
 
-        root_name, _ = self._split_name(name)
-
-        is_rep = root_name in self._d_rep
-
-        log.debug(f'Reparametrizing {name}: {is_rep}')
-
-        return is_rep
+        return self._d_rep.get(name)
     #-----------------------------------------
     def _get_reparametrization(
         self, 
