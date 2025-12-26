@@ -2,37 +2,36 @@
 Module with utility functions related to the dmu.stats project
 '''
 
-from contextlib import contextmanager
 import os
 import re
+import zfit
 import pickle
-from typing     import Union, Any, overload
-from pathlib    import Path
 
 import yaml
 import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
+import tensorflow        as tf
 
 import dmu.pdataframe.utilities as put
 import dmu.generic.utilities    as gut
 
-from dmu.stats.zfit         import zfit
-from dmu.stats.fitter       import Fitter
-from dmu.stats.zfit_plotter import ZFitPlotter
+from typing                 import Union, Any, overload
+from pathlib                import Path
+from contextlib             import contextmanager
 from dmu.logging.log_store  import LogStore
-from dmu                    import Measurement
-
-import tensorflow as tf
 
 from omegaconf        import OmegaConf, DictConfig
 from zfit.data        import Data          as zdata
 from zfit.interface   import ZfitSpace     as zobs
 from zfit.param       import Parameter     as zpar
-from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.pdf         import BasePDF       as zpdf
+from zfit.result      import FitResult     as zres
+from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 
-from zfit.minimizers.fitresult import FitResult as zres
+from .fitter          import Fitter
+from .measurement     import Measurement
+from .zfit_plotter    import ZFitPlotter
 
 log = LogStore.add_logger('dmu:stats:utilities')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
