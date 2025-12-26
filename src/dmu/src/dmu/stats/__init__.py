@@ -11,8 +11,10 @@ from .model_factory    import ModelFactory, MethodRegistry
 from .fitter           import Fitter
 from .protocols        import ParsHolder
 from .utilities        import print_pdf
+from .zfit_plotter     import ZFitPlotter
 
 __all__ = [
+    'ZFitPlotter',
     'print_pdf',
     'Fitter',
     'build_constraint',
