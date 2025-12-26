@@ -4,8 +4,9 @@ Script holding ConstraintReader class
 
 from typing              import Final
 from dmu                 import LogStore
-from dmu.stats           import Constraint, Constraint1D, ParsHolder
+from dmu.stats           import Constraint, Constraint1D
 from rx_common           import Sample
+from zfit.loss           import ExtendedUnbinnedNLL
 from .fit_config         import FitConfig
 from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
@@ -22,24 +23,25 @@ class ConstraintReader:
     # ----------------------
     def __init__(
         self, 
-        obj   : ParsHolder, 
+        nll   : ExtendedUnbinnedNLL, 
         cfg   : FitConfig,
         signal: str = 'bpkpee',
         pprefx: str = 'pscale'):
         '''
         Parameters
         -------------------
-        obj   : Object for which `get_parms` is defined, e.g. PDF, likelihood, etc
+        nll   : Likelihoood 
         cfg   : Object storing fit configuration
         signal: Process considered as the signal when calculating denominator of rare Partially
                 reconstructed scale constraints
         pprefx: Preffix of rare partially reconstructed parameters, to tell the code
                 to read their constraints, if found
         '''
-        s_par         = obj.get_params(floating=True) 
+        s_par         = nll.get_params(floating=True) 
         if not s_par:
             raise ValueError('No floating parameters found in parameters holder')
 
+        self._nll     = nll
         self._l_par   = [ par.name for par in s_par ] 
         self._cfg     = cfg
         self._signal  = signal 

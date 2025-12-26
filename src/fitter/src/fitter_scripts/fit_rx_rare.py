@@ -105,7 +105,7 @@ def _get_constraints(
     -------------
     List of constraint objects
     '''
-    crd  = ConstraintReader(obj=nll, cfg=cfg)
+    crd  = ConstraintReader(nll=nll, cfg=cfg)
     cons = crd.get_constraints()
 
     if cons is None:
