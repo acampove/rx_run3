@@ -10,6 +10,13 @@ low:
   float         : []
   reparametrize : {}
   fix           : {}
+  constraints:
+    sample     : DATA_24* 
+    trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
+    parameters :
+      - mu
+      - ap
+      - bt
 central:
   shared        : []
   float         : []
