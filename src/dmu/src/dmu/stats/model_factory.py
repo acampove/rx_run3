@@ -306,7 +306,7 @@ class ModelFactory:
     @MethodRegistry.register('exp')
     def _get_exponential(self, suffix : str = '') -> zpdf:
         c   = self._get_parameter(kind = 'exp', name = 'c', suffix = suffix)
-        pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp{suffix}')
+        pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
@@ -316,7 +316,7 @@ class ModelFactory:
         ap = self._get_parameter(kind = 'hypexp', name = 'ap', suffix = suffix)
         bt = self._get_parameter(kind = 'hypexp', name = 'bt', suffix = suffix)
 
-        pdf= HypExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'hypexp{suffix}')
+        pdf= HypExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'hypexp_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
@@ -326,14 +326,14 @@ class ModelFactory:
         ap = self._get_parameter(kind = 'modexp', name = 'ap', suffix = suffix)
         bt = self._get_parameter(kind = 'modexp', name = 'bt', suffix = suffix)
 
-        pdf= ModExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'modexp{suffix}')
+        pdf= ModExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'modexp_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('pol1')
     def _get_pol1(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol1', name = 'a', suffix = suffix)
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=f'pol1{suffix}')
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=f'pol1_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -341,7 +341,7 @@ class ModelFactory:
     def _get_pol2(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol2', name = 'a', suffix = suffix)
         b   = self._get_parameter(kind = 'pol2', name = 'b', suffix = suffix)
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b   ], name=f'pol2{suffix}')
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b   ], name=f'pol2_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
@@ -351,7 +351,7 @@ class ModelFactory:
         b   = self._get_parameter(kind = 'pol3', name = 'b', suffix = suffix)
         c   = self._get_parameter(kind = 'pol3', name = 'c', suffix = suffix)
 
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b, c], name=f'pol3{suffix}')
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b, c], name=f'pol3_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -362,7 +362,7 @@ class ModelFactory:
         ar  = self._get_parameter(kind = 'cbr', name = 'ac', suffix = suffix)
         nr  = self._get_parameter(kind = 'cbr', name = 'nc', suffix = suffix)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=f'cbr{suffix}')
+        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=f'cbr_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -373,7 +373,7 @@ class ModelFactory:
         gm  = self._get_parameter(kind = 'suj', name = 'gm', suffix = suffix)
         dl  = self._get_parameter(kind = 'suj', name = 'dl', suffix = suffix)
 
-        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj{suffix}')
+        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -384,7 +384,7 @@ class ModelFactory:
         al  = self._get_parameter(kind = 'cbl', name = 'ac', suffix = suffix)
         nl  = self._get_parameter(kind = 'cbl', name = 'nc', suffix = suffix)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=f'cbl{suffix}')
+        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=f'cbl_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -393,7 +393,7 @@ class ModelFactory:
         mu  = self._get_parameter(kind = 'gauss', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'gauss', name = 'sg', suffix = suffix)
 
-        pdf = zfit.pdf.Gauss(mu, sg, self._obs, name=f'gauss{suffix}')
+        pdf = zfit.pdf.Gauss(mu, sg, self._obs, name=f'gauss_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -406,7 +406,7 @@ class ModelFactory:
         nr  = self._get_parameter(kind = 'dscb', name = 'nr', suffix = suffix)
         nl  = self._get_parameter(kind = 'dscb', name = 'nl', suffix = suffix)
 
-        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs, name=f'dscb{suffix}')
+        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs, name=f'dscb_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -416,7 +416,7 @@ class ModelFactory:
         sg  = self._get_parameter(kind = 'voigt', name = 'sg', suffix = suffix)
         gm  = self._get_parameter(kind = 'voigt', name = 'gm', suffix = suffix)
 
-        pdf = zfit.pdf.Voigt(m=mu, sigma=sg, gamma=gm, obs=self._obs, name=f'voigt{suffix}')
+        pdf = zfit.pdf.Voigt(m=mu, sigma=sg, gamma=gm, obs=self._obs, name=f'voigt_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -426,7 +426,7 @@ class ModelFactory:
         sg  = self._get_parameter(kind = 'qgauss', name = 'sg', suffix = suffix)
         q   = self._get_parameter(kind = 'qgauss', name =  'q', suffix = suffix)
 
-        pdf = zfit.pdf.QGauss(q=q, mu=mu, sigma=sg, obs=self._obs, name =f'qgauss{suffix}')
+        pdf = zfit.pdf.QGauss(q=q, mu=mu, sigma=sg, obs=self._obs, name =f'qgauss_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -435,7 +435,7 @@ class ModelFactory:
         mu  = self._get_parameter(kind = 'cauchy', name = 'mu', suffix = suffix)
         gm  = self._get_parameter(kind = 'cauchy', name = 'gm', suffix = suffix)
 
-        pdf = zfit.pdf.Cauchy(obs=self._obs, m=mu, gamma=gm, name=f'cauchy{suffix}')
+        pdf = zfit.pdf.Cauchy(obs=self._obs, m=mu, gamma=gm, name=f'cauchy_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
