@@ -28,7 +28,7 @@ class CmbConstraints:
     # ----------------------
     def __init__(
         self, 
-        obs  : zobs,
+        nll  : zlos,
         cfg  : DictConfig,
         q2bin: Qsq) -> None:
         '''
@@ -38,10 +38,11 @@ class CmbConstraints:
         cfg  : fit configuration
         q2bin: E.g. central
         '''
-        self._obs    = obs
         self._q2bin  = q2bin
         self._cfg    = cfg
-        self._cmb_cfg= cfg.model.components.combinatorial
+        self._cmb_cfg= cfg.model.components[_COMBINATORIAL_NAME]
+
+        self._obs, self._model = self._model_from_nll(nll = nll)
     # ----------------------
     def _get_data(self) -> zdat:
         '''
