@@ -3,6 +3,7 @@ Module with CmbConstraints class
 '''
 import zfit
 
+from dmu          import LogStore
 from dmu.stats    import ModelFactory
 from dmu.stats    import ConstraintND, Fitter
 from omegaconf    import DictConfig
@@ -14,6 +15,7 @@ from rx_common    import Qsq, Sample, Trigger
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
 
+log=LogStore.add_logger('fitter::cmb_constraints')
 # ------------------------------------
 class CmbConstraints:
     '''
@@ -63,6 +65,8 @@ class CmbConstraints:
         if not isinstance(data, zdat):
             raise ValueError('Data is not a zfit.Data instance')
 
+        log.info(f'Found data with shape: {data.shape}')
+
         return data
     # ----------------------
     def _get_model(self) -> zpdf:
@@ -97,6 +101,8 @@ class CmbConstraints:
         pdf = self._get_model()
         ftr = Fitter(pdf = pdf, data = data)
         res = ftr.fit()
+
+        log.info(res)
 
         return res
     # ----------------------
