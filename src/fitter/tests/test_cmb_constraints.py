@@ -21,7 +21,7 @@ def test_simple(q2bin : Qsq):
 
     calc      = CmbConstraints(
         obs   = obs,
-        cfg   = fit_cfg.model.components.combinatorial,
+        cfg   = fit_cfg,
         q2bin = q2bin)
 
     constraint = calc.get_constraint()
