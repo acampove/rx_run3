@@ -2,25 +2,24 @@
 Module with SimFitter class
 '''
 
-from typing import cast
-
 import yaml
+import zfit
 
+from typing                   import cast
 from omegaconf                import DictConfig, OmegaConf
-from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities    as sut
-from dmu.workflow.cache       import Cache
 from dmu.stats                import ModelFactory
+from dmu.workflow             import Cache
 from dmu                      import LogStore
 
 from rx_efficiencies          import DecayNames
+from rx_common                import Trigger
 from rx_selection             import selection        as sel
-from rx_common.types          import Trigger
 from zfit.data                import Data             as zdata
 from zfit.pdf                 import BasePDF          as zpdf
-from zfit.param               import Parameter
 from zfit.interface           import ZfitSpace        as zobs
 from zfit.result              import FitResult        as zres
+from zfit.param               import Parameter
 from fitter.base_fitter       import BaseFitter
 from fitter.data_preprocessor import DataPreprocessor
 from fitter.prec              import PRec
