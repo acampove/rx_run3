@@ -13,7 +13,7 @@ low:
   constraints:
     sample     : DATA_24* 
     trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
-    parameters :
+    parameters : # Will constrain these parameters
       - mu
       - ap
       - bt
