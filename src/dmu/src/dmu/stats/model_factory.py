@@ -462,7 +462,7 @@ class ModelFactory:
         if fun is None:
             raise NotImplementedError(f'PDF of type \"{kind}\" with preffix \"{preffix}\" is not implemented')
 
-        return fun(self, preffix)
+        return fun(self, suffix = preffix)
     #-----------------------------------------
     def _add_pdf(self, l_pdf : list[zpdf]) -> zpdf:
         nfrc = len(l_pdf)
