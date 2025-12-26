@@ -29,13 +29,13 @@ class CmbConstraints:
         Parameters
         -------------
         obs  : Zfit observable
-        cfg  : configuration for combinatorial component
+        cfg  : fit configuration
         q2bin: E.g. central
         '''
         self._obs    = obs
+        self._q2bin  = q2bin
         self._cfg    = cfg
         self._cmb_cfg= cfg.model.combinatorial
-        self._q2bin  = q2bin
     # ----------------------
     def _get_data(self) -> zdat:
         '''
@@ -43,9 +43,7 @@ class CmbConstraints:
         -------------
         1D numpy array with masses to fit
         '''
-        cmb_cfg= self._cfg.model.combinatorial
-
-        cons   = cmb_cfg[self._q2bin]['constraints']
+        cons   = self._cmb_cfg[self._q2bin]['constraints']
         sample = Sample(cons.sample)
         trigger= Trigger(cons.trigger)
 
@@ -97,7 +95,6 @@ class CmbConstraints:
         Result of fit
         '''
         pdf = self._get_model()
-
         ftr = Fitter(pdf = pdf, data = data)
         res = ftr.fit()
 
