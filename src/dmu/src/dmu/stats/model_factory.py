@@ -73,12 +73,11 @@ class ModelFactory:
     l_flt = ['mu', 'sg']
     d_rep = {'mu' : 'scale', 'sg' : 'reso'}
     mod   = ModelFactory(
-            preffix = 'signal', 
-            obs     = obs, 
-            l_pdf   = l_pdf, 
-            l_shared= l_shr, 
-            d_rep   = d_rep)
-
+        preffix = 'signal', 
+        obs     = obs, 
+        l_pdf   = l_pdf, 
+        l_shared= l_shr, 
+        d_rep   = d_rep)
     pdf   = mod.get_pdf()
     ```
 
