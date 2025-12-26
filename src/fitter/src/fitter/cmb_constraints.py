@@ -8,7 +8,8 @@ from dmu.stats    import ConstraintND, Fitter
 from omegaconf    import DictConfig
 from zfit         import Space     as zobs
 from zfit         import Data      as zdat
-from zfit.result  import FitResult
+from zfit.pdf     import BasePDF   as zpdf
+from zfit.result  import FitResult as zres
 from rx_common    import Qsq, Sample, Trigger
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
