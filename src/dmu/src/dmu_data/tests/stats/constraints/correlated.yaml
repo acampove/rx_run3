@@ -1,5 +1,5 @@
 signal_shape:
-  kind        : GaussianNDConstraint 
+  kind        : GaussianConstraint 
   parameters  :
     - mu
     - sg
