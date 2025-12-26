@@ -5,15 +5,15 @@ Module with SimFitter class
 from typing import cast
 
 import yaml
-from omegaconf                import DictConfig, OmegaConf
 
+from omegaconf                import DictConfig, OmegaConf
 from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities    as sut
 from dmu.workflow.cache       import Cache
-from dmu.stats.model_factory  import ModelFactory
-from dmu.logging.log_store    import LogStore
+from dmu.stats                import ModelFactory
+from dmu                      import LogStore
 
-from rx_efficiencies.decay_names import DecayNames
+from rx_efficiencies          import DecayNames
 from rx_selection             import selection        as sel
 from rx_common.types          import Trigger
 from zfit.data                import Data             as zdata
