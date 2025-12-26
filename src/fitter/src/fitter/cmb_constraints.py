@@ -123,8 +123,7 @@ class CmbConstraints:
         -------------
         Result of fit
         '''
-        pdf = self._get_model()
-        ftr = Fitter(pdf = pdf, data = data)
+        ftr = Fitter(pdf = self._model, data = data)
         res = ftr.fit()
 
         log.info(res)
