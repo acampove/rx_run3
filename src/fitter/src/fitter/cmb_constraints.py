@@ -91,9 +91,9 @@ class CmbConstraints:
             trigger = trigger,
             process = sample,
             q2bin   = self._q2bin,
+            uid     = gtr.get_uid(),
         )
 
-        array = rdf.AsNumpy([self._obs.name])[self._obs.name]
         if rdf.Count().GetValue() == 0:
             rep = rdf.Report()
             rep.Print()
@@ -101,6 +101,9 @@ class CmbConstraints:
 
         if self._obs.obs is None:
             raise ValueError('Cannot extract observable names')
+
+        name  = self._obs.obs[0]
+        array = rdf.AsNumpy([name])[name]
         data  = zfit.Data.from_numpy(obs = self._obs, array = array)
 
         if not isinstance(data, zdat):
