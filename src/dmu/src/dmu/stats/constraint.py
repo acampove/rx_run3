@@ -192,10 +192,13 @@ class ConstraintND(BaseModel, Constraint):
         l_par = self._obs_from_holder(holder = holder)
         l_obs = self.observations.values()
 
-        cns   = zfit.constraint.GaussianConstraint(
-            params      = l_par, 
-            observation = l_obs,
-            cov         = self.cov)
+        if self.kind == 'GaussianConstraint':
+            cns   = zfit.constraint.GaussianConstraint(
+                params      = l_par, 
+                observation = l_obs,
+                cov         = self.cov)
+        else:
+            raise ValueError(f'Invalid constraint kind: {self.kind}')
 
         return cns
     # ----------------------
