@@ -16,8 +16,8 @@ def test_simple(q2bin : Qsq):
     '''
     Simplest test of CmbConstraints
     '''
-    fit_cfg = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
-    obs     = zfit.Space('B_Mass', 4500, 7000)
+    fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
+    obs       = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
     calc      = CmbConstraints(
         obs   = obs,
@@ -28,3 +28,4 @@ def test_simple(q2bin : Qsq):
 
     assert isinstance(constraint, ConstraintND)
 
+    print(constraint)
