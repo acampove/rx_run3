@@ -360,7 +360,7 @@ def _save_cutflow(
     gut.dump_json(data = cuts, path = path / 'cuts.yaml', exists_ok=True)
 #-----------------------
 def apply_full_selection(
-    rdf      : RDF.RNode,
+    rdf      : RDF.RNode | RDataFrame,
     q2bin    : str,
     process  : str,
     trigger  : str,
@@ -404,7 +404,8 @@ def apply_full_selection(
         return rdf
 
     log.info('Attaching updated UID')
-    rdf.uid = hashing.hash_object([uid, d_sel])
+    uid = hashing.hash_object([uid, d_sel])
+    setattr(rdf, 'uid', uid)
 
     return rdf
 # ----------------------
