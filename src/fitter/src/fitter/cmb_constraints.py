@@ -3,19 +3,23 @@ Module with CmbConstraints class
 '''
 import zfit
 
+from typing       import Final
 from dmu          import LogStore
-from dmu.stats    import ModelFactory
 from dmu.stats    import ConstraintND, Fitter
 from omegaconf    import DictConfig
-from zfit         import Space     as zobs
-from zfit         import Data      as zdat
-from zfit.pdf     import BasePDF   as zpdf
-from zfit.result  import FitResult as zres
+from zfit         import Space               as zobs
+from zfit         import Data                as zdat
+from zfit.pdf     import BasePDF             as zpdf
+from zfit.result  import FitResult           as zres
+from zfit.loss    import ExtendedUnbinnedNLL as zlos
 from rx_common    import Qsq, Sample, Trigger
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
 
-log=LogStore.add_logger('fitter::cmb_constraints')
+# Name of combinatorial component
+_COMBINATORIAL_NAME : Final[str] = 'combinatorial'
+
+log=LogStore.add_logger('fitter:cmb_constraints')
 # ------------------------------------
 class CmbConstraints:
     '''
