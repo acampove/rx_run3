@@ -210,15 +210,15 @@ class ModelFactory:
     #-----------------------------------------
     def _get_parameter(
         self,
-        kind   : str,
         name   : str,
+        kind   : str,
         suffix : str) -> zpar:
         '''
         Parameters
         ----------------
-        kind  : Identifies PDF, e.g. gaus
         name  : Physical name of parameter, e.g. mu
-        suffix: If multiple PDFs of this kind, it will be some sort of index, e.g. gaus(1), gaus(2)
+        kind  : Identifies PDF, e.g. gaus
+        suffix: If multiple PDFs of this kind, it will be some sort of index, e.g. _1, _2
 
         Returns
         ----------------
