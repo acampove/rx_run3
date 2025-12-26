@@ -46,7 +46,7 @@ class RDFGetter(SpecMaker):
     # ---------------------------------------------------
     def __init__(
         self,
-        sample  : str,
+        sample  : Sample,
         trigger : Trigger,
         tree    : str = 'DecayTree'):
         '''
