@@ -1,10 +1,14 @@
 '''
 Module with CmbConstraints class
 '''
-from dmu.stats import ConstraintND
-from omegaconf import DictConfig
-from rx_common import Qsq
-from zfit      import Space               as zobs
+import numpy
+
+from rx_data     import RDFGetter
+from dmu.stats   import ConstraintND
+from omegaconf   import DictConfig
+from rx_common   import Qsq
+from zfit        import Space     as zobs
+from zfit.result import FitResult
 
 # ------------------------------------
 class CmbConstraints:
