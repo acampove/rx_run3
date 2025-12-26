@@ -3,14 +3,14 @@ Module containing tests for ZModel class
 '''
 
 import pytest
+import zfit
 
-from dmu.stats.zfit          import zfit
-from zfit.pdf                import BasePDF    as zpdf
-from dataclasses             import dataclass
-from dmu.stats.utilities     import print_pdf
-from dmu                     import LogStore
-from dmu.stats.model_factory import ModelFactory, MethodRegistry
-from dmu.stats.parameters    import ParameterLibrary
+from zfit.pdf    import BasePDF    as zpdf
+from dataclasses import dataclass
+from dmu         import LogStore
+from dmu.stats   import print_pdf
+from dmu.stats   import ModelFactory, MethodRegistry
+from dmu.stats   import ParameterLibrary
 
 log=LogStore.add_logger('dmu:stats:test_model_factory')
 #--------------------------
