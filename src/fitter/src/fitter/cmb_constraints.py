@@ -2,10 +2,12 @@
 Module with CmbConstraints class
 '''
 import zfit
+import matplotlib.pyplot as plt
 
 from typing       import Final
 from dmu          import LogStore
 from dmu.stats    import ConstraintND, Fitter
+from dmu.stats    import ZFitPlotter
 from omegaconf    import DictConfig
 from zfit         import Space               as zobs
 from zfit         import Data                as zdat
@@ -127,6 +129,11 @@ class CmbConstraints:
         res = ftr.fit()
 
         log.info(res)
+
+        ptr = ZFitPlotter(data=data, model=self._model, result=res)
+        ptr.plot(nbins=50, d_leg={}, ext_text='SS Fit')
+        ptr.axs[1].set_ylim(-5, 5)
+        plt.show()
 
         return res
     # ----------------------
