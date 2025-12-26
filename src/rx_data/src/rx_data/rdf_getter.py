@@ -6,14 +6,13 @@ from contextlib import contextmanager
 from pathlib    import Path
 from typing     import Any, overload, Literal
 
-import dmu.generic.utilities as gut
-
 from ROOT                    import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
 from dmu.generic             import hashing
-from dmu.logging.log_store   import LogStore
+from dmu                     import LogStore
+from dmu.generic             import utilities as gut
 from omegaconf               import DictConfig, OmegaConf
 from rx_data.spec_maker      import SpecMaker
-from rx_common.types         import Trigger
+from rx_common               import Sample, Trigger
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
