@@ -1,11 +1,13 @@
 '''
 Module with CmbConstraints class
 '''
-import numpy
+import zfit
 
-from dmu.stats    import ConstraintND
+from dmu.stats    import ModelFactory
+from dmu.stats    import ConstraintND, Fitter
 from omegaconf    import DictConfig
 from zfit         import Space     as zobs
+from zfit         import Data      as zdat
 from zfit.result  import FitResult
 from rx_common    import Qsq, Sample, Trigger
 from rx_data      import RDFGetter
