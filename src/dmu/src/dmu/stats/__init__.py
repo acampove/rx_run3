@@ -7,6 +7,7 @@ from .constraint_adder import ConstraintAdder
 from .parameters       import ParameterLibrary
 from .measurement      import Measurement
 from .gof_calculator   import GofCalculator
+from .model_factory    import ModelFactory
 from .fitter           import Fitter
 from .protocols        import ParsHolder
 
@@ -14,6 +15,7 @@ __all__ = [
     'Fitter',
     'build_constraint',
     'Constraint',
+    'ModelFactory',
     'Constraint1D',
     'ConstraintND',
     'print_constraints',
