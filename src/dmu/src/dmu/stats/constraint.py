@@ -155,6 +155,12 @@ class ConstraintND(BaseModel, Constraint):
         if not obs:
             raise ValueError('No observable found')
 
+        ninit = len(self.parameters)
+        nzfit = len(obs)
+
+        if ninit != nzfit:
+            raise ValueError(f'Number of constraint parameters and zfit parameters differ: {ninit} != {nzfit}')
+
         return obs
     # ----------------------
     @cached_property
