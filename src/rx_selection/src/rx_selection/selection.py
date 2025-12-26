@@ -5,22 +5,20 @@ Module containing the selection function, which returns a dictionary of cuts
 import os
 import re
 import copy
-
-from pathlib             import Path
-from importlib.resources import files
-from contextlib          import contextmanager
-
 import yaml
-import ap_utilities.decays.utilities as aput
-from ROOT                   import RDF # type: ignore
-from dmu.generic            import hashing
-from dmu.logging.log_store  import LogStore
-from dmu.rdataframe         import utilities as rut
-from dmu.generic            import utilities as gut
 
-from rx_common    import info
-from rx_selection import truth_matching     as tm
-from rx_selection import version_management as vman
+from pathlib                import Path
+from contextlib             import contextmanager
+from importlib.resources    import files
+from ROOT                   import RDF, RDataFrame # type: ignore
+from dmu                    import LogStore
+from dmu.generic            import hashing
+from dmu.rdataframe         import utilities          as rut
+from dmu.generic            import utilities          as gut
+from ap_utilities.decays    import utilities          as aput
+from rx_selection           import truth_matching     as tm
+from rx_selection           import version_management as vman
+from rx_common              import info
 
 log=LogStore.add_logger('rx_selection:selection')
 #-----------------------
