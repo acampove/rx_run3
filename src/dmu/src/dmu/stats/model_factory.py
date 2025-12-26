@@ -241,14 +241,18 @@ class ModelFactory:
             log.info(f'Picking already made parameter {par_name}')
             return self._d_par[par_name]
 
-        is_reparametrized = self._is_reparametrized(name)
+        rep_kind = self._get_reparametrization_type(name = name)
 
         val, low, high = PL.get_values(kind=kind, parameter=name)
 
-        if is_reparametrized:
-            init_name, _ = self._split_name(par_name)
+        if rep_kind is not None:
             log.info(f'Reparametrizing {par_name}')
-            par  = self._get_reparametrization(par_name, init_name, val, low, high)
+            par  = self._get_reparametrization(
+                par_name = par_name, 
+                kind     = rep_kind, 
+                value    = val, 
+                low      = low, 
+                high     = high)
         else:
             if val == low == high:
                 log.warning(f'Upper and lower edges agree, fixing parameter to: {low}')
