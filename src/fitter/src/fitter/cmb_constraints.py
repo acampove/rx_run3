@@ -44,6 +44,35 @@ class CmbConstraints:
 
         self._obs, self._model = self._model_from_nll(nll = nll)
     # ----------------------
+    def _model_from_nll(self, nll : zlos) -> tuple[zobs, zpdf]:
+        '''
+        Parameters
+        -------------
+        nll: Likelihood associated to current signal region
+
+        Returns
+        -------------
+        Tuple with observable and combinatorial PDF
+        '''
+        models : list[zpdf] = []
+        for pdf in nll.model:
+            if _COMBINATORIAL_NAME in pdf.name:
+                log.info(f'Picking: {pdf.name}')
+                models.append(pdf)
+            else:
+                log.debug(f'Skipping: {pdf.name}')
+
+        nmodels = len(models)
+        if nmodels != 1:
+            raise ValueError(f'Expected one combinatorial model, got: {nmodels}')
+
+        pdf = models[0]
+        obs = pdf.space
+        if not isinstance(obs, zobs):
+            raise ValueError('Observable not of Space type')
+
+        return obs, pdf
+    # ---------------------
     def _get_data(self) -> zdat:
         '''
         Returns
@@ -80,25 +109,6 @@ class CmbConstraints:
         log.info(f'Found data with shape: {data.shape}')
 
         return data
-    # ----------------------
-    def _get_model(self) -> zpdf:
-        '''
-        Returns
-        -------------
-        PDF used to fit combinatorial
-        '''
-
-        mod         = ModelFactory(
-            preffix = 'ss' ,
-            obs     = self._obs,
-            l_pdf   = self._cmb_cfg['categories'].main.models[self._q2bin],
-            l_shared= self._cmb_cfg[self._q2bin ].shared,
-            l_float = self._cmb_cfg[self._q2bin ].float,
-        )
-
-        pdf = mod.get_pdf()
-
-        return pdf
     # ----------------------
     def _fit(self, data : zdat) -> zres:
         '''
