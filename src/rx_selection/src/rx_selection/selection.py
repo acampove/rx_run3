@@ -360,7 +360,7 @@ def _save_cutflow(
     gut.dump_json(data = cuts, path = path / 'cuts.yaml', exists_ok=True)
 #-----------------------
 def apply_full_selection(
-    rdf      : RDF.RNode | RDataFrame,
+    rdf      : RDF.RNode,
     q2bin    : str,
     process  : str,
     trigger  : str,
