@@ -349,15 +349,18 @@ def _save_cutflow(
     rdf : Root Dataframe
     cuts: Selection
     '''
-    log.info(f'Saving cutflow to: {path}')
-
     path.mkdir(parents=True, exist_ok=True)
 
     rep = rdf.Report()
     df  = rut.rdf_report_to_df(rep=rep)
-    df.to_markdown(path / 'cutflow.md')
 
-    gut.dump_json(data = cuts, path = path / 'cuts.yaml', exists_ok=True)
+    cf_path = path / 'cutflow.md'
+    log.info(f'Saving cutflow to: {cf_path}')
+    df.to_markdown(cf_path)
+
+    ct_path = path / 'cuts.yaml'
+    log.info(f'Saving cuts to: {ct_path}')
+    gut.dump_json(data = cuts, path = ct_path, exists_ok=True)
 #-----------------------
 def apply_full_selection(
     rdf      : RDF.RNode,
