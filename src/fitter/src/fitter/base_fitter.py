@@ -1,18 +1,20 @@
 '''
 This module contains BaseFitter
 '''
-from typing                   import cast
+import yaml
 import textwrap
 
+from typing                   import cast
 from omegaconf                import OmegaConf, DictConfig
-from dmu.stats.fitter         import Fitter
+from dmu                      import LogStore
+from dmu.stats                import Fitter
 from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
-from dmu.logging.log_store    import LogStore
-from rx_common.types          import Trigger
 from zfit.result              import FitResult  as zres
 from zfit.data                import Data       as zdata
 from zfit.pdf                 import BasePDF    as zpdf
+from rx_common                import Sample
+from rx_common                import Trigger
 
 log=LogStore.add_logger('fitter:base_fitter')
 # ------------------------
