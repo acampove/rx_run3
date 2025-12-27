@@ -197,7 +197,7 @@ class BaseFitter:
         self,
         cut_cfg  : DictConfig,
         plt_cfg  : DictConfig,
-        out_path : str,
+        out_path : Path,
         model    : zpdf | None,
         res      : zres | None,
         data     : zdata,
@@ -218,13 +218,15 @@ class BaseFitter:
         '''
         # If no entries were present
         # There will not be PDF
-        title, text         = self._get_text(data=data, res=res, selection=cut_cfg)
-        text                = '\n'.join(textwrap.wrap(text, width=40))
-        plt_cfg['title'   ] = title
-        plt_cfg['ext_text'] = text
+        title, sel_fit, sel_dif = self._get_text(data=data, res=res, selection=cut_cfg)
+        text                    = '\n'.join(textwrap.wrap(sel_dif, width=40))
+        plt_cfg['title'   ]     = title
+        plt_cfg['ext_text']     = text
 
-        sel_path = f'{out_path}/selection.yaml'
-        gut.dump_json(cut_cfg, sel_path, exists_ok=True)
+        sel_path = out_path / 'selection.yaml'
+        out_path.mkdir(parents = True, exist_ok = True)
+        with open(sel_path, 'w') as ofile:
+            ofile.write(sel_fit)
 
         sut.save_fit(
             data   = data,
