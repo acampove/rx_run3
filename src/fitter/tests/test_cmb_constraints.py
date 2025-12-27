@@ -44,17 +44,19 @@ def _get_nll() -> zlos:
     return zlos(model = pdf, data = data)
 # ----------------------
 @pytest.mark.parametrize('q2bin', ['low'])
-def test_simple(q2bin : Qsq):
+def test_simple(q2bin : Qsq, tmp_path : Path):
     '''
     Simplest test of CmbConstraints
     '''
     fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
     nll       = _get_nll()
 
-    calc      = CmbConstraints(
-        nll   = nll,
-        cfg   = fit_cfg,
-        q2bin = q2bin)
+    with Cache.cache_root(path = tmp_path):
+        calc      = CmbConstraints(
+            name  = 'test',
+            nll   = nll,
+            cfg   = fit_cfg,
+            q2bin = q2bin)
 
     constraint = calc.get_constraint()
 
