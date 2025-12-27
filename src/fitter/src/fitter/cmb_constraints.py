@@ -58,7 +58,6 @@ class CmbConstraints(BaseFitter, Cache):
         self._base_path = Path(f'{cfg.output_directory}/{name}/{self._cfg.trigger}_{self._q2bin}')
         self._rdf, uid, self._cuts = self._get_rdf()
 
-
         Cache.__init__(
             self,
             rdf_uid  = uid,
@@ -107,16 +106,24 @@ class CmbConstraints(BaseFitter, Cache):
         gtr = RDFGetter(sample = self._sample, trigger = self._trigger)
         rdf = gtr.get_rdf(per_file = False)
 
+        if Cache._cache_root is None:
+            raise ValueError('Cache root directory not defined')
+
+        out_path = Cache._cache_root / self._base_path
+
         rdf = sel.apply_full_selection(
             rdf     = rdf,
             trigger = self._trigger,
             process = self._sample,
             q2bin   = self._q2bin,
             uid     = gtr.get_uid(),
+            out_path= out_path, 
         )
 
         uid = getattr(rdf, 'uid')
         cuts= getattr(rdf, 'sel')
+
+        log.debug(f'Using UID: {uid}')
 
         with sel.custom_selection(d_sel = {}, force_override = True):
             default_cuts = sel.selection(
@@ -183,6 +190,7 @@ class CmbConstraints(BaseFitter, Cache):
         ----------------------
         N dimensional Gaussian constraint
         '''
+        log.info('Constraints not found, calculating them')
         data = self._get_data(rdf = self._rdf)
         res  = self._fit(data=data, model=self._model, cfg = self._cfg)
 
