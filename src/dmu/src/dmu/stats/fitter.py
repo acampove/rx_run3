@@ -202,7 +202,11 @@ class Fitter:
         s_par : set[zpar] = self._pdf.get_params(floating=True)
         for par in s_par:
             ival = par.value()
-            fval = numpy.random.uniform(par.lower, par.upper)
+
+            if par.lower is None or par.upper is None:
+                raise ValueError(f'Either lower or lower bound missing for: {par.name}')
+
+            fval = numpy.random.uniform(par.lower.numpy(), par.upper.numpy())
             par.set_value(fval)
             log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
     #------------------------------
@@ -270,7 +274,10 @@ class Fitter:
         return data
     #------------------------------
     def _get_binned_observable(self, nbins : int):
-        obs : zobs = self._pdf.space
+        obs = self._pdf.space
+        if not isinstance(obs, zobs):
+            raise ValueError('Observable not an Space instance')
+
         [[minx]], [[maxx]] = obs.limits
 
         binning = zfit.binned.RegularBinning(nbins, minx, maxx, name=obs.label)
