@@ -131,27 +131,19 @@ class BaseFitter:
         if self._sample == 'NA':
             return '', ''
 
-        cuts_def  = selection.default
-        cuts_fit  = selection.fit
-        brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
+        if 'fit' in selection:
+            cuts = OmegaConf.to_container(selection.fit)
+        else:
+            cuts = OmegaConf.to_container(selection)
 
-        l_expr = []
-        # Collect all the cuts that are different
-        # from default selection
-        for name, fit_expr in cuts_fit.items():
-            if name not in cuts_def:
-                l_expr.append(fit_expr)
-                continue
+        try:
+            brem_cuts = self._brem_cuts_from_cuts(cuts=cuts) # type: ignore
+        except Exception:
+            raise ValueError('Cannot retrieve brem cut string from cuts dictionary')
 
-            def_expr = cuts_def[name]
-            if fit_expr != def_expr:
-                l_expr.append(fit_expr)
+        cut_str = yaml.dump(cuts)
 
-        # Remove differences in brem, will be done separately
-        l_expr_no_brem = [ expr for expr in l_expr if 'nbrem' not in expr ]
-        new_cuts       = '\n'.join(l_expr_no_brem)
-
-        return new_cuts, brem_cuts
+        return cut_str, brem_cuts
     # --------------------------
     def _entries_from_data(self, data : zdata) -> int:
         '''
