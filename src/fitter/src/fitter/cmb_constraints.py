@@ -206,5 +206,8 @@ class CmbConstraints(BaseFitter, Cache):
             cov        = cov.tolist(),
         )
 
+        constraints_path = self._out_path / 'constraints.json'
+        cns.to_json(constraints_path)
+
         return cns
 # ------------------------------------
