@@ -116,31 +116,6 @@ class CmbConstraints:
 
         return data
     # ----------------------
-    def _fit(self, data : zdat) -> zres:
-        '''
-        Parameters
-        -------------
-        data: 1D array with masses
-
-        Returns
-        -------------
-        Result of fit
-        '''
-        ftr = Fitter(pdf = self._model, data = data)
-        res = ftr.fit()
-
-        log.info(res)
-
-        legends = {self._model.name : 'Model'}
-        title   = f'SS fit for {self._q2bin} bin and {self._cfg.trigger}'
-
-        ptr = ZFitPlotter(data=data, model=self._model, result=res)
-        ptr.plot(nbins=50, d_leg=legends, title=title)
-        ptr.axs[1].set_ylim(-5, 5)
-        plt.show()
-
-        return res
-    # ----------------------
     def _pick_parameter(self, name : str) -> bool:
         '''
         Parameters
