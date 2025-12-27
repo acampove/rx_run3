@@ -8,7 +8,7 @@ import math
 import numpy
 
 from pathlib               import Path
-from typing                import Sequence
+from typing                import Self, Sequence
 from tabulate              import tabulate
 from functools             import cached_property
 from zfit.constraint       import GaussianConstraint as GConstraint
@@ -60,7 +60,7 @@ class Constraint(BaseModel):
         raise NotImplementedError('Cannot extract zfit constraint from base Constraint')
     # ----------------------
     @classmethod
-    def from_json(cls, path : Path) -> 'Constraint':
+    def from_json(cls, path : Path) -> Self:
         '''
         Parameters
         -------------
