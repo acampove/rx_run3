@@ -92,11 +92,11 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def __init__(
         self,
-        samples  : list[str],
+        samples  : list[Sample],
         trig     : Trigger,
         q2bin    : str,
         d_weight : dict[str,int],
-        out_dir  : str = ''):
+        out_dir  : Path):
         '''
         Parameters:
         -------------------------
@@ -104,7 +104,7 @@ class PRec(Cache):
         trig     : HLT2 trigger.
         q2bin    : q2 bin
         d_weight : Dictionary specifying which weights to use, e.g. {'dec' : 1, 'sam' : 1}
-        out_dir  : Directory where cached outputs will go WRT _cache_root, default empty
+        out_dir  : Directory where cached outputs will go WRT _cache_root
         '''
         self._l_sample = samples
         self._trig     = trig
@@ -754,7 +754,7 @@ class PRec(Cache):
         model   : Model,
         name    : str,
         title   : str,
-        out_dir : str) -> None:
+        out_dir : Path) -> None:
         '''
         Save plot of weights and PDF as text
 
@@ -772,7 +772,7 @@ class PRec(Cache):
 
         plt.legend()
         plt.title(title)
-        plt.savefig(f'{out_dir}/{name}_wgt.png')
+        plt.savefig(out_dir / f'{name}_wgt.png')
         plt.close('all')
 
         if model.pdf is None:
