@@ -2,21 +2,22 @@
 Module with CmbConstraints class
 '''
 import zfit
-import matplotlib.pyplot as plt
 
+from omegaconf    import OmegaConf
+from ROOT         import RDF # type: ignore 
 from typing       import Final
 from dmu          import LogStore
-from dmu.stats    import ConstraintND, Fitter
-from dmu.stats    import ZFitPlotter
+from dmu.workflow import Cache
+from dmu.stats    import ConstraintND
 from omegaconf    import DictConfig
 from zfit         import Space               as zobs
 from zfit         import Data                as zdat
 from zfit.pdf     import BasePDF             as zpdf
-from zfit.result  import FitResult           as zres
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
 from rx_common    import Qsq, Sample, Trigger
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
+from .base_fitter import BaseFitter
 
 # Name of combinatorial component
 _COMBINATORIAL_NAME : Final[str] = 'combinatorial'
