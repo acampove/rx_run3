@@ -38,7 +38,7 @@ class Cache:
     _cache_root     : str|None       = None
     _l_skip_class   : list[str]|None = []
     # ---------------------------
-    def __init__(self, out_path : str, **kwargs):
+    def __init__(self, out_path : Path, **kwargs):
         '''
         Parameters
         ---------------
@@ -56,9 +56,10 @@ class Cache:
         else:
             log.warning('Not using code for hashing')
 
-        self._out_path  = os.path.normpath(f'{Cache._cache_root}/{out_path}')
+        self._out_path  = Cache._cache_root / out_path 
+
         log.debug(f'Using {self._out_path} output path')
-        os.makedirs(self._out_path, exist_ok=True)
+        self._out_path.mkdir(parents=True, exist_ok=True)
 
         self._dat_hash  = kwargs
 
