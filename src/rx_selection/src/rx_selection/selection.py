@@ -405,7 +405,8 @@ def apply_full_selection(
 
     log.info('Attaching updated UID')
     uid = hashing.hash_object([uid, d_sel])
-    setattr(rdf, 'uid', uid)
+    setattr(rdf, 'uid',   uid)
+    setattr(rdf, 'sel', d_sel)
 
     return rdf
 # ----------------------
