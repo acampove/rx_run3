@@ -523,6 +523,10 @@ def _save_result(
         log.info('No result object found, not saving parameters in pkl or JSON')
         return None
 
+    # TODO: Needs to be removed once
+    # https://github.com/zfit/zfit/issues/702
+    # be sorted out
+    res.covariance()
     res.freeze()
     with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
         pickle.dump(res, ofile)
@@ -843,6 +847,10 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
     --------------
     OmegaConfig's DictConfig instance
     '''
+    # TODO: Needs to be removed once
+    # https://github.com/zfit/zfit/issues/702
+    # be sorted out
+    res.covariance()
     res.freeze()
 
     par   = res.params
