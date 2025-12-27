@@ -1,19 +1,17 @@
 '''
 Module holding zfitter class
 '''
-# pylint: disable=wrong-import-order, import-error
 
+import zfit
 import contextlib
 import pprint
-from typing                   import Protocol, Union
-from functools                import lru_cache
-
 import numpy
 import pandas            as pd
 import matplotlib.pyplot as plt
 
+from typing                   import Protocol, Union
+from functools                import lru_cache
 from dmu.logging              import messages  as mes
-from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from dmu.stats.gof_calculator import GofCalculator
 
