@@ -517,8 +517,11 @@ class Fitter:
             log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
             self._reshuffle_pdf_pars()
 
-        if last_res is None:
+        if last_res is None and isinstance(nll, Loss):
             self._plot_data(nll=nll)
+
+        if last_res is None:
+            # TODO: Need to plot binned data before raising for cases where fit fails
             raise FitterFailedFit('Cannot find any valid fit')
 
         return d_pval_res, last_res
