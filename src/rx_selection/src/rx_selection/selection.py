@@ -403,7 +403,7 @@ def apply_full_selection(
         log.debug('No UID found, not updating it')
         return rdf
 
-    log.info('Attaching updated UID')
+    log.info('Attaching updated UID and selection to dataframe')
     uid = hashing.hash_object([uid, d_sel])
     setattr(rdf, 'uid',   uid)
     setattr(rdf, 'sel', d_sel)
