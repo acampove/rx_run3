@@ -3,9 +3,11 @@ Module containing constraint classes
 '''
 
 import zfit
+import json
 import math
 import numpy
 
+from pathlib               import Path
 from typing                import Sequence
 from tabulate              import tabulate
 from functools             import cached_property
@@ -20,7 +22,7 @@ from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:constraint')
 # ----------------------------------------
-class Constraint:
+class Constraint(BaseModel):
     '''
     Class with common code to 1D and ND constraints
     '''
@@ -57,7 +59,7 @@ class Constraint:
 
         raise NotImplementedError('Cannot extract zfit constraint from base Constraint')
 # ----------------------------------------
-class ConstraintND(BaseModel, Constraint):
+class ConstraintND(Constraint):
     '''
     Class meant to symbolize NDimensional Gaussian constraint
     '''
@@ -233,7 +235,7 @@ class ConstraintND(BaseModel, Constraint):
         for new_value, observation in zip(new_values[0], self.observations.values()):
             observation.set_value(new_value)
 # ----------------------------------------
-class Constraint1D(BaseModel, Constraint):
+class Constraint1D(Constraint):
     '''
     Class representing Gaussian 1D constrain
     '''
