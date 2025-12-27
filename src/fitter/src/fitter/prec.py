@@ -4,29 +4,28 @@ Module containing PRec
 import os
 import copy
 import pprint
-from pathlib     import Path
-from dataclasses import dataclass
-
+import zfit
 import numpy
 import slugify
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from dmu.stats.zfit         import zfit
+from pathlib                import Path
+from dataclasses            import dataclass
 from dmu.generic            import hashing
-from dmu.logging.log_store  import LogStore
-from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu                    import LogStore
+from dmu.stats              import ZFitPlotter
 from dmu.stats.utilities    import is_pdf_usable
 from dmu.stats              import utilities as sut
 from dmu.rdataframe         import utilities as rut
 from dmu.generic            import utilities as gut
-from dmu.workflow.cache     import Cache
+from dmu.workflow           import Cache
 
 from zfit.pdf              import BasePDF       as zpdf
 from zfit.interface        import ZfitSpace     as zobs
 from rx_selection          import selection     as sel
-from rx_data.rdf_getter    import RDFGetter
-from rx_common.types       import Trigger
+from rx_data               import RDFGetter
+from rx_common             import Sample, Trigger
 from rx_common             import info
 from ROOT                  import RDF # type: ignore
 
