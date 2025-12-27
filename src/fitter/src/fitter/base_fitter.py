@@ -123,27 +123,28 @@ class BaseFitter:
         --------------
         Tuple with:
 
-        - Multiple lines with cuts that were used for fit, but are not default, plus MVA cut
+        - Selection used for fit
+        - Difference between fit selection and default 
         - Brem categories choice
         '''
         # For components like combinatorial, there is no MC sample
         # Therefore the selection or brem category does not make sense
         if self._sample == 'NA':
-            return '', ''
+            return '', '', ''
 
-        if 'fit' in selection:
-            cuts = OmegaConf.to_container(selection.fit)
-        else:
-            cuts = OmegaConf.to_container(selection)
+        cuts_ini : dict[str,str] = OmegaConf.to_container(selection.default) # type: ignore
+        cuts_fit : dict[str,str] = OmegaConf.to_container(selection.fit)     # type: ignore
+
+        sel_dif  = self._get_selection_diff(ini = cuts_ini, fit = cuts_fit)
 
         try:
-            brem_cuts = self._brem_cuts_from_cuts(cuts=cuts) # type: ignore
+            brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
         except Exception:
             raise ValueError('Cannot retrieve brem cut string from cuts dictionary')
 
-        cut_str = yaml.dump(cuts)
+        sel_fit = yaml.dump(cuts_fit)
 
-        return cut_str, brem_cuts
+        return sel_fit, sel_dif, brem_cuts
     # --------------------------
     def _entries_from_data(self, data : zdata) -> int:
         '''
