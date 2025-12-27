@@ -4,11 +4,11 @@ This module contains BaseFitter
 import yaml
 import textwrap
 
+from pathlib                  import Path
 from typing                   import cast
 from omegaconf                import OmegaConf, DictConfig
 from dmu                      import LogStore
 from dmu.stats                import Fitter
-from dmu.generic              import utilities  as gut
 from dmu.stats                import utilities  as sut
 from zfit.result              import FitResult  as zres
 from zfit.data                import Data       as zdata
