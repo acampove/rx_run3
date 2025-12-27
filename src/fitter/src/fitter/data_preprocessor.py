@@ -75,7 +75,7 @@ class DataPreprocessor(Cache):
         self._df_ctf = df_ctf
 
         self._is_sig = is_sig
-        self._rdf_uid= None if self._rdf is None else self._rdf.uid
+        self._rdf_uid= None if self._rdf is None else getattr(self._rdf, 'uid')
 
         super().__init__(
             out_path = out_dir,
