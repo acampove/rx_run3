@@ -183,13 +183,21 @@ class CmbConstraints(BaseFitter, Cache):
         ----------------------
         N dimensional Gaussian constraint
         '''
-        data = self._get_data()
-        res  = self._fit(data=data)
+        data = self._get_data(rdf = self._rdf)
+        res  = self._fit(data=data, model=self._model, cfg = self._cfg)
 
-        values = [ float(par.value().numpy()) for par in res.params if self._pick_parameter(name = par.name) ]
-        names  = [ par.name                   for par in res.params if self._pick_parameter(name = par.name) ]
-        params = [ par                        for par in res.params if self._pick_parameter(name = par.name) ]
-        cov    = res.covariance(params = params)
+        self._save_fit(
+            data    = data, 
+            res     = res, 
+            out_path= self._out_path,
+            plt_cfg = self._cmb_cfg[self._q2bin].constraints.plots,
+            cut_cfg = self._cuts,
+            model   = self._model)
+
+        params = [ par for par in self._model.get_params() if self._pick_parameter(name = par.name) ] 
+        values = [ float(par.value().numpy()) for par in params ]
+        names  = [ par.name                   for par in params ]
+        cov    = res.covariance(params = names)
 
         cns = ConstraintND(
             kind       = 'GaussianConstraint',
