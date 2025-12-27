@@ -94,26 +94,55 @@ class CmbConstraints(BaseFitter, Cache):
 
         return obs, pdf
     # ---------------------
-    def _get_data(self) -> zdat:
+    def _get_rdf(self) -> tuple[RDF.RNode, str, DictConfig]:
         '''
         Returns
         -------------
-        1D numpy array with masses to fit
-        '''
-        cons   = self._cmb_cfg[self._q2bin]['constraints']
-        sample = Sample(cons.sample)
-        trigger= Trigger(cons.trigger)
+        Tuple with:
 
-        gtr = RDFGetter(sample = sample, trigger = trigger)
+        - DataFrame after full selection 
+        - Unique identifier for input ntuples and selection
+        - Dictionary with selection used
+        '''
+        gtr = RDFGetter(sample = self._sample, trigger = self._trigger)
         rdf = gtr.get_rdf(per_file = False)
 
         rdf = sel.apply_full_selection(
             rdf     = rdf,
-            trigger = trigger,
-            process = sample,
+            trigger = self._trigger,
+            process = self._sample,
             q2bin   = self._q2bin,
             uid     = gtr.get_uid(),
         )
+
+        uid = getattr(rdf, 'uid')
+        cuts= getattr(rdf, 'sel')
+
+        with sel.custom_selection(d_sel = {}, force_override = True):
+            default_cuts = sel.selection(
+                q2bin    = self._q2bin, 
+                process  = self._sample,
+                trigger  = self._trigger,
+            )
+
+        cuts= {'default' : default_cuts, 'fit' : cuts}
+
+        cuts= OmegaConf.create(obj=cuts)
+        if not isinstance(cuts, DictConfig):
+            raise ValueError('Cuts cannot be transformed to DictConfig')
+
+        return rdf, uid, cuts
+    # ---------------------
+    def _get_data(self, rdf : RDF.RNode) -> zdat:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT dataframe with e.g. SS data after selection
+
+        Returns
+        -------------
+        Zfit dataset instance
+        '''
 
         if rdf.Count().GetValue() == 0:
             rep = rdf.Report()
