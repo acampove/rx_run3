@@ -58,6 +58,37 @@ class Constraint(BaseModel):
         _ = holder
 
         raise NotImplementedError('Cannot extract zfit constraint from base Constraint')
+    # ----------------------
+    @classmethod
+    def from_json(cls, path : Path) -> 'Constraint':
+        '''
+        Parameters
+        -------------
+        path: Path to JSON file to load constraint
+
+        Returns
+        -------------
+        Constraint
+        '''
+        if not path.exists():
+            raise ValueError(f'Path not found: {path}')
+
+        with open(path) as ifile:
+            data = json.load(ifile)
+
+        return cls(**data)
+    # ----------------------
+    def to_json(self, path : Path) -> None:
+        '''
+        Parameters
+        -------------
+        path: Path to JSON file that will store 
+        '''
+        data = self.model_dump_json(indent=2)
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'w') as ofile:
+            ofile.write(data)
 # ----------------------------------------
 class ConstraintND(Constraint):
     '''

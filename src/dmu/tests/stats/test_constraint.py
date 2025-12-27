@@ -5,6 +5,7 @@ import zfit
 import numpy
 import pytest
 
+from pathlib         import Path
 from typing          import Final
 from zfit            import Parameter          as zpar
 from zfit.constraint import GaussianConstraint as GConstraint 
@@ -160,3 +161,37 @@ def test_from_dict():
     assert all( isinstance(const, Constraint1D) for const in constraints )
 
     print_constraints(constraints)
+# ---------------------------------
+def test_serialization_nd(tmp_path : Path):
+    '''
+    Tests serialization to and from JSON
+    fro ND constraints
+    '''
+    data = _load_constraints(kind = 'correlated')[0]
+    obj  = ConstraintND(**data)
+
+    path = tmp_path / 'ND.json'
+    obj.to_json(path = path)
+
+    assert path.exists()
+
+    res = ConstraintND.from_json(path=path)
+
+    assert res == obj
+# ---------------------------------
+@pytest.mark.parametrize('data', _load_constraints(kind = 'uncorrelated'))
+def test_serialization_1d(tmp_path : Path, data):
+    '''
+    Tests serialization to and from JSON
+    fro ND constraints
+    '''
+    obj  = Constraint1D(**data)
+
+    path = tmp_path / '1D.json'
+    obj.to_json(path = path)
+
+    assert path.exists()
+
+    res = Constraint1D.from_json(path=path)
+
+    assert res == obj
