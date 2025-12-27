@@ -111,7 +111,42 @@ class BaseFitter:
 
         return brem_cuts
     # --------------------------
-    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str]:
+    def _get_selection_diff(self, ini : dict[str,str], fit : dict[str,str]) -> str:
+        '''
+        Parameters
+        -----------------
+        ini: Initial (default) selection
+        fit: Selection used for fit
+
+        Returns
+        -----------------
+        Semicolon separated string with cuts that
+
+        - Were modified from values in default
+        - Were added on top of the default
+
+        Cuts are never removed explicitly, just changed, e.g. mva > 0.3 ---> (1)
+        '''
+        s_ini = set(ini)
+        s_fit = set(fit)
+
+        s_intersection = s_ini & s_fit
+        diff   = []
+        for key in s_intersection:
+            if ini[key] == fit[key]:
+                continue
+
+            diff.append(fit[key])
+
+        for key in s_fit:
+            if key in s_ini:
+                continue
+
+            diff.append(fit[key])
+
+        return '; '.join(diff)
+    # --------------------------
+    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str,str]:
         '''
         Parameters
         --------------
