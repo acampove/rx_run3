@@ -17,6 +17,8 @@ low:
       - mu       # with any of these strings
       - ap       # E.g mu_hypexp_combinatorial_1
       #- bt
+    plots:
+      nbins : 60
 central:
   shared        : []
   float         : []
