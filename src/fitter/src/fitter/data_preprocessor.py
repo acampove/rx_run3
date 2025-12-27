@@ -36,9 +36,9 @@ class DataPreprocessor(Cache):
     # ------------------------
     def __init__(
         self,
-        out_dir : str,
+        out_dir : Path,
         obs     : zobs,
-        sample  : str,
+        sample  : Sample,
         trigger : Trigger,
         q2bin   : str,
         wgt_cfg : DictConfig|None,
@@ -88,7 +88,7 @@ class DataPreprocessor(Cache):
     # ------------------------
     def _get_rdf(
         self, 
-        out_dir     : str,
+        out_dir     : Path,
         cut         : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
