@@ -3,6 +3,7 @@ Module with CmbConstraints class
 '''
 import zfit
 
+from pathlib      import Path
 from omegaconf    import OmegaConf
 from ROOT         import RDF # type: ignore 
 from typing       import Final
@@ -24,13 +25,14 @@ _COMBINATORIAL_NAME : Final[str] = 'combinatorial'
 
 log=LogStore.add_logger('fitter:cmb_constraints')
 # ------------------------------------
-class CmbConstraints:
+class CmbConstraints(BaseFitter, Cache):
     '''
     Class intended to provide constraints for shape of combinatorial model
     '''
     # ----------------------
     def __init__(
         self, 
+        name : str,
         nll  : zlos,
         cfg  : DictConfig,
         q2bin: Qsq) -> None:
@@ -41,11 +43,27 @@ class CmbConstraints:
         cfg  : fit configuration
         q2bin: E.g. central
         '''
+        BaseFitter.__init__(self)
+
         self._q2bin  = q2bin
         self._cfg    = cfg
         self._cmb_cfg= cfg.model.components[_COMBINATORIAL_NAME]
 
+        cons         = self._cmb_cfg[self._q2bin]['constraints']
+        self._sample = Sample(cons.sample)
+        self._trigger= Trigger(cons.trigger)
+
         self._obs, self._model = self._model_from_nll(nll = nll)
+
+        self._base_path = Path(f'{cfg.output_directory}/{name}/{self._cfg.trigger}_{self._q2bin}')
+        self._rdf, uid, self._cuts = self._get_rdf()
+
+
+        Cache.__init__(
+            self,
+            rdf_uid  = uid,
+            out_path = self._base_path,
+            config   = OmegaConf.to_container(cfg, resolve=True))
     # ----------------------
     def _model_from_nll(self, nll : zlos) -> tuple[zobs, zpdf]:
         '''
