@@ -523,13 +523,7 @@ def _save_result(
         log.info('No result object found, not saving parameters in pkl or JSON')
         return None
 
-    # TODO: Remove this once there be a safer way to freeze
-    # see https://github.com/zfit/zfit/issues/632
-    try:
-        res.freeze()
-    except AttributeError:
-        pass
-
+    res.freeze()
     with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
         pickle.dump(res, ofile)
 
@@ -849,11 +843,7 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
     --------------
     OmegaConfig's DictConfig instance
     '''
-    # This should prevent crash when result object was already frozen
-    try:
-        res.freeze()
-    except AttributeError:
-        pass
+    res.freeze()
 
     par   = res.params
     try:
