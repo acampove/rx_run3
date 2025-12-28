@@ -220,4 +220,5 @@ def test_apply_selection(tmp_path : Path):
     rdf =sel.apply_selection(
         rdf     =rdf, 
         cuts    =cuts,
+        uid     =gtr.get_uid(),
         out_path=out_path)
