@@ -35,8 +35,8 @@ class Cache:
     - If the list is empty, caching runs for everything
     - If the list is None, caching is turned off for everything
     '''
-    _cache_root     : Path | None    = None
-    _l_skip_class   : list[str]|None = []
+    _cache_root     : Path     | None = None
+    _l_skip_class   : list[str]| None = []
     # ---------------------------
     def __init__(self, out_path : Path, **kwargs):
         '''
@@ -56,7 +56,7 @@ class Cache:
         else:
             log.warning('Not using code for hashing')
 
-        self._out_path  = Cache._cache_root / out_path 
+        self._out_path  = Cache._cache_root / out_path
 
         log.debug(f'Using {self._out_path} output path')
         self._out_path.mkdir(parents=True, exist_ok=True)
