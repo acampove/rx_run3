@@ -5,6 +5,7 @@ Module used to test CmbConstraints class
 import zfit
 import pytest 
 
+from typing       import Final
 from pathlib      import Path
 from dmu.workflow import Cache
 from dmu.stats    import ConstraintND
@@ -15,6 +16,8 @@ from dmu.generic  import utilities           as gut
 from dmu.stats    import ModelFactory
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
 from rx_selection import selection           as sel
+
+_COMBINATORIAL_NAME : Final[str] = 'combinatorial'
 
 log=LogStore.add_logger('test_cmb_constraints')
 # ----------------------
@@ -55,7 +58,7 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.8'}):
         calc      = CmbConstraints(
-            name  = 'test',
+            name  = _COMBINATORIAL_NAME,
             nll   = nll,
             cfg   = fit_cfg,
             q2bin = q2bin)
