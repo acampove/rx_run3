@@ -123,6 +123,11 @@ class ConstraintReader:
         '''
         Adds combinatorial constraints
         '''
+        components= self._cfg.fit_cfg.model.components
+        if _COMBINATORIAL_NAME not in components:
+            log.warning(f'Combinatorial {_COMBINATORIAL_NAME} component not found, not calculating constraints')
+            return
+
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
             nll   = self._nll,
