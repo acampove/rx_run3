@@ -413,3 +413,48 @@ def apply_full_selection(
 
     return rdf
 # ----------------------
+def apply_selection(
+    rdf      : RDF.RNode,
+    cuts     : dict[str,str],
+    out_path : Path|None= None) -> RDF.RNode:
+    '''
+    Will apply selection on dataframe.
+    IMPORTANT: This HAS to be done lazily or else the rest of the code will be slowed down.
+
+    Parameters
+    --------------------
+    rdf     : ROOT DataFrame
+    cuts    : Dictionary mapping cut label with expression
+    out_path: Directory path where selection and cutflow will be stored, optional
+
+    Returns
+    --------------------
+    Dataframe after full selection.
+    If uid was passed, the uid will be recalculated and attached to the dataframe.
+    '''
+
+    log.info(60 * '-')
+    log.info('Applying cuts')
+    log.info(60 * '-')
+    for cut_name, cut_value in cuts.items():
+        log.debug(f'{cut_name:<40}{cut_value}')
+        rdf = rdf.Filter(cut_value, cut_name)
+
+    if out_path:
+        _save_cutflow(path=out_path, rdf=rdf, cuts=cuts)
+    else:
+        log.warning('Not saving cutflow')
+
+    if not hasattr(rdf, 'uid'):
+        log.debug('No UID found, not updating it')
+        return rdf
+
+    uid = getattr(rdf, 'uid')
+
+    log.info('Attaching updated UID and selection to dataframe')
+    uid = hashing.hash_object([uid, cuts])
+    setattr(rdf, 'uid',   uid)
+    setattr(rdf, 'sel', cuts)
+
+    return rdf
+
