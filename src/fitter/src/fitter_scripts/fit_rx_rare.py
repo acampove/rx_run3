@@ -92,9 +92,9 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
 
     return cfg
 # ----------------------
-def _get_constraints(
+def _add_constraints(
     nll : ExtendedUnbinnedNLL,
-    cfg : FitConfig) -> list[Constraint]:
+    cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
     '''
     Parameters
     -------------
@@ -103,7 +103,10 @@ def _get_constraints(
 
     Returns
     -------------
-    List of constraint objects
+    Tuple with:
+
+    - Constrained likelihood
+    - List of constraints
     '''
     crd  = ConstraintReader(nll=nll, cfg=cfg)
     cons = crd.get_constraints()
@@ -115,7 +118,15 @@ def _get_constraints(
     for constraint in cons:
         log.info(constraint)
 
-    return cons 
+    cons_str    = [ str(constraint) for constraint in cons ]
+    constraints = '\n\n'.join(cons_str)
+
+    cfg.fit_cfg['used_constraints'] = constraints
+
+    cad  = ConstraintAdder(nll=nll, constraints=cons)
+    nll  = cad.get_nll()
+
+    return nll, cons
 # ----------------------
 def _fit(cfg : FitConfig) -> None:
     '''
@@ -129,18 +140,8 @@ def _fit(cfg : FitConfig) -> None:
     nll = ftr.run()
     cfg_mod = ftr.get_config()
 
-    cons = _get_constraints(nll=nll, cfg=cfg)
-    cad  = ConstraintAdder(nll=nll, constraints=cons)
-    nll  = cad.get_nll()
+    nll, cons = _add_constraints(nll=nll, cfg=cfg)
 
-    # Type analyser needs to be told this is the right type
-    if not isinstance(nll, ExtendedUnbinnedNLL):
-        raise ValueError('Likelihood is not extended and unbinned')
-
-    cons_str    = [ str(constraint) for constraint in cons ]
-    constraints = '\n\n'.join(cons_str)
-
-    cfg.fit_cfg['used_constraints'] = constraints
     ftr = DataFitter(
         name = cfg.q2bin,
         d_nll= {cfg.name : (nll, cfg_mod)}, 
