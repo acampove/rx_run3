@@ -6,15 +6,12 @@ provided by this project
 import os
 import typer
 import mplhep
-import pandas              as pnd
 import matplotlib.pyplot   as plt
 
 from pathlib               import Path
-from dmu.workflow          import Cache
 from dmu                   import LogStore
-from rx_efficiencies       import CXCalculator
 from rx_data.rdf_getter    import RDFGetter
-from rx_common             import Trigger, Qsq, Project
+from rx_common             import Trigger, Qsq, Sample
 from rx_common             import info
 from rx_plotter.refitting  import plot      as refitting_plot
 from rx_selection          import selection as sel
@@ -62,7 +59,7 @@ def control_region(
     sample = 'DATA_24*'
 
     with RDFGetter.multithreading(nthreads = 10):
-        gtr = RDFGetter(sample = sample, trigger = Trigger(trig))
+        gtr = RDFGetter(sample = Sample(sample), trigger = Trigger(trig))
         rdf = gtr.get_rdf(per_file = False)
 
         if   mass == 'B_Mass_hdpipi':
