@@ -2,23 +2,23 @@ args:
   # ------------
   # Muon
   # ------------
-  - { block : -1, fit_cfg : rare/rk/muon       , q2bin :     low, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rk/muon       , q2bin : central, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rk/muon       , q2bin :    high, mva_cmb : 0.5, mva_prc : 0.5} 
-  # ------------
-  - { block : -1, fit_cfg : rare/rkst/muon     , q2bin :     low, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rkst/muon     , q2bin : central, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rkst/muon     , q2bin :    high, mva_cmb : 0.5, mva_prc : 0.5} 
+  - { block : -1, group : test_003, fit_cfg : rare/rk/muon       , q2bin :     low, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rk/muon       , q2bin : central, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rk/muon       , q2bin :    high, mva_cmb : 50, mva_prc : 50} 
+  # ------------                                                                                              
+  - { block : -1, group : test_003, fit_cfg : rare/rkst/muon     , q2bin :     low, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rkst/muon     , q2bin : central, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rkst/muon     , q2bin :    high, mva_cmb : 50, mva_prc : 50} 
   # ------------
   # Electron 
   # ------------
-  - { block : -1, fit_cfg : rare/rk/electron   , q2bin :     low, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rk/electron   , q2bin : central, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rk/electron   , q2bin :    high, mva_cmb : 0.5, mva_prc : 0.5} 
+  - { block : -1, group : test_003, fit_cfg : rare/rk/electron   , q2bin :     low, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rk/electron   , q2bin : central, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rk/electron   , q2bin :    high, mva_cmb : 50, mva_prc : 50} 
   # ------------
-  - { block : -1, fit_cfg : rare/rkst/electron , q2bin :     low, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rkst/electron , q2bin : central, mva_cmb : 0.5, mva_prc : 0.5} 
-  - { block : -1, fit_cfg : rare/rkst/electron , q2bin :    high, mva_cmb : 0.5, mva_prc : 0.5} 
+  - { block : -1, group : test_003, fit_cfg : rare/rkst/electron , q2bin :     low, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rkst/electron , q2bin : central, mva_cmb : 50, mva_prc : 50} 
+  - { block : -1, group : test_003, fit_cfg : rare/rkst/electron , q2bin :    high, mva_cmb : 50, mva_prc : 50} 
 outputs:
   - data.json
   - fit_linear.png
