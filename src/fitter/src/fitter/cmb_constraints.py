@@ -129,18 +129,20 @@ class CmbConstraints(BaseFitter, Cache):
 
         out_path = Cache._cache_root / self._base_path
 
-        rdf = sel.apply_full_selection(
-            rdf     = rdf,
-            trigger = self._trigger,
+        cuts = sel.selection(
             process = self._sample,
-            q2bin   = self._q2bin,
-            uid     = gtr.get_uid(),
-            out_path= out_path, 
-        )
+            trigger = self._trigger,
+            q2bin   = self._q2bin)
 
-        uid = getattr(rdf, 'uid')
-        cuts= getattr(rdf, 'sel')
+        uid  = gtr.get_uid()
+        cuts = self._update_selection(cuts = cuts)
+        rdf  = sel.apply_selection(
+            rdf      = rdf, 
+            cuts     = cuts, 
+            uid      = uid,
+            out_path = out_path)
 
+        uid  = getattr(rdf, 'uid')
         log.debug(f'Using UID: {uid}')
 
         with sel.custom_selection(d_sel = {}, force_override = True):
