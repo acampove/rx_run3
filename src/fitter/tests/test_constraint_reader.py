@@ -148,13 +148,13 @@ def _get_fit_config(q2bin : Qsq) -> FitConfig:
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , _CONSTRAINTS)
-def test_simple(
+def test_all_but_cmb(
     tmp_path : Path, 
     kind     : str, 
     q2bin    : Qsq,
     slow_mode: bool):
     '''
-    Tests getting constraints
+    Tests all the constraints but the combinatorial shape
 
     Parameters
     -------------
@@ -163,8 +163,11 @@ def test_simple(
     '''
 
     obs = zfit.Space('dummy', limits=(4500, 6000))
-    obj = Parameters(kind=kind, obs = obs)
+    nll = Parameters(kind = kind, obs = obs) 
+    nll = cast(ExtendedUnbinnedNLL, nll) # Tests will only need get_params
+
     cfg = _get_fit_config(q2bin = q2bin)
+    del cfg.fit_cfg.model.components[_COMBINATORIAL_NAME]
 
     if not slow_mode:
         log.info('Skipping misid constraints')
@@ -174,7 +177,7 @@ def test_simple(
         log.info('Running full test')
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(obj=obj, cfg=cfg)
+        obj         = ConstraintReader(nll=nll, cfg=cfg)
         constraints = obj.get_constraints()
 
     print_constraints(constraints = constraints)
