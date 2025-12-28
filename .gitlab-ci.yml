@@ -4,7 +4,6 @@ stages:
   - test
   - build-environment
   - build-analysis
-  - workflow
 environment:
   stage: build-environment
   image: registry.cern.ch/quay.io/buildah/stable
@@ -23,20 +22,5 @@ analysis:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:2402062d9 -f docker/ana.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:2402062d9
-workflow:
-  stage: workflow
-  image: $CI_REGISTRY_IMAGE:2402062d9
-  script:
-    - reana-client create -w rx_tests
-    # -----------
-    - reana-client upload -w rx_tests $(find src/dmu -name  "*.txt"    -type f)
-    - reana-client upload -w rx_tests $(find src/dmu -name "*.yaml"    -type f)
-    - reana-client upload -w rx_tests $(find src/dmu -name "*.toml"    -type f)
-    - reana-client upload -w rx_tests $(find src/dmu -name "*.json"    -type f)
-    # -----------
-    - reana-client upload -w rx_tests $(find       . -name "test_*.py" -type f)
-    - reana-client upload -w rx_tests $(find       . -name "Snakefile" -type f)
-    - reana-client upload -w rx_tests $(find       . -name "setup.sh"  -type f)
-    - reana-client start  -w rx_tests --follow
+    - buildah bud  -t $CI_REGISTRY_IMAGE:722c0163f -f docker/ana.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:722c0163f
