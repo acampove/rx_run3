@@ -194,3 +194,30 @@ def test_apply_full_selection(tmp_path : Path):
         process =sample,
         trigger =trigger,
         out_path=out_path)
+# --------------------------
+def test_apply_selection(tmp_path : Path):
+    '''
+    Tests application of selection
+    '''
+    q2bin  = 'jpsi'
+    sample = Sample.data_24 
+    trigger= Trigger.rk_ee_os 
+
+    with RDFGetter.max_entries(10_000):
+        gtr = RDFGetter(
+            sample =sample, 
+            trigger=trigger)
+        rdf = gtr.get_rdf(per_file=False)
+
+    out_path = tmp_path / f'{q2bin}_{sample}_{trigger}'
+
+    cuts = sel.selection(
+        q2bin   = q2bin,
+        process = sample,
+        trigger = trigger,
+    )
+
+    rdf =sel.apply_selection(
+        rdf     =rdf, 
+        cuts    =cuts,
+        out_path=out_path)
