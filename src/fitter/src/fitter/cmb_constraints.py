@@ -3,6 +3,7 @@ Module with CmbConstraints class
 '''
 import zfit
 
+from typing       import cast
 from pathlib      import Path
 from omegaconf    import OmegaConf
 from ROOT         import RDF # type: ignore 
@@ -35,6 +36,7 @@ class CmbConstraints(BaseFitter, Cache):
         '''
         Parameters
         -------------
+        name : Name of component, i.e. 'combinatorial'. Used to finc component PDF in NLL
         obs  : Zfit observable
         cfg  : fit configuration
         q2bin: E.g. central
