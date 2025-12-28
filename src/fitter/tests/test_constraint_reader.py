@@ -118,11 +118,16 @@ class Parameters:
 
         return self._s_par 
 # ----------------------
-def _get_nll(obs : zobs) -> ExtendedUnbinnedNLL:
+def _get_nll(
+    obs  : zobs, 
+    q2bin: Qsq,
+    cfg  : FitConfig) -> ExtendedUnbinnedNLL:
     '''
     Parameters
     -------------
-    obs: Observable
+    obs  : Observable
+    cfg  : Configuration for fit
+    q2bin: E.g. central
 
     Returns
     -------------
@@ -131,6 +136,7 @@ def _get_nll(obs : zobs) -> ExtendedUnbinnedNLL:
     - PDF used to fit combinatorial
     - Parameters needed for misID
     '''
+    pdf_names = cfg.fit_cfg.model.components.combinatorial.categories.main.models[q2bin]
 
     mu   = zfit.Parameter('mu', 5200, 4500, 6000)
     sg   = zfit.Parameter('sg',  150,   10, 200)
@@ -138,7 +144,7 @@ def _get_nll(obs : zobs) -> ExtendedUnbinnedNLL:
 
     fct  = ModelFactory(
         obs     = obs,
-        l_pdf   = ['hypexp'],
+        l_pdf   = pdf_names,
         l_shared= [],
         l_float = [],
         preffix = 'combinatorial')
@@ -238,8 +244,8 @@ def test_only_cmb(
     '''
 
     obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
-    nll = _get_nll(obs=obs) 
     cfg = _get_fit_config(q2bin = q2bin)
+    nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
     del cfg.fit_cfg.model.components['kkk']
     del cfg.fit_cfg.model.components['kpipi']
 
