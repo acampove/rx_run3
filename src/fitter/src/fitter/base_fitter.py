@@ -30,11 +30,11 @@ class BaseFitter:
         '''
         Used to hold attributes passed from derived classes
         '''
-        self._sample  : Sample
-        self._trigger : Trigger
         self._project : str     = ''
         self._q2bin   : str     = ''
         self._sig_yld : str     = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
+        self._trigger : Trigger = Trigger.uninitialized
+        self._sample  : Sample  = Sample.undefined
     # ------------------------
     def _fit(
         self,
