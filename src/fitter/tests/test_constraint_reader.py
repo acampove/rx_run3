@@ -8,7 +8,7 @@ from typing         import Final, cast
 from pathlib        import Path
 from dmu.workflow   import Cache
 from dmu            import LogStore
-from dmu.stats      import print_constraints
+from dmu.stats      import ModelFactory, print_constraints
 from dmu.generic    import utilities           as gut
 from rx_common      import Qsq
 from fitter         import FitConfig
@@ -117,6 +117,42 @@ class Parameters:
         _ = floating
 
         return self._s_par 
+# ----------------------
+def _get_nll(obs : zobs) -> ExtendedUnbinnedNLL:
+    '''
+    Parameters
+    -------------
+    obs: Observable
+
+    Returns
+    -------------
+    Likelihood with:
+
+    - PDF used to fit combinatorial
+    - Parameters needed for misID
+    '''
+
+    mu   = zfit.Parameter('mu', 5200, 4500, 6000)
+    sg   = zfit.Parameter('sg',  150,   10, 200)
+    gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+
+    fct  = ModelFactory(
+        obs     = obs,
+        l_pdf   = ['hypexp'],
+        l_shared= [],
+        l_float = [],
+        preffix = 'combinatorial')
+    expo = fct.get_pdf()
+
+    nexpo = zfit.param.Parameter('nbkg', 1000, 0, 1000_000)
+    ngaus = zfit.param.Parameter('nsig', 1000, 0, 1000_000)
+
+    bkg   = expo.create_extended(nexpo)
+    sig   = gaus.create_extended(ngaus)
+    pdf   = zfit.pdf.SumPDF([bkg, sig])
+    dat   = pdf.create_sampler()
+
+    return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
 # ----------------------
 @pytest.fixture(scope='module', autouse=True)
 def initialize():
