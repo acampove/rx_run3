@@ -1,3 +1,13 @@
+constraints: &cons
+    sample     : DATA_24* 
+    trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
+    parameters : # Will constrain parameters starting
+      - mu       # with any of these strings
+      - ap       # E.g mu_hypexp_combinatorial_1
+      #- bt
+    plots:
+      nbins : 60
+
 output_directory : rare/electron/combinatorial
 categories:
   main:
@@ -11,19 +21,14 @@ low:
   reparametrize : {}
   fix           : {}
   constraints:
-    sample     : DATA_24* 
-    trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
-    parameters : # Will constrain parameters starting
-      - mu       # with any of these strings
-      - ap       # E.g mu_hypexp_combinatorial_1
-      #- bt
-    plots:
-      nbins : 60
+    <<: *cons
 central:
   shared        : []
   float         : []
   reparametrize : {}
   fix           : {}
+  constraints:
+    <<: *cons
 high:
   shared        : []
   float         : []
@@ -31,3 +36,11 @@ high:
   fix           :
     dl_suj : 2.5
     gm_suj : -10
+  constraints:
+      sample     : DATA_24* 
+      trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
+      parameters : 
+        - mu       
+        - sg       
+      plots:
+        nbins : 60
