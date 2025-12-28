@@ -1,6 +1,13 @@
+reso_veto: &reso_veto
+  $M_{DTF}^{J/\psi}$ veto   : "TMath::Abs(B_const_mass_M       - 5280) > 200"
+  $M_{DTF}^{\psi(2S)}$ veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
+
+
 constraints: &cons
     sample     : DATA_24* 
     trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
+    selection  : 
+      <<: *reso_veto
     parameters : # Will constrain parameters starting
       - mu       # with any of these strings
       - ap       # E.g mu_hypexp_combinatorial_1
@@ -39,6 +46,8 @@ high:
   constraints:
       sample     : DATA_24* 
       trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
+      selection  : 
+        <<: *reso_veto
       parameters : 
         - mu       
         - sg       
