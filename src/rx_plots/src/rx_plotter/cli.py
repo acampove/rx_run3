@@ -98,7 +98,7 @@ def control_region(
 
     name     = f'{chan}_{mass}_{proj}_{qsq}'
     ana_dir  = Path(os.environ['ANADIR'])
-    out_path = ana_dir / f'plots/contro_region/PID/{name}.png'
+    out_path = ana_dir / f'plots/control_region/PID/{name}.png'
     out_path.parent.mkdir(parents = True, exist_ok = True)
 
     plt.savefig(out_path)
