@@ -11,7 +11,6 @@ from dmu          import LogStore
 from dmu.workflow import Cache
 from dmu.stats    import ConstraintND
 from omegaconf    import DictConfig
-from zfit         import Space               as zobs
 from zfit         import Data                as zdat
 from zfit.pdf     import BasePDF             as zpdf
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
