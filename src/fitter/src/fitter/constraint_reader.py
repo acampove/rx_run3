@@ -12,7 +12,8 @@ from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
 from .cmb_constraints    import CmbConstraints
 
-_MISID_COMPONENTS : Final[set[str]] = {'kkk', 'kpipi'}
+_MISID_COMPONENTS   : Final[set[str]] = {'kkk', 'kpipi'}
+_COMBINATORIAL_NAME : Final[str]      = 'combinatorial'
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
@@ -123,6 +124,7 @@ class ConstraintReader:
         Adds combinatorial constraints
         '''
         calc      = CmbConstraints(
+            name  = _COMBINATORIAL_NAME,
             nll   = self._nll,
             cfg   = self._cfg.fit_cfg,
             q2bin = self._cfg.q2bin)
