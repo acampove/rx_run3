@@ -5,7 +5,7 @@ import os
 import pytest
 from pathlib      import Path
 from dmu          import LogStore
-from rx_common    import Trigger
+from rx_common    import Sample, Trigger
 from rx_selection import selection as sel
 from rx_data      import RDFGetter 
 
@@ -181,7 +181,9 @@ def test_apply_full_selection(tmp_path : Path):
     trigger= 'Hlt2RD_BuToKpEE_MVA'
 
     with RDFGetter.max_entries(10_000):
-        gtr = RDFGetter(sample=sample, trigger=Trigger(trigger))
+        gtr = RDFGetter(
+            sample =Sample(sample), 
+            trigger=Trigger(trigger))
         rdf = gtr.get_rdf(per_file=False)
 
     out_path = tmp_path / f'{q2bin}_{sample}_{trigger}'
