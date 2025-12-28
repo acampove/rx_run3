@@ -103,57 +103,5 @@ def control_region(
 
     plt.savefig(out_path)
 # ----------------------
-@app.command()
-def cx():
-    '''
-    This is used to plot CK and CKstar
-    '''
-    ana_dir  = Path(os.environ['ANADIR'])
-    out_path = ana_dir / 'plots/efficiencies/cx.png'
-    cache_dir= Path('/tmp/rx/cache/plots/cx')
-
-    with Cache.cache_root(path=cache_dir),\
-        LogStore.level(name = 'rx_selection:selection'               , lvl = 30),\
-        LogStore.level(name = 'rx_efficiencies:efficiency_calculator', lvl = 30):
-        data = {'Value' : [], 'Error' : [], 'Quantity' : [], 'qsq' : []}
-        for project in {Project.rk, Project.rkst}:
-            for qsq in {Qsq.low, Qsq.central, Qsq.high}:
-                quantity = {Project.rk : '$C_K$', Project.rkst : '$C_{K^*}$'}[project]
-                obj      = CXCalculator(project = project, qsq = qsq)
-                val, err = obj.calculate()
-
-                data['qsq'].append(qsq)
-                data['Value'].append(val)
-                data['Error'].append(err)
-                data['Quantity'].append(quantity)
-
-    df = pnd.DataFrame(data)
-
-    order_map   = {val: i for i, val in enumerate(['low', 'central', 'high'])}
-    df['order'] = df['qsq'].map(order_map)
-    df          = df.sort_values('order')
-
-    axis = None
-    for quantity, df_q in df.groupby('Quantity'):
-        axis = df_q.plot(x='qsq', y='Value', yerr='Error', label=quantity, ax=axis)
-
-    if axis is None:
-        raise ValueError('No plot was made')
-
-    rare_label = r'$\varepsilon_{ee}^{rare}/\varepsilon_{\mu\mu}^{rare}$'
-    reso_label = r'$\varepsilon_{ee}^{J/\psi}/\varepsilon_{\mu\mu}^{J/\psi}$'
-
-    plt.ylim(0, 3)
-    plt.ylabel(r'random $\times C_x$')
-    plt.xlabel(r'$q^2$ bin')
-
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    log.info(f'Saving to: {out_path}')
-    axis.yaxis.set_visible(False)
-    plt.title(f'{rare_label} over {reso_label}, uncorrected MC')
-    plt.savefig(out_path)
-    plt.close('all')
-# ----------------------
 if __name__ == '__main__':
     app()
