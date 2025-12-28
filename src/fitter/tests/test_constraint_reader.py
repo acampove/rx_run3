@@ -243,7 +243,7 @@ def test_only_cmb(
     q2bin: q2 bin
     '''
 
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = _get_fit_config(q2bin = q2bin)
     nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
     del cfg.fit_cfg.model.components['kkk']
