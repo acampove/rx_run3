@@ -41,7 +41,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConf
     '''
     if args is None:
         parser = argparse.ArgumentParser(description='Script used to fit RX data')
-        parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[1,2,3,4,5,6,7,8], default=-1)
+        parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[-1,1,2,3,4,5,6,7,8], default=-1)
         parser.add_argument('-g', '--group'  , type=str  , help='Name of group to which fit belongs, e.g. toys'   , required= True)
         parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/rk/electron'    , required= True)
         parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =   '')
