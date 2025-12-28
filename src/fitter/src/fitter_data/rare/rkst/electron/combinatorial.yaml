@@ -1,20 +1,40 @@
+reso_veto: &reso_veto
+  jpsi veto  : "TMath::Abs(B_const_mass_M       - 5280) > 200"
+  psi2s veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
+
+constraints: &cons
+    sample     : DATA_24* 
+    trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA
+    selection  : 
+      <<: *reso_veto
+    parameters : # Will constrain parameters starting
+      - mu       # with any of these strings
+      - ap       # E.g mu_hypexp_combinatorial_1
+      #- bt
+    plots:
+      nbins : 60
+
 output_directory : rare/rkst/electron/combinatorial
 categories:
   main:
     models : 
       low     : [hypexp]
-      central : [exp]
+      central : [hypexp]
       high    : [suj]
 low:
   shared        : []
   float         : []
   reparametrize : {}
   fix           : {}
+  constraints:
+    <<: *cons
 central:
   shared        : []
   float         : []
   reparametrize : {}
   fix           : {}
+  constraints:
+    <<: *cons
 high:
   shared        : []
   float         : []
@@ -22,3 +42,13 @@ high:
   fix           :
     dl_suj : 2.5
     gm_suj : -10
+  constraints:
+      sample     : DATA_24* 
+      trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA 
+      selection  : 
+        <<: *reso_veto
+      parameters : 
+        - mu       
+        - sg       
+      plots:
+        nbins : 60
