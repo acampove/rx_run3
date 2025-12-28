@@ -55,7 +55,7 @@ class SimFitter(BaseFitter, Cache):
         log.info(f'Fitting {component}/{name}')
         log.info(20 * '-')
 
-        self._sample    = Sample(DecayNames.sample_from_decay(component, fall_back='NA'))
+        self._sample    = Sample(DecayNames.sample_from_decay(component, fall_back='undefined'))
         self._name      = name
         self._category  = self._get_category(cfg=cfg)
         self._component = component

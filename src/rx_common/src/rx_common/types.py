@@ -129,6 +129,8 @@ class Sample(StrEnum):
 
     - Except for data, all samples meant to be used with the electron/muon channel should end with ee/mm
     '''
+    undefined      = 'undefined'
+    # -----
     data_24        = 'DATA_24*'
     # -----
     bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
