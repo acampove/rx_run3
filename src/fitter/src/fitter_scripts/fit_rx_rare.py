@@ -153,7 +153,11 @@ def _fit(cfg : FitConfig) -> None:
 
     log.info(f'Making {cfg.toy_cfg.ntoys} toys')
 
-    mkr = ToyMaker(nll=nll, res=res, cfg=cfg.toy_cfg, cns = cons)
+    mkr = ToyMaker(
+        nll= nll, 
+        res= res, 
+        cfg= cfg.toy_cfg, 
+        cns= cons)
     mkr.get_parameter_information()
 # ----------------------
 def main(args : DictConfig | None = None):
