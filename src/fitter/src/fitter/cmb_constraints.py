@@ -202,6 +202,9 @@ class CmbConstraints(BaseFitter, Cache):
             model   = self._model)
 
         params = [ par for par in self._model.get_params() if self._pick_parameter(name = par.name) ] 
+        if not params:
+            raise ValueError('No parameters found to make constraints')
+
         values = [ float(par.value().numpy()) for par in params ]
         names  = [ par.name                   for par in params ]
         cov    = res.covariance(params = names)
