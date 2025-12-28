@@ -4,7 +4,7 @@ Module with functions needed to test ConstraintReader class
 import pytest
 import zfit
 
-from typing         import Final
+from typing         import Final, cast
 from pathlib        import Path
 from dmu.workflow   import Cache
 from dmu            import LogStore
@@ -12,6 +12,7 @@ from dmu.stats      import print_constraints
 from dmu.generic    import utilities           as gut
 from rx_common      import Qsq
 from fitter         import FitConfig
+from zfit.loss      import ExtendedUnbinnedNLL
 from zfit.param     import Parameter           as zpar
 from zfit           import Space               as zobs
 from fitter         import ConstraintReader
@@ -19,7 +20,8 @@ from zfit.core.loss import ZfitParameter
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
-_CONSTRAINTS : Final[list[str]] = [
+_COMBINATORIAL_NAME : Final[str]       = 'combinatorial'
+_CONSTRAINTS        : Final[list[str]] = [
     'sig_par', 
     'rare_prec_rk', 
     'invalid', 
