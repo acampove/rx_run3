@@ -137,7 +137,7 @@ def _fit(cfg : FitConfig) -> None:
         q2bin  = cfg.q2bin,
         sample = DATA_SAMPLE,
         cfg    = cfg.fit_cfg)
-    nll = ftr.run()
+    nll     = ftr.run()
     cfg_mod = ftr.get_config()
 
     nll, cons = _add_constraints(nll=nll, cfg=cfg)
