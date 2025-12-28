@@ -160,6 +160,7 @@ def initialize():
     This runs before any test
     '''
     LogStore.set_level('fitter:constraint_reader', 10)
+    LogStore.set_level('fitter:cmb_constraints'  , 10)
 # --------------------------------------------------------------
 def _get_fit_config(q2bin : Qsq) -> FitConfig:
     '''
@@ -221,6 +222,32 @@ def test_all_but_cmb(
     # TODO: Needs to be updated when other parameter constraints be implemented
     if kind != 'rare_prec_rk':
         return
+
+    assert len(constraints) > 0 
+# --------------------------------------------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_only_cmb(
+    tmp_path : Path, 
+    q2bin    : Qsq):
+    '''
+    Tests all the constraints but the combinatorial shape
+
+    Parameters
+    -------------
+    q2bin: q2 bin
+    '''
+
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
+    nll = _get_nll(obs=obs) 
+    cfg = _get_fit_config(q2bin = q2bin)
+    del cfg.fit_cfg.model.components['kkk']
+    del cfg.fit_cfg.model.components['kpipi']
+
+    with Cache.cache_root(path = tmp_path):
+        obj         = ConstraintReader(nll=nll, cfg=cfg)
+        constraints = obj.get_constraints()
+
+    print_constraints(constraints = constraints)
 
     assert len(constraints) > 0 
 # --------------------------------------------------------------
