@@ -6,7 +6,6 @@ import zfit
 from pathlib      import Path
 from omegaconf    import OmegaConf
 from ROOT         import RDF # type: ignore 
-from typing       import Final
 from dmu          import LogStore
 from dmu.workflow import Cache
 from dmu.stats    import ConstraintND
@@ -19,9 +18,6 @@ from rx_common    import Qsq, Sample, Trigger
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
 from .base_fitter import BaseFitter
-
-# Name of combinatorial component
-_COMBINATORIAL_NAME : Final[str] = 'combinatorial'
 
 log=LogStore.add_logger('fitter:cmb_constraints')
 # ------------------------------------
@@ -45,9 +41,10 @@ class CmbConstraints(BaseFitter, Cache):
         '''
         BaseFitter.__init__(self)
 
+        self._name   = name
         self._q2bin  = q2bin
         self._cfg    = cfg
-        self._cmb_cfg= cfg.model.components[_COMBINATORIAL_NAME]
+        self._cmb_cfg= cfg.model.components[name]
 
         cons         = self._cmb_cfg[self._q2bin]['constraints']
         self._sample = Sample(cons.sample)
@@ -76,7 +73,7 @@ class CmbConstraints(BaseFitter, Cache):
         '''
         models : list[zpdf] = []
         for pdf in nll.model:
-            if _COMBINATORIAL_NAME in pdf.name:
+            if self._name in pdf.name:
                 log.info(f'Picking: {pdf.name}')
                 models.append(pdf)
             else:
