@@ -52,7 +52,12 @@ class CmbConstraints(BaseFitter, Cache):
         self._sample = Sample(cons.sample)
         self._trigger= Trigger(cons.trigger)
 
-        self._obs, self._model = self._model_from_nll(nll = nll)
+        model = self._model_from_models(models = nll.model)
+        if model is None:
+            raise ValueError(f'Cannot find combinatorial PDF: {name}')
+
+        self._model = model
+        self._obs   = model.space
 
         self._base_path = Path(f'{cfg.output_directory}/{name}/{self._cfg.trigger}_{self._q2bin}')
         self._rdf, uid, self._cuts = self._get_rdf()
@@ -63,34 +68,29 @@ class CmbConstraints(BaseFitter, Cache):
             out_path = self._base_path,
             config   = OmegaConf.to_container(cfg, resolve=True))
     # ----------------------
-    def _model_from_nll(self, nll : zlos) -> tuple[zobs, zpdf]:
+    def _model_from_models(self, models : list[zpdf]) -> zpdf | None:
         '''
         Parameters
         -------------
-        nll: Likelihood associated to current signal region
+        models: List of PDFs 
 
         Returns
         -------------
-        Tuple with observable and combinatorial PDF
+        Combinatorial PDF if found, otherwise None
         '''
-        models : list[zpdf] = []
-        for pdf in nll.model:
+        for pdf in models: 
             if self._name in pdf.name:
                 log.info(f'Picking: {pdf.name}')
-                models.append(pdf)
-            else:
-                log.debug(f'Skipping: {pdf.name}')
+                return pdf
 
-        nmodels = len(models)
-        if nmodels != 1:
-            raise ValueError(f'Expected one combinatorial model, got: {nmodels}')
+            if isinstance(pdf, zfit.pdf.SumPDF):
+                # TODO: Change this once https://github.com/zfit/zfit/issues/699#issuecomment-3694682177 be fixed
+                pdfs = cast(list[zpdf], pdf.pdfs)
+                pdf  = self._model_from_models(models = pdfs)
+                if pdf is not None:
+                    return pdf
 
-        pdf = models[0]
-        obs = pdf.space
-        if not isinstance(obs, zobs):
-            raise ValueError('Observable not of Space type')
-
-        return obs, pdf
+        return None 
     # ---------------------
     def _get_rdf(self) -> tuple[RDF.RNode, str, DictConfig]:
         '''
