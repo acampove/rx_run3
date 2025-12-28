@@ -91,6 +91,25 @@ class CmbConstraints(BaseFitter, Cache):
                     return pdf
 
         return None 
+    # ----------------------
+    def _update_selection(self, cuts : dict[str,str]) -> dict[str,str]:
+        '''
+        Parameters
+        -------------
+        cuts: Dictionary mapping cut label with expression
+
+        Returns
+        -------------
+        Updated version of cuts dictionary, e.g. adding vetoes
+        '''
+        selection = self._cmb_cfg[self._q2bin].constraints.get('selection')
+
+        if selection is None: 
+            return cuts
+
+        cuts.update(selection)
+
+        return cuts
     # ---------------------
     def _get_rdf(self) -> tuple[RDF.RNode, str, DictConfig]:
         '''
