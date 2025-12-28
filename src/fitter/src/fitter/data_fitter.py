@@ -52,7 +52,7 @@ class DataFitter(BaseFitter, Cache):
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = f'{self._cfg.output_directory}/{name}',
+            out_path = Path(self._cfg.output_directory) / name,
             cfg      = cfg)
     # ----------------------
     def _get_full_nll(self) -> NLL:
@@ -73,7 +73,7 @@ class DataFitter(BaseFitter, Cache):
 
         return nll
     # ----------------------
-    def _save_constraints(self, out_dir : str) -> None:
+    def _save_constraints(self, out_dir : Path) -> None:
         '''
         Parameters
         -------------
@@ -88,7 +88,7 @@ class DataFitter(BaseFitter, Cache):
             cfg_cns = dict() # Need to store these constraints
                              # This will be None in no constraint case
 
-        out_path= f'{out_dir}/constraints.yaml'
+        out_path= out_dir / 'constraints.yaml'
         log.info(f'Saving constraints to: {out_path}')
 
         OmegaConf.save(config=cfg_cns, f=out_path, resolve=True)
@@ -120,7 +120,7 @@ class DataFitter(BaseFitter, Cache):
         res.hesse(name='minuit_hesse')
 
         for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
-            out_path = f'{self._out_path}/{name}'
+            out_path = self._out_path / name
 
             log.info(f'Saving fit to: {out_path}')
 
