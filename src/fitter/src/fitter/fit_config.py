@@ -14,7 +14,7 @@ from dmu            import LogStore
 from rx_common      import Qsq, info
 from zfit           import Space      as zobs
 
-log=LogStore.add_logger('rx_fitter::fit_config')
+log=LogStore.add_logger('fitter:fit_config')
 # ----------------------
 @dataclasses.dataclass
 class FitConfig:
@@ -143,6 +143,7 @@ class FitConfig:
         LogStore.set_level('rx_selection:selection'               , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:constraint_adder'           , DEPENDENCIES_LEVEL)
         # ---------
+        LogStore.set_level('fitter:fit_config'                    ,         TOOL_LEVEL)
         LogStore.set_level('fitter:likelihood_factory'            ,         TOOL_LEVEL)
         LogStore.set_level('fitter:data_preprocessor'             ,         TOOL_LEVEL)
         LogStore.set_level('fitter:prec'                          ,         TOOL_LEVEL)
@@ -264,6 +265,8 @@ class FitConfig:
             raise RuntimeError('ANADIR variable not set')
 
         out_dir = f'{ana_dir}/fits/data/{self.group}/{self.fit_name}_{block_name}'
+
+        log.debug(f'Using output directory: {out_dir}')
     
         return Path(out_dir)
     # ----------------------
