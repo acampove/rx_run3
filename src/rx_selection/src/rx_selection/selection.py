@@ -416,7 +416,8 @@ def apply_full_selection(
 def apply_selection(
     rdf      : RDF.RNode,
     cuts     : dict[str,str],
-    out_path : Path|None= None) -> RDF.RNode:
+    uid      : str |None = None,
+    out_path : Path|None = None) -> RDF.RNode:
     '''
     Will apply selection on dataframe.
     IMPORTANT: This HAS to be done lazily or else the rest of the code will be slowed down.
@@ -425,6 +426,7 @@ def apply_selection(
     --------------------
     rdf     : ROOT DataFrame
     cuts    : Dictionary mapping cut label with expression
+    uid     : String symbolizing unique identifier for input dataframe
     out_path: Directory path where selection and cutflow will be stored, optional
 
     Returns
@@ -445,15 +447,13 @@ def apply_selection(
     else:
         log.warning('Not saving cutflow')
 
-    if not hasattr(rdf, 'uid'):
+    if uid is None: 
         log.debug('No UID found, not updating it')
         return rdf
 
-    uid = getattr(rdf, 'uid')
-
     log.info('Attaching updated UID and selection to dataframe')
     uid = hashing.hash_object([uid, cuts])
-    setattr(rdf, 'uid',   uid)
+    setattr(rdf, 'uid',  uid)
     setattr(rdf, 'sel', cuts)
 
     return rdf
