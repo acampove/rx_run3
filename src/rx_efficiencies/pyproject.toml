@@ -6,7 +6,6 @@ dependencies= [
 'numpy',
 'pandas',
 'mplhep',
-'uncertainties',
 'matplotlib']
 
 [project.optional-dependencies]
