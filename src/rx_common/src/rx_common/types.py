@@ -60,7 +60,7 @@ class Trigger(StrEnum):
     rkst_mm_nopid= 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'
     rkst_mm_ss   = 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA'
     # -----------
-    uninitialized= ''
+    uninitialized= 'uninitialized'
 
     def __str__(self):
         return self.value
