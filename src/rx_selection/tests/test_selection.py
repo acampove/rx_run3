@@ -3,11 +3,11 @@ Script with functions needed to test functions in selection.py
 '''
 import os
 import pytest
-from pathlib                import Path
-from dmu.logging.log_store  import LogStore
-from rx_common.types        import Trigger
-from rx_selection           import selection as sel
-from rx_data.rdf_getter     import RDFGetter 
+from pathlib      import Path
+from dmu          import LogStore
+from rx_common    import Trigger
+from rx_selection import selection as sel
+from rx_data      import RDFGetter 
 
 log=LogStore.add_logger('rx_selection:test_selection')
 # --------------------------
