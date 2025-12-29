@@ -288,11 +288,11 @@ class ZFitPlotter:
         if not hasattr(self._result, 'gof'):
             return None
 
-        chi2, ndof, pval = self._result.gof
+        chi2, ndof, pval = getattr(self._result, 'gof')
 
         rchi2 = chi2/ndof
 
-        return f'$\chi^2$/NdoF={chi2:.2f}/{ndof}={rchi2:.2f}\np={pval:.3f}'
+        return fr'$\chi^2$/NdoF={chi2:.2f}/{ndof}={rchi2:.2f}\np={pval:.3f}'
     #----------------------------------------
     def _get_text(self, ext_text):
         gof_text = self._get_zfit_gof()
