@@ -52,7 +52,12 @@ Currently, the docker container is hosted [here](https://gitlab.cern.ch/LHCb-RD/
 
 ```bash
 podman pull gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v5 # Change to latest tagged version
-podman run -it --privileged --name rx_run3_001 -v $ANADIR:/eos/lhcb/wg/RD/RX_run3 rx_run3:v5
+podman run \
+    -it --rm --userns=host \
+    -v $XDG_RUNTIME_DIR/krb5cc:$XDG_RUNTIME_DIR/krb5cc:ro \
+    -e KRB5CCNAME=$XDG_RUNTIME_DIR/krb5cc \
+    -v /eos/lhcb/wg/RD/RX_run3:/eos/lhcb/wg/RD/RX_run3  \ 
+    gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v5 bash
 ```
 
 where `-v` in the last step will expose `ANADIR` (the path to the inputs) to the container.
