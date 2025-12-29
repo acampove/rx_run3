@@ -60,7 +60,7 @@ rule toys:
                     -P {wildcards.prc} \
                     -t toys/maker.yaml \
                     -N {params.ntoys}  \
-                    -g {params.name} || true
+                    -g {params.name}
 
         REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
 
