@@ -81,7 +81,6 @@ def test_config(tmp_path : Path):
             name   = 'likelihood_factory',
             obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
-            trigger= Trigger.rk_mm_os,
             q2bin  = 'jpsi',
             cfg    = cfg)
         cfg = ftr.get_config()
@@ -115,7 +114,6 @@ def test_reso_muon(tmp_path : Path):
             name   = 'brem_000',
             obs    = obs,
             sample = 'DATA_24_MagDown_24c2',
-            trigger= Trigger.rk_mm_os,
             q2bin  = 'jpsi',
             cfg    = cfg)
         ftr.run()
@@ -135,7 +133,6 @@ def test_rare_muon(q2bin : str, tmp_path : Path):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = 'DATA_24_*',
-            trigger= Trigger.rk_mm_os,
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
@@ -161,7 +158,6 @@ def test_reso_electron(nbrem : int, tmp_path : Path):
             name   = f'brem_{nbrem:03}',
             obs    = obs,
             sample = 'DATA_24_*',
-            trigger= Trigger.rk_ee_os,
             q2bin  = 'jpsi',
             cfg    = cfg)
         ftr.run()
@@ -184,7 +180,6 @@ def test_rare_electron(q2bin : str, tmp_path : Path):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = 'DATA_24_*',
-            trigger= Trigger.rk_ee_os,
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
@@ -208,7 +203,6 @@ def test_high_q2_track(tmp_path : Path):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = 'DATA_24_*',
-            trigger= Trigger.rk_ee_os,
             q2bin  = 'high',
             cfg    = cfg)
         ftr.run()
@@ -247,7 +241,6 @@ def test_rare_misid_electron(
             obs    = obs,
             name   = region,
             sample = 'DATA_24_*',
-            trigger= Trigger.rk_ee_ext,
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
