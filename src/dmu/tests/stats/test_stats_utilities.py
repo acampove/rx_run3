@@ -355,3 +355,22 @@ def test_val_from_zres() -> None:
 
     with pytest.raises(ValueError):
         sut.val_from_zres(res=res, name='fake')
+#----------------------------------
+def test_val_from_frozen_zres() -> None:
+    '''
+    Tests `val_from_zres`
+    '''
+    expected = 5199.536378229733 
+
+    res = placeholder_fit(kind='s+b', fit_dir=None)
+    res.freeze()
+    log.info(res)
+
+    val = sut.val_from_frozen_zres(res=res, name='mu')
+    assert math.isclose(val, expected, rel_tol=1e-5)
+
+    val = sut.val_from_frozen_zres(res=res, name='mu')
+    assert math.isclose(val, expected, rel_tol=1e-5)
+
+    with pytest.raises(ValueError):
+        sut.val_from_frozen_zres(res=res, name='fake')
