@@ -10,13 +10,13 @@ import pandas as pnd
 import pytest
 
 from typing      import Union
-from rx_common   import rxran
 from zfit.loss   import ExtendedUnbinnedNLL, UnbinnedNLL 
 from omegaconf   import DictConfig
 from dmu.stats   import Constraint1D, ConstraintND
 from dmu.stats   import ConstraintAdder
 from dmu.stats   import utilities as sut
 from dmu.generic import utilities as gut
+from dmu.generic import rxran
 from dmu         import LogStore
 from dmu.stats.constraint import print_constraints
 

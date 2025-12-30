@@ -13,8 +13,8 @@ from dmu.stats             import ConstraintAdder, build_constraint
 from dmu.stats             import utilities as sut
 from dmu.generic           import utilities as gut
 from dmu.stats             import Fitter
+from dmu.generic           import rxran
 from dmu                   import LogStore
-from rx_common             import rxran
 
 log=LogStore.add_logger('fitter:test_toymaker')
 # ----------------------
