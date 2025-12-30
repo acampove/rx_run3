@@ -23,10 +23,10 @@ _SEL_CFG : Final[dict] = {
 }
 
 _CONSTRAINTS : Final[dict] = {
-    'name' : 'name',
+    'name' : 'mu',
     'kind' : 'GaussianConstraint',
-    'mu'   : (5280, 10),
-    'sg'   : (  10,  1),
+    'mu'   : 5280,
+    'sg'   :   10,
 }
 
 log=LogStore.add_logger('fitter:test_data_fitter')
@@ -129,13 +129,12 @@ def test_with_constraints(tmp_path : Path) -> None:
 
     sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
+    cons    = Constraint1D(**_CONSTRAINTS)
 
-    cns     = cad.ConstraintAdder.dict_to_cons(d_cns=_constraints, name='test', kind='GaussianConstraint')
-    adr     = cad.ConstraintAdder(nll=nll, cns=cns)
+    adr     = cad.ConstraintAdder(nll=nll, constraints = [cons])
     nll     = adr.get_nll() 
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
-    cfg.constraints = cns
 
     with Cache.cache_root(path = tmp_path):
         ftr = DataFitter(
