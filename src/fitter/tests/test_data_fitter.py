@@ -6,9 +6,10 @@ import pytest
 from pathlib         import Path
 from omegaconf       import OmegaConf
 from dmu.stats.zfit  import zfit
+from dmu.stats       import Constraint
+from dmu.stats       import utilities        as sut
 from dmu.stats       import constraint_adder as cad 
 from dmu.stats       import gof_calculator   as goc
-from dmu.stats       import utilities        as sut
 from dmu.generic     import utilities        as gut
 from dmu.workflow    import Cache
 from dmu             import LogStore
