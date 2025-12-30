@@ -1,13 +1,8 @@
 '''
 Module storing ZModel class
 '''
-# pylint: disable=too-many-lines, import-error, too-many-positional-arguments, too-many-arguments
-# pylint: disable=too-many-instance-attributes
 
-from typing import Callable, Union
-
-import zfit
-
+from typing                 import Callable, Union
 from zfit.interface         import ZfitSpace     as zobs
 from zfit.pdf               import BasePDF       as zpdf
 from zfit.param             import Parameter     as zpar
@@ -16,6 +11,7 @@ from dmu.stats.parameters   import ParameterLibrary as PL
 from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
+from dmu.stats.zfit         import zfit
 
 log=LogStore.add_logger('dmu:stats:model_factory')
 #-----------------------------------------

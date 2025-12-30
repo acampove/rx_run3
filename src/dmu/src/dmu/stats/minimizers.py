@@ -1,15 +1,15 @@
 '''
 Module containing derived classes from ZFit minimizer
 '''
-from typing import Union
 import numpy
 
-import zfit
 import matplotlib.pyplot as plt
 
+from typing                        import Union
 from zfit.result                   import FitResult
 from zfit.core.basepdf             import BasePDF           as zpdf
 from zfit.minimizers.baseminimizer import FailMinimizeNaN
+from dmu.stats.zfit                import zfit
 from dmu.stats.utilities           import print_pdf
 from dmu.stats.gof_calculator      import GofCalculator
 from dmu.logging.log_store         import LogStore

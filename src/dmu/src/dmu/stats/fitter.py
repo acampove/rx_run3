@@ -2,7 +2,6 @@
 Module holding zfitter class
 '''
 
-import zfit
 import contextlib
 import pprint
 import numpy
@@ -14,6 +13,7 @@ from functools                import lru_cache
 from dmu.logging              import messages  as mes
 from dmu.logging.log_store    import LogStore
 from dmu.stats.gof_calculator import GofCalculator
+from dmu.stats.zfit           import zfit
 
 from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN

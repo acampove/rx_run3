@@ -4,7 +4,6 @@ Module with utility functions related to the dmu.stats project
 
 import os
 import re
-import zfit
 import pickle
 
 import yaml
@@ -20,6 +19,7 @@ from typing                 import Union, Any, overload
 from pathlib                import Path
 from contextlib             import contextmanager
 from dmu.logging.log_store  import LogStore
+from dmu.stats.zfit         import zfit
 
 from omegaconf        import OmegaConf, DictConfig
 from zfit.data        import Data          as zdata

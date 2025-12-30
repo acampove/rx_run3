@@ -2,7 +2,7 @@
 This module contains the ConstraintAdder class
 '''
 import numpy
-import zfit
+from dmu.stats.zfit        import zfit
 from dmu.logging.log_store import LogStore
 
 from typing          import Sequence, cast

@@ -6,7 +6,6 @@ import math
 import warnings
 import pprint
 
-import zfit
 import hist
 import mplhep
 import tensorflow            as tf
@@ -21,6 +20,7 @@ from zfit.result            import FitResult  as zres
 import dmu.generic.utilities as gut
 import dmu.stats.utilities   as sut
 
+from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('dmu:zfit_plotter')

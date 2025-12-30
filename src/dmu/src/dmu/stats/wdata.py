@@ -1,15 +1,16 @@
 '''
 Module with Wdata class
 '''
-from typing import Union
 
-import zfit
 import numpy
 import pandas as pnd
+
+from typing                import Union
+from dmu.stats.zfit        import zfit
+from dmu.logging.log_store import LogStore
+
 from zfit.interface import ZfitSpace  as zobs
 from zfit.interface import ZfitData   as zdata
-
-from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:wdata')
 # -------------------------------

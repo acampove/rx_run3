@@ -2,7 +2,6 @@
 Module containing constraint classes 
 '''
 
-import zfit
 import json
 import math
 import numpy
@@ -17,6 +16,7 @@ from zfit.param            import Parameter as zpar
 from zfit.result           import FitResult
 from pydantic              import BaseModel, model_validator, TypeAdapter
 
+from dmu.stats.zfit        import zfit
 from dmu.stats.protocols   import ParsHolder
 from dmu.logging.log_store import LogStore
 
