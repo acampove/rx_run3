@@ -899,28 +899,23 @@ def val_from_zres(res : zres, name : str) -> float:
     -------------
     Numerical value of fitting parameter
     '''
-    for par in res.params:
-        if par.name == name:
+    for par, data in res.params.items():
+        if isinstance(par, zpar) and par.name != name:
+            continue
+
+        if isinstance(par, str)  and par      != name:
+            continue
+
+        if isinstance(par, zpar):
             return float(par.value().numpy())
 
-    log.info(res)
-    raise ValueError(f'Cannot find parameter: {name}')
+        # TODO: Remove ignore when issue be fixed:
+        # https://github.com/zfit/zfit/discussions/684#discussioncomment-15376203 
+        if isinstance(par,  str):
+            val = data['value'] 
+            return float(val) # type:ignore
+
+    log.error(res)
+
+    raise ValueError(f'Parameter {name} not found in results')
 #---------------------------------------------
-def val_from_frozen_zres(res : zres, name : str) -> float:
-    '''
-    Parameters
-    -------------
-    res : Zfit result, after freezing
-    name: Name of fitting parameter
-
-    Returns
-    -------------
-    Numerical value of fitting parameter
-    '''
-    for par_name, d_val in res.params.items():
-        if par_name == name:
-            val = d_val['value']
-            return to_float(val=val)
-
-    log.info(res)
-    raise ValueError(f'Cannot find parameter: {name}')
