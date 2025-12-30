@@ -153,6 +153,14 @@ class Sample(StrEnum):
     bpk2kpipiee    = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
     bpkstkpiee     = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
     bsphiee        = 'Bs_phiee_eq_Ball_DPC'
+    # -----
+    bpjpsixee      = 'Bu_JpsiX_ee_eq_JpsiInAcc'
+    bdjpsixee      = 'Bd_JpsiX_ee_eq_JpsiInAcc'
+    bsjpsixee      = 'Bs_JpsiX_ee_eq_JpsiInAcc'
+    # -----
+    bpjpsixmm      = 'Bu_JpsiX_mm_eq_JpsiInAcc'
+    bdjpsixmm      = 'Bd_JpsiX_mm_eq_JpsiInAcc'
+    bsjpsixmm      = 'Bs_JpsiX_mm_eq_JpsiInAcc'
     # --------------------------------------------
     @property
     def subdecays(self) -> list[str]:
