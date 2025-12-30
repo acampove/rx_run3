@@ -46,7 +46,7 @@ def test_single_region(tmp_path : Path) -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
@@ -71,7 +71,7 @@ def test_two_regions(tmp_path : Path) -> None:
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
         'region_002' : (nll_002, sel_cfg),
@@ -104,7 +104,7 @@ def test_two_regions_common_pars(tmp_path : Path) -> None:
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
         'region_002' : (nll_002, sel_cfg),
@@ -127,7 +127,7 @@ def test_with_constraints(tmp_path : Path) -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     cns     = cad.ConstraintAdder.dict_to_cons(d_cns=_constraints, name='test', kind='GaussianConstraint')
@@ -159,7 +159,7 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     fit_cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
