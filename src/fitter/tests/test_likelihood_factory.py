@@ -13,6 +13,7 @@ from rx_common.types       import Trigger
 from rx_data               import RDFGetter
 from rx_selection          import selection  as sel
 from fitter                import LikelihoodFactory
+from zfit.core.loss        import ExtendedUnbinnedNLL
 
 # -------------------------------------------
 class Data:
@@ -59,6 +60,8 @@ def test_simple(tmp_path : Path):
             q2bin  = 'jpsi',
             cfg    = cfg)
         nll = ftr.run()
+
+    assert isinstance(nll, ExtendedUnbinnedNLL)
 # -------------------------------------------
 def test_config(tmp_path : Path):
     '''
