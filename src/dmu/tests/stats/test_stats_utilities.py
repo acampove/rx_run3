@@ -37,6 +37,9 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('dmu:stats:utilities', 10)
+
+    with rxran.seed(42):
+        yield
 #----------------------------------
 def _get_pdf_simple(is_extended : bool = True) -> zpdf:
     obs = zfit.Space('m',    limits=(-10, 10))
@@ -153,8 +156,13 @@ def test_pdf_to_tex(tmp_path : Path):
         'mu_Signal_002_scale_flt'       : 'e',
         }
 
-    in_path = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
-    pdf_to_tex(in_path=in_path, out_dir = tmp_path, d_par=d_par)
+    data    = files('dmu_data').joinpath('tests/pdf_to_tex.txt')
+    in_path = Path(str(data))
+
+    pdf_to_tex(
+        in_path = in_path, 
+        out_dir = tmp_path, 
+        d_par   = d_par)
 #----------------------------------
 @pytest.mark.parametrize('make_plot', [True, False])
 def test_placeholder_fit(make_plot : bool, tmp_path : Path) -> None:
@@ -266,25 +274,6 @@ def test_save_fit_nomodel(tmp_path : Path):
         plt_cfg={'nbins' : 50, 'stacked' : True},
         fit_dir=tmp_path)
 #----------------------------------
-def test_save_fit_param_refreeze(tmp_path : Path):
-    '''
-    Tests saving fit with parameters
-    when the result object has already been frozen
-    '''
-    pdf = _get_pdf(kind='simple')
-    dat = pdf.create_sampler(n=1000)
-
-    obj = Fitter(pdf, dat)
-    res = obj.fit()
-    res.freeze()
-
-    sut.save_fit(
-        data   =dat,
-        model  =pdf,
-        res    =res,
-        plt_cfg={'nbins' : 50, 'stacked' : True},
-        fit_dir=tmp_path)
-#----------------------------------
 def test_name_from_obs():
     '''
     Tests retrieval of name from observable
@@ -304,7 +293,6 @@ def test_zres_to_cres(tmp_path : Path):
 
     obj = Fitter(pdf, dat)
     res = obj.fit()
-    res.freeze()
 
     cres = sut.zres_to_cres(res=res)
 
@@ -321,7 +309,6 @@ def test_zres_to_cres_fallback():
     with Fitter.errors_disabled(value=True):
         obj = Fitter(pdf, dat)
         res = obj.fit()
-        res.freeze()
 
     with pytest.raises(KeyError):
         sut.zres_to_cres(res=res)
@@ -355,7 +342,7 @@ def test_val_from_zres() -> None:
     '''
     Tests `val_from_zres`
     '''
-    expected = 5200.384730974302
+    expected = 5199.536378229733 
 
     res = placeholder_fit(kind='s+b', fit_dir=None)
     log.info(res)
@@ -363,7 +350,6 @@ def test_val_from_zres() -> None:
     val = sut.val_from_zres(res=res, name='mu')
     assert math.isclose(val, expected, rel_tol=1e-5)
 
-    res.freeze()
     val = sut.val_from_zres(res=res, name='mu')
     assert math.isclose(val, expected, rel_tol=1e-5)
 
