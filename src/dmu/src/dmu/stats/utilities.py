@@ -892,7 +892,7 @@ def val_from_zres(res : zres, name : str) -> float:
     '''
     Parameters
     -------------
-    res: Zfit result, before or after freezing
+    res: Zfit result, before freezing
     name: Name of fitting parameter
 
     Returns
@@ -906,3 +906,21 @@ def val_from_zres(res : zres, name : str) -> float:
     log.info(res)
     raise ValueError(f'Cannot find parameter: {name}')
 #---------------------------------------------
+def val_from_frozen_zres(res : zres, name : str) -> float:
+    '''
+    Parameters
+    -------------
+    res : Zfit result, after freezing
+    name: Name of fitting parameter
+
+    Returns
+    -------------
+    Numerical value of fitting parameter
+    '''
+    for par_name, d_val in res.params.items():
+        if par_name == name:
+            val = d_val['value']
+            return to_float(val=val)
+
+    log.info(res)
+    raise ValueError(f'Cannot find parameter: {name}')
