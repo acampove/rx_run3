@@ -87,6 +87,7 @@ def test_integration(
     nll  = adr.get_nll()
 
     res, _ = Fitter.minimize(nll=nll, cfg={})
+    res.freeze()
 
     mkr = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
     df  = mkr.get_parameter_information()
