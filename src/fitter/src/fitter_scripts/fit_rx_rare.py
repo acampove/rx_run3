@@ -2,6 +2,8 @@
 Script used to interact with DataFitter tool
 and run fits
 '''
+# To prevent crash
+import ROOT
 
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
