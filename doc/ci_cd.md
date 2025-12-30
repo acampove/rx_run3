@@ -56,6 +56,7 @@ podman run \
     -it --rm --userns=host \
     -v $XDG_RUNTIME_DIR/krb5cc:$XDG_RUNTIME_DIR/krb5cc:ro \
     -e KRB5CCNAME=$XDG_RUNTIME_DIR/krb5cc \
+    -e ANADIR=$ANADIR
     -v /eos/lhcb/wg/RD/RX_run3:/eos/lhcb/wg/RD/RX_run3  \ 
     gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v5 bash
 ```
