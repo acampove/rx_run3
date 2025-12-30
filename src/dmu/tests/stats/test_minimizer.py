@@ -20,7 +20,7 @@ class Data:
     obs = zfit.Space('x', limits=(-10, 10))
 #---------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     LogStore.set_level('dmu:ml:minimizers', 10)
 #---------------------------------------------
 def _get_model():

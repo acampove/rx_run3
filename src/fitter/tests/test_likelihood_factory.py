@@ -59,8 +59,6 @@ def test_simple(tmp_path : Path):
             q2bin  = 'jpsi',
             cfg    = cfg)
         nll = ftr.run()
-
-
 # -------------------------------------------
 def test_config(tmp_path : Path):
     '''

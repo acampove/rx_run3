@@ -4,10 +4,12 @@ Module with unit tests for functions in dmu.stat.utilities
 import os
 import re
 import math
-from importlib.resources import files
-from pathlib             import Path
-
+import pytest
 import numpy
+import pandas as pnd
+
+from importlib.resources    import files
+from pathlib                import Path
 from omegaconf              import OmegaConf
 from dmu.logging.log_store  import LogStore
 from dmu.stats              import utilities as sut
@@ -17,11 +19,9 @@ from dmu.stats.utilities    import print_pdf
 from dmu.stats.utilities    import pdf_to_tex
 from dmu.stats.utilities    import placeholder_fit
 from dmu.stats.utilities    import is_pdf_usable
-
-import pytest
-import pandas as pnd
-from zfit.data        import Data     as zdata
-from zfit.pdf         import BasePDF  as zpdf
+from dmu.generic            import rxran
+from zfit.data              import Data     as zdata
+from zfit.pdf               import BasePDF  as zpdf
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------

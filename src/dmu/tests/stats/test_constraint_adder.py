@@ -4,7 +4,6 @@ This module contains tests for the ConstraintAdder class
 
 import math
 import tqdm
-import numpy
 import pandas as pnd
 import pytest
 
