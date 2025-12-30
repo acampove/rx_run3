@@ -899,11 +899,9 @@ def val_from_zres(res : zres, name : str) -> float:
     -------------
     Numerical value of fitting parameter
     '''
-    for par, d_val in res.params.items():
-        par_name = par if isinstance(par, str) else par.name
-        if par_name == name:
-            val = d_val['value']
-            return to_float(val=val)
+    for par in res.params:
+        if par.name == name:
+            return float(par.value().numpy())
 
     log.info(res)
     raise ValueError(f'Cannot find parameter: {name}')
