@@ -1,4 +1,5 @@
 pytest-cov
+cffi
 pytest-split
 pytest-xdist
 pre-commit
