@@ -38,11 +38,21 @@ class Constraint(BaseModel):
         -------------
         New value of parameters constraint mean
         '''
-        for par in result.params:
-            if par.name != name:
+        for par, data in result.params.items():
+            if isinstance(par, zpar) and par.name != name:
                 continue
 
-            return float(par.value().numpy())
+            if isinstance(par, str)  and par      != name:
+                continue
+
+            if isinstance(par, zpar):
+                return float(par.value().numpy())
+
+            # TODO: Remove ignore when issue be fixed:
+            # 
+            if isinstance(par,  str):
+                val = data['value'] 
+                return float(val) # type:ignore
 
         raise ValueError(f'Parameter {name} not found in holder')
     # ----------------------
