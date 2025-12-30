@@ -3,10 +3,11 @@ Module used to test DataFitter
 '''
 import pytest
 
+from typing          import Final
 from pathlib         import Path
 from omegaconf       import OmegaConf
 from dmu.stats.zfit  import zfit
-from dmu.stats       import Constraint
+from dmu.stats       import Constraint1D
 from dmu.stats       import utilities        as sut
 from dmu.stats       import constraint_adder as cad 
 from dmu.stats       import gof_calculator   as goc
@@ -17,17 +18,18 @@ from fitter          import DataFitter
 from fitter          import ToyMaker
 from fitter          import ToyPlotter
 
-log=LogStore.add_logger('fitter:test_data_fitter')
-
-_sel_cfg = {
+_SEL_CFG : Final[dict] = {
     'selection' : {'default' : {}, 'fit' : {}}
 }
 
-_constraints : dict[str,tuple[float,float]]= {
-    'mu' : (5280, 10),
-    'sg' : (  10,  1),
+_CONSTRAINTS : Final[dict] = {
+    'name' : 'name',
+    'kind' : 'GaussianConstraint',
+    'mu'   : (5280, 10),
+    'sg'   : (  10,  1),
 }
 
+log=LogStore.add_logger('fitter:test_data_fitter')
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
