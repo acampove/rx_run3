@@ -542,8 +542,6 @@ class RDFGetter(SpecMaker):
             return self._d_rdf
 
         conf_path = self.get_spec_path(per_file=per_file)
-        log.debug(f'Building datarame from file {conf_path}')
-
         self._rdf = self._rdf_from_conf(fpath='joint_files', conf_path=conf_path)
 
         return self._emulator.post_process(rdf=self._rdf)
