@@ -138,7 +138,9 @@ def test_toy() -> None:
     l_df : list[pnd.DataFrame] = []
     sam = nll.data[0]
     for _ in tqdm.trange(ntoy, ascii=' -'):
-        cad.resample()
+        for cns in cons:
+            cns.resample()
+
         sam.resample()
         mnm.minimize(nll)
 
