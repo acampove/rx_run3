@@ -1,7 +1,6 @@
 '''
 Module with tests for classes and functions in constraint.py module
 '''
-import zfit
 import numpy
 import pytest
 
@@ -15,6 +14,7 @@ from dmu.generic import utilities as gut
 from dmu.stats   import Constraint1D 
 from dmu.stats   import ConstraintND
 from dmu.stats   import print_constraints 
+from dmu.stats.zfit  import zfit
 
 from dmu import LogStore
 

@@ -3,10 +3,10 @@ Script used to test custom zfit minimizer
 '''
 from dataclasses import dataclass
 
-import zfit
 import numpy
 import pytest
 
+from dmu.stats.zfit        import zfit
 from dmu.stats.minimizers  import AnealingMinimizer
 from dmu.logging.log_store import LogStore
 

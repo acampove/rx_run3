@@ -3,12 +3,12 @@ This module contains tests for the ConstraintAdder class
 '''
 
 import math
-import zfit
 import tqdm
 import numpy
 import pandas as pnd
 import pytest
 
+from dmu.stats.zfit import zfit
 from typing      import Union
 from zfit.loss   import ExtendedUnbinnedNLL, UnbinnedNLL 
 from omegaconf   import DictConfig

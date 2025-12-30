@@ -4,10 +4,10 @@ Module with tests for GofCalculator class
 import math
 from dataclasses              import dataclass
 
-import zfit
 import numpy
 import pytest
 
+from dmu.stats.zfit           import zfit
 from dmu.stats.gof_calculator import GofCalculator
 from dmu.logging.log_store    import LogStore
 
