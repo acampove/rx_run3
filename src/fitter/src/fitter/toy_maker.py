@@ -54,7 +54,6 @@ class ToyMaker:
         for cons in self._cns:
             log.debug(cons)
 
-
         self._check_gof()
         self._check_gpu()
     # ----------------------
