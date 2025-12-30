@@ -43,6 +43,7 @@ class ToyMaker:
         cfg  : omegaconf dictionary controlling configuration
         cns  : List of constraints, needed for resampling between toys
         '''
+
         self._ana_dir = Path(os.environ['ANADIR'])
 
         self._nll   = nll
@@ -52,6 +53,7 @@ class ToyMaker:
 
         for cons in self._cns:
             log.debug(cons)
+
 
         self._check_gof()
         self._check_gpu()
