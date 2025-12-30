@@ -107,7 +107,10 @@ class DataFitter(BaseFitter, Cache):
 
         Returns
         -------------
-        OmegaConf DictConfig with fitting parameters
+        Either:
+
+        - OmegaConf DictConfig with fitting parameters
+        - Zfit result object after freezing
         '''
         nll    = self._get_full_nll()
         l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
