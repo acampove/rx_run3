@@ -1,11 +1,11 @@
 '''
 Module with functions needed to handle random numbers
 '''
-import zfit
 import numpy
 import random 
 
-from contextlib import contextmanager
+from dmu.stats.zfit import zfit
+from contextlib     import contextmanager
 
 # ----------------------
 @contextmanager
