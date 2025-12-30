@@ -12,7 +12,7 @@ from dmu.stats.fitter       import Fitter
 from dmu.stats              import utilities as sut
 from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
-from rx_common.types        import Trigger
+from rx_common.types        import Sample, Trigger
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 from fitter.prec            import PRec
@@ -39,12 +39,9 @@ def test_electron(tmp_path : Path, trig : Trigger):
     mass   = 'B_const_mass_M'
     label  = r'$M_{DTF}$'
 
-    l_samp = [
-        'Bu_JpsiX_ee_eq_JpsiInAcc',
-        'Bd_JpsiX_ee_eq_JpsiInAcc',
-        'Bs_JpsiX_ee_eq_JpsiInAcc']
-
-    obs=zfit.Space(label, limits=(4500, 6900))
+    l_samp  = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    obs     = zfit.Space(label, limits=(4500, 6900))
+    out_dir = Path(f'electron_{trig}')
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
@@ -54,7 +51,7 @@ def test_electron(tmp_path : Path, trig : Trigger):
             trig    =trig, 
             q2bin   =q2bin, 
             d_weight=d_wgt,
-            out_dir =f'electron_{trig}')
+            out_dir =out_dir)
 
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
@@ -69,14 +66,10 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
     '''
     Simplest test in electron channel
     '''
-    label  = r'$M_{DTF}$'
-
-    l_samp = [
-        'Bu_JpsiX_mm_eq_JpsiInAcc',
-        'Bd_JpsiX_mm_eq_JpsiInAcc',
-        'Bs_JpsiX_mm_eq_JpsiInAcc']
-
-    obs=zfit.Space(label, limits=(4500, 6900))
+    label   = r'$M_{DTF}$'
+    l_samp  = [ Sample.bpjpsixmm, Sample.bdjpsixmm, Sample.bsjpsixmm ]
+    obs     = zfit.Space(label, limits=(4500, 6900))
+    out_dir = Path(f'{trig}_{q2bin}')
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
@@ -86,7 +79,7 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
             trig    =trig, 
             q2bin   =q2bin, 
             d_weight=d_wgt,
-            out_dir =f'{trig}_{q2bin}')
+            out_dir =out_dir)
 
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
@@ -100,13 +93,10 @@ def test_muon_by_block(tmp_path : Path, trig : Trigger, block : int):
     mass   = 'B_const_mass_M'
     label  = r'$M_{DTF}$'
 
-    l_samp = [
-        'Bu_JpsiX_mm_eq_JpsiInAcc',
-        'Bd_JpsiX_mm_eq_JpsiInAcc',
-        'Bs_JpsiX_mm_eq_JpsiInAcc']
-
-    obs  = zfit.Space(label, limits=(4500, 6900))
-    d_wgt= {'dec' : 1, 'sam' : 1}
+    l_samp = [ Sample.bpjpsixmm, Sample.bdjpsixmm, Sample.bsjpsixmm ]
+    obs    = zfit.Space(label, limits=(4500, 6900))
+    d_wgt  = {'dec' : 1, 'sam' : 1}
+    out_dir= Path(f'muon_by_block_{block:03}_{trig}')
 
     with sel.custom_selection(d_sel={'block' : f'block == {block}'}),\
          Cache.cache_root(tmp_path):
@@ -116,7 +106,7 @@ def test_muon_by_block(tmp_path : Path, trig : Trigger, block : int):
             trig    =trig, 
             q2bin   =q2bin, 
             d_weight=d_wgt,
-            out_dir =f'muon_by_block_{block:03}_{trig}')
+            out_dir =out_dir)
 
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
@@ -141,10 +131,7 @@ def test_reso(q2bin : str, tmp_path : Path):
         'psi2'    :r'$M_{DTF}(K^+e^+e^-)$',
         'high'    :r'$M(K^+e^+e^-)$'}[q2bin]
 
-    l_samp = [
-        'Bu_JpsiX_ee_eq_JpsiInAcc',
-        'Bd_JpsiX_ee_eq_JpsiInAcc',
-        'Bs_JpsiX_ee_eq_JpsiInAcc']
+    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
 
     d_maxe = {
         'low'     : -1,
@@ -153,25 +140,26 @@ def test_reso(q2bin : str, tmp_path : Path):
         'psi2'    : 50_000,
         'high'    : -1}
 
-    obs=zfit.Space(label, limits=(4500, 6900))
+    obs     = zfit.Space(label, limits=(4500, 6900))
+    out_dir = Path('reso')
 
     maxe = d_maxe[q2bin]
     with RDFGetter.max_entries(value = maxe),\
          Cache.cache_root(tmp_path):
         d_wgt= {'dec' : 0, 'sam' : 0}
-        obp_4=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp_4=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
         obp_4.get_sum(mass=mass, name='PRec_4', obs=obs)
 
         d_wgt= {'dec' : 0, 'sam' : 1}
-        obp_3=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp_3=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
         obp_3.get_sum(mass=mass, name='PRec_3', obs=obs)
 
         d_wgt= {'dec' : 1, 'sam' : 0}
-        obp_2=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp_2=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
         obp_2.get_sum(mass=mass, name='PRec_2', obs=obs)
 
         d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
 def test_fit(tmp_path : Path):
@@ -182,17 +170,19 @@ def test_fit(tmp_path : Path):
     trig   = Trigger.rk_ee_os 
     mass   = 'B_Mass_smr'
     label  = r'$M(K^+e^+e^-)$'
-    l_samp = [
-        'Bu_JpsiX_ee_eq_JpsiInAcc',
-        'Bd_JpsiX_ee_eq_JpsiInAcc',
-        'Bs_JpsiX_ee_eq_JpsiInAcc']
-
-    obs=zfit.Space(label, limits=(4500, 6900))
-    test = f'reso/fit/{q2bin}'
+    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    obs    = zfit.Space(label, limits=(4500, 6900))
+    out_dir= Path(f'reso/fit/{q2bin}')
 
     d_wgt= {'dec' : 1, 'sam' : 1}
     with Cache.cache_root(path = tmp_path):
-        obp = PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp = PRec(
+            samples = l_samp, 
+            trig    = trig, 
+            q2bin   = q2bin, 
+            d_weight= d_wgt,
+            out_dir = out_dir,
+        )
         pdf = obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 
     if pdf is None:
@@ -211,7 +201,7 @@ def test_fit(tmp_path : Path):
         model  =pdf,
         res    =res,
         plt_cfg=None,
-        fit_dir= tmp_path / test,
+        fit_dir= tmp_path / out_dir,
         d_const={})
 #-----------------------------------------------
 @pytest.mark.parametrize('bdt_cut', [
@@ -230,15 +220,19 @@ def test_bdt(q2bin : str, bdt_cut : str, tmp_path : Path):
     obs=zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [
-        'Bu_JpsiX_ee_eq_JpsiInAcc',
-        'Bd_JpsiX_ee_eq_JpsiInAcc',
-        'Bs_JpsiX_ee_eq_JpsiInAcc']
+    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
 
-    d_wgt= {'dec' : 1, 'sam' : 1}
+    d_wgt   = {'dec' : 1, 'sam' : 1}
+    out_dir = Path('bdt')
     with Cache.cache_root(tmp_path),\
         sel.custom_selection(d_sel={'bdt' : bdt_cut}):
-        obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp=PRec(
+            samples = l_samp, 
+            trig    = trig, 
+            q2bin   = q2bin, 
+            d_weight= d_wgt,
+            out_dir = out_dir,
+        )
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
 @pytest.mark.parametrize('brem_cut', ['nbrem == 0', 'nbrem == 1', 'nbrem >= 2'])
@@ -247,18 +241,22 @@ def test_brem(brem_cut : str, tmp_path : Path):
     Testing by brem category
     '''
     q2bin  = 'jpsi'
-    obs=zfit.Space('mass', limits=(4500, 6000))
+    obs    = zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [
-            'Bu_JpsiX_ee_eq_JpsiInAcc',
-            'Bd_JpsiX_ee_eq_JpsiInAcc',
-            'Bs_JpsiX_ee_eq_JpsiInAcc']
+    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    d_wgt  = {'dec' : 1, 'sam' : 1}
+    out_dir= Path('brem')
 
-    d_wgt= {'dec' : 1, 'sam' : 1}
     with sel.custom_selection(d_sel={'brem' : brem_cut}),\
         Cache.cache_root(path = tmp_path):
-        obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp=PRec(
+            samples =l_samp, 
+            trig    =trig, 
+            q2bin   =q2bin, 
+            d_weight=d_wgt,
+            out_dir = out_dir,
+        )
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
 def test_cache(tmp_path : Path):
@@ -270,34 +268,47 @@ def test_cache(tmp_path : Path):
     obs    = zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [
-            'Bu_JpsiX_ee_eq_JpsiInAcc',
-            'Bd_JpsiX_ee_eq_JpsiInAcc',
-            'Bs_JpsiX_ee_eq_JpsiInAcc',
-            ]
-
+    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
     d_wgt  = {'dec' : 1, 'sam' : 1}
+    out_dir= Path('cache')
+
     with Cache.cache_root(path = tmp_path):
-        obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp=PRec(
+            samples = l_samp, 
+            trig    = trig, 
+            q2bin   = q2bin, 
+            d_weight= d_wgt,
+            out_dir = out_dir,
+        )
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 
-        obp=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt)
+        obp=PRec(
+            samples =l_samp, 
+            trig    =trig, 
+            q2bin   =q2bin, 
+            d_weight=d_wgt,
+            out_dir =out_dir,
+        )
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
 def test_extended(tmp_path : Path):
     '''
     Testing that PDFs are not extended
     '''
-    obs=zfit.Space('mass', limits=(4500, 6000))
+    obs    = zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
-    l_samp = [
-        'Bu_JpsiX_ee_eq_JpsiInAcc',
-        'Bd_JpsiX_ee_eq_JpsiInAcc',
-        'Bs_JpsiX_ee_eq_JpsiInAcc']
+    d_wgt  = {'dec' : 1, 'sam' : 1}
+    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    out_dir= Path('extended')
 
-    d_wgt= {'dec' : 1, 'sam' : 1}
     with Cache.cache_root(path = tmp_path):
-        obp=PRec(samples=l_samp, trig=trig, q2bin='jpsi', d_weight=d_wgt)
+        obp=PRec(
+            samples =l_samp, 
+            trig    =trig, 
+            q2bin   ='jpsi', 
+            d_weight=d_wgt,
+            out_dir = out_dir,
+        )
         pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
 
     if pdf is None:
@@ -312,15 +323,18 @@ def test_low_stats(mass : str, tmp_path : Path):
     '''
     obs    = zfit.Space(mass, limits=(4500, 7000))
     trig   = Trigger.rk_ee_os 
-    l_samp = [
-        'Bu_JpsiX_ee_eq_JpsiInAcc',
-        'Bd_JpsiX_ee_eq_JpsiInAcc',
-        'Bs_JpsiX_ee_eq_JpsiInAcc',
-        ]
+    d_wgt  = {'dec' : 1, 'sam' : 1}
+    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    out_dir= Path('low_stats')
 
-    d_wgt = {'dec' : 1, 'sam' : 1}
     with Cache.cache_root(path=tmp_path),\
         sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.9 && mva_prc > 0.9'}):
-        obp=PRec(samples=l_samp, trig=trig, q2bin='high', d_weight=d_wgt)
+        obp=PRec(
+            samples =l_samp, 
+            trig    =trig, 
+            q2bin   ='high', 
+            d_weight=d_wgt,
+            out_dir = out_dir,
+        )
         obp.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
