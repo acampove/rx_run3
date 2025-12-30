@@ -49,7 +49,7 @@ class Constraint(BaseModel):
                 return float(par.value().numpy())
 
             # TODO: Remove ignore when issue be fixed:
-            # 
+            # https://github.com/zfit/zfit/discussions/684#discussioncomment-15376203 
             if isinstance(par,  str):
                 val = data['value'] 
                 return float(val) # type:ignore
