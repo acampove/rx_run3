@@ -172,7 +172,7 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
         toy_cfg.ntoys = ntoys
-        mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
+        mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg, cns = [])
         df  = mkr.get_parameter_information()
 
         plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
