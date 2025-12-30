@@ -2,9 +2,9 @@
 Module used to test CmbConstraints class
 '''
 
-import zfit
 import pytest 
 
+from dmu.stats.zfit import zfit
 from typing       import Final
 from pathlib      import Path
 from dmu.workflow import Cache

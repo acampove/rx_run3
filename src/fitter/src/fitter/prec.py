@@ -4,7 +4,6 @@ Module containing PRec
 import os
 import copy
 import pprint
-import zfit
 import numpy
 import slugify
 import pandas            as pnd
@@ -15,6 +14,7 @@ from dataclasses            import dataclass
 from dmu.generic            import hashing
 from dmu                    import LogStore
 from dmu.stats              import ZFitPlotter
+from dmu.stats.zfit         import zfit
 from dmu.stats.utilities    import is_pdf_usable
 from dmu.stats              import utilities as sut
 from dmu.rdataframe         import utilities as rut

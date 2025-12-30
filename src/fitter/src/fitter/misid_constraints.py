@@ -2,14 +2,13 @@
 Module containing the MisIDConstraints class
 '''
 
-import zfit
-
 from typing         import Final
 from rx_selection   import selection as sel
 
 from dmu.stats      import GofCalculator
 from dmu.stats      import ParameterLibrary as PL
 from dmu.stats      import Constraint1D
+from dmu.stats.zfit import zfit
 
 from dmu.generic    import utilities        as gut
 from dmu.workflow   import Cache

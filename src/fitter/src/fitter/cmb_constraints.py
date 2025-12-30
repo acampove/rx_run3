@@ -1,7 +1,7 @@
 '''
 Module with CmbConstraints class
 '''
-import zfit
+from dmu.stats.zfit import zfit
 
 from typing       import cast
 from pathlib      import Path

@@ -3,13 +3,13 @@ Module with SimFitter class
 '''
 
 import yaml
-import zfit
 
 from pathlib                  import Path
 from typing                   import cast
 from omegaconf                import DictConfig, OmegaConf
 from dmu.stats                import utilities    as sut
 from dmu.stats                import ModelFactory
+from dmu.stats.zfit           import zfit
 from dmu.workflow             import Cache
 from dmu                      import LogStore
 

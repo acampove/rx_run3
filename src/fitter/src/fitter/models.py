@@ -2,7 +2,7 @@
 Module with fitting models
 '''
 
-import zfit
+from dmu.stats.zfit         import zfit
 from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
