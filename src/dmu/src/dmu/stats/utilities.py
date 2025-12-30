@@ -526,7 +526,11 @@ def _save_result(
     # TODO: Needs to be removed once
     # https://github.com/zfit/zfit/issues/702
     # be sorted out
-    res.covariance()
+    try:
+        res.covariance()
+    except Exception as exc:
+        raise ValueError('Cannot calculate covariance matrix, result was likely already frozen') from exc
+
     res.freeze()
     with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
         pickle.dump(res, ofile)
@@ -850,7 +854,11 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
     # TODO: Needs to be removed once
     # https://github.com/zfit/zfit/issues/702
     # be sorted out
-    res.covariance()
+    try:
+        res.covariance()
+    except Exception as exc:
+        raise ValueError('Cannot calculate covariance matrix, result was likely already frozen') from exc
+
     res.freeze()
 
     par   = res.params
