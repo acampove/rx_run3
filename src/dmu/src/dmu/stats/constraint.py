@@ -17,6 +17,7 @@ from zfit.result           import FitResult
 from pydantic              import BaseModel, model_validator, TypeAdapter
 
 from dmu.stats.zfit        import zfit
+from dmu.stats             import utilities  as sut
 from dmu.stats.protocols   import ParsHolder
 from dmu.logging.log_store import LogStore
 
@@ -26,35 +27,6 @@ class Constraint(BaseModel):
     '''
     Class with common code to 1D and ND constraints
     '''
-    # ----------------------
-    def _get_parameter_value(self, name : str, result : FitResult) -> float:
-        '''
-        Parameters
-        -------------
-        name  : Name of parameter to be calibrated
-        holder: Object with `get_params` implemented
-
-        Returns
-        -------------
-        New value of parameters constraint mean
-        '''
-        for par, data in result.params.items():
-            if isinstance(par, zpar) and par.name != name:
-                continue
-
-            if isinstance(par, str)  and par      != name:
-                continue
-
-            if isinstance(par, zpar):
-                return float(par.value().numpy())
-
-            # TODO: Remove ignore when issue be fixed:
-            # https://github.com/zfit/zfit/discussions/684#discussioncomment-15376203 
-            if isinstance(par,  str):
-                val = data['value'] 
-                return float(val) # type:ignore
-
-        raise ValueError(f'Parameter {name} not found in holder')
     # ----------------------
     def calibrate(self, result : FitResult) -> 'Constraint':
         _ = result
@@ -125,7 +97,7 @@ class ConstraintND(Constraint):
         '''
         new_values = []
         for name, old_value in zip(self.parameters, self.values):
-            new_value = self._get_parameter_value(name = name, result = result )
+            new_value = sut.val_from_zres(name = name, res = result )
             new_values.append(new_value)
 
             log.info(f'{name:<20}{old_value:<20.3f}{"--->":<20}{new_value:<20.3f}')
@@ -327,7 +299,7 @@ class Constraint1D(Constraint):
         -------------
         Copy of this constraint with means calibrated
         '''
-        new_value = self._get_parameter_value(name = self.name, result = result)
+        new_value = sut.val_from_zres(name = self.name, res = result )
 
         log.info(f'{self.name:<20}{self.mu:<20.3f}{"--->":<20}{new_value:<20.3f}')
 
