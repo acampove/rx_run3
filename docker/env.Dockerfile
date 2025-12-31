@@ -18,5 +18,5 @@ WORKDIR /workspace
 COPY --from=builder /opt/app-root /opt/app-root
 
 USER 0
-RUN dnf install -y libuuid && dnf clean all
+RUN dnf install -y libuuid xrootd-client krb5-workstation && dnf clean all
 USER 1001

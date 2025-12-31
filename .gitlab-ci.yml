@@ -11,8 +11,8 @@ environment:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:v6.3 -f docker/env.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:v6.3
+    - buildah bud  -t $CI_REGISTRY_IMAGE:v6.4 -f docker/env.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:v6.4
   only:
     - update_env 
 analysis:
@@ -22,5 +22,7 @@ analysis:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:b433505ef -f docker/ana.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:b433505ef
+    - buildah bud  -t $CI_REGISTRY_IMAGE:f27542b2f -f docker/ana.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:f27542b2f
+  only:
+    - issue-002 
