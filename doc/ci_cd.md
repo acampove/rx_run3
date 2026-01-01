@@ -54,7 +54,7 @@ Currently, the docker container is hosted [here](https://gitlab.cern.ch/LHCb-RD/
 podman pull gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v6.4 # Change to latest tagged version
 podman run \
     -it --rm --userns=host \
-    -v $XDG_RUNTIME_DIR/krb5cc:$XDG_RUNTIME_DIR/krb5cc:ro \
+    -v $XDG_RUNTIME_DIR/krb5cc:$XDG_RUNTIME_DIR/krb5cc:Z \
     -e KRB5CCNAME=$XDG_RUNTIME_DIR/krb5cc \
     -e ANADIR=$ANADIR \
     -v $ANADIR:$ANADIR \

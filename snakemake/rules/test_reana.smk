@@ -6,7 +6,7 @@ rule test:
     output:
         'results/file_{index}.txt'
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:394bdc0fe'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:4243f02d4'
     resources:
         kubernetes_memory_limit="4000Mi"
     shell:
