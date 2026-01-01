@@ -3,8 +3,6 @@ Module intended to wrap zfit
 
 Needed in order to silence tensorflow messages
 '''
-# pylint: disable=unused-import, wrong-import-order
-
 try:
     import ROOT
 except ImportError:
