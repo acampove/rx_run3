@@ -11,7 +11,7 @@ hypexp:
   ap:
     val : 0.020
     low : 0
-    high: 0.10
+    high: 0.30
   bt:
     val : 0.002
     low : 0.0001
