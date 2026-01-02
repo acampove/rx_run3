@@ -2,6 +2,7 @@
 Module used to test CmbConstraints class
 '''
 
+from omegaconf import DictConfig
 import pytest 
 
 from dmu.stats.zfit import zfit
@@ -29,17 +30,21 @@ def initialize():
     LogStore.set_level('fitter:cmb_constraints', 10)
     LogStore.set_level('dmu:statistics:fitter' , 10)
 # ----------------------
-def _get_nll() -> zlos:
+def _get_nll(
+    cfg   : DictConfig,
+    q2bin : Qsq) -> zlos:
     '''
     Returns
     -------------
     Likelihood with a combinatorial PDF
     '''
+    pdfs= cfg.model.components['combinatorial'].categories.main.models[q2bin]
+
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     mod = ModelFactory(
         preffix = 'combinatorial',
         obs     = obs,
-        l_pdf   = ['hypexp'],
+        l_pdf   = pdfs,
         l_shared= [],
         l_float = [])
 
@@ -54,7 +59,7 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
     Simplest test of CmbConstraints
     '''
     fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
-    nll       = _get_nll()
+    nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
 
     with Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.8'}):
