@@ -11,6 +11,12 @@ constraints: &cons
       - mu       # with any of these strings
       - ap       # E.g mu_hypexp_combinatorial_1
       #- bt
+    fit :
+      strategy : 
+        retry :
+          ntries        : 20
+          pvalue_thresh : 0.05
+          ignore_status : False 
     plots:
       nbins : 60
 
