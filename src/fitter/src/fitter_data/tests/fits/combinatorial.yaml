@@ -2,6 +2,12 @@ reso_veto: &reso_veto
   jpsi veto  : "TMath::Abs(B_const_mass_M       - 5280) > 200"
   psi2s veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
 
+strategy : &fit_strategy
+  retry :
+    ntries        : 20
+    pvalue_thresh : 0.05
+    ignore_status : False 
+
 constraints: &cons
     sample     : DATA_24* 
     trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
@@ -12,14 +18,9 @@ constraints: &cons
       - ap       # E.g mu_hypexp_combinatorial_1
       #- bt
     fit :
-      strategy : 
-        retry :
-          ntries        : 20
-          pvalue_thresh : 0.05
-          ignore_status : False 
+      <<: *fit_strategy
     plots:
       nbins : 60
-
 output_directory : rare/electron/combinatorial
 categories:
   main:
@@ -56,5 +57,7 @@ high:
       parameters : 
         - mu       
         - sg       
+      fit :
+        <<: *fit_strategy
       plots:
         nbins : 60
