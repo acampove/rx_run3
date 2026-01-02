@@ -477,7 +477,7 @@ class Fitter:
 
         return not (good_chi2 and good_pval and good_ndof)
     #------------------------------
-    def _fit_retries(self, cfg : dict) -> tuple[dict, zres]:
+    def _fit_retries(self, cfg : dict) -> tuple[dict[tuple[float, int, float],zres], zres]:
         ntries       = cfg['strategy']['retry']['ntries']
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
         ignore_status= cfg['strategy']['retry']['ignore_status']
@@ -493,6 +493,9 @@ class Fitter:
                 log.warning(f'{i_try:03}/{ntries:03} failed due to exception')
                 continue
 
+            if log.getEffectiveLevel() < 20:
+                log.debug(res)
+
             last_res = res
             bad_fit  = res.status != 0 or not res.valid
 
@@ -501,18 +504,18 @@ class Fitter:
                 log.info(f'{i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
                 continue
 
-            chi2, _, pval   = gof
 
             if self._gof_is_bad(gof=gof):
                 log.debug('Reshufling and skipping, found bad gof')
                 self._reshuffle_pdf_pars()
                 continue
 
-            d_pval_res[chi2]=res
+            d_pval_res[gof]=res
 
+            _, _, pval   = gof
             if pval > pvalue_thresh:
                 log.info(f'Reached {pval:.3f} (> {pvalue_thresh:.3f}) threshold after {i_try + 1} attempts')
-                return {chi2 : res}, res
+                return {gof : res}, res
 
             log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
             self._reshuffle_pdf_pars()
@@ -537,7 +540,10 @@ class Fitter:
         plt.hist(arr, bins=100, range=(mean - 10 * rms, mean + 10 * rms))
         plt.show()
     #------------------------------
-    def _pick_best_fit(self, d_pval_res : dict, last_res : zres) -> zres:
+    def _pick_best_fit(
+        self, 
+        d_pval_res : dict[tuple[float,int,float], zres], 
+        last_res   : zres) -> zres:
         nsucc = len(d_pval_res)
         if nsucc == 0:
             log.warning('None of the fits succeeded, returning last result')
@@ -547,11 +553,12 @@ class Fitter:
 
         l_pval_res= list(d_pval_res.items())
         l_pval_res.sort()
-        _, res = l_pval_res[0]
+        (chi2, ndof, pval), res = l_pval_res[0]
+        rchi2 = chi2 / ndof
 
-        log.debug(f'Picking out best fit from {nsucc} fits')
-        for chi2, _ in l_pval_res:
-            log.debug(f'{chi2:.3f}')
+        log.info(f'Picking out best fit from {nsucc} fits reduced chi2/pvalue: {rchi2:.3f}/{pval:.3f}')
+        for (chi2, ndof, pval), _ in l_pval_res:
+            log.debug(f'{chi2:<20.3f}{ndof:<20}{pval:<20.3f}')
 
         self._set_pdf_pars(res)
 
@@ -676,14 +683,22 @@ class Fitter:
 
         cfg = {} if cfg is None else cfg
 
-        log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         if 'strategy' not in cfg:
+            log.info('Not using any strategy, simple fit')
             nll    = self._get_full_nll(cfg = cfg)
             res, _ = self.minimize(nll, cfg, ndof=self._ndof)
-        elif 'retry' in cfg['strategy']:
+
+            return res
+
+        log.info(30 * '-')
+        log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
+        log.info(30 * '-')
+        if 'retry' in cfg['strategy']:
+            log.info('Using retry strategy')
             d_pval_res, last_res = self._fit_retries(cfg)
             res = self._pick_best_fit(d_pval_res, last_res)
         elif 'steps' in cfg['strategy']:
+            log.info('Using steps strategy')
             res = self._fit_in_steps(cfg)
         else:
             raise ValueError('Unsupported fitting strategy')
