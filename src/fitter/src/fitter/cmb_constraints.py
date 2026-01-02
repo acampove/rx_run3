@@ -210,8 +210,9 @@ class CmbConstraints(BaseFitter, Cache):
         N dimensional Gaussian constraint
         '''
         log.info('Constraints not found, calculating them')
-        data = self._get_data(rdf = self._rdf)
-        res  = self._fit(data=data, model=self._model, cfg = self._cfg)
+        data    = self._get_data(rdf = self._rdf)
+        cfg_fit = self._cmb_cfg.constraints.fit
+        res     = self._fit(data=data, model=self._model, cfg = cfg_fit)
 
         self._save_fit(
             data    = data, 
