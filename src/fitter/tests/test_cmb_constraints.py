@@ -48,7 +48,7 @@ def _get_nll() -> zlos:
 
     return zlos(model = pdf, data = data)
 # ----------------------
-@pytest.mark.parametrize('q2bin', ['low'])
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 def test_simple(q2bin : Qsq, tmp_path : Path):
     '''
     Simplest test of CmbConstraints
