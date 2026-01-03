@@ -65,6 +65,7 @@ def _get_triggers() -> dict[str,int]:
     d_trigger = {}
     for lfn in l_lfn:
         _, trigger = ut.info_from_path(lfn)
+        trigger = str(trigger)
         if trigger not in d_trigger:
             d_trigger[trigger] = 1
         else:
