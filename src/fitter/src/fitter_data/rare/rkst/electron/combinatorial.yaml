@@ -49,12 +49,18 @@ high:
     dl_suj : 2.5
     gm_suj : -10
   constraints:
-      sample     : DATA_24* 
-      trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA 
-      selection  : 
-        <<: *reso_veto
-      parameters : 
-        - mu       
-        - sg       
-      plots:
-        nbins : 60
+    sample     : DATA_24* 
+    trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA
+    selection  : 
+      <<: *reso_veto
+    parameters : # Will constrain parameters starting
+      - mu       # with any of these strings
+      - sg       # E.g mu_hypexp_combinatorial_1
+    fit:
+      strategy : 
+        retry :
+          ntries        : 20
+          pvalue_thresh : 0.05
+          ignore_status : False 
+    plots:
+      nbins : 60
