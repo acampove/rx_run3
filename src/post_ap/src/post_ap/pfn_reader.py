@@ -46,7 +46,7 @@ class PFNReader:
             if sample_name not in l_sample:
                 continue
 
-            sam                = collection.filter(name=sample_name)
+            sam                = collection.filter(name=sample_name, version = sample_vers)
             l_pfn              = sam.PFNs()
             npfn              += len(l_pfn)
             d_pfn[sample_name] = l_pfn
