@@ -10,7 +10,7 @@ constraints: &cons
     parameters : # Will constrain parameters starting
       - mu       # with any of these strings
       - ap       # E.g mu_hypexp_combinatorial_1
-      #- bt
+      - bt
     fit:
       strategy : 
         retry :
