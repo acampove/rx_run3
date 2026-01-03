@@ -2,10 +2,16 @@
 Script with tests for PFNReader class
 '''
 import pytest
-import dmu.generic.utilities as gut
-
-from post_ap.pfn_reader import PFNReader
-
+from dmu.generic           import utilities as gut
+from dmu.logging.log_store import LogStore
+from post_ap.pfn_reader    import PFNReader
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('post_ap:pfn_reader', 10)
 # -----------------------------
 class Data:
     '''
