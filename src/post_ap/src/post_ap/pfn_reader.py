@@ -24,9 +24,18 @@ class PFNReader:
 
         self._cfg = cfg
     #------------------------------------
-    def _paths_from_collection(self, collection : SampleCollection, l_sample : list[str], version : str) -> dict[str,list[str]]:
+    def _paths_from_collection(
+        self, 
+        collection : SampleCollection, 
+        l_sample   : list[str], 
+        version    : str) -> dict[str,list[str]]:
         d_pfn = {}
         npfn  = 0
+
+        log.debug(80 * '-')
+        log.debug(f'{"Sample":<40}{"Version":<20}{"Number of PFNs":<20}')
+        log.debug(80 * '-')
+        pfn_ex = None
         for d_info in collection:
             sample_name = d_info['name']
             sample_vers = d_info['version']
@@ -41,8 +50,11 @@ class PFNReader:
             l_pfn              = sam.PFNs()
             npfn              += len(l_pfn)
             d_pfn[sample_name] = l_pfn
+            pfn_ex             = l_pfn[0]
 
-        log.info(f'Found {npfn} PFNs')
+            log.debug(f'{sample_name:<40}{sample_vers:<20}{len(l_pfn):<80}')
+
+        log.info(f'Found {npfn} PFNs, e.g.: {pfn_ex}')
 
         return d_pfn
     # ---------------------------------------
@@ -63,9 +75,12 @@ class PFNReader:
         if not isinstance(collection, SampleCollection):
             raise ValueError('Cannot retrieve a collection of samples for {production}:{nickname}')
 
-        log.info(f'Retrieving production/nickname: {production}/{nickname}')
         l_sample   = self._cfg.productions[production].samples[nickname]
         version    = self._cfg.productions[production].versions[nickname]
+
+        log.info('Using samples from:')
+        for sample in l_sample:
+            log.info(f'  {production}:{version}/{sample}')
 
         d_path     = self._paths_from_collection(collection, l_sample, version)
 
