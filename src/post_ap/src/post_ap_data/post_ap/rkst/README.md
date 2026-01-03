@@ -14,3 +14,7 @@ These jobs are used to process
 
 Second production of MC with sim10f. These samples are MC only and mostly to model
 the rare mode, both signal and backgrounds.
+
+# v4
+
+Used to process SS data, no MC or other triggers
