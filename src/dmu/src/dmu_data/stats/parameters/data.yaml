@@ -15,7 +15,7 @@ hypexp:
   bt:
     val : 0.002
     low : 0.0001
-    high: 0.003
+    high: 0.009
 modexp:
   mu:
     val : 4300
