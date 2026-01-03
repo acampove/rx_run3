@@ -76,7 +76,7 @@ def _save_pfns() -> None:
     Data.njob = _pfns_to_njob(d_pfn)
 
     log.info(f'Will use {Data.njob} jobs')
-
+    log.info(f'Using PFNs in: {Data.pfn_path}')
     with open(Data.pfn_path, 'w', encoding='utf-8') as ofile:
         json.dump(d_pfn, ofile, indent=4)
 # -------------------------------------------------
