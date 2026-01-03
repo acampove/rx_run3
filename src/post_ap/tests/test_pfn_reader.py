@@ -37,3 +37,16 @@ def test_simple(nickname : str, expected : int):
     npfn   = len(d_pfn)
 
     assert npfn == expected
+# -----------------------------
+@pytest.mark.parametrize('analysis', ['rk', 'rkst'])
+@pytest.mark.parametrize('sample'  , ['ss_mu', 'ss_md'])
+def test_real(analysis : str, sample : str):
+    '''
+    Test simple reading
+    '''
+    cfg    = gut.load_conf(package='post_ap_data', fpath=f'post_ap/{analysis}/v4.yaml')
+
+    reader = PFNReader(cfg=cfg)
+    d_pfn  = reader.get_pfns(production='rx_2024', nickname=sample)
+
+    assert d_pfn
