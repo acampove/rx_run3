@@ -192,10 +192,12 @@ def _download_group(group : list[Path]) -> int:
     log.debug(f'Downloading {nfiles} files in parallel')
 
     if nfiles == 1:
+        log.warning('Found group of one file, not using multiprocessing')
         ncopied = _copy_sample(source=group[0])
         return ncopied
 
     with multiprocessing.Pool() as pool:
+        log.info(f'Will run {nfiles} processes')
         l_ncopied = pool.map(_copy_sample, group)
         ncopied   = sum(l_ncopied)
 
@@ -224,6 +226,11 @@ def _group_paths(l_path : list[Path]) -> list[list[Path]]:
     arr_path   = numpy.array(l_path, dtype=object)
     l_arr_path = numpy.array_split(arr_path, Data.nprc)
     l_l_path   = [ [ Path(obj) for obj in arr_path ] for arr_path in l_arr_path ]
+
+    log.debug('Found the following groups:')
+    for group in l_l_path:
+        nfiles = len(group)
+        log.debug(f'   {nfiles}')
 
     return l_l_path
 # -----------------------------------------
