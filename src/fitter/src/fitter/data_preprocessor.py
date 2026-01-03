@@ -1,22 +1,22 @@
 '''
 Module holding DataPreprocessor class
 '''
-from pathlib import Path
-
 import numpy
 import pandas   as pnd
+
+from pathlib                  import Path
 from omegaconf                import DictConfig, OmegaConf
 from ROOT                     import RDF # type: ignore
-from dmu.workflow.cache       import Cache
+from dmu.workflow             import Cache
 from dmu.stats                import utilities  as sut
 from dmu.generic              import utilities  as gut
 from dmu.rdataframe           import utilities  as rut
 from dmu.pdataframe           import utilities  as put
-from dmu.logging.log_store    import LogStore
+from dmu                      import LogStore
 from zfit.data                import Data
 from zfit.interface           import ZfitSpace  as zobs
-from rx_common.types          import Trigger
-from rx_data.rdf_getter       import RDFGetter
+from rx_common                import Sample, Trigger
+from rx_data                  import RDFGetter
 from rx_selection             import selection  as sel
 from rx_misid.sample_splitter import SampleSplitter
 from rx_misid.sample_weighter import SampleWeighter
@@ -36,9 +36,9 @@ class DataPreprocessor(Cache):
     # ------------------------
     def __init__(
         self,
-        out_dir : str,
+        out_dir : Path,
         obs     : zobs,
-        sample  : str,
+        sample  : Sample,
         trigger : Trigger,
         q2bin   : str,
         wgt_cfg : DictConfig|None,
@@ -75,7 +75,7 @@ class DataPreprocessor(Cache):
         self._df_ctf = df_ctf
 
         self._is_sig = is_sig
-        self._rdf_uid= None if self._rdf is None else self._rdf.uid
+        self._rdf_uid= None if self._rdf is None else getattr(self._rdf, 'uid')
 
         super().__init__(
             out_path = out_dir,
@@ -88,7 +88,7 @@ class DataPreprocessor(Cache):
     # ------------------------
     def _get_rdf(
         self, 
-        out_dir     : str,
+        out_dir     : Path,
         cut         : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters

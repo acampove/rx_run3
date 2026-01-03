@@ -5,8 +5,8 @@ This module contains utility functions related to typing
 import numpy
 import pandas as pnd
 
-from typing import TypeVar, Type, cast
-from dmu    import LogStore
+from typing                import TypeVar, Type, cast
+from dmu.logging.log_store import LogStore
 
 log           = LogStore.add_logger('dmu:generic:typing')
 numeric_types =               (int, float, bool, numpy.integer, numpy.floating)

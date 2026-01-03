@@ -4,10 +4,10 @@ Module with tests for GofCalculator class
 import math
 from dataclasses              import dataclass
 
-import zfit
 import numpy
 import pytest
 
+from dmu.stats.zfit           import zfit
 from dmu.stats.gof_calculator import GofCalculator
 from dmu.logging.log_store    import LogStore
 
@@ -22,7 +22,7 @@ class Data:
     obs       = zfit.Space('x', limits=(-10, 10))
 #---------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     LogStore.set_level('dmu:stats:gofcalculator', 10)
 #---------------------------------------------
 def _get_model():

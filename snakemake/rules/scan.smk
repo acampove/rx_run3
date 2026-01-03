@@ -6,26 +6,26 @@ ntoys    = config['ntoys'  ]
 conf_val = 'rare/rkst/electron'
 kind_val = 'rare_rkst_electron'
 out_path = '.eos/lhcb/wg/RD/RX_run3/fits/data'
-name     = 'scan'
+name     = 'scan_001'
 
 # ---------------------
 rule all:
     input: 
         expand(
-            f'{out_path}/{name}_summary/{kind_val}/{{qsq}}/{{cmb}}_{{prc}}.png',
+            out_path + '/' + name + '_summary/' + kind_val + '/{qsq}/{cmb}_{prc}.png',
             cmb      = mva_cmb,
             prc      = mva_prc,
             qsq      = qsq_bin)
 # ---------------------
 rule collect:
-    input : f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{conf_val}/data/{{qsq}}/brem_x12/fit_linear.png'
-    output: f'{out_path}/{name}_summary/{kind_val}/{{qsq}}/{{cmb}}_{{prc}}.png'
+    input : out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png'
+    output: out_path + '/' + name + '_summary/' + kind_val + '/{qsq}/{cmb}_{prc}.png'
     wildcard_constraints:
         cmb = r'\d{3}', 
         prc = r'\d{3}', 
         qsq = '[a-z]+', 
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:3bfa7045a'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:68d56639b'
     shell:
         '''
         REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
@@ -37,7 +37,7 @@ rule collect:
         '''
 # ---------------------
 rule toys:
-    output: f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{conf_val}/data/{{qsq}}/brem_x12/fit_linear.png'
+    output: out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png'
     wildcard_constraints:
         cmb   = r'\d{3}', 
         prc   = r'\d{3}', 
@@ -47,7 +47,7 @@ rule toys:
         ntoys = ntoys,
         conf  = conf_val,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:3bfa7045a'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:68d56639b'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 

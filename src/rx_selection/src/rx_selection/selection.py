@@ -5,22 +5,20 @@ Module containing the selection function, which returns a dictionary of cuts
 import os
 import re
 import copy
-
-from pathlib             import Path
-from importlib.resources import files
-from contextlib          import contextmanager
-
 import yaml
-import ap_utilities.decays.utilities as aput
-from ROOT                   import RDF # type: ignore
-from dmu.generic            import hashing
-from dmu.logging.log_store  import LogStore
-from dmu.rdataframe         import utilities as rut
-from dmu.generic            import utilities as gut
 
-from rx_common    import info
-from rx_selection import truth_matching     as tm
-from rx_selection import version_management as vman
+from pathlib                import Path
+from contextlib             import contextmanager
+from importlib.resources    import files
+from ROOT                   import RDF # type: ignore
+from dmu                    import LogStore
+from dmu.generic            import hashing
+from dmu.rdataframe         import utilities          as rut
+from dmu.generic            import utilities          as gut
+from ap_utilities.decays    import utilities          as aput
+from rx_selection           import truth_matching     as tm
+from rx_selection           import version_management as vman
+from rx_common              import info
 
 log=LogStore.add_logger('rx_selection:selection')
 #-----------------------
@@ -351,15 +349,18 @@ def _save_cutflow(
     rdf : Root Dataframe
     cuts: Selection
     '''
-    log.info(f'Saving cutflow to: {path}')
-
     path.mkdir(parents=True, exist_ok=True)
 
     rep = rdf.Report()
     df  = rut.rdf_report_to_df(rep=rep)
-    df.to_markdown(path / 'cutflow.md')
 
-    gut.dump_json(data = cuts, path = path / 'cuts.yaml', exists_ok=True)
+    cf_path = path / 'cutflow.md'
+    log.info(f'Saving cutflow to: {cf_path}')
+    df.to_markdown(cf_path)
+
+    ct_path = path / 'cuts.yaml'
+    log.info(f'Saving cuts to: {ct_path}')
+    gut.dump_json(data = cuts, path = ct_path, exists_ok=True)
 #-----------------------
 def apply_full_selection(
     rdf      : RDF.RNode,
@@ -405,8 +406,55 @@ def apply_full_selection(
         log.debug('No UID found, not updating it')
         return rdf
 
-    log.info('Attaching updated UID')
-    rdf.uid = hashing.hash_object([uid, d_sel])
+    log.info('Attaching updated UID and selection to dataframe')
+    uid = hashing.hash_object([uid, d_sel])
+    setattr(rdf, 'uid',   uid)
+    setattr(rdf, 'sel', d_sel)
 
     return rdf
 # ----------------------
+def apply_selection(
+    rdf      : RDF.RNode,
+    cuts     : dict[str,str],
+    uid      : str |None = None,
+    out_path : Path|None = None) -> RDF.RNode:
+    '''
+    Will apply selection on dataframe.
+    IMPORTANT: This HAS to be done lazily or else the rest of the code will be slowed down.
+
+    Parameters
+    --------------------
+    rdf     : ROOT DataFrame
+    cuts    : Dictionary mapping cut label with expression
+    uid     : String symbolizing unique identifier for input dataframe
+    out_path: Directory path where selection and cutflow will be stored, optional
+
+    Returns
+    --------------------
+    Dataframe after full selection.
+    If uid was passed, the uid will be recalculated and attached to the dataframe.
+    '''
+
+    log.info(60 * '-')
+    log.info('Applying cuts')
+    log.info(60 * '-')
+    for cut_name, cut_value in cuts.items():
+        log.debug(f'{cut_name:<40}{cut_value}')
+        rdf = rdf.Filter(cut_value, cut_name)
+
+    if out_path:
+        _save_cutflow(path=out_path, rdf=rdf, cuts=cuts)
+    else:
+        log.warning('Not saving cutflow')
+
+    if uid is None: 
+        log.debug('No UID found, not updating it')
+        return rdf
+
+    log.info('Attaching updated UID and selection to dataframe')
+    uid = hashing.hash_object([uid, cuts])
+    setattr(rdf, 'uid',  uid)
+    setattr(rdf, 'sel', cuts)
+
+    return rdf
+

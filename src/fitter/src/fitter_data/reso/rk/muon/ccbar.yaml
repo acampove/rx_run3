@@ -1,4 +1,4 @@
-output_directory : /reso/rk/muon/ccbar/
+output_directory : reso/rk/muon/ccbar/
 ccbar_samples:
   - Bd_JpsiX_mm_eq_JpsiInAcc
   - Bu_JpsiX_mm_eq_JpsiInAcc

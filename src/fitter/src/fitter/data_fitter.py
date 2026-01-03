@@ -1,16 +1,17 @@
 '''
 Module containing DataFitter class
 '''
+from pathlib                   import Path
 from typing                    import Literal, overload
 from omegaconf                 import DictConfig, OmegaConf
-from dmu.logging.log_store     import LogStore
-from dmu.workflow.cache        import Cache
-from dmu.stats.fitter          import Fitter
+from dmu                       import LogStore
+from dmu.workflow              import Cache
+from dmu.stats                 import Fitter
 from dmu.stats                 import utilities as sut
 from zfit.exception            import ParamNameNotUniqueError
-from fitter.base_fitter        import BaseFitter
 from zfit.result               import FitResult           as zres
 from zfit.loss                 import ExtendedUnbinnedNLL as NLL
+from fitter.base_fitter        import BaseFitter
 
 log=LogStore.add_logger('fitter:data_fitter')
 # ----------------------
@@ -51,7 +52,7 @@ class DataFitter(BaseFitter, Cache):
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = f'{self._cfg.output_directory}/{name}',
+            out_path = Path(self._cfg.output_directory) / name,
             cfg      = cfg)
     # ----------------------
     def _get_full_nll(self) -> NLL:
@@ -72,7 +73,7 @@ class DataFitter(BaseFitter, Cache):
 
         return nll
     # ----------------------
-    def _save_constraints(self, out_dir : str) -> None:
+    def _save_constraints(self, out_dir : Path) -> None:
         '''
         Parameters
         -------------
@@ -87,7 +88,7 @@ class DataFitter(BaseFitter, Cache):
             cfg_cns = dict() # Need to store these constraints
                              # This will be None in no constraint case
 
-        out_path= f'{out_dir}/constraints.yaml'
+        out_path= out_dir / 'constraints.yaml'
         log.info(f'Saving constraints to: {out_path}')
 
         OmegaConf.save(config=cfg_cns, f=out_path, resolve=True)
@@ -106,7 +107,10 @@ class DataFitter(BaseFitter, Cache):
 
         Returns
         -------------
-        OmegaConf DictConfig with fitting parameters
+        Either:
+
+        - OmegaConf DictConfig with fitting parameters
+        - Zfit result object after freezing
         '''
         nll    = self._get_full_nll()
         l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
@@ -119,7 +123,7 @@ class DataFitter(BaseFitter, Cache):
         res.hesse(name='minuit_hesse')
 
         for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
-            out_path = f'{self._out_path}/{name}'
+            out_path = self._out_path / name
 
             log.info(f'Saving fit to: {out_path}')
 

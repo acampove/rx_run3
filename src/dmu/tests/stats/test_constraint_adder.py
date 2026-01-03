@@ -1,43 +1,40 @@
 '''
 This module contains tests for the ConstraintAdder class
 '''
-from typing import Union
 
 import math
-import zfit
 import tqdm
-import numpy
 import pandas as pnd
 import pytest
-from zfit.loss                  import ExtendedUnbinnedNLL, UnbinnedNLL 
-from omegaconf                  import OmegaConf, DictConfig
-from dmu.stats.constraint_adder import ConstraintAdder
-from dmu.stats                  import utilities as sut
-from dmu.generic                import utilities as gut
-from dmu.logging.log_store      import LogStore
 
-_CONSTRAINTS = [
-    {
-        'mu' : (5200., 10.),
-        'sg' : (  50., 20.),
-    },
-    {},
-]
+from dmu.stats.zfit import zfit
+from typing      import Union
+from zfit.loss   import ExtendedUnbinnedNLL, UnbinnedNLL 
+from omegaconf   import DictConfig
+from dmu.stats   import Constraint1D, ConstraintND
+from dmu.stats   import ConstraintAdder
+from dmu.stats   import utilities as sut
+from dmu.generic import utilities as gut
+from dmu.generic import rxran
+from dmu         import LogStore
+from dmu.stats.constraint import print_constraints
 
-log=LogStore.add_logger('dmu:stats:test_constraint_adder')
-Loss=Union[ExtendedUnbinnedNLL,UnbinnedNLL]
+log        = LogStore.add_logger('dmu:stats:test_constraint_adder')
+Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+Constraint = Union[Constraint1D, ConstraintND]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
     '''
     This will run before any test
     '''
-    numpy.random.seed(42)
-
     LogStore.set_level('dmu:stats:constraint_adder'     , 10)
     LogStore.set_level('dmu:stats:test_constraint_adder', 10)
+
+    with rxran.seed(42):
+        yield
 # ----------------------
-def _extract_observables(nll : Loss) -> pnd.DataFrame:
+def _extract_parameters(nll : Loss) -> pnd.DataFrame:
     '''
     Parameters
     -------------
@@ -45,101 +42,80 @@ def _extract_observables(nll : Loss) -> pnd.DataFrame:
 
     Returns
     -------------
-    Pandas series with observed value, parameter name and toy index
+    Pandas series with observed value and parameter name
     '''
-    df = pnd.DataFrame(columns=['Parameter', 'Value'])
+    data  = {'Parameter' : [], 'Value' : []}
+    s_par = nll.get_params()
+    for par in s_par:
+        value = float(par.value().numpy())
+        data['Parameter'].append(par.name)
+        data['Value'    ].append(value)
 
-    l_val = []
-    l_nam = []
-    for constraint in nll.constraints:
-        l_obs = constraint.observation
-        l_val+= [ obs.value().numpy()           for obs in l_obs ]
-        l_nam+= [ obs.name.removesuffix('_cns') for obs in l_obs ]
-
-    df['Parameter'] = l_nam
-    df['Value'    ] = l_val
+    df = pnd.DataFrame(data)
 
     return df
 # ----------------------
 def _validate(df : pnd.DataFrame, cfg : DictConfig) -> None:
     '''
+    Check that for each parameter the mean and std from the dataframe (toys)
+    is compatible (within 15%) to what is in the config
+
     Parameters
     -------------
     df : Dataframe with parameter name, observed value and toy inde
     cfg: Config with user defined information 
     '''
-    for par, df_par in df.groupby('Parameter'):
-        for kind, cfg_block in cfg.items():
-            log.debug(f'Kind: {kind}')
 
-            l_par = cfg_block.parameters
-            if par not in l_par:
-                continue
+    for tmp, df_par in df.groupby('Parameter'):
+        if tmp not in cfg:
+            continue
 
-            l_obs = cfg_block.observation
-            if kind == 'signal_shape':
-                mat   = cfg_block.cov
-                l_var = numpy.diag(mat)
-            else:
-                l_var = l_obs
+        toy_par   = str(tmp)
+        cfg_block = cfg[toy_par]
+        log.debug('')
+        log.debug(f'Parameter: {toy_par}')
 
-            d_par_obs = dict(zip(l_par, l_obs))
-            d_par_var = dict(zip(l_par, l_var))
+        tmp  = df_par['Value'].mean()
+        mean = float(tmp)
+        expc = cfg_block.mu
 
-            tmp  = df_par['Value'].mean()
-            mean = float(tmp)
-            expc = d_par_obs[par]
-            log.debug(f'Mean: {mean:.0f}/{expc}')
-            assert math.isclose(mean, expc, rel_tol=0.15) 
+        log.debug(f'Mean: {mean:.2f}/{expc:.2f}')
+        assert math.isclose(mean, expc, rel_tol=0.01) # Constrain and measurement should be the same
 
-            tmp  = df_par['Value'].var()
-            mean = float(tmp) # type:ignore
-            expc = d_par_var[par]
+        if   cfg_block.kind == 'GaussianConstraint':
+            expc = cfg_block.sg
+        elif cfg_block.kind == 'PoissonConstraint':
+            expc = math.sqrt(cfg_block.mu)
+        else:
+            raise ValueError(f'Invalid constraint: {cfg_block.kind}')
 
-            log.debug(f'Variance: {mean:.0f}/{expc}')
-            assert math.isclose(mean, expc, rel_tol=0.15) 
+        tmp  = df_par['Value'].std()
+        std  = float(tmp)
+
+        log.debug(f'STD : {std:.2f}/{expc:.2f}')
+        assert std < expc # Parameters distribution in data should be narrower than constrain
 # ----------------------
-def test_simple() -> None:
+def test_uncorrelated() -> None:
     '''
-    This is the simplest test of ConstraintAdder
+    Test multiple uncorrelated constraints
     '''
     nll = sut.get_nll(kind='s+b')
-    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
+    cns = gut.load_data(package='dmu_data', fpath='tests/stats/constraints/uncorrelated.yaml')
+    cons : list[Constraint] = [ Constraint1D(**data) for data in cns.values() ]
 
-    cad = ConstraintAdder(nll=nll, cns=cns)
+    cad = ConstraintAdder(nll=nll, constraints=cons)
     nll = cad.get_nll()
-
-    cov_gauss_out = nll.constraints[0].covariance.numpy()
-    cov_gauss_inp = numpy.array(cns.signal_shape.cov)
-
-    obs_gauss_out = numpy.array(nll.constraints[0].observation)
-    obs_gauss_inp = numpy.array(cns.signal_shape.observation)
-
-    obs_poiss_out = numpy.array(nll.constraints[1].observation)
-    obs_poiss_inp = numpy.array(cns.yields.observation)
-
-    assert numpy.isclose(cov_gauss_out, cov_gauss_inp, rtol=1e-5).all()
-    assert numpy.isclose(obs_gauss_out, obs_gauss_inp, rtol=1e-5).all()
-    assert numpy.isclose(obs_poiss_out, obs_poiss_inp, rtol=1e-5).all()
 # ----------------------
-@pytest.mark.parametrize('kind' , ['GaussianConstraint', 'PoissonConstraint'])
-@pytest.mark.parametrize('d_cns', _CONSTRAINTS)
-def test_dict_to_const(kind : str, d_cns : dict[str,tuple[float,float]]) -> None:
+def test_correlated() -> None:
     '''
-    This tests utility that converts python dictionary to
-    DictConfig used to hold constraints
+    Test constraints of correlated parameters
     '''
-
-    # TODO: Improve test with assertions
-    cns = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='test', kind=kind)
-    if cns is not None:
-        log.info('\n\n' + OmegaConf.to_yaml(cns))
-
     nll = sut.get_nll(kind='s+b')
-    cad = ConstraintAdder(nll=nll, cns=cns)
+    cns = gut.load_data(package='dmu_data', fpath='tests/stats/constraints/correlated.yaml')
+    cons : list[Constraint] = [ ConstraintND(**data) for data in cns.values() ]
+
+    cad = ConstraintAdder(nll=nll, constraints=cons)
     nll = cad.get_nll()
-    for _ in range(3):
-        cad.resample()
 # ----------------------
 @pytest.mark.timeout(100)
 def test_toy() -> None:
@@ -147,23 +123,31 @@ def test_toy() -> None:
     Tests toy constraint addition in a loop
     with timeout extended in order to profile
     '''
-    ntoy= 400
-    nll = sut.get_nll(kind='s+b')
-    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/constraint_adder.yaml')
-    sam = nll.data[0]
+    ntoy= 100
+    nll = sut.get_nll(kind='s+b', nentries = 100)
+    cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/uncorrelated.yaml')
+    cons : list[Constraint] = [ Constraint1D(kind=data.kind, name=data.name, mu=data.mu, sg=data.sg) for data in cns.values() ]
+
+    log.info('')
+    print_constraints(cons)
 
     mnm = zfit.minimize.Minuit()
-    cad = ConstraintAdder(nll=nll, cns=cns)
+    cad = ConstraintAdder(nll=nll, constraints=cons)
     nll = cad.get_nll()
 
-    l_df = []
+    l_df : list[pnd.DataFrame] = []
+    sam = nll.data[0]
     for _ in tqdm.trange(ntoy, ascii=' -'):
-        cad.resample()
+        for cns in cons:
+            cns.resample()
+
         sam.resample()
         mnm.minimize(nll)
 
-        df = _extract_observables(nll=nll)
+        df = _extract_parameters(nll=nll)
         l_df.append(df)
 
-    df = pnd.concat(l_df)
+    df = pnd.concat(l_df, ignore_index=True)
+
     _validate(df=df, cfg=cns)
+# ----------------------

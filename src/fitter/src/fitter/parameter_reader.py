@@ -6,8 +6,8 @@ import math
 import pandas as pnd
 from contextlib import contextmanager
 from pathlib    import Path
-from dmu        import Measurement
 from dmu        import LogStore
+from dmu.stats  import Measurement
 from rx_common  import Project, Trigger 
 from rx_common  import Qsq 
 from rx_common  import info

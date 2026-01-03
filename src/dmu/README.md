@@ -566,44 +566,6 @@ samples:
 
 # Math
 
-## Weighted data
-
-`Wdata` is a small class symbolizing weighted data that contains extra functionality. It can
-be used as:
-
-```python
-from dmu.stats.wdata        import Wdata
-
-arr_mass = numpy.random.normal(loc=0, scale=1.0, size=Data.nentries)
-arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=Data.nentries)
-
-# Make an instance
-wdata    = Wdata(data=arr_mass, weights=arr_wgt)
-
-# create a zfit dataset, if needed
-obs      = zfit.Space('obs', limits=(-3, +3))
-zdata    = wdata.to_zfit(obs=obs)
-
-# Add datasets
-wdata_1  = Wdata(data=arr_mass, weights=arr_wgt)
-wdata_2  = Wdata(data=arr_mass, weights=arr_wgt)
-wdata_3  = wdata_1 + wdata_2
-
-# Extract information from dataset
-
-wdata.sumw() # sum of weights
-wdata.size() # Number of entries
-
-# Update weights creating a new Wdata instance
-arr_wgt_new  = numpy.random.normal(loc=1, scale=0.2, size=Data.nentries)
-
-# New weights
-wdata_2 = wdata.update_weights(weights=arr_wgt_new, replace=True)
-
-# Multiply old weights by new ones and update
-wdata_3 = wdata.update_weights(weights=arr_wgt_new, replace=False)
-```
-
 ## PDFs
 
 ### Suppressing tensorflow messages from zfit import
@@ -974,7 +936,7 @@ A measurement is represented by the name of the quantity been measured, the valu
 This can be representing using the `Measurement` class like:
 
 ```python
-from dmu import Measurement
+from dmu.stats import Measurement
 
 # Add multiple measurements
 data = {'a' : (1., 1.), 'b' : (2., 1.)}

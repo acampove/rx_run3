@@ -2,51 +2,41 @@
 This module contains the ConstraintAdder class
 '''
 import numpy
-import zfit
+from dmu.stats.zfit        import zfit
+from dmu.logging.log_store import LogStore
 
-from typing          import Union, cast
-from omegaconf       import DictConfig, OmegaConf
+from typing          import Sequence, cast
+from omegaconf       import DictConfig
 from zfit            import Parameter
-from zfit.constraint import GaussianConstraint, PoissonConstraint
-from zfit.loss       import ExtendedUnbinnedNLL, UnbinnedNLL
-from dmu             import LogStore
+from zfit.loss       import ExtendedUnbinnedNLL
+from .constraint     import Constraint
 
-log        = LogStore.add_logger('dmu:stats:constraint_adder')
-Constraint = Union[GaussianConstraint, PoissonConstraint]
-Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+log = LogStore.add_logger('dmu:stats:constraint_adder')
 # ----------------------
 class ConstraintAdder:
     '''
     This class is in charge of:
 
-    - Transforming a config object into constrain objects
     - Using those constraints to update the NLL
     '''
-    _valid_constraints = ['GaussianConstraint', 'PoissonConstraint']
     # ----------------------
     def __init__(
         self, 
-        nll : Loss, 
-        cns : DictConfig | None):
+        nll         : ExtendedUnbinnedNLL, 
+        constraints : Sequence[Constraint]):
         '''
         Parameters
         -------------
-        nll: Zfit likelihood, before constraints added
-        cns: Configuration, describing 
-            - What variables to constraint
-            - What kind of constraint to use
-            - What the means of the contraints should be
-            - What the covariances should be
-
-            or None, for no constraints case
+        nll        : Zfit likelihood, before constraints added
+        constraints: List of constraint objects
         '''
-        self._nll = nll
-        self._cns = cns
+        self._nll         = nll
+        self._constraints = constraints
 
         self._d_par = self._get_params(nll=nll)
         self._d_cns : dict[str,Parameter] = {}
     # ----------------------
-    def _get_params(self, nll : Loss) -> dict[str, Parameter]:
+    def _get_params(self, nll : ExtendedUnbinnedNLL) -> dict[str, Parameter]:
         '''
         Parameters
         -------------
@@ -79,27 +69,6 @@ class ConstraintAdder:
 
         return l_par
     # ----------------------
-    def _resample_block(self, cfg : DictConfig) -> None:
-        '''
-        Updates observation values for parameters of a given block of constraints
-        '''
-        mu  = cfg.observation
-        if cfg.kind == 'PoissonConstraint':
-            arr = numpy.random.poisson(mu, size=len(mu))
-            # Cannot use a lambda=0 for a Poisson distribution
-            # Use very small lambda, if RNG gives zero
-            arr = numpy.where(arr == 0, 1e-2, arr)
-            self._update_observations(values=arr, names=cfg.parameters)
-            return
-
-        cov = cfg.cov
-        if cfg.kind == 'GaussianConstraint':
-            arr = numpy.random.multivariate_normal(mu, cov, size=1)
-            self._update_observations(values=arr[0], names=cfg.parameters)
-            return
-
-        raise ValueError(f'Toy observation not defined for: {cfg.kind}')
-    # ----------------------
     def _update_observations(self, values : numpy.ndarray, names : list[str]) -> None:
         '''
         This method sets the values of the constraining parameters from resampled values
@@ -118,160 +87,23 @@ class ConstraintAdder:
             par = self._d_cns[name]
             par.set_value(value)
     # ----------------------
-    def _get_gaussian_constraint(self, cfg : DictConfig) -> GaussianConstraint:
-        '''
-        Parameters
-        -------------
-        cfg  : Configuration specifying how to build the Gaussian constraint
-        mode : Controls the observation value. Either toy or real.
-
-        Returns
-        -------------
-        Zfit gaussian constrain
-        '''
-        l_name    = cfg.parameters
-        l_obs_par = self._get_observation(cfg=cfg)
-        l_obs_val = [ par.value for par in l_obs_par ]
-        self._d_cns.update(dict(zip(l_name, l_obs_par)))
-
-        log.verbose('Creating Gaussian constraint')
-        log.verbose(f'Parameters :\n {l_name}')
-        log.verbose(f'Observation:\n {l_obs_val}')
-        log.verbose(f'Covariance :\n {cfg.cov}')
-
-        l_par = [ self._d_par[name] for name in cfg.parameters ]
-        cns   = zfit.constraint.GaussianConstraint(
-            params      = l_par, 
-            observation = l_obs_par,
-            cov         = cfg.cov)
-
-        return cns
-    # ----------------------
-    def _get_poisson_constraint(self, cfg : DictConfig) -> PoissonConstraint:
-        '''
-        Parameters
-        -------------
-        cfg  : Configuration needed to build constraint
-
-        Returns
-        -------------
-        Zfit constraint
-        '''
-        l_name    = cfg.parameters
-        l_obs_par = self._get_observation(cfg=cfg)
-        l_obs_val = [ obs.value for obs in l_obs_par ]
-        self._d_cns.update(dict(zip(l_name, l_obs_par)))
-
-        log.verbose('Creating Poisson constraint')
-        log.verbose(f'Parameters :\n{l_name}')
-        log.verbose(f'Observation:\n{l_obs_val}')
-
-        l_par = [ self._d_par[name] for name in cfg.parameters ]
-        cns   = zfit.constraint.PoissonConstraint(
-            params      = l_par, 
-            observation = l_obs_par)
-
-        return cns
-    # ----------------------
-    def _create_constraint(self, cfg : DictConfig) -> Constraint:
-        '''
-        Parameters
-        -------------
-        cfg : Dictionary storing constraint information 
-
-        Returns
-        -------------
-        Zfit constrain object
-        '''
-        if cfg.kind == 'GaussianConstraint':
-            return self._get_gaussian_constraint(cfg=cfg)
-
-        if cfg.kind == 'PoissonConstraint':
-            return self._get_poisson_constraint(cfg=cfg)
-
-        raise ValueError(f'Invalid constraint type: {cfg.kind}')
-    # ----------------------
-    @classmethod
-    def dict_to_cons(
-        cls,
-        d_cns : dict[str,tuple[float,float]], 
-        name  : str,
-        kind  : str) -> DictConfig | None:
-        '''
-        Parameters
-        -------------
-        d_cns: Dictionary mapping variable name to tuple with value and error
-        name : Name of block to which these constraints belong, e.g. shape
-        kind : Type of constraints, e.g. GaussianConstraint, PoissonConstraint
-
-        Returns
-        -------------
-        Config object or None, if no constraints were passed
-        '''
-
-        if kind not in cls._valid_constraints:
-            raise ValueError(f'Invalid kind {kind} choose from: {cls._valid_constraints}')
-
-        if not d_cns:
-            return None
-
-        data = None
-        if kind == 'PoissonConstraint':
-            data = {
-                'kind'       : kind,
-                'parameters' : list(d_cns),
-                'observation': [ val[0] for val in d_cns.values() ]
-            }
-
-        if kind == 'GaussianConstraint':
-            npar = len(d_cns)
-            cov  = []
-            for ival, val in enumerate(d_cns.values()):
-                zeros       = npar   * [0.]
-                var         = val[1] ** 2
-                zeros[ival] = var
-
-                cov.append(zeros)
-
-            data = {
-                'kind'       : kind,
-                'parameters' : list(d_cns),
-                'observation': [ val[0] for val in d_cns.values() ],
-                'cov'        : cov,
-            }
-
-        if data is None:
-            raise ValueError('Could not create data needed for constraint object')
-
-        return OmegaConf.create({name : data})
-    # ----------------------
-    def get_nll(self) -> Loss:
+    def get_nll(self) -> ExtendedUnbinnedNLL:
         '''
         Returns
         -------------
         Likelihood with constrain added
         '''
-        if self._cns is None:
+        if self._constraints is None:
             log.info('No constraints found, using original (unconstrained) NLL')
             return self._nll
 
-        l_const = [ self._create_constraint(cfg = cfg) for cfg in self._cns.values() ]
+        l_const = [ 
+            cns.zfit_cons(holder = self._nll) # type: ignore
+            for cns in self._constraints ]
 
-        nll = self._nll.create_new(constraints=l_const) # type: ignore
+        nll = self._nll.create_new(constraints=l_const)
         if nll is None:
             raise ValueError('Could not create a new likelihood')
 
         return nll
-    # ----------------------
-    def resample(self) -> None:
-        '''
-        Will update the parameters associated to constraint
-        '''
-        if self._cns is None:
-            log.debug('Not resampling constraints for case without constraints')
-            return
-
-        for name, cfg_block in self._cns.items():
-            log.verbose(f'Resampling block: {name}')
-            self._resample_block(cfg=cfg_block)
 # ----------------------

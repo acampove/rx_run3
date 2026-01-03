@@ -1,18 +1,20 @@
 '''
 This module contains BaseFitter
 '''
-from typing                   import cast
+import yaml
 import textwrap
 
+from pathlib                  import Path
+from typing                   import cast
 from omegaconf                import OmegaConf, DictConfig
-from dmu.stats.fitter         import Fitter
-from dmu.generic              import utilities  as gut
+from dmu                      import LogStore
+from dmu.stats                import Fitter
 from dmu.stats                import utilities  as sut
-from dmu.logging.log_store    import LogStore
-from rx_common.types          import Trigger
 from zfit.result              import FitResult  as zres
 from zfit.data                import Data       as zdata
 from zfit.pdf                 import BasePDF    as zpdf
+from rx_common                import Sample
+from rx_common                import Trigger
 
 log=LogStore.add_logger('fitter:base_fitter')
 # ------------------------
@@ -28,11 +30,11 @@ class BaseFitter:
         '''
         Used to hold attributes passed from derived classes
         '''
-        self._sample  : str     = ''
-        self._trigger : Trigger = Trigger.uninitialized
         self._project : str     = ''
         self._q2bin   : str     = ''
         self._sig_yld : str     = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
+        self._trigger : Trigger = Trigger.uninitialized
+        self._sample  : Sample  = Sample.undefined
     # ------------------------
     def _fit(
         self,
@@ -109,7 +111,42 @@ class BaseFitter:
 
         return brem_cuts
     # --------------------------
-    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str]:
+    def _get_selection_diff(self, ini : dict[str,str], fit : dict[str,str]) -> str:
+        '''
+        Parameters
+        -----------------
+        ini: Initial (default) selection
+        fit: Selection used for fit
+
+        Returns
+        -----------------
+        Semicolon separated string with cuts that
+
+        - Were modified from values in default
+        - Were added on top of the default
+
+        Cuts are never removed explicitly, just changed, e.g. mva > 0.3 ---> (1)
+        '''
+        s_ini = set(ini)
+        s_fit = set(fit)
+
+        s_intersection = s_ini & s_fit
+        diff   = []
+        for key in s_intersection:
+            if ini[key] == fit[key]:
+                continue
+
+            diff.append(fit[key])
+
+        for key in s_fit:
+            if key in s_ini:
+                continue
+
+            diff.append(fit[key])
+
+        return '; '.join(diff)
+    # --------------------------
+    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str,str]:
         '''
         Parameters
         --------------
@@ -121,35 +158,28 @@ class BaseFitter:
         --------------
         Tuple with:
 
-        - Multiple lines with cuts that were used for fit, but are not default, plus MVA cut
+        - Selection used for fit
+        - Difference between fit selection and default 
         - Brem categories choice
         '''
         # For components like combinatorial, there is no MC sample
         # Therefore the selection or brem category does not make sense
-        if self._sample == 'NA':
-            return '', ''
+        if self._sample == Sample.undefined:
+            return '', '', ''
 
-        cuts_def  = selection.default
-        cuts_fit  = selection.fit
-        brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
+        cuts_ini : dict[str,str] = OmegaConf.to_container(selection.default) # type: ignore
+        cuts_fit : dict[str,str] = OmegaConf.to_container(selection.fit)     # type: ignore
 
-        l_expr = []
-        # Collect all the cuts that are different
-        # from default selection
-        for name, fit_expr in cuts_fit.items():
-            if name not in cuts_def:
-                l_expr.append(fit_expr)
-                continue
+        sel_dif  = self._get_selection_diff(ini = cuts_ini, fit = cuts_fit)
 
-            def_expr = cuts_def[name]
-            if fit_expr != def_expr:
-                l_expr.append(fit_expr)
+        try:
+            brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
+        except Exception:
+            raise ValueError('Cannot retrieve brem cut string from cuts dictionary')
 
-        # Remove differences in brem, will be done separately
-        l_expr_no_brem = [ expr for expr in l_expr if 'nbrem' not in expr ]
-        new_cuts       = '\n'.join(l_expr_no_brem)
+        sel_fit = yaml.dump(cuts_fit)
 
-        return new_cuts, brem_cuts
+        return sel_fit, sel_dif, brem_cuts
     # --------------------------
     def _entries_from_data(self, data : zdata) -> int:
         '''
@@ -176,7 +206,7 @@ class BaseFitter:
         self,
         data      : zdata,
         res       : zres|None,
-        selection : DictConfig) -> tuple[str,str]:
+        selection : DictConfig) -> tuple[str,str,str]:
         '''
         Parameters
         --------------
@@ -189,23 +219,24 @@ class BaseFitter:
         Tuple with:
 
         - Title for fit plot
+        - Text with full selection used in fit
         - Text that goes inside plot with selection information
         '''
-        nentries          = self._entries_from_data(data=data)
-        sel_txt, brem_txt = self._get_selection_text(selection=selection)
+        nentries                   = self._entries_from_data(data=data)
+        sel_def, sel_dif, brem_txt = self._get_selection_text(selection=selection)
 
         sensitivity = self._get_sensitivity(res=res)
         title       = f'$\\delta={sensitivity:.2f}$%; Entries={nentries:.0f}; Brem:{brem_txt}'
 
-        return title, sel_txt
+        return title, sel_def, sel_dif
     # ------------------------
     def _save_fit(
         self,
         cut_cfg  : DictConfig,
         plt_cfg  : DictConfig,
-        out_path : str,
-        model    : zpdf|None,
-        res      : zres|None,
+        out_path : Path,
+        model    : zpdf | None,
+        res      : zres | None,
         data     : zdata,
         d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
         '''
@@ -224,13 +255,15 @@ class BaseFitter:
         '''
         # If no entries were present
         # There will not be PDF
-        title, text         = self._get_text(data=data, res=res, selection=cut_cfg)
-        text                = '\n'.join(textwrap.wrap(text, width=40))
-        plt_cfg['title'   ] = title
-        plt_cfg['ext_text'] = text
+        title, sel_fit, sel_dif = self._get_text(data=data, res=res, selection=cut_cfg)
+        text                    = '\n'.join(textwrap.wrap(sel_dif, width=40))
+        plt_cfg['title'   ]     = title
+        plt_cfg['ext_text']     = text
 
-        sel_path = f'{out_path}/selection.yaml'
-        gut.dump_json(cut_cfg, sel_path, exists_ok=True)
+        sel_path = out_path / 'selection.yaml'
+        out_path.mkdir(parents = True, exist_ok = True)
+        with open(sel_path, 'w') as ofile:
+            ofile.write(sel_fit)
 
         sut.save_fit(
             data   = data,

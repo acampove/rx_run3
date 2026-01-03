@@ -51,8 +51,14 @@ on what we need and when.
 Currently, the docker container is hosted [here](https://gitlab.cern.ch/LHCb-RD/cal-rx-run3/container_registry/26425) and it can be used with:
 
 ```bash
-podman pull gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v5 # Change to latest tagged version
-podman run -it --privileged --name rx_run3_001 -v $ANADIR:/eos/lhcb/wg/RD/RX_run3 rx_run3:v5
+podman pull gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v6.4 # Change to latest tagged version
+podman run \
+    -it --rm --userns=host \
+    -v $XDG_RUNTIME_DIR/krb5cc:$XDG_RUNTIME_DIR/krb5cc:Z \
+    -e KRB5CCNAME=$XDG_RUNTIME_DIR/krb5cc \
+    -e ANADIR=$ANADIR \
+    -v $ANADIR:$ANADIR \
+    gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v6.4 bash
 ```
 
 where `-v` in the last step will expose `ANADIR` (the path to the inputs) to the container.

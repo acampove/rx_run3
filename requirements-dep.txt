@@ -71,6 +71,8 @@ cachecontrol==0.14.4
     # via schema-salad
 certifi==2025.11.12
     # via requests
+cffi==2.0.0
+    # via -r requirements-dep.in
 cfgv==3.5.0
     # via pre-commit
 charset-normalizer==3.4.4
@@ -521,6 +523,8 @@ pyarrow==22.0.0
     # via
     #   -r requirements-dep.in
     #   dask
+pycparser==2.23
+    # via cffi
 pydantic==2.12.5
     # via
     #   -r requirements-dep.in

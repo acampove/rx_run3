@@ -1,4 +1,4 @@
-output_directory : /rare/electron/ccbar
+output_directory : rare/electron/ccbar
 ccbar_samples:
   - Bd_JpsiX_ee_eq_JpsiInAcc
   - Bu_JpsiX_ee_eq_JpsiInAcc

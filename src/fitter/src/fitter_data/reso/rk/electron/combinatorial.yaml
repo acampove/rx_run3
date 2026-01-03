@@ -7,11 +7,8 @@ output_directory : reso/rk/electron/combinatorial
 categories:
   main:
     models :
-      low     : [exp]
-      central : [exp]
       jpsi    : [exp]
       psi2    : [exp]
-      high    : [exp]
 low:
   <<: *settings
 central:

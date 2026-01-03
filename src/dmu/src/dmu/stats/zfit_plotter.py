@@ -1,13 +1,11 @@
 '''
 Module containing plot class, used to plot fits
 '''
-# pylint: disable=too-many-instance-attributes, too-many-arguments
 
 import math
 import warnings
 import pprint
 
-import zfit
 import hist
 import mplhep
 import tensorflow            as tf
@@ -20,6 +18,9 @@ from zfit.data              import Data       as zdat
 from zfit.result            import FitResult  as zres
 
 import dmu.generic.utilities as gut
+import dmu.stats.utilities   as sut
+
+from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('dmu:zfit_plotter')
@@ -46,6 +47,8 @@ class ZFitPlotter:
         '''
 
         self.obs               = model.space
+        self._obs_name         = sut.name_from_obs(obs = self.obs) 
+
         self.data              = self._data_to_zdata(model.space, data, weights)
         min, max               = self.obs.limits
         self.lower, self.upper = min[0][0], max[0][0]
@@ -108,7 +111,7 @@ class ZFitPlotter:
                 nbins,
                 self.lower,
                 self.upper,
-                name       =self.obs.obs[0],
+                name       =self._obs_name,
                 underflow  =False,
                 overflow   =False)
 
@@ -211,7 +214,7 @@ class ZFitPlotter:
     #----------------------------------------
     def _plot_data(self, ax, nbins=100, l_range=None):
         dat, wgt  = self._get_range_data(l_range, blind=True)
-        data_hist = hist.Hist.new.Regular(nbins, self.lower, self.upper, name=self.obs.obs[0], underflow=False, overflow=False)
+        data_hist = hist.Hist.new.Regular(nbins, self.lower, self.upper, name=self._obs_name, underflow=False, overflow=False)
         data_hist = data_hist.Weight()
         data_hist.fill(dat, weight=wgt)
 
@@ -226,7 +229,7 @@ class ZFitPlotter:
     def _pull_hist(self, pdf_hist, nbins, data_yield, l_range=None):
         pdf_values= pdf_hist.values()
         dat, wgt  = self._get_range_data(l_range, blind=False)
-        data_hist = hist.Hist.new.Regular(nbins, self.lower, self.upper, name=self.obs.obs[0], underflow=False, overflow=False)
+        data_hist = hist.Hist.new.Regular(nbins, self.lower, self.upper, name=self._obs_name, underflow=False, overflow=False)
         data_hist = data_hist.Weight()
         data_hist.fill(dat, weight=wgt)
 
@@ -265,7 +268,7 @@ class ZFitPlotter:
         return pull_hist, pull_errors
     #----------------------------------------
     def _plot_pulls(self, ax, nbins, data_yield, l_range):
-        obs_name   = self.obs.obs[0]
+        obs_name   = self._obs_name
         binning    = zfit.binned.RegularBinning(bins=nbins, start=self.lower, stop=self.upper, name=obs_name)
         binned_obs = zfit.Space(obs_name, binning=binning)
         binned_pdf = zfit.pdf.BinnedFromUnbinnedPDF(self.total_model, binned_obs)
@@ -285,11 +288,11 @@ class ZFitPlotter:
         if not hasattr(self._result, 'gof'):
             return None
 
-        chi2, ndof, pval = self._result.gof
+        chi2, ndof, pval = getattr(self._result, 'gof')
 
         rchi2 = chi2/ndof
 
-        return f'$\chi^2$/NdoF={chi2:.2f}/{ndof}={rchi2:.2f}\np={pval:.3f}'
+        return fr'$\chi^2$/NdoF={chi2:.2f}/{ndof}={rchi2:.2f}\np={pval:.3f}'
     #----------------------------------------
     def _get_text(self, ext_text):
         gof_text = self._get_zfit_gof()

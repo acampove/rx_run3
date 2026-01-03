@@ -125,12 +125,13 @@ class ToyPlotter:
         and with the generation value
         '''
         cfg_gen = cfg.generated
-        cfg_gen = copy.deepcopy(cfg_gen)
 
         for par_name in self._d_tex:
-            cfg_gen.x = self._d_gen[par_name] 
+            cfg_gen_par          = copy.deepcopy(cfg_gen)
+            cfg_gen_par.x        = self._d_gen[par_name] 
+            cfg_gen_par['label'] = f'{cfg_gen_par.label}={cfg_gen_par.x:.2f}'
 
-            cfg.plots[f'{par_name}_val']['vline'] = cfg_gen
+            cfg.plots[f'{par_name}_val']['vline'] = cfg_gen_par
 
         return cfg
     # ----------------------

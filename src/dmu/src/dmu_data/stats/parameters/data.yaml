@@ -11,11 +11,11 @@ hypexp:
   ap:
     val : 0.020
     low : 0
-    high: 0.10
+    high: 0.30
   bt:
     val : 0.002
     low : 0.0001
-    high: 0.003
+    high: 0.009
 modexp:
   mu:
     val : 4300
@@ -76,7 +76,7 @@ cbr:
 suj:
   mu:
     val : 4000
-    low : 3500
+    low : 3000
     high: 5000
   sg:
     val : 10

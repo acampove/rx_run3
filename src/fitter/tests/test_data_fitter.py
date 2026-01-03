@@ -3,12 +3,14 @@ Module used to test DataFitter
 '''
 import pytest
 
+from typing          import Final
 from pathlib         import Path
 from omegaconf       import OmegaConf
 from dmu.stats.zfit  import zfit
+from dmu.stats       import Constraint1D
+from dmu.stats       import utilities        as sut
 from dmu.stats       import constraint_adder as cad 
 from dmu.stats       import gof_calculator   as goc
-from dmu.stats       import utilities        as sut
 from dmu.generic     import utilities        as gut
 from dmu.workflow    import Cache
 from dmu             import LogStore
@@ -16,17 +18,18 @@ from fitter          import DataFitter
 from fitter          import ToyMaker
 from fitter          import ToyPlotter
 
-log=LogStore.add_logger('fitter:test_data_fitter')
-
-_sel_cfg = {
+_SEL_CFG : Final[dict] = {
     'selection' : {'default' : {}, 'fit' : {}}
 }
 
-_constraints : dict[str,tuple[float,float]]= {
-    'mu' : (5280, 10),
-    'sg' : (  10,  1),
+_CONSTRAINTS : Final[dict] = {
+    'name' : 'mu',
+    'kind' : 'GaussianConstraint',
+    'mu'   : 5280,
+    'sg'   :   10,
 }
 
+log=LogStore.add_logger('fitter:test_data_fitter')
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -43,7 +46,7 @@ def test_single_region(tmp_path : Path) -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
@@ -68,7 +71,7 @@ def test_two_regions(tmp_path : Path) -> None:
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
         'region_002' : (nll_002, sel_cfg),
@@ -101,7 +104,7 @@ def test_two_regions_common_pars(tmp_path : Path) -> None:
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {
         'region_001' : (nll_001, sel_cfg),
         'region_002' : (nll_002, sel_cfg),
@@ -124,15 +127,14 @@ def test_with_constraints(tmp_path : Path) -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
+    cons    = Constraint1D(**_CONSTRAINTS)
 
-    cns     = cad.ConstraintAdder.dict_to_cons(d_cns=_constraints, name='test', kind='GaussianConstraint')
-    adr     = cad.ConstraintAdder(nll=nll, cns=cns)
+    adr     = cad.ConstraintAdder(nll=nll, constraints = [cons])
     nll     = adr.get_nll() 
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
-    cfg.constraints = cns
 
     with Cache.cache_root(path = tmp_path):
         ftr = DataFitter(
@@ -156,7 +158,7 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    sel_cfg = OmegaConf.create(obj=_sel_cfg)
+    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {'signal_region' : (nll, sel_cfg)}
 
     fit_cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
@@ -170,7 +172,7 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
         toy_cfg.ntoys = ntoys
-        mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg)
+        mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg, cns = [])
         df  = mkr.get_parameter_information()
 
         plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')

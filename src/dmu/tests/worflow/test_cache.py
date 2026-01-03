@@ -32,7 +32,7 @@ class Tester(Cache):
         add_dir: If true, will produce output with directory
         '''
         super().__init__(
-            out_path=name,
+            out_path=Path(name),
             val     =val,
             nval    =nval)
 

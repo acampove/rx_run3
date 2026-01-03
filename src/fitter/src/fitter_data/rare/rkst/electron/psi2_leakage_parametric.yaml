@@ -1,20 +1,13 @@
-output_directory : rare/rkst/electron/signal 
+output_directory : rare/rkst/electron/psi2_leakage
 categories:
-  brem_one : 
-    selection : 
-      brem1 : nbrem == 1
+  main:
     model :
       - dscb
-  brem_two :
-    selection :
-      brem2 : nbrem == 2
-    model :
-      - dscb
-sample        : Bd_Kstee_eq_btosllball05_DPC
-shared        :
+sample : Bd_psi2SKst_ee_eq_DPC
+shared :
   - mu
   - sg
-float         :
+float  :
   - mu
   - sg
 reparametrize : {}

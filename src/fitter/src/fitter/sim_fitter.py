@@ -2,25 +2,25 @@
 Module with SimFitter class
 '''
 
-from typing import cast
-
 import yaml
+
+from pathlib                  import Path
+from typing                   import cast
 from omegaconf                import DictConfig, OmegaConf
-
-from dmu.stats.zfit           import zfit
 from dmu.stats                import utilities    as sut
-from dmu.workflow.cache       import Cache
-from dmu.stats.model_factory  import ModelFactory
-from dmu.logging.log_store    import LogStore
+from dmu.stats                import ModelFactory
+from dmu.stats.zfit           import zfit
+from dmu.workflow             import Cache
+from dmu                      import LogStore
 
-from rx_efficiencies.decay_names import DecayNames
+from rx_efficiencies          import DecayNames
+from rx_common                import Trigger, Sample
 from rx_selection             import selection        as sel
-from rx_common.types          import Trigger
 from zfit.data                import Data             as zdata
 from zfit.pdf                 import BasePDF          as zpdf
-from zfit.param               import Parameter
 from zfit.interface           import ZfitSpace        as zobs
 from zfit.result              import FitResult        as zres
+from zfit.param               import Parameter
 from fitter.base_fitter       import BaseFitter
 from fitter.data_preprocessor import DataPreprocessor
 from fitter.prec              import PRec
@@ -55,7 +55,7 @@ class SimFitter(BaseFitter, Cache):
         log.info(f'Fitting {component}/{name}')
         log.info(20 * '-')
 
-        self._sample    = DecayNames.sample_from_decay(component, fall_back='NA')
+        self._sample    = Sample(DecayNames.sample_from_decay(component, fall_back='undefined'))
         self._name      = name
         self._category  = self._get_category(cfg=cfg)
         self._component = component
@@ -63,7 +63,7 @@ class SimFitter(BaseFitter, Cache):
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._obs       = obs
-        self._base_path = f'{cfg.output_directory}/{name}/{trigger}_{q2bin}'
+        self._base_path = Path(f'{cfg.output_directory}/{name}/{trigger}_{q2bin}')
 
         log.debug(f'For component {self._component} using output: {self._base_path}')
 
@@ -274,7 +274,7 @@ class SimFitter(BaseFitter, Cache):
                 data     = data,
                 model    = None,
                 res      = None,
-                out_path = f'{self._out_path}/{category}')
+                out_path = self._out_path / 'category')
 
             return None, 0, None
 
@@ -286,7 +286,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data,
             model    = model,
             res      = res,
-            out_path = f'{self._out_path}/{category}')
+            out_path = self._out_path / 'category')
 
         cres  = sut.zres_to_cres(res=res)
         model = self._fix_tails(pdf=model, pars=cres)
@@ -471,7 +471,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data,
             model    = pdf,
             res      = None,
-            out_path = f'{self._out_path}/{self._category}')
+            out_path = self._out_path / self._category)
 
         return pdf
     # ------------------------

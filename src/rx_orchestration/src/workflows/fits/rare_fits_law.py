@@ -50,21 +50,6 @@ class Fit(law.Task):
 
         return self._cfg
     # ----------------------
-    def _get_mva_cut(self, args : DictConfig) -> str:
-        '''
-        Parameters
-        -------------
-        args: Configuration needed for fit
-
-        Returns
-        -------------
-        string identifying MVA WP, e.g. 050_050
-        '''
-        cmb_wp = args.mva_cmb * 100
-        prc_wp = args.mva_prc * 100
-
-        return f'{cmb_wp:03.0f}_{prc_wp:03.0f}'
-    # -------------------------------------
     def output(self) -> list[law.LocalFileTarget]:
         '''
         Returns
@@ -75,7 +60,7 @@ class Fit(law.Task):
         args    = cfg.args
 
         ana_dir = Path(os.environ['ANADIR'])
-        mva_cut = self._get_mva_cut(args=args)
+        mva_cut = f'{args.mva_cmb:03}_{args.mva_prc:03}'
 
         if args.fit_cfg.endswith('muon'):
             l_brem = ['brem_0xx']
@@ -87,7 +72,7 @@ class Fit(law.Task):
         l_output = []
         for brem in l_brem:
             name    = 'all' if args.block == -1 else f'b{args.block}'
-            out_dir = ana_dir / f'fits/data/{mva_cut}_{name}/{args.fit_cfg}/data/{args.q2bin}/{brem}'
+            out_dir = ana_dir / f'fits/data/{args.group}/{mva_cut}_{name}/{args.fit_cfg}/data/{args.q2bin}/{brem}'
             out_dir.mkdir(parents=True, exist_ok=True)
 
             l_output += [ law.LocalFileTarget(out_dir / name) for name in cfg.outputs ]

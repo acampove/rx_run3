@@ -8,6 +8,7 @@ from omegaconf         import OmegaConf, DictConfig
 from fitter.fit_config import FitConfig
 from dmu               import LogStore
 from dmu.generic       import utilities as gut
+from rx_common.types   import Qsq
 
 log=LogStore.add_logger('fitter:test_fit_config')
 # ----------------------
@@ -34,7 +35,13 @@ def test_replace():
     new     = '7634244'
     fit_cfg = _get_config(name = org)
 
-    cfg = FitConfig(name = 'test_replace', fit_cfg = fit_cfg)
+    cfg = FitConfig(
+        name    = 'test_replace', 
+        group   = 'tests',
+        mva_cmb = 0.,
+        mva_prc = 0.,
+        q2bin   = Qsq.central,
+        fit_cfg = fit_cfg)
     cfg.replace(substring=org, value=new)
 
     assert cfg.fit_cfg == _get_config(name=new)
@@ -47,7 +54,14 @@ def test_save(tmp_path : Path):
     fit_cfg = _get_config(name = name)
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
-        cfg = FitConfig(name = name, fit_cfg = fit_cfg)
+        cfg = FitConfig(
+            name    = name, 
+            group   = 'tests',
+            mva_cmb = 0.,
+            mva_prc = 0.,
+            q2bin   = Qsq.central,
+            fit_cfg = fit_cfg,
+        )
         cfg.save(kind = 'test')
 
     assert cfg.fit_cfg == _get_config(name=name)

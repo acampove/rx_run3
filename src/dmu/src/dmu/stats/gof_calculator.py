@@ -1,17 +1,17 @@
 '''
 Module holding GofCalculator class
 '''
-from contextlib import contextmanager
-from functools import lru_cache
 
-import zfit
 import numpy
 import pandas as pnd
 
 from scipy                  import stats
+from dmu.stats.zfit         import zfit
+from dmu.logging.log_store  import LogStore
+from contextlib             import contextmanager
+from functools              import lru_cache
 from zfit.core.basepdf      import BasePDF   as zpdf
 from zfit.core.parameter    import Parameter as zpar
-from dmu.logging.log_store  import LogStore
 
 log = LogStore.add_logger('dmu:stats:gofcalculator')
 # ------------------------

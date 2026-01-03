@@ -2,38 +2,38 @@
 Script used to interact with DataFitter tool
 and run fits
 '''
+# To prevent crash
+import ROOT
 
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 import argparse
 
-from typing                     import Final
-from contextlib                 import ExitStack
-from omegaconf                  import DictConfig
-from dmu.stats.parameters       import ParameterLibrary as PL
-from dmu.generic                import utilities as gut
-from dmu.stats                  import utilities as sut
-from dmu.stats.constraint_adder import ConstraintAdder
-from dmu.workflow.cache         import Cache
-from dmu.logging.log_store      import LogStore
-from zfit.loss                  import ExtendedUnbinnedNLL
+from typing        import Final
+from contextlib    import ExitStack
+from omegaconf     import DictConfig
+from dmu.stats     import ParameterLibrary as PL
+from dmu.generic   import utilities as gut
+from dmu.stats     import utilities as sut
+from dmu.stats     import ConstraintAdder
+from dmu.stats     import Constraint
+from dmu.workflow  import Cache
+from dmu           import LogStore
+from zfit.loss     import ExtendedUnbinnedNLL
+from rx_data       import RDFGetter
+from rx_selection  import selection as sel
+from rx_common     import Sample, info
 
-from fitter.fit_config         import FitConfig
-from fitter.constraint_reader  import ConstraintReader
-from fitter.data_fitter        import DataFitter
-from fitter.likelihood_factory import LikelihoodFactory
-from fitter.misid_constraints  import MisIDConstraints 
-from fitter.toy_maker          import ToyMaker
-from fitter.constraint         import GaussianConstraint, PoissonConstraint, print_constraints
-from rx_data.rdf_getter        import RDFGetter
-from rx_selection              import selection as sel
-from rx_common                 import info
+from fitter        import FitConfig
+from fitter        import ConstraintReader
+from fitter        import DataFitter
+from fitter        import LikelihoodFactory
+from fitter        import ToyMaker
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 
-Constraint               = GaussianConstraint | PoissonConstraint
-DATA_SAMPLE : Final[str] = 'DATA_24_*'
+DATA_SAMPLE : Final[Sample] = Sample.data_24 
 # ----------------------
 def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
     '''
@@ -43,7 +43,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConf
     '''
     if args is None:
         parser = argparse.ArgumentParser(description='Script used to fit RX data')
-        parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[1,2,3,4,5,6,7,8], default=-1)
+        parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[-1,1,2,3,4,5,6,7,8], default=-1)
         parser.add_argument('-g', '--group'  , type=str  , help='Name of group to which fit belongs, e.g. toys'   , required= True)
         parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/rk/electron'    , required= True)
         parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =   '')
@@ -94,35 +94,9 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
 
     return cfg
 # ----------------------
-def _use_constraints(
-    kind : str,
-    cfg  : FitConfig) -> bool:
-    '''
-    Parameters
-    -------------
-    kind: Label for constraints, e.g. misid
-    cfg : Object holding configuration for fit 
-
-    Returns
-    -------------
-    It will check in the config and will return true to run on these constraints
-    E.g. components not in the model, do not need constraints
-    '''
-    if kind not in ['misid']:
-        raise ValueError(f'Invalid kind: {kind}')
-
-    l_misid   = ['kkk', 'kpipi']
-    components= cfg.fit_cfg.model.components
-    all_found = all(component in components for component in l_misid)
-
-    if kind == 'misid' and all_found:
-        return True
-
-    return False
-# ----------------------
-def _get_constraints(
+def _add_constraints(
     nll : ExtendedUnbinnedNLL,
-    cfg : FitConfig) -> DictConfig | None:
+    cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
     '''
     Parameters
     -------------
@@ -131,37 +105,30 @@ def _get_constraints(
 
     Returns
     -------------
-    Dictionary with:
-        key  : Name of parameter
-        Value: Tuple with mu and sigma for constraining parameter
-    '''
-    crd   = ConstraintReader(obj=nll, q2bin=cfg.q2bin)
-    d_cns = crd.get_constraints()
-    cons  = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='scales', kind='GaussianConstraint')
+    Tuple with:
 
-    if _use_constraints(kind='misid', cfg=cfg):
-        mrd       = MisIDConstraints(
-            obs   = cfg.observable,
-            cfg   = cfg.fit_cfg.model.constraints.misid,
-            q2bin = cfg.q2bin)
-        d_cns   = mrd.get_constraints()
-        tmp     = ConstraintAdder.dict_to_cons(d_cns=d_cns, name='misid' , kind='PoissonConstraint')
-        cons    = OmegaConf.merge(cons, tmp)
-    else:
-        log.info('Skipping misid constraints')
+    - Constrained likelihood
+    - List of constraints
+    '''
+    crd  = ConstraintReader(nll=nll, cfg=cfg)
+    cons = crd.get_constraints()
 
     if cons is None:
         log.warning('Not using any constraints')
-        return cons
-
-    if not isinstance(cons, DictConfig):
-        raise ValueError('Configuration is not a DictConfig')
 
     log.info('Constraints:')
-    cons_str = OmegaConf.to_yaml(cons)
-    log.info('\n\n' + cons_str)
+    for constraint in cons:
+        log.info(constraint)
 
-    return cons 
+    cons_str    = [ str(constraint) for constraint in cons ]
+    constraints = '\n\n'.join(cons_str)
+
+    cfg.fit_cfg['used_constraints'] = constraints
+
+    cad  = ConstraintAdder(nll=nll, constraints=cons)
+    nll  = cad.get_nll()
+
+    return nll, cons
 # ----------------------
 def _fit(cfg : FitConfig) -> None:
     '''
@@ -172,18 +139,11 @@ def _fit(cfg : FitConfig) -> None:
         q2bin  = cfg.q2bin,
         sample = DATA_SAMPLE,
         cfg    = cfg.fit_cfg)
-    nll = ftr.run()
+    nll     = ftr.run()
     cfg_mod = ftr.get_config()
 
-    cfg_cns = _get_constraints(nll=nll, cfg=cfg)
-    cad     = ConstraintAdder(nll=nll, cns=cfg_cns)
-    nll     = cad.get_nll()
+    nll, cons = _add_constraints(nll=nll, cfg=cfg)
 
-    # Type analyser needs to be told this is the right type
-    if not isinstance(nll, ExtendedUnbinnedNLL):
-        raise ValueError('Likelihood is not extended and unbinned')
-
-    cfg.fit_cfg['constraints'] = cfg_cns
     ftr = DataFitter(
         name = cfg.q2bin,
         d_nll= {cfg.name : (nll, cfg_mod)}, 
@@ -194,9 +154,13 @@ def _fit(cfg : FitConfig) -> None:
         log.info('Not making toys')
         return
 
-    cfg.toy_cfg['constraints'] = cfg_cns
     log.info(f'Making {cfg.toy_cfg.ntoys} toys')
-    mkr = ToyMaker(nll=nll, res=res, cfg=cfg.toy_cfg)
+
+    mkr = ToyMaker(
+        nll= nll, 
+        res= res, 
+        cfg= cfg.toy_cfg, 
+        cns= cons)
     mkr.get_parameter_information()
 # ----------------------
 def main(args : DictConfig | None = None):

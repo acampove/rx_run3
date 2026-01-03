@@ -2,37 +2,36 @@
 Module with utility functions related to the dmu.stats project
 '''
 
-from contextlib import contextmanager
 import os
 import re
 import pickle
-from typing     import Union, Any, overload
-from pathlib    import Path
 
 import yaml
 import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
+import tensorflow        as tf
 
 import dmu.pdataframe.utilities as put
 import dmu.generic.utilities    as gut
 
-from dmu.stats.zfit         import zfit
-from dmu.stats.fitter       import Fitter
-from dmu.stats.zfit_plotter import ZFitPlotter
+from typing                 import Union, Any, overload
+from pathlib                import Path
+from contextlib             import contextmanager
 from dmu.logging.log_store  import LogStore
-from dmu                    import Measurement
-
-import tensorflow as tf
+from dmu.stats.zfit         import zfit
 
 from omegaconf        import OmegaConf, DictConfig
 from zfit.data        import Data          as zdata
 from zfit.interface   import ZfitSpace     as zobs
 from zfit.param       import Parameter     as zpar
-from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.pdf         import BasePDF       as zpdf
+from zfit.result      import FitResult     as zres
+from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 
-from zfit.minimizers.fitresult import FitResult as zres
+from .fitter          import Fitter
+from .measurement     import Measurement
+from .zfit_plotter    import ZFitPlotter
 
 log = LogStore.add_logger('dmu:stats:utilities')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
@@ -372,6 +371,15 @@ def save_fit(
     plt_cfg : DictConfig|dict|None,
     d_const : dict[str,tuple[float,float]]|None = None) -> Measurement: ...
 #---------------------------------------------
+@overload
+def save_fit(
+    data    : zdata,
+    model   : zpdf | None,
+    res     : zres | None,
+    fit_dir : str|Path,
+    plt_cfg : DictConfig|dict|None,
+    d_const : dict[str,tuple[float,float]]|None = None) -> Measurement | None: ...
+#---------------------------------------------
 def save_fit(
     data    : zdata,
     model   : zpdf|None,
@@ -515,13 +523,15 @@ def _save_result(
         log.info('No result object found, not saving parameters in pkl or JSON')
         return None
 
-    # TODO: Remove this once there be a safer way to freeze
-    # see https://github.com/zfit/zfit/issues/632
+    # TODO: Needs to be removed once
+    # https://github.com/zfit/zfit/issues/702
+    # be sorted out
     try:
-        res.freeze()
-    except AttributeError:
-        pass
+        res.covariance()
+    except Exception as exc:
+        raise ValueError('Cannot calculate covariance matrix, result was likely already frozen') from exc
 
+    res.freeze()
     with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
         pickle.dump(res, ofile)
 
@@ -676,7 +686,7 @@ def get_model(
         obs  = zfit.Space(f'mass{suffix}', limits=(4500, 7000))
 
     mu   = zfit.Parameter(f'mu{suffix}', 5200, 4500, 6000)
-    sg   = zfit.Parameter(f'sg{suffix}',   50,   10, 200)
+    sg   = zfit.Parameter(f'sg{suffix}',  150,   10, 200)
     gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
 
     if kind == 'signal':
@@ -697,11 +707,12 @@ def get_model(
 
     raise NotImplementedError(f'Invalid kind of fit: {kind}')
 # ----------------------
-def get_nll(kind : str) -> Loss:
+def get_nll(kind : str, nentries : int = 1000) -> Loss:
     '''
     Parameters
     -------------
-    kind : Type of model, e.g. s+b, signal
+    kind    : Type of model, e.g. s+b, signal
+    nentries: Dataset size
 
     Returns
     -------------
@@ -714,7 +725,7 @@ def get_nll(kind : str) -> Loss:
         return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
 
     if kind == 'signal':
-        dat = pdf.create_sampler(n=1000)
+        dat = pdf.create_sampler(n=nentries)
         return zfit.loss.UnbinnedNLL(model=pdf, data=dat)
 
     raise NotImplementedError(f'Invalid kind: {kind}')
@@ -840,11 +851,15 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
     --------------
     OmegaConfig's DictConfig instance
     '''
-    # This should prevent crash when result object was already frozen
+    # TODO: Needs to be removed once
+    # https://github.com/zfit/zfit/issues/702
+    # be sorted out
     try:
-        res.freeze()
-    except AttributeError:
-        pass
+        res.covariance()
+    except Exception as exc:
+        raise ValueError('Cannot calculate covariance matrix, result was likely already frozen') from exc
+
+    res.freeze()
 
     par   = res.params
     try:
@@ -877,19 +892,30 @@ def val_from_zres(res : zres, name : str) -> float:
     '''
     Parameters
     -------------
-    res: Zfit result, before or after freezing
+    res: Zfit result, before freezing
     name: Name of fitting parameter
 
     Returns
     -------------
     Numerical value of fitting parameter
     '''
-    for par, d_val in res.params.items():
-        par_name = par if isinstance(par, str) else par.name
-        if par_name == name:
-            val = d_val['value']
-            return to_float(val=val)
+    for par, data in res.params.items():
+        if isinstance(par, zpar) and par.name != name:
+            continue
 
-    log.info(res)
-    raise ValueError(f'Cannot find parameter: {name}')
+        if isinstance(par, str)  and par      != name:
+            continue
+
+        if isinstance(par, zpar):
+            return float(par.value().numpy())
+
+        # TODO: Remove ignore when issue be fixed:
+        # https://github.com/zfit/zfit/discussions/684#discussioncomment-15376203 
+        if isinstance(par,  str):
+            val = data['value'] 
+            return float(val) # type:ignore
+
+    log.error(res)
+
+    raise ValueError(f'Parameter {name} not found in results')
 #---------------------------------------------

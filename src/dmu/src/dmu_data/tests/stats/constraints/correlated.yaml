@@ -1,11 +1,11 @@
 signal_shape:
-  kind        : GaussianNDConstraint 
+  kind        : GaussianConstraint 
   parameters  :
     - mu
     - sg
   values : 
-    - 5080
-    - 10
+    - 5200
+    - 150
   cov: 
     - [100, 10]
     - [ 10,  4]

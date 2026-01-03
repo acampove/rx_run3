@@ -1,10 +1,7 @@
 version: 0.9.4
 inputs:
   files:
-    - Snakefile
-    - setup.sh
-  parameters:
-    input: ./snakemake/config.yaml
+    - snakemake/rules/test_reana.smk
 workspace:
   retention_days:
     '*': 1
@@ -12,4 +9,4 @@ workflow:
   resources:
     kerberos : true
   type: snakemake
-  file: Snakefile
+  file: snakemake/rules/test_reana.smk

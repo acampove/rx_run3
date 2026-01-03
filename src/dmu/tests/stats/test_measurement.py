@@ -2,9 +2,8 @@
 Tests for Measurement class
 '''
 import pytest
-from pydantic import ValidationError
-
-from dmu import Measurement
+from pydantic  import ValidationError
+from dmu.stats import Measurement
 
 # ------------------------------------
 def test_simple():

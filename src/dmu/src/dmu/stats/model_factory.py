@@ -1,13 +1,8 @@
 '''
 Module storing ZModel class
 '''
-# pylint: disable=too-many-lines, import-error, too-many-positional-arguments, too-many-arguments
-# pylint: disable=too-many-instance-attributes
 
-from typing import Callable, Union
-
-import zfit
-
+from typing                 import Callable, Union
 from zfit.interface         import ZfitSpace     as zobs
 from zfit.pdf               import BasePDF       as zpdf
 from zfit.param             import Parameter     as zpar
@@ -16,6 +11,7 @@ from dmu.stats.parameters   import ParameterLibrary as PL
 from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
+from dmu.stats.zfit         import zfit
 
 log=LogStore.add_logger('dmu:stats:model_factory')
 #-----------------------------------------
@@ -73,12 +69,11 @@ class ModelFactory:
     l_flt = ['mu', 'sg']
     d_rep = {'mu' : 'scale', 'sg' : 'reso'}
     mod   = ModelFactory(
-            preffix = 'signal', 
-            obs     = obs, 
-            l_pdf   = l_pdf, 
-            l_shared= l_shr, 
-            d_rep   = d_rep)
-
+        preffix = 'signal', 
+        obs     = obs, 
+        l_pdf   = l_pdf, 
+        l_shared= l_shr, 
+        d_rep   = d_rep)
     pdf   = mod.get_pdf()
     ```
 
@@ -211,15 +206,15 @@ class ModelFactory:
     #-----------------------------------------
     def _get_parameter(
         self,
-        kind   : str,
         name   : str,
+        kind   : str,
         suffix : str) -> zpar:
         '''
         Parameters
         ----------------
-        kind  : Identifies PDF, e.g. gaus
         name  : Physical name of parameter, e.g. mu
-        suffix: If multiple PDFs of this kind, it will be some sort of index, e.g. gaus(1), gaus(2)
+        kind  : Identifies PDF, e.g. gaus
+        suffix: If multiple PDFs of this kind, it will be some sort of index, e.g. _1, _2
 
         Returns
         ----------------
@@ -241,14 +236,18 @@ class ModelFactory:
             log.info(f'Picking already made parameter {par_name}')
             return self._d_par[par_name]
 
-        is_reparametrized = self._is_reparametrized(name)
+        rep_kind = self._get_reparametrization_type(name = name)
 
         val, low, high = PL.get_values(kind=kind, parameter=name)
 
-        if is_reparametrized:
-            init_name, _ = self._split_name(par_name)
+        if rep_kind is not None:
             log.info(f'Reparametrizing {par_name}')
-            par  = self._get_reparametrization(par_name, init_name, val, low, high)
+            par  = self._get_reparametrization(
+                par_name = par_name, 
+                kind     = rep_kind, 
+                value    = val, 
+                low      = low, 
+                high     = high)
         else:
             if val == low == high:
                 log.warning(f'Upper and lower edges agree, fixing parameter to: {low}')
@@ -262,24 +261,33 @@ class ModelFactory:
 
         return par
     #-----------------------------------------
-    def _is_reparametrized(self, name : str) -> bool:
+    def _get_reparametrization_type(self, name : str) -> str | None:
+        '''
+        Parameters
+        -------------------
+        name: Physical name of parameter, e.g. mu
+
+        Returns
+        -------------------
+        Type of reparametrization (e.g. scale, resolution...) 
+        or None, if no reparametrization is needed
+        '''
         if self._d_rep is None:
-            return False
+            return None 
 
-        root_name, _ = self._split_name(name)
-
-        is_rep = root_name in self._d_rep
-
-        log.debug(f'Reparametrizing {name}: {is_rep}')
-
-        return is_rep
+        return self._d_rep.get(name)
     #-----------------------------------------
-    def _get_reparametrization(self, par_name : str, init_name : str, value : float, low : float, high : float) -> zpar:
+    def _get_reparametrization(
+        self, 
+        par_name  : str, 
+        kind      : str, 
+        value     : float, 
+        low       : float, 
+        high      : float) -> zpar:
         log.debug(f'Reparametrizing {par_name}')
         par_const = zfit.Parameter(par_name, value, low, high)
         par_const.floating = False
 
-        kind = self._d_rep[init_name]
         if   kind == 'reso':
             par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
             par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
@@ -293,137 +301,137 @@ class ModelFactory:
     #-----------------------------------------
     @MethodRegistry.register('exp')
     def _get_exponential(self, suffix : str = '') -> zpdf:
-        c   = self._get_parameter('exp', 'c', suffix)
-        pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp{suffix}')
+        c   = self._get_parameter(kind = 'exp', name = 'c', suffix = suffix)
+        pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
     @MethodRegistry.register('hypexp')
     def _get_hypexp(self, suffix : str = '') -> zpdf:
-        mu = self._get_parameter('hypexp', 'mu', suffix)
-        ap = self._get_parameter('hypexp', 'ap', suffix)
-        bt = self._get_parameter('hypexp', 'bt', suffix)
+        mu = self._get_parameter(kind = 'hypexp', name = 'mu', suffix = suffix)
+        ap = self._get_parameter(kind = 'hypexp', name = 'ap', suffix = suffix)
+        bt = self._get_parameter(kind = 'hypexp', name = 'bt', suffix = suffix)
 
-        pdf= HypExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'hypexp{suffix}')
+        pdf= HypExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'hypexp_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
     @MethodRegistry.register('modexp')
     def _get_modexp(self, suffix : str = '') -> zpdf:
-        mu = self._get_parameter('modexp', 'mu', suffix)
-        ap = self._get_parameter('modexp', 'ap', suffix)
-        bt = self._get_parameter('modexp', 'bt', suffix)
+        mu = self._get_parameter(kind = 'modexp', name = 'mu', suffix = suffix)
+        ap = self._get_parameter(kind = 'modexp', name = 'ap', suffix = suffix)
+        bt = self._get_parameter(kind = 'modexp', name = 'bt', suffix = suffix)
 
-        pdf= ModExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'modexp{suffix}')
+        pdf= ModExp(obs=self._obs, mu=mu, alpha=ap, beta=bt, name=f'modexp_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('pol1')
     def _get_pol1(self, suffix : str = '') -> zpdf:
-        a   = self._get_parameter('pol1', 'a', suffix)
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=f'pol1{suffix}')
+        a   = self._get_parameter(kind = 'pol1', name = 'a', suffix = suffix)
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=f'pol1_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('pol2')
     def _get_pol2(self, suffix : str = '') -> zpdf:
-        a   = self._get_parameter('pol2', 'a', suffix)
-        b   = self._get_parameter('pol2', 'b', suffix)
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b   ], name=f'pol2{suffix}')
+        a   = self._get_parameter(kind = 'pol2', name = 'a', suffix = suffix)
+        b   = self._get_parameter(kind = 'pol2', name = 'b', suffix = suffix)
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b   ], name=f'pol2_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
     @MethodRegistry.register('pol3')
     def _get_pol3(self, suffix : str = '') -> zpdf:
-        a   = self._get_parameter('pol3', 'a', suffix)
-        b   = self._get_parameter('pol3', 'b', suffix)
-        c   = self._get_parameter('pol3', 'c', suffix)
+        a   = self._get_parameter(kind = 'pol3', name = 'a', suffix = suffix)
+        b   = self._get_parameter(kind = 'pol3', name = 'b', suffix = suffix)
+        c   = self._get_parameter(kind = 'pol3', name = 'c', suffix = suffix)
 
-        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b, c], name=f'pol3{suffix}')
+        pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a, b, c], name=f'pol3_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('cbr')
     def _get_cbr(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('cbr', 'mu', suffix)
-        sg  = self._get_parameter('cbr', 'sg', suffix)
-        ar  = self._get_parameter('cbr', 'ac', suffix)
-        nr  = self._get_parameter('cbr', 'nc', suffix)
+        mu  = self._get_parameter(kind = 'cbr', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'cbr', name = 'sg', suffix = suffix)
+        ar  = self._get_parameter(kind = 'cbr', name = 'ac', suffix = suffix)
+        nr  = self._get_parameter(kind = 'cbr', name = 'nc', suffix = suffix)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=f'cbr{suffix}')
+        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=f'cbr_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('suj')
     def _get_suj(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('suj', 'mu', suffix)
-        sg  = self._get_parameter('suj', 'sg', suffix)
-        gm  = self._get_parameter('suj', 'gm', suffix)
-        dl  = self._get_parameter('suj', 'dl', suffix)
+        mu  = self._get_parameter(kind = 'suj', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'suj', name = 'sg', suffix = suffix)
+        gm  = self._get_parameter(kind = 'suj', name = 'gm', suffix = suffix)
+        dl  = self._get_parameter(kind = 'suj', name = 'dl', suffix = suffix)
 
-        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj{suffix}')
+        pdf = zfit.pdf.JohnsonSU(mu, sg, gm, dl, self._obs, name=f'suj_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('cbl')
     def _get_cbl(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('cbl', 'mu', suffix)
-        sg  = self._get_parameter('cbl', 'sg', suffix)
-        al  = self._get_parameter('cbl', 'ac', suffix)
-        nl  = self._get_parameter('cbl', 'nc', suffix)
+        mu  = self._get_parameter(kind = 'cbl', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'cbl', name = 'sg', suffix = suffix)
+        al  = self._get_parameter(kind = 'cbl', name = 'ac', suffix = suffix)
+        nl  = self._get_parameter(kind = 'cbl', name = 'nc', suffix = suffix)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=f'cbl{suffix}')
+        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=f'cbl_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('gauss')
     def _get_gauss(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('gauss', 'mu', suffix)
-        sg  = self._get_parameter('gauss', 'sg', suffix)
+        mu  = self._get_parameter(kind = 'gauss', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'gauss', name = 'sg', suffix = suffix)
 
-        pdf = zfit.pdf.Gauss(mu, sg, self._obs, name=f'gauss{suffix}')
+        pdf = zfit.pdf.Gauss(mu, sg, self._obs, name=f'gauss_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('dscb')
     def _get_dscb(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('dscb', 'mu', suffix)
-        sg  = self._get_parameter('dscb', 'sg', suffix)
-        ar  = self._get_parameter('dscb', 'ar', suffix)
-        al  = self._get_parameter('dscb', 'al', suffix)
-        nr  = self._get_parameter('dscb', 'nr', suffix)
-        nl  = self._get_parameter('dscb', 'nl', suffix)
+        mu  = self._get_parameter(kind = 'dscb', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'dscb', name = 'sg', suffix = suffix)
+        ar  = self._get_parameter(kind = 'dscb', name = 'ar', suffix = suffix)
+        al  = self._get_parameter(kind = 'dscb', name = 'al', suffix = suffix)
+        nr  = self._get_parameter(kind = 'dscb', name = 'nr', suffix = suffix)
+        nl  = self._get_parameter(kind = 'dscb', name = 'nl', suffix = suffix)
 
-        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs, name=f'dscb{suffix}')
+        pdf = zfit.pdf.DoubleCB(mu, sg, al, nl, ar, nr, self._obs, name=f'dscb_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('voigt')
     def _get_voigt(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('voigt', 'mu', suffix)
-        sg  = self._get_parameter('voigt', 'sg', suffix)
-        gm  = self._get_parameter('voigt', 'gm', suffix)
+        mu  = self._get_parameter(kind = 'voigt', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'voigt', name = 'sg', suffix = suffix)
+        gm  = self._get_parameter(kind = 'voigt', name = 'gm', suffix = suffix)
 
-        pdf = zfit.pdf.Voigt(m=mu, sigma=sg, gamma=gm, obs=self._obs, name=f'voigt{suffix}')
+        pdf = zfit.pdf.Voigt(m=mu, sigma=sg, gamma=gm, obs=self._obs, name=f'voigt_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('qgauss')
     def _get_qgauss(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('qgauss', 'mu', suffix)
-        sg  = self._get_parameter('qgauss', 'sg', suffix)
-        q   = self._get_parameter('qgauss',  'q', suffix)
+        mu  = self._get_parameter(kind = 'qgauss', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'qgauss', name = 'sg', suffix = suffix)
+        q   = self._get_parameter(kind = 'qgauss', name =  'q', suffix = suffix)
 
-        pdf = zfit.pdf.QGauss(q=q, mu=mu, sigma=sg, obs=self._obs, name =f'qgauss{suffix}')
+        pdf = zfit.pdf.QGauss(q=q, mu=mu, sigma=sg, obs=self._obs, name =f'qgauss_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('cauchy')
     def _get_cauchy(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter('cauchy', 'mu', suffix)
-        gm  = self._get_parameter('cauchy', 'gm', suffix)
+        mu  = self._get_parameter(kind = 'cauchy', name = 'mu', suffix = suffix)
+        gm  = self._get_parameter(kind = 'cauchy', name = 'gm', suffix = suffix)
 
-        pdf = zfit.pdf.Cauchy(obs=self._obs, m=mu, gamma=gm, name=f'cauchy{suffix}')
+        pdf = zfit.pdf.Cauchy(obs=self._obs, m=mu, gamma=gm, name=f'cauchy_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
@@ -449,7 +457,7 @@ class ModelFactory:
         if fun is None:
             raise NotImplementedError(f'PDF of type \"{kind}\" with preffix \"{preffix}\" is not implemented')
 
-        return fun(self, preffix)
+        return fun(self, suffix = preffix)
     #-----------------------------------------
     def _add_pdf(self, l_pdf : list[zpdf]) -> zpdf:
         nfrc = len(l_pdf)

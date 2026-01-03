@@ -3,17 +3,18 @@ Module holding ToyMaker class
 '''
 import os
 import tqdm
+import numpy
 import pandas     as pnd
 import tensorflow as tf
 
-from pathlib                    import Path
-from omegaconf                  import DictConfig, OmegaConf
-from dmu.stats                  import utilities  as sut
-from dmu.logging.log_store      import LogStore
-from dmu.stats.fitter           import Fitter, GofCalculator
-from dmu.stats.constraint_adder import ConstraintAdder
-from zfit.result                import FitResult           as zres
-from zfit.loss                  import ExtendedUnbinnedNLL as Loss
+from pathlib     import Path
+from omegaconf   import DictConfig, OmegaConf
+from dmu.stats   import utilities  as sut
+from dmu.stats   import Constraint
+from dmu         import LogStore
+from dmu.stats   import Fitter, GofCalculator
+from zfit.result import FitResult           as zres
+from zfit.loss   import ExtendedUnbinnedNLL as Loss
 
 log=LogStore.add_logger('fitter:toy_maker')
 # ----------------------
@@ -31,6 +32,7 @@ class ToyMaker:
         self,
         nll   : Loss,
         res   : zres,
+        cns   : list[Constraint],
         cfg   : DictConfig):
         '''
         Parameters
@@ -39,12 +41,18 @@ class ToyMaker:
         res  : Result of actual fit to data. Used to make sure
                toys are generaged with the correct initial parameters
         cfg  : omegaconf dictionary controlling configuration
+        cns  : List of constraints, needed for resampling between toys
         '''
+
         self._ana_dir = Path(os.environ['ANADIR'])
 
         self._nll   = nll
         self._res   = res
         self._cfg   = self._check_config(cfg=cfg) 
+        self._cns   = [ cons.calibrate(result = res) for cons in cns ]
+
+        for cons in self._cns:
+            log.debug(cons)
 
         self._check_gof()
         self._check_gpu()
@@ -136,6 +144,17 @@ class ToyMaker:
 
         return out_path
     # ----------------------
+    def _print_parameters(self) -> None:
+        '''
+        Print likelihood's floating parameters at this moment
+        '''
+        s_par = self._nll.get_params()
+
+        log.debug(f'{"Parameter":<20}{"Value":<20}')
+        log.debug(40 * '-')
+        for par in s_par:
+            log.debug(f'{par.name:<20}{par.value():<20.3f}')
+    # ----------------------
     def get_parameter_information(self) -> pnd.DataFrame:
         '''
         Returns
@@ -145,32 +164,41 @@ class ToyMaker:
         columns = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid']
         df = pnd.DataFrame(columns=columns)
 
+        self._print_parameters()
         l_sampler = [ model.create_sampler() for model in self._nll.model ]
-        nll       = self._nll.create_new(data=l_sampler)
-        if nll is None:
-            raise ValueError('Faled to create NLL with sampler')
+        zfit_cns  = [ cons.zfit_cons(holder = self._nll) for cons in self._cns ]
 
-        if 'constraints' not in self._cfg:
-            log.warning('Running toys without constraints on any model parameter')
-        else:
-            log.debug('Using constraints in toy fitting model')
+        nll       = self._nll.create_new(data=l_sampler, constraints=zfit_cns)
+
+        if nll is None:
+            raise ValueError('Failed to create NLL with sampler')
 
         log.debug('Running toys with config:')
         cfg_str = OmegaConf.to_yaml(self._cfg)
         log.debug('\n' + cfg_str)
 
-        cad = ConstraintAdder(nll=nll, cns=self._cfg.constraints)
-        nll = cad.get_nll()
-
+        l_total = []
         for itoy in tqdm.tqdm(range(self._cfg.ntoys), ascii=' -'):
-            cad.resample()
+            for constraint in self._cns:
+                constraint.resample()
+
+            total = 0
             for sampler in l_sampler:
                 sampler.resample()
+                total += sampler.nentries 
+            l_total.append(total)
 
             with GofCalculator.disabled(value = not self._cfg.run_gof):
                 res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fitting)
 
             df = self._add_parameters(df=df, res=res, gof=gof, itoy=itoy)
+
+        medn_total = numpy.median(l_total)
+        mean_total = numpy.mean(l_total)
+        stdv_total = numpy.std(l_total)
+
+        log.info(f'Total yield average: {mean_total:.2f} ± {stdv_total:.2f}')
+        log.info(f'Total yield median : {medn_total:.2f} ± {stdv_total:.2f}')
 
         out_path = self._get_out_path()
         df.to_parquet(out_path)

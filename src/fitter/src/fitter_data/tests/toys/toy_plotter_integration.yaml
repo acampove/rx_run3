@@ -4,7 +4,6 @@
 general:
   size: [15, 10]
 
-
 correlation:
   size     : [20, 15]
   title    : Correlation matrix 
@@ -15,7 +14,7 @@ correlation:
   cmap     : Spectral 
   linewidth: 0.5
   annot_kws:
-    size : 12 
+    size : 15 
   rotation :
     x    : 45
 
@@ -41,7 +40,7 @@ plots:
     yscale: 'linear'
     labels: ['$\mu$', 'Entries']
   mu_err:
-    binning: [0.0, 5., 60]
+    binning: [0.0, 100., 60]
     yscale: 'linear'
     labels: ['$\varepsilon(\mu)$', 'Entries']
   
@@ -50,7 +49,7 @@ plots:
     yscale: 'linear'
     labels: ['nbkg', 'Entries']
   nbkg_err:
-    binning: [0, 50, 60]
+    binning: [20, 30, 60]
     yscale: 'linear'
     labels: ['nbkg_err', 'Entries']
   
@@ -59,25 +58,25 @@ plots:
     yscale: 'linear'
     labels: ['nsig', 'Entries']
   nsig_err:
-    binning: [0, 100, 60]
+    binning: [20, 30, 60]
     yscale: 'linear'
     labels: ['nsig_err', 'Entries']
 
   sg_val:
-    binning: [35, 65, 60]
+    binning: [100, 200, 60]
     yscale: 'linear'
     labels: ['$\sigma$', 'Entries']
   sg_err:
-    binning: [0.0, 4, 60]
+    binning: [1.5, 2.5, 60]
     yscale: 'linear'
     labels: ['$\varepsilon(\sigma)$', 'Entries']
 
   c_val:
-    binning: [-0.002, 0.0, 60]
+    binning: [-0.0005, 0.0, 60]
     yscale: 'linear'
     labels: ['c val', 'Entries']
   c_err:
-    binning: [0.0, 0.0001, 60]
+    binning: [4e-5, 6e-5, 60]
     yscale: 'linear'
     labels: ['c err', 'Entries']
 plugin:
@@ -98,6 +97,11 @@ plugin:
       format : '{:.3f}'
     nsig_err :
       format : '{:.2f}'
+    # -----------------
+    nbkg_val :
+      format : '{:.3f}'
+    nsig_val :
+      format : '{:.3f}'
 
 summary:
   median : 

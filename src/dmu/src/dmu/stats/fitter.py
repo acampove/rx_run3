@@ -1,21 +1,19 @@
 '''
 Module holding zfitter class
 '''
-# pylint: disable=wrong-import-order, import-error
 
 import contextlib
 import pprint
-from typing                   import Protocol, Union
-from functools                import lru_cache
-
 import numpy
 import pandas            as pd
 import matplotlib.pyplot as plt
 
+from typing                   import Protocol, Union
+from functools                import lru_cache
 from dmu.logging              import messages  as mes
-from dmu.stats.zfit           import zfit
 from dmu.logging.log_store    import LogStore
 from dmu.stats.gof_calculator import GofCalculator
+from dmu.stats.zfit           import zfit
 
 from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
@@ -204,7 +202,11 @@ class Fitter:
         s_par : set[zpar] = self._pdf.get_params(floating=True)
         for par in s_par:
             ival = par.value()
-            fval = numpy.random.uniform(par.lower, par.upper)
+
+            if par.lower is None or par.upper is None:
+                raise ValueError(f'Either lower or lower bound missing for: {par.name}')
+
+            fval = numpy.random.uniform(par.lower.numpy(), par.upper.numpy())
             par.set_value(fval)
             log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
     #------------------------------
@@ -272,7 +274,10 @@ class Fitter:
         return data
     #------------------------------
     def _get_binned_observable(self, nbins : int):
-        obs : zobs = self._pdf.space
+        obs = self._pdf.space
+        if not isinstance(obs, zobs):
+            raise ValueError('Observable not an Space instance')
+
         [[minx]], [[maxx]] = obs.limits
 
         binning = zfit.binned.RegularBinning(nbins, minx, maxx, name=obs.label)
@@ -472,7 +477,7 @@ class Fitter:
 
         return not (good_chi2 and good_pval and good_ndof)
     #------------------------------
-    def _fit_retries(self, cfg : dict) -> tuple[dict, zres]:
+    def _fit_retries(self, cfg : dict) -> tuple[dict[tuple[float, int, float],zres], zres]:
         ntries       = cfg['strategy']['retry']['ntries']
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
         ignore_status= cfg['strategy']['retry']['ignore_status']
@@ -488,6 +493,9 @@ class Fitter:
                 log.warning(f'{i_try:03}/{ntries:03} failed due to exception')
                 continue
 
+            if log.getEffectiveLevel() < 20:
+                log.debug(res)
+
             last_res = res
             bad_fit  = res.status != 0 or not res.valid
 
@@ -496,24 +504,27 @@ class Fitter:
                 log.info(f'{i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
                 continue
 
-            chi2, _, pval   = gof
 
             if self._gof_is_bad(gof=gof):
                 log.debug('Reshufling and skipping, found bad gof')
                 self._reshuffle_pdf_pars()
                 continue
 
-            d_pval_res[chi2]=res
+            d_pval_res[gof]=res
 
+            _, _, pval   = gof
             if pval > pvalue_thresh:
                 log.info(f'Reached {pval:.3f} (> {pvalue_thresh:.3f}) threshold after {i_try + 1} attempts')
-                return {chi2 : res}, res
+                return {gof : res}, res
 
             log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
             self._reshuffle_pdf_pars()
 
-        if last_res is None:
+        if last_res is None and isinstance(nll, Loss):
             self._plot_data(nll=nll)
+
+        if last_res is None:
+            # TODO: Need to plot binned data before raising for cases where fit fails
             raise FitterFailedFit('Cannot find any valid fit')
 
         return d_pval_res, last_res
@@ -529,7 +540,10 @@ class Fitter:
         plt.hist(arr, bins=100, range=(mean - 10 * rms, mean + 10 * rms))
         plt.show()
     #------------------------------
-    def _pick_best_fit(self, d_pval_res : dict, last_res : zres) -> zres:
+    def _pick_best_fit(
+        self, 
+        d_pval_res : dict[tuple[float,int,float], zres], 
+        last_res   : zres) -> zres:
         nsucc = len(d_pval_res)
         if nsucc == 0:
             log.warning('None of the fits succeeded, returning last result')
@@ -539,11 +553,12 @@ class Fitter:
 
         l_pval_res= list(d_pval_res.items())
         l_pval_res.sort()
-        _, res = l_pval_res[0]
+        (chi2, ndof, pval), res = l_pval_res[0]
+        rchi2 = chi2 / ndof
 
-        log.debug(f'Picking out best fit from {nsucc} fits')
-        for chi2, _ in l_pval_res:
-            log.debug(f'{chi2:.3f}')
+        log.info(f'Picking out best fit from {nsucc} fits reduced chi2/pvalue: {rchi2:.3f}/{pval:.3f}')
+        for (chi2, ndof, pval), _ in l_pval_res:
+            log.debug(f'{chi2:<20.3f}{ndof:<20}{pval:<20.3f}')
 
         self._set_pdf_pars(res)
 
@@ -668,14 +683,22 @@ class Fitter:
 
         cfg = {} if cfg is None else cfg
 
-        log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         if 'strategy' not in cfg:
+            log.info('Not using any strategy, simple fit')
             nll    = self._get_full_nll(cfg = cfg)
             res, _ = self.minimize(nll, cfg, ndof=self._ndof)
-        elif 'retry' in cfg['strategy']:
+
+            return res
+
+        log.info(30 * '-')
+        log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
+        log.info(30 * '-')
+        if 'retry' in cfg['strategy']:
+            log.info('Using retry strategy')
             d_pval_res, last_res = self._fit_retries(cfg)
             res = self._pick_best_fit(d_pval_res, last_res)
         elif 'steps' in cfg['strategy']:
+            log.info('Using steps strategy')
             res = self._fit_in_steps(cfg)
         else:
             raise ValueError('Unsupported fitting strategy')

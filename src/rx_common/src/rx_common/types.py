@@ -60,7 +60,7 @@ class Trigger(StrEnum):
     rkst_mm_nopid= 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'
     rkst_mm_ss   = 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA'
     # -----------
-    uninitialized= ''
+    uninitialized= 'uninitialized'
 
     def __str__(self):
         return self.value
@@ -129,6 +129,8 @@ class Sample(StrEnum):
 
     - Except for data, all samples meant to be used with the electron/muon channel should end with ee/mm
     '''
+    undefined      = 'undefined'
+    # -----
     data_24        = 'DATA_24*'
     # -----
     bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
@@ -151,6 +153,14 @@ class Sample(StrEnum):
     bpk2kpipiee    = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
     bpkstkpiee     = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
     bsphiee        = 'Bs_phiee_eq_Ball_DPC'
+    # -----
+    bpjpsixee      = 'Bu_JpsiX_ee_eq_JpsiInAcc'
+    bdjpsixee      = 'Bd_JpsiX_ee_eq_JpsiInAcc'
+    bsjpsixee      = 'Bs_JpsiX_ee_eq_JpsiInAcc'
+    # -----
+    bpjpsixmm      = 'Bu_JpsiX_mm_eq_JpsiInAcc'
+    bdjpsixmm      = 'Bd_JpsiX_mm_eq_JpsiInAcc'
+    bsjpsixmm      = 'Bs_JpsiX_mm_eq_JpsiInAcc'
     # --------------------------------------------
     @property
     def subdecays(self) -> list[str]:

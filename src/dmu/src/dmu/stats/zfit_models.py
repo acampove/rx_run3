@@ -2,8 +2,8 @@
 Module meant to hold classes defining PDFs that can be used by ZFIT
 '''
 
-import zfit
-from zfit   import z
+from dmu.stats.zfit import zfit
+from zfit           import z
 
 #-------------------------------------------------------------------
 class HypExp(zfit.pdf.ZPDF):

@@ -2,15 +2,13 @@
 Module containing the MisIDConstraints class
 '''
 
-import zfit
-
 from typing         import Final
 from rx_selection   import selection as sel
 
 from dmu.stats      import GofCalculator
 from dmu.stats      import ParameterLibrary as PL
-from dmu.stats      import GaussianConstraint
-from dmu.stats      import PoissonConstraint
+from dmu.stats      import Constraint1D
+from dmu.stats.zfit import zfit
 
 from dmu.generic    import utilities        as gut
 from dmu.workflow   import Cache
@@ -222,7 +220,7 @@ class MisIDConstraints(Cache):
 
         return nll, cfg
     # ----------------------
-    def get_constraints(self) -> list[GaussianConstraint | PoissonConstraint]:
+    def get_constraints(self) -> list[Constraint1D]:
         '''
         Returns
         -------------
@@ -237,7 +235,7 @@ class MisIDConstraints(Cache):
 
             d_cns = gut.load_json(cons_path)
 
-            return GaussianConstraint.from_dict(data = d_cns)
+            return Constraint1D.from_dict(data = d_cns, kind='GaussianConstraint')
 
         log.info(f'Running full calculation, nothing cached in: {cons_path}')
         d_nll   = {}
@@ -253,5 +251,5 @@ class MisIDConstraints(Cache):
 
         self._cache()
 
-        return GaussianConstraint.from_dict(data = d_cns)
+        return Constraint1D.from_dict(data = d_cns, kind = 'GaussianConstraint')
 # -------------------------

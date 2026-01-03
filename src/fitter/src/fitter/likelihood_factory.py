@@ -1,11 +1,13 @@
 '''
 Module containing DataFitter class
 '''
+from pathlib                  import Path
 from omegaconf                import DictConfig, OmegaConf
 
+from dmu                      import LogStore
 from dmu.stats.zfit           import zfit
-from dmu.logging.log_store    import LogStore
-from rx_common.types          import Trigger
+from rx_common                import Qsq, Sample
+from rx_common                import Trigger
 from rx_selection             import selection  as sel
 
 from zfit.loss                import ExtendedUnbinnedNLL
@@ -26,8 +28,8 @@ class LikelihoodFactory:
     def __init__(
         self,
         obs     : zobs,
-        sample  : str,
-        q2bin   : str,
+        sample  : Sample,
+        q2bin   : Qsq,
         cfg     : DictConfig,
         name    : str|None = None):
         '''
@@ -46,7 +48,7 @@ class LikelihoodFactory:
         self._name      = name
         self._base_path = self._get_base_path()
     # ------------------------
-    def _get_base_path(self) -> str:
+    def _get_base_path(self) -> Path:
         '''
         Returns directory where outputs will go
         '''
@@ -56,7 +58,7 @@ class LikelihoodFactory:
         else:
             sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._q2bin}'
 
-        return sample
+        return Path(sample)
     # ------------------------
     def _update_mc_trigger(self) -> Trigger:
         '''

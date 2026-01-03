@@ -6,14 +6,13 @@ from contextlib import contextmanager
 from pathlib    import Path
 from typing     import Any, overload, Literal
 
-import dmu.generic.utilities as gut
-
 from ROOT                    import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
 from dmu.generic             import hashing
-from dmu.logging.log_store   import LogStore
+from dmu                     import LogStore
+from dmu.generic             import utilities as gut
 from omegaconf               import DictConfig, OmegaConf
 from rx_data.spec_maker      import SpecMaker
-from rx_common.types         import Trigger
+from rx_common               import Sample, Trigger
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
@@ -47,7 +46,7 @@ class RDFGetter(SpecMaker):
     # ---------------------------------------------------
     def __init__(
         self,
-        sample  : str,
+        sample  : Sample,
         trigger : Trigger,
         tree    : str = 'DecayTree'):
         '''
@@ -543,8 +542,6 @@ class RDFGetter(SpecMaker):
             return self._d_rdf
 
         conf_path = self.get_spec_path(per_file=per_file)
-        log.debug(f'Building datarame from file {conf_path}')
-
         self._rdf = self._rdf_from_conf(fpath='joint_files', conf_path=conf_path)
 
         return self._emulator.post_process(rdf=self._rdf)

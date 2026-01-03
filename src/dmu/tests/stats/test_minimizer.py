@@ -3,10 +3,10 @@ Script used to test custom zfit minimizer
 '''
 from dataclasses import dataclass
 
-import zfit
 import numpy
 import pytest
 
+from dmu.stats.zfit        import zfit
 from dmu.stats.minimizers  import AnealingMinimizer
 from dmu.logging.log_store import LogStore
 
@@ -20,7 +20,7 @@ class Data:
     obs = zfit.Space('x', limits=(-10, 10))
 #---------------------------------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     LogStore.set_level('dmu:ml:minimizers', 10)
 #---------------------------------------------
 def _get_model():

@@ -2,29 +2,77 @@
 Module containing constraint classes 
 '''
 
-import zfit
+import json
 import math
 import numpy
 
-from typing                import Protocol
+from pathlib               import Path
+from typing                import Self, Sequence
+from tabulate              import tabulate
 from functools             import cached_property
 from zfit.constraint       import GaussianConstraint as GConstraint
 from zfit.constraint       import PoissonConstraint  as PConstraint
 from zfit.param            import Parameter as zpar
+from zfit.result           import FitResult
+from pydantic              import BaseModel, model_validator, TypeAdapter
 
-from pydantic              import BaseModel, model_validator
+from dmu.stats.zfit        import zfit
+from dmu.stats             import utilities  as sut
+from dmu.stats.protocols   import ParsHolder
 from dmu.logging.log_store import LogStore
 
 log=LogStore.add_logger('dmu:stats:constraint')
 # ----------------------------------------
-class ParsHolder(Protocol):
+class Constraint(BaseModel):
     '''
-    Class meant to symbolize generic holder of parameters
+    Class with common code to 1D and ND constraints
     '''
-    def get_params(self, *args, **kwargs)-> set[zpar]:
-        ...
+    # ----------------------
+    def calibrate(self, result : FitResult) -> 'Constraint':
+        _ = result
+
+        raise NotImplementedError('Cannot calibrate base Constraint')
+    # ----------------------
+    def resample(self) -> None:
+        raise NotImplementedError('Cannot resample base Constraint')
+    # ----------------------
+    def zfit_cons(self, holder : ParsHolder) -> GConstraint | PConstraint:
+        _ = holder
+
+        raise NotImplementedError('Cannot extract zfit constraint from base Constraint')
+    # ----------------------
+    @classmethod
+    def from_json(cls, path : Path) -> Self:
+        '''
+        Parameters
+        -------------
+        path: Path to JSON file to load constraint
+
+        Returns
+        -------------
+        Constraint
+        '''
+        if not path.exists():
+            raise ValueError(f'Path not found: {path}')
+
+        with open(path) as ifile:
+            data = json.load(ifile)
+
+        return cls(**data)
+    # ----------------------
+    def to_json(self, path : Path) -> None:
+        '''
+        Parameters
+        -------------
+        path: Path to JSON file that will store 
+        '''
+        data = self.model_dump_json(indent=2)
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'w') as ofile:
+            ofile.write(data)
 # ----------------------------------------
-class ConstraintND(BaseModel):
+class ConstraintND(Constraint):
     '''
     Class meant to symbolize NDimensional Gaussian constraint
     '''
@@ -32,6 +80,53 @@ class ConstraintND(BaseModel):
     parameters : list[str]
     values     : list[float]
     cov        : list[list[float]]
+    # ----------------------
+    def calibrate(self, result : FitResult) -> 'ConstraintND':
+        '''
+        Re-centers mu values of this constraint to value of parameter in holder.
+        Needed before fitting toys. The constraints need to be consistent with the
+        parameter values used to generate toy data.
+
+        Parameters
+        -------------
+        result: Object holding result of fit
+
+        Returns
+        -------------
+        Copy of this constraint with means calibrated
+        '''
+        new_values = []
+        for name, old_value in zip(self.parameters, self.values):
+            new_value = sut.val_from_zres(name = name, res = result )
+            new_values.append(new_value)
+
+            log.info(f'{name:<20}{old_value:<20.3f}{"--->":<20}{new_value:<20.3f}')
+
+        return ConstraintND(
+            kind       = self.kind,
+            parameters = self.parameters,
+            values     = new_values, 
+            cov        = self.cov,
+        )
+    # ----------------------
+    def __str__(self) -> str:
+        '''
+        Returns
+        -------------
+        String representation of constrint
+        '''
+        parameters = [ f'{name:<50}{value:<20.3f}' for name, value in zip(self.parameters, self.values) ]
+
+        msg  = '\n'
+        msg += '\n'
+        msg += 'Covariance:\n'
+        msg += tabulate(self.cov, tablefmt="grid") + '\n'
+        msg += '\n'
+        msg += 'Parameters\n'
+        msg += '---------------\n'
+        msg += '\n'.join(parameters)
+        
+        return msg
     # ---------------------
     @model_validator(mode='after')
     def check_dimensions(self) -> 'ConstraintND':
@@ -69,10 +164,17 @@ class ConstraintND(BaseModel):
             if par.name not in self.parameters: 
                 continue
 
-            obs.append(par)
+            if isinstance(par, zpar):
+                obs.append(par)
 
         if not obs:
             raise ValueError('No observable found')
+
+        ninit = len(self.parameters)
+        nzfit = len(obs)
+
+        if ninit != nzfit:
+            raise ValueError(f'Number of constraint parameters and zfit parameters differ: {ninit} != {nzfit}')
 
         return obs
     # ----------------------
@@ -109,12 +211,15 @@ class ConstraintND(BaseModel):
         Multidimentional Gaussian constraint
         '''
         l_par = self._obs_from_holder(holder = holder)
-        l_obs = self.observations
+        l_obs = self.observations.values()
 
-        cns   = zfit.constraint.GaussianConstraint(
-            params      = l_par, 
-            observation = l_obs,
-            cov         = self.cov)
+        if self.kind == 'GaussianConstraint':
+            cns   = zfit.constraint.GaussianConstraint(
+                params      = l_par, 
+                observation = l_obs,
+                cov         = self.cov)
+        else:
+            raise ValueError(f'Invalid constraint kind: {self.kind}')
 
         return cns
     # ----------------------
@@ -143,7 +248,7 @@ class ConstraintND(BaseModel):
         for new_value, observation in zip(new_values[0], self.observations.values()):
             observation.set_value(new_value)
 # ----------------------------------------
-class Constraint1D(BaseModel):
+class Constraint1D(Constraint):
     '''
     Class representing Gaussian 1D constrain
     '''
@@ -151,6 +256,59 @@ class Constraint1D(BaseModel):
     name: str
     mu  : float
     sg  : float
+    # ----------------------
+    @classmethod
+    def from_dict(
+        cls,
+        data : dict[str,tuple[float,float]],
+        kind : str) -> list['Constraint1D']:
+        '''
+        Parameters
+        -----------------
+        data: Dictionary storing parameter names, and tuples with measurements and errors
+        kind: String specifying type of constraint
+
+        Returns
+        -----------------
+        List of 1D constraints
+        '''
+
+        constraints = []
+        for name, (value, error) in data.items():
+            cns = cls(
+                kind = kind,
+                name = name,
+                mu   = value,
+                sg   = error)
+
+            constraints.append(cns)
+
+        return constraints
+    # ----------------------
+    def calibrate(self, result : FitResult) -> 'Constraint1D':
+        '''
+        Re-centers mu values of this constraint to value of parameter in holder.
+        Needed before fitting toys. The constraints need to be consistent with the
+        parameter values used to generate toy data.
+
+        Parameters
+        -------------
+        result: Object holding result of fit 
+
+        Returns
+        -------------
+        Copy of this constraint with means calibrated
+        '''
+        new_value = sut.val_from_zres(name = self.name, res = result )
+
+        log.info(f'{self.name:<20}{self.mu:<20.3f}{"--->":<20}{new_value:<20.3f}')
+
+        return Constraint1D(
+            kind   = self.kind,
+            name   = self.name,
+            mu     = new_value, 
+            sg     = self.sg,
+        )
     # ----------------------
     @cached_property
     def observation(self) -> zpar:
@@ -185,7 +343,7 @@ class Constraint1D(BaseModel):
         '''
         s_par = holder.get_params()
         for par in s_par:
-            if par.name == self.name:
+            if par.name == self.name and isinstance(par, zpar):
                 return par
 
         raise ValueError(f'Cannot find {self.name} in NLL')
@@ -217,7 +375,7 @@ class Constraint1D(BaseModel):
         -------------
         String representation
         '''
-        return f'{self.name:<20}{self.mu:<20}{self.sg:<20}{self.kind:<20}'
+        return f'{self.name:<50}{self.mu:<20.3f}{self.sg:<20.3f}{self.kind:<20}'
     # ----------------------
     def resample(self) -> None:
         '''
@@ -233,13 +391,51 @@ class Constraint1D(BaseModel):
 
         self.observation.set_value(new_val)
 # ----------------------------------------
-def print_constraints(constraints : list[Constraint1D]) -> None:
+def build_constraint(data: dict) -> Constraint:
+    '''
+    Parameters
+    ---------------
+    data: Python dictionary with constraint information
+
+    Returns
+    ---------------
+    Constraint object
+    '''
+    adapter = TypeAdapter(Constraint1D | ConstraintND)
+
+    try:
+        return adapter.validate_python(data)
+    except Exception as exc:
+        raise ValueError('Cannot build constrain from input') from exc
+# ----------------------------------------
+def print_constraints(constraints : Sequence[Constraint]) -> None:
     '''
     Parameters
     -------------
     List of constraint objects
     '''
-    log.info(f'{"Parameter":<20}{"Value":<20}{"Error":<20}{"Kind":<20}')
+    l_cons_1d = [ cons for cons in constraints if isinstance(cons, Constraint1D) ]
+    l_cons_nd = [ cons for cons in constraints if isinstance(cons, ConstraintND) ]
+
+    if l_cons_1d:
+        _print_1d_constraints(l_cons_1d)
+
+    if l_cons_nd:
+        _print_nd_constraints(l_cons_nd)
+# ----------------------------------------
+def _print_1d_constraints(constraints : Sequence[Constraint1D]) -> None:
+    '''
+    Prints list of constraints
+    '''
+    log.info(f'{"Parameter":<50}{"Value":<20}{"Error":<20}{"Kind":<20}')
+    log.info(80 * '-')
+    for constraint in constraints:
+        log.info(constraint)
+# ----------------------------------------
+def _print_nd_constraints(constraints : Sequence[ConstraintND]) -> None:
+    '''
+    Prints list of constraints
+    '''
     for constraint in constraints:
         log.info(constraint)
 # ----------------------------------------

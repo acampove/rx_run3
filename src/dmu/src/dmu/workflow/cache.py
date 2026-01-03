@@ -35,10 +35,10 @@ class Cache:
     - If the list is empty, caching runs for everything
     - If the list is None, caching is turned off for everything
     '''
-    _cache_root     : str|None       = None
-    _l_skip_class   : list[str]|None = []
+    _cache_root     : Path     | None = None
+    _l_skip_class   : list[str]| None = []
     # ---------------------------
-    def __init__(self, out_path : str, **kwargs):
+    def __init__(self, out_path : Path, **kwargs):
         '''
         Parameters
         ---------------
@@ -56,9 +56,10 @@ class Cache:
         else:
             log.warning('Not using code for hashing')
 
-        self._out_path  = os.path.normpath(f'{Cache._cache_root}/{out_path}')
+        self._out_path  = Cache._cache_root / out_path
+
         log.debug(f'Using {self._out_path} output path')
-        os.makedirs(self._out_path, exist_ok=True)
+        self._out_path.mkdir(parents=True, exist_ok=True)
 
         self._dat_hash  = kwargs
 
@@ -267,7 +268,7 @@ class Cache:
         old_val = cls._cache_root
         @contextmanager
         def _context():
-            cls._cache_root = str(path)
+            cls._cache_root = path
             try:
                 yield
             finally:
@@ -276,7 +277,7 @@ class Cache:
         return _context()
     # ---------------------------
     @classmethod
-    def set_cache_root(cls, root : str | Path) -> None:
+    def set_cache_root(cls, root : Path) -> None:
         '''
         Sets the path to the directory WRT which the _out_path_
         will be placed.
@@ -284,12 +285,10 @@ class Cache:
         This is meant to be called once per execution and has a lock
         that will raise an exception if called twice
         '''
-        root = str(root)
-
         if cls._cache_root is not None:
             raise ValueError(f'Trying to set {root}, but already found {cls._cache_root}')
 
-        os.makedirs(root, exist_ok=True)
+        root.mkdir(parents = True, exist_ok = True)
 
         cls._cache_root = root
 # ---------------------------

@@ -2,17 +2,16 @@
 Module with tests for zutils.plot plot class
 '''
 import os
-from typing      import Union
-from dataclasses import dataclass
 
 import numpy
 import pytest
 import matplotlib.pyplot as plt
 
-from dmu.stats.zfit         import zfit
-from dmu.stats.zfit_plotter import ZFitPlotter
-from dmu.logging.log_store  import LogStore
-from zfit.data              import Data         as zdat
+from dmu.stats.zfit import zfit
+from dataclasses  import dataclass
+from dmu.stats    import ZFitPlotter
+from dmu          import LogStore
+from zfit.data    import Data         as zdat
 
 log = LogStore.add_logger('dmu:test_fit_plotter')
 #--------------------------------
