@@ -105,16 +105,16 @@ from post_ap.pfn_reader        import PFNReader
 The script in the next setion needs a special environment to run. This environment is created by:
 
 - Go to a virtual environment where this project is installed, could be named e.g. `post_ap`
-- Make a grid token with:
-
-```bash
-lhcb-proxy-init -v 100:00
-```
-
 - Run:
 
 ```bash
 post_shell
+```
+
+- Make a grid token with:
+
+```bash
+lhcb-proxy-init -v 100:00
 ```
 
 which will leave you in a new shell with the required environment variables
@@ -126,10 +126,10 @@ which will leave you in a new shell with the required environment variables
 For this one would run a line like:
 
 ```bash
-job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -c rx/v13.yaml -b BACKEND -v VERSION_OF_ENV 
+job_filter_ganga -n job_name -p PRODUCTION -s SAMPLE -c rk/v13.yaml -b BACKEND -v VERSION_OF_ENV 
 
 # For example
-job_filter_ganga -n flt_002 -p rd_ap_2024 -s w37_39_v1r3788 -c rx/v13.yaml -b Dirac -v 037
+job_filter_ganga -n flt_002 -p rx_2024 -s w37_39_v1r3788 -c rk/v13.yaml -b Dirac -v 037
 ```
 
 - The number of jobs will be equal to the number of PFNs, up to 500 jobs.
