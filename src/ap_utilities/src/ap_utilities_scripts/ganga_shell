@@ -49,7 +49,7 @@ make_rcfile()
     echo "export LXNAME=$LXNAME"                                                                                 >> $RCFILE
     echo "export GANGA_CONFIG_PATH=GangaLHCb/LHCb.ini"                                                           >> $RCFILE
     echo "export GANGA_SITE_CONFIG_AREA=/cvmfs/lhcb.cern.ch/lib/GangaConfig/config"                              >> $RCFILE
-    echo "export PYTHONPATH=$PYTHONPATH:/cvmfs/ganga.cern.ch/Ganga/install/$GVER/lib/python3.11/site-packages/"  >> $RCFILE
+    echo "export PYTHONPATH=/cvmfs/ganga.cern.ch/Ganga/install/$GVER/lib/python3.11/site-packages:$PYTHONPATH"   >> $RCFILE
     echo "Using rc file:"
     cat $RCFILE
 }
