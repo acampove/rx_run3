@@ -93,7 +93,8 @@ This might allow for these files to be fixed, assuming that they were broken due
 After the preselection the data files are very small and there are many of them. The following line can be used to merge them:
 
 ```bash
-merge_samples -p rx -s DATA_24_MagDown_24c3 -t Hlt2RD_BuToKpMuMu_MVA -v v7
+merge_samples -p rx -s DATA_24_MagDown_24c3 -t Hlt2RD_BuToKpMuMu_MVA    -v v7
+merge_samples -p rx -s DATA_24_MagDown_24c2 -t Hlt2RD_B0ToKpPimMuMu_MVA -v v7
 ```
 
 where the command will merge all the files associated to a given sample and trigger.
