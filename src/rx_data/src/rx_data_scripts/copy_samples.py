@@ -227,7 +227,12 @@ def _group_paths(l_path : list[Path]) -> list[list[Path]]:
         return l_group
 
     arr_path   = numpy.array(l_path, dtype=object)
-    l_arr_path = numpy.array_split(arr_path, Data.nprc)
+
+    if len(arr_path) < Data.nprc:
+        return [ [ Path(obj) for obj in arr_path ] ]
+
+    ngroups    = len(arr_path) // Data.nprc
+    l_arr_path = numpy.array_split(arr_path, ngroups)
     l_l_path   = [ [ Path(obj) for obj in arr_path ] for arr_path in l_arr_path ]
 
     log.debug('Found the following groups:')
