@@ -103,10 +103,25 @@ def get_rdf(kind : str, prefix : str) -> RDF.RNode:
 
     return rdf_from_sample(sample=sample, trigger=Trigger(trigger))
 # ----------------------------------
-def rdf_from_sample(sample : str, trigger : Trigger) -> RDF.RNode:
+def rdf_from_sample(
+    sample          : Sample, 
+    trigger         : Trigger,
+    apply_selection : bool = True) -> RDF.RNode:
+    '''
+    Parameters
+    --------------
+    apply_selection: If true (default) will apply full selection
+
+    Returns
+    --------------
+    ROOT dataframe
+    '''
     with RDFGetter.max_entries(value = Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
+
+    if not apply_selection:
+        return rdf
 
     rdf, d_cut = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
 
