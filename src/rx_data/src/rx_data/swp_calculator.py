@@ -173,9 +173,6 @@ class SWPCalculator:
             if lep.charge == had.charge and not self._use_ss:
                 continue
 
-            if lep.charge != had.charge and     self._use_ss:
-                continue
-
             lep_id = new_lep_id if kind == 'swp' else old_lep_id
             had_id = new_had_id if kind == 'swp' else old_had_id
 
@@ -185,15 +182,13 @@ class SWPCalculator:
 
         ncmb = len(masses)
         if ncmb == 0:
-            log.warning(f'Found no combinations with masses: {l_mass}')
-            log.debug(row)
-            return -999
+            raise ValueError('No track combinations found')
 
         # If multiple combinations found (e.g. SS sample with K+ l-l-)
         # pick randomly 
         log.debug(f'Found {ncmb} combinations with masses: {masses}')
 
-        return l_mass[0]
+        return random.choice(masses)
     #---------------------------------
     def _calculate_mass(self, progress_bar : bool, had_name : str, kind : str, new_had_id : int) -> pnd.Series:
         if progress_bar:
