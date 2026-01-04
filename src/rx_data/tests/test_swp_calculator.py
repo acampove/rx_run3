@@ -34,7 +34,7 @@ def initialize():
 
     plt.style.use(mplhep.style.LHCb2)
 # ----------------------
-def _get_hadron_mapping(prefix : str) -> dict[str,int]:
+def _get_hadron_mapping(trigger : Trigger) -> dict[str,int]:
     '''
     Parameters
     -------------
@@ -44,13 +44,13 @@ def _get_hadron_mapping(prefix : str) -> dict[str,int]:
     -------------
     dictionary specifying how to swap masses
     '''
-    if prefix in ['Hlt2RD_BuToKpEE', 'Hlt2RD_BuToKpMuMu']:
-        return {'H' : 321}
+    if trigger.project == Project.rk:
+        return {'H'  : 321}
 
-    if prefix in ['Hlt2RD_B0ToKpPimEE', 'Hlt2RD_B0ToKpPimMuMu']:
+    if trigger.project == Project.rkst:
         return {'H1' : 321}
 
-    raise ValueError(f'Invalid prefix: {prefix}')
+    raise ValueError(f'Invalid trigger: {trigger}')
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind)
 def test_dzero_misid(prefix : str, kind : str, tmp_path : Path):
