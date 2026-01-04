@@ -77,6 +77,24 @@ def _parse_args():
     Data.skipped_friend = args.skip
 
     LogStore.set_level('rx_data:copy_samples', args.logl)
+# ----------------------
+def _get_host(name : str) -> str:
+    '''
+    Parameters
+    -------------
+    name: Nickname for host
+
+    Returns
+    -------------
+    Actual host name
+    '''
+    match name:
+        case 'IHEP':
+            return 'campoverde@lxlogin.ihep.ac.cn'
+        case 'LOCAL':
+            return ''
+        case _:
+            raise ValueError(f'Invalid host: {name}')
 # -----------------------------------------
 def _is_right_trigger(path : Path) -> bool:
     l_trigger  = Data.conf.triggers
