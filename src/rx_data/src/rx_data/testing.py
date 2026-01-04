@@ -66,9 +66,6 @@ l_prefix_kind_bzero = [
     ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
     ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
 # ----------------------------------
-class Data:
-    nentries= 100_000
-# ----------------------------------
 def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     '''
     Parameters
@@ -107,17 +104,19 @@ def get_rdf(kind : str, prefix : str) -> RDF.RNode:
 def rdf_from_sample(
     sample          : Sample, 
     trigger         : Trigger,
-    apply_selection : bool = True) -> RDF.RNode:
+    nentries        : int  = 10_000,
+    apply_selection : bool =  False) -> RDF.RNode:
     '''
     Parameters
     --------------
-    apply_selection: If true (default) will apply full selection
+    nentries       : Filter this number of entries
+    apply_selection: If true will apply full selection
 
     Returns
     --------------
     ROOT dataframe
     '''
-    with RDFGetter.max_entries(value = Data.nentries):
+    with RDFGetter.max_entries(value = nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
