@@ -20,51 +20,51 @@ l_trigger_ee  = [
     'Hlt2RD_B0ToKpPimEE_MVA_misid']
 
 l_prefix_kind = [
-    ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'mc_ee'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_mi'),
     # -----------
-    ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'mc_ee'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_mi'),
     # -----------
-    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
-    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
+    ('Hlt2RD_BuToKpMuMu_MVA'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu_MVA'   , 'dt_mm'),
     # -----------
-    ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
-    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
+    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'mc_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'dt_mm')]
 
 l_prefix_kind_data = [
-    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_mi'),
     # -----------
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_mi'),
     # -----------
-    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
-    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
+    ('Hlt2RD_BuToKpMuMu_MVA'   , 'dt_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'dt_mm')]
 
 l_prefix_kind_bplus = [
-    ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
-    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'mc_ee'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_mi'),
     # -----------
-    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
-    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm')]
+    ('Hlt2RD_BuToKpMuMu_MVA'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu_MVA'   , 'dt_mm')]
 
 l_prefix_kind_bzero = [
-    ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
-    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'mc_ee'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_mi'),
     # -----------
-    ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
-    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
+    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'mc_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'dt_mm')]
 # ----------------------------------
 def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     '''
