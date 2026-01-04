@@ -2,8 +2,9 @@
 Module with class used to swap mass hypotheses
 '''
 import pandas as pnd
-
+import random
 import vector
+
 from ROOT                  import RDF # type: ignore
 from tqdm                  import tqdm
 from particle              import Particle         as part
