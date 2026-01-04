@@ -80,28 +80,29 @@ def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     ------------------
     ROOT dataframe
     '''
+
     if   kind == 'dt_ss':
-        sample = 'DATA_24_MagUp_24c3'
-        trigger= f'{prefix}_SameSign_MVA'
+        sample = Sample.data_24 
+        trigger= Trigger.rk_ee_ss 
     elif kind == 'dt_ee':
-        sample = 'DATA_24_MagUp_24c2'
-        trigger= f'{prefix}_MVA'
+        sample = Sample.data_24 
+        trigger= Trigger.rk_ee_os 
     elif kind == 'dt_mi':
-        sample = 'DATA_24_MagUp_24c4'
-        trigger= f'{prefix}_MVA_misid'
+        sample = Sample.data_24 
+        trigger= Trigger.rk_ee_misid 
     elif kind == 'dt_mm':
-        sample = 'DATA_24_MagDown_24c4'
-        trigger= f'{prefix}_MVA'
+        sample = Sample.data_24 
+        trigger= Trigger.rk_mm_os 
     elif kind == 'mc_ee' and prefix.endswith('EE'):
-        sample = 'Bd_Kstee_eq_btosllball05_DPC'
-        trigger= f'{prefix}_MVA'
+        sample = Sample.bdkstkpiee
+        trigger= Trigger.rk_ee_os 
     elif kind == 'mc_mm' and prefix.endswith('MuMu'):
-        sample = 'Bd_Kstmumu_eq_btosllball05_DPC'
-        trigger= f'{prefix}_MVA'
+        sample = Sample.bdkstkpimm 
+        trigger= Trigger.rk_mm_os 
     else:
         raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
-    return rdf_from_sample(sample=sample, trigger=Trigger(trigger))
+    return rdf_from_sample(sample=Sample(sample), trigger=Trigger(trigger))
 # ----------------------------------
 def rdf_from_sample(
     sample          : Sample, 
