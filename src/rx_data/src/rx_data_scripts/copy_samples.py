@@ -200,7 +200,7 @@ def _download_group(group : list[Path]) -> int:
         return ncopied
 
     with multiprocessing.Pool() as pool:
-        log.info(f'Will run {nfiles} processes')
+        log.debug(f'Will run {nfiles} processes')
         l_ncopied = pool.map(_copy_sample, group)
         ncopied   = sum(l_ncopied)
 
