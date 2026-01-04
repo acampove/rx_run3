@@ -6,7 +6,7 @@ ntoys    = config['ntoys'  ]
 conf_val = 'rare/rkst/electron'
 kind_val = 'rare_rkst_electron'
 out_path = '.eos/lhcb/wg/RD/RX_run3/fits/data'
-name     = 'scan_001'
+name     = 'scan_002'
 
 # ---------------------
 rule all:
