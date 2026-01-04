@@ -204,11 +204,13 @@ These trees take time to calculate, therefore one has to send jobs to the cluste
 (LXPLUS HTCondor is not supported). For that do:
 
 ```bash
-make_friend_trees -p rk_nopid -e mva -c rk
-make_friend_trees -p rk_nopid -o mva -c rk
+make_friend_trees -p rk_nopid -e mva smear -c rk # makes all the trees excluding mva and smear
+make_friend_trees -p rk_nopid -o smear     -c rk # makes only the smear tree
+make_friend_trees -p rk_nopid -o mva       -c rk # makes only the mva tree
 ```
 
-Where:
+Where the order of the trees is needed due to the dependencies. E.g. in order to make the `smear` trees
+one needs the `brem_track_2` trees. The options are:
 
 ```
 options:
@@ -219,7 +221,7 @@ options:
                         Name of project, e.g. rk
   -e EXCLUDE [EXCLUDE ...], --exclude EXCLUDE [EXCLUDE ...]
                         List of names of friend trees to exclude
-  -o ONLY, --only ONLY  Name the the only friend tree
+  -o ONLY, --only ONLY  Name the only friend tree to make
   -w WCARD, --wcard WCARD
                         Wildcard to match files
   -d, --dry_run         If used, it will do a dry run, fewer jobs and no outputs
