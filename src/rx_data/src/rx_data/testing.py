@@ -77,29 +77,26 @@ def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     ------------------
     ROOT dataframe
     '''
-
     if   kind == 'dt_ss':
         sample = Sample.data_24 
-        trigger= Trigger.rk_ee_ss 
     elif kind == 'dt_ee':
         sample = Sample.data_24 
-        trigger= Trigger.rk_ee_os 
     elif kind == 'dt_mi':
         sample = Sample.data_24 
-        trigger= Trigger.rk_ee_misid 
     elif kind == 'dt_mm':
         sample = Sample.data_24 
-        trigger= Trigger.rk_mm_os 
-    elif kind == 'mc_ee' and prefix.endswith('EE'):
+    elif kind == 'mc_ee':
         sample = Sample.bdkstkpiee
-        trigger= Trigger.rk_ee_os 
-    elif kind == 'mc_mm' and prefix.endswith('MuMu'):
+    elif kind == 'mc_mm':
         sample = Sample.bdkstkpimm 
-        trigger= Trigger.rk_mm_os 
     else:
         raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
-    return rdf_from_sample(sample=Sample(sample), trigger=Trigger(trigger))
+    with RDFGetter.only_friends(s_friend = set()):
+        trigger = Trigger(prefix)
+        rdf     = rdf_from_sample(sample=Sample(sample), trigger=Trigger(trigger))
+
+    return rdf
 # ----------------------------------
 def rdf_from_sample(
     sample          : Sample, 
