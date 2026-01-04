@@ -37,13 +37,17 @@ def initialize():
     LogStore.set_level('rx_data:sample_emulator', 10)
     LogStore.set_level('dmu:generic:utilities'  , 10)
 # ----------------------
-def _get_rdf() -> RDF.RNode:
+def _get_rdf(size : int = 100) -> RDF.RNode:
     '''
     Returns
     -------------
     Dataframe with zeroed columns 
     '''
-    rdf = RDataFrame(100)
+    rdf = RDataFrame(size)
+
+    if size == 0:
+        return rdf
+
     rdf = rdf.Define('B_M'                 ,   '0')
     rdf = rdf.Define('B_Mass'              ,   '0')
     rdf = rdf.Define('B_M_brem_track_2'    ,   '0')
@@ -76,12 +80,13 @@ def test_rename(
     assert old_name == val 
 # --------------------------------------------
 @pytest.mark.parametrize('sample', _SAMPLES_MOTHER_SWAP)
-def test_swap_mother(sample : str):
+@pytest.mark.parametrize('size'  , [0, 100])
+def test_swap_mother(sample : str, size : int):
     '''
     sample: Name of sample to emulate
     '''
     log.info('')
-    rdf_old = _get_rdf()
+    rdf_old = _get_rdf(size = size)
     emu     = SampleEmulator(sample=sample)
     rdf_new = emu.post_process(rdf = rdf_old)
 

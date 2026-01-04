@@ -114,6 +114,11 @@ class SampleEmulator:
         -------------
         Dataframe after redefinitions, etc
         '''
+        size = rdf.Count().GetValue()
+        if size == 0:
+            log.warning('Not running emulation for empty dataframe')
+            return rdf
+
         if not self._cfg: 
             log.debug(f'Not emulating {self._sample}, missing in config')
             return rdf
