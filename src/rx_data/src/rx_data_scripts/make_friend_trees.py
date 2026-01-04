@@ -33,7 +33,7 @@ def _parse_args() -> None:
     parser.add_argument('-c', '--config' , type=str , help='Name of config file, e.g. rk_nopid', required=True)
     parser.add_argument('-p', '--project', type=str , help='Name of project, e.g. rk', required=True)
     parser.add_argument('-e', '--exclude', nargs='+', help='List of names of friend trees to exclude', default=[])
-    parser.add_argument('-o', '--only'   , type=str , help='Name the the only friend tree')
+    parser.add_argument('-o', '--only'   , type=str , help='Name of the only friend tree to make')
     parser.add_argument('-w', '--wcard'  , type=str , help='Wildcard to match files', default=Data.wildcard)
     parser.add_argument('-d', '--dry_run', action='store_true', help='If used, it will do a dry run, fewer jobs and no outputs')
     parser.add_argument('-l', '--log_lvl', type=int , help='Logging level' , choices=[10, 20, 30], default=20)
