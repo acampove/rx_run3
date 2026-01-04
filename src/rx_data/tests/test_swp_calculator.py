@@ -52,24 +52,34 @@ def _get_hadron_mapping(trigger : Trigger) -> dict[str,int]:
 
     raise ValueError(f'Invalid trigger: {trigger}')
 # ----------------------------------
-@pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind)
-def test_dzero_misid(prefix : str, kind : str, tmp_path : Path):
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_ss])
+@pytest.mark.parametrize('sample' , [Sample.data_24])
+def test_dzero_misid(
+    trigger  : Trigger, 
+    sample   : Sample, 
+    tmp_path : Path):
     '''
     Tests dzero decay contamination
     '''
-    rdf = tst.get_rdf(kind=kind, prefix=prefix)
+    with RDFGetter.only_friends(s_friend = set()):
+        rdf = tst.rdf_from_sample(
+            sample          = sample, 
+            trigger         = trigger,
+            apply_selection = False)
+
+    rdf      = rdf.Range(1000)
     ientries = rdf.Count().GetValue()
 
-    d_had = _get_hadron_mapping(prefix=prefix)
+    d_had = _get_hadron_mapping(trigger=trigger)
 
     obj = SWPCalculator(rdf, d_lep={'L1' : 211, 'L2' : 211}, d_had=d_had)
-    rdf = obj.get_rdf(preffix='dzero_misid', progress_bar=True, use_ss= 'ss' in kind)
+    rdf = obj.get_rdf(preffix='dzero_misid', progress_bar=True, use_ss= trigger.is_ss)
 
     oentries = rdf.Count().GetValue()
 
     assert ientries == oentries
 
-    _plot(rdf, test='dzero_misid', kind=kind, prefix=prefix, tmp_path = tmp_path)
+    _plot(rdf, test='dzero_misid', kind=sample, prefix=trigger, tmp_path = tmp_path)
 # ----------------------------------
 @pytest.mark.parametrize('prefix, kind', tst.l_prefix_kind)
 def test_phi_misid(prefix : str, kind : str, tmp_path : Path):
