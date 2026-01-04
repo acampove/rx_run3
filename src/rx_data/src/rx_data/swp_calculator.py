@@ -195,7 +195,11 @@ class SWPCalculator:
     #---------------------------------
     def _calculate_mass(self, progress_bar : bool, had_name : str, kind : str, new_had_id : int) -> pnd.Series:
         if progress_bar:
-            sr_mass = self._df.progress_apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
+            # TODO: This shows error in type analyzer, progress bar is enable through TQDM
+            sr_mass = self._df.progress_apply( # type: ignore
+                self._combine, 
+                args=(had_name, kind, new_had_id), 
+                axis=1)
         else:
             sr_mass = self._df.apply(self._combine, args=(had_name, kind, new_had_id), axis=1)
 
