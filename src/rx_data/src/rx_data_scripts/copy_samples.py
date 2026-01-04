@@ -201,6 +201,9 @@ def _copy_sample(source : Path) -> int:
     '''
     target= Data.out_dir/source.name
 
+    if not hasattr(Data, 'fcp'):
+        Data.fcp = FCopy(source=Data.host, timeout = Data.timeout)
+
     Data.copied_files += 1
     Data.copied_size  += source.stat().st_size / 1_000_000_000
     log.debug('')
