@@ -88,9 +88,9 @@ def test_phi_misid(prefix : str, kind : str, tmp_path : Path):
     '''
     rdf   = tst.get_rdf(kind=kind, prefix=prefix)
 
-    if   prefix in ['Hlt2RD_BuToKpEE', 'Hlt2RD_BuToKpMuMu']:
+    if   Trigger(prefix).project == Project.rk: 
         obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
-    elif prefix in ['Hlt2RD_B0ToKpPimEE', 'Hlt2RD_B0ToKpPimMuMu']:
+    elif Trigger(prefix).project == Project.rkst: 
         obj = SWPCalculator(rdf, d_lep={'H1' : 321}, d_had={'H2' : 321})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')
@@ -107,9 +107,9 @@ def test_jpsi_misid_bplus(prefix : str, kind : str, tmp_path : Path):
     rdf = tst.get_rdf(kind=kind, prefix=prefix)
     name= 'jpsi_misid_bplus'
 
-    if 'MuMu' in prefix:
+    if   Trigger(prefix).channel == 'muon':
         obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
-    elif 'EE' in prefix:
+    elif Trigger(prefix).channel == 'electron':
         obj = SWPCalculator(rdf, d_lep={'L1' : 11, 'L2' : 11}, d_had={'H' : 11})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')
