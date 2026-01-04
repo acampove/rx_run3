@@ -29,10 +29,13 @@ class Data:
     nprc    : int
     conf    : DictConfig 
     d_data  : dict
+    host    : str
     l_source: list[Path]
-    skipped_friend : str|None
+    timeout : int
 
-    out_dir : Path # Path to ana_dir/{kind}/{version}
+    skipped_friend : str|None
+    fcp            : FCopy
+    out_dir        : Path # Path to ana_dir/{kind}/{version}
     pfs_dir = Path(os.environ['PFS_ANADIR'])/'Data'
     ana_dir = Path(os.environ['ANADIR'    ])/'Data'
     vers    = None
@@ -49,7 +52,6 @@ class Data:
     copied_files : int   = 0
     copied_size  : float = 0
 
-    fcp     = FCopy(source='campoverde@lxlogin.ihep.ac.cn')
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
