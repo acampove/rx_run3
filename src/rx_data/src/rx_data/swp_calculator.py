@@ -162,13 +162,14 @@ class SWPCalculator:
         ----------------------
         Mass of the combination of particles
         '''
-        old_had_id = numeric_from_series(row, f'{had_name}_ID', int)
-        had              = part.from_pdgid(old_had_id)
-        l_mass           = []
+        old_had_id           = numeric_from_series(row, f'{had_name}_ID', int)
+        had                  = part.from_pdgid(old_had_id)
+        masses : list[float] = []
         for lep_name, new_lep_id in self._d_lep.items():
             old_lep_id = numeric_from_series(row, f'{lep_name}_ID', int)
-            lep              = part.from_pdgid(old_lep_id)
+            lep        = part.from_pdgid(old_lep_id)
 
+            # For OS candidates H - Lep combination have to be of opposite charge tracks
             if lep.charge == had.charge and not self._use_ss:
                 continue
 
@@ -180,16 +181,17 @@ class SWPCalculator:
 
             mass   = self._build_mass(row, {had_name : had_id, lep_name : lep_id})
 
-            l_mass.append(mass)
+            masses.append(mass)
 
-        ncmb = len(l_mass)
-
+        ncmb = len(masses)
         if ncmb == 0:
             log.warning(f'Found no combinations with masses: {l_mass}')
             log.debug(row)
             return -999
 
-        log.debug(f'Found {ncmb} combinations with masses: {l_mass}')
+        # If multiple combinations found (e.g. SS sample with K+ l-l-)
+        # pick randomly 
+        log.debug(f'Found {ncmb} combinations with masses: {masses}')
 
         return l_mass[0]
     #---------------------------------
