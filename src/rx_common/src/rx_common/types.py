@@ -38,7 +38,7 @@ class Component(StrEnum):
 # ---------------------------------------
 class Trigger(StrEnum):
     '''
-    Class meant to represent MVA triggers
+    Class meant to represent MVA HLT2 triggers
     '''
     rk_ee_os     = 'Hlt2RD_BuToKpEE_MVA'
     rk_ee_ext    = 'Hlt2RD_BuToKpEE_MVA_ext'
@@ -64,6 +64,13 @@ class Trigger(StrEnum):
 
     def __str__(self):
         return self.value
+    # -----------
+    @property
+    def is_ss(self) -> bool:
+        '''
+        True if it is a same sign trigger
+        '''
+        return 'SameSign' in self.value
     # -----------
     @property
     def project(self) -> 'Project':
