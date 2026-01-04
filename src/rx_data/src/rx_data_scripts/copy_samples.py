@@ -133,7 +133,10 @@ def _get_version(kind : str) -> str:
     if Data.vers is not None:
         return Data.vers
 
-    knd_dir = f'{Data.pfs_dir}/{Data.proj}/{kind}'
+    knd_dir = Data.pfs_dir / Data.proj / kind
+    if not knd_dir.exists():
+        raise ValueError(f'Cannot find {knd_dir}, likely PFS was not mounted')
+
     vers    = get_last_version(dir_path = knd_dir, version_only=True)
 
     log.debug(f'Latest version {vers} found in {knd_dir}')
