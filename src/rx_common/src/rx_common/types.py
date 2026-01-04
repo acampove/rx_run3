@@ -66,6 +66,25 @@ class Trigger(StrEnum):
         return self.value
     # -----------
     @property
+    def channel(self) -> str:
+        '''
+        Either 'muon' or 'electron'
+        '''
+        if 'EE_MVA'            in self.value:
+            return 'electron'
+
+        if 'EE_SameSign_MVA'   in self.value:
+            return 'electron'
+
+        if 'MuMu_MVA'          in self.value:
+            return 'muon'
+        
+        if 'MuMu_SameSign_MVA' in self.value:
+            return 'muon'
+
+        raise ValueError(f'Cannot determine channel for trigger: {self}')
+    # -----------
+    @property
     def is_ss(self) -> bool:
         '''
         True if it is a same sign trigger
