@@ -3,7 +3,8 @@ This module contains functions needed by tests
 '''
 import yaml
 
-from rx_common.types        import Trigger
+from rx_common              import Sample
+from rx_common              import Trigger
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
 from ROOT                   import RDF # type: ignore
