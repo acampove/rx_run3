@@ -363,7 +363,7 @@ class Fitter:
         log.info(parval)
     #------------------------------
     @staticmethod
-    def minimize(nll, cfg : dict, ndof : int = 10) -> tuple[zres, tuple]:
+    def minimize(nll, cfg : dict, ndof : int = 10) -> tuple[zres, tuple] | None:
         '''
         Parameters
         --------------
@@ -382,7 +382,7 @@ class Fitter:
 
         Returns
         --------------
-        Tuple with:
+        None if minimization fails. Otherwise tuple with:
 
         - Zfit result object
         - Tuple with goodness of fit (pvalue, ndof, chi2)
@@ -403,6 +403,9 @@ class Fitter:
         mnm = zfit.minimize.Minuit(**min_cfg)
         with mes.filter_stderr(banned_substrings=Fitter._l_hidden_tf_lines):
             res = mnm.minimize(nll)
+
+        if not Fitter.good_fit(res = res):
+            return None
 
         if not Fitter._turn_off_errors:
             log.debug('Calculating errors')
