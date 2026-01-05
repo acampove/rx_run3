@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from ROOT                   import RDF# type: ignore
 from pathlib                import Path
 from dmu.logging.log_store  import LogStore
-from rx_common              import Trigger
+from rx_common              import Sample, Trigger
 from rx_data.hop_calculator import HOPCalculator
 from rx_data.mis_calculator import MisCalculator
 from rx_data                import testing as tst
@@ -29,7 +29,7 @@ def initialize():
     LogStore.set_level('rx_data:hop_calculator', 10)
 # ----------------------------
 def _get_rdf(kind : str, prefix : str) -> RDF.RNode:
-    trigger = tst.get_trigger(kind=kind, prefix=prefix)
+    trigger = Trigger(prefix) 
 
     rdf = tst.get_rdf(kind=kind, prefix=prefix)
     mcl = MisCalculator(rdf=rdf, trigger=trigger)
@@ -80,8 +80,7 @@ def test_mc(prefix : str, kind : str, tmp_path : Path):
     '''
     Test on MC
     '''
-    trigger          = tst.get_trigger(kind=kind, prefix=prefix)
-
+    trigger          = Trigger(prefix) 
     rdf              = _get_rdf(kind=kind, prefix=prefix)
     rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)
 
@@ -91,9 +90,9 @@ def test_compare_bukee(tmp_path : Path):
     '''
     Compare signal with background for Bu -> K ee decays
     '''
-    trigger = Trigger('Hlt2RD_BuToKpEE_MVA')
-    sig_sam = 'Bu_Kee_eq_btosllball05_DPC'  
-    bkg_sam = 'Bd_Kstee_eq_btosllball05_DPC'
+    trigger = Trigger.rk_ee_os
+    sig_sam = Sample.bpkpee
+    bkg_sam = Sample.bdkstkpiee
 
     rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
     rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
@@ -107,9 +106,9 @@ def test_compare_bdkstee(tmp_path : Path):
     '''
     Compare signal with background for Bd -> Kpi ee decays
     '''
-    trigger = Trigger('Hlt2RD_B0ToKpPimEE_MVA')
-    sig_sam = 'Bd_Kstee_eq_btosllball05_DPC'
-    bkg_sam = 'Bu_K1ee_eq_DPC'
+    trigger = Trigger.rkst_ee_os
+    sig_sam = Sample.bdkstkpiee
+    bkg_sam = Sample.bpk1kpipiee 
 
     rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
     rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
@@ -124,7 +123,7 @@ def test_extra_branches(trigger : Trigger):
     '''
     Testing adding extra branches to RDF
     '''
-    sample  = 'Bd_Kstee_eq_btosllball05_DPC'
+    sample  = Sample.bdkstkpiee 
     rdf     = tst.rdf_from_sample(sample = sample, trigger=trigger)
 
     obj     = HOPCalculator(rdf=rdf, trigger=trigger)
@@ -139,7 +138,7 @@ def test_data(kind : str, prefix : str, tmp_path : Path):
     '''
     Test with data
     '''
-    trigger = tst.get_trigger(kind=kind, prefix=prefix)
+    trigger = Trigger(prefix) 
     rdf     = _get_rdf(kind=kind, prefix=prefix)
 
     rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)
