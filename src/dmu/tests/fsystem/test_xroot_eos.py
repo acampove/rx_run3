@@ -3,7 +3,7 @@ This module holds tests for functions in xroot_eos.py
 '''
 import pytest
 
-from dmu import XRootEOS
+from dmu.fsystem.xroot_eos import XRootEOS
 from dmu.logging.log_store import LogStore 
 
 # ----------------------
