@@ -55,12 +55,17 @@ class SignalCalculator:
         -----------------
         Value of efficiency for control mode
         '''
-        sample = self._cfg['samples']['control']
+        sample = Sample(self._cfg['samples']['control'])
+        trigger= Trigger(self._cfg['samples']['trigger'])
 
         # Control mode (i.e. Jpsi) should always
         # be evaluated at Jpsi bin
-        obj = EfficiencyCalculator(q2bin='jpsi')
-        val, _ = obj.get_efficiency(sample=sample)
+        obj = EfficiencyCalculator(
+            q2bin   = 'jpsi', 
+            trigger = trigger, 
+            sample  = sample)
+
+        val, _ = obj.get_efficiency()
 
         return val 
     # -----------------------------------
