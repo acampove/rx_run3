@@ -477,6 +477,20 @@ class Fitter:
 
         return not (good_chi2 and good_pval and good_ndof)
     #------------------------------
+    @staticmethod
+    def good_fit(res : zres) -> bool:
+        '''
+        Parameters
+        -----------
+        res: Fit result
+
+        Returns
+        -----------
+        True if fit is good
+        '''
+
+        return res.status == 0 and res.valid
+    #------------------------------
     def _fit_retries(self, cfg : dict) -> tuple[dict[tuple[float, int, float],zres], zres]:
         ntries       = cfg['strategy']['retry']['ntries']
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
