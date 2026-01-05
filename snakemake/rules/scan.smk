@@ -25,7 +25,7 @@ rule collect:
         prc = r'\d{3}', 
         qsq = '[a-z]+', 
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:d1a3a09ea'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:9010339d9'
     shell:
         '''
         REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
@@ -47,7 +47,7 @@ rule toys:
         ntoys = ntoys,
         conf  = conf_val,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:d1a3a09ea'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:9010339d9'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 

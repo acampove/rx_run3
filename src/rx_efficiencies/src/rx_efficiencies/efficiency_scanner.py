@@ -6,12 +6,14 @@ import numpy
 import tqdm
 import pandas as pnd
 
+from pathlib               import Path
 from ROOT                  import RDF # type: ignore
 from dmu.workflow.cache    import Cache
 from dmu.logging.log_store import LogStore
 from dmu.generic           import hashing
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
+from rx_common             import Sample, Trigger
 from rx_efficiencies       import EfficiencyCalculator
 
 log = LogStore.add_logger('rx_efficiencies:efficiency_scanner')
