@@ -9,6 +9,7 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
+from pathlib                           import Path
 from ROOT                              import RDF # type: ignore
 from dmu                               import LogStore
 from dmu.workflow                      import Cache
@@ -51,7 +52,7 @@ class EfficiencyCalculator(Cache):
         plt.style.use(mplhep.style.LHCb2)
 
         super().__init__(
-            out_path = f'efficiencies/{q2bin}_{self._year}',
+            out_path = Path('efficiencies') / f'{q2bin}_{self._year}',
             d_sel    = self._get_selection_hash(),
             q2bin    = self._q2bin,
             trigger  = self._trigger,

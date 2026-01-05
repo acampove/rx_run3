@@ -22,7 +22,7 @@ analysis:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:1a08e8991 -f docker/ana.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:1a08e8991
+    - buildah bud  -t $CI_REGISTRY_IMAGE:d1a3a09ea -f docker/ana.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:d1a3a09ea
   only:
     - issue-002 
