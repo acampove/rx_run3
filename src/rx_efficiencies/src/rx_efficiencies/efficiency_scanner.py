@@ -30,7 +30,7 @@ class EfficiencyScanner(Cache):
     # --------------------------------
     def __init__(self, cfg : dict):
         super().__init__(
-                out_path= 'EfficiencyScanner',
+                out_path= Path('EfficiencyScanner'),
                 cfg     = cfg)
 
         self._cfg    = cfg
