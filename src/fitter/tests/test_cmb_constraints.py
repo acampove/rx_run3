@@ -38,15 +38,19 @@ def _get_nll(
     -------------
     Likelihood with a combinatorial PDF
     '''
-    pdfs= cfg.model.components['combinatorial'].categories.main.models[q2bin]
+    pdfs    = cfg.model.components['combinatorial'].categories.main.models[q2bin]
+    cmb_cfg = cfg.model.components['combinatorial'][q2bin]
 
     obs = zfit.Space('B_Mass_smr', limits=(4500, 6996))
     mod = ModelFactory(
         preffix = 'combinatorial',
         obs     = obs,
         l_pdf   = pdfs,
-        l_shared= [],
-        l_float = [])
+        l_shared= cmb_cfg.shared,
+        l_float = cmb_cfg.float,
+        d_rep   = cmb_cfg.reparametrize,
+        d_fix   = cmb_cfg.fix,
+    )
 
     pdf   = mod.get_pdf()
     data  = pdf.create_sampler(1000)
