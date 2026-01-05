@@ -40,7 +40,7 @@ def _get_nll(
     '''
     pdfs= cfg.model.components['combinatorial'].categories.main.models[q2bin]
 
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 6996))
     mod = ModelFactory(
         preffix = 'combinatorial',
         obs     = obs,
@@ -62,7 +62,10 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
     nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
 
     with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.8'}):
+        sel.custom_selection(d_sel = {
+                             'bdt'   : 'mva_cmb > 0.3 && mva_prc > 0.4',
+                             'brem'  : 'nbrem != 0'}):
+
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
             nll   = nll,
