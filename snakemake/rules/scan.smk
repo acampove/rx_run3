@@ -12,29 +12,10 @@ name     = 'scan_002'
 rule all:
     input: 
         expand(
-            out_path + '/' + name + '_summary/' + kind_val + '/{qsq}/{cmb}_{prc}.png',
+            out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png',
             cmb      = mva_cmb,
             prc      = mva_prc,
             qsq      = qsq_bin)
-# ---------------------
-rule collect:
-    input : out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png'
-    output: out_path + '/' + name + '_summary/' + kind_val + '/{qsq}/{cmb}_{prc}.png'
-    wildcard_constraints:
-        cmb = r'\d{3}', 
-        prc = r'\d{3}', 
-        qsq = '[a-z]+', 
-    container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:bd8acf283'
-    shell:
-        '''
-        REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
-        mkdir -p $(dirname  $REMOTE)
-        mkdir -p $(dirname {output})
-
-        cp {input} {output}
-        cp {input} $REMOTE 
-        '''
 # ---------------------
 rule toys:
     output: out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png'
@@ -47,7 +28,7 @@ rule toys:
         ntoys = ntoys,
         conf  = conf_val,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:bd8acf283'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:a7f4115c7'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 
