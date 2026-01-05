@@ -149,9 +149,16 @@ class EfficiencyScanner(Cache):
         if self._yld_default == 0:
             raise ValueError('Default WP yield is zero')
 
-        sample = self._cfg['input']['sample']
-        obj    = EfficiencyCalculator(q2bin='central', sample=sample)
-        eff, _ = obj.get_efficiency(sample = sample)
+        sample = self._cfg['input']['sample' ]
+        trigger= self._cfg['input']['trigger']
+        q2bin  = self._cfg['input']['q2bin'  ]
+
+        obj         = EfficiencyCalculator(
+            q2bin   = q2bin, 
+            sample  = Sample(sample), 
+            trigger = Trigger(trigger))
+
+        eff, _ = obj.get_efficiency()
 
         # eff = self._yld_default / yld_total
         # Therefore this should provide efficiency at given WP
