@@ -18,7 +18,7 @@ class Data:
     l_must_have_bplus = ['L1_PE', 'L2_PE', 'H_PE']
     l_must_have_bzero = ['L1_PE', 'L2_PE', 'H1_PE', 'H2_PE']
 # ------------------------
-def _check_rdf(rdf : RDataFrame, l_must_have : list[str]) -> None:
+def _check_rdf(rdf : RDF.RNode, l_must_have : list[str]) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
     success = True
@@ -34,7 +34,7 @@ def test_simple(kind : str, prefix : str):
     '''
     Simplest test of class
     '''
-    trigger = tst.get_trigger(kind=kind, prefix=prefix)
+    trigger = Trigger(prefix) 
     rdf = tst.get_rdf(kind=kind, prefix=prefix)
     cal = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = cal.get_rdf()
