@@ -28,7 +28,7 @@ rule toys:
         ntoys = ntoys,
         conf  = conf_val,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:da05f7e32'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:85f4fcafc'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 
