@@ -79,11 +79,11 @@ def _get_pdf():
 
     return pdf
 #-------------------------------------
-def _save_fit(test : str, kind : str):
-    out_dir = f'{Data.plt_dir}/{test}'
-    os.makedirs(out_dir, exist_ok=True)
-
-    plot_path = f'{out_dir}/{kind}.png'
+def _save_fit(
+    test     : str, 
+    kind     : str, 
+    out_path : Path):
+    plot_path = out_path / f'{test}_{kind}.png'
 
     log.info(f'Saving to: {plot_path}')
     plt.savefig(plot_path)
