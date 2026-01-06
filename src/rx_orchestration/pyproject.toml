@@ -39,3 +39,5 @@ scales_law = "workflows.q2.scales_law:main"
 # ----------------
 reso_fits_law = "workflows.fits.reso_fits_law:main"
 rare_fits_law = "workflows.fits.rare_fits_law:main"
+# ----------------
+rxorc = 'cli:app'
