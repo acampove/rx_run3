@@ -61,6 +61,31 @@ def _add_pdfs(l_pdf : list[zpdf]) -> None:
 
     zfit.pdf.SumPDF(l_pdf, l_par)
 #--------------------------
+def test_ranges():
+    '''
+    Test passing ranges for parameters
+    '''
+    l_pdf = ['cbr', 'cbl', 'dscb']
+    l_shr = ['mu', 'sg']
+    l_flt = ['mu', 'sg']
+    ranges= {
+        'mu' : [5500., 5000., 6000.],
+        'sg' : [  10.,    5.,   20.],
+    }
+
+    mod   = ModelFactory(
+        preffix = 'unique',
+        obs     = Data.obs,
+        l_pdf   = l_pdf,
+        d_fix   = {'al_dscb' : 3, 'nr_dscb' : 1},
+        ranges  = ranges,
+        l_shared= l_shr,
+        l_float = l_flt)
+
+    pdf   = mod.get_pdf()
+
+    print_pdf(pdf)
+#--------------------------
 def test_fix_params():
     '''
     Will test fixing subset of parameters
