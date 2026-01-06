@@ -34,6 +34,26 @@ class FitConfig:
     ntoys   : int             = 0
     toy_cfg : DictConfig|None = None
     # ----------------------
+    def _pick_components(self) -> None:
+        '''
+        - If components section has current q2bin as key, 
+          use value as replacement for components
+        - If it has no q2bin, do not replace anything.
+        - If it has at least one q2bin, but not all, raise
+        '''
+        cmp = self.fit_cfg.model.components 
+
+        if all( q2bin not in cmp for q2bin in Qsq ):
+            log.debug('Not picking fit components per q2-bin')
+            return
+
+        if self.q2bin in cmp:
+            log.debug(f'Picking components for {self.q2bin} bin')
+            self.fit_cfg.model.components = cmp[self.q2bin]
+            return
+
+        raise ValueError(f'Invalid components config, not found {self.q2bin} in components section')
+    # ----------------------
     def replace(self, substring : str, value : str) -> None:
         '''
         Parameters
@@ -94,6 +114,7 @@ class FitConfig:
         '''
         self._set_logs()
         self._initialize_toy_config()
+        self._pick_components()
 
         try:
             self.block = int(self.block)
