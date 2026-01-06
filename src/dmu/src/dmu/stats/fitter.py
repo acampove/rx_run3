@@ -524,18 +524,18 @@ class Fitter:
                 log.info(f'{i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
                 continue
 
-
             if self._gof_is_bad(gof=gof):
                 log.debug('Reshufling and skipping, found bad gof')
                 self._reshuffle_pdf_pars()
                 continue
 
-            d_pval_res[gof]=res
-
             _, _, pval   = gof
             if pval > pvalue_thresh:
                 log.info(f'Reached {pval:.3f} (> {pvalue_thresh:.3f}) threshold after {i_try + 1} attempts')
                 return {gof : res}, res
+
+            log.info(f'Picking: {res}')
+            d_pval_res[gof]=res
 
             log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
             self._reshuffle_pdf_pars()
