@@ -38,10 +38,10 @@ model:
       signal                   : rare/rkst/electron/signal_non_parametric.yaml
     high:
       combinatorial            : rare/rkst/electron/combinatorial.yaml
-      ccbar                    : rare/rkst/electron/ccbar.yaml
+      #ccbar                    : rare/rkst/electron/ccbar.yaml
       #Bu_Kpipiee_eq_DPC_LSFLAT : rare/rkst/electron/prec.yaml
+      psi2_leakage             : rare/rkst/electron/psi2_leakage.yaml
       jpsi_leakage             : rare/rkst/electron/jpsi_leakage_non_parametric.yaml
-      psi2_leakage             : rare/rkst/electron/psi2_leakage_non_parametric.yaml
       signal                   : rare/rkst/electron/signal.yaml
   constraints : {}
 fit: {}
