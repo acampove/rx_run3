@@ -518,9 +518,8 @@ class Fitter:
                 log.debug(res)
 
             last_res = res
-            bad_fit  = res.status != 0 or not res.valid
 
-            if not ignore_status and bad_fit:
+            if not ignore_status and not self.good_fit(res = res):
                 self._reshuffle_pdf_pars()
                 log.info(f'{i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
                 continue
