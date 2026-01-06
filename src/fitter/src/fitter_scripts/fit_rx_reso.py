@@ -4,10 +4,12 @@ and run fits to the resonant mode
 '''
 
 import os
+
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 import argparse
 
+from rx_common                 import Sample
 from contextlib                import ExitStack
 from dmu.stats.gof_calculator  import GofCalculator
 from omegaconf                 import DictConfig
@@ -52,6 +54,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
     if args is None:
         parser = argparse.ArgumentParser(description='Script used to fit RX data')
         parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[1,2,3,4,5,6,7,8], default=-1)
+        parser.add_argument('-g', '--group'  , type=str  , help='Name of group to which fit belongs, e.g. toys'   , required= True)
         parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. reso/rkst/electron'  , required=True)
         parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =  '')
         parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
@@ -66,6 +69,8 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
     toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
 
     cfg         = FitConfig(
+        name    = 'reso',
+        group   = args.group,
         fit_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
         block   = args.block,
@@ -94,8 +99,7 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
         name   = cfg.name,
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
-        sample = 'DATA_24_*',
-        trigger= cfg.fit_cfg.trigger,
+        sample = Sample.data_24, 
         cfg    = cfg.fit_cfg)
     nll = ftr.run()
     cfg_mod = ftr.get_config()
