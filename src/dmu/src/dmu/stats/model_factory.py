@@ -64,15 +64,18 @@ class ModelFactory:
     ```python
     from dmu.stats.model_factory import ModelFactory
 
+    ranges= {'mu' : [5000, 5500, 6000]}
     l_pdf = ['dscb', 'gauss']
     l_shr = ['mu']
     l_flt = ['mu', 'sg']
     d_rep = {'mu' : 'scale', 'sg' : 'reso'}
+
     mod   = ModelFactory(
         preffix = 'signal', 
         obs     = obs, 
         l_pdf   = l_pdf, 
         l_shared= l_shr, 
+        ranges  = ranges,
         d_rep   = d_rep)
     pdf   = mod.get_pdf()
     ```
@@ -90,14 +93,16 @@ class ModelFactory:
         l_pdf    : list[str],
         l_shared : list[str],
         l_float  : list[str],
-        l_reuse  : None | list[zpar]      = None,
-        d_fix    : None | dict[str,float] = None,
-        d_rep    : None | dict[str,str]   = None):
+        ranges   : None | dict[str, list[float]] = None,
+        l_reuse  : None | list[zpar]             = None,
+        d_fix    : None | dict[str,float]        = None,
+        d_rep    : None | dict[str,str]          = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
+        ranges :  Dictionary used to override ranges for different parameters
         l_float:  List of parameter names to allow to float
         l_reuse:  Optional. List of parameters that if given will be used instead of built by factory
         d_fix:    Dictionary with keys as the beginning of the name of a parameter and value as the number
@@ -106,6 +111,7 @@ class ModelFactory:
         '''
         l_reuse = [] if l_reuse is None else l_reuse
 
+        self._ranges          = ranges
         self._preffix         = preffix
         self._l_pdf           = l_pdf
         self._l_shr           = l_shared
