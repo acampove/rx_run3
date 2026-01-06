@@ -366,7 +366,10 @@ class Fitter:
         log.info(parval)
     #------------------------------
     @staticmethod
-    def minimize(nll, cfg : dict, ndof : int = 10) -> tuple[zres, tuple] | None:
+    def minimize(
+        nll, 
+        cfg  : dict, 
+        ndof : int = 10) -> tuple[zres, tuple | None ]:
         '''
         Parameters
         --------------
@@ -385,10 +388,8 @@ class Fitter:
 
         Returns
         --------------
-        None if minimization fails. Otherwise tuple with:
-
         - Zfit result object
-        - Tuple with goodness of fit (pvalue, ndof, chi2)
+        - Tuple with goodness of fit (pvalue, ndof, chi2) or None when minimization fails
 
         Raises
         --------------
@@ -408,7 +409,7 @@ class Fitter:
             res = mnm.minimize(nll)
 
         if not Fitter.good_fit(res = res):
-            return None
+            return res, None
 
         if not Fitter._turn_off_errors:
             log.debug('Calculating errors')
@@ -507,11 +508,10 @@ class Fitter:
         last_res   = None
         for i_try in range(ntries):
             try:
-                val = self.minimize(nll, cfg, ndof=self._ndof)
-                if val is None:
+                res, gof = self.minimize(nll, cfg, ndof=self._ndof)
+                if gof is None:
                     continue
 
-                res, gof = val
             except (FailMinimizeNaN, FitterGofError, RuntimeError):
                 self._reshuffle_pdf_pars()
                 log.warning(f'{i_try:03}/{ntries:03} failed due to exception')
@@ -601,22 +601,19 @@ class Fitter:
             cfg_step             = dict(cfg)
             cfg_step['nentries'] = nsample
 
-            nll    = self._get_full_nll(cfg = cfg_step)
-            val    = self.minimize(nll, cfg_step, ndof=self._ndof)
-            if val is None:
+            nll      = self._get_full_nll(cfg = cfg_step)
+            res, gof = self.minimize(nll, cfg_step, ndof=self._ndof)
+            if gof is None:
                 raise ValueError('Minimization failed')
 
-            res, _ = val
             res.hesse(method='minuit_hesse')
             self._update_par_bounds(res, nsigma=nsigma, yields=l_yield)
 
         log.info('Fitting full sample')
-        nll    = self._get_full_nll(cfg = cfg)
-        val    = self.minimize(nll, cfg, ndof=self._ndof)
-        if val is None:
+        nll      = self._get_full_nll(cfg = cfg)
+        res, gof = self.minimize(nll, cfg, ndof=self._ndof)
+        if gof is None:
             raise ValueError('Minimization failed')
-
-        res, _ = val
 
         if res is None:
             nsteps = len(l_nsample)
@@ -719,12 +716,10 @@ class Fitter:
 
         if 'strategy' not in cfg:
             log.info('Not using any strategy, simple fit')
-            nll    = self._get_full_nll(cfg = cfg)
-            val    = self.minimize(nll, cfg, ndof=self._ndof)
-            if val is None:
+            nll      = self._get_full_nll(cfg = cfg)
+            res, gof = self.minimize(nll, cfg, ndof=self._ndof)
+            if gof is None:
                 raise ValueError('Minimization failed')
-
-            res, _ = val 
 
             return res
 
