@@ -6,7 +6,7 @@ ntoys    = config['ntoys'  ]
 conf_val = 'rare/rkst/electron'
 kind_val = 'rare_rkst_electron'
 out_path = '.eos/lhcb/wg/RD/RX_run3/fits/data'
-name     = 'scan_002'
+name     = 'scan_003'
 
 # ---------------------
 rule all:
@@ -28,7 +28,7 @@ rule toys:
         ntoys = ntoys,
         conf  = conf_val,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:e00f897b5'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:199ccb1e0'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell : 
