@@ -167,6 +167,7 @@ class SimFitter(BaseFitter, Cache):
             l_reuse = [self._mu_par, self._sg_par],
             l_shared= cfg.shared,
             l_float = cfg.float ,
+            ranges  = cfg.get('ranges'),
             d_rep   = cfg.reparametrize,
             d_fix   = cfg.fix)
 
