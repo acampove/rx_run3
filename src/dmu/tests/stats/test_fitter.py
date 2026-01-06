@@ -143,7 +143,7 @@ def test_constrain():
 
     assert res.valid
 #-------------------------------------
-def test_ranges():
+def test_ranges(tmp_path : Path):
     '''
     Fit data in disjoint ranges
     '''
@@ -155,8 +155,8 @@ def test_ranges():
     cfg   = {'ranges': rng}
 
     with GofCalculator.disabled(value=True):
-        obj   = Fitter(pdf, sam)
-        res   = obj.fit(cfg)
+        obj = Fitter(pdf, sam)
+        res = obj.fit(cfg)
 
     print(res)
     assert res.valid
@@ -164,7 +164,7 @@ def test_ranges():
     obj   = ZFitPlotter(data=sam, model=pdf)
     obj.plot(nbins=50, stacked=True, ranges=rng)
 
-    _save_fit(test='ranges', kind='fit')
+    _save_fit(test='ranges', kind='fit', out_path = tmp_path)
 #-------------------------------------
 # TODO: Need to improve this test
 def test_wgt():
