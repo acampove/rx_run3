@@ -1,4 +1,5 @@
 from .rdf_getter         import RDFGetter
+from .rdf_loader         import RDFLoader
 from .swp_calculator     import SWPCalculator
 from .spec_maker         import SpecMaker
 from .ntuple_partitioner import NtuplePartitioner 
@@ -10,5 +11,6 @@ __all__ = [
     'MisCalculator',
     'SWPCalculator',
     'RDFGetter', 
+    'RDFLoader',
     'Stats', 
     'SpecMaker']
