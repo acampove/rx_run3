@@ -458,8 +458,12 @@ class RDFGetter(SpecMaker):
         Dataframe after some basic preprocessing
         '''
         log.debug(f'Building dataframe from {conf_path} for {fpath}')
-        rdf = RDF.Experimental.FromSpec(str(conf_path))
 
+        rdf = RDFLoader.from_conf(
+            ntries = 10,
+            wait   = 30,
+            path   = conf_path)
+        
         nentries = rdf.Count().GetValue()
         if nentries == 0:
             log.warning(f'Found empty dataframe for {fpath}')
