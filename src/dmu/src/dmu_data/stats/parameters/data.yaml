@@ -118,9 +118,9 @@ gauss:
     high: 300
 dscb:
   mu:
-    val : 5300
-    low : 5000
-    high: 6000
+    val : 5250
+    low : 5200
+    high: 5300
   sg:
     val : 50
     low :  5 
