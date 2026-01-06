@@ -1,20 +1,18 @@
 '''
 Module containing unit tests for Fitter class
 '''
-
-import os
-from functools   import cache
-
 import tqdm
 import numpy
 import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
-from omegaconf        import OmegaConf
 
+from pathlib                  import Path
+from functools                import cache
+from omegaconf                import OmegaConf
 from dmu.stats.gof_calculator import GofCalculator
 from dmu.stats              import utilities as sut
-from dmu.generic            import utilities as gut
+from dmu.generic            import rxran, utilities as gut
 from dmu.stats.zfit         import zfit
 from dmu.stats.fitter       import Fitter
 from dmu.stats.zfit_plotter import ZFitPlotter
