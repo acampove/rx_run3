@@ -154,6 +154,7 @@ class FitConfig:
         LogStore.set_level('dmu:workflow:cache'                   , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:utilities'                  , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:model_factory'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:parameters'                 , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:gofcalculator'              , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_data:rdf_getter'                   , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_data:path_splitter'                , DEPENDENCIES_LEVEL)
