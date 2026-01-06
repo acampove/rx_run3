@@ -26,9 +26,6 @@ class Data:
     Data class used to store share data
     '''
     nsample = 100_000
-    plt_dir = '/tmp/tests/dmu/stats/fitter'
-    numpy.random.seed(42)
-
     arr_sig = numpy.random.normal(5.0, 0.5, size=10_000)
     arr_bkg = numpy.random.exponential(scale=10, size=10_000)
     arr_tot = numpy.concatenate((arr_sig, arr_bkg))
@@ -42,13 +39,15 @@ class Data:
 
     l_arg_simple = [arr, df, zf]
 #-------------------------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This will run before any test
     '''
     LogStore.set_level('dmu:statistics:fitter', 10)
-    os.makedirs(Data.plt_dir, exist_ok=True)
+
+    with rxran.seed(value = 42):
+        yield
 #-------------------------------------
 @cache
 def _get_weighted_data():
