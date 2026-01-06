@@ -544,6 +544,9 @@ class Fitter:
             # TODO: Need to plot binned data before raising for cases where fit fails
             raise FitterFailedFit('Cannot find any valid fit')
 
+        nres = len(d_pval_res)
+        log.info(f'Found {nres} results')
+
         return d_pval_res, last_res
     #------------------------------
     def _plot_data(self, nll : Loss) -> None:
