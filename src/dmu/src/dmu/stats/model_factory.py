@@ -2,6 +2,7 @@
 Module storing ZModel class
 '''
 
+from contextlib             import ExitStack
 from typing                 import Callable, Union
 from zfit.interface         import ZfitSpace     as zobs
 from zfit.pdf               import BasePDF       as zpdf
@@ -458,12 +459,43 @@ class ModelFactory:
 
         return l_type
     #-----------------------------------------
-    def _get_pdf(self, kind : str, preffix : str) -> zpdf:
+    def _get_pdf(
+        self, 
+        kind    : str, 
+        preffix : str) -> zpdf:
+        '''
+        Parameters
+        --------------------
+        kind   : Type of PDF, e.g. gauss, cbl
+        preffix: Prefix for parameters and PDF
+
+        Returns
+        --------------------
+        zfit PDF
+        '''
         fun = MethodRegistry.get_method(kind)
         if fun is None:
             raise NotImplementedError(f'PDF of type \"{kind}\" with preffix \"{preffix}\" is not implemented')
 
-        return fun(self, suffix = preffix)
+        if self._ranges is None:
+            log.debug(f'Not changing ranges of PDF parameters for {kind}')
+            return fun(self, suffix = preffix)
+
+        log.info(f'Changing ranges of PDF parameters for {kind}')
+        with ExitStack() as stack:
+            for parameter, [val, low, high] in self._ranges.items():
+                context = PL.values(
+                    parameter = parameter, 
+                    kind      = kind,
+                    val       = val, 
+                    low       = low,
+                    high      = high)
+
+                stack.enter_context(context)
+
+            pdf = fun(self, suffix = preffix)
+
+        return pdf
     #-----------------------------------------
     def _add_pdf(self, l_pdf : list[zpdf]) -> zpdf:
         nfrc = len(l_pdf)
