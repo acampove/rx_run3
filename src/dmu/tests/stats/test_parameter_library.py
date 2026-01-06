@@ -13,11 +13,11 @@ log=LogStore.add_logger('dmu:test_parameter_library')
 
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
-def _initialize():
+def initialize():
     '''
     This runs before the tests
     '''
-    LogStore.set_level('dmu:parameters', 10)
+    LogStore.set_level('dmu:stats:parameters', 10)
 # ----------------------
 def _check_parameter(par : zpar) -> None:
     '''

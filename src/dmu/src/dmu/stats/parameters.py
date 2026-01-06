@@ -10,7 +10,7 @@ from dmu.stats.zfit        import zfit
 from zfit.param            import Parameter as zpar
 from omegaconf             import DictConfig, OmegaConf
 
-log=LogStore.add_logger('dmu:parameters')
+log=LogStore.add_logger('dmu:stats:parameters')
 # --------------------------------
 class ParameterLibrary:
     '''
