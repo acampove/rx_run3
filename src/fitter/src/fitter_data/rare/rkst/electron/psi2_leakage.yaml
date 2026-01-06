@@ -12,6 +12,11 @@ float  :
   - sg
 reparametrize : {}
 fix           : {}
+ranges:
+  mu :
+    - 5600
+    - 5500
+    - 5800
 fit:
   strategy  :
     retry   :
