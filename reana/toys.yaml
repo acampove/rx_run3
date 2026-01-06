@@ -4,7 +4,7 @@ inputs:
     - snakemake/rules/scan.smk
     - setup.sh
   parameters:
-    input: ./snakemake/configs/scan_test.yaml
+    input: ./snakemake/configs/scan.yaml
 workspace:
   retention_days:
     '*': 1
