@@ -1,6 +1,8 @@
 '''
 Module holding RDFLoader class
 '''
+import time
+import cppyy
 
 from pathlib import Path
 from ROOT    import RDF  # type: ignore
@@ -33,7 +35,19 @@ class RDFLoader:
         -------------
         ROOT dataframe
         '''
-        rdf = RDF.Experimental.FromSpec(str(path))
+        itry = 0
 
-        return rdf
+        while itry < ntries:
+            try:
+                rdf = RDF.Experimental.FromSpec(str(path))
+                nentries = rdf.Count().GetValue()
+                log.debug(f'Succeeding loading {nentries} entries from: {path}')
+
+                return rdf
+            except (cppyy.gbl.std.runtime_error, RuntimeError):
+                log.warning(f'Loading of dataframe failed, retrying in {wait} seconds')
+                time.sleep(wait)
+                itry += 1
+
+        raise RuntimeError(f'Failed to load {path}')
 # ----------------------------------
