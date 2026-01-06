@@ -85,7 +85,7 @@ class ParameterLibrary:
         This function will override the value and range for the given parameter
         It should be typically used before using the ModelFactory class
         '''
-        if not low < val < high:
+        if not low <= val <= high:
             raise ValueError(f'Invalid values for {parameter} in {kind}: {low} < {val} < {high}')
 
         log.info(f'{parameter:<30}{val:<20.3f}{low:<20.3f}{high:<20.3f}')
