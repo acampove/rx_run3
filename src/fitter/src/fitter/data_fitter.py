@@ -119,7 +119,11 @@ class DataFitter(BaseFitter, Cache):
         if nll is None:
             raise ValueError('Likelihood is missing')
 
-        res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
+        res, gof = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
+        if gof is None:
+            log.error(res)
+            raise ValueError('Minimization failed')
+
         res.hesse(name='minuit_hesse')
 
         for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
