@@ -1,6 +1,5 @@
 reso_veto: &reso_veto
-  jpsi veto  : "TMath::Abs(B_const_mass_M       - 5280) > 300"
-  psi2s veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
+  jpsi veto  : "TMath::Abs(B_const_mass_M       - 5280) > 100"
 fit_strategy: &fit_strategy
   strategy : 
     retry :
@@ -19,9 +18,6 @@ constraints: &cons
       - bt
     fit :
       <<: *fit_strategy
-      ranges:
-        - [4500, 4900]
-        - [6000, 7000]
     plots:
       nbins : 60
 # --------------------------------------
