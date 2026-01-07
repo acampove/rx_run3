@@ -3,18 +3,33 @@ common_settings: &settings
   float         : []
   reparametrize : {}
   fix           : {}
+  constraints   :
+    sample     : DATA_24* 
+    trigger    : Hlt2RD_BuToKpEE_SameSign_MVA 
+    selection  :
+      jpsi veto: "TMath::Abs(B_const_mass_M - 5280) > 100"
+      bdt      : mva_cmb > 0.2 && mva_cmb < 0.7
+      mass     : (1)
+    parameters : # Will constrain parameters starting
+      - mu       # with any of these strings
+      - ap       # E.g mu_hypexp_combinatorial_1
+      - bt
+    fit :
+      fit_strategy:
+        strategy : 
+          retry :
+            ntries        : 20
+            pvalue_thresh : 0.05
+            ignore_status : False 
+    plots:
+      nbins : 60
+# -------------------------------------------------
 output_directory : reso/rk/electron/combinatorial
 categories:
   main:
     models :
       jpsi    : [hypexp]
-low:
-  <<: *settings
-central:
-  <<: *settings
 jpsi:
   <<: *settings
 psi2:
-  <<: *settings
-high:
   <<: *settings
