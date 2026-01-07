@@ -1,15 +1,15 @@
 '''
 Module used to test CmbConstraints class
 '''
-
-from omegaconf import DictConfig
 import pytest 
 
+from contextlib     import ExitStack
+from omegaconf      import DictConfig
 from dmu.stats.zfit import zfit
 from typing       import Final
 from pathlib      import Path
 from dmu.workflow import Cache
-from dmu.stats    import ConstraintND
+from dmu.stats    import ConstraintND, GofCalculator
 from rx_common    import Qsq
 from fitter       import CmbConstraints
 from dmu          import LogStore
