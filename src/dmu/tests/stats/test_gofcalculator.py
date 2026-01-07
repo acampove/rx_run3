@@ -2,8 +2,6 @@
 Module with tests for GofCalculator class
 '''
 import math
-from dataclasses              import dataclass
-
 import numpy
 import pytest
 
@@ -13,7 +11,6 @@ from dmu.logging.log_store    import LogStore
 
 log = LogStore.add_logger('dmu:stats:test_gofcalculator')
 #---------------------------------------------
-@dataclass
 class Data:
     '''
     Class used to share attributes
