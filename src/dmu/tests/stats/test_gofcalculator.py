@@ -56,3 +56,18 @@ def test_simple():
 
     assert math.isclose(gof, 0.9649746, abs_tol=1e-5)
 # -------------------------------------------
+def test_disable():
+    '''
+    Test disabling GofCalculator
+    '''
+    nll = _get_nll()
+    res = Data.minimizer.minimize(nll)
+    print(res)
+
+    with GofCalculator.disabled(value = True):
+        gcl = GofCalculator(nll, ndof=10)
+        pvl = gcl.get_gof(kind='pvalue')
+        chi = gcl.get_gof(kind='chi2')
+
+    assert pvl == 1 
+    assert chi == 0 
