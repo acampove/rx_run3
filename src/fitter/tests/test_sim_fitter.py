@@ -3,6 +3,7 @@ This module is meant to test the SimFitter class
 '''
 import pytest
 
+from contextlib             import ExitStack
 from pathlib                import Path
 from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities as gut
@@ -64,10 +65,23 @@ def test_with_cat(tmp_path : Path):
     '''
     Test for components with brem categories
     '''
-    obs   = zfit.Space('B_Mass', limits=(4500, 7000))
-    cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/signal_parametric.yaml')
+    obs   = zfit.Space('B_Mass', limits=(4500, 6000))
+    cfg   = gut.load_conf(package='fitter_data', fpath='reso/rk/electron/jpsi.yaml')
 
-    with Cache.cache_root(path = tmp_path):
+    cuts  = {
+        'bdt': '(mva_cmb > 0.8) && (mva_prc > 0.5)',
+        'mass': '(1)',
+        'block': 'block == 1',
+        'nobrm0': 'nbrem != 0',
+        'brem_cat': 'nbrem == 1',
+    }
+
+    with ExitStack() as stack:
+        stack.enter_context(Cache.cache_root(path = tmp_path))
+        stack.enter_context(RDFGetter.max_entries(value = -1))
+        stack.enter_context(LogStore.level('dmu:stats:fitter', 10))
+        stack.enter_context(sel.custom_selection(d_sel = cuts))
+
         ftr = SimFitter(
             name     = 'test_with_cat',
             component= 'signal_electron',
