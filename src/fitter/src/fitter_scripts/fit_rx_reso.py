@@ -84,6 +84,42 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
 
     return cfg
 # ----------------------
+def _add_constraints(
+    nll : ExtendedUnbinnedNLL,
+    cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
+    '''
+    Parameters
+    -------------
+    nll: Likelihood
+    cfg: Object holding configuration for fit 
+
+    Returns
+    -------------
+    Tuple with:
+
+    - Constrained likelihood
+    - List of constraints
+    '''
+    crd  = ConstraintReader(nll=nll, cfg=cfg)
+    cons = crd.get_constraints()
+
+    if cons is None:
+        log.warning('Not using any constraints')
+
+    log.info('Constraints:')
+    for constraint in cons:
+        log.info(constraint)
+
+    cons_str    = [ str(constraint) for constraint in cons ]
+    constraints = '\n\n'.join(cons_str)
+
+    cfg.fit_cfg['used_constraints'] = constraints
+
+    cad  = ConstraintAdder(nll=nll, constraints=cons)
+    nll  = cad.get_nll()
+
+    return nll, cons
+# ----------------------
 def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
     '''
     Parameters
@@ -105,6 +141,8 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
     nll = ftr.run()
     cfg_mod = ftr.get_config()
 
+    nll, _ = _add_constraints(nll=nll, cfg=cfg)
+
     if not isinstance(nll, ExtendedUnbinnedNLL):
         raise TypeError('Likelihood object is not an ExtendedUnbinnedNLL')
 
@@ -125,7 +163,9 @@ def _fit_electron(cfg : FitConfig) -> None:
         cfg.replace(substring='brem_001', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
-    with GofCalculator.disabled(value=True):
+    with ExitStack() as stack:
+        stack.enter_context(GofCalculator.disabled(value=True))
+        stack.enter_context(Fitter.criterion(status=True, valid=False))
         ftr = DataFitter(
             name = cfg.q2bin,
             d_nll= d_nll, 
