@@ -81,3 +81,28 @@ def test_simple_rare(q2bin : Qsq, tmp_path : Path):
     assert isinstance(constraint, ConstraintND)
 
     print(constraint)
+# ----------------------
+@pytest.mark.parametrize('q2bin', ['jpsi'])
+def test_simple_reso(q2bin : Qsq, tmp_path : Path):
+    '''
+    Simplest test of CmbConstraints
+    '''
+    fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader_reso.yaml')
+    nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
+
+    with Cache.cache_root(path = tmp_path),\
+        sel.custom_selection(d_sel = {
+            'bdt'   : 'mva_cmb > 0.3 && mva_prc > 0.4',
+            'brem'  : 'nbrem != 0'}):
+
+        calc      = CmbConstraints(
+            name  = _COMBINATORIAL_NAME,
+            nll   = nll,
+            cfg   = fit_cfg,
+            q2bin = q2bin)
+
+    constraint = calc.get_constraint()
+
+    assert isinstance(constraint, ConstraintND)
+
+    print(constraint)
