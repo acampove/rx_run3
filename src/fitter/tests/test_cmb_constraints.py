@@ -58,7 +58,7 @@ def _get_nll(
     return zlos(model = pdf, data = data)
 # ----------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_simple(q2bin : Qsq, tmp_path : Path):
+def test_simple_rare(q2bin : Qsq, tmp_path : Path):
     '''
     Simplest test of CmbConstraints
     '''
@@ -67,8 +67,8 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
 
     with Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {
-                             'bdt'   : 'mva_cmb > 0.3 && mva_prc > 0.4',
-                             'brem'  : 'nbrem != 0'}):
+            'bdt'   : 'mva_cmb > 0.3 && mva_prc > 0.4',
+            'brem'  : 'nbrem != 0'}):
 
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
