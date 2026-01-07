@@ -211,7 +211,7 @@ class CmbConstraints(BaseFitter, Cache):
         '''
         log.info('Constraints not found, calculating them')
         data    = self._get_data(rdf = self._rdf)
-        cfg_fit = self._cmb_cfg.constraints.fit
+        cfg_fit = self._cmb_cfg[self._q2bin].constraints.fit
         res     = self._fit(data=data, model=self._model, cfg = cfg_fit)
 
         self._save_fit(
