@@ -1,0 +1,31 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+trigger          : Hlt2RD_BuToKpEE_MVA
+output_directory : reso/rk/electron/data
+model:
+  yields    : model/yields/rk/reso_electron.yaml
+  observable:
+    jpsi:
+      name : B_Mass
+      range:
+        - 4500 
+        - 7000
+  components:
+    combinatorial : reso/rk/electron/combinatorial_non_dtf.yaml
+    ccbar         : reso/rk/electron/ccbar.yaml
+    jpsik         : reso/rk/electron/jpsi_non_dtf.yaml
+  constraints:
+    yields : []
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  yrange:
+    log   : [1.0,  1e6]
+    linear: [0.0, null]
+  nbins           : 100
+  stacked         : True
+  plot_components : ccbar
+  d_leg :
+    combinatorial : Combinatorial
+    ccbar         : $B_{s,d,u}\to c\bar{c} X$
+    jpsik         : $B^+\to J/\psi(\to e^+e^-) K^+$

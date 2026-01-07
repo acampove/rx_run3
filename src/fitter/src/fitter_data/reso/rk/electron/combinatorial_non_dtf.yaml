@@ -1,0 +1,20 @@
+common_settings: &settings
+  shared        : []
+  float         : []
+  reparametrize : {}
+  fix           : {}
+output_directory : reso/rk/electron/combinatorial
+categories:
+  main:
+    models :
+      jpsi    : [hypexp]
+low:
+  <<: *settings
+central:
+  <<: *settings
+jpsi:
+  <<: *settings
+psi2:
+  <<: *settings
+high:
+  <<: *settings
