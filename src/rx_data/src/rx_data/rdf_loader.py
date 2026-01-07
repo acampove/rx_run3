@@ -41,7 +41,7 @@ class RDFLoader:
             try:
                 rdf = RDF.Experimental.FromSpec(str(path))
                 nentries = rdf.Count().GetValue()
-                log.debug(f'Succeeding loading {nentries} entries from: {path}')
+                log.info(f'Succeeding loading {nentries} entries from: {path}')
 
                 return rdf
             except (cppyy.gbl.std.runtime_error, RuntimeError):
