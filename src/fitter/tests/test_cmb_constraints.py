@@ -9,7 +9,7 @@ from dmu.stats.zfit import zfit
 from typing       import Final
 from pathlib      import Path
 from dmu.workflow import Cache
-from dmu.stats    import ConstraintND, GofCalculator
+from dmu.stats    import ConstraintND
 from rx_common    import Qsq
 from fitter       import CmbConstraints
 from dmu          import LogStore
@@ -90,11 +90,13 @@ def test_simple_reso(q2bin : Qsq, tmp_path : Path):
     '''
     fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader_reso.yaml')
     nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
+    cuts      = {
+            'bdt'   : 'mva_cmb > 0.3 && mva_cmb < 0.7 && mva_prc > 0.8',
+            'brem'  : 'nbrem != 0'}
 
-    with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel = {
-            'bdt'   : 'mva_cmb > 0.3 && mva_prc > 0.4',
-            'brem'  : 'nbrem != 0'}):
+    with ExitStack() as stack:
+        stack.enter_context(Cache.cache_root(path = tmp_path))
+        stack.enter_context(sel.custom_selection(d_sel = cuts))
 
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
@@ -102,7 +104,7 @@ def test_simple_reso(q2bin : Qsq, tmp_path : Path):
             cfg   = fit_cfg,
             q2bin = q2bin)
 
-    constraint = calc.get_constraint()
+        constraint = calc.get_constraint()
 
     assert isinstance(constraint, ConstraintND)
 
