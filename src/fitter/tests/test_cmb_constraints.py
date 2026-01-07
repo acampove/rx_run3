@@ -73,6 +73,7 @@ def test_simple_rare(q2bin : Qsq, tmp_path : Path):
 
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
+            kind  = '',
             nll   = nll,
             cfg   = fit_cfg,
             q2bin = q2bin)
@@ -100,6 +101,7 @@ def test_simple_reso(q2bin : Qsq, tmp_path : Path):
 
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
+            kind  = '',
             nll   = nll,
             cfg   = fit_cfg,
             q2bin = q2bin)
