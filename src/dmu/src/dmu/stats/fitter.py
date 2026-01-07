@@ -409,6 +409,10 @@ class Fitter:
             res = mnm.minimize(nll)
 
         if not Fitter.good_fit(res = res):
+            log.debug('Found bad fit')
+            if log.getEffectiveLevel() < 20:
+                log.info(res)
+
             return res, None
 
         if not Fitter._turn_off_errors:
