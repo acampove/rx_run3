@@ -130,6 +130,7 @@ class ConstraintReader:
 
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
+            kind  = self._cfg.name,
             nll   = self._nll,
             cfg   = self._cfg.fit_cfg,
             q2bin = self._cfg.q2bin)
