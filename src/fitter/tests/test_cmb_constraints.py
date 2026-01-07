@@ -40,8 +40,9 @@ def _get_nll(
     '''
     pdfs    = cfg.model.components['combinatorial'].categories.main.models[q2bin]
     cmb_cfg = cfg.model.components['combinatorial'][q2bin]
+    obs_cfg = cfg.model.observable[q2bin]
 
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 6996))
+    obs = zfit.Space(obs_cfg.name, limits=obs_cfg.range)
     mod = ModelFactory(
         preffix = 'combinatorial',
         obs     = obs,
