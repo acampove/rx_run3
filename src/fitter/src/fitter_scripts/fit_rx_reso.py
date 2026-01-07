@@ -4,27 +4,28 @@ and run fits to the resonant mode
 '''
 
 import os
-
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-
 import argparse
 
-from rx_common                 import Sample
-from contextlib                import ExitStack
-from dmu.stats.gof_calculator  import GofCalculator
-from omegaconf                 import DictConfig
-from dmu.stats.parameters      import ParameterLibrary as PL
-from dmu.generic               import utilities as gut
-from dmu.stats                 import utilities as sut
-from dmu.workflow.cache        import Cache
-from dmu.logging.log_store     import LogStore
-from zfit.loss                 import ExtendedUnbinnedNLL
+from rx_common     import Sample
+from omegaconf     import DictConfig
+from contextlib    import ExitStack
+from dmu.generic   import utilities as gut
+from dmu.stats     import GofCalculator
+from dmu.stats     import ParameterLibrary as PL
+from dmu.stats     import Fitter, utilities as sut
+from dmu.stats     import ConstraintAdder
+from dmu.stats     import Constraint
+from dmu.workflow  import Cache
+from dmu           import LogStore
+from zfit.loss     import ExtendedUnbinnedNLL
 
-from fitter.fit_config         import FitConfig
-from fitter.data_fitter        import DataFitter
-from fitter.likelihood_factory import LikelihoodFactory
-from rx_data.rdf_getter        import RDFGetter
-from rx_selection              import selection as sel
+from fitter        import ConstraintReader
+from fitter        import FitConfig
+from fitter        import DataFitter
+from fitter        import LikelihoodFactory
+from rx_data       import RDFGetter
+from rx_selection  import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_reso')
 # ----------------------
