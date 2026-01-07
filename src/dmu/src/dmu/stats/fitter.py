@@ -23,7 +23,7 @@ from zfit.param               import Parameter     as zpar
 from zfit.data                import Data          as zdat
 from zfit                     import Space         as zobs
 
-log = LogStore.add_logger('dmu:statistics:fitter')
+log = LogStore.add_logger('dmu:stats:fitter')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
 #------------------------------
 class ParameterHolder(Protocol):

@@ -44,7 +44,7 @@ def initialize():
     '''
     This will run before any test
     '''
-    LogStore.set_level('dmu:statistics:fitter', 10)
+    LogStore.set_level('dmu:stats:fitter', 10)
 
     with rxran.seed(value = 42):
         yield

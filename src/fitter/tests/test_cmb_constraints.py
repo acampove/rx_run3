@@ -28,7 +28,7 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('fitter:cmb_constraints', 10)
-    LogStore.set_level('dmu:statistics:fitter' , 10)
+    LogStore.set_level('dmu:stats:fitter'      , 10)
 # ----------------------
 def _get_nll(
     cfg   : DictConfig,

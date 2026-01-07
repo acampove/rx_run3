@@ -27,7 +27,7 @@ def initialize():
     plt.style.use(mplhep.style.LHCb2)
 
     LogStore.set_level('dmu:stats:gofcalculator', 30)
-    LogStore.set_level('dmu:statistics:fitter'  , 20)
+    LogStore.set_level('dmu:stats:fitter'       , 20)
     LogStore.set_level('fitter:toy_maker'       , 10)
     LogStore.set_level('fitter:constraint_adder', 10)
 

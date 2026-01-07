@@ -161,7 +161,7 @@ def _set_logs() -> None:
     Silence loggers to reduce noise
     '''
     LogStore.set_level('dmu:zfit_plotter'      , 30)
-    LogStore.set_level('dmu:statistics:fitter' , 30)
+    LogStore.set_level('dmu:stats:fitter'      , 30)
     LogStore.set_level('rx_data:rdf_getter'    , 30)
     LogStore.set_level('rx_selection:selection', Data.loglvl)
     LogStore.set_level('rx_fitter:validate_cmb', Data.loglvl)

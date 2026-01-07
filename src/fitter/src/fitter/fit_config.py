@@ -150,9 +150,9 @@ class FitConfig:
         else:
             DEPENDENCIES_LEVEL = 30
 
-        LogStore.set_level('dmu:statistics:fitter'                , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:workflow:cache'                   , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:utilities'                  , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:fitter'                     , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:model_factory'              , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:parameters'                 , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:gofcalculator'              , DEPENDENCIES_LEVEL)

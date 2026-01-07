@@ -88,7 +88,7 @@ def _initialize():
     plt.style.use(mplhep.style.LHCb2)
     cfg = _load_config()
 
-    LogStore.set_level('dmu:statistics:fitter', cfg.logl)
+    LogStore.set_level('dmu:stats:fitter', cfg.logl)
     LogStore.set_level('dmu:stats:utilities'  , cfg.logl)
     LogStore.set_level('rx_q2:get_q2_tables'  , cfg.logl)
     LogStore.set_level('rx_data:rdf_getter'   , cfg.logl)
