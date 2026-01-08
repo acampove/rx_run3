@@ -143,29 +143,24 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
 
     nll, _ = _add_constraints(nll=nll, cfg=cfg)
 
-    if not isinstance(nll, ExtendedUnbinnedNLL):
-        raise TypeError('Likelihood object is not an ExtendedUnbinnedNLL')
-
     return nll, cfg_mod
 # ----------------------
 def _fit_electron(cfg : FitConfig) -> None:
     '''
     This is where DataFitter is used
     '''
-    d_nll = {}
+    d_nll : dict[str, tuple[ExtendedUnbinnedNLL, DictConfig]] = {}
     with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 1'}):
         cfg.name = 'brem_001'
-        cfg.replace(substring='brem_xxx', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
     with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 2'}):
         cfg.name = 'brem_002'
-        cfg.replace(substring='brem_001', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
     with ExitStack() as stack:
         stack.enter_context(GofCalculator.disabled(value=True))
-        stack.enter_context(Fitter.criterion(status=True, valid=False))
+        stack.enter_context(Fitter.criterion(status=False, valid=False))
         ftr = DataFitter(
             name = cfg.q2bin,
             d_nll= d_nll, 
