@@ -48,6 +48,9 @@ class Fitter:
     '''
     Class meant to be an interface to underlying fitters
     '''
+    _status = True # Enforce status == 0 when declaring fits as good
+    _valid  = True # Enforce validity when declaring fits as good
+
     # This is meant to be used through a context manager
     # To allow the errors to be calculated or not
     _turn_off_errors  = False
@@ -499,8 +502,13 @@ class Fitter:
         -----------
         True if fit is good
         '''
+        if Fitter._status and res.status != 0:
+            return False
 
-        return res.status == 0 and res.valid
+        if Fitter._valid  and not res.valid:
+            return False
+
+        return True 
     #------------------------------
     def _fit_retries(self, cfg : dict) -> tuple[dict[tuple[float, int, float],zres], zres]:
         ntries       = cfg['strategy']['retry']['ntries']
@@ -758,6 +766,33 @@ class Fitter:
                 yield
             finally:
                 Fitter._turn_off_errors = old_val
+
+        return _context()
+    # ----------------------
+    @classmethod
+    def criterion(
+        cls, 
+        status : bool = True, 
+        valid  : bool = True):
+        '''
+        Parameters
+        -------------
+        status: If False, it will ignore status when declaring fits as good
+        valid : If False, it will ignore validity when declaring fits as good
+        '''
+        old_status = Fitter._status
+        old_valid  = Fitter._valid
+
+        Fitter._status = status 
+        Fitter._valid  = valid 
+
+        @contextlib.contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                Fitter._valid  = old_valid 
+                Fitter._status = old_status 
 
         return _context()
 #------------------------------
