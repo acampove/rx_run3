@@ -5,9 +5,12 @@ Module holding zfitter class
 import contextlib
 import pprint
 import numpy
+import tempfile
 import pandas            as pd
 import matplotlib.pyplot as plt
 
+from asdf                     import AsdfFile
+from pathlib                  import Path
 from typing                   import Protocol, Union
 from functools                import lru_cache
 from dmu.logging              import messages  as mes
