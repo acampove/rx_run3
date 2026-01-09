@@ -5,15 +5,15 @@ import pytest
 
 from contextlib             import ExitStack
 from pathlib                import Path
+from dmu                    import LogStore
 from dmu.stats.zfit         import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
-from dmu.workflow.cache     import Cache
-from rx_common.types        import Trigger
-from rx_data.rdf_getter     import RDFGetter
+from dmu.workflow           import Cache
+from rx_common              import Sample, Trigger
+from rx_data                import RDFGetter
 from rx_selection           import selection as sel
-from fitter.sim_fitter      import SimFitter
-from dmu.logging.log_store  import LogStore
+from fitter                 import SimFitter
 
 log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
