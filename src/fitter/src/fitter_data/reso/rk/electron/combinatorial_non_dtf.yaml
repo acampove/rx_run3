@@ -15,12 +15,11 @@ common_settings: &settings
       - ap       # E.g mu_hypexp_combinatorial_1
       - bt
     fit :
-      fit_strategy:
-        strategy : 
-          retry :
-            ntries        : 20
-            pvalue_thresh : 0.05
-            ignore_status : False 
+      strategy : 
+        retry :
+          ntries        : 20
+          pvalue_thresh : 0.05
+          ignore_status : False 
     plots:
       nbins : 60
 # -------------------------------------------------
