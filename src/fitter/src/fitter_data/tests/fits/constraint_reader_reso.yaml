@@ -10,7 +10,7 @@ model:
       name : B_Mass
       range:
         - 4500 
-        - 6900
+        - 7000
   components:
     combinatorial                     : tests/fits/combinatorial_reso.yaml
     ccbar                             : rare/rk/electron/ccbar.yaml
