@@ -93,7 +93,7 @@ class DataModel:
             with SpecMaker.project(name = project):
                 ftr  = SimFitter(
                     name     = name,
-                    component= component,
+                    sample   = component,
                     trigger  = trigger,
                     q2bin    = self._q2bin,
                     cfg      = cfg,
