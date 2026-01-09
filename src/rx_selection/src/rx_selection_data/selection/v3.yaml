@@ -7,14 +7,23 @@ cascade_common : &cascade_common
   psi2    : swp_cascade_mass_swp    > 1900
   high    : swp_cascade_mass_swp    > 1900 || swp_cascade_mass_swp < 1800
 
-bdt_common: &bdt_common
-  low     : (mva_cmb > 0.60) && (mva_prc > 0.80)
-  central : (mva_cmb > 0.60) && (mva_prc > 0.80)
-  cen_low : (mva_cmb > 0.60) && (mva_prc > 0.80)
-  cen_high: (mva_cmb > 0.60) && (mva_prc > 0.80)
-  jpsi    : (mva_cmb > 0.60) && (mva_prc > 0.80)
-  psi2    : (mva_cmb > 0.60) && (mva_prc > 0.80)
-  high    : (mva_cmb > 0.60) && (mva_prc > 0.80)
+cmb_common: &cmb_common
+  low     : mva_cmb > 0.60
+  central : mva_cmb > 0.60
+  cen_low : mva_cmb > 0.60
+  cen_high: mva_cmb > 0.60
+  jpsi    : mva_cmb > 0.60
+  psi2    : mva_cmb > 0.60
+  high    : mva_cmb > 0.60
+
+prc_common: &prc_common
+  low     : mva_prc > 0.80
+  central : mva_prc > 0.80
+  cen_low : mva_prc > 0.80
+  cen_high: mva_prc > 0.80
+  jpsi    : mva_prc > 0.80
+  psi2    : mva_prc > 0.80
+  high    : mva_prc > 0.80
 
 q2_common: &q2_common
   low     : (q2       >   100000) && (q2 <  1100000)
@@ -128,8 +137,10 @@ RK: &rk
       <<: *cascade_common
     hop       :
       <<: *hop_common
-    bdt       :
-      <<: *bdt_common
+    cmb       :
+      <<: *cmb_common
+    prc       :
+      <<: *prc_common
     mass:
       <<: *mass_ee
   MM:
@@ -157,8 +168,10 @@ RK: &rk
       high    : (1) 
     hop       :
       <<: *hop_common
-    bdt       :
-      <<: *bdt_common
+    cmb       :
+      <<: *cmb_common
+    prc       :
+      <<: *prc_common
     mass:
       <<: *mass_mm
 # --------------------
