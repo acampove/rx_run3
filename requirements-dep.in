@@ -1,4 +1,5 @@
 pytest-cov
+asdf
 cffi
 pytest-split
 pytest-xdist
