@@ -195,7 +195,8 @@ def main(args : DictConfig | None = None):
         'mass'  : '(1)',
         'block' : cfg.block_cut,
         'nobrm0': cfg.brem_cut,
-        'bdt'   : cfg.mva_cut}
+        'cmb'   : cfg.cmb_cut,
+        'prc'   : cfg.prc_cut}
 
     Cache.set_cache_root(root=cfg.output_directory)
     with ExitStack() as stack:
