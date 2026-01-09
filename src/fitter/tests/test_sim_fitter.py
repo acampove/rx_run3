@@ -70,7 +70,8 @@ def test_with_cat(tmp_path : Path):
 
     cuts  = {
         #'q2' : '(1)',
-        'bdt': '(mva_cmb > 0.8) && (mva_prc > 0.5)',
+        'cmb': 'mva_cmb > 0.85',
+        'prc': 'mva_prc > 0.50',
         'mass': '(1)',
         'block': 'block == 1',
         'nobrm0': 'nbrem != 0',
