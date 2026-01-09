@@ -738,7 +738,7 @@ class Fitter:
         log.info(30 * '-')
         log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         log.info(30 * '-')
-        if 'retry' in cfg['strategy']:
+        if   'retry' in cfg['strategy']:
             log.info('Using retry strategy')
             d_pval_res, last_res = self._fit_retries(cfg)
             res = self._pick_best_fit(d_pval_res, last_res)
