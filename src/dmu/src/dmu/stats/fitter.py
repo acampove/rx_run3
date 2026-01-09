@@ -577,6 +577,11 @@ class Fitter:
         return d_pval_res, last_res
     #------------------------------
     def _plot_fit(self, nll : Loss) -> None:
+        '''
+        Parameters
+        ---------------
+        nll: Negative log likelihood with model and data from fit
+        '''
         data = nll.data[0]
         pdf  = nll.model[0]
 
