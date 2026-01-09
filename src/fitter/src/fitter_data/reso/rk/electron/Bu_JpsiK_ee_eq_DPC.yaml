@@ -18,7 +18,7 @@ fix           : {}
 fit:
   strategy  :
     retry   :
-      ntries        : 15
+      ntries        : 3 
       pvalue_thresh : 0.05
       ignore_status : false
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
