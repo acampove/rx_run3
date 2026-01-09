@@ -1,25 +1,5 @@
 reso_veto: &reso_veto
-  jpsi veto  : "TMath::Abs(B_const_mass_M       - 5280) > 100"
-fit_strategy: &fit_strategy
-  strategy : 
-    retry :
-      ntries        : 20
-      pvalue_thresh : 0.05
-      ignore_status : False 
-constraints: &cons
-    sample     : DATA_24* 
-    trigger    : Hlt2RD_BuToKpEE_SameSign_MVA 
-    selection  :
-      mass : (1)
-      <<: *reso_veto
-    parameters : # Will constrain parameters starting
-      - mu       # with any of these strings
-      - ap       # E.g mu_hypexp_combinatorial_1
-      - bt
-    fit :
-      <<: *fit_strategy
-    plots:
-      nbins : 60
+  jpsi veto  : "TMath::Abs(B_const_mass_M - 5280) > 100"
 # --------------------------------------
 output_directory : reso/electron/combinatorial
 categories:
@@ -32,4 +12,20 @@ jpsi:
   reparametrize : {}
   fix           : {}
   constraints:
-    <<: *cons
+    sample     : DATA_24* 
+    trigger    : Hlt2RD_BuToKpEE_SameSign_MVA 
+    selection  :
+      mass : (1)
+      <<: *reso_veto
+    parameters : # Will constrain parameters starting
+      - mu       # with any of these strings
+      - ap       # E.g mu_hypexp_combinatorial_1
+      - bt
+    fit :
+      strategy : 
+        retry :
+          ntries        : 20
+          pvalue_thresh : 0.05
+          ignore_status : False 
+    plots:
+      nbins : 50
