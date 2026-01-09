@@ -566,6 +566,7 @@ class Fitter:
                 log.info(res)
 
             self._plot_fit(nll=nll)
+            self._save_nll(nll=nll)
 
         if last_res is None:
             # TODO: Need to plot binned data before raising for cases where fit fails
@@ -575,6 +576,24 @@ class Fitter:
         log.info(f'Found {nres} results')
 
         return d_pval_res, last_res
+    #------------------------------
+    def _save_nll(self, nll : Loss) -> None:
+        '''
+        Parameters
+        ---------------
+        nll: Negative log likelihood with model and data from fit
+        '''
+        out_path = tempfile.mkdtemp()
+        fpath    = f'{out_path}/nll.asdf'
+
+        obj : AsdfFile = nll.to_asdf()
+        try:
+            obj.write_to(fd = fpath)
+        except Exception:
+            log.error('Could not serialize NLL')
+            return
+
+        log.info(f'Saved NLL to: {fpath}')
     #------------------------------
     def _plot_fit(self, nll : Loss) -> None:
         '''
