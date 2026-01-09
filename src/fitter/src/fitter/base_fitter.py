@@ -178,7 +178,7 @@ class BaseFitter:
         except Exception:
             raise ValueError('Cannot retrieve brem cut string from cuts dictionary')
 
-        sel_fit = yaml.dump(cuts_fit)
+        sel_fit = yaml.dump(cuts_fit, sort_keys=False)
 
         return sel_fit, sel_dif, brem_cuts
     # --------------------------
