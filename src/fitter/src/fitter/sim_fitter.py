@@ -302,9 +302,16 @@ class SimFitter(BaseFitter, Cache):
             Values: Selection for data that was fitted and default
         '''
         cfg        = {}
-        cfg['fit'] = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin)
+        cfg['fit'] = sel.selection(
+            process=self._cfg.sample, 
+            trigger=self._trigger, 
+            q2bin  =self._q2bin)
+
         with sel.custom_selection(d_sel={}, force_override=True):
-            cfg['default'] = sel.selection(process=self._cfg.sample, trigger=self._trigger, q2bin=self._q2bin)
+            cfg['default'] = sel.selection(
+                process=self._cfg.sample, 
+                trigger=self._trigger, 
+                q2bin  =self._q2bin)
 
         return OmegaConf.create(cfg)
     # ------------------------
