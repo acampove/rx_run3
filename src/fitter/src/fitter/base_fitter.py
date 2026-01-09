@@ -165,6 +165,7 @@ class BaseFitter:
         # For components like combinatorial, there is no MC sample
         # Therefore the selection or brem category does not make sense
         if self._sample == Sample.undefined:
+            log.info('Undefined sample, not saving sample text')
             return '', '', ''
 
         cuts_ini : dict[str,str] = OmegaConf.to_container(selection.default) # type: ignore
