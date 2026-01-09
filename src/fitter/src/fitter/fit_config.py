@@ -188,13 +188,22 @@ class FitConfig:
         gut.dump_json(data = data, path = path, exists_ok = True)
     # ----------------------
     @cached_property
-    def mva_cut(self) -> str:
+    def cmb_cut(self) -> str:
         '''
         Returns
         -------------
         Cut used for MVA
         '''
-        return f'(mva_cmb > {self.mva_cmb}) && (mva_prc > {self.mva_prc})'
+        return f'mva_cmb > {self.mva_cmb}'
+    # ----------------------
+    @cached_property
+    def prc_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        Cut used for MVA
+        '''
+        return f'mva_prc > {self.mva_prc}'
     # ----------------------
     @cached_property
     def block_cut(self) -> str:
@@ -243,7 +252,8 @@ class FitConfig:
         return {
             'block' : self.block_cut,
             'brem'  : self.brem_cut,
-            'bdt'   : self.mva_cut,
+            'cmb'   : self.cmb_cut,
+            'prc'   : self.prc_cut,
         }
     # ----------------------
     # ----------------------
