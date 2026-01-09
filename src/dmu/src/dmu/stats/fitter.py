@@ -13,6 +13,7 @@ from functools                import lru_cache
 from dmu.logging              import messages  as mes
 from dmu.logging.log_store    import LogStore
 from dmu.stats.gof_calculator import GofCalculator
+from dmu.stats.zfit_plotter   import ZFitPlotter
 from dmu.stats.zfit           import zfit
 
 from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
@@ -556,7 +557,8 @@ class Fitter:
             self._reshuffle_pdf_pars()
 
         if last_res is None and isinstance(nll, Loss):
-            self._plot_data(nll=nll)
+
+            self._plot_fit(nll=nll)
 
         if last_res is None:
             # TODO: Need to plot binned data before raising for cases where fit fails
@@ -567,15 +569,12 @@ class Fitter:
 
         return d_pval_res, last_res
     #------------------------------
-    def _plot_data(self, nll : Loss) -> None:
+    def _plot_fit(self, nll : Loss) -> None:
         data = nll.data[0]
-        arr  = data.to_numpy()
-        arr  = arr[~numpy.isnan(arr)]
+        pdf  = nll.model[0]
 
-        rms  = numpy.std(arr)
-        mean = numpy.mean(arr)
-
-        plt.hist(arr, bins=100, range=(mean - 10 * rms, mean + 10 * rms))
+        obj  = ZFitPlotter(data=data, model=pdf, result=None)
+        obj.plot(nbins=50)
         plt.show()
     #------------------------------
     def _pick_best_fit(
