@@ -13,7 +13,6 @@ from dmu.stats.zfit           import zfit
 from dmu.workflow             import Cache
 from dmu                      import LogStore
 
-from rx_efficiencies          import DecayNames
 from rx_common                import Trigger, Sample
 from rx_selection             import selection        as sel
 from zfit.data                import Data             as zdata
@@ -34,7 +33,7 @@ class SimFitter(BaseFitter, Cache):
     # ------------------------
     def __init__(
         self,
-        component : str,
+        sample    : Sample,
         trigger   : Trigger,
         q2bin     : str,
         cfg       : DictConfig,
@@ -52,13 +51,13 @@ class SimFitter(BaseFitter, Cache):
         '''
         BaseFitter.__init__(self)
         log.info(20 * '-')
-        log.info(f'Fitting {component}/{name}')
+        log.info(f'Fitting {sample}/{name}')
         log.info(20 * '-')
 
-        self._sample    = Sample(DecayNames.sample_from_decay(component, fall_back='undefined'))
+        self._sample    = sample
         self._name      = name
         self._category  = self._get_category(cfg=cfg)
-        self._component = component
+        self._component = sample
         self._trigger   = trigger
         self._q2bin     = q2bin
         self._cfg       = cfg
