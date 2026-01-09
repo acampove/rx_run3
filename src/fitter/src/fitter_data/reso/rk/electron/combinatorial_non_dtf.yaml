@@ -8,7 +8,7 @@ common_settings: &settings
     trigger    : Hlt2RD_BuToKpEE_SameSign_MVA 
     selection  :
       jpsi veto: "TMath::Abs(B_const_mass_M - 5280) > 100"
-      bdt      : mva_cmb > 0.2 && mva_cmb < 0.7
+      cmb      : mva_cmb > 0.2 && mva_cmb < 0.7
       mass     : (1)
     parameters : # Will constrain parameters starting
       - mu       # with any of these strings
