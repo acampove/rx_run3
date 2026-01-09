@@ -223,12 +223,12 @@ class BaseFitter:
         - Text that goes inside plot with selection information
         '''
         nentries                   = self._entries_from_data(data=data)
-        sel_def, sel_dif, brem_txt = self._get_selection_text(selection=selection)
+        sel_fit, sel_dif, brem_txt = self._get_selection_text(selection=selection)
 
         sensitivity = self._get_sensitivity(res=res)
         title       = f'$\\delta={sensitivity:.2f}$%; Entries={nentries:.0f}; Brem:{brem_txt}'
 
-        return title, sel_def, sel_dif
+        return title, sel_fit, sel_dif
     # ------------------------
     def _save_fit(
         self,
