@@ -523,6 +523,8 @@ class Fitter:
             try:
                 res, gof = self.minimize(nll, cfg, ndof=self._ndof)
                 if gof is None:
+                    if log.getEffectiveLevel() < 20:
+                        log.debug(res)
                     continue
 
             except (FailMinimizeNaN, FitterGofError, RuntimeError):
@@ -557,6 +559,8 @@ class Fitter:
             self._reshuffle_pdf_pars()
 
         if last_res is None and isinstance(nll, Loss):
+            for res in d_pval_res.values():
+                log.info(res)
 
             self._plot_fit(nll=nll)
 
