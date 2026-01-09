@@ -157,6 +157,8 @@ class Sample(StrEnum):
     '''
     undefined      = 'undefined'
     # -----
+    ccbar          = 'ccbar' # Only needed as placeholder for inclusive charmonium mix
+    # -----
     data_24        = 'DATA_24*'
     # -----
     bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
@@ -166,6 +168,9 @@ class Sample(StrEnum):
     bpkpmm         = 'Bu_Kmumu_eq_btosllball05_DPC'
     bpkpjpsimm     = 'Bu_JpsiK_mm_eq_DPC'
     bpkppsi2mm     = 'Bu_psi2SK_mm_eq_DPC'
+    # -----
+    bppipjpsiee    = 'Bu_JpsiPi_ee_eq_DPC'
+    bppipjpsimm    = 'Bu_JpsiPi_mm_eq_DPC'
     # -----
     bdkstkpiee     = 'Bd_Kstee_eq_btosllball05_DPC'
     bdkstkpijpsiee = 'Bd_JpsiKst_ee_eq_DPC'
@@ -187,6 +192,12 @@ class Sample(StrEnum):
     bpjpsixmm      = 'Bu_JpsiX_mm_eq_JpsiInAcc'
     bdjpsixmm      = 'Bd_JpsiX_mm_eq_JpsiInAcc'
     bsjpsixmm      = 'Bs_JpsiX_mm_eq_JpsiInAcc'
+    # -----
+    # Hadronic misid
+    # -----
+    bpkkk          = 'Bu_KplKplKmn_eq_sqDalitz_DPC'
+    bpkpik         = 'Bu_KplpiplKmn_eq_sqDalitz_DPC'
+    bpkpipi        = 'Bu_piplpimnKpl_eq_sqDalitz_DPC' 
     # --------------------------------------------
     @property
     def subdecays(self) -> list[str]:
