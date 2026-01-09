@@ -395,7 +395,10 @@ def apply_full_selection(
     log.info(60 * '-')
     for cut_name, cut_value in d_sel.items():
         log.debug(f'{cut_name:<40}{cut_value}')
-        rdf = rdf.Filter(cut_value, cut_name)
+        try:
+            rdf = rdf.Filter(cut_value, cut_name)
+        except Exception as exc:
+            raise ValueError(f'Cannot apply cut {cut_name} = {cut_value}') from exc
 
     if out_path:
         _save_cutflow(path=out_path, rdf=rdf, cuts=d_sel)
