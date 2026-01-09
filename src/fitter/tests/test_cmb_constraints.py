@@ -63,13 +63,16 @@ def test_simple_rare(q2bin : Qsq, tmp_path : Path):
     '''
     Simplest test of CmbConstraints
     '''
-    fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
-    nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
+    fit_cfg  = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
+    nll      = _get_nll(cfg = fit_cfg, q2bin = q2bin)
+    cuts     = {
+    'cmb'   : 'mva_cmb > 0.3',
+    'prc'   : 'mva_prc > 0.4',
+    'brem'  : 'nbrem != 0'}
 
-    with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel = {
-            'bdt'   : 'mva_cmb > 0.3 && mva_prc > 0.4',
-            'brem'  : 'nbrem != 0'}):
+    with ExitStack() as stack:
+        stack.enter_context(Cache.cache_root(path = tmp_path))
+        stack.enter_context(sel.custom_selection(d_sel = cuts))
 
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
@@ -92,8 +95,12 @@ def test_simple_reso(q2bin : Qsq, tmp_path : Path):
     fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader_reso.yaml')
     nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
     cuts      = {
-            'bdt'   : 'mva_cmb > 0.3 && mva_cmb < 0.7 && mva_prc > 0.8',
-            'brem'  : 'nbrem != 0'}
+        'block'   : 'block == 1',
+        'cmb'     : 'mva_cmb > 0.2 && mva_cmb < 0.7',
+        'prc'     : 'mva_prc > 0.5',
+        'nobrm0'  : 'nbrem != 0',
+        'brem_cat': 'nbrem == 1',
+    }
 
     with ExitStack() as stack:
         stack.enter_context(Cache.cache_root(path = tmp_path))
