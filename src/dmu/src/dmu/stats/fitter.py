@@ -527,6 +527,7 @@ class Fitter:
                 if gof is None:
                     if log.getEffectiveLevel() < 20:
                         log.debug(res)
+                    self._reshuffle_pdf_pars()
                     continue
 
             except (FailMinimizeNaN, FitterGofError, RuntimeError):
@@ -559,6 +560,7 @@ class Fitter:
 
             log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
             self._reshuffle_pdf_pars()
+        # Loop ends here
 
         if last_res is None and isinstance(nll, Loss):
             for res in d_pval_res.values():
