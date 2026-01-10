@@ -35,7 +35,7 @@ def max_entries():
 # -------------------------------------------------
 def _validate_data(
     data     : zdata, 
-    name     : str,
+    name     : Path,
     tmp_path : Path) -> None:
     '''
     Makes validation plots from zfit data
@@ -55,14 +55,14 @@ def _validate_data(
     plt.close()
 # -------------------------------------------------
 @pytest.mark.parametrize('sample', [
-    'DATA_24_MagDown_24c2',
-    'Bu_JpsiK_mm_eq_DPC'])
-def test_muon_data(tmp_path : Path, sample : str):
+    Sample.data_24,
+    Sample.bpkpjpsimm])
+def test_muon_data(tmp_path : Path, sample : Sample):
     '''
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
-    name= f'data_preprocessor/{sample}_muon_data'
+    name= Path(f'data_preprocessor/{sample}_muon_data')
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
@@ -77,15 +77,18 @@ def test_muon_data(tmp_path : Path, sample : str):
     _validate_data(data=dat, name=name, tmp_path = tmp_path)
 # -------------------------------------------------
 @pytest.mark.parametrize('sample', [
-    'DATA_24_MagDown_24c2',
-    'Bu_JpsiK_ee_eq_DPC'])
+    Sample.data_24,
+    Sample.bpkpjpsiee])
 @pytest.mark.parametrize('brem_cat', [0, 1, 2])
-def test_brem_cat_data(tmp_path : Path, sample : str, brem_cat : int):
+def test_brem_cat_data(
+    tmp_path : Path, 
+    sample   : Sample, 
+    brem_cat : int):
     '''
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 6000))
-    name= f'data_preprocessor/{sample}_brem_{brem_cat:03}'
+    name= Path(f'data_preprocessor/{sample}_brem_{brem_cat:03}')
     cut = {'brem' : f'nbrem == {brem_cat}'}
 
     with Cache.cache_root(path = tmp_path):
@@ -103,13 +106,13 @@ def test_brem_cat_data(tmp_path : Path, sample : str, brem_cat : int):
 # -------------------------------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
 @pytest.mark.parametrize('sample', [
-    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
-    'Bu_KplKplKmn_eq_sqDalitz_DPC'])
+    Sample.bpkkk,
+    Sample.bpkpipi])
 @pytest.mark.parametrize('region', ['kpipi' ,     'kkk'])
 @pytest.mark.parametrize('kind'  , ['signal', 'control'])
 def test_with_pid_weights(
     tmp_path : Path,
-    sample   : str,
+    sample   : Sample,
     region   : str, 
     kind     : str) -> None:
     '''
@@ -132,7 +135,7 @@ def test_with_pid_weights(
         'brem' : 'nbrem == 1',
         'pid_l': '(1)'}
 
-    name = f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}'
+    name = Path(f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}')
 
     with Cache.cache_root(path = tmp_path):
         prp  = DataPreprocessor(
