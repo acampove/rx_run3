@@ -4,17 +4,18 @@ Module meant to hold tests for the DataPreprocessor class
 import os
 import pytest
 import matplotlib.pyplot as plt
+
 from pathlib                  import Path
+from dmu                      import LogStore
 from dmu.stats.zfit           import zfit
 from dmu.generic              import utilities as gut
 from dmu.stats                import utilities as sut
-from dmu.logging.log_store    import LogStore
 from dmu.workflow             import Cache
 from omegaconf                import OmegaConf
-from rx_common.types          import Trigger
-from rx_data.rdf_getter       import RDFGetter
+from rx_common                import Trigger, Sample
+from rx_data                  import RDFGetter
 from zfit.data                import Data      as zdata
-from fitter.data_preprocessor import DataPreprocessor
+from fitter                   import DataPreprocessor
 
 log=LogStore.add_logger('fitter:test_data_preprocessor')
 # -------------------------------------------------
