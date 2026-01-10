@@ -542,14 +542,30 @@ class RDFGetter(SpecMaker):
             d_sample = self.get_spec_path(per_file=per_file)
             log.info('Building one dataframe per file')
             d_rdf       = { fpath : self._rdf_from_conf(fpath=fpath, conf_path=conf_path) for fpath, conf_path in d_sample.items() }
-            self._d_rdf = { fpath : self._emulator.post_process(rdf=rdf)                  for fpath, rdf       in d_rdf.items() }
+            d_rdf       = { fpath : self._emulator.post_process(rdf=rdf)                  for fpath, rdf       in d_rdf.items() }
+            self._d_rdf = { fpath : self._check_rdf(rdf = rdf)                            for fpath, rdf       in d_rdf.items() }
 
             return self._d_rdf
 
         conf_path = self.get_spec_path(per_file=per_file)
         self._rdf = self._rdf_from_conf(fpath='joint_files', conf_path=conf_path)
 
-        return self._emulator.post_process(rdf=self._rdf)
+        rdf = self._emulator.post_process(rdf=self._rdf)
+        rdf = self._check_rdf(rdf = rdf)
+
+        return rdf
+    # ----------------------
+    def _check_rdf(self, rdf : RDF.RNode) -> RDF.RNode:
+        '''
+        Parameters
+        -------------
+        rdf: ROOT dataframe
+
+        Returns
+        -------------
+        ROOT dataframe after checks
+        '''
+        return rdf
     # ---------------------------------------------------
     def get_uid(self) -> str:
         '''
