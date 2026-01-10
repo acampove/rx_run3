@@ -566,15 +566,15 @@ class RDFGetter(SpecMaker):
         -------------
         ROOT dataframe after checks
         '''
-        self._check_alignment(rdf = rdf, column = 'EVENTNUMBER')
-        self._check_alignment(rdf = rdf, column =   'RUNNUMBER')
+        self._check_alignment(rdf = rdf, index = 'EVENTNUMBER')
+        self._check_alignment(rdf = rdf, index =   'RUNNUMBER')
 
         return rdf
     # ----------------------
     def _check_alignment(
         self, 
-        rdf     : RDF.RNode,
-        column  : str) -> None:
+        rdf    : RDF.RNode,
+        index  : str) -> None:
         '''
         Method used to check alignment of indexes
 
@@ -584,25 +584,25 @@ class RDFGetter(SpecMaker):
         column  : Name of column whose values need to be aligned
         nentries: Number of entries to check
         '''
-        if self._tree_name == 'MCDecayTree' and column == 'RUNNUMBER':
-            log.debug(f'Not testing for {column} for {self._tree_name} tree')
+        if self._tree_name == 'MCDecayTree' and index == 'RUNNUMBER':
+            log.debug(f'Not testing for {index} for {self._tree_name} tree')
             return
 
         columns = [ name.c_str() for name in rdf.GetColumnNames()     ]
-        index   = [ name for name in columns if column in name ]
-        ncol    = len(index)
+        indexes = [ name for name in columns if index in name ]
+        ncol    = len(indexes)
 
-        log.info(f'Checking {ncol} columns for {column}')
+        log.info(f'Checking {ncol} columns for {index}')
 
-        data    = rdf.AsNumpy(index)
+        data    = rdf.AsNumpy(indexes)
         arrays  = [ array for array in data.values() ]
         aligned = all( numpy.array_equal(array, arrays[0]) for array in arrays)
 
         if not aligned:
-            rdf.Display(f'.*{column}.*').Print()
-            raise ValueError(f'{column} columns are not aligned')
+            rdf.Display(f'.*{index}.*').Print()
+            raise ValueError(f'{index} columns are not aligned')
         else:
-            log.debug(f'Checked {column}')
+            log.debug(f'Checked {index}')
     # ---------------------------------------------------
     def get_uid(self) -> str:
         '''
