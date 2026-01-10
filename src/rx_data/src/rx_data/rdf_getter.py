@@ -584,6 +584,10 @@ class RDFGetter(SpecMaker):
         column  : Name of column whose values need to be aligned
         nentries: Number of entries to check
         '''
+        if self._tree_name == 'MCDecayTree' and column == 'RUNNUMBER':
+            log.debug(f'Not testing for {column} for {self._tree_name} tree')
+            return
+
         columns = [ name.c_str() for name in rdf.GetColumnNames()     ]
         index   = [ name for name in columns if column in name ]
         ncol    = len(index)
@@ -595,7 +599,7 @@ class RDFGetter(SpecMaker):
         aligned = all( numpy.array_equal(array, arrays[0]) for array in arrays)
 
         if not aligned:
-            rdf.Display().Print()
+            rdf.Display(f'.*{column}.*').Print()
             raise ValueError(f'{column} columns are not aligned')
         else:
             log.debug(f'Checked {column}')
