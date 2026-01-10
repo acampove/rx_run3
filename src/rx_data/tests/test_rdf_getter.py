@@ -652,7 +652,7 @@ def test_q2_track_electron(sample : Sample, trigger : Trigger, tmp_path : Path):
     if 'B0ToKpPim' in trigger:
         return
 
-    is_mc = not sample.startswith('DATA_24_')
+    is_mc = not sample.startswith('DATA_24')
     _check_branches(rdf, is_ee=True, is_mc = is_mc)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , [Sample.data_24, Sample.bdkstkpimm])
@@ -674,7 +674,7 @@ def test_q2_track_muon(sample : Sample, trigger : Trigger, tmp_path : Path):
     if 'B0ToKpPim' in trigger:
         return
 
-    is_mc = not sample.startswith('DATA_24_')
+    is_mc = not sample.startswith('DATA_24')
     _check_branches(rdf, is_ee=False, is_mc=is_mc)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample' , [Sample.data_24, Sample.bpkpjpsiee])
@@ -689,7 +689,7 @@ def test_brem_track_2(sample : Sample, trigger : Trigger, tmp_path : Path):
     rep = rdf.Report()
     rep.Print()
 
-    is_mc = not sample.startswith('DATA_24_')
+    is_mc = not sample.startswith('DATA_24')
     _check_branches(rdf, is_ee=True, is_mc=is_mc)
 
     _plot_brem_track_2(rdf, sample, 'brem_track_2', out_dir = tmp_path)
@@ -708,8 +708,8 @@ def test_check_vars(sample : Sample, trigger : Trigger):
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee=True, is_mc=is_mc)
+    is_mc = not sample.startswith('DATA_24')
+    _check_branches(rdf, is_ee=True, is_mc= is_mc)
 
     _print_dotted_branches(rdf)
 # ------------------------------------------------
