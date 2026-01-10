@@ -2,6 +2,7 @@
 Module holding RDFGetter class
 '''
 import copy
+import numpy
 from contextlib   import contextmanager
 from pathlib      import Path
 from typing       import Any, overload, Literal
@@ -565,7 +566,39 @@ class RDFGetter(SpecMaker):
         -------------
         ROOT dataframe after checks
         '''
+        self._check_alignment(rdf = rdf, column = 'EVENTNUMBER')
+        self._check_alignment(rdf = rdf, column =   'RUNNUMBER')
+
         return rdf
+    # ----------------------
+    def _check_alignment(
+        self, 
+        rdf     : RDF.RNode,
+        column  : str) -> None:
+        '''
+        Method used to check alignment of indexes
+
+        Parameters
+        -------------
+        rdf     : ROOT dataframe
+        column  : Name of column whose values need to be aligned
+        nentries: Number of entries to check
+        '''
+        columns = [ name.c_str() for name in rdf.GetColumnNames()     ]
+        index   = [ name for name in columns if column in name ]
+        ncol    = len(index)
+
+        log.info(f'Checking {ncol} columns for {column}')
+
+        data    = rdf.AsNumpy(index)
+        arrays  = [ array for array in data.values() ]
+        aligned = all( numpy.array_equal(array, arrays[0]) for array in arrays)
+
+        if not aligned:
+            rdf.Display().Print()
+            raise ValueError(f'{column} columns are not aligned')
+        else:
+            log.debug(f'Checked {column}')
     # ---------------------------------------------------
     def get_uid(self) -> str:
         '''
