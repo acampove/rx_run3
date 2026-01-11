@@ -582,16 +582,11 @@ class RDFGetter(SpecMaker):
 
         Parameters
         -------------
-        rdf     : ROOT dataframe
-        column  : Name of column whose values need to be aligned
-        nentries: Number of entries to check
+        rdf   : ROOT dataframe
+        index : Name of column whose values need to be aligned
         '''
-        if self._tree_name == 'MCDecayTree' and index == 'RUNNUMBER':
-            log.debug(f'Not testing for {index} for {self._tree_name} tree')
-            return
-
-        columns = [ name.c_str() for name in rdf.GetColumnNames()     ]
-        indexes = [ name for name in columns if index in name ]
+        columns = [ name.c_str() for name in rdf.GetColumnNames() ]
+        indexes = [ name         for name in columns if index in name ]
         ncol    = len(indexes)
 
         log.info(f'Checking {ncol} columns for {index}')
