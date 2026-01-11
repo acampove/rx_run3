@@ -3,13 +3,11 @@ categories:
   main:
     model :
       - dscb 
-      - cbl
 sample        : Bu_JpsiPi_ee_eq_DPC
 shared        :
   - mu
   - sg
-float         :
-  - sg
+float         : []
 reparametrize : {}
 fix           : {}
 fit:
