@@ -127,6 +127,8 @@ class DataPreprocessor(Cache):
                 process = self._sample,
                 out_path= out_path)
 
+            RDFGetter.check_alignment(rdf = rdf, index = 'EVENTNUMBER')
+
             cfg_sel = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
             rep = rdf.Report()
             df  = rut.rdf_report_to_df(rep=rep)
