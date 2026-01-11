@@ -5,6 +5,7 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 
+from contextlib               import ExitStack
 from pathlib                  import Path
 from dmu                      import LogStore
 from dmu.stats.zfit           import zfit
@@ -12,6 +13,7 @@ from dmu.generic              import utilities as gut
 from dmu.stats                import utilities as sut
 from dmu.workflow             import Cache
 from omegaconf                import OmegaConf
+from rx_selection             import selection as sel
 from rx_common                import Trigger, Sample
 from rx_data                  import RDFGetter
 from zfit.data                import Data      as zdata
@@ -53,6 +55,38 @@ def _validate_data(
     plt.hist(arr_data, histtype='step', bins=100, range=rng, weights=arr_wgt)
     plt.savefig(plt_path)
     plt.close()
+# -------------------------------------------------
+@pytest.mark.parametrize('sample', [Sample.bpkpee])
+def test_mc(tmp_path : Path, sample : Sample):
+    '''
+    Tests class with toys
+    '''
+    obs = zfit.Space('B_Mass', limits=(5180, 6000))
+    cuts= {
+        'q2' : '(1)',
+        'cmb': 'mva_cmb > 0.85',
+        'prc': 'mva_prc > 0.50',
+        'mass': 'B_Mass > 4500 && B_Mass < 6000',
+        'nobrm0': 'nbrem != 0',
+        'brem_cat': 'nbrem == 2',
+        'block': 'block == 1',
+    }
+
+    out_dir = Path(sample)
+    with ExitStack() as stack:
+        stack.enter_context(Cache.cache_root(path = tmp_path))
+        stack.enter_context(sel.custom_selection(d_sel = cuts))
+
+        prp = DataPreprocessor(
+            obs    = obs,
+            out_dir= out_dir,
+            sample = sample,
+            trigger= Trigger.rk_ee_os,
+            wgt_cfg= None,
+            q2bin  = 'jpsi')
+        dat = prp.get_data()
+
+    _validate_data(data=dat, name=out_dir, tmp_path = tmp_path)
 # -------------------------------------------------
 @pytest.mark.parametrize('sample', [
     Sample.data_24,
