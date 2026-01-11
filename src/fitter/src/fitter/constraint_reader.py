@@ -129,8 +129,8 @@ class ConstraintReader:
             return
 
         q2bin = self._cfg.q2bin
-        if 'constraints' not in self._cfg.fit_cfg[q2bin]:
-            log.info(f'No constraints section found for {q2bin}')
+        if 'constraints' not in components[_COMBINATORIAL_NAME][q2bin]:
+            log.info(f'No combinatorial constraints section found for {q2bin}')
             return
 
         calc      = CmbConstraints(
