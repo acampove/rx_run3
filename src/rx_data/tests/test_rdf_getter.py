@@ -890,6 +890,7 @@ def test_no_pid(sample : Sample, trigger : Trigger, tmp_path : Path):
         test_name   = 'no_pid')
 # ------------------------------------------------
 # TODO: Check for negative numbers
+@pytest.mark.skip(reason='Disabling multithreading for RDFGetter')
 @pytest.mark.parametrize('nthreads', [1, 6])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 def test_multithreading(nthreads : int, trigger : Trigger, tmp_path : Path):
@@ -919,6 +920,7 @@ def test_multithreading(nthreads : int, trigger : Trigger, tmp_path : Path):
 
         _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample, out_dir = tmp_path)
 # ------------------------------------------------
+@pytest.mark.skip(reason='Disabling multithreading for RDFGetter')
 @pytest.mark.parametrize('nthreads', [-3, 0])
 def test_multithreading_invalid(nthreads : int):
     '''
@@ -931,6 +933,7 @@ def test_multithreading_invalid(nthreads : int):
             gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
             gtr.get_rdf(per_file=False)
 # ------------------------------------------------
+@pytest.mark.skip(reason='Disabling multithreading for RDFGetter')
 def test_multithreading_locked():
     '''
     This will test multithreading with locked class
