@@ -3,10 +3,11 @@ Module with tests for SamplePatcher class
 '''
 
 import pytest
-from dmu.logging.log_store  import LogStore
-from rx_common.types        import Trigger
-from rx_data.sample_patcher import SamplePatcher
-from rx_data.spec_maker     import SpecMaker
+
+from dmu        import LogStore
+from rx_common  import Trigger
+from rx_data    import SamplePatcher
+from rx_data    import SpecMaker
 
 _UNPATCHED_SAMPLES = [
     ('DATA_24_MagDown_24c2', Trigger.rk_ee_os),
