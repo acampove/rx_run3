@@ -566,13 +566,15 @@ class RDFGetter(SpecMaker):
         -------------
         ROOT dataframe after checks
         '''
-        self._check_alignment(rdf = rdf, index = 'EVENTNUMBER')
-        self._check_alignment(rdf = rdf, index =   'RUNNUMBER')
+        self.check_alignment(rdf = rdf, index = 'EVENTNUMBER')
+
+        if self._tree_name != 'MCDecayTree':
+            self.check_alignment(rdf = rdf, index = 'RUNNUMBER')
 
         return rdf
     # ----------------------
-    def _check_alignment(
-        self, 
+    @staticmethod
+    def check_alignment(
         rdf    : RDF.RNode,
         index  : str) -> None:
         '''
