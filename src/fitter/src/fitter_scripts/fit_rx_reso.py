@@ -24,7 +24,6 @@ from fitter        import ConstraintReader
 from fitter        import FitConfig
 from fitter        import DataFitter
 from fitter        import LikelihoodFactory
-from rx_data       import RDFGetter
 from rx_selection  import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_reso')
@@ -201,7 +200,6 @@ def main(args : DictConfig | None = None):
     Cache.set_cache_root(root=cfg.output_directory)
     with ExitStack() as stack:
         stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
-        stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
         stack.enter_context(Cache.turn_off_cache(val=[]))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
         stack.enter_context(sel.custom_selection(d_sel=overriding_selection))
