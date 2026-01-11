@@ -71,27 +71,27 @@ def test_with_cat(tmp_path : Path):
     cfg   = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{sample}.yaml')
 
     cuts  = {
-        #'q2' : '(1)',
+        'q2' : '(1)',
         'cmb': 'mva_cmb > 0.85',
         'prc': 'mva_prc > 0.50',
-        'mass': '(1)',
+        'mass': 'B_Mass > 4500 && B_Mass < 6000',
         'block': 'block == 1',
         'nobrm0': 'nbrem != 0',
-        'brem_cat': 'nbrem == 1',
+        'brem_cat': 'nbrem == 2',
     }
 
     with ExitStack() as stack:
-        stack.enter_context(Cache.cache_root(path = tmp_path))
         stack.enter_context(RDFGetter.max_entries(value = -1))
         stack.enter_context(LogStore.level('dmu:stats:fitter', 10))
+        stack.enter_context(Cache.cache_root(path = tmp_path))
         stack.enter_context(sel.custom_selection(d_sel = cuts))
 
         ftr = SimFitter(
-            name     = 'test_with_cat',
-            component= 'signal_electron',
+            name    = 'test_with_cat',
+            sample  = Sample.bpkpjpsiee,
+            trigger = Trigger.rk_ee_os,
             obs     = obs,
             cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
             q2bin   = 'jpsi')
         _ = ftr.get_model()
 # ---------------------------------------------------
