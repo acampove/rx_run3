@@ -729,6 +729,7 @@ class RDFGetter(SpecMaker):
         nthreads: Number of threads for EnableImplicitMT. If number
         of threads is 1, multithreading will be off
         '''
+        raise NotImplementedError('Multithreading was disabled')
 
         if nthreads <= 0:
             raise ValueError(f'Invalid number of threads: {nthreads}')
