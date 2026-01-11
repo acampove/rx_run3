@@ -17,11 +17,11 @@ model:
         - 4800 
         - 7000
   components:
-    combinatorial : reso/rk/electron/combinatorial.yaml
-    #cabibbo       : reso/rk/electron/cabibbo.yaml
-    ccbar         : reso/rk/electron/ccbar.yaml
-    jpsik         : reso/rk/electron/jpsi.yaml
-    psi2k         : reso/rk/electron/psi2.yaml
+    combinatorial      : reso/rk/electron/combinatorial.yaml
+    #cabibbo            : reso/rk/electron/Bu_JpsiPi_ee_eq_DPC.yaml
+    ccbar              : reso/rk/electron/ccbar.yaml
+    jpsik              : reso/rk/electron/Bu_JpsiK_ee_eq_DPC.yaml
+    psi2k              : reso/rk/electron/Bu_psi2SK_ee_eq_DPC.yaml
   constraints:
     yields : []
 fit: {}
@@ -34,7 +34,7 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
   plot_components : ccbar
   d_leg :
     combinatorial : Combinatorial
-    cabibbo       : $B^+\to J/\psi(\to e^+e^-)\pi^+$
     ccbar         : $B_{s,d,u}\to c\bar{c} X$
+    cabibbo       : $B^+\to J/\psi(\to e^+e^-)\pi^+$
     jpsik         : $B^+\to J/\psi(\to e^+e^-) K^+$
     psi2k         : $B^+\to \psi(2S)(\to e^+e^-) K^+$
