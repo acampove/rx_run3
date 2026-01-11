@@ -77,12 +77,11 @@ class ConstraintReader:
         Appends constraints to _constraints list for parameters in parameter holder
         whose names start with `pscale`
         '''
-        log.info('Adding partially reconstructed component constraint')
         for par in self._l_par:
             if not par.startswith(self._prc_pref): # PRec constraints are scales, starting with "s"
                 continue
 
-            log.debug(f'Adding constraint for: {par}')
+            log.info(f'Adding part reco constraint for: {par}')
 
             process  = self._proc_from_par(par_name = par)
             obj      = PrecScales(proc=process, q2bin=self._cfg.q2bin)
