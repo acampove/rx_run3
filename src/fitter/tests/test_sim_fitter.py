@@ -67,15 +67,14 @@ def test_with_cat(tmp_path : Path, brem : int):
     '''
     Test for components with brem categories
     '''
-    obs   = zfit.Space('B_Mass', limits=(4500, 7000))
+    obs   = zfit.Space('B_Mass', limits=(4800, 7000))
     cfg   = gut.load_conf(package='fitter_data', fpath='reso/rk/electron/jpsi_non_dtf.yaml')
 
     cuts  = {
-        'q2'       : '(1)',
         'cmb'      : 'mva_cmb > 0.50',
         'prc'      : 'mva_prc > 0.50',
-        'mass'     : 'B_Mass > 4500 && B_Mass < 7000',
-        'block'    : 'block == 1',
+        'mass'     : 'B_const_mass_M > 5180',
+        'block'    : 'block == 1 || block == 2',
         'nobrm0'   : 'nbrem != 0',
         'brem_cat' : f'nbrem == {brem}',
     }
