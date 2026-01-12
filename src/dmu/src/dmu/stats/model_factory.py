@@ -471,6 +471,21 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    @MethodRegistry.register('egauss')
+    def _get_egauss(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter(kind = 'egauss', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'egauss', name = 'sg', suffix = suffix)
+        lm  = self._get_parameter(kind = 'egauss', name = 'lm', suffix = suffix)
+
+        pdf = zfit.pdf.ExpModGauss(
+            mu   =mu, 
+            sigma=sg, 
+            lambd=lm, 
+            obs  =self._obs, 
+            name =f'egauss_{self._preffix}{suffix}')
+
+        return pdf
+    #-----------------------------------------
     @MethodRegistry.register('bgauss')
     def _get_bgauss(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'bgauss', name = 'mu', suffix = suffix)

@@ -209,6 +209,19 @@ ggauss:
     val : 2
     low : 1
     high: 10 
+egauss:
+  mu:
+    val : 5280
+    low : 5040
+    high: 5500
+  sg:
+    val : 20
+    low : 10
+    high: 400
+  lm:
+    val : 1
+    low : 0
+    high: 10 
 bgauss:
   mu:
     val : 5280

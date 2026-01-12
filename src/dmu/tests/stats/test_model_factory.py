@@ -165,6 +165,7 @@ def test_all_pdf(name : str):
         [
             ['bgauss'],
             ['ggauss'],
+            ['egauss'],
             ['qgauss'],
             ['gauss'],
             ['cbl'],
