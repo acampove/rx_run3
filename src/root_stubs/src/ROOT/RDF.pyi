@@ -1,9 +1,10 @@
 
-from typing import Self, overload
 import numpy
 import pandas as pnd
 
-from ROOT import TCutInfo, CutIterator
+from typing           import Self, overload
+from ROOT             import TCutInfo, CutIterator
+from dask.distributed import Client
 
 class RResultPtr:
     def GetValue(self) -> int: ...
@@ -49,7 +50,7 @@ class RNode:
 
 class Experimental:
     @staticmethod
-    def FromSpec(jsonFile : str) -> RNode: ...
+    def FromSpec(jsonFile : str, executor : Client | None = None) -> RNode: ...
 
 def FromNumpy(data : dict[str,numpy.ndarray]) -> RNode: ...
 def FromPandas(df : pnd.DataFrame) -> RNode: ...
