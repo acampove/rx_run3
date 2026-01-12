@@ -23,8 +23,8 @@ def test_from_conf():
     '''
     Test loading dataframe from JSON config file
     '''
-    sample = Sample.bpkpee
-    trigger= Trigger.rk_ee_os
+    sample = Sample.data_24
+    trigger= Trigger.rk_mm_os
 
     mkr    = SpecMaker(sample=sample, trigger=trigger)
     path   = mkr.get_spec_path(per_file=False)
@@ -33,5 +33,42 @@ def test_from_conf():
         ntries = 3,
         wait   = 10,
         path   = path)
+
+    rdf = sel.apply_full_selection(
+        rdf     = rdf,
+        q2bin   = Qsq.central,
+        process = sample,
+        trigger = trigger)
+
+    assert rdf.Count().GetValue() > 0
+# ----------------------
+def test_dask():
+    '''
+    Load using dask client 
+    '''
+    sample = Sample.data_24
+    trigger= Trigger.rk_mm_os
+
+    mkr    = SpecMaker(sample=sample, trigger=trigger)
+    path   = mkr.get_spec_path(per_file=False)
+
+    cluster = LocalCluster(
+        n_workers         =2, 
+        threads_per_worker=1, 
+        processes         =True, 
+        memory_limit      ='6GiB')
+    client  = Client(cluster)
+
+    with RDFLoader.client(client = client):
+        rdf = RDFLoader.from_conf(
+            ntries = 3,
+            wait   = 10,
+            path   = path)
+
+        rdf = sel.apply_full_selection(
+            rdf     = rdf,
+            q2bin   = Qsq.central,
+            process = sample,
+            trigger = trigger)
 
     assert rdf.Count().GetValue() > 0
