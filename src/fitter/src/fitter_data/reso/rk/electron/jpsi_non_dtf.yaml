@@ -10,8 +10,8 @@ shared        :
 float         :
   - mu
   - sg
-  - ar
-  - nr
+  - al
+  - nl
 reparametrize : {}
 fix           : {}
 fit:
