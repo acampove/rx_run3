@@ -2,7 +2,8 @@ output_directory : reso/rk/electron/jpsi
 categories:
   main:
     model :
-      - dscb 
+      - cbl 
+      - cbr
 sample        : Bu_JpsiK_ee_eq_DPC
 shared        :
   - mu
