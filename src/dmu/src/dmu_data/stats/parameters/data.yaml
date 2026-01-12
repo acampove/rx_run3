@@ -107,6 +107,35 @@ cbl:
     val : 1
     low : 0.5
     high: 150
+cbg:
+  mu:
+    val : 5300
+    low : 5100
+    high: 6000
+  sl:
+    val : 50
+    low : 2
+    high: 300
+  al:
+    val : 2
+    low : 0.0
+    high: 14.
+  nl:
+    val : 1
+    low : 0.5
+    high: 150
+  sr:
+    val : 50
+    low : 2
+    high: 300
+  ar:
+    val : 2
+    low : 0.0
+    high: 14.
+  nr:
+    val : 1
+    low : 0.5
+    high: 150
 gauss:
   mu:
     val : 5300

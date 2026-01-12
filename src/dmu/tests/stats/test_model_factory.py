@@ -169,6 +169,7 @@ def test_all_pdf(name : str):
             ['gauss'],
             ['cbl'],
             ['cbr'],
+            ['cbg'],
             ['dscb'],
             ['cbl', 'cbl'],
             ['cbl', 'cbr']])

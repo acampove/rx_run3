@@ -391,6 +391,29 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    @MethodRegistry.register('cbg')
+    def _get_cbg(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter(kind = 'cbg', name = 'mu', suffix = suffix)
+        sr  = self._get_parameter(kind = 'cbg', name = 'sr', suffix = suffix)
+        ar  = self._get_parameter(kind = 'cbg', name = 'ar', suffix = suffix)
+        nr  = self._get_parameter(kind = 'cbg', name = 'nr', suffix = suffix)
+        sl  = self._get_parameter(kind = 'cbg', name = 'sl', suffix = suffix)
+        al  = self._get_parameter(kind = 'cbg', name = 'al', suffix = suffix)
+        nl  = self._get_parameter(kind = 'cbg', name = 'nl', suffix = suffix)
+
+        pdf = zfit.pdf.GeneralizedCB(
+            mu     = mu, 
+            sigmar = sr, 
+            alphar = ar, 
+            nr     = nr, 
+            sigmal = sl, 
+            alphal = al, 
+            nl     = nl, 
+            obs    = self._obs, 
+            name   = f'cbg_{self._preffix}{suffix}')
+
+        return pdf
+    #-----------------------------------------
     @MethodRegistry.register('gauss')
     def _get_gauss(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'gauss', name = 'mu', suffix = suffix)
