@@ -165,6 +165,8 @@ def test_all_pdf(name : str):
 @pytest.mark.parametrize(
         'l_name',
         [
+            ['qgauss'],
+            ['ggauss'],
             ['gauss'],
             ['cbl'],
             ['cbr'],

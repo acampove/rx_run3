@@ -433,6 +433,21 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    @MethodRegistry.register('ggauss')
+    def _get_ggauss(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter(kind = 'ggauss', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'ggauss', name = 'sg', suffix = suffix)
+        bt  = self._get_parameter(kind = 'ggauss', name = 'bt', suffix = suffix)
+
+        pdf = zfit.pdf.GeneralizedGauss(
+            beta =bt, 
+            mu   =mu, 
+            sigma=sg, 
+            obs  =self._obs, 
+            name =f'ggauss_{self._preffix}{suffix}')
+
+        return pdf
+    #-----------------------------------------
     @MethodRegistry.register('cauchy')
     def _get_cauchy(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cauchy', name = 'mu', suffix = suffix)
