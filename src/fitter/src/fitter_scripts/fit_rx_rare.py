@@ -10,6 +10,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 import argparse
 
+from dask.distributed import Client, LocalCluster
 from typing        import Final
 from contextlib    import ExitStack
 from omegaconf     import DictConfig
@@ -21,7 +22,7 @@ from dmu.stats     import Constraint
 from dmu.workflow  import Cache
 from dmu           import LogStore
 from zfit.loss     import ExtendedUnbinnedNLL
-from rx_data       import RDFGetter
+from rx_data       import RDFLoader
 from rx_selection  import selection as sel
 from rx_common     import Sample, info
 
@@ -34,6 +35,27 @@ from fitter        import ToyMaker
 log=LogStore.add_logger('fitter:fit_rx_rare')
 
 DATA_SAMPLE : Final[Sample] = Sample.data_24 
+# ----------------------
+def _get_client(cfg : FitConfig) -> Client | None:
+    '''
+    Parameters
+    -------------
+    cfg: Configuration object
+
+    Returns
+    -------------
+    Client if using multiple processes, or None
+    '''
+    if cfg.nthread == 1:
+        return None
+
+    cluster = LocalCluster(
+       n_workers         =cfg.nthread, 
+       threads_per_worker=1, 
+       processes         =True, 
+       memory_limit      ='4GiB')
+
+    return Client(cluster)
 # ----------------------
 def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
     '''
@@ -167,13 +189,16 @@ def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
-    cfg = _parse_args(args = args)
+    cfg    = _parse_args(args = args)
+    client = _get_client(cfg = cfg)
 
     with ExitStack() as stack:
+        if client is not None:
+            stack.enter_context(RDFLoader.client(client = client))
+
         stack.enter_context(Cache.cache_root(path=cfg.output_directory))
         stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
         stack.enter_context(sel.custom_selection(d_sel=cfg.overriding_selection))
-        stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
 
         _fit(cfg=cfg)
