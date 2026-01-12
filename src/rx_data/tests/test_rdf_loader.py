@@ -3,10 +3,12 @@ This module contains tests for the RDFLoader class
 '''
 import pytest
 
-from rx_common import Sample, Trigger
-from rx_data   import RDFLoader
-from rx_data   import SpecMaker
-from dmu       import LogStore
+from dask.distributed import Client, LocalCluster
+from rx_common        import Qsq, Sample, Trigger
+from rx_data          import RDFLoader
+from rx_data          import SpecMaker
+from rx_selection     import selection as sel
+from dmu              import LogStore
 
 log=LogStore.add_logger('rx_data:test_rdf_loader')
 # ----------------------
