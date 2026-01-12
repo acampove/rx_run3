@@ -56,23 +56,6 @@ pol3:
     val : 0.000
     low : -0.95
     high: +0.95
-cbr:
-  mu:
-    val : 5300
-    low : 5100
-    high: 6000
-  sg:
-    val : 50
-    low : 2
-    high: 300
-  ac:
-    val : -2
-    low : -14.
-    high: -0.1
-  nc:
-    val : 1
-    low : 0.5
-    high: 150
 suj:
   mu:
     val : 4000
@@ -90,6 +73,23 @@ suj:
     val : 1
     low : 0.1
     high: 40
+cbr:
+  mu:
+    val : 5300
+    low : 5100
+    high: 6000
+  sg:
+    val : 50
+    low : 2
+    high: 300
+  ar:
+    val : -2
+    low : -14.
+    high: -0.1
+  nr:
+    val : 1
+    low : 0.5
+    high: 150
 cbl:
   mu:
     val : 5300
@@ -99,11 +99,11 @@ cbl:
     val : 50
     low : 2
     high: 300
-  ac:
+  al:
     val : 2
     low : 0.0
     high: 14.
-  nc:
+  nl:
     val : 1
     low : 0.5
     high: 150
