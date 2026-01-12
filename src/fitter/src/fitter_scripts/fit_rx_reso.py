@@ -7,6 +7,7 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import argparse
 
+from dask.distributed import Client, LocalCluster
 from rx_common     import Sample
 from omegaconf     import DictConfig
 from contextlib    import ExitStack
@@ -24,9 +25,31 @@ from fitter        import ConstraintReader
 from fitter        import FitConfig
 from fitter        import DataFitter
 from fitter        import LikelihoodFactory
+from rx_data       import RDFLoader
 from rx_selection  import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_reso')
+# ----------------------
+def _get_client(cfg : FitConfig) -> Client | None:
+    '''
+    Parameters
+    -------------
+    cfg: Configuration object
+
+    Returns
+    -------------
+    Client if using multiple processes, or None
+    '''
+    if cfg.nthread == 1:
+        return None
+
+    cluster = LocalCluster(
+       n_workers         =cfg.nthread, 
+       threads_per_worker=1, 
+       processes         =True, 
+       memory_limit      ='4GiB')
+
+    return Client(cluster)
 # ----------------------
 def _set_logs() -> None:
     '''
@@ -198,7 +221,11 @@ def main(args : DictConfig | None = None):
         'prc'   : cfg.prc_cut}
 
     Cache.set_cache_root(root=cfg.output_directory)
+    client = _get_client(cfg = cfg)
     with ExitStack() as stack:
+        if client is not None:
+            stack.enter_context(RDFLoader.client(client = client))
+
         stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
         stack.enter_context(Cache.turn_off_cache(val=[]))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
