@@ -6,7 +6,7 @@ import numpy
 from contextlib   import contextmanager
 from pathlib      import Path
 from typing       import Any, overload, Literal
-from ROOT         import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
+from ROOT         import RDF, TFile # type: ignore
 from dmu          import LogStore
 from dmu.generic  import hashing
 from dmu.generic  import utilities as gut
@@ -43,8 +43,7 @@ class RDFGetter(SpecMaker):
     _max_entries                      = -1
     _skip_adding_columns              = False
     _d_custom_columns : dict[str,str] = {}
-    _allow_multithreading             = False
-    _nthreads                         = None
+    _nproc : int                      = 1 
     # ---------------------------------------------------
     def __init__(
         self,
@@ -106,7 +105,6 @@ class RDFGetter(SpecMaker):
         self._channel                = self._channel_from_trigger()
 
         self._set_logs()
-        self._check_multithreading()
     # ---------------------------------------------------
     def _channel_from_trigger(self) -> str:
         '''
@@ -151,20 +149,6 @@ class RDFGetter(SpecMaker):
         to reduce noise
         '''
         LogStore.set_level('rx_data:path_splitter', 30)
-    # ---------------------------------------------------
-    def _check_multithreading(self) -> None:
-        '''
-        This method will raise if running with mulithreading and if it was not explicitly allowed
-        '''
-        if self._allow_multithreading:
-            log.info(f'Using {self._nthreads} threads')
-            return
-
-        nthreads = GetThreadPoolSize()
-        if nthreads > 1:
-            raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
-
-        log.debug('Not using multithreading')
     # ---------------------------------------------------
     # TODO: This class is pretty large, all the lines below
     # have one job, adding columns to dataframe, put them in a class
@@ -715,47 +699,6 @@ class RDFGetter(SpecMaker):
                 yield
             finally:
                 cls._d_custom_columns = old_val
-
-        return _context()
-    # ---------------------------------------------------
-    @classmethod
-    def multithreading(cls, nthreads : int):
-        '''
-        Multithreading should be used with care. This should be the only
-        place where multithreading is allowed to be turned on.
-
-        Parameters
-        ----------------
-        nthreads: Number of threads for EnableImplicitMT. If number
-        of threads is 1, multithreading will be off
-        '''
-        raise NotImplementedError('Multithreading was disabled')
-
-        if nthreads <= 0:
-            raise ValueError(f'Invalid number of threads: {nthreads}')
-
-        if cls._allow_multithreading:
-            raise ValueError(f'Multithreading was already set to {cls._nthreads}, cannot set to {nthreads}')
-
-        @contextmanager
-        def _context():
-            if nthreads == 1:
-                yield
-                return
-
-            old_val = cls._allow_multithreading
-            old_nth = cls._nthreads
-
-            cls._nthreads             = nthreads
-            cls._allow_multithreading = True
-            EnableImplicitMT(nthreads)
-
-            try:
-                yield
-            finally:
-                DisableImplicitMT()
-                cls._allow_multithreading = old_val
-                cls._nthreads             = old_nth
 
         return _context()
 # ---------------------------------------------------
