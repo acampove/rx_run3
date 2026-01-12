@@ -448,6 +448,21 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
+    @MethodRegistry.register('bgauss')
+    def _get_bgauss(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter(kind = 'bgauss', name = 'mu', suffix = suffix)
+        sr  = self._get_parameter(kind = 'bgauss', name = 'sr', suffix = suffix)
+        sl  = self._get_parameter(kind = 'bgauss', name = 'sl', suffix = suffix)
+
+        pdf = zfit.pdf.BifurGauss(
+            mu    =mu, 
+            sigmar=sr, 
+            sigmal=sl, 
+            obs   =self._obs, 
+            name  =f'bgauss_{self._preffix}{suffix}')
+
+        return pdf
+    #-----------------------------------------
     @MethodRegistry.register('cauchy')
     def _get_cauchy(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cauchy', name = 'mu', suffix = suffix)
