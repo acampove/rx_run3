@@ -9,7 +9,7 @@ common_settings: &settings
     selection  :
       jpsi veto: "TMath::Abs(B_const_mass_M - 5280) > 100"
       cmb      : mva_cmb > 0.2 && mva_cmb < 0.7
-      mass     : (1)
+      mass     : B_Mass > 0
     parameters : # Will constrain parameters starting
       - mu       # with any of these strings
       - ap       # E.g mu_hypexp_combinatorial_1
