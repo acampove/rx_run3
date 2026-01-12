@@ -372,22 +372,22 @@ class ModelFactory:
     @MethodRegistry.register('cbr')
     def _get_cbr(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cbr', name = 'mu', suffix = suffix)
-        sg  = self._get_parameter(kind = 'cbr', name = 'sg', suffix = suffix)
+        sr  = self._get_parameter(kind = 'cbr', name = 'sr', suffix = suffix)
         ar  = self._get_parameter(kind = 'cbr', name = 'ar', suffix = suffix)
         nr  = self._get_parameter(kind = 'cbr', name = 'nr', suffix = suffix)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=f'cbr_{self._preffix}{suffix}')
+        pdf = zfit.pdf.CrystalBall(mu, sr, ar, nr, self._obs, name=f'cbr_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
     @MethodRegistry.register('cbl')
     def _get_cbl(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cbl', name = 'mu', suffix = suffix)
-        sg  = self._get_parameter(kind = 'cbl', name = 'sg', suffix = suffix)
+        sl  = self._get_parameter(kind = 'cbl', name = 'sl', suffix = suffix)
         al  = self._get_parameter(kind = 'cbl', name = 'al', suffix = suffix)
         nl  = self._get_parameter(kind = 'cbl', name = 'nl', suffix = suffix)
 
-        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=f'cbl_{self._preffix}{suffix}')
+        pdf = zfit.pdf.CrystalBall(mu, sl, al, nl, self._obs, name=f'cbl_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
