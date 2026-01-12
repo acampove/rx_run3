@@ -191,8 +191,7 @@ class PRec(Cache):
         - ROOT dataframe after selection
         - Updated Unique identifier that takes into account the selection
         '''
-        d_sel         = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
-        d_sel['mass'] = '(1)'
+        d_sel = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
         for name, expr in d_sel.items():
             rdf = rdf.Filter(expr, name)
 
