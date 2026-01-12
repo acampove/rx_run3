@@ -103,7 +103,7 @@ class ModelFactory:
         obs:      zfit obserbable
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
-        ranges :  Dictionary used to override ranges for different parameters
+        ranges :  Dictionary used to override ranges for different parameters, e.g. {'mu' : [val, low, high]}
         l_float:  List of parameter names to allow to float
         l_reuse:  Optional. List of parameters that if given will be used instead of built by factory
         d_fix:    Dictionary with keys as the beginning of the name of a parameter and value as the number
