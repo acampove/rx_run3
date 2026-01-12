@@ -652,6 +652,8 @@ class RDFGetter(SpecMaker):
 
             if cls._max_entries != -1:
                 log.warning(f'Running over at most {cls._max_entries} entries')
+            else:
+                log.warning('Running over all entries')
 
             try:
                 yield
