@@ -4,9 +4,11 @@ Module holding RDFLoader class
 import time
 import cppyy
 
-from pathlib import Path
-from ROOT    import RDF  # type: ignore
-from dmu     import LogStore
+from contextlib       import contextmanager
+from dask.distributed import Client
+from pathlib          import Path
+from ROOT             import RDF  # type: ignore
+from dmu              import LogStore
 
 log=LogStore.add_logger('rx_data:rdf_loader')
 # ----------------------------------
@@ -18,9 +20,36 @@ class RDFLoader:
     - Network delays
     - Timeouts
     '''
+    _CLIENT : Client | None = None
     # ----------------------
-    @staticmethod
+    @classmethod
+    def client(cls, client : Client):
+        '''
+        Parameters
+        -------------
+        client: Dask client to use to process dataframe
+
+        Returns
+        -------------
+        Context manager
+        '''
+        old_val = cls._CLIENT
+
+        log.info('Using user provided dask client')
+
+        @contextmanager
+        def _context():
+            try:
+                cls._CLIENT = client
+                yield
+            finally:
+                cls._CLIENT = old_val 
+
+        return _context()
+    # ----------------------
+    @classmethod
     def from_conf(
+        cls,
         ntries : int,
         wait   : int,
         path   : Path) -> RDF.RNode:
@@ -39,7 +68,13 @@ class RDFLoader:
 
         while itry < ntries:
             try:
-                rdf = RDF.Experimental.FromSpec(str(path))
+                if cls._CLIENT is None:
+                    log.debug(f'Not using any client to load: {path}')
+                    rdf = RDF.Experimental.FromSpec(str(path))
+                else:
+                    log.debug(f'Using user provided client to load: {path}')
+                    rdf = RDF.Experimental.FromSpec(str(path), executor = cls._CLIENT)
+
                 nentries = rdf.Count().GetValue()
                 log.info(f'Succeeding loading {nentries} entries from: {path}')
 
