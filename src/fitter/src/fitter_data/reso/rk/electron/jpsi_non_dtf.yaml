@@ -13,6 +13,8 @@ float         :
   - sg
   - al
   - nl
+ranges:
+  mu : [5200, 5100, 5300]
 reparametrize : {}
 fix           : {}
 fit:
