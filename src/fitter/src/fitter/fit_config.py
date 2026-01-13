@@ -224,6 +224,29 @@ class FitConfig:
 
         gut.dump_json(data = data, path = path, exists_ok = True)
     # ----------------------
+    def _mva_cut(self, values : list[str], kind : str) -> str:
+        '''
+        Parameters
+        --------------
+        values: List of MVA working points
+        kind  : Name of branch to cut on, e.g. mva_cmb
+
+        Returns
+        --------------
+        MVA working point cut, e.g. mva_cmb > 0.3 
+        '''
+        nval = len(values)
+        if nval == 1:
+            val = values[0]
+            return f'{kind} > {val}'
+
+        if nval == 2:
+            low = values[0]
+            high= values[1]
+            return f'{kind} > {low} && {kind} < {high}'
+
+        raise ValueError(f'Invalid list of working points: {values}')
+    # ----------------------
     @cached_property
     def cmb_cut(self) -> str:
         '''
@@ -231,7 +254,7 @@ class FitConfig:
         -------------
         Cut used for MVA
         '''
-        return f'mva_cmb > {self.mva_cmb}'
+        return self._mva_cut(values = self.mva_cmb, kind = 'mva_cmb')
     # ----------------------
     @cached_property
     def prc_cut(self) -> str:
@@ -240,7 +263,7 @@ class FitConfig:
         -------------
         Cut used for MVA
         '''
-        return f'mva_prc > {self.mva_prc}'
+        return self._mva_cut(values = self.mva_prc, kind = 'mva_prc')
     # ----------------------
     @cached_property
     def block_cut(self) -> str:
