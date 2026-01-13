@@ -24,8 +24,8 @@ class FitConfig:
     name    : str
     group   : str        # E.g. toys, needed to name directory where fit outputs will go
     fit_cfg : DictConfig
-    mva_cmb : float
-    mva_prc : float
+    mva_cmb : list[str] 
+    mva_prc : list[str] 
     q2bin   : Qsq
 
     block   : int             = -1 
@@ -121,11 +121,48 @@ class FitConfig:
         except Exception as exc:
             raise TypeError(f'Cannot cast block {self.block} as int') from exc
 
-        if not (0 <= self.mva_cmb < 1):
-            raise ValueError(f'Invalid value for combinatorial MVA WP: {self.mva_cmb}')
+        self._validate_mva(values = self.mva_cmb)
+        self._validate_mva(values = self.mva_prc)
+    # ----------------------
+    def _validate_mva(self, values : list[str]) -> None:
+        '''
+        Validates that values is a proper list of working points
 
-        if not (0 <= self.mva_prc < 1):
-            raise ValueError(f'Invalid value for part reco MVA WP: {self.mva_prc}')
+        Parameters
+        -------------
+        values: List of strings, symbolizing MVA working points, e.g. [0.1] or [0.3, 0.4]
+        '''
+
+        if len(values) not in {1, 2}:
+            raise ValueError(f'Expected one or two working points, found: {values}')
+
+        if all( self._is_valid_wp(value) for value in values ):
+            return
+
+        raise ValueError(f'Invalid MVA working points: {values}')
+    # ----------------------
+    def _is_valid_wp(self, value : str) -> bool:
+        '''
+        Parameters
+        -------------
+        value: String symbolizing working point
+
+        Returns
+        -------------
+        True if it is a valid working point for an MVA
+        '''
+        try:
+            fvalue = float(value)
+        except Exception:
+            log.warning(f'Invalid MVA working point: {value}')
+            return False
+
+        if 0.0 <= fvalue <= 1.0:
+            return True
+
+        log.warning(f'Invalid MVA working point: {value}')
+
+        return False
     # ----------------------
     def _initialize_toy_config(self) -> None:
         if self.toy_cfg is None:
