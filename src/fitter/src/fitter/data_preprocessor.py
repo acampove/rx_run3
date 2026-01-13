@@ -112,26 +112,33 @@ class DataPreprocessor(Cache):
 
         log.debug(f'Applying selection to {self._sample}/{self._trigger}')
 
-        if Cache._cache_root is None:
-            raise ValueError('Cache root directory not defined')
+    # ------------------------
+    def _get_selected_dataframe(self) -> tuple[RDF.RNode, pnd.DataFrame]:
+        '''
+        Returns
+        -----------------
+        Tuple with:
 
-        out_path = Path(Cache._cache_root) / out_dir
-
+        -ROOT dataframe with data
+        -Pandas dataframe with cutflow
+        '''
         # overriding only happens for simulation samples
-        with sel.custom_selection(d_sel=cut, force_override=True):
+        log.info(f'Applying selection to {self._sample}/{self._trigger}')
+        with sel.custom_selection(d_sel=self._cut, force_override=True):
             rdf = sel.apply_full_selection(
-                rdf     = rdf,
-                uid     = uid,
+                rdf     = self._rdf,
+                uid     = getattr(self._rdf, 'uid'),
                 q2bin   = self._q2bin,
                 trigger = self._trigger,
                 process = self._sample,
-                out_path= out_path)
+                out_path= self._out_path)
 
-            cfg_sel = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
             rep = rdf.Report()
             df  = rut.rdf_report_to_df(rep=rep)
 
-        return rdf, cfg_sel, df
+        log.info('Applied selection')
+
+        return rdf, df
     # ------------------------
     def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
         '''
