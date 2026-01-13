@@ -127,8 +127,6 @@ class DataPreprocessor(Cache):
                 process = self._sample,
                 out_path= out_path)
 
-            RDFGetter.check_alignment(rdf = rdf, index = 'EVENTNUMBER')
-
             cfg_sel = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
             rep = rdf.Report()
             df  = rut.rdf_report_to_df(rep=rep)
@@ -212,6 +210,8 @@ class DataPreprocessor(Cache):
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
 
         rdf = self._rdf
+        RDFGetter.check_alignment(rdf = rdf, index = 'EVENTNUMBER')
+
         if log.getEffectiveLevel() < 20:
             rep = rdf.Report()
             rep.Print()
@@ -284,6 +284,7 @@ class DataPreprocessor(Cache):
             data    = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
             return data
 
+        log.info(f'Data not found cached, loading {self._sample}/{self._trigger}')
         arr, wgt = self._get_array()
         data     = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
 
