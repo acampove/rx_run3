@@ -5,6 +5,7 @@ from .types import Project
 from .types import Sample
 from .types import Qsq 
 from .types import Brem 
+from .types import MVA 
 
 __all__ = [
     'Component', 
@@ -14,4 +15,5 @@ __all__ = [
     'Sample',
     'Qsq', 
     'Brem',
+    'MVA',
 ]

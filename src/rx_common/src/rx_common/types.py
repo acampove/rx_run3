@@ -4,6 +4,16 @@ This module contains classes derived from Enum
 from enum import IntEnum, StrEnum
 
 # ---------------------------------------
+class MVA(StrEnum):
+    r'''
+    This class is meant to hold types representing kinds of MVA classifiers 
+
+    cmb : Combinatorial 
+    prc : Partially reconstructed 
+    '''
+    cmb = 'cmb'
+    prc = 'prc'
+# ---------------------------------------
 class Brem(IntEnum):
     '''
     Enum meant to represent brem category
