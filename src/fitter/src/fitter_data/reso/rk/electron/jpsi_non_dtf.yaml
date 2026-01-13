@@ -2,8 +2,7 @@ output_directory : reso/rk/electron/jpsi
 categories:
   main:
     model :
-      - cbl 
-      - cbr
+      - dscb
 sample        : Bu_JpsiK_ee_eq_DPC
 shared        :
   - mu
@@ -11,8 +10,6 @@ shared        :
 float         :
   - mu
   - sg
-  - al
-  - nl
 ranges:
   mu : [5200, 5100, 5300]
 reparametrize : {}
