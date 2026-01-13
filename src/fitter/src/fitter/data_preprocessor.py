@@ -86,10 +86,6 @@ class DataPreprocessor(Cache):
             wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
             rdf_uid  = self._rdf_uid)
     # ------------------------
-    def _get_rdf(
-        self, 
-        out_dir     : Path,
-        cut         : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
     def _get_selection(self) -> dict[str,str]:
         '''
         Returns
@@ -98,12 +94,12 @@ class DataPreprocessor(Cache):
         '''
         with sel.custom_selection(d_sel=self._cut, force_override=True):
             return sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
+    # ------------------------
+    def _get_rdf(self) -> RDF.RNode:
+        '''
         Returns
         -------------------
-        Tuple with:
-           - ROOT dataframe after selection and with Unique identifier attached as uid
-           - Dictionary storing selection
-           - Pandas dataframe with cutflow
+        ROOT dataframe before selection and with unique identifier string attached as 'uid'
         '''
         log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}')
         gtr = RDFGetter(
@@ -113,8 +109,9 @@ class DataPreprocessor(Cache):
         rdf = gtr.get_rdf(per_file=False)
         uid = gtr.get_uid()
 
-        log.debug(f'Applying selection to {self._sample}/{self._trigger}')
+        setattr(rdf, 'uid', uid)
 
+        return rdf
     # ------------------------
     def _get_selected_dataframe(self) -> tuple[RDF.RNode, pnd.DataFrame]:
         '''
