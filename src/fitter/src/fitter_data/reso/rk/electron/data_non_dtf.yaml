@@ -3,17 +3,20 @@
 
 trigger          : Hlt2RD_BuToKpEE_MVA
 output_directory : reso/rk/electron/data
+selection        :
+  q2    : (q2_dtf >  6000000) && (q2_dtf < 11000000)
+  mass  : B_const_mass_M > 5200
 model:
   yields    : model/yields/rk/reso_electron.yaml
   observable:
     jpsi:
       name : B_Mass
       range:
-        - 4500 
+        - 4600 
         - 7000
   components:
     combinatorial : reso/rk/electron/combinatorial_non_dtf.yaml
-    ccbar         : reso/rk/electron/ccbar.yaml
+    #ccbar         : reso/rk/electron/ccbar.yaml
     jpsik         : reso/rk/electron/jpsi_non_dtf.yaml
   constraints:
     yields : []
