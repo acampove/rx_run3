@@ -11,8 +11,9 @@ common_settings: &settings
       cmb      : mva_cmb > 0.2 && mva_cmb < 0.7
       mass     : B_Mass > 0
     parameters : # Will constrain parameters starting
-      - c_exp    # with any of these strings
-                 # E.g mu_hypexp_combinatorial_1
+      - mu       # with any of these strings
+      - ap       # E.g mu_hypexp_combinatorial_1
+      - bt
     fit :
       strategy : 
         retry :
@@ -26,7 +27,7 @@ output_directory : reso/rk/electron/combinatorial
 categories:
   main:
     models :
-      jpsi    : [exp]
+      jpsi    : [hypexp]
 jpsi:
   <<: *settings
 psi2:
