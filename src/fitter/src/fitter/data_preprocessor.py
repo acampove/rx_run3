@@ -67,24 +67,20 @@ class DataPreprocessor(Cache):
         self._trigger= trigger
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
+        self._cut    = cut
 
-        rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir)
-
-        self._rdf    = rdf 
-        self._d_sel  = d_sel
-        self._df_ctf = df_ctf
-
+        self._rdf    = self._get_rdf()
+        self._d_sel  = self._get_selection() 
         self._is_sig = is_sig
-        self._rdf_uid= None if self._rdf is None else getattr(self._rdf, 'uid')
-
+        
         super().__init__(
             out_path = out_dir,
             obs_name = sut.name_from_obs(obs=obs),
             obs_range= sut.range_from_obs(obs=obs),
-            d_sel    = d_sel,
+            d_sel    = self._d_sel,
             is_sig   = is_sig,
             wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
-            rdf_uid  = self._rdf_uid)
+            rdf_uid  = getattr(self._rdf, 'uid') )
     # ------------------------
     def _get_selection(self) -> dict[str,str]:
         '''
