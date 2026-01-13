@@ -474,7 +474,7 @@ class Fitter:
             if res.converged:
                 if log.getEffectiveLevel() < 20:
                     print(res)
-                log.warning(f'Error not calculated, retrying: {counter}/10')
+                log.debug(f'Error not calculated, retrying: {counter}/10')
             # Bad fit and cannot get error => Forget about fit
             else:
                 raise RuntimeError('Fit error could not be found')
