@@ -156,6 +156,7 @@ class FitConfig:
         LogStore.set_level('dmu:stats:model_factory'              , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:parameters'                 , DEPENDENCIES_LEVEL)
         LogStore.set_level('dmu:stats:gofcalculator'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:constraint_adder'           , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_data:rdf_getter'                   , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_data:path_splitter'                , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_data:sample_emulator'              , DEPENDENCIES_LEVEL)
@@ -164,7 +165,6 @@ class FitConfig:
         LogStore.set_level('rx_efficiencies:efficiency_calculator', DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_selection:truth_matching'          , DEPENDENCIES_LEVEL)
         LogStore.set_level('rx_selection:selection'               , DEPENDENCIES_LEVEL)
-        LogStore.set_level('dmu:stats:constraint_adder'           , DEPENDENCIES_LEVEL)
         # ---------
         LogStore.set_level('fitter:fit_config'                    ,         TOOL_LEVEL)
         LogStore.set_level('fitter:likelihood_factory'            ,         TOOL_LEVEL)
