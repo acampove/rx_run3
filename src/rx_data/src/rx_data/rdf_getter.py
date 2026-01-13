@@ -584,8 +584,8 @@ class RDFGetter(SpecMaker):
         if not aligned:
             rdf.Display(f'.*{index}.*').Print()
             raise ValueError(f'{index} columns are not aligned')
-        else:
-            log.debug(f'Checked {index}')
+
+        log.info(f'Checked {index}')
     # ---------------------------------------------------
     def get_uid(self) -> str:
         '''
