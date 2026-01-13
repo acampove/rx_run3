@@ -202,14 +202,18 @@ class DataPreprocessor(Cache):
 
         return df['pid_weights'].to_numpy()
     # ------------------------
-    def _get_array(self) -> tuple[numpy.ndarray,numpy.ndarray]:
+    def _get_array(self, rdf : RDF.RNode) -> tuple[numpy.ndarray,numpy.ndarray]:
         '''
-        Return a tuple of numpy arrays with the observable and weight
-        for the sample requested, this array is fully selected
+        Parameters
+        ------------------
+        rdf: ROOT dataframe after selection
+
+        Returns
+        ------------------
+        Tuple of numpy arrays with the observable and weights
         '''
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
 
-        rdf = self._rdf
         if log.getEffectiveLevel() < 20:
             rep = rdf.Report()
             rep.Print()
