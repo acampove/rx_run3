@@ -228,11 +228,14 @@ class DataPreprocessor(Cache):
         return arr, wgt
     # ------------------------
     @property
-    def rdf_uid(self) -> str|None:
+    def uid(self) -> str:
         '''
-        Unique identifier of ROOT dataframe after selection
+        Unique identifier of current dataset 
         '''
-        return self._rdf_uid
+        if not isinstance(self._hsh, str):
+            raise ValueError('UID for dataset not found')
+
+        return self._hsh
     # ------------------------
     def _data_from_numpy(
         self,
