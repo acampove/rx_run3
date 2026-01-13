@@ -107,6 +107,10 @@ class DataModel:
             pdf = self._extend(pdf=pdf, name=component)
             l_pdf.append(pdf)
 
+        if len(l_pdf) == 1:
+            log.warning('Found only one PDF, not using it in SumPDF')
+            return l_pdf[0]
+
         pdf = zfit.pdf.SumPDF(l_pdf)
 
         return pdf
