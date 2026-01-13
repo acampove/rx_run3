@@ -210,8 +210,6 @@ class DataPreprocessor(Cache):
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
 
         rdf = self._rdf
-        RDFGetter.check_alignment(rdf = rdf, index = 'EVENTNUMBER')
-
         if log.getEffectiveLevel() < 20:
             rep = rdf.Report()
             rep.Print()
