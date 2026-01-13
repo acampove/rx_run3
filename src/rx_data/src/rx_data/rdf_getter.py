@@ -575,7 +575,9 @@ class RDFGetter(SpecMaker):
 
         log.info(f'Checking {ncol} columns for {index}')
 
-        data    = rdf.AsNumpy(indexes)
+        rdf_small = rdf.Range(100)
+
+        data    = rdf_small.AsNumpy(indexes)
         arrays  = [ array for array in data.values() ]
         aligned = all( numpy.array_equal(array, arrays[0]) for array in arrays)
 
