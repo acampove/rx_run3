@@ -11,7 +11,7 @@ from dmu.stats.zfit import zfit
 from omegaconf      import DictConfig
 from dmu.generic    import utilities  as gut
 from dmu            import LogStore
-from rx_common      import Qsq, info
+from rx_common      import Qsq, MVA, info
 from zfit           import Space      as zobs
 
 log=LogStore.add_logger('fitter:fit_config')
@@ -348,6 +348,40 @@ class FitConfig:
             return f'{low:03d}-{high:03d}'
 
         raise ValueError(f'Invalid MVA values: {values}')
+    # ----------------------
+    @staticmethod
+    def str_to_wp(wp : str, kind : MVA) -> list[float]:
+        '''
+        Parameters
+        --------------
+        wp  : String representing MVA working point, e.g. 030_040
+        kind: Type of BDT requested, e.g. cmb
+
+        Returns
+        --------------
+        List of floats representing the working point, e.g. 0.3
+        '''
+        parts = wp.split('_')
+        if len(parts) != 2:
+            raise ValueError(f'Cannot find two and only two working points in: {wp}')
+
+        wps = None
+
+        if kind == MVA.cmb:
+            wps = parts[0] 
+
+        if kind == MVA.prc:
+            wps = parts[1]
+
+        if not isinstance(wps, str):
+            raise ValueError('Working point not found')
+
+        fwps = [ float(part) / 100. for part in wps.split('-') ]
+
+        if len(fwps) not in {1, 2}:
+            raise ValueError(f'Cannot find either one or two working points in: {wps}')
+
+        return fwps
     # ----------------------
     @cached_property
     def fit_name(self) -> str:
