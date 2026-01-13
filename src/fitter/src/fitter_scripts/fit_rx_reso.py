@@ -214,7 +214,7 @@ def main(args : DictConfig | None = None):
     cfg = _parse_args(args=args) 
 
     overriding_selection = {
-        'mass'  : 'B_const_mass_M > 5180',
+        'mass'  : 'B_const_mass_M > 5200',
         'block' : cfg.block_cut,
         'nobrm0': cfg.brem_cut,
         'cmb'   : cfg.cmb_cut,
