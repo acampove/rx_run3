@@ -8,7 +8,7 @@ from omegaconf         import OmegaConf, DictConfig
 from fitter.fit_config import FitConfig
 from dmu               import LogStore
 from dmu.generic       import utilities as gut
-from rx_common.types   import Qsq
+from rx_common         import Qsq, MVA
 
 log=LogStore.add_logger('fitter:test_fit_config')
 # ----------------------
@@ -88,4 +88,18 @@ def test_output(tmp_path : Path):
         cfg.save(kind = 'test')
 
         assert cfg.output_directory == tmp_path / f'fits/data/tests/010-020_050_b{block}'
+# ----------------------
+def test_str_to_wp():
+    '''
+    Test converter of strings to lists of floats
+    '''
+    assert FitConfig.str_to_wp(wp = '010_020'        , kind = MVA.cmb) == [0.1]
+    assert FitConfig.str_to_wp(wp = '010_020'        , kind = MVA.prc) == [0.2]
+
+    assert FitConfig.str_to_wp(wp = '010-030_020'    , kind = MVA.cmb) == [0.1, 0.3]
+    assert FitConfig.str_to_wp(wp = '010_010-020'    , kind = MVA.prc) == [0.1, 0.2]
+
+    assert FitConfig.str_to_wp(wp = '000-010_010-020', kind = MVA.cmb) == [0.0, 0.1]
+    assert FitConfig.str_to_wp(wp = '000-010_010-020', kind = MVA.prc) == [0.1, 0.2]
+# ----------------------
 
