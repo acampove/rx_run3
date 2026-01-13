@@ -19,25 +19,35 @@ from dmu.stats.zfit_plotter import ZFitPlotter
 from dmu.logging.log_store  import LogStore
 from ROOT                   import RDF, gInterpreter # type: ignore
 
+_NSAMPLE : int = 10_000
+
 log = LogStore.add_logger('dmu:logging:test_fitter')
+# ----------------------
+@cache
+def _get_data() -> numpy.ndarray:
+    '''
+    Returns
+    -------------
+    Array with dataset from gaussian plus exponential
+    '''
+    arr_sig = numpy.random.normal(5.0, 0.5, size=_NSAMPLE)
+    arr_bkg = numpy.random.exponential(scale=10, size=_NSAMPLE)
+    arr_tot = numpy.concatenate((arr_sig, arr_bkg))
+    numpy.random.shuffle(arr_tot)
+
+    return arr_tot
 #-------------------------------------
 class Data:
     '''
     Data class used to store share data
     '''
-    nsample = 100_000
-    arr_sig = numpy.random.normal(5.0, 0.5, size=10_000)
-    arr_bkg = numpy.random.exponential(scale=10, size=10_000)
-    arr_tot = numpy.concatenate((arr_sig, arr_bkg))
-    numpy.random.shuffle(arr_tot)
-
+    data    = _get_data()
     pdf     = None
-    arr     = arr_tot
     obs     = zfit.Space('m', limits=(0, 10))
-    df      = pnd.DataFrame({'x' : arr_tot})
-    zf      = zfit.data.from_numpy(obs=obs, array=arr)
+    df      = pnd.DataFrame({'x' : data})
+    zf      = zfit.data.from_numpy(obs=obs, array=data)
 
-    l_arg_simple = [arr, df, zf]
+    l_arg_simple = [data, df, zf]
 #-------------------------------------
 @pytest.fixture(scope='module', autouse=True)
 def initialize():
@@ -54,8 +64,8 @@ def _get_weighted_data():
     gInterpreter.ProcessLine('TRandom3 r(1);')
 
     d_val      = {}
-    d_val['x'] = numpy.random.uniform(-1, 4, size=Data.nsample)
-    d_val['y'] = numpy.random.uniform(-1, 4, size=Data.nsample)
+    d_val['x'] = numpy.random.uniform(-1, 4, size=_NSAMPLE)
+    d_val['y'] = numpy.random.uniform(-1, 4, size=_NSAMPLE)
 
     rdf = RDF.FromNumpy(d_val)
     rdf = rdf.Define('m', 'r.Gaus(x, 2 + y/4.)')
@@ -70,7 +80,7 @@ def _get_pdf():
     nsg = zfit.Parameter('nsg', 100,  0, 10_000_000)
     sig = sig.create_extended(nsg)
 
-    lb  = zfit.Parameter("lb", -0.1,  -0.3, 0)
+    lb  = zfit.Parameter("lb", -0.1,  -0.9, 0)
     bkg = zfit.pdf.Exponential(obs=Data.obs, lam=lb)
     nbg = zfit.Parameter('nbk', 100,  0, 10_000_000)
     bkg = bkg.create_extended(nbg)
@@ -121,7 +131,8 @@ def test_retry():
            }
 
     pdf = _get_pdf()
-    obj = Fitter(pdf, Data.arr)
+    arr = _get_data()
+    obj = Fitter(pdf, arr)
     res = obj.fit(cfg)
 
     assert res.valid
@@ -138,8 +149,9 @@ def test_constrain():
             }
 
     pdf = _get_pdf()
-    obj=Fitter(pdf, Data.arr)
-    res=obj.fit(cfg)
+    arr = _get_data()
+    obj = Fitter(pdf, arr)
+    res = obj.fit(cfg)
 
     assert res.valid
 #-------------------------------------
@@ -179,14 +191,12 @@ def test_wgt():
     dat = zfit.data.from_numpy(array=arr, weights=wgt, obs=pdf.space)
 
     obj=Fitter(pdf, dat)
-    res=obj.fit()
+    obj.fit()
 #-------------------------------------
 def test_steps():
     '''
     Tests the steps fitting strategy
     '''
-    pdf = _get_pdf()
-
     cfg = {
             'strategy' : {
                 'steps' : {
@@ -197,7 +207,9 @@ def test_steps():
                 }
             }
 
-    obj = Fitter(pdf, Data.arr)
+    pdf = _get_pdf()
+    arr = _get_data()
+    obj = Fitter(pdf, arr)
     res = obj.fit(cfg)
     print(res)
 
@@ -211,8 +223,9 @@ def test_binning(nbins : int):
     '''
     cfg = {'likelihood' : {'nbins' : nbins}}
 
+    arr = _get_data()
     pdf = _get_pdf()
-    obj = Fitter(pdf, Data.arr)
+    obj = Fitter(pdf, arr)
     res = obj.fit(cfg)
 
     log.info(res)
