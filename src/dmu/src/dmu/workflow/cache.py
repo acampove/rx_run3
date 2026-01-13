@@ -87,9 +87,9 @@ class Cache:
         return val
     # ---------------------------
     def _get_dir(
-            self,
-            kind : str,
-            make : bool = True) -> str:
+        self,
+        kind : str,
+        make : bool = True) -> str:
         '''
         Parameters
         --------------
