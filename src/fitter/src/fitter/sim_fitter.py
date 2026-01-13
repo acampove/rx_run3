@@ -137,7 +137,7 @@ class SimFitter(BaseFitter, Cache):
                 sample = self._cfg.sample)
             d_data[cat_name] = prp.get_data()
 
-            self._l_rdf_uid.append(prp.rdf_uid)
+            self._l_rdf_uid.append(prp.uid)
 
         return d_data
     # ------------------------
