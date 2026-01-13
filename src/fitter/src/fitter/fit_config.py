@@ -326,14 +326,37 @@ class FitConfig:
         '''
         return info.is_ee(self.fit_cfg.trigger)
     # ----------------------
+    def _wp_to_str(self, values : list[str]) -> str:
+        '''
+        Parameters
+        -------------
+        values: List of working points, e.g. [0.1] or [0.2, 0.3]
+
+        Returns
+        -------------
+        Stringified version, used for naming directories, e.g. 010, 020-030
+        '''
+        fvalues = [ 100 * float(value) for value in values ]
+        ivalues = [ int(fvalue) for fvalue in fvalues ]
+
+        if len(ivalues) == 1:
+            [low] = ivalues
+            return f'{low:03d}'
+
+        if len(ivalues) == 2:
+            [low, high] = ivalues
+            return f'{low:03d}-{high:03d}'
+
+        raise ValueError(f'Invalid MVA values: {values}')
+    # ----------------------
     @cached_property
     def fit_name(self) -> str:
         '''
         Builds fit identifier from MVA working points
         '''
-        cmb  = int(100 * self.mva_cmb)
-        prc  = int(100 * self.mva_prc)
-        name = f'{cmb:03d}_{prc:03d}'
+        cmb  = self._wp_to_str(values = self.mva_cmb) 
+        prc  = self._wp_to_str(values = self.mva_prc) 
+        name = f'{cmb}_{prc}'
     
         return name
     # ----------------------
