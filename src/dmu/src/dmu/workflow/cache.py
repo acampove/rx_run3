@@ -61,8 +61,7 @@ class Cache:
         log.debug(f'Using {self._out_path} output path')
         self._out_path.mkdir(parents=True, exist_ok=True)
 
-        self._dat_hash  = kwargs
-
+        self._hsh       = hashing.hash_object(kwargs)
         self._cache_dir = self._get_dir(kind='cache')
         self._hash_dir  : str
     # ---------------------------
@@ -101,8 +100,7 @@ class Cache:
             dir_path  = f'{self._out_path}/.cache'
         elif kind == 'hash':
             cache_dir = self._get_dir(kind='cache')
-            hsh       = hashing.hash_object(self._dat_hash)
-            dir_path  = f'{cache_dir}/{hsh}'
+            dir_path  = f'{cache_dir}/{self._hsh}'
         else:
             raise ValueError(f'Invalid directory kind: {kind}')
 
