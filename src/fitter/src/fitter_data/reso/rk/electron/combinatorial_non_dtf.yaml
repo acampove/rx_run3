@@ -27,7 +27,7 @@ output_directory : reso/rk/electron/combinatorial
 categories:
   main:
     models :
-      jpsi    : [hypexp]
+      jpsi    : [exp]
 jpsi:
   <<: *settings
 psi2:
