@@ -6,9 +6,11 @@ provided by this project
 import typer
 import matplotlib.pyplot as plt
 
-from dmu      import LogStore
-from pathlib  import Path
-from fitter   import FitSummary
+from dmu       import LogStore
+from pathlib   import Path
+from fitter    import FitSummary
+from rx_common import MVA
+from fitter    import FitConfig
 
 app = typer.Typer(help=__doc__)
 log = LogStore.add_logger('rx_fitter:cli')
