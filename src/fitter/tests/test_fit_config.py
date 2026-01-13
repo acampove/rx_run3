@@ -66,3 +66,26 @@ def test_save(tmp_path : Path):
         cfg.save(kind = 'test')
 
     assert cfg.fit_cfg == _get_config(name=name)
+# ----------------------
+def test_output(tmp_path : Path):
+    '''
+    Tests saving config 
+    '''
+    name    = 'test_save'
+    block   = 3
+    fit_cfg = _get_config(name = name)
+
+    with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
+        cfg = FitConfig(
+            name    = name, 
+            group   = 'tests',
+            mva_cmb = ['0.1', '0.2'],
+            mva_prc = ['0.5'],
+            block   = block,
+            q2bin   = Qsq.central,
+            fit_cfg = fit_cfg,
+        )
+        cfg.save(kind = 'test')
+
+        assert cfg.output_directory == tmp_path / f'fits/data/tests/010-020_050_b{block}'
+
