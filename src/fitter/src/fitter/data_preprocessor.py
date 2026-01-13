@@ -283,14 +283,15 @@ class DataPreprocessor(Cache):
             return data
 
         log.info(f'Data not found cached, loading {self._sample}/{self._trigger}')
-        arr, wgt = self._get_array()
-        data     = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
 
-        cuts_path = data_path.replace('.npz' , '.yaml')
+        rdf, df_ctf = self._get_selected_dataframe()
+        arr, wgt    = self._get_array(rdf = rdf)
+        data        = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
+        cuts_path   = data_path.replace('.npz' , '.yaml')
         gut.dump_json(data=self._d_sel , path=cuts_path)
 
         ctfl_path = cuts_path.replace('.yaml',   '.md')
-        put.to_markdown(df=self._df_ctf, path=ctfl_path)
+        put.to_markdown(df=df_ctf, path=ctfl_path)
 
         numpy.savez_compressed(data_path, values=arr, weights=wgt)
         self._cache()
