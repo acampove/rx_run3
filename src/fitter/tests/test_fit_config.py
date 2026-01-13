@@ -22,7 +22,8 @@ def initialize():
 def _get_config(name : str) -> DictConfig:
     fit_cfg = {
         name   : [1,2,3],
-        'name' : { name : 1, 'a' : name }
+        'name' : { name : 1, 'a' : name },
+        'model': {'components' : ['x', 'y']} 
     }
 
     return OmegaConf.create(fit_cfg)
@@ -38,8 +39,8 @@ def test_replace():
     cfg = FitConfig(
         name    = 'test_replace', 
         group   = 'tests',
-        mva_cmb = 0.,
-        mva_prc = 0.,
+        mva_cmb = ['0.1', '0.2'],
+        mva_prc = ['0.5'],
         q2bin   = Qsq.central,
         fit_cfg = fit_cfg)
     cfg.replace(substring=org, value=new)
@@ -57,8 +58,8 @@ def test_save(tmp_path : Path):
         cfg = FitConfig(
             name    = name, 
             group   = 'tests',
-            mva_cmb = 0.,
-            mva_prc = 0.,
+            mva_cmb = ['0.1', '0.2'],
+            mva_prc = ['0.5'],
             q2bin   = Qsq.central,
             fit_cfg = fit_cfg,
         )
