@@ -90,11 +90,14 @@ class DataPreprocessor(Cache):
         self, 
         out_dir     : Path,
         cut         : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
+    def _get_selection(self) -> dict[str,str]:
         '''
-        Parameters
+        Returns
         -------------------
-        category_cut: Selection to be added on top, used for categories.
-
+        Dictionary with full selection
+        '''
+        with sel.custom_selection(d_sel=self._cut, force_override=True):
+            return sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
         Returns
         -------------------
         Tuple with:
