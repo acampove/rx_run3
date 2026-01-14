@@ -44,4 +44,4 @@ class ScalesConf(BaseModel):
         [low, high] = data[var]
 
         return low, high
-
+#-------------------------------------
