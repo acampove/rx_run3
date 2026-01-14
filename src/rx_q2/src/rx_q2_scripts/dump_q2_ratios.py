@@ -14,12 +14,12 @@ import pandas                as pnd
 
 from dmu                   import LogStore
 from dmu.generic           import utilities        as gut
-from typing                import Callable, Any
+from typing                import Callable
 from pathlib               import Path
 from omegaconf             import DictConfig
 from functools             import cache
-from pydantic              import BaseModel, ConfigDict
 from matplotlib.axes       import Axes
+from rx_q2                 import ScalesConf
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
 
