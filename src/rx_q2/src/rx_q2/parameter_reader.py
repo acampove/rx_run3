@@ -2,7 +2,6 @@
 Module holding the ParameterReader class
 '''
 import re
-import pandas as pnd
 
 from pathlib           import Path
 from rx_q2.scales_conf import ScalesConf
@@ -37,10 +36,17 @@ class ParameterReader:
         '''
         data = gut.load_json(path)
     
-        [[mu_val, mu_err]] = [ val for name, val in data.items() if name.startswith('mu_')]
-        [[sg_val, sg_err]] = [ val for name, val in data.items() if name.startswith('sg_')]
-    
         brem, block = self._brem_block_from_path(path=path)
+
+        if   self._cfg.kind == 'q2':
+            [[mu_val, mu_err]] = [ val for name, val in data.items() if name.startswith('mu_')]
+            [[sg_val, sg_err]] = [ val for name, val in data.items() if name.startswith('sg_')]
+        elif self._cfg.kind == 'B':
+            brem_str = f'brem_{brem:03d}'
+            [[mu_val, mu_err]] = [ val for name, val in data.items() if name.startswith('mu_jpsi') and brem_str in name]
+            [[sg_val, sg_err]] = [ val for name, val in data.items() if name.startswith('sg_jpsi') and brem_str in name]
+        else:
+            raise ValueError(f'Invalid kind: {self._cfg.kind}')
 
         data = {
             'mu_val' : mu_val,
@@ -54,6 +60,49 @@ class ParameterReader:
         return data 
     #-------------------------------------
     def _brem_block_from_path(self, path : Path) -> tuple[int, int]:
+        '''
+        Parameters
+        ---------------
+        Path: path to parameters.json
+    
+        Returns
+        ---------------
+        Tuple with integers describing the brem and block
+        '''
+        if self._cfg.kind == 'q2':
+            return self._brem_block_from_q2_path(path = path)
+
+        if self._cfg.kind == 'B':
+            return self._brem_block_from_B_path(path = path)
+
+        raise ValueError(f'Invalid kind: {self._cfg.kind}')
+    # ----------------------
+    def _brem_block_from_B_path(self, path : Path) -> tuple[int, int]:
+        '''
+        Parameters
+        ---------------
+        Path: path to parameters.json
+    
+        Returns
+        ---------------
+        Tuple with integers describing the brem and block
+        '''
+        brem_str = path.parent.name # E.g. brem_001
+        brem_val = brem_str.replace('brem_', '')
+        brem_int = int(brem_val)
+
+        match = re.search(self._cfg.regex, str(path))
+        if match is None:
+            raise ValueError(f'Cannot match {self._cfg.regex} in {path}')
+
+        # Combinatorial and prec MVA are dropped
+        _, _, block = match.groups()
+
+        block_int   = int(block)
+
+        return brem_int, block_int 
+    # ----------------------
+    def _brem_block_from_q2_path(self, path : Path) -> tuple[int, int]:
         '''
         Parameters
         ---------------
