@@ -376,12 +376,22 @@ def main(args : DictConfig | None = None):
     - project
     - year (default 2024)
     '''
-    Data.args = args
+    global ARGS
+    if   args is not None:
+        ARGS = args
+    else:
+        parser = argparse.ArgumentParser(description='Used to create pandas dataframe with information from fits needed to smear q2')
+        parser.add_argument('-k', '--kind'   , type=str, help='Type of scales' , required=True, choices=['q2', 'B'])
+        parser.add_argument('-v', '--vers'   , type=str, help='Version'        , required=True)
+        parser.add_argument('-p', '--project', type=str, help='Name of project', required=True, choices=PROJECTS)
+        parser.add_argument('-y', '--year'   , type=str, help='Year for data whose corrections are needed', default='2024')
+        ARGS = parser.parse_args()
 
-    cfg = _load_config()
-    _initialize(cfg=cfg)
+    plt.style.use(mplhep.style.LHCb2)
 
-    out_path = f'{Data.out_dir}/parameters.json'
+    cfg  = _load_config()
+
+    out_path = cfg.out_dir / 'parameters.json'
     if os.path.isfile(out_path):
         log.warning(f'Dataframe already found, reusing: {out_path}')
         df = pnd.read_json(out_path)
@@ -389,7 +399,7 @@ def main(args : DictConfig | None = None):
 
         return
 
-    log.info('Dataframe already not found, making it')
+    log.info('Dataframe not found, making it')
     l_df : list[pnd.DataFrame] = []
     for sample in ['dat', 'sim']:
         df           = _get_df(sample=sample, project=cfg.proj, year=cfg.year)
