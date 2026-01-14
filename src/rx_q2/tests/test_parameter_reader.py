@@ -14,9 +14,9 @@ from dmu.generic import utilities as gut
 log=LogStore.add_logger('rx_q2:test_parameter_reader')
 # ----------------------
 @pytest.mark.parametrize('sample', ['rk_ee_2024', 'rk_mm_2024'])
-def test_simple(sample : str) -> None:
+def test_jpsi(sample : str) -> None:
     '''
-    Simplest test of tool
+    Test of tool with jpsi fits
     '''
     ANADIR = os.environ['ANADIR']
     path   = Path(ANADIR) / f'q2/fits/v6/dat/{sample}/0_1_nom/parameters.json'
