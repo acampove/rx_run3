@@ -2,6 +2,7 @@
 This module contains functions to test the ParameterReader class
 '''
 import os
+import pytest
 import pandas as pnd
 
 from pathlib     import Path
@@ -12,12 +13,13 @@ from dmu.generic import utilities as gut
 
 log=LogStore.add_logger('rx_q2:test_parameter_reader')
 # ----------------------
-def test_simple() -> None:
+@pytest.mark.parametrize('sample', ['rk_ee_2024', 'rk_mm_2024'])
+def test_simple(sample : str) -> None:
     '''
     Simplest test of tool
     '''
     ANADIR = os.environ['ANADIR']
-    path   = Path(ANADIR) / 'q2/fits/v6/dat/rk_ee_2024/1_1_nom/parameters.json'
+    path   = Path(ANADIR) / f'q2/fits/v6/dat/{sample}/0_1_nom/parameters.json'
     if not path.exists():
         raise ValueError(f'Cannot find: {path}')
 
@@ -38,3 +40,4 @@ def test_simple() -> None:
     assert isinstance(srs, pnd.Series)
     
     print(srs)
+    print(srs.dtypes)
