@@ -4,7 +4,6 @@ with the widths and means of the Jpsi peak, fitted from data and MC samples
 '''
 import os
 import re
-import glob
 import math
 import argparse
 
@@ -23,6 +22,9 @@ from pydantic              import BaseModel, ConfigDict
 from matplotlib.axes       import Axes
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
+
+ARGS     : DictConfig | argparse.Namespace | None = None
+PROJECTS : list[str] = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
 #-------------------------------------
 class ScalesConf(BaseModel):
     '''
@@ -67,15 +69,6 @@ class ScalesConf(BaseModel):
 
         return low, high
 #-------------------------------------
-class Data:
-    '''
-    Data class
-    '''
-    regex   = r'(\d)_(\d)_nom'
-    inp_dir : Path 
-    out_dir : Path 
-    args    : DictConfig | None = None
-# ----------------------
 @cache
 def _load_config() -> ScalesConf:
     '''
