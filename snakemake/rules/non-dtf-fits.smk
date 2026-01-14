@@ -1,20 +1,27 @@
 import os
 
 ANADIR = os.environ['ANADIR']
-WP     = '070_060'
-BREM   = ['001', '002']
+WP     = [
+    '050_060',     # Loose SR 
+    '070_060',     # Representative of SR 
+    '090_060',     # Tight SR 
+    '010-050_080', # Check combinatorial
+    ]
 BLOCK  = list(range(1, 9))[:1]
 NAME   = 'reso_non_dtf'
 # ---------------------
 rule all:
     input: 
         expand(
-            ANADIR + '/fits/data/' + NAME + '/' + WP + '_b{block}/reso/rk/electron/data/jpsi/brem_{brem}/fit_linear.png',
-            brem  = BREM,
+            [ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_001/fit_linear.png',
+             ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_002/fit_linear.png'],
+            wp    = WP,
             block = BLOCK)
 # ---------------------
 rule fits:
-    output   : ANADIR + '/fits/data/' + NAME + '/' + WP + '_b{block}/reso/rk/electron/data/jpsi/brem_{brem}/fit_linear.png'
+    output   : 
+        ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_001/fit_linear.png',
+        ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_002/fit_linear.png',
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:6d4387847'
     params:
@@ -29,6 +36,6 @@ rule fits:
                     -g {params.name}\
                     -c reso/rk/electron/data_non_dtf.yaml \
                     -q jpsi \
-                    -C 0.70 \
-                    -P 0.60 || true
+                    -C $(rxfitter wp-translator -w {wildcards.wp} -k cmb)\
+                    -P $(rxfitter wp-translator -w {wildcards.wp} -k prc) || true
         '''
