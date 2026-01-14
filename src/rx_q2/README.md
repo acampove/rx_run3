@@ -51,7 +51,11 @@ for all the candidates and declared only once.
 The script collecting all the numbers should be run with:
 
 ```bash
-dump_q2_ratios -v v2 -p rk_ee
+# For scales and resolutions from fit to Jpsi
+dump_q2_ratios -v v2 -p rk_ee -k q2
+
+# For scales and resolutions from non-dtf fit to B
+dump_q2_ratios -v v2 -p rk_ee -k B
 ```
 
 for instance.
