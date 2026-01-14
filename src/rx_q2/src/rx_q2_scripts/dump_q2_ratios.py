@@ -138,9 +138,10 @@ def _brem_block_from_path(path : Path) -> tuple[str,str]:
     dir_name = os.path.dirname(path)
     sample   = os.path.basename(dir_name)
 
-    mtch     = re.match(Data.regex, sample)
+    cfg      = _load_config()
+    mtch     = re.match(cfg.regex, sample)
     if not mtch:
-        raise ValueError(f'Cannot extract information from {sample} using {Data.regex}')
+        raise ValueError(f'Cannot extract information from {sample} using {cfg.regex}')
 
     [brem, block] = mtch.groups()
 
@@ -157,8 +158,9 @@ def _get_df(
     project: e.g. rk_ee
     year   : 2024
     '''
-    path_wc = f'{Data.inp_dir}/{sample}/{project}_{year}/*/parameters.json'
-    l_path  = glob.glob(path_wc)
+    cfg     = _load_config()
+    path_wc = cfg.inp_dir / f'{sample}/{project}_{year}'
+    l_path  = list(path_wc.glob(pattern = '*/parameters.json'))
     nfiles  = len(l_path)
 
     df = pnd.DataFrame(columns=['mu_val', 'mu_err', 'sg_val', 'sg_err', 'brem', 'block'])
@@ -319,7 +321,7 @@ def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
         plt.ylim(rng)
 
     plt.grid()
-    plt.savefig(f'{Data.out_dir}/{quantity}.png')
+    plt.savefig(cfg.out_dir / f'{quantity}.png')
     plt.close()
 #-------------------------------------
 def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
@@ -348,7 +350,7 @@ def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
 
     plt.grid()
     plt.legend()
-    plt.savefig(f'{Data.out_dir}/{quantity}_{kind}.png')
+    plt.savefig(cfg.out_dir / f'{quantity}_{kind}.png')
     plt.close()
 #-------------------------------------
 def _plot(df : pnd.DataFrame):
