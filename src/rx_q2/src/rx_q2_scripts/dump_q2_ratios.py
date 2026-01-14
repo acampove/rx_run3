@@ -366,7 +366,15 @@ def _plot(df : pnd.DataFrame):
 #-------------------------------------
 def main(args : DictConfig | None = None):
     '''
-    Starts here
+    Parameters
+    ----------------------
+    args: Arguments passed to this script when using it as a module (e.g. with LAW),
+    It should hold:
+
+    - kind
+    - vers
+    - project
+    - year (default 2024)
     '''
     Data.args = args
 
