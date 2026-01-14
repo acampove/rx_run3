@@ -41,7 +41,7 @@ def _load_config() -> ScalesConf:
     if ARGS is None:
         raise ValueError('Arguments not found')
 
-    data         = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
+    data         = gut.load_data(package='rx_q2_data', fpath=f'plots/scales_{ARGS.kind}.yaml')
     data['kind'] = ARGS.kind
     data['vers'] = ARGS.vers
     data['year'] = ARGS.year
@@ -74,8 +74,8 @@ def _add_paths(data : dict) -> None:
         out_dir = ana_dir / f'q2/fits/{ARGS.vers}/plots/{ARGS.project}'
         regex   = r'(\d)_(\d)_nom'
     elif ARGS.kind == 'B':
-        inp_dir = ana_dir / f'fits/data/reso_no_dtf/{ARGS.vers}/{ARGS.project}'
-        out_dir = ana_dir / f'fits/data/reso_no_dtf/{ARGS.vers}/{ARGS.project}/plots'
+        inp_dir = ana_dir / f'fits/data/reso_non_dtf/{ARGS.vers}/{ARGS.project}'
+        out_dir = ana_dir / f'fits/data/reso_non_dtf/{ARGS.vers}/{ARGS.project}/plots'
         regex   = r'(\d{3})_(\d{3})_b(\d)'
     else:
         raise ValueError(f'Invalid scale type: {ARGS.kind}')
