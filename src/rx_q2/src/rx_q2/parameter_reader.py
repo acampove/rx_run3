@@ -1,12 +1,13 @@
 '''
 Module holding the ParameterReader class
 '''
+import re
 import pandas as pnd
 
 from pathlib           import Path
 from rx_q2.scales_conf import ScalesConf
-
-from dmu import LogStore
+from dmu               import LogStore
+from dmu.generic       import utilities as gut
 
 log=LogStore.add_logger('rx_q2:parameter_reader')
 # ----------------------
