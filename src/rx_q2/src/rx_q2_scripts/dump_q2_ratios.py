@@ -3,7 +3,6 @@ Script used to transform JSON files with fitting parameters to create a datafram
 with the widths and means of the Jpsi peak, fitted from data and MC samples
 '''
 import os
-import re
 import math
 import argparse
 
@@ -20,6 +19,7 @@ from omegaconf             import DictConfig
 from functools             import cache
 from matplotlib.axes       import Axes
 from rx_q2                 import ScalesConf
+from rx_q2                 import ParameterReader 
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
 
