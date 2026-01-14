@@ -1,8 +1,10 @@
 '''
 Module with Measurement class
 '''
+from dmu      import LogStore
 from pydantic import BaseModel, ConfigDict
 
+log=LogStore.add_logger('dmu:stats:measurement')
 # ----------------------------------------------
 class Measurement(BaseModel):
     '''
