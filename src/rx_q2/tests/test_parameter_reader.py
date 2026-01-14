@@ -16,12 +16,20 @@ def test_simple() -> None:
     '''
     Simplest test of tool
     '''
-    path = Path('/home/acampove/external_02/q2/fits/v6/dat/rk_ee_2024/1_1_nom/parameters.json')
-    data = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
-    data['kind'] = 'q2'
-    data['vers'] = 'dummy'
-    data['year'] = 'dummy'
-    data['proj'] = 'dummy'
+    ANADIR = os.environ['ANADIR']
+    path   = Path(ANADIR) / 'q2/fits/v6/dat/rk_ee_2024/1_1_nom/parameters.json'
+    if not path.exists():
+        raise ValueError(f'Cannot find: {path}')
+
+    data            = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
+    data['kind']    = 'q2'
+    data['regex']   = r'(\d)_(\d)_nom'
+
+    data['vers']    = 'dummy'
+    data['year']    = 'dummy'
+    data['proj']    = 'dummy'
+    data['inp_dir'] = Path('dummy')
+    data['out_dir'] = Path('dummy')
 
     cfg  = ScalesConf(**data)
     rdr  = ParameterReader(cfg = cfg)
@@ -29,3 +37,4 @@ def test_simple() -> None:
 
     assert isinstance(srs, pnd.Series)
     
+    print(srs)
