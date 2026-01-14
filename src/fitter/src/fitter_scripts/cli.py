@@ -53,6 +53,27 @@ def make_dummy_plot(
     plt.savefig(path)
     plt.close('all')
 # ----------------------
+@app.command()
+def wp_translator(
+    wp   : str = typer.Option(..., '--wp'  , '-w', help='Working point, e.g. 030_020, 030-050_020'),
+    kind : MVA = typer.Option(..., '--kind', '-k', help='Kind of MVA')) -> None:
+    '''
+    This will print the signal probability (i.e. MVA working point) given a string
+    '''
+    values = FitConfig.str_to_wp(wp = wp, kind = kind)
+
+    if len(values) == 1:
+        value  = values[0] 
+        print(f'{value:.3f}')
+        return
+
+    if len(values) == 2:
+        [low, high] = values 
+        print(f'{low:.3f} {high:.3f}')
+        return
+
+    raise ValueError(f'Invalid values: {values}')
+# ----------------------
 if __name__ == '__main__':
     app()
 
