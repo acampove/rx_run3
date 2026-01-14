@@ -81,10 +81,10 @@ def _add_paths(data : dict) -> None:
     data['out_dir'] = out_dir
     data['regex'  ] = regex
 #-------------------------------------
-def _get_df(
-    sample : str,
+def _get_q2_df(
     project: str,
-    year   : str) -> pnd.DataFrame:
+    year   : str,
+    sample : str | None = None) -> pnd.DataFrame:
     '''
     Arguments
     --------------
@@ -92,6 +92,15 @@ def _get_df(
     project: e.g. rk_ee
     year   : 2024
     '''
+    if sample is None:
+        df_dat = _get_q2_df(sample = 'dat', project = project, year = year)
+        df_dat['sample'] = 'dat' 
+
+        df_sim = _get_q2_df(sample = 'sim', project = project, year = year)
+        df_sim['sample'] = 'sim' 
+
+        return pnd.concat([df_dat, df_sim], axis=0, ignore_index=True)
+    
     cfg     = _load_config()
     rdr     = ParameterReader(cfg = cfg)
 
@@ -341,13 +350,10 @@ def main(args : DictConfig | None = None):
         return
 
     log.info('Dataframe not found, making it')
-    l_df : list[pnd.DataFrame] = []
-    for sample in ['dat', 'sim']:
-        df           = _get_df(sample=sample, project=cfg.proj, year=cfg.year)
-        df['sample'] = sample
-        l_df.append(df)
 
-    df=pnd.concat(l_df, axis=0, ignore_index=True)
+    if cfg.kind == 'q2':
+        df = _get_q2_df(project=cfg.proj, year=cfg.year)
+
     df.to_json(out_path, indent=2)
 
     _plot(df=df)
