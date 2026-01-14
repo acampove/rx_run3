@@ -370,7 +370,7 @@ def main(args : DictConfig | None = None):
     cfg  = _load_config()
 
     out_path = cfg.out_dir / 'parameters.json'
-    if os.path.isfile(out_path):
+    if out_path.exists():
         log.warning(f'Dataframe already found, reusing: {out_path}')
         df = pnd.read_json(out_path)
         _plot(df=df)
