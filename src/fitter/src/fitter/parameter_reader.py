@@ -93,7 +93,7 @@ class ParameterReader:
 
         return df_out
     # ----------------------
-    def _format_data(self, data : dict[str, float]) -> dict[str,tuple[float,float]]:
+    def _format_data(self, data : dict[str, float | str]) -> dict[str,tuple[float,float]]:
         '''
         Parameters
         -------------
@@ -156,7 +156,7 @@ class ParameterReader:
             raise ValueError('Not found one and only one row')
 
         raw_data = df.iloc[0].to_dict()
-        data     = self._format_data(data = raw_data)
+        data     = self._format_data(data = raw_data) # type: ignore
 
         return FitMeasurement(data = data)
     # ----------------------
