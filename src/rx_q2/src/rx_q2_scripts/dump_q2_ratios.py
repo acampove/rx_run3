@@ -11,15 +11,20 @@ import jacobi
 import matplotlib.pyplot     as plt
 import pandas                as pnd
 
-from dmu                   import LogStore
-from dmu.generic           import utilities        as gut
-from typing                import Callable
-from pathlib               import Path
-from omegaconf             import DictConfig
-from functools             import cache
-from matplotlib.axes       import Axes
-from rx_q2                 import ScalesConf
-from rx_q2                 import ParameterReader 
+from dmu             import LogStore
+from dmu.generic     import utilities        as gut
+from typing          import Callable
+from pathlib         import Path
+from omegaconf       import DictConfig
+from functools       import cache
+from matplotlib.axes import Axes
+from fitter          import FitSummary
+from rx_q2           import ScalesConf
+from rx_q2           import ParameterReader 
+from fitter          import ParameterReader as FitParameterReader
+from rx_common       import Project
+from rx_common       import Trigger 
+from rx_common       import Qsq 
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
 
