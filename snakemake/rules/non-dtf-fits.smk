@@ -7,7 +7,7 @@ WP     = [
     '090_060',     # Tight SR 
     '010-050_080', # Check combinatorial
     ]
-BLOCK  = list(range(1, 9))[:1]
+BLOCK  = list(range(1, 9))
 NAME   = 'reso_non_dtf'
 # ---------------------
 rule all:
