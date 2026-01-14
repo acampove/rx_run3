@@ -73,7 +73,10 @@ class FitSummary:
 
         return files
     # ----------------------
-    def _attach_information(self, data : dict[str, float | str], path : Path) -> dict[str, float | str]:
+    def _attach_information(
+        self, 
+        data : dict[str, float | str], 
+        path : Path) -> dict[str, float | str]:
         '''
         Parameters
         -------------
