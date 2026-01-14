@@ -44,6 +44,24 @@ class Measurement(BaseModel):
 
         return self.data[variable]
     # ----------------------
+    def get_values(self, prefix : str) -> tuple[float,float]:
+        '''
+        Parameters
+        -------------
+        prefix: String that parameter has to start with 
+
+        Returns
+        -------------
+        Tuple with value and error for fitted parameter
+        '''
+        filtered = [ val for key, val in self.data.items() if key.startswith(prefix) ]
+
+        if len(filtered) != 1:
+            log.error(self)
+            raise ValueError(f'Could not find one and only one parameter starting with {prefix}')
+
+        return filtered[0]
+    # ----------------------
     def __contains__(self, variable : str) -> bool:
         '''
         Parameters
