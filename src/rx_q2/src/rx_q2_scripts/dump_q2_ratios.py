@@ -81,30 +81,27 @@ def _add_paths(data : dict) -> None:
     data['out_dir'] = out_dir
     data['regex'  ] = regex
 #-------------------------------------
-def _get_q2_df(
-    project: str,
-    year   : str,
-    sample : str | None = None) -> pnd.DataFrame:
+def _get_Bx_df() -> pnd.DataFrame:
+    df = pnd.DataFrame(columns=['mu_val', 'mu_err', 'sg_val', 'sg_err', 'brem', 'block'])
+    return df 
+#-------------------------------------
+def _get_q2_df(sample : str | None = None) -> pnd.DataFrame:
     '''
     Arguments
     --------------
     sample : dat or sim
-    project: e.g. rk_ee
-    year   : 2024
     '''
     if sample is None:
-        df_dat = _get_q2_df(sample = 'dat', project = project, year = year)
+        df_dat = _get_q2_df(sample = 'dat')
         df_dat['sample'] = 'dat' 
 
-        df_sim = _get_q2_df(sample = 'sim', project = project, year = year)
+        df_sim = _get_q2_df(sample = 'sim')
         df_sim['sample'] = 'sim' 
 
         return pnd.concat([df_dat, df_sim], axis=0, ignore_index=True)
     
     cfg     = _load_config()
-    rdr     = ParameterReader(cfg = cfg)
-
-    path_wc = cfg.inp_dir / f'{sample}/{project}_{year}'
+    path_wc = cfg.inp_dir / f'{sample}/{cfg.proj}_{cfg.year}'
     l_path  = list(path_wc.glob(pattern = '*/parameters.json'))
     nfiles  = len(l_path)
 
@@ -113,6 +110,8 @@ def _get_q2_df(
         raise ValueError(f'Cannot find any parameters file in: {path_wc}')
 
     log.info(f'Found {nfiles} parameters files')
+
+    rdr = ParameterReader(cfg = cfg)
     for path in l_path:
         df.loc[len(df)] = rdr.read(path=path)
 
@@ -351,8 +350,12 @@ def main(args : DictConfig | None = None):
 
     log.info('Dataframe not found, making it')
 
-    if cfg.kind == 'q2':
-        df = _get_q2_df(project=cfg.proj, year=cfg.year)
+    if   cfg.kind == 'q2':
+        df = _get_q2_df()
+    elif cfg.kind ==  'B':
+        df = _get_Bx_df()
+    else:
+        raise ValueError(f'Invalid kind: {cfg.kind}')
 
     df.to_json(out_path, indent=2)
 
