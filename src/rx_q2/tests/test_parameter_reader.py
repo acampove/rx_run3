@@ -42,3 +42,32 @@ def test_jpsi(sample : str) -> None:
     print('')
     print(df)
     print(df.dtypes)
+# ----------------------
+def test_bplus():
+    '''
+    Test with fits to bplus
+    '''
+    ANADIR = os.environ['ANADIR']
+    path   = Path(ANADIR) / 'fits/data/reso_no_dtf/v1/rk_ee/050_060_b3/reso/rk/electron/data/jpsi/brem_001/parameters.json'
+    if not path.exists():
+        raise ValueError(f'Cannot find: {path}')
+
+    data            = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
+    data['kind']    = 'B'
+    data['regex']   =  r'(\d{3})_(\d{3})_b(\d)'
+
+    data['vers']    = 'dummy'
+    data['year']    = 'dummy'
+    data['proj']    = 'dummy'
+    data['inp_dir'] = Path('dummy')
+    data['out_dir'] = Path('dummy')
+
+    cfg    = ScalesConf(**data)
+    rdr    = ParameterReader(cfg = cfg)
+    l_data = [ rdr.read(path = path) for _ in range(3) ]
+
+    df = pnd.DataFrame(l_data)
+
+    print('')
+    print(df)
+    print(df.dtypes)
