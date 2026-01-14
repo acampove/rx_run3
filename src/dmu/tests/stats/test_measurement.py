@@ -18,6 +18,18 @@ def test_simple():
     assert 'a'     in ms
     assert 'x' not in ms
 # ------------------------------------
+def test_get_values():
+    '''
+    Tests get_values method
+    '''
+    data = {'a_par' : (1., 1.), 'b_par' : (2., 1.), 'b_par_x' : (2., 3.)}
+
+    ms = Measurement(data=data)
+    assert ms.get_values(prefix = 'a_par') == (1., 1.)
+
+    with pytest.raises(ValueError):
+        ms.get_values(prefix = 'b_par') 
+# ------------------------------------
 def test_print():
     '''
     Test string representations
