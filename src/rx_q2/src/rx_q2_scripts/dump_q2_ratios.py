@@ -156,13 +156,22 @@ def _get_df(
     return df
 #-------------------------------------
 def _get_scales(df : pnd.DataFrame) -> pnd.DataFrame:
-    l_df_scale = []
+    l_df_scale : list[pnd.DataFrame] = []
     for (block, brem), df_group in df.groupby(['block', 'brem']):
+        try:
+            iblock = int(block) # type: ignore[arg-type]
+            ibrem  = int(brem)  # type: ignore[arg-type]
+        except Exception:
+            raise ValueError('Cannot cast block and brem as int')
+
         df_scale          = _scales_from_df(df=df_group)
-        df_scale['block'] = block
-        df_scale['brem' ] = brem
+        df_scale['block'] = iblock
+        df_scale['brem' ] = ibrem
 
         l_df_scale.append(df_scale)
+
+    if not l_df_scale:
+        raise ValueError('No dataframes found to concatenate')
 
     df = pnd.concat(l_df_scale, ignore_index=True)
 
@@ -355,7 +364,7 @@ def main(args : DictConfig | None = None):
         return
 
     log.info('Dataframe already not found, making it')
-    l_df = []
+    l_df : list[pnd.DataFrame] = []
     for sample in ['dat', 'sim']:
         df           = _get_df(sample=sample, project=cfg.proj, year=cfg.year)
         df['sample'] = sample
