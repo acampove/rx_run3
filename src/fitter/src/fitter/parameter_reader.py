@@ -166,6 +166,9 @@ class ParameterReader:
 
         raw_data = df.iloc[0].to_dict()
         data     = self._format_data(data = raw_data) # type: ignore
+        # for simultaneous fits, this removes brem_002 parameters when one needs brem_001
+        # and viceversa
+        data     = { key : value for key, value in data.items() if f'brem_{brem:03d}' in key }
 
         return FitMeasurement(data = data)
     # ----------------------
