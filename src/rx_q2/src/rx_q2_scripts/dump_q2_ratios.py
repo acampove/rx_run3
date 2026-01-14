@@ -91,15 +91,38 @@ def _load_config() -> ScalesConf:
 
     return cfg 
 #-------------------------------------
-def _initialize(cfg : ScalesConf):
-    ana_dir      = Path(os.environ['ANADIR'])
+def _add_paths(data : dict) -> None:
+    '''
+    Updates configuration data with paths and regex
 
-    Data.inp_dir = ana_dir / f'q2/fits/{cfg.vers}'
-    Data.out_dir = ana_dir / f'q2/fits/{cfg.vers}/plots/{cfg.proj}'
+    Parameters
+    ---------------
+    data: Dictionary with settings from:
 
-    Data.out_dir.mkdir(parents=True, exist_ok=True)
+    - Config file
+    - User defined through CLI flags
+    '''
+    if ARGS is None:
+        raise ValueError('Arguments not found')
 
-    plt.style.use(mplhep.style.LHCb2)
+    ana_dir = Path(os.environ['ANADIR'])
+
+    if   ARGS.kind == 'q2':
+        inp_dir = ana_dir / f'q2/fits/{ARGS.vers}'
+        out_dir = ana_dir / f'q2/fits/{ARGS.vers}/plots/{ARGS.project}'
+        regex   = r'(\d)_(\d)_nom'
+    elif ARGS.kind == 'B':
+        inp_dir = ana_dir / f'fits/data/reso_no_dtf/{ARGS.vers}/{ARGS.project}'
+        out_dir = ana_dir / f'fits/data/reso_no_dtf/{ARGS.vers}/{ARGS.project}/plots'
+        regex   = r'(\d{3})_(\d{3})_b(\d)'
+    else:
+        raise ValueError(f'Invalid scale type: {ARGS.kind}')
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    data['inp_dir'] = inp_dir
+    data['out_dir'] = out_dir
+    data['regex'  ] = regex
 #-------------------------------------
 def _row_from_path(path : str) -> list[Any]:
     data = gut.load_json(path)
