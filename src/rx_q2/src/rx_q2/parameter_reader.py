@@ -24,7 +24,52 @@ class ParameterReader:
         cfg: Object holding configuration
         '''
         self._cfg = cfg
+    #-------------------------------------
+    def _row_from_path(self, path : Path) -> pnd.Series:
+        '''
+        Parameters
+        -----------------
+        path: Full path to parameters.json
+    
+        Returns
+        -----------------
+        Pandas series with extracted information meant to be used as a row
+        '''
+        data = gut.load_json(path)
+    
+        [[mu_val, mu_err]] = [ val for name, val in data.items() if name.startswith('mu_')]
+        [[sg_val, sg_err]] = [ val for name, val in data.items() if name.startswith('sg_')]
+    
+        brem, block = self._brem_block_from_path(path=path)
 
+        data = {
+            'mu_val' : mu_val,
+            'mu_err' : mu_err,
+            'sg_val' : sg_val,
+            'sg_err' : sg_err,
+            'brem'   : brem,
+            'block'  : block,
+        } 
+    
+        return pnd.Series(data) 
+    #-------------------------------------
+    def _brem_block_from_path(self, path : Path) -> tuple[str,str]:
+        '''
+        Parameters
+        ---------------
+        Path: path to parameters.json
+    
+        Returns
+        ---------------
+        Tuple with strings describing the brem and block
+        '''
+        mtch = re.match(self._cfg.regex, path.parent.name)
+        if not mtch:
+            raise ValueError(f'Cannot extract information from {path.parent.name} using {self._cfg.regex}')
+    
+        [brem, block] = mtch.groups()
+    
+        return brem, block
     # ----------------------
     def read(self, path : Path) -> pnd.Series:
         '''
@@ -36,5 +81,5 @@ class ParameterReader:
         -------------
         Pandas series with fit parameters information
         '''
-        return pnd.Series()
+        return self._row_from_path(path = path)
 # ----------------------
