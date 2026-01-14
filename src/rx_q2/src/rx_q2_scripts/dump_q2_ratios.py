@@ -226,13 +226,18 @@ def _plot_df(
     val   = f'{quantity}_val'
     err   = f'{quantity}_err'
 
-    ax.fill_between(
-        df['block'],
-        df[val] - df[err],
-        df[val] + df[err],
-        color=color,
-        label=f'Brem {brem}',
-        alpha=0.5)
+    try:
+        ax.fill_between(
+            df['block'],
+            df[val] - df[err],
+            df[val] + df[err],
+            color=color,
+            label=f'Brem {brem}',
+            alpha=0.5)
+    except TypeError as exc:
+        log.error(df)
+        log.error(df.dtypes)
+        raise TypeError('Cannot plot data in dataframe') from exc
 
     return ax
 #-------------------------------------
