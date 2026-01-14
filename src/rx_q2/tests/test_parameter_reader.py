@@ -1,12 +1,13 @@
 '''
 This module contains functions to test the ParameterReader class
 '''
+import os
 import pandas as pnd
 
-from pathlib import Path
-from rx_q2   import ParameterReader
-from rx_q2   import ScalesConf
-from dmu     import LogStore
+from pathlib     import Path
+from rx_q2       import ParameterReader
+from rx_q2       import ScalesConf
+from dmu         import LogStore
 from dmu.generic import utilities as gut
 
 log=LogStore.add_logger('rx_q2:test_parameter_reader')
