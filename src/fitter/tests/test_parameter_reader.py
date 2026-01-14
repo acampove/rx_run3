@@ -19,7 +19,7 @@ def test_simple(name : str):
     '''
     Test simplest use of reader
     '''
-    rdr = ParameterReader(name = name)
+    rdr    = ParameterReader(name = name)
     ms_sim = rdr(
         brem     = 1, 
         block    = 3, 
@@ -43,6 +43,8 @@ def test_pars_path():
         ms_sim = rdr(
             brem     = 1, 
             block    = 3, 
+            cmb      = '050',
+            prc      = '050',
             trigger  = Trigger.rk_ee_os, 
             project  = Project.rk,
             q2bin    = Qsq.jpsi)
