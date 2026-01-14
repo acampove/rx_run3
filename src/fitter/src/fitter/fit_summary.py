@@ -194,22 +194,39 @@ class FitSummary:
         force_update: If true (default false) will regenerate file, otherwise will reuse file if found 
         '''
         output_path  = self._fit_dir / 'parameters.parquet'
-        paths = self._get_parameter_paths()
-
         if output_path.exists() and not force_update:
             log.info(f'Reading cached files at: {output_path}')
             return pnd.read_parquet(output_path)
 
+        df_dat = self._get_df(kind = 'dat')
+        df_sim = self._get_df(kind = 'sim')
+        df     = pnd.concat([df_dat, df_sim], axis=0)
+        df     = df.reset_index(drop=True)
+        df     = df.astype(dtype = {'block' : int, 'brem' : int})
+
+        self._save_df(df=df, path = output_path)
+
+        return df
+    # ----------------------
+    def _get_df(self, kind : str) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        kind: dat or sim, used to pick input JSON files
+
+        Returns
+        -------------
+        Pandas dataframe with parameters
+        '''
+        paths = self._get_parameter_paths(kind = kind)
+
         l_df : list[pnd.DataFrame] = []
         for path in tqdm.tqdm(paths, ascii=' -'):
-            df = self._get_dataframe(path=path)
+            df = self._get_dataframe(path=path, kind = kind)
             l_df.append(df)
 
-        df = pnd.concat(objs=l_df, axis=0)
-        df = df.reset_index(drop=True)
-
-        df = df.astype(dtype = {'block' : int, 'brem' : int})
-        self._save_df(df=df, path = output_path)
+        df         = pnd.concat(objs=l_df, axis=0)
+        df['kind'] = kind
 
         return df
     # ----------------------
