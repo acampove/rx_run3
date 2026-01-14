@@ -81,7 +81,19 @@ def _add_paths(data : dict) -> None:
     data['out_dir'] = out_dir
     data['regex'  ] = regex
 #-------------------------------------
-def _row_from_path(path : Path) -> list[Any]:
+def _row_from_path(path : Path) -> list[float | str]:
+    '''
+    Parameters
+    -----------------
+    path: Full path to parameters.json
+
+    Returns
+    -----------------
+    List with:
+
+    - Errors and values for width and mean
+    - Brem and block strings
+    '''
     data = gut.load_json(path)
 
     [[mu_val, mu_err]] = [ val for name, val in data.items() if name.startswith('mu_')]
@@ -92,6 +104,15 @@ def _row_from_path(path : Path) -> list[Any]:
     return [mu_val, mu_err, sg_val, sg_err, brem, block]
 #-------------------------------------
 def _brem_block_from_path(path : Path) -> tuple[str,str]:
+    '''
+    Parameters
+    ---------------
+    Path: path to parameters.json
+
+    Returns
+    ---------------
+    Tuple with strings describing the brem and block
+    '''
     dir_name = os.path.dirname(path)
     sample   = os.path.basename(dir_name)
 
