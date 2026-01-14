@@ -14,17 +14,18 @@ log=LogStore.add_logger('fitter:test_parameter_reader')
 def initialize() -> None:
     LogStore.set_level('fitter:parameter_reader', 10)
 # -----------------------
-@pytest.mark.parametrize('name', ['reso_no_dtf'])
-def test_simple(name : str):
+@pytest.mark.parametrize('kind', ['dat', 'sim'])
+def test_simple(kind : str):
     '''
     Test simplest use of reader
     '''
-    rdr    = ParameterReader(name = name)
+    rdr    = ParameterReader(name = 'reso_non_dtf')
     ms_sim = rdr(
         brem     = 1, 
         block    = 3, 
         cmb      = '050',
         prc      = '060',
+        kind     = kind,
         trigger  = Trigger.rk_ee_os, 
         project  = Project.rk,
         q2bin    = Qsq.jpsi)

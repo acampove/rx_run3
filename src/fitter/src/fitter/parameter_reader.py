@@ -130,6 +130,7 @@ class ParameterReader:
         block     : int,
         cmb       : str,
         prc       : str,
+        kind      : str,
         project   : Project,
         q2bin     : Qsq,
         trigger   : Trigger) -> FitMeasurement:
@@ -137,6 +138,7 @@ class ParameterReader:
         Parameters
         -------------
         cmb/prc  : String specifying working point, e.g. 050
+        kind     : Either dat or sim
         brem     : Brem category, e.g. 0, 1, 2
         block    : Block number in 2024, e.g. 1, 2, 3...8
         component: Name of fitting component
@@ -151,6 +153,7 @@ class ParameterReader:
 
         df      = self._query(df = df, cut = f'brem    ==   {brem}'     )
         df      = self._query(df = df, cut = f'block   ==   {block}'    )
+        df      = self._query(df = df, cut = f'kind    == \"{kind}\"'   )
         df      = self._query(df = df, cut = f'mva_cmb == \"{cmb}\"'    )
         df      = self._query(df = df, cut = f'mva_prc == \"{prc}\"'    )
         df      = self._query(df = df, cut = f'q2bin   == \"{q2bin}\"'  )
