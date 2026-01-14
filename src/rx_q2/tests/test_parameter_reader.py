@@ -33,11 +33,12 @@ def test_simple(sample : str) -> None:
     data['inp_dir'] = Path('dummy')
     data['out_dir'] = Path('dummy')
 
-    cfg  = ScalesConf(**data)
-    rdr  = ParameterReader(cfg = cfg)
-    srs  = rdr.read(path = path)
+    cfg    = ScalesConf(**data)
+    rdr    = ParameterReader(cfg = cfg)
+    l_data = [ rdr.read(path = path) for _ in range(3) ]
 
-    assert isinstance(srs, pnd.Series)
-    
-    print(srs)
-    print(srs.dtypes)
+    df = pnd.DataFrame(l_data)
+
+    print('')
+    print(df)
+    print(df.dtypes)
