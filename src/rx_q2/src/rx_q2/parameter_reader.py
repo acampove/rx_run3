@@ -25,7 +25,7 @@ class ParameterReader:
         '''
         self._cfg = cfg
     #-------------------------------------
-    def _row_from_path(self, path : Path) -> pnd.Series:
+    def _row_from_path(self, path : Path) -> dict[str, int | float | str]:
         '''
         Parameters
         -----------------
@@ -33,7 +33,7 @@ class ParameterReader:
     
         Returns
         -----------------
-        Pandas series with extracted information meant to be used as a row
+        Dictionary mapping name of quantity and value, e.g. mu_val : 20.3
         '''
         data = gut.load_json(path)
     
@@ -50,10 +50,10 @@ class ParameterReader:
             'brem'   : brem,
             'block'  : block,
         } 
-    
-        return pnd.Series(data) 
+
+        return data 
     #-------------------------------------
-    def _brem_block_from_path(self, path : Path) -> tuple[str,str]:
+    def _brem_block_from_path(self, path : Path) -> tuple[int, int]:
         '''
         Parameters
         ---------------
@@ -61,17 +61,17 @@ class ParameterReader:
     
         Returns
         ---------------
-        Tuple with strings describing the brem and block
+        Tuple with integers describing the brem and block
         '''
         mtch = re.match(self._cfg.regex, path.parent.name)
         if not mtch:
             raise ValueError(f'Cannot extract information from {path.parent.name} using {self._cfg.regex}')
     
         [brem, block] = mtch.groups()
-    
-        return brem, block
+
+        return int(brem), int(block)
     # ----------------------
-    def read(self, path : Path) -> pnd.Series:
+    def read(self, path : Path) -> dict[str, int | float | str]:
         '''
         Parameters
         -------------
@@ -79,7 +79,7 @@ class ParameterReader:
 
         Returns
         -------------
-        Pandas series with fit parameters information
+        Dictionary mapping name of quantity and value, e.g. mu_val : 20.3
         '''
         return self._row_from_path(path = path)
 # ----------------------
