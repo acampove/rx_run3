@@ -26,17 +26,26 @@ class FitSummary:
     - Store information in JSON for further usage
     '''
     # ----------------------
-    def __init__(self, name : str) -> None:
+    def __init__(
+        self, 
+        signal: str,
+        name  : str) -> None:
         '''
         Parameters
         -------------
-        name : Name of directory in {ANADIR}/fits/data/{name}
+        signal: Name of signal component, e.g. jpsi
+        name  : Name of directory in {ANADIR}/fits/data/{name}
         '''
         self._fit_dir = self._get_fit_dir(name=name)
 
-        # This captures seven fields
-        self._regex   : Final[str] = r'(\d{3})_(\d{3})_b(\d)/reso/(rk|rkst)/(muon|electron)/data/(psi2|jpsi)/brem_(\d{3})/parameters.json'
-        self._pattern : Final[str] = '*_*_b*/reso/r*/*/data/*/brem_*/parameters.json'
+        dat_regex = r'(\d{3})_(\d{3})_b(\d)/reso/(rk|rkst)/(muon|electron)/data/(psi2|jpsi)/brem_(\d{3})/parameters.json'
+        sim_regex = fr'(\d{{3}})_(\d{{3}})_b(\d)/reso/(rk|rkst)/(muon|electron)/{signal}/brem_(\d{{3}})/.*_(psi2|jpsi)/category/parameters.json'
+
+        dat_pattern = '*_*_b*/reso/r*/*/data/*/brem_*/parameters.json'
+        sim_pattern = f'*_*_b*/reso/r*/*/{signal}/brem_*/*/category/parameters.json'
+
+        self._patterns : Final[dict[str,str]]  = {'dat' : dat_pattern, 'sim' : sim_pattern}
+        self._regexes  : Final[dict[str,str]]  = {'dat' : dat_regex  , 'sim' : sim_regex  }
     # ----------------------
     def _get_fit_dir(self, name : str) -> Path:
         '''
