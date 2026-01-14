@@ -31,12 +31,17 @@ class ScalesConf(BaseModel):
     model_config = ConfigDict(frozen=True)
     jpsi_mass : float
 
-    mm   : dict[str,list[float]]
-    ee   : dict[str,list[float]]
+    mm      : dict[str,list[float]]
+    ee      : dict[str,list[float]]
 
-    vers : str
-    year : str
-    proj : str
+    kind    : str
+    vers    : str
+    year    : str
+    proj    : str
+
+    inp_dir : Path
+    out_dir : Path
+    regex   : str
     # ------------------------------
     def get_range(self, var : str) -> tuple[float,float]:
         '''
