@@ -87,8 +87,49 @@ def _add_paths(data : dict) -> None:
     data['regex'  ] = regex
 #-------------------------------------
 def _get_Bx_df() -> pnd.DataFrame:
-    df = pnd.DataFrame(columns=['mu_val', 'mu_err', 'sg_val', 'sg_err', 'brem', 'block'])
-    return df 
+    name   = 'reso_non_dtf'
+    signal = 'jpsi'
+    cmb    = '070'
+    prc    = '060'
+    brems  = [1, 2]
+    blocks = range(1, 9)
+    kinds  = ['dat', 'sim']
+
+    smr = FitSummary(name = name, signal = signal)
+    smr.get_df()
+
+    rdr = FitParameterReader(name = name)
+
+    l_data = []
+    for brem in brems:
+        for block in blocks:
+            for kind in kinds:
+                msr = rdr(
+                    brem     = brem, 
+                    block    = block, 
+                    cmb      = cmb,
+                    prc      = prc,
+                    kind     = kind,
+                    trigger  = Trigger.rk_ee_os, 
+                    project  = Project.rk,
+                    q2bin    = Qsq.jpsi)
+
+                mu_val, mu_err = msr.get_values(prefix = f'mu_{signal}')
+                sg_val, sg_err = msr.get_values(prefix = f'sg_{signal}')
+
+                data = {
+                    'mu_val' : mu_val,
+                    'mu_err' : mu_err,
+                    'sg_val' : sg_val,
+                    'sg_err' : sg_err,
+                    'block'  : block,
+                    'brem'   : brem,
+                    'sample' : kind,
+                }
+
+                l_data.append(data)
+
+    return pnd.DataFrame(l_data) 
 #-------------------------------------
 def _get_q2_df(sample : str | None = None) -> pnd.DataFrame:
     '''
