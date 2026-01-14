@@ -128,12 +128,15 @@ class ParameterReader:
         self, 
         brem      : int,
         block     : int,
+        cmb       : str,
+        prc       : str,
         project   : Project,
         q2bin     : Qsq,
         trigger   : Trigger) -> FitMeasurement:
         '''
         Parameters
         -------------
+        cmb/prc  : String specifying working point, e.g. 050
         brem     : Brem category, e.g. 0, 1, 2
         block    : Block number in 2024, e.g. 1, 2, 3...8
         component: Name of fitting component
@@ -145,9 +148,12 @@ class ParameterReader:
         '''
         channel = info.channel_from_trigger(trigger=trigger, lower_case = True)
         df      = self._df
-        df      = self._query(df = df, cut = f'brem    ==   {brem}')
-        df      = self._query(df = df, cut = f'block   ==   {block}')
-        df      = self._query(df = df, cut = f'q2bin   == \"{q2bin}\"')
+
+        df      = self._query(df = df, cut = f'brem    ==   {brem}'     )
+        df      = self._query(df = df, cut = f'block   ==   {block}'    )
+        df      = self._query(df = df, cut = f'mva_cmb == \"{cmb}\"'    )
+        df      = self._query(df = df, cut = f'mva_prc == \"{prc}\"'    )
+        df      = self._query(df = df, cut = f'q2bin   == \"{q2bin}\"'  )
         df      = self._query(df = df, cut = f'channel == \"{channel}\"')
         df      = self._query(df = df, cut = f'project == \"{project}\"')
 
