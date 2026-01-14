@@ -120,8 +120,15 @@ class FitSummary:
         data['block'  ] = groups[2]
         data['project'] = groups[3]
         data['channel'] = channel
-        data['q2bin'  ] = groups[5]
-        data['brem'   ] = groups[6]
+
+        if kind == 'dat':
+            data['q2bin'  ] = groups[5]
+            data['brem'   ] = groups[6]
+        elif kind == 'sim':
+            data['q2bin'  ] = groups[6]
+            data['brem'   ] = groups[5]
+        else:
+            raise ValueError(f'Invalid kind: {kind}')
 
         return data
     # ----------------------
