@@ -5,13 +5,13 @@ import pytest
 from fitter   import FitSummary
 
 # ----------------------
-@pytest.mark.parametrize('kind', ['reso_no_dtf'])
-def test_simple(kind : str) -> None:
+@pytest.mark.parametrize('name', ['reso_non_dtf'])
+def test_simple(name : str) -> None:
     '''
     Simplest test
     '''
-    smr = FitSummary(name = kind)
-    df  = smr.get_df(force_update = False)
+    smr = FitSummary(name = name, signal = 'jpsi')
+    df  = smr.get_df(force_update = True)
 
     assert len(df) > 0
 
@@ -25,7 +25,7 @@ def test_update(force_update : bool) -> None:
     '''
     Test updating the parquet file
     '''
-    smr = FitSummary(name='mid_window')
+    smr = FitSummary(name='mid_window', signal = 'jpsi')
     df  = smr.get_df(force_update = force_update)
 
     assert len(df) > 0
