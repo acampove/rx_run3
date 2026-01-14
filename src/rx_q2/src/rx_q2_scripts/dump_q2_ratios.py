@@ -76,21 +76,16 @@ def _load_config() -> ScalesConf:
     -------------
     config class
     '''
-    if Data.args: 
-        args = Data.args
-    else:
-        projects = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
-
-        parser = argparse.ArgumentParser(description='Used to create pandas dataframe with information from fits needed to smear q2')
-        parser.add_argument('-v', '--vers'   , type=str, help='Version', required=True)
-        parser.add_argument('-p', '--project', type=str, help='Name of project', required=True, choices=projects)
-        parser.add_argument('-y', '--year'   , type=str, help='Year for data whose corrections are needed', default='2024')
-        args = parser.parse_args()
+    if ARGS is None:
+        raise ValueError('Arguments not found')
 
     data         = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
-    data['vers'] = args.vers
-    data['year'] = args.year
-    data['proj'] = args.project
+    data['kind'] = ARGS.kind
+    data['vers'] = ARGS.vers
+    data['year'] = ARGS.year
+    data['proj'] = ARGS.project
+
+    _add_paths(data = data)
 
     cfg  = ScalesConf(**data)
 
