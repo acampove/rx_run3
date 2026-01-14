@@ -64,18 +64,26 @@ class FitSummary:
         if not fit_dir.exists():
             raise FileNotFoundError(f'Coult not find: {fit_dir}')
 
+        log.info(f'Picking up parameters from directory: {fit_dir}')
+
         return fit_dir
     # ----------------------
-    def _get_parameter_paths(self) -> list[Path]:
+    def _get_parameter_paths(self, kind : str) -> list[Path]:
         '''
+        Parameters
+        -------------
+        kind: dat or sim 
+
         Returns
         -------------
         List of paths to JSON files with fitting parameters
         '''
-        gen     = self._fit_dir.glob(pattern=self._pattern)
+        pattern = self._patterns[kind]
+        gen     = self._fit_dir.glob(pattern=pattern)
         files   = list(gen)
+
         if not files:
-            raise ValueError(f'No files found in: {self._fit_dir}')
+            raise ValueError(f'No files found in: {self._fit_dir}/{pattern}')
         else:
             nfile   = len(files)
             log.info(f'Found {nfile} files')
@@ -84,21 +92,24 @@ class FitSummary:
     # ----------------------
     def _attach_information(
         self, 
+        kind : str,
         data : dict[str, float | str], 
         path : Path) -> dict[str, float | str]:
         '''
         Parameters
         -------------
-        data: Dictionary with fitting parameter information
-        path: Path to JSON file with this information
+        kind : dat or sim 
+        data : Dictionary with fitting parameter information
+        path : Path to JSON file with this information
 
         Returns
         -------------
         Input dictionary with extra information added, taken from path
         '''
-        mtch = re.match(f'.*/{self._regex}', str(path))
+        regex = self._regexes[kind]
+        mtch  = re.match(f'.*/{regex}', str(path))
         if not mtch:
-            raise ValueError(f'Cannot match pattern \"{self._regex}\" to \"{path}\"')
+            raise ValueError(f'Cannot match pattern \"{regex}\" to \"{path}\"')
 
         groups : list[str] = list(mtch.groups())
         channel            = groups[4]
@@ -114,11 +125,15 @@ class FitSummary:
 
         return data
     # ----------------------
-    def _get_dataframe(self, path : Path) -> pnd.DataFrame:
+    def _get_dataframe(
+        self, 
+        kind : str,
+        path : Path) -> pnd.DataFrame:
         '''
         Parameters
         -------------
-        path: Path to JSON file with fit parameters
+        kind : dat or sim 
+        path : Path to JSON file with fit parameters
 
         Returns
         -------------
@@ -131,7 +146,7 @@ class FitSummary:
             parameters[f'{name}_value'] = value
             parameters[f'{name}_error'] = error 
 
-        parameters = self._attach_information(data=parameters, path=path)
+        parameters = self._attach_information(data=parameters, path=path, kind=kind)
         values     = { key : [value] for key, value in parameters.items() }
 
         # Do this just for MC, data has parameters starting with yld_
