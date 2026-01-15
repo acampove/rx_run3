@@ -110,8 +110,7 @@ def main(cfg : DictConfig|None = None):
     d_cut   = cfg_plt.get('selection', {})
     d_def   = cfg_plt.get('definitions', {})
 
-    with RDFGetter.multithreading(nthreads=Data.nthreads), \
-        RDFGetter.custom_columns(columns = d_def),\
+    with RDFGetter.custom_columns(columns = d_def),\
         sel.custom_selection(d_sel=d_cut):
 
         cfg_plt.pop('definitions', None)

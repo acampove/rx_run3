@@ -174,6 +174,8 @@ rxdata show-samples-by-block -p rkst
 
 # Multithreading
 
+This has been disabled due to bugs in ROOT.
+
 Multithreading with ROOT dataframes at the moment is dangerous and should be done only in a few places.
 To turn this on run:
 
