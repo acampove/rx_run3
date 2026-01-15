@@ -4,8 +4,8 @@ Module with FWHM plugin class
 import numpy
 import matplotlib.pyplot as plt
 
-from dmu.stats.zfit        import zfit
-from dmu.logging.log_store import LogStore
+from dmu       import LogStore
+from dmu.stats import zfit
 
 log = LogStore.add_logger('dmu:plotting:fwhm')
 # --------------------------------------------
