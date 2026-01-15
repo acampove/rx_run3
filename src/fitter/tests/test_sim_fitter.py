@@ -6,7 +6,7 @@ import pytest
 from contextlib             import ExitStack
 from pathlib                import Path
 from dmu                    import LogStore
-from dmu.stats.zfit         import zfit
+from dmu.stats              import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
 from dmu.workflow           import Cache

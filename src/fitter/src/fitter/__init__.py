@@ -10,6 +10,8 @@ from .data_preprocessor  import DataPreprocessor
 from .constraint_reader  import ConstraintReader
 from .cmb_constraints    import CmbConstraints
 from .signal_constraints import SignalConstraints
+from .prec               import PRec 
+from .misid_constraints  import MisIDConstraints
 
 __all__ = [
     'FitSummary', 
@@ -23,4 +25,6 @@ __all__ = [
     'DataFitter',
     'ToyMaker',
     'ToyPlotter',
+    'PRec',
+    'MisIDConstraints',
     'LikelihoodFactory']

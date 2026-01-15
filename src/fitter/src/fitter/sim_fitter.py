@@ -4,25 +4,25 @@ Module with SimFitter class
 
 import yaml
 
-from pathlib                  import Path
-from typing                   import cast
-from omegaconf                import DictConfig, OmegaConf
-from dmu.stats                import utilities    as sut
-from dmu.stats                import ModelFactory
-from dmu.stats.zfit           import zfit
-from dmu.workflow             import Cache
-from dmu                      import LogStore
+from pathlib            import Path
+from typing             import cast
+from omegaconf          import DictConfig, OmegaConf
+from dmu                import LogStore
+from dmu.stats          import utilities    as sut
+from dmu.stats          import ModelFactory
+from dmu.stats          import zfit
+from dmu.workflow       import Cache
 
-from rx_common                import Trigger, Sample
-from rx_selection             import selection        as sel
-from zfit.data                import Data             as zdata
-from zfit.pdf                 import BasePDF          as zpdf
-from zfit.interface           import ZfitSpace        as zobs
-from zfit.result              import FitResult        as zres
-from zfit.param               import Parameter
-from fitter.base_fitter       import BaseFitter
-from fitter.data_preprocessor import DataPreprocessor
-from fitter.prec              import PRec
+from rx_common          import Trigger, Sample
+from rx_selection       import selection        as sel
+from zfit.data          import Data             as zdata
+from zfit.pdf           import BasePDF          as zpdf
+from zfit.interface     import ZfitSpace        as zobs
+from zfit.result        import FitResult        as zres
+from zfit.param         import Parameter
+from .base_fitter       import BaseFitter
+from .data_preprocessor import DataPreprocessor
+from .prec              import PRec
 
 log=LogStore.add_logger('fitter:sim_fitter')
 # ------------------------

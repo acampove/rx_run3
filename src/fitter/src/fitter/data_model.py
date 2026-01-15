@@ -2,17 +2,17 @@
 Module containing DataModel class
 '''
 
-from contextlib             import contextmanager
-from dmu.stats.zfit         import zfit
-from dmu.logging.log_store  import LogStore
-from dmu.stats.parameters   import ParameterLibrary as PL
-from omegaconf              import DictConfig
-from rx_common.types        import Trigger
-from rx_common              import info
-from rx_data.stats          import SpecMaker
-from zfit.pdf               import BasePDF       as zpdf
-from zfit.interface         import ZfitSpace     as zobs
-from fitter.sim_fitter      import SimFitter
+from contextlib       import contextmanager
+from omegaconf        import DictConfig
+from dmu              import LogStore
+from dmu.stats        import zfit
+from dmu.stats        import ParameterLibrary as PL
+from rx_common        import Trigger
+from rx_common        import info
+from rx_data          import SpecMaker
+from zfit             import Space         as zobs
+from zfit.pdf         import BasePDF       as zpdf
+from .sim_fitter      import SimFitter
 
 log = LogStore.add_logger('fitter:data_model')
 # ------------------------

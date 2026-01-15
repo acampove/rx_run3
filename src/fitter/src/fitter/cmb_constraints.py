@@ -1,7 +1,6 @@
 '''
 Module with CmbConstraints class
 '''
-from dmu.stats.zfit import zfit
 
 from typing       import cast
 from pathlib      import Path
@@ -9,6 +8,7 @@ from omegaconf    import OmegaConf
 from ROOT         import RDF # type: ignore 
 from dmu          import LogStore
 from dmu.workflow import Cache
+from dmu.stats    import zfit
 from dmu.stats    import ConstraintND
 from omegaconf    import DictConfig
 from zfit         import Data                as zdat

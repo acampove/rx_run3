@@ -7,8 +7,8 @@ from pathlib               import Path
 from rx_common.types       import Trigger
 from rx_selection          import selection as sel
 from rx_data.rdf_getter    import RDFGetter 
-from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.stats.zfit        import zfit
+from dmu.stats             import ParameterLibrary as PL
+from dmu.stats             import zfit
 from dmu.generic           import utilities as gut
 from dmu.stats             import utilities as sut
 from dmu.workflow          import Cache

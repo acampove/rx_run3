@@ -3,17 +3,17 @@ Module meant to test DataFitter class
 '''
 import pytest
 
-from pathlib               import Path
-from dmu.stats.fitter      import LogStore
-from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.stats.zfit        import zfit
-from dmu.generic           import utilities  as gut
-from dmu.workflow          import Cache
-from rx_common.types       import Trigger
-from rx_data               import RDFGetter
-from rx_selection          import selection  as sel
-from fitter                import LikelihoodFactory
-from zfit.core.loss        import ExtendedUnbinnedNLL
+from pathlib      import Path
+from dmu          import LogStore
+from dmu.stats    import ParameterLibrary as PL
+from dmu.stats    import zfit
+from dmu.generic  import utilities  as gut
+from dmu.workflow import Cache
+from rx_common    import Qsq, Sample
+from rx_data      import RDFGetter
+from rx_selection import selection  as sel
+from fitter       import LikelihoodFactory
+from zfit.loss    import ExtendedUnbinnedNLL
 
 # -------------------------------------------
 class Data:

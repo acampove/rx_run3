@@ -2,13 +2,13 @@
 Module with fitting models
 '''
 
-from dmu.stats.zfit         import zfit
-from dmu.stats.zfit_models  import HypExp
-from dmu.stats.zfit_models  import ModExp
-from dmu.logging.log_store  import LogStore
+from dmu        import LogStore
+from dmu.stats  import zfit
+from dmu.stats  import HypExp
+from dmu.stats  import ModExp
 
-from zfit.interface         import ZfitSpace as zobs
-from zfit.pdf               import BasePDF 
+from zfit       import Space   as zobs
+from zfit.pdf   import BasePDF 
 
 log = LogStore.add_logger('rx_fitter:models')
 # ---------------------------------------------

@@ -3,18 +3,18 @@ Module used to test CmbConstraints class
 '''
 import pytest 
 
-from contextlib     import ExitStack
-from omegaconf      import DictConfig
-from dmu.stats.zfit import zfit
+from contextlib   import ExitStack
+from omegaconf    import DictConfig
 from typing       import Final
 from pathlib      import Path
-from dmu.workflow import Cache
-from dmu.stats    import ConstraintND
-from rx_common    import Qsq
-from fitter       import CmbConstraints
 from dmu          import LogStore
 from dmu.generic  import utilities           as gut
 from dmu.stats    import ModelFactory
+from dmu.workflow import Cache
+from dmu.stats    import zfit
+from dmu.stats    import ConstraintND
+from rx_common    import Qsq
+from fitter       import CmbConstraints
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
 from rx_selection import selection           as sel
 

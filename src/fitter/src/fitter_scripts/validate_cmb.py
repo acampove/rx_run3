@@ -3,29 +3,31 @@ Script used to validate PDFs needed to fit combinatorial
 '''
 import os
 import argparse
-from typing import cast
-
 import matplotlib.pyplot as plt
-from dmu.logging.log_store  import LogStore
-from dmu.generic            import utilities as gut
-from dmu.generic            import naming
-from dmu.stats.zfit         import zfit
-from dmu.stats.fitter       import Fitter
-from dmu.stats.zfit_plotter import ZFitPlotter
 
-from ROOT                   import RDF
-from zfit.interface         import ZfitData  as zdata
-from zfit.interface         import ZfitPDF   as zpdf
-from zfit.interface         import ZfitSpace as zobs
-from rx_data.rdf_getter     import RDFGetter
-from rx_selection           import selection as sel
-from fitter                 import models
+from typing        import cast
+from dmu           import LogStore
+from dmu.generic   import utilities as gut
+from dmu.generic   import naming
+from dmu.stats     import zfit
+from dmu.stats     import Fitter
+from dmu.stats     import ZFitPlotter
+
+from ROOT          import RDF # type: ignore
+from rx_common     import Sample, Trigger
+from zfit.data     import Data      as zdata
+from zfit.pdf      import BasePDF   as zpdf
+from zfit          import Space     as zobs
+from zfit.result   import FitResult as zres
+from rx_selection  import selection as sel
+from rx_data       import RDFGetter
+from fitter        import models
 
 log=LogStore.add_logger('rx_fitter:validate_cmb')
 # --------------------------------
 class Data:
     '''
-    Dataclass
+    Class used as namespace
     '''
     minx   : float
     maxx   : float
