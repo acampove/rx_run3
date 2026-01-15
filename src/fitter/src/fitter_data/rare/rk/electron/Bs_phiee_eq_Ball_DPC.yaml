@@ -1,4 +1,4 @@
-output_directory : rare/electron/bsphiee
+output_directory : rare/rk/electron/bsphiee
 categories:
   main: 
     model : KDE1DimFFT

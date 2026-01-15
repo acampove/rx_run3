@@ -1,4 +1,4 @@
-output_directory : rare/electron/combinatorial
+output_directory : rare/rk/electron/combinatorial
 categories:
   main:
     models : 

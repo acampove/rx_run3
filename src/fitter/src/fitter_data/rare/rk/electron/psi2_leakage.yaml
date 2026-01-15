@@ -1,4 +1,4 @@
-output_directory : rare/electron/psi2_leakage
+output_directory : rare/rk/electron/psi2_leakage
 categories:
   main: 
     model : KDE1DimFFT

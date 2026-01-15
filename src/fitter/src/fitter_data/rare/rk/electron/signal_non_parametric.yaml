@@ -1,4 +1,4 @@
-output_directory : rare/electron/signal 
+output_directory : rare/rk/electron/signal 
 categories:
   main: 
     model : KDE1DimFFT

@@ -23,7 +23,7 @@ model:
         - 5850
   components:
     combinatorial : rare/rk/muon/combinatorial.yaml
-    signal        : rare/rk/muon/signal.yaml
+    signal        : rare/rk/muon/Bu_Kmumu_eq_btosllball05_DPC.yaml
   constraints:
     yields : []
 fit: {}

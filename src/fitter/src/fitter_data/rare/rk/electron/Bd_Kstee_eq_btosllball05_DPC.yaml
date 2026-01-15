@@ -1,4 +1,4 @@
-output_directory : rare/electron/bdkstee
+output_directory : rare/rk/electron/bdkstee
 categories:
   main: 
     model : KDE1DimFFT
