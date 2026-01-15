@@ -56,8 +56,8 @@ def test_simple(tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = 'brem_000',
             obs    = obs,
-            sample = 'DATA_24_MagDown_24c2',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi, 
             cfg    = cfg)
         nll = ftr.run()
 
@@ -80,8 +80,8 @@ def test_config(tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = 'likelihood_factory',
             obs    = obs,
-            sample = 'DATA_24_MagDown_24c2',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi, 
             cfg    = cfg)
         cfg = ftr.get_config()
 
@@ -113,13 +113,12 @@ def test_reso_muon(tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = 'brem_000',
             obs    = obs,
-            sample = 'DATA_24_MagDown_24c2',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi, 
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-@pytest.mark.parametrize('q2bin', ['central'])
-def test_rare_muon(q2bin : str, tmp_path : Path):
+def test_rare_muon(tmp_path : Path):
     '''
     Test using toy data
     '''
@@ -132,8 +131,8 @@ def test_rare_muon(q2bin : str, tmp_path : Path):
          PL.parameter_schema(cfg=cfg.model.yields):
         ftr = LikelihoodFactory(
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = q2bin,
+            sample = Sample.data_24,
+            q2bin  = Qsq.central, 
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -157,13 +156,13 @@ def test_reso_electron(nbrem : int, tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = f'brem_{nbrem:03}',
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi, 
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_rare_electron(q2bin : str, tmp_path : Path):
+def test_rare_electron(q2bin : Qsq, tmp_path : Path):
     '''
     Test fitting rare electron channel
     '''
@@ -179,8 +178,8 @@ def test_rare_electron(q2bin : str, tmp_path : Path):
             'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
         ftr = LikelihoodFactory(
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = q2bin,
+            sample = Sample.data_24,
+            q2bin  = q2bin, 
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -202,8 +201,8 @@ def test_high_q2_track(tmp_path : Path):
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = LikelihoodFactory(
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = 'high',
+            sample = Sample.data_24,
+            q2bin  = Qsq.high, 
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -213,7 +212,7 @@ def test_high_q2_track(tmp_path : Path):
     ('hdkk'  , 'PROBNN_K > 0.1'), 
     ('hdpipi', 'PROBNN_K < 0.1')])
 def test_rare_misid_electron(
-    q2bin   : str,
+    q2bin   : Qsq,
     region  : str, 
     tag_cut : str,
     tmp_path: Path):
@@ -231,7 +230,6 @@ def test_rare_misid_electron(
 
     with PL.parameter_schema(cfg=cfg.model.yields),\
          RDFGetter.max_entries(value = -1),\
-         RDFGetter.multithreading(nthreads = 6),\
          Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
@@ -240,7 +238,7 @@ def test_rare_misid_electron(
         ftr = LikelihoodFactory(
             obs    = obs,
             name   = region,
-            sample = 'DATA_24_*',
+            sample = Sample.data_24,
             q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
