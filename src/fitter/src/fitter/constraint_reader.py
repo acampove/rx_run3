@@ -52,9 +52,6 @@ class ConstraintReader:
 
         self._constraints : list[Constraint] = []
     # ----------------------
-    def _add_signal_constraints(self) -> None:
-        raise NotImplementedError('This needs to be implemented with DataFitter')
-    # ----------------------
     def _proc_from_par(self, par_name : str) -> str:
         '''
         Parameters
@@ -143,7 +140,7 @@ class ConstraintReader:
 
         self._constraints.append( calc.get_constraint() )
     # ----------------------
-    def _add_signal_scales(self) -> None:
+    def _add_signal_constraints(self) -> None:
         '''
         Update _constraints with constraints to the mass scale, resolution
         '''
@@ -163,7 +160,7 @@ class ConstraintReader:
         self._add_misid_constraints()
         self._add_prec_constraints()
         self._add_combinatorial_constraints()
-        self._add_signal_scales()
+        self._add_signal_constraints()
 
         return self._constraints
 # -------------------------------------------------------------
