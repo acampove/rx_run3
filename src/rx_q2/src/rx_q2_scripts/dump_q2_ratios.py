@@ -1,6 +1,14 @@
 '''
-Script used to transform JSON files with fitting parameters to create a dataframe
-with the widths and means of the Jpsi peak, fitted from data and MC samples
+This script will:
+
+- Read a JSON file containing fitting parameters for fits to data and MC
+- Transform them into JSON files with:
+    parameters.json : The peak positions 
+    scales.json     : The scales
+
+For each brem category and block
+
+- Make plots of the peak positions and the scales
 '''
 import os
 import math
