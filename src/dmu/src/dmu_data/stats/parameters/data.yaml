@@ -78,7 +78,7 @@ cbr:
     val : 5300
     low : 5100
     high: 6000
-  sr:
+  sg:
     val : 50
     low : 2
     high: 300
@@ -95,7 +95,7 @@ cbl:
     val : 5300
     low : 5100
     high: 6000
-  sl:
+  sg:
     val : 50
     low : 2
     high: 300
