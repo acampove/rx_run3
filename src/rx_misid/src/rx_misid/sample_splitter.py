@@ -5,6 +5,7 @@ Module holding SampleSplitter class
 import numpy
 import pandas as pnd
 
+from pathlib                import Path
 from ROOT                   import RDF # type: ignore
 from omegaconf              import DictConfig, OmegaConf
 from dmu.logging.log_store  import LogStore
@@ -37,9 +38,10 @@ class SampleSplitter(Wcache):
         cfg      : omegaconf dictionary with configuration specifying how to split the samples
         '''
         cfg_data = OmegaConf.to_container(cfg, resolve=True)
+        rdf_uid  = getattr(rdf, 'uid')
         super().__init__(
-            out_path = 'data_sample_splitter',
-            args     = [rdf.uid, cfg_data])
+            out_path = Path('data_sample_splitter'),
+            args     = [rdf_uid, cfg_data])
 
         self._cfg      = cfg
         self._rdf      = rdf
@@ -56,26 +58,27 @@ class SampleSplitter(Wcache):
         '''
         array = numpy.abs(array)
         if not numpy.all(array == array[0]):
-            log.info(array)
+            rep    = self._rdf.Report()
+            rep.Print()
+            unique = numpy.unique(array)
+            log.error(unique)
             raise ValueError('Array of IDs contains multiple values')
 
         particle_id = array[0]
 
         return particle_id
     # ----------------------
-    def _particle_from_simulation(self) -> str|None:
+    def _particle_from_simulation(self) -> str:
         '''
         Returns
         -------------
-        Name of particle associated to MC L1 and L2 leptons, pion, kaon or electron
-        If this is not MC, return None.
-        If particle is neither raise
+        Name of particle associated to MC L1 and L2 leptons, pion or kaon.
+        If neither, raise
         '''
         l_col = [ name.c_str() for name in self._rdf.GetColumnNames() ]
 
         if 'L1_TRUEID' not in l_col or 'L2_TRUEID' not in l_col:
-            log.debug('No simulation hadron ID found, sample is data')
-            return None
+            raise ValueError('No simulation hadron ID found, sample is data')
 
         d_trueid = self._rdf.AsNumpy(['L1_TRUEID', 'L2_TRUEID'])
         arr_l1id = d_trueid['L1_TRUEID']
