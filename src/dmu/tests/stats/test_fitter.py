@@ -7,16 +7,16 @@ import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
-from pathlib                  import Path
-from functools                import cache
-from omegaconf                import OmegaConf
-from dmu.stats.gof_calculator import GofCalculator
+from pathlib                import Path
+from functools              import cache
+from omegaconf              import OmegaConf
+from dmu                    import LogStore
+from dmu.stats              import GofCalculator
 from dmu.stats              import utilities as sut
+from dmu.stats              import zfit
+from dmu.stats              import Fitter
+from dmu.stats              import ZFitPlotter
 from dmu.generic            import rxran, utilities as gut
-from dmu.stats.zfit         import zfit
-from dmu.stats.fitter       import Fitter
-from dmu.stats.zfit_plotter import ZFitPlotter
-from dmu.logging.log_store  import LogStore
 from ROOT                   import RDF, gInterpreter # type: ignore
 
 _NSAMPLE : int = 10_000

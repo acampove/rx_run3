@@ -12,11 +12,8 @@ import matplotlib.pyplot as plt
 from asdf                     import AsdfFile
 from typing                   import Protocol, Union
 from functools                import lru_cache
+from dmu                      import LogStore
 from dmu.logging              import messages  as mes
-from dmu.logging.log_store    import LogStore
-from dmu.stats.gof_calculator import GofCalculator
-from dmu.stats.zfit_plotter   import ZFitPlotter
-from dmu.stats.zfit           import zfit
 
 from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
@@ -25,6 +22,10 @@ from zfit.pdf                 import BasePDF       as zpdf
 from zfit.param               import Parameter     as zpar
 from zfit.data                import Data          as zdat
 from zfit                     import Space         as zobs
+
+from .gof_calculator          import GofCalculator
+from .zfit_plotter            import ZFitPlotter
+from .imports                 import zfit
 
 log = LogStore.add_logger('dmu:stats:fitter')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]

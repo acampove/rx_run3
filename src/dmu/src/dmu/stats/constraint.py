@@ -16,10 +16,10 @@ from zfit.param            import Parameter as zpar
 from zfit.result           import FitResult
 from pydantic              import BaseModel, model_validator, TypeAdapter
 
-from dmu.stats.zfit        import zfit
-from dmu.stats             import utilities  as sut
-from dmu.stats.protocols   import ParsHolder
-from dmu.logging.log_store import LogStore
+from dmu          import LogStore
+from .            import utilities as sut
+from .imports     import zfit
+from .protocols   import ParsHolder
 
 log=LogStore.add_logger('dmu:stats:constraint')
 # ----------------------------------------

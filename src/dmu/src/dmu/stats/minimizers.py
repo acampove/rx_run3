@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 
 from typing                        import Union
 from zfit.result                   import FitResult
-from zfit.core.basepdf             import BasePDF           as zpdf
+from zfit.pdf                      import BasePDF           as zpdf
 from zfit.minimizers.baseminimizer import FailMinimizeNaN
-from dmu.stats.zfit                import zfit
-from dmu.stats.utilities           import print_pdf
-from dmu.stats.gof_calculator      import GofCalculator
-from dmu.logging.log_store         import LogStore
+from dmu                           import LogStore
+from .imports                      import zfit
+from .utilities                    import print_pdf
+from .gof_calculator               import GofCalculator
 
 log = LogStore.add_logger('dmu:ml:minimizers')
 # ------------------------
@@ -169,7 +169,10 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         plt.hist(arr_mass, bins=60)
         plt.show()
     # ------------------------
-    def minimize(self, nll, **kwargs) -> FitResult:
+    def minimize(
+        self, 
+        nll, 
+        **kwargs) -> FitResult:
         '''
         Will run minimization and return FitResult object
         '''

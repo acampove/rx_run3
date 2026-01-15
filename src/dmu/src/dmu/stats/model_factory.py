@@ -2,17 +2,18 @@
 Module storing ZModel class
 '''
 
-from contextlib             import ExitStack
-from typing                 import Callable, Union
-from zfit.interface         import ZfitSpace     as zobs
-from zfit.pdf               import BasePDF       as zpdf
-from zfit.param             import Parameter     as zpar
+from contextlib     import ExitStack
+from typing         import Callable, Union
 
-from dmu.stats.parameters   import ParameterLibrary as PL
-from dmu.stats.zfit_models  import HypExp
-from dmu.stats.zfit_models  import ModExp
-from dmu.logging.log_store  import LogStore
-from dmu.stats.zfit         import zfit
+from dmu            import LogStore
+from zfit.interface import ZfitSpace     as zobs
+from zfit.pdf       import BasePDF       as zpdf
+from zfit.param     import Parameter     as zpar
+
+from .imports       import zfit
+from .parameters    import ParameterLibrary as PL
+from .zfit_models   import HypExp
+from .zfit_models   import ModExp
 
 log=LogStore.add_logger('dmu:stats:model_factory')
 #-----------------------------------------
@@ -262,6 +263,7 @@ class ModelFactory:
                 par.floating = False
             else:
                 log.debug(f'Creating new parameter {par_name}')
+                print(zfit.__file__)
                 par  = zfit.param.Parameter(par_name, val, low, high)
 
         self._d_par[par_name] = par
@@ -297,10 +299,18 @@ class ModelFactory:
 
         if   kind == 'reso':
             par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
-            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
+
+            par       = zfit.ComposedParameter(
+                name  = f'{par_name}_cmp', 
+                func  = lambda d_par : d_par['par_const'] * d_par['reso' ], 
+                params={'par_const' : par_const, 'reso'  : par_reso } )
         elif kind == 'scale':
             par_scale = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
-            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] + d_par['scale'], params={'par_const' : par_const, 'scale' : par_scale} )
+
+            par       = zfit.ComposedParameter(
+                name  = f'{par_name}_cmp', 
+                func  = lambda d_par : d_par['par_const'] + d_par['scale'], 
+                params={'par_const' : par_const, 'scale' : par_scale} )
         else:
             raise ValueError(f'Invalid kind: {kind}')
 

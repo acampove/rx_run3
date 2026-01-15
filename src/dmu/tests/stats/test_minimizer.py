@@ -1,18 +1,16 @@
 '''
 Script used to test custom zfit minimizer
 '''
-from dataclasses import dataclass
-
 import numpy
 import pytest
 
-from dmu.stats.zfit        import zfit
-from dmu.stats.minimizers  import AnealingMinimizer
-from dmu.logging.log_store import LogStore
+from dmu        import LogStore
+from dmu.stats  import zfit
+from dmu.stats  import AnealingMinimizer
+from zfit.data  import Data as zdat
 
 log = LogStore.add_logger('dmu:ml:test_minimizer')
 #---------------------------------------------
-@dataclass
 class Data:
     '''
     Class used to share attributes
@@ -35,15 +33,18 @@ def _get_model():
 
     return pdf
 # -------------------------------------------
-def _get_data():
+def _get_data() -> zdat:
     numpy.random.seed(42)
     data_1  = numpy.random.normal(0, 1.0, size=15_000)
     data_2  = numpy.random.normal(0, 1.2, size= 1_500)
     data_np = numpy.concatenate([data_1, data_2])
 
-    data_zf = zfit.Data.from_numpy(obs=Data.obs, array=data_np)
+    data    = zfit.Data.from_numpy(obs=Data.obs, array=data_np)
 
-    return data_zf
+    if not isinstance(data, zdat):
+        raise ValueError('Data not a zfit data instance')
+
+    return data
 # -------------------------------------------
 def _get_nll():
     pdf = _get_model()

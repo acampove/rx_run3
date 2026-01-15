@@ -11,10 +11,11 @@ import pandas as pnd
 from importlib.resources    import files
 from pathlib                import Path
 from omegaconf              import OmegaConf
-from dmu.logging.log_store  import LogStore
+
+from dmu                    import LogStore
 from dmu.stats              import utilities as sut
-from dmu.stats.zfit         import zfit
-from dmu.stats.fitter       import Fitter
+from dmu.stats              import zfit
+from dmu.stats              import Fitter
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.utilities    import pdf_to_tex
 from dmu.stats.utilities    import placeholder_fit

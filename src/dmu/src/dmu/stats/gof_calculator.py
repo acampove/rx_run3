@@ -6,7 +6,7 @@ import numpy
 import pandas as pnd
 
 from scipy                  import stats
-from dmu.stats.zfit         import zfit
+from dmu.stats.imports      import zfit
 from dmu.logging.log_store  import LogStore
 from contextlib             import contextmanager
 from functools              import lru_cache

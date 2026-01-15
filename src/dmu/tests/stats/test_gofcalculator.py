@@ -5,9 +5,9 @@ import math
 import numpy
 import pytest
 
-from dmu.stats.zfit           import zfit
-from dmu.stats.gof_calculator import GofCalculator
-from dmu.logging.log_store    import LogStore
+from dmu        import LogStore
+from dmu.stats  import zfit
+from dmu.stats  import GofCalculator
 
 log = LogStore.add_logger('dmu:stats:test_gofcalculator')
 #---------------------------------------------

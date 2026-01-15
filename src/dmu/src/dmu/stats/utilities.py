@@ -15,11 +15,11 @@ import tensorflow        as tf
 import dmu.pdataframe.utilities as put
 import dmu.generic.utilities    as gut
 
-from typing                 import Union, Any, overload
+from dmu                    import LogStore
+from .imports               import zfit
+from typing                 import Union, Any, Literal, overload
 from pathlib                import Path
 from contextlib             import contextmanager
-from dmu.logging.log_store  import LogStore
-from dmu.stats.zfit         import zfit
 
 from omegaconf        import OmegaConf, DictConfig
 from zfit.data        import Data          as zdata
@@ -707,6 +707,10 @@ def get_model(
 
     raise NotImplementedError(f'Invalid kind of fit: {kind}')
 # ----------------------
+@overload
+def get_nll(kind : Literal['s+b']   , nentries : int = 1000) -> ExtendedUnbinnedNLL:...
+@overload
+def get_nll(kind : Literal['signal'], nentries : int = 1000) -> UnbinnedNLL:...
 def get_nll(kind : str, nentries : int = 1000) -> Loss:
     '''
     Parameters

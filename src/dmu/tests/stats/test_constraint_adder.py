@@ -7,17 +7,17 @@ import tqdm
 import pandas as pnd
 import pytest
 
-from dmu.stats.zfit import zfit
 from typing      import Union
 from zfit.loss   import ExtendedUnbinnedNLL, UnbinnedNLL 
 from omegaconf   import DictConfig
+from dmu         import LogStore
 from dmu.stats   import Constraint1D, ConstraintND
 from dmu.stats   import ConstraintAdder
+from dmu.stats   import zfit
 from dmu.stats   import utilities as sut
+from dmu.stats   import print_constraints
 from dmu.generic import utilities as gut
 from dmu.generic import rxran
-from dmu         import LogStore
-from dmu.stats.constraint import print_constraints
 
 log        = LogStore.add_logger('dmu:stats:test_constraint_adder')
 Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
@@ -138,8 +138,8 @@ def test_toy() -> None:
     l_df : list[pnd.DataFrame] = []
     sam = nll.data[0]
     for _ in tqdm.trange(ntoy, ascii=' -'):
-        for cns in cons:
-            cns.resample()
+        for constraint in cons:
+            constraint.resample()
 
         sam.resample()
         mnm.minimize(nll)

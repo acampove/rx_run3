@@ -5,10 +5,10 @@ import math
 
 from contextlib            import contextmanager
 from importlib.resources   import files
-from dmu.logging.log_store import LogStore
-from dmu.stats.zfit        import zfit
+from dmu                   import LogStore
 from zfit.param            import Parameter as zpar
 from omegaconf             import DictConfig, OmegaConf
+from .imports              import zfit
 
 log=LogStore.add_logger('dmu:stats:parameters')
 # --------------------------------

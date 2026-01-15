@@ -12,9 +12,13 @@ from .fitter           import Fitter
 from .protocols        import ParsHolder
 from .utilities        import print_pdf
 from .zfit_plotter     import ZFitPlotter
+from .zfit_models      import ModExp
+from .zfit_models      import HypExp
 from .imports          import zfit
+from .minimizers       import AnealingMinimizer
 
 __all__ = [
+    'AnealingMinimizer',
     'ZFitPlotter',
     'zfit',
     'print_pdf',
@@ -22,6 +26,8 @@ __all__ = [
     'build_constraint',
     'Constraint',
     'ModelFactory',
+    'ModExp',
+    'HypExp',
     'MethodRegistry',
     'Constraint1D',
     'ConstraintND',
