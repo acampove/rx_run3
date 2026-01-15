@@ -25,7 +25,7 @@ def test_update(force_update : bool) -> None:
     '''
     Test updating the parquet file
     '''
-    smr = FitSummary(name='mid_window', signal = 'jpsi')
+    smr = FitSummary(name='reso_non_dtf', signal = 'jpsi')
     df  = smr.get_df(force_update = force_update)
 
     assert len(df) > 0
