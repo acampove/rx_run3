@@ -183,9 +183,9 @@ def _get_fit_config(q2bin : Qsq) -> FitConfig:
     return FitConfig(
         name    = 'test',
         group   = 'test',
+        mva_cmb = ['000'],
+        mva_prc = ['000'],
         fit_cfg = fit_cfg, 
-        mva_cmb = 0.0,
-        mva_prc = 0.0,
         q2bin   = q2bin,
     )
 # --------------------------------------------------------------
