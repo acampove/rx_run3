@@ -9,9 +9,11 @@ from .sim_fitter         import SimFitter
 from .data_preprocessor  import DataPreprocessor
 from .constraint_reader  import ConstraintReader
 from .cmb_constraints    import CmbConstraints
+from .signal_constraints import SignalConstraints
 
 __all__ = [
     'FitSummary', 
+    'SignalConstraints',
     'FitConfig',
     'ConstraintReader',
     'CmbConstraints',
