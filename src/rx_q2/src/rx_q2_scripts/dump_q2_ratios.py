@@ -172,6 +172,17 @@ def _get_q2_df(sample : str | None = None) -> pnd.DataFrame:
     return df
 #-------------------------------------
 def _get_scales(df : pnd.DataFrame) -> pnd.DataFrame:
+    '''
+    Parameters
+    ---------------
+    df: Pandas dataframe with fitting parameters, e.g. mu, sg.
+
+    Returns
+    ---------------
+    Pandas dataframe with scales and resolutions, columns:
+
+    smu_val   smu_err   ssg_val   ssg_err  block  brem
+    '''
     l_df_scale : list[pnd.DataFrame] = []
     for (block, brem), df_group in df.groupby(['block', 'brem']):
         try:
@@ -356,7 +367,12 @@ def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
     plt.savefig(cfg.out_dir / f'{quantity}_{kind}.png')
     plt.close()
 #-------------------------------------
-def _plot(df : pnd.DataFrame):
+def _plot(df : pnd.DataFrame) -> None:
+    '''
+    Parameters
+    ---------------
+    df: Pandas dataframe with fitting parameters, e.g. mu, sg.
+    '''
     for kind, df_kind in df.groupby('sample'):
         kind = str(kind)
 
