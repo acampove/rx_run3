@@ -1,7 +1,7 @@
 import os
 import pytest
-from pathlib import Path
 
+from pathlib   import Path
 from fitter    import ParameterReader
 from rx_common import Project
 from rx_common import Trigger 
