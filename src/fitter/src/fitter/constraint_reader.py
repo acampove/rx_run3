@@ -11,9 +11,11 @@ from .fit_config         import FitConfig
 from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
 from .cmb_constraints    import CmbConstraints
+from .signal_constraints import SignalConstraints
 
 _MISID_COMPONENTS   : Final[set[str]] = {'kkk', 'kpipi'}
 _COMBINATORIAL_NAME : Final[str]      = 'combinatorial'
+_SIGNAL_NAME        : Final[str]      = 'signal'
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
@@ -141,6 +143,16 @@ class ConstraintReader:
 
         self._constraints.append( calc.get_constraint() )
     # ----------------------
+    def _add_signal_scales(self) -> None:
+        '''
+        Update _constraints with constraints to the mass scale, resolution
+        '''
+        calc = SignalConstraints(
+            name = _SIGNAL_NAME,
+            nll  = self._nll)
+
+        self._constraints += calc.get_constraints()
+    # ----------------------
     def get_constraints(self) -> list[Constraint]:
         '''
         Returns dictionary with constraints, i.e.
@@ -151,6 +163,7 @@ class ConstraintReader:
         self._add_misid_constraints()
         self._add_prec_constraints()
         self._add_combinatorial_constraints()
+        self._add_signal_scales()
 
         return self._constraints
 # -------------------------------------------------------------
