@@ -6,20 +6,18 @@ import pytest
 
 from pathlib         import Path
 from typing          import Final
+from dmu             import LogStore
+from dmu.generic     import utilities          as gut
+from dmu.stats       import Constraint1D 
+from dmu.stats       import ConstraintND
+from dmu.stats       import Constraint
+from dmu.stats       import print_constraints 
+from dmu.stats       import zfit
 from zfit            import Parameter          as zpar
 from zfit.constraint import GaussianConstraint as GConstraint 
 from zfit.constraint import PoissonConstraint  as PConstraint 
 
-from dmu.generic import utilities as gut
-from dmu.stats   import Constraint1D 
-from dmu.stats   import ConstraintND
-from dmu.stats   import Constraint
-from dmu.stats   import print_constraints 
-from dmu.stats.zfit  import zfit
-
-from dmu import LogStore
-
-log        = LogStore.add_logger('dmu::test_constraint')
+log = LogStore.add_logger('dmu:test_constraint')
 # ----------------------
 _EXPECTED_MU : Final[list[float]] = [
     5199.89615,
