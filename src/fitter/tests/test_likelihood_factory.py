@@ -36,6 +36,8 @@ def initialize():
     LogStore.set_level('rx_data:rdf_getter'      , 30)
     LogStore.set_level('rx_misid:sample_weighter', 30)
     LogStore.set_level('fitter:LikelihoodFactory', 10)
+    LogStore.set_level('fitter:data_preprocessor', 10)
+    LogStore.set_level('rx_selection:selection'  , 10)
 
     with RDFGetter.max_entries(value = 10_000):
         yield
@@ -73,7 +75,7 @@ def test_config(tmp_path : Path):
 
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
     with PL.parameter_schema(cfg=cfg.model.yields),\
-         sel.custom_selection(d_sel = {'bdt' : '(1)'}),\
+         sel.custom_selection(d_sel = {'cmb' : '(1)'}),\
          Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value=100_000):
 
@@ -93,8 +95,8 @@ def test_config(tmp_path : Path):
     sel_fit = cfg.selection.fit
 
     assert sel_def.keys() == sel_fit.keys()
-    assert sel_def.bdt    != sel_fit.bdt
-    assert sel_fit.bdt    == '(1)'
+    assert sel_def.cmb    != sel_fit.cmb
+    assert sel_fit.cmb    == '(1)'
 # -------------------------------------------
 def test_reso_muon(tmp_path : Path):
     '''
@@ -175,7 +177,8 @@ def test_rare_electron(q2bin : Qsq, tmp_path : Path):
          Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
-            'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
+            'cmb'   : 'mva_cmb > 0.6',
+            'prc'   : 'mva_prc > 0.4'}):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = Sample.data_24,
