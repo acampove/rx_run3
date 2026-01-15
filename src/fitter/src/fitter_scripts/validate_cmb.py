@@ -43,8 +43,8 @@ class Data:
     q2_kind: str|None=None
     model  : str
     config : str
-    sample : str
-    trigger: str
+    sample : Sample 
+    trigger: Trigger 
     initial: int
     final  : int
     ntries : int
@@ -96,7 +96,7 @@ def _get_rdf() ->  RDF.RNode:
     return rdf
 # --------------------------------
 @gut.timeit
-def _fit(pdf : zpdf, data : zdata) -> None:
+def _fit(pdf : zpdf, data : zdata) -> zres:
     fit_cfg = Data.cfg['fitting']
 
     obj = Fitter(pdf, data)
@@ -244,8 +244,7 @@ def _get_zfit_data() -> dict[str,zdata]:
     d_cut = _override_q2(cuts=d_cut)
 
     d_mva_cuts = _get_mva_cuts()
-    with sel.custom_selection(d_sel=d_cut),\
-        RDFGetter.multithreading(nthreads=8):
+    with sel.custom_selection(d_sel=d_cut):
         rdf   = _get_rdf()
         d_rdf = { name : rdf.Filter(expr, name)  for name, expr in d_mva_cuts.items()}
 
