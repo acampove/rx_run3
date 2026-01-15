@@ -12,9 +12,11 @@ from .fitter           import Fitter
 from .protocols        import ParsHolder
 from .utilities        import print_pdf
 from .zfit_plotter     import ZFitPlotter
+from .imports          import zfit
 
 __all__ = [
     'ZFitPlotter',
+    'zfit',
     'print_pdf',
     'Fitter',
     'build_constraint',
