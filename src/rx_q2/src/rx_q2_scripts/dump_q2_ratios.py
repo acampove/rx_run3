@@ -386,6 +386,27 @@ def _plot(df : pnd.DataFrame) -> None:
     _plot_scales(df=df_scale, quantity='ssg')
     _plot_scales(df=df_scale, quantity='smu')
 #-------------------------------------
+def _get_df(cfg : ScalesConf) -> pnd.DataFrame:
+    '''
+    Parameters
+    -----------
+    cfg: Configuration needed to get scales
+
+    Returns
+    -----------
+    Dataframe with fitting parameters, e.g. mu, sg
+    '''
+    log.info('Dataframe not found, making it')
+
+    if   cfg.kind == 'q2':
+        df = _get_q2_df()
+    elif cfg.kind ==  'B':
+        df = _get_Bx_df()
+    else:
+        raise ValueError(f'Invalid kind: {cfg.kind}')
+
+    return df
+#-------------------------------------
 def main(args : DictConfig | None = None):
     '''
     Parameters
@@ -417,19 +438,12 @@ def main(args : DictConfig | None = None):
     if out_path.exists():
         log.warning(f'Dataframe already found, reusing: {out_path}')
         df = pnd.read_json(out_path)
+
         _plot(df=df)
 
         return
 
-    log.info('Dataframe not found, making it')
-
-    if   cfg.kind == 'q2':
-        df = _get_q2_df()
-    elif cfg.kind ==  'B':
-        df = _get_Bx_df()
-    else:
-        raise ValueError(f'Invalid kind: {cfg.kind}')
-
+    df = _get_df(cfg = cfg)
     df.to_json(out_path, indent=2)
 
     _plot(df=df)
