@@ -23,7 +23,7 @@ def test_simple(sample : str) -> None:
     if not path.exists():
         raise ValueError(f'Cannot find: {path}')
 
-    data            = gut.load_data(package='rx_q2_data', fpath='plots/scales.yaml')
+    data            = gut.load_data(package='rx_q2_data', fpath='plots/scales_q2.yaml')
     data['kind']    = 'q2'
     data['regex']   = r'(\d)_(\d)_nom'
 
