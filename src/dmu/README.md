@@ -573,7 +573,7 @@ samples:
 If you work with zfit, you will see messages from tensorflow, by importing zfit through:
 
 ```python
-from dmu.stats.zfit import zfit
+from dmu.stats import zfit
 ```
 
 these messages should be hidden. If `ROOT` is installed, the wrapper will import it before
@@ -1051,7 +1051,7 @@ The class `ZFitPlotter` can be used to plot fits done with zfit. For a complete 
 this class check the [tests](tests/stats/test_fit_plotter.py). A simple example of its usage is below:
 
 ```python
-from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu.stats import ZFitPlotter
 
 obs = zfit.Space('m', limits=(0, 10))
 
@@ -1097,8 +1097,8 @@ this class supports:
 To save in one go everything regarding your fit do:
 
 ```python
-from dmu.stats              import utilities as sut
-from dmu.stats.zfit_plotter import ZFitPlotter
+from dmu.stats import utilities as sut
+from dmu.stats import ZFitPlotter
 
 ptr = ZFitPlotter(data=dat, model=pdf)
 ptr.plot()
