@@ -4,7 +4,8 @@ from pathlib               import Path
 #-------------------------------------
 class ScalesConf(BaseModel):
     '''
-    Class storing configuration
+    Class used to store configuration
+    needed to extract mass scales and resolutions
     '''
     model_config = ConfigDict(frozen=True)
     jpsi_mass : float
@@ -12,7 +13,7 @@ class ScalesConf(BaseModel):
     mm      : dict[str,list[float]]
     ee      : dict[str,list[float]]
 
-    kind    : str
+    kind    : str # q2, B
     vers    : str
     year    : str
     proj    : str
