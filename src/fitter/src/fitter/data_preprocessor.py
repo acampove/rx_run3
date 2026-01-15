@@ -133,6 +133,9 @@ class DataPreprocessor(Cache):
             df  = rut.rdf_report_to_df(rep=rep)
 
         log.info('Applied selection')
+        if log.getEffectiveLevel() < 20:
+            rep = rdf.Report()
+            rep.Print()
 
         return rdf, df
     # ------------------------
@@ -216,11 +219,6 @@ class DataPreprocessor(Cache):
         Tuple of numpy arrays with the observable and weights
         '''
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
-
-        if log.getEffectiveLevel() < 20:
-            rep = rdf.Report()
-            rep.Print()
-
         name = sut.name_from_obs(obs=self._obs)
 
         log.debug('Retrieving data')
