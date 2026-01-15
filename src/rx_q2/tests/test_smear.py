@@ -7,7 +7,7 @@ import pytest
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                     import RDF
+from ROOT                     import RDF # type: ignore
 from pathlib                  import Path
 from dmu.logging.log_store    import LogStore
 from rx_q2.q2smear_corrector  import Q2SmearCorrector

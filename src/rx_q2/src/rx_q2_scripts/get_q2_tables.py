@@ -16,23 +16,23 @@ import matplotlib.pyplot   as plt
 
 from omegaconf               import DictConfig
 from ROOT                    import RDF # type: ignore
-from dmu.stats.zfit          import zfit
+from dmu                     import LogStore
+from dmu.stats               import zfit
+from dmu.rdataframe          import utilities        as rut
+from dmu.generic             import utilities        as gut
+from dmu.stats               import utilities        as sut
+from dmu.stats               import Fitter
+from dmu.stats               import ParameterLibrary as PL
+from dmu.stats               import ModelFactory
+from dmu.stats               import ZFitPlotter
+
 from zfit.pdf                import BasePDF   as zpdf
 from zfit.data               import Data      as zdata
 from zfit.result             import FitResult as zres
 
-from dmu.rdataframe          import utilities        as rut
-from dmu.generic             import utilities        as gut
-from dmu.stats               import utilities        as sut
-from dmu.stats.fitter        import Fitter
-from dmu.stats.parameters    import ParameterLibrary as PL
-from dmu.stats.model_factory import ModelFactory
-from dmu.stats.zfit_plotter  import ZFitPlotter
-from dmu.logging.log_store   import LogStore
-
 from rx_selection            import selection as sel
 from rx_common.types         import Trigger
-from rx_data.rdf_getter      import RDFGetter
+from rx_data                 import RDFGetter
 from rx_q2.config            import Config
 
 Parameters=dict[str,tuple[float,float]]
