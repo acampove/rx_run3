@@ -24,9 +24,9 @@ model:
   components:
     ccbar                             : rare/rk/electron/ccbar.yaml
     combinatorial                     : rare/rk/electron/combinatorial.yaml
-    Bd_Kstee_eq_btosllball05_DPC      : rare/rk/electron/bdkstee.yaml
-    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/rk/electron/bukstee.yaml
-    Bs_phiee_eq_Ball_DPC              : rare/rk/electron/bsphiee.yaml
+    Bd_Kstee_eq_btosllball05_DPC      : rare/rk/electron/Bd_Kstee_eq_btosllball05_DPC.yaml
+    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/rk/electron/Bu_Kstee_Kpi0_eq_btosllball05_DPC.yaml
+    Bs_phiee_eq_Ball_DPC              : rare/rk/electron/Bs_phiee_eq_Ball_DPC.yaml
     jpsi_leakage                      : rare/rk/electron/jpsi_leakage.yaml
     psi2_leakage                      : rare/rk/electron/psi2_leakage.yaml
     kkk                               : rare/rk/electron/kkk.yaml

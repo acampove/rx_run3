@@ -23,8 +23,8 @@ model:
     bsjpsiphi     : reso/rkst/muon/bsjpsiphi.yaml
     bsjpsikst     : reso/rkst/muon/bsjpsikst.yaml
     bdjpsikst_swp : reso/rkst/muon/bdjpsikst_swp.yaml
-    jpsi          : reso/rkst/muon/jpsi.yaml
-    psi2          : reso/rkst/muon/psi2.yaml
+    jpsi          : reso/rkst/muon/Bd_JpsiKst_mm_eq_DPC.yaml
+    psi2          : reso/rkst/muon/Bd_psi2SKst_mm_eq_DPC.yaml
   constraints:
     yields : []
 fit: {}
