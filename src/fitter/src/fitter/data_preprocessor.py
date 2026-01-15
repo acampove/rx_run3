@@ -139,10 +139,14 @@ class DataPreprocessor(Cache):
 
         return rdf, df
     # ------------------------
-    def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
+    def _add_extra_weights(
+        self, 
+        rdf : RDF.RNode,
+        wgt : numpy.ndarray) -> numpy.ndarray:
         '''
         Parameters
         -------------
+        rdf: Dataframe with data after selection
         wgt: Array of weights already held in ROOT dataframe
 
         Returns
@@ -155,7 +159,7 @@ class DataPreprocessor(Cache):
 
         for kind, cfg in self._wgt_cfg.items():
             kind    = str(kind)
-            new_wgt = self._get_extra_weight(kind=kind, cfg=cfg)
+            new_wgt = self._get_extra_weight(kind=kind, cfg=cfg, rdf = rdf)
             if new_wgt.shape != wgt.shape:
                 raise ValueError(
                     f'''Shapes of original array and {kind} weights differ:
@@ -165,28 +169,37 @@ class DataPreprocessor(Cache):
 
         return wgt
     # ----------------------
-    def _get_extra_weight(self, kind : str, cfg : DictConfig) -> numpy.ndarray:
+    def _get_extra_weight(
+        self, 
+        kind : str, 
+        rdf  : RDF.RNode,
+        cfg  : DictConfig) -> numpy.ndarray:
         '''
         Parameters
         -------------
         kind: E.g. PID, Dalitz
         cfg : Configuration needed to extract weights
+        rdf : DataFrame after selection
 
         Returns
         -------------
         Array of weights
         '''
         if kind == 'PID':
-            arr_wgt = self._get_pid_weights(cfg=cfg)
+            arr_wgt = self._get_pid_weights(cfg=cfg, rdf=rdf)
         else:
             raise ValueError(f'Invalid type of weight {kind}')
 
         return arr_wgt
     # ----------------------
-    def _get_pid_weights(self, cfg : DictConfig) -> numpy.ndarray:
+    def _get_pid_weights(
+        self, 
+        cfg : DictConfig,
+        rdf : RDF.RNode) -> numpy.ndarray:
         '''
         Parameters
         -------------
+        rdf : DataFrame after selection
         cfg : Dictionary containing configuration for PID, i.e. it should have keys
               `splitting` and `weights` as used in the rx_misid project
 
@@ -195,7 +208,7 @@ class DataPreprocessor(Cache):
         Array with PID weights
         '''
         log.info(f'Splitting sample: {self._sample}/{self._q2bin}')
-        spl   = SampleSplitter(rdf = self._rdf, cfg = cfg.splitting)
+        spl   = SampleSplitter(rdf = rdf, cfg = cfg.splitting)
         df    = spl.get_sample()
 
         log.info(f'Getting PID weights for: {self._sample}/{self._q2bin}')
@@ -225,7 +238,7 @@ class DataPreprocessor(Cache):
         arr  = rdf.AsNumpy([name])[name]
         wgt  = rdf.AsNumpy(['weight'])['weight']
         wgt  = wgt.astype(float)
-        wgt  = self._add_extra_weights(wgt=wgt)
+        wgt  = self._add_extra_weights(wgt=wgt, rdf = rdf)
 
         nevt = len(arr)
         log.debug(f'Found {nevt} entries')
