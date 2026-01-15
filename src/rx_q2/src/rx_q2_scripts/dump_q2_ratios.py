@@ -202,6 +202,9 @@ def _get_scales(df : pnd.DataFrame) -> pnd.DataFrame:
 
     df = pnd.concat(l_df_scale, ignore_index=True)
 
+    cfg = _load_config()
+    df.to_json(cfg.out_dir / 'scales.json', indent = 2)
+
     return df
 #-------------------------------------
 def _reorder_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
