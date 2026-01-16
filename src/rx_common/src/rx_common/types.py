@@ -25,7 +25,7 @@ class Correction(StrEnum):
     '''
     mass_scale      = 'smu'
     mass_resolution = 'rsg'
-    brem_fraction   = 'bfr'
+    brem_fraction   = 'rfr'
     # ------------------------
     @property
     def latex(self) -> str:
@@ -38,9 +38,9 @@ class Correction(StrEnum):
             case 'smu':
                 return r'$\Delta\mu$[MeV]' 
             case 'rsg':
-                return r'$r_{\sigma}$'
-            case 'bfr':
-                return r'$r_{FR}$'
+                return r'$\frac{\sigma^{Data}}{\sigma^{MC}}$'
+            case 'rfr':
+                return r'$\frac{BFr^{Data}}{BFr^{MC}}$'
 # ---------------------------------------
 class MVA(StrEnum):
     r'''
