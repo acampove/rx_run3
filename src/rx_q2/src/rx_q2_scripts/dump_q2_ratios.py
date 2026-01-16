@@ -360,6 +360,8 @@ def _plot_variables(
     variable : str, 
     kind     : str) -> None:
 
+    log.info(f'Plotting {variable} for {kind}')
+
     _, ax = plt.subplots(figsize=(15, 10))
     for brem, df_brem in df.groupby('brem'):
         brem    = str(brem)
@@ -371,18 +373,18 @@ def _plot_variables(
     name = {'dat' : 'Data', 'sim' : 'MC'}[kind]
 
     cfg = _load_config()
-    if variable == 'mu':
+    if   variable == 'mu':
         plt.ylabel(f'$\\mu^{{{name}}}$[MeV]')
         ax.axhline(y=cfg.jpsi_mass, color='black', linestyle=':', label='PDG')
-
-        rng = cfg.get_range(var='mu')
-        plt.ylim(rng)
-
-    if variable == 'sg':
+    elif variable == 'sg':
         plt.ylabel(f'$\\sigma^{{{name}}}$[MeV]')
-        rng = cfg.get_range(var='sg')
-        plt.ylim(rng)
+    elif variable == 'fr':
+        plt.ylabel(f'$fr^{{{name}}}$[MeV]')
+    else:
+        raise ValueError(f'Invalid varible: {variable}')
 
+    rng = cfg.get_range(var=variable)
+    plt.ylim(rng)
     plt.grid()
     plt.legend()
     plt.savefig(cfg.out_dir / f'{variable}_{kind}.png')
@@ -399,6 +401,7 @@ def _plot(df : pnd.DataFrame) -> None:
 
         _plot_variables(df=df_kind, variable='mu', kind = kind)
         _plot_variables(df=df_kind, variable='sg', kind = kind)
+        _plot_variables(df=df_kind, variable='fr', kind = kind)
 
     df_scale = _get_scales(df)
     _plot_corrections(df=df_scale, correction=Correction.mass_resolution)
