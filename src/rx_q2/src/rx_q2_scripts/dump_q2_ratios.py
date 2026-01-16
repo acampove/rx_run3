@@ -228,7 +228,8 @@ def _reorder_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
 def _scales_from_df(df : pnd.DataFrame) -> pnd.DataFrame:
     d_mu = _get_scale(df=df, name='mu', fun=lambda x : x[0] - x[1])
     d_sg = _get_scale(df=df, name='sg', fun=lambda x : x[0] / x[1])
-    df   = pnd.DataFrame({**d_mu, **d_sg})
+    d_fr = _get_scale(df=df, name='fr', fun=lambda x : x[0] / x[1])
+    df   = pnd.DataFrame({**d_mu, **d_sg, **d_fr})
 
     return df
 #-------------------------------------
@@ -270,6 +271,10 @@ def _get_scale(
 
     if name == 'sg':
         corr = Correction.mass_resolution
+        return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
+
+    if name == 'fr':
+        corr = Correction.brem_fraction
         return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
 
     raise ValueError(f'Invalid parameter name: {name}')
@@ -400,6 +405,7 @@ def _plot(df : pnd.DataFrame) -> None:
     df_scale = _get_scales(df)
     _plot_corrections(df=df_scale, correction=Correction.mass_resolution)
     _plot_corrections(df=df_scale, correction=Correction.mass_scale)
+    _plot_corrections(df=df_scale, correction=Correction.brem_fraction)
 #-------------------------------------
 def _get_df(cfg : ScalesConf) -> pnd.DataFrame:
     '''
