@@ -132,10 +132,10 @@ class FitSummary:
 
         return data
     # ----------------------
-    def _get_dataframe(
+    def _get_data(
         self, 
         kind : str,
-        path : Path) -> pnd.DataFrame:
+        path : Path) -> dict[str, float | str]:
         '''
         Parameters
         -------------
@@ -144,7 +144,7 @@ class FitSummary:
 
         Returns
         -------------
-        DataFrame
+        Dictionary mapping quantity and value, error or name for e.g. channel.
         '''
         data       = gut.load_json(path=path)
         parameters = dict()
@@ -154,14 +154,9 @@ class FitSummary:
             parameters[f'{name}_error'] = error 
 
         parameters = self._attach_information(data=parameters, path=path, kind=kind)
-        values     = { key : [value] for key, value in parameters.items() }
+        values     = { key : value for key, value in parameters.items() }
 
-        if kind == 'sim':
-            parameters['nentries'] = self._get_mc_nentries(path=path)
-
-        df = pnd.DataFrame(values)
-
-        return df
+        return values 
     # ----------------------
     def _get_mc_nentries(self, path : Path) -> float:
         '''
