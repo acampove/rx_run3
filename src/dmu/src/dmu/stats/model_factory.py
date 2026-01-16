@@ -263,7 +263,6 @@ class ModelFactory:
                 par.floating = False
             else:
                 log.debug(f'Creating new parameter {par_name}')
-                print(zfit.__file__)
                 par  = zfit.param.Parameter(par_name, val, low, high)
 
         self._d_par[par_name] = par
