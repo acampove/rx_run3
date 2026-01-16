@@ -93,11 +93,15 @@ class ParameterReader:
 
         return df_out
     # ----------------------
-    def _format_data(self, data : dict[str, float | str]) -> dict[str,tuple[float,float]]:
+    def _format_data(
+        self, 
+        brem : int,
+        data : dict[str, float]) -> dict[str,tuple[float,float]]:
         '''
         Parameters
         -------------
-        data: Dictionary mapping quantity with value
+        brem: Brem category
+        data: Dictionary mapping quantity with value, value is a float, i.e. dictionary has been filtered
 
         Returns
         -------------
@@ -105,9 +109,6 @@ class ParameterReader:
         '''
         output_data : dict[str, list[float]] = dict()
         for key, val in data.items():
-            if not isinstance(val, float):
-                continue
-
             if math.isnan(val):
                 continue
 
@@ -165,7 +166,11 @@ class ParameterReader:
             raise ValueError('Not found one and only one row')
 
         raw_data = df.iloc[0].to_dict()
-        data     = self._format_data(data = raw_data) # type: ignore
+        flt_data = { key : value for key, value in raw_data.items() if isinstance(value, float) }
+        data     = self._format_data(
+            brem = brem,
+            data = flt_data) # type: ignore
+
         # for simultaneous fits, this removes brem_002 parameters when one needs brem_001
         # and viceversa
         data     = { key : value for key, value in data.items() if f'brem_{brem:03d}' in key }
