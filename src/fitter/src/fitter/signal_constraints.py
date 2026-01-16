@@ -3,11 +3,13 @@ Module holding SignalConstraints class
 '''
 import re
 
-from typing     import Final
-from dmu        import LogStore
-from dmu.stats  import Constraint, Constraint1D
-from zfit.loss  import ExtendedUnbinnedNLL
-from zfit.param import Parameter as zpar
+from typing        import Final
+from dmu           import LogStore
+from dmu.stats     import Constraint, Constraint1D
+from zfit.loss     import ExtendedUnbinnedNLL
+from zfit.param    import Parameter as zpar
+
+from .scale_reader import ScaleReader
 
 log=LogStore.add_logger('fitter:signal_constraints')
 # ------------------------------------------
@@ -32,7 +34,7 @@ class SignalConstraints:
         nll : Likelihood
         '''
         self._nll   = nll
-        #self._srd   = ScaleReader()
+        self._srd   = ScaleReader()
 
         self._regex           : Final[str] = r'.*signal_brem_00(\d)_b(\d)_\d+_(scale|reso)_flt'
         self._constraint_kind : Final[str] = 'GaussianConstraint'
@@ -55,9 +57,7 @@ class SignalConstraints:
         -------------
         Constraint object
         '''
-        #val, err = self._srd.get_scale(name = kind, block = block, brem = brem)
-        val = 3
-        err = 1
+        val, err = self._srd.get_scale(name = kind, block = block, brem = brem)
 
         log.info(f'Constraining: {par.name}')
         log.debug(f'{"mu":<20}{val:20.3f}')
