@@ -1,8 +1,30 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum import IntEnum, StrEnum
+from enum import StrEnum
 
+# ---------------------------------------
+class Block(StrEnum):
+    r'''
+    Type meant to represent data blocks, e.g. block 1
+    '''
+    b1 = '1'
+    b2 = '2'
+    b3 = '3'
+    b4 = '4'
+    b5 = '5'
+    b6 = '6'
+    b7 = '7'
+    b8 = '8'
+# ---------------------------------------
+class Correction(StrEnum):
+    r'''
+    Class meant to represent differences between data and MC
+    measured in control regions, which can be used to correct MC
+    e.g. DeltaMu = Mu(data) - Mu(simulation)
+    '''
+    mass_scale      = 'smu'
+    mass_resolution = 'ssg'
 # ---------------------------------------
 class MVA(StrEnum):
     r'''
