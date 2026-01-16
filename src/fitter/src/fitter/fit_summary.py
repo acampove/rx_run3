@@ -195,6 +195,8 @@ class FitSummary:
 
         df_dat = self._get_df(kind = 'dat')
         df_sim = self._get_df(kind = 'sim')
+        df_sim = self._rename_fractions(dat = df_dat, sim = df_sim)
+
         df     = pnd.concat([df_dat, df_sim], axis=0)
         df     = df.reset_index(drop=True)
         df     = df.astype(dtype = {'block' : int, 'brem' : int})
@@ -237,6 +239,36 @@ class FitSummary:
         df['kind'] = kind
 
         return df
+    # ----------------------
+    def _rename_fractions(self, dat : pnd.DataFrame, sim : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Parameters
+        -------------
+        dat/sim: Dataframe with fitting information for Data/Simulation
+
+        Returns
+        -------------
+        Dataframe for simulation after renaming fractions
+        '''
+        log.info('Renaming fractions')
+
+        dat_columns = dat.columns
+        frac_columns= [ name for name in sim.columns if 'fraction' in name ]
+        
+        renaming : dict[str,str] = dict()
+        for frac_column in frac_columns:
+            targets = [ value for value in dat_columns if value.endswith(frac_column) ]
+            if len(targets) != 1:
+                raise ValueError(f'Cannot find in data one and only one column ending with: {frac_column}')
+
+            target = targets[0]
+            renaming[frac_column] = target
+
+            log.debug(f'{frac_column:<20}{target:<20}')
+
+        sim = sim.rename(columns = renaming)
+
+        return sim
     # ----------------------
     def _post_process_mc(
         self, 
