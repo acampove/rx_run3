@@ -1,7 +1,13 @@
 '''
 Module holding ScaleReader class
 '''
+import os
+import pandas as pnd
+from dmu       import LogStore
+from pathlib   import Path
+from rx_common import Block, Brem, Correction
 
+log=LogStore.add_logger('fitter:scale_reader')
 # -------------------------------------
 class ScaleReader:
     '''
