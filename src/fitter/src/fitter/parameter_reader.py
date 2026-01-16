@@ -123,7 +123,38 @@ class ParameterReader:
 
             output_data[var_name][index] = val
 
-        return { key : (value[0], value[1]) for key, value in output_data.items() } 
+        res = { key : (value[0], value[1]) for key, value in output_data.items() } 
+
+        name, val, err = self._extract_brem(brem = brem, data = data)
+
+        res[name] = val, err
+
+        return res
+    # ----------------------
+    def _extract_brem(self, brem : int, data : dict[str, float]) -> tuple[str,float,float]:
+        '''
+        Parameters
+        -------------
+        brem: brem category, i.e. 1 or 2
+        data: Dictionary with variable name and value
+
+        Returns
+        -------------
+        Tuple with value of brem fraction, error and name of variable
+        '''
+        keys = [ key for key in data if 'fraction' in key ]
+        if len(keys) != 2:
+            for key in data:
+                log.error(key)
+            raise ValueError('Expected two entries corresponding to brem fraction')
+
+        [val] = [ data[key] for key in keys if key.endswith('_value') ]
+        [err] = [ data[key] for key in keys if key.endswith('_error') ]
+
+        if brem == 2:
+            val = 1 - val # fraction stored is brem 1 one
+
+        return f'fr_brem_{brem:03d}', val, err
     # ----------------------
     def __call__(
         self, 
