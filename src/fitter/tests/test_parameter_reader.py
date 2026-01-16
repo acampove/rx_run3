@@ -15,14 +15,15 @@ def initialize() -> None:
     LogStore.set_level('fitter:parameter_reader', 10)
 # -----------------------
 @pytest.mark.parametrize('kind', ['dat', 'sim'])
-def test_simple(kind : str):
+@pytest.mark.parametrize('brem', [1, 2])
+def test_simple(kind : str, brem : int):
     '''
     Test simplest use of reader
     '''
     rdr    = ParameterReader(name = 'reso_non_dtf')
     ms_sim = rdr(
-        brem     = 1, 
         block    = 3, 
+        brem     = brem, 
         cmb      = '050',
         prc      = '060',
         kind     = kind,
