@@ -144,9 +144,7 @@ class ConstraintReader:
         '''
         Update _constraints with constraints to the mass scale, resolution
         '''
-        calc = SignalConstraints(
-            name = _SIGNAL_NAME,
-            nll  = self._nll)
+        calc = SignalConstraints(nll = self._nll)
 
         self._constraints += calc.get_constraints()
     # ----------------------
