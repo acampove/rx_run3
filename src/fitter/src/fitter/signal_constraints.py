@@ -70,6 +70,36 @@ class SignalConstraints:
             mu   = val,
             sg   = err)
     # ----------------------
+    def _get_correction_settings(self, par : zpar) -> tuple[Brem, Block, Correction] | None:
+        '''
+        Parameters
+        -------------
+        par: Zfit parameter
+
+        Returns
+        -------------
+        Tuple with settings to find correction
+        or None, if no correction (through constraint) is possible for parameter
+        '''
+        name = par.name
+
+        mtch = re.match(self._regex, name)
+        if not mtch:
+            return
+
+        brem = Brem(mtch.group(1)) 
+        block= Block(mtch.group(2)) 
+        kind = mtch.group(3)
+
+        if   kind == 'scale' and name.startswith('mu_'):
+            corr = Correction.mass_scale
+        elif kind == 'reso'  and name.startswith('sg_'):
+            corr = Correction.mass_resolution
+        else:
+            raise ValueError(f'Cannot determine correction for parameter: {name}')
+
+        return brem, block, corr
+    # ----------------------
     def get_constraints(self) -> list[Constraint]:
         '''
         Returns
@@ -83,14 +113,12 @@ class SignalConstraints:
             if not isinstance(par, zpar):
                 raise ValueError(f'Found non-parameter object: {par}')
 
-            mtch = re.match(self._regex, par.name)
-
-            if not mtch:
+            correction_settings = self._get_correction_settings(par = par)
+            if correction_settings is None:
+                log.debug(f'Not found constraints for {par.name}')
                 continue
 
-            brem = Brem(mtch.groups(0))
-            block= Block(mtch.groups(1))
-            kind = Correction(mtch.groups(2))
+            brem, block, kind = correction_settings
 
             constraint = self._get_constraint(
                 brem = brem, 
