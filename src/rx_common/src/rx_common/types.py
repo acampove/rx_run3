@@ -25,6 +25,22 @@ class Correction(StrEnum):
     '''
     mass_scale      = 'smu'
     mass_resolution = 'rsg'
+    brem_fraction   = 'bfr'
+    # ------------------------
+    @property
+    def latex(self) -> str:
+        '''
+        Returns
+        --------------
+        Latex string corresponding to correction
+        '''
+        match self.value:
+            case 'smu':
+                return r'$\Delta\mu$[MeV]' 
+            case 'rsg':
+                return r'$r_{\sigma}$'
+            case 'bfr':
+                return r'$r_{FR}$'
 # ---------------------------------------
 class MVA(StrEnum):
     r'''
