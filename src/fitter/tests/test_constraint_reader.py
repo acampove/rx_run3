@@ -27,6 +27,16 @@ _CONSTRAINTS        : Final[list[str]] = [
     'invalid', 
     'brem_frac']
 # ----------------------
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('fitter:constraint_reader' , 10)
+    LogStore.set_level('fitter:signal_constraints', 10)
+    LogStore.set_level('fitter:scale_reader'      , 10)
+    LogStore.set_level('fitter:cmb_constraints'   , 10)
+# ----------------------
 class Parameters:
     '''
     Class used to instantiate objects holding parameters and observables
@@ -159,14 +169,6 @@ def _get_nll(
     dat   = pdf.create_sampler()
 
     return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
-# ----------------------
-@pytest.fixture(scope='module', autouse=True)
-def initialize():
-    '''
-    This runs before any test
-    '''
-    LogStore.set_level('fitter:constraint_reader', 10)
-    LogStore.set_level('fitter:cmb_constraints'  , 10)
 # --------------------------------------------------------------
 def _get_fit_config(q2bin : Qsq) -> FitConfig:
     '''
