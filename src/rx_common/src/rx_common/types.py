@@ -36,13 +36,13 @@ class MVA(StrEnum):
     cmb = 'cmb'
     prc = 'prc'
 # ---------------------------------------
-class Brem(IntEnum):
+class Brem(StrEnum):
     '''
     Enum meant to represent brem category
     '''
-    zero = 0 
-    one  = 1 
-    two  = 2 
+    zero = '0'
+    one  = '1'
+    two  = '2'
 # ---------------------------------------
 class Component(StrEnum):
     r'''
