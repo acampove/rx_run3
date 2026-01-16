@@ -30,7 +30,7 @@ from fitter          import FitSummary
 from rx_q2           import ScalesConf
 from rx_q2           import ParameterReader 
 from fitter          import ParameterReader as FitParameterReader
-from rx_common       import Project
+from rx_common       import Correction, Project
 from rx_common       import Trigger 
 from rx_common       import Qsq 
 
@@ -233,7 +233,7 @@ def _get_scale(
     Parameters
     ------------------
     df  : Dataframe with mass scales and resolutions
-    name: Variable whose 
+    name: Variable whose scale or resolution will be calculated
     fun : Function used to calculate scale or resolution
 
     Returns
@@ -243,27 +243,29 @@ def _get_scale(
     key  : Name of scale/resolution
     value: Numerical value
     '''
-    df_dat  = df[df['sample'] == 'dat']
-    df_sim  = df[df['sample'] == 'sim']
+    df_dat  = df.query('sample == "dat"')
+    df_sim  = df.query('sample == "sim"') 
 
     dat_val, dat_err = _get_entry(name=name, df=df_dat)
     sim_val, sim_err = _get_entry(name=name, df=df_sim)
 
     cov : list[list[float]] = [
-            [dat_err ** 2,            0],
-            [0           , sim_err ** 2]]
+        [dat_err ** 2,            0],
+        [0           , sim_err ** 2]]
 
     val, var = jacobi.propagate(fun, [dat_val, sim_val], cov) # type: ignore
     val      = float(val)
     err      = math.sqrt(var)
 
-    if name == 'sg' and err > 100:
-        log.warning('-----------------')
-        log.info(f'Error: {err:.0f}')
-        print(df)
-        log.warning('-----------------')
+    if name == 'mu':
+        corr = Correction.mass_scale
+        return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
 
-    return {f's{name}_val' : [val], f's{name}_err' : [err]}
+    if name == 'sg':
+        corr = Correction.mass_resolution
+        return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
+
+    raise ValueError(f'Invalid parameter name: {name}')
 # ----------------------
 def _get_entry(name : str, df : pnd.DataFrame) -> tuple[float,float]:
     '''
@@ -291,16 +293,16 @@ def _get_entry(name : str, df : pnd.DataFrame) -> tuple[float,float]:
 #-------------------------------------
 def _plot_df(
     df       : pnd.DataFrame,
-    quantity : str,
+    variable : str,
     brem     : str,
     ax       : Axes) -> Axes:
 
-    if brem == 0 and quantity == 'ssg':
+    if brem == 0 and variable == Correction.mass_resolution:
         return ax
 
     color = {'0' : '#1f77b4', '1' : '#ff7f0e', '2' : '#2ca02c'}[brem]
-    val   = f'{quantity}_val'
-    err   = f'{quantity}_err'
+    val   = f'{variable}_val'
+    err   = f'{variable}_err'
 
     try:
         ax.fill_between(
@@ -317,57 +319,66 @@ def _plot_df(
 
     return ax
 #-------------------------------------
-def _plot_scales(df : pnd.DataFrame, quantity : str) -> None:
+def _plot_corrections(
+    df         : pnd.DataFrame, 
+    correction : Correction) -> None:
+
+    log.info(f'Plotting correction: {correction}')
+
     _, ax = plt.subplots(figsize=(15, 10))
     for brem, df_brem in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem)
         brem    = str(brem)
-        ax      = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
+        ax      = _plot_df(df=df_brem, variable=correction, brem=brem, ax=ax)
 
     ax.legend()
 
     cfg = _load_config()
-    if quantity == 'smu':
+    if correction == Correction.mass_scale:
         plt.ylabel(r'$\Delta\mu$[MeV]')
-        rng = cfg.get_range(var='smu')
+        rng = cfg.get_range(var=correction)
         plt.ylim(rng)
 
-    if quantity == 'ssg':
+    if correction == Correction.mass_resolution:
         plt.ylabel(r'$s_{\sigma}$')
-        rng = cfg.get_range(var='ssg')
+        rng = cfg.get_range(var=correction)
         plt.ylim(rng)
 
     plt.grid()
-    plt.savefig(cfg.out_dir / f'{quantity}.png')
+    plt.savefig(cfg.out_dir / f'{correction}.png')
     plt.close()
 #-------------------------------------
-def _plot_variables(df : pnd.DataFrame, quantity : str, kind : str) -> None:
+def _plot_variables(
+    df       : pnd.DataFrame, 
+    variable : str, 
+    kind     : str) -> None:
+
     _, ax = plt.subplots(figsize=(15, 10))
     for brem, df_brem in df.groupby('brem'):
         brem    = str(brem)
         df_brem = _reorder_blocks(df = df_brem)
-        ax      = _plot_df(df=df_brem, quantity=quantity, brem=brem, ax=ax)
+        ax      = _plot_df(df=df_brem, variable=variable, brem=brem, ax=ax)
 
     ax.legend()
 
     name = {'dat' : 'Data', 'sim' : 'MC'}[kind]
 
     cfg = _load_config()
-    if quantity == 'mu':
+    if variable == 'mu':
         plt.ylabel(f'$\\mu^{{{name}}}$[MeV]')
         ax.axhline(y=cfg.jpsi_mass, color='black', linestyle=':', label='PDG')
 
         rng = cfg.get_range(var='mu')
         plt.ylim(rng)
 
-    if quantity == 'sg':
+    if variable == 'sg':
         plt.ylabel(f'$\\sigma^{{{name}}}$[MeV]')
         rng = cfg.get_range(var='sg')
         plt.ylim(rng)
 
     plt.grid()
     plt.legend()
-    plt.savefig(cfg.out_dir / f'{quantity}_{kind}.png')
+    plt.savefig(cfg.out_dir / f'{variable}_{kind}.png')
     plt.close()
 #-------------------------------------
 def _plot(df : pnd.DataFrame) -> None:
@@ -379,12 +390,12 @@ def _plot(df : pnd.DataFrame) -> None:
     for kind, df_kind in df.groupby('sample'):
         kind = str(kind)
 
-        _plot_variables(df=df_kind, quantity='mu', kind = kind)
-        _plot_variables(df=df_kind, quantity='sg', kind = kind)
+        _plot_variables(df=df_kind, variable='mu', kind = kind)
+        _plot_variables(df=df_kind, variable='sg', kind = kind)
 
     df_scale = _get_scales(df)
-    _plot_scales(df=df_scale, quantity='ssg')
-    _plot_scales(df=df_scale, quantity='smu')
+    _plot_corrections(df=df_scale, correction=Correction.mass_resolution)
+    _plot_corrections(df=df_scale, correction=Correction.mass_scale)
 #-------------------------------------
 def _get_df(cfg : ScalesConf) -> pnd.DataFrame:
     '''
