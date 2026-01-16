@@ -2,8 +2,17 @@
 Module with tests for FitSummary class 
 '''
 import pytest
+from dmu      import LogStore
 from fitter   import FitSummary
 
+log=LogStore.add_logger('fitter:test_fit_summary')
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('fitter:fit_summary', 10)
 # ----------------------
 @pytest.mark.parametrize('name', ['reso_non_dtf'])
 def test_simple(name : str) -> None:
