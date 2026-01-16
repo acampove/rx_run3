@@ -12,10 +12,12 @@ from .cmb_constraints    import CmbConstraints
 from .signal_constraints import SignalConstraints
 from .prec               import PRec 
 from .misid_constraints  import MisIDConstraints
+from .scale_reader       import ScaleReader
 
 __all__ = [
     'FitSummary', 
     'SignalConstraints',
+    'ScaleReader',
     'FitConfig',
     'ConstraintReader',
     'CmbConstraints',
