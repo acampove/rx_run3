@@ -15,15 +15,26 @@ class ScaleReader:
     and making them available
     '''
     # ----------------------
+    def __init__(self) -> None:
+        '''
+
+        '''
+        ana_dir   = Path(os.environ['ANADIR'])
+        data_path = ana_dir / 'fits/data/reso_non_dtf/v1/rk_ee/plots/scales.json'
+        if not data_path.exists():
+            raise FileNotFoundError(f'Cannot find scales file: {data_path}')
+
+        self._df  = pnd.read_json(data_path)
+    # ----------------------
     def get_scale(
         self,
-        name : str,
-        block : str,
-        brem  : str) -> tuple[float,float]:
+        corr  : Correction,
+        block : Block,
+        brem  : Brem) -> tuple[float,float]:
         '''
         Parameters
         -------------
-        name: Kind of scale, e.g. scale, reso, brem
+        corr : Type of correction
         block: E.g. 1...8
         brem : E.g. 1, 2
 
@@ -31,5 +42,17 @@ class ScaleReader:
         -------------
         Tuple with value and error of scale
         '''
-        return 1, 0
+        df = self._df
+        df = df.query(f'block == {block}')
+        df = df.query(f'brem  == {brem}')
+
+        if len(df) != 1:
+            log.error(df)
+            raise ValueError(f'Not found one and only one row for block/brem: {block}/{brem}')
+
+        sr  = df.iloc[0]
+        val = sr[f'{corr}_val']
+        err = sr[f'{corr}_err']
+
+        return val, err 
 # -------------------------------------
