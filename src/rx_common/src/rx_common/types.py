@@ -24,7 +24,7 @@ class Correction(StrEnum):
     e.g. DeltaMu = Mu(data) - Mu(simulation)
     '''
     mass_scale      = 'smu'
-    mass_resolution = 'ssg'
+    mass_resolution = 'rsg'
 # ---------------------------------------
 class MVA(StrEnum):
     r'''
