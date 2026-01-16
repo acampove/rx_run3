@@ -114,7 +114,7 @@ class Parameters:
 
         return { zfit.Parameter(name, 0, 0, 1) for name in l_par_name }
     # ----------------------
-    def get_params(self, floating : bool) -> set[zpar] | set[ZfitParameter]:
+    def get_params(self, floating : bool) -> set[zpar] | set[zpar]:
         '''
         Parameters
         -------------
