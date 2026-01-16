@@ -214,28 +214,44 @@ class FitSummary:
         '''
         paths = self._get_parameter_paths(kind = kind)
 
-        l_df : list[pnd.DataFrame] = []
+        l_data : list[dict[str, float | str]] = []
         for path in tqdm.tqdm(paths, ascii=' -'):
             if 'brem_002' in str(path):
                 continue
 
-            df_001 = self._get_dataframe(path=path, kind = kind)
+            val_1  = self._get_data(path=path, kind = kind)
             path   = str(path).replace('brem_001', 'brem_002')
             path   = Path(path)
-            df_002 = self._get_dataframe(path=path, kind = kind)
+            val_2  = self._get_data(path=path, kind = kind)
 
             if kind == 'sim':
-                df_001, df_002 = self._post_process_mc(
-                    df_001 = df_001,
-                    df_002 = df_002)
+                val_1, val_2 = self._post_process_mc(
+                    val_1 = val_1,
+                    val_2 = val_2)
 
-            l_df.append(df_001)
-            l_df.append(df_002)
+            l_data.append(val_1)
+            l_data.append(val_2)
 
-        df         = pnd.concat(objs=l_df, axis=0)
+        df         = pnd.DataFrame(l_data)
         df['kind'] = kind
 
         return df
+    # ----------------------
+    def _post_process_mc(
+        self, 
+        val_1 : dict[str, float | str],
+        val_2 : dict[str, float | str]) -> tuple[dict[str,float | str], dict[str, float | str]]:
+        '''
+        Parameters
+        -------------
+        val_x : Dictionary with fitting parameters for given fit, or other identifier, for brem 'x'
+
+        Returns
+        -------------
+        Same as input, but with nentries_value/error keys replaced with fraction_value/error
+        '''
+
+        return val_1, val_2 
     # ----------------------
     def _save_df(
         self, 
