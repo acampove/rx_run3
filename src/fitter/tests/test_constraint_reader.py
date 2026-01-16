@@ -14,9 +14,9 @@ from rx_common      import Qsq
 from fitter         import FitConfig
 from zfit.loss      import ExtendedUnbinnedNLL
 from zfit.param     import Parameter           as zpar
+from zfit.pdf       import BasePDF             as zpdf
 from zfit           import Space               as zobs
 from fitter         import ConstraintReader
-from zfit.core.loss import ZfitParameter
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
