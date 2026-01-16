@@ -4,6 +4,7 @@ Module holding FitSummary class
 import os
 import re
 import tqdm
+import math
 import pandas as pnd
 
 from pathlib import Path
@@ -250,6 +251,24 @@ class FitSummary:
         -------------
         Same as input, but with nentries_value/error keys replaced with fraction_value/error
         '''
+        nentries_001 = float(val_1['nentries_value'])
+        nentries_002 = float(val_2['nentries_value'])
+
+        ntotal   = nentries_001 + nentries_002
+        fraction = nentries_001 / ntotal 
+        error    = math.sqrt( fraction * (1 - fraction) / ntotal )
+
+        del val_1['nentries_value']
+        del val_2['nentries_value']
+
+        del val_1['nentries_error']
+        del val_2['nentries_error']
+
+        val_1['fraction_value'] = fraction
+        val_2['fraction_value'] = fraction
+
+        val_1['fraction_error'] = error 
+        val_2['fraction_error'] = error 
 
         return val_1, val_2 
     # ----------------------
