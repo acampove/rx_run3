@@ -1,6 +1,12 @@
-from pydantic              import BaseModel, ConfigDict
-from pathlib               import Path
+'''
+Module containing ScalesConf class
+'''
 
+from pydantic   import BaseModel, ConfigDict
+from pathlib    import Path
+from dmu        import LogStore
+
+log=LogStore.add_logger('fitter:scales_conf')
 #-------------------------------------
 class ScalesConf(BaseModel):
     '''
@@ -40,6 +46,8 @@ class ScalesConf(BaseModel):
             raise ValueError(f'Invalid project: {self.proj}')
 
         if var not in data:
+            for value in data:
+                log.error(value)
             raise ValueError(f'Invalid variable: {var}')
 
         [low, high] = data[var]
