@@ -341,16 +341,10 @@ def _plot_corrections(
     ax.legend()
 
     cfg = _load_config()
-    if correction == Correction.mass_scale:
-        plt.ylabel(r'$\Delta\mu$[MeV]')
-        rng = cfg.get_range(var=correction)
-        plt.ylim(rng)
+    rng = cfg.get_range(var=correction)
 
-    if correction == Correction.mass_resolution:
-        plt.ylabel(r'$s_{\sigma}$')
-        rng = cfg.get_range(var=correction)
-        plt.ylim(rng)
-
+    plt.ylabel(correction.latex)
+    plt.ylim(rng)
     plt.grid()
     plt.savefig(cfg.out_dir / f'{correction}.png')
     plt.close()
