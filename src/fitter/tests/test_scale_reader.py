@@ -1,25 +1,29 @@
 '''
 Module with tests for ScaleReader class
 '''
+import pytest
 
-from fitter import ScaleReader
-
-from dmu import LogStore
+from dmu       import LogStore
+from fitter    import ScaleReader
+from rx_common import Correction
+from rx_common import Brem
+from rx_common import Block 
 
 log=LogStore.add_logger('fitter:test_scale_reader')
 # ----------------------
-def test_simple():
+@pytest.mark.parametrize('kind' , Correction)
+@pytest.mark.parametrize('block', Block)
+@pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
+def test_simple(
+    brem : Brem,
+    block: Block,
+    kind : Correction):
     '''
     Simplest test
     '''
-    kind  = 'reso'
-    block = '1'
-    brem  = '1'
-
-    srd = ScaleReader()
-
+    srd      = ScaleReader()
     val, err = srd.get_scale(
-        name  = kind, 
+        corr  = kind, 
         block = block, 
         brem  = brem)
 
