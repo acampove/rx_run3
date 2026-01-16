@@ -128,6 +128,39 @@ class Parameters:
 
         return self._s_par 
 # ----------------------
+def _get_signal(obs : zobs) -> zpdf:
+    '''
+    Parameters
+    -------------
+    obs: Observable
+
+    Returns
+    -------------
+    Signal model
+    '''
+    fct  = ModelFactory(
+        obs     = obs,
+        l_pdf   = ['dscb'],
+        l_shared= [],
+        l_float = [],
+        d_rep   = {'mu' : 'scale', 'sg' : 'reso'},
+        preffix = 'signal_brem_001_b1')
+    gaus_001 = fct.get_pdf()
+
+    fct  = ModelFactory(
+        obs     = obs,
+        l_pdf   = ['dscb'],
+        l_shared= [],
+        l_float = [],
+        d_rep   = {'mu' : 'scale', 'sg' : 'reso'},
+        preffix = 'signal_brem_002_b1')
+    gaus_002 = fct.get_pdf()
+
+    frac = zfit.param.Parameter('frac_signal_b1', 0.3, 0.0, 1.0)
+    pdf  = zfit.pdf.SumPDF(pdfs = [gaus_001, gaus_002], fracs = frac)
+
+    return pdf
+# ----------------------
 def _get_nll(
     obs  : zobs, 
     q2bin: Qsq,
@@ -148,10 +181,7 @@ def _get_nll(
     '''
     pdf_names = cfg.fit_cfg.model.components.combinatorial.categories.main.models[q2bin]
 
-    mu   = zfit.Parameter('mu', 5200, 4500, 6000)
-    sg   = zfit.Parameter('sg',  150,   10, 200)
-    gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
-
+    gaus = _get_signal(obs = obs)
     fct  = ModelFactory(
         obs     = obs,
         l_pdf   = pdf_names,
