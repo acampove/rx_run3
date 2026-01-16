@@ -94,6 +94,7 @@ def _add_paths(data : dict) -> None:
     data['out_dir'] = out_dir
     data['regex'  ] = regex
 #-------------------------------------
+# TODO: This is too hardcoded
 def _get_Bx_df() -> pnd.DataFrame:
     name   = 'reso_non_dtf'
     signal = 'jpsi'
@@ -124,12 +125,18 @@ def _get_Bx_df() -> pnd.DataFrame:
 
                 mu_val, mu_err = msr.get_values(prefix = f'mu_{signal}')
                 sg_val, sg_err = msr.get_values(prefix = f'sg_{signal}')
+                fr_val, fr_err = msr.get_values(prefix = f'fr_{signal}')
 
                 data = {
                     'mu_val' : mu_val,
                     'mu_err' : mu_err,
+                    # ---
                     'sg_val' : sg_val,
                     'sg_err' : sg_err,
+                    # ---
+                    'fr_val' : fr_val,
+                    'fr_err' : fr_err,
+                    # ---
                     'block'  : block,
                     'brem'   : brem,
                     'sample' : kind,
