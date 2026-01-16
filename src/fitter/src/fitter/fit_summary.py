@@ -221,8 +221,21 @@ class FitSummary:
 
         l_df : list[pnd.DataFrame] = []
         for path in tqdm.tqdm(paths, ascii=' -'):
-            df = self._get_dataframe(path=path, kind = kind)
-            l_df.append(df)
+            if 'brem_002' in str(path):
+                continue
+
+            df_001 = self._get_dataframe(path=path, kind = kind)
+            path   = str(path).replace('brem_001', 'brem_002')
+            path   = Path(path)
+            df_002 = self._get_dataframe(path=path, kind = kind)
+
+            if kind == 'sim':
+                df_001, df_002 = self._post_process_mc(
+                    df_001 = df_001,
+                    df_002 = df_002)
+
+            l_df.append(df_001)
+            l_df.append(df_002)
 
         df         = pnd.concat(objs=l_df, axis=0)
         df['kind'] = kind
