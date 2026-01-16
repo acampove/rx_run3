@@ -156,15 +156,14 @@ class FitSummary:
         parameters = self._attach_information(data=parameters, path=path, kind=kind)
         values     = { key : [value] for key, value in parameters.items() }
 
-        # Do this just for MC, data has parameters starting with yld_
-        if all( not key.startswith('yld_') for key in parameters ):
+        if kind == 'sim':
             parameters['nentries'] = self._get_mc_nentries(path=path)
 
         df = pnd.DataFrame(values)
 
         return df
     # ----------------------
-    def _get_mc_nentries(self, path : Path) -> int:
+    def _get_mc_nentries(self, path : Path) -> float:
         '''
         This is needed to get entries from simulated datasets
 
