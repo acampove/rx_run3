@@ -2,6 +2,7 @@
 This module contains the ParameterReader class
 '''
 import os
+import re
 import math
 import pandas as pnd
 from contextlib import contextmanager
@@ -154,7 +155,16 @@ class ParameterReader:
         if brem == 2:
             val = 1 - val # fraction stored is brem 1 one
 
-        return f'fr_brem_{brem:03d}', val, err
+        # Fraction needs to be named as mu and sg to be used for scales
+        key    = keys[0]
+        regex  = r'(\w+)_fraction_(value|error)'
+        mtch   = re.match(regex, key)
+        if not mtch:
+            raise ValueError(f'Canot extract signal name from: {key}')
+
+        signal = mtch.group(1) 
+
+        return f'fr_{signal}_brem_{brem:03d}', val, err
     # ----------------------
     def __call__(
         self, 
