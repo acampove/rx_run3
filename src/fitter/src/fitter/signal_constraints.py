@@ -6,6 +6,7 @@ import re
 from typing        import Final
 from dmu           import LogStore
 from dmu.stats     import Constraint, Constraint1D
+from rx_common     import Block, Brem, Correction
 from zfit.loss     import ExtendedUnbinnedNLL
 from zfit.param    import Parameter as zpar
 
@@ -41,9 +42,9 @@ class SignalConstraints:
     # ----------------------
     def _get_constraint(
         self, 
-        brem  : str, 
-        block : str, 
-        kind  : str, 
+        brem  : Brem, 
+        block : Block, 
+        kind  : Correction, 
         par   : zpar) -> Constraint:
         '''
         Parameters
@@ -57,7 +58,7 @@ class SignalConstraints:
         -------------
         Constraint object
         '''
-        val, err = self._srd.get_scale(name = kind, block = block, brem = brem)
+        val, err = self._srd.get_scale(corr = kind, block = block, brem = brem)
 
         log.info(f'Constraining: {par.name}')
         log.debug(f'{"mu":<20}{val:20.3f}')
@@ -87,9 +88,9 @@ class SignalConstraints:
             if not mtch:
                 continue
 
-            brem = str(mtch.groups(0))
-            block= str(mtch.groups(1))
-            kind = str(mtch.groups(2))
+            brem = Brem(mtch.groups(0))
+            block= Block(mtch.groups(1))
+            kind = Correction(mtch.groups(2))
 
             constraint = self._get_constraint(
                 brem = brem, 
