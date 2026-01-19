@@ -330,7 +330,6 @@ class SimFitter(BaseFitter, Cache):
 
         return cat.selection
     # ------------------------
-    # TODO: Fractions need to be parameters to be constrained
     def _get_fraction(
         self,
         sumw     : float,
@@ -347,7 +346,7 @@ class SimFitter(BaseFitter, Cache):
         -------------
         Fitting fraction parameter fixed
         '''
-        frac_name = f'frac_{self._component}_{category}'
+        frac_name = f'fr_{self._name}_{category}'
         value     = sumw / total
         par       = Parameter(frac_name, value, 0, 1)
 
