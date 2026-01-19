@@ -13,7 +13,7 @@ from dmu.stats          import ModelFactory
 from dmu.stats          import zfit
 from dmu.workflow       import Cache
 
-from rx_common          import Trigger, Sample
+from rx_common          import Qsq, Trigger, Sample
 from rx_selection       import selection        as sel
 from zfit.data          import Data             as zdata
 from zfit.pdf           import BasePDF          as zpdf
@@ -35,7 +35,7 @@ class SimFitter(BaseFitter, Cache):
         self,
         sample    : Sample,
         trigger   : Trigger,
-        q2bin     : str,
+        q2bin     : Qsq,
         cfg       : DictConfig,
         obs       : zobs,
         name      : str):
