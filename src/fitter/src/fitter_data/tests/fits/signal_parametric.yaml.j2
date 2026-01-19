@@ -7,7 +7,7 @@ categories:
 {% for block in blocks %}
   brem_00{{brem}}_b{{block}}:
     selection:
-      block: block == {{block}}
+      block       : block == {{block}}
       brem{{brem}}: nbrem == {{brem}}
     model:
       - dscb
