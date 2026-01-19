@@ -10,7 +10,7 @@ from dmu.stats              import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
 from dmu.workflow           import Cache
-from rx_common              import Sample, Trigger
+from rx_common              import Qsq, Sample, Trigger
 from rx_data                import RDFGetter
 from rx_selection           import selection as sel
 from fitter                 import SimFitter
@@ -40,7 +40,7 @@ def test_nomc(tmp_path : Path):
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_ee_os,
-            q2bin   = 'low')
+            q2bin   = Qsq.low)
         _ = ftr.get_model()
 # ---------------------------------------------------
 def test_nocat(tmp_path : Path):
@@ -59,7 +59,7 @@ def test_nocat(tmp_path : Path):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_mm_os,
-            q2bin    = 'jpsi')
+            q2bin    = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('brem', [1, 2])
@@ -91,7 +91,7 @@ def test_with_cat(tmp_path : Path, brem : int):
             trigger = Trigger.rk_ee_os,
             obs     = obs,
             cfg     = cfg,
-            q2bin   = 'jpsi')
+            q2bin   = Qsq.jpsi)
         _ = ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('sample', [Sample.bdkstkpiee, Sample.bpkstkpiee, Sample.bsphiee])
@@ -109,13 +109,13 @@ def test_kde(sample : Sample, tmp_path : Path):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            q2bin    = 'central')
+            q2bin    = Qsq.central)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
 @pytest.mark.parametrize('sample', [Sample.bpkkk, Sample.bpkpipi])
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_misid(sample : Sample, q2bin : str, tmp_path : Path):
+def test_misid(sample : Sample, q2bin : Qsq, tmp_path : Path):
     '''
     Test fitting misID simulation 
     '''
@@ -152,7 +152,7 @@ def test_ccbar_reso(limits : str, tmp_path : Path):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            q2bin    = 'jpsi')
+            q2bin    = Qsq.jpsi)
         pdf = ftr.get_model()
 
     assert pdf is not None
@@ -166,7 +166,7 @@ def test_ccbar_rare(tmp_path : Path):
     '''
     sample    = Sample.ccbar
     mass      = 'B_Mass'
-    q2bin     = 'high'
+    q2bin     = Qsq.high
     obs       = zfit.Space(mass, limits=(4500, 6000))
     cfg       = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{sample}.yaml')
 
@@ -202,14 +202,14 @@ def test_reso_rk_ee(sample : Sample, brem : int, tmp_path : Path):
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_ee_os,
-            q2bin   = 'jpsi')
+            q2bin   = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('sample', [Sample.bdkstkpijpsimm, Sample.bdkstkpipsi2mm])
 @pytest.mark.parametrize('q2bin' , ['jpsi', 'psi2'])
 def test_reso_rkst_mm(
     sample   : Sample, 
-    q2bin    : str, 
+    q2bin    : Qsq, 
     tmp_path : Path):
     '''
     Test resonant jpsi and psi2S in rkst muon channel
@@ -246,7 +246,7 @@ def test_name(name : str, tmp_path : Path):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            q2bin    = 'jpsi')
+            q2bin    = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
@@ -265,6 +265,6 @@ def test_weights(sample : Sample, tmp_path : Path):
             obs     = obs,
             cfg     = cfg,
             trigger = Trigger.rk_ee_nopid,
-            q2bin   = 'central')
+            q2bin   = Qsq.central)
         ftr.get_model()
 # ---------------------------------------------------
