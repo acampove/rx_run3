@@ -15,7 +15,6 @@ from .signal_constraints import SignalConstraints
 
 _MISID_COMPONENTS   : Final[set[str]] = {'kkk', 'kpipi'}
 _COMBINATORIAL_NAME : Final[str]      = 'combinatorial'
-_SIGNAL_NAME        : Final[str]      = 'signal'
 
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
