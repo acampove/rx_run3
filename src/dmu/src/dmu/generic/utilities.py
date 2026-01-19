@@ -437,7 +437,12 @@ def _prepare_path(path : Path|str, exists_ok : bool) -> Path:
 # --------------------------------
 def load_json(path : str | Path):
     '''
-    Loads data from JSON or YAML, depending on extension of files, supported .json, .yaml, .yml
+    Loads data from: 
+    - JSON
+    - YAML
+    - JINJA
+
+    Depending on extension of files, supported .json, .yaml, .yml, yaml.j2
 
     Parameters
     ------------------
