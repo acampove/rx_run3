@@ -56,7 +56,6 @@ class SimFitter(BaseFitter, Cache):
 
         self._sample    = sample
         self._name      = name
-        self._category  = self._get_category(cfg=cfg)
         self._component = sample
         self._trigger   = trigger
         self._q2bin     = q2bin
@@ -66,6 +65,7 @@ class SimFitter(BaseFitter, Cache):
 
         log.debug(f'For component {self._component} using output: {self._base_path}')
 
+        self._category : None | str  = self._get_category(cfg=cfg)
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
 
