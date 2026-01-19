@@ -272,7 +272,7 @@ class SimFitter(BaseFitter, Cache):
 
             log.warning(f'Found to few entries {sumw:.1f} < {self._min_fit_entries}, skipping {self._component} component')
             self._save_fit(
-                cut_cfg  = self._get_cut_config(),
+                cut_cfg  = self._get_cut_config(category = category),
                 plt_cfg  = self._cfg.plots,
                 data     = data,
                 model    = model,
@@ -284,7 +284,7 @@ class SimFitter(BaseFitter, Cache):
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
 
         self._save_fit(
-            cut_cfg  = self._get_cut_config(),
+            cut_cfg  = self._get_cut_config(category = category),
             plt_cfg  = self._cfg.plots,
             data     = data,
             model    = model,
@@ -476,7 +476,7 @@ class SimFitter(BaseFitter, Cache):
             pdf = kde_builder(obs=self._obs, data=data, name=self._component, **kwargs)
 
         self._save_fit(
-            cut_cfg  = self._get_cut_config(),
+            cut_cfg  = self._get_cut_config(category = self._category),
             plt_cfg  = self._cfg.plots,
             data     = data,
             model    = pdf,
