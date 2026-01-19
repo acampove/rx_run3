@@ -255,9 +255,9 @@ class SimFitter(BaseFitter, Cache):
         '''
         log.info(f'Fitting category {category}')
 
-        model = self._get_pdf(
-            category= category,
+        model       = self._get_pdf(
             cfg     = self._cfg,
+            category= category,
             l_model = l_model_name)
 
         data  = self._d_data[category]
@@ -267,16 +267,19 @@ class SimFitter(BaseFitter, Cache):
             return model, sumw, None
 
         if sumw < self._min_fit_entries:
+            model = None
+            res   = None
+
             log.warning(f'Found to few entries {sumw:.1f} < {self._min_fit_entries}, skipping {self._component} component')
             self._save_fit(
                 cut_cfg  = self._get_cut_config(),
                 plt_cfg  = self._cfg.plots,
                 data     = data,
-                model    = None,
-                res      = None,
+                model    = model,
+                res      = res,
                 out_path = self._out_path / 'category')
 
-            return None, 0, None
+            return model, sumw, res 
 
         res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
 
