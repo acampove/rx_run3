@@ -454,7 +454,7 @@ class SimFitter(BaseFitter, Cache):
             for sumw, category in zip(l_yield, self._cfg.categories) ]
         log.debug(60 * '-')
 
-        full_model = zfit.pdf.SumPDF(l_pdf, l_frac)
+        full_model = zfit.pdf.SumPDF(l_pdf, l_frac[:-1]) # Remove last fraction, need N-1
         full_cres  = OmegaConf.merge(*l_cres)
         if not isinstance(full_cres, DictConfig):
             raise TypeError('Merged dictionary not a DictConfig')
