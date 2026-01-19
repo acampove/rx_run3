@@ -325,6 +325,25 @@ class SimFitter(BaseFitter, Cache):
                 q2bin  =self._q2bin)
 
         return OmegaConf.create(cfg)
+    # ----------------------
+    def _get_category_selection(self, category : str) -> dict[str,str]:
+        '''
+        Parameters
+        -------------
+        category: Name of category, e.g. brem_001_b1
+
+        Returns
+        -------------
+        Selection used, e.g. key is brem value is brem == 1
+        '''
+        if 'categories' not in self._cfg:
+            return {}
+
+        cat = self._cfg.categories[category]
+        if 'selection' not in cat:
+            return {}
+
+        return cat.selection
     # ------------------------
     # TODO: Fractions need to be parameters to be constrained
     def _get_fraction(
