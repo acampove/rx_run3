@@ -168,7 +168,7 @@ def test_silent_import():
 
     tensorflow.version
 # -------------------------
-@pytest.mark.parametrize('ext', ['yaml', 'json'])
+@pytest.mark.parametrize('ext', ['yaml', 'json', 'yaml.j2'])
 def test_load_data(ext : str):
     '''
     Tests loading file from data package

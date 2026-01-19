@@ -8,6 +8,8 @@ import time
 import json
 import pickle
 import inspect
+
+from jinja2                import Template
 from importlib.resources   import files
 from importlib.util        import find_spec
 from typing                import Callable, Any, cast
@@ -447,13 +449,20 @@ def load_json(path : str | Path):
     if not path.is_file:
         raise FileNotFoundError(f'Cannot find: {path}')
 
-    with open(path, encoding='utf-8') as ofile:
+    with open(path, encoding='utf-8') as ifile:
+        if path.name.endswith('.yaml.j2'):
+            text = ifile.read()
+            temp = Template(source = text)
+            rend = temp.render()
+            data = yaml.safe_load(rend)
+            return data
+
         if path.name.endswith('.json'):
-            data = json.load(ofile)
+            data = json.load(ifile)
             return data
 
         if path.name.endswith('.yaml') or path.name.endswith('.yml'):
-            data = yaml.safe_load(ofile)
+            data = yaml.safe_load(ifile)
             return data
 
         raise NotImplementedError(f'Cannot deduce format from extension in path: {path}')

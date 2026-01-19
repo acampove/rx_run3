@@ -1,0 +1,5 @@
+{% set values = [1, 2, 3] %}
+key:
+{% for value in values %}
+  - value{{value}}
+{% endfor %}
