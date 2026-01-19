@@ -296,19 +296,27 @@ class SimFitter(BaseFitter, Cache):
 
         return model, sumw, res
     # ----------------------
-    def _get_cut_config(self) -> DictConfig:
+    def _get_cut_config(self, category : str) -> DictConfig:
         '''
+        Parameters
+        -------------
+        category: Category for which this cuts are used, e.g. brem_001_b1
+
         Returns
         -------------
         Dictionary with:
             Keys  : `fit`, `default`
             Values: Selection for data that was fitted and default
         '''
+
         cfg        = {}
         cfg['fit'] = sel.selection(
             process=self._cfg.sample, 
             trigger=self._trigger, 
             q2bin  =self._q2bin)
+
+        category_selection = self._get_category_selection(category = category)
+        cfg['fit'].update(category_selection)
 
         with sel.custom_selection(d_sel={}, force_override=True):
             cfg['default'] = sel.selection(
