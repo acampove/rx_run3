@@ -1,15 +1,18 @@
+{% set brems = [1, 2] %}
+{% set blocks = range(1, 9) %}
+
 output_directory : rare/rk/electron/signal 
 categories:
-  brem_one : 
-    selection : 
-      brem1 : nbrem == 1
-    model :
+{% for brem in brems %}
+{% for block in blocks %}
+  brem_00{{brem}}_b{{block}}:
+    selection:
+      block: block == {{block}}
+      brem{{brem}}: nbrem == {{brem}}
+    model:
       - dscb
-  brem_two :
-    selection :
-      brem2 : nbrem == 2
-    model :
-      - dscb
+{% endfor %}
+{% endfor %}
 sample        : Bu_Kee_eq_btosllball05_DPC
 shared        :
   - mu
@@ -27,4 +30,4 @@ fit:
       ignore_status : false 
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
-  stacked : True
+  stacked : true
