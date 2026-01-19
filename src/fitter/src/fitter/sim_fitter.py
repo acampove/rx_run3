@@ -232,11 +232,11 @@ class SimFitter(BaseFitter, Cache):
 
         return model
     # ------------------------
-    def _fit_category(
-            self,
-            skip_fit     : bool,
-            category     : str,
-            l_model_name : list[str]) -> tuple[zpdf|None,float|None,zres|None]:
+    def _get_component(
+        self,
+        skip_fit     : bool,
+        category     : str,
+        l_model_name : list[str]) -> tuple[zpdf|None,float|None,zres|None]:
         '''
         Parameters
         ----------------
@@ -359,7 +359,7 @@ class SimFitter(BaseFitter, Cache):
         l_cres  = []
         for category, data in self._cfg.categories.items():
             l_model_name     = data['model']
-            model, sumw, res = self._fit_category(
+            model, sumw, res = self._get_component(
                 skip_fit     = skip_fit,
                 category     = category,
                 l_model_name = l_model_name)
