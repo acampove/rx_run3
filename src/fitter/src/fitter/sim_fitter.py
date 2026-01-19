@@ -512,7 +512,7 @@ class SimFitter(BaseFitter, Cache):
 
         return pdf
     # ------------------------
-    def _get_ccbar_component(self) -> zpdf|None:
+    def _get_ccbar_component(self) -> zpdf | None:
         '''
         This is an interace to the PRec class, which is in
         charge of building the KDE for ccbar sample
@@ -544,7 +544,7 @@ class SimFitter(BaseFitter, Cache):
 
         return pdf
     # ------------------------
-    def get_model(self) -> zpdf|None:
+    def get_model(self) -> zpdf | None:
         '''
         Returns
         ------------
@@ -559,7 +559,7 @@ class SimFitter(BaseFitter, Cache):
         if 'sample' not in self._cfg:
             return self._get_nomc_component()
 
-        result_path = f'{self._out_path}/parameters.yaml'
+        result_path = self._out_path / 'parameters.yaml'
         if self._copy_from_cache():
             res      = OmegaConf.load(result_path)
             res      = cast(DictConfig, res)
