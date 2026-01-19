@@ -86,7 +86,7 @@ class SimFitter(BaseFitter, Cache):
             l_rdf_uid= self._l_rdf_uid,
             config   = OmegaConf.to_container(cfg, resolve=True))
     # ----------------------
-    def _get_category(self, cfg : DictConfig) -> str|None:
+    def _get_category(self, cfg : DictConfig) -> str | None:
         '''
         Parameters
         -------------
@@ -443,7 +443,7 @@ class SimFitter(BaseFitter, Cache):
 
         return 'KDE1Dim' in yaml_str
     # ------------------------
-    def _get_kde(self) -> zpdf|None:
+    def _get_kde(self) -> zpdf | None:
         '''
         - Makes KDE PDF
         - Saves fit (plot, list of parameters, etc)
