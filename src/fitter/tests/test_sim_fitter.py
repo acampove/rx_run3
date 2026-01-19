@@ -67,7 +67,7 @@ def test_signal(tmp_path : Path):
     Test for components with brem categories
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/signal_parametric.yaml')
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/signal_parametric.yaml.j2')
 
     with ExitStack() as stack:
         stack.enter_context(RDFGetter.max_entries(value = -1))
