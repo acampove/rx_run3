@@ -277,7 +277,7 @@ class SimFitter(BaseFitter, Cache):
                 data     = data,
                 model    = model,
                 res      = res,
-                out_path = self._out_path / 'category')
+                out_path = self._out_path / category)
 
             return model, sumw, res 
 
@@ -289,7 +289,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data,
             model    = model,
             res      = res,
-            out_path = self._out_path / 'category')
+            out_path = self._out_path / category)
 
         cres  = sut.zres_to_cres(res=res)
         model = self._fix_tails(pdf=model, pars=cres)
