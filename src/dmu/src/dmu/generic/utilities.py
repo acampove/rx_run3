@@ -191,19 +191,14 @@ def load_conf(
     DictConfig class from the OmegaConf package
     '''
     log.debug(f'Loading: {package}:{fpath}')
-
-    cpath = files(package).joinpath(fpath)
-    cpath = cast(str, cpath)
-
-    log.debug(f'Loading configuration from: {cpath}')
-
     try:
-        cfg = OmegaConf.load(cpath)
+        data= load_data(package=package, fpath=fpath)
+        cfg = OmegaConf.create(data)
     except ConstructorError as exc:
-        raise ConstructorError(f'Cannot load {cpath}') from exc
+        raise ConstructorError('Cannot load configuration') from exc
 
     if not isinstance(cfg, DictConfig):
-        raise ValueError(f'Object in {cpath} is not a dictionary')
+        raise ValueError('Configuration not a dictionary')
 
     _validate_schema(cfg=cfg, package=package, fpath=fpath)
 
