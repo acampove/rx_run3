@@ -62,6 +62,28 @@ def test_nocat(tmp_path : Path):
             q2bin    = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
+def test_signal(tmp_path : Path):
+    '''
+    Test for components with brem categories
+    '''
+    obs = zfit.Space('B_Mass', limits=(4500, 7000))
+    cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/signal_parametric.yaml')
+
+    with ExitStack() as stack:
+        stack.enter_context(RDFGetter.max_entries(value = -1))
+        stack.enter_context(LogStore.level('dmu:stats:fitter', 10))
+        stack.enter_context(Cache.cache_root(path = tmp_path))
+
+        ftr = SimFitter(
+            name    = 'signal',
+            trigger = Trigger.rk_ee_os,
+            sample  = Sample.bpkpee,
+            q2bin   = Qsq.central,
+            obs     = obs,
+            cfg     = cfg,
+        )
+        _ = ftr.get_model()
+# ---------------------------------------------------
 @pytest.mark.parametrize('brem', [1, 2])
 def test_with_cat(tmp_path : Path, brem : int):
     '''
