@@ -34,12 +34,12 @@ class Correction(StrEnum):
         --------------
         Latex string corresponding to correction
         '''
-        match self.value:
-            case 'smu':
+        match self:
+            case Correction.mass_scale:
                 return r'$\Delta\mu$[MeV]' 
-            case 'rsg':
+            case Correction.mass_resolution:
                 return r'$\frac{\sigma^{Data}}{\sigma^{MC}}$'
-            case 'rfr':
+            case Correction.brem_fraction:
                 return r'$\frac{BFr^{Data}}{BFr^{MC}}$'
 # ---------------------------------------
 class MVA(StrEnum):
