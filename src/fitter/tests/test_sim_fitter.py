@@ -6,6 +6,7 @@ import pytest
 from contextlib             import ExitStack
 from pathlib                import Path
 from dmu                    import LogStore
+from dmu.stats              import ModelFactory
 from dmu.stats              import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
@@ -70,15 +71,16 @@ def test_signal(tmp_path : Path):
     cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/signal_parametric.yaml.j2')
 
     with ExitStack() as stack:
+        stack.enter_context(ModelFactory.reparametrization_parameters(floating=False))
         stack.enter_context(RDFGetter.max_entries(value = -1))
         stack.enter_context(LogStore.level('dmu:stats:fitter', 10))
         stack.enter_context(Cache.cache_root(path = tmp_path))
 
         ftr = SimFitter(
-            name    = 'signal',
             trigger = Trigger.rk_ee_os,
             sample  = Sample.bpkpee,
             q2bin   = Qsq.central,
+            name    = 'signal',
             obs     = obs,
             cfg     = cfg,
         )
