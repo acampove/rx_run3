@@ -4,6 +4,7 @@ Script with functions meant to test Enums
 import ROOT
 import pytest
 
+from rx_common import Correction
 from rx_common import Component
 from rx_common import Sample 
 from rx_common import Brem 
@@ -14,6 +15,14 @@ from rx_common import Trigger
 from rx_common import Project 
 
 log=LogStore.add_logger('rx_common::test_types')
+# -------------------------------------------
+@pytest.mark.parametrize('corr', Correction)
+def test_correction(corr : Correction):
+    '''
+    Tests Correction type
+    '''
+    assert isinstance(corr.latex, str)
+    assert corr.kind in {'reso', 'scale'} 
 # -------------------------------------------
 def test_component():
     '''
