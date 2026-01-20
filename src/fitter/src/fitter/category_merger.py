@@ -1,7 +1,6 @@
 '''
 Module holding CategoryMerger class
 '''
-from typing    import Self
 from dmu       import LogStore
 from .category import Category
 
@@ -23,7 +22,7 @@ class CategoryMerger:
         '''
         self._categories = categories
     # ----------------------
-    def get_category(self) -> Self:
+    def get_category(self) -> Category:
         '''
         Returns
         -------------
