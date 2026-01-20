@@ -113,8 +113,10 @@ class Category:
         if not isinstance(cres, DictConfig):
             raise ValueError(f'Config result object is not a DictConfig after merge: {cres}')
 
+        brem = self.brem + other.brem
+
         return type(self)(
-            name      = '',
+            name      = f'brem_{brem}_b{self.block}',
             pdf       = pdf,
             sumw      = self.sumw + other.sumw,
             cres      = cres,
