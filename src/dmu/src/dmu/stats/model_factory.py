@@ -2,6 +2,7 @@
 Module storing ZModel class
 '''
 
+from contextlib     import contextmanager
 from contextlib     import ExitStack
 from typing         import Callable, Union
 
@@ -60,6 +61,9 @@ class MethodRegistry:
         return list(cls._d_method)
 #-----------------------------------------
 class ModelFactory:
+    # When reparametrizing, if True, it will float the reparametrizing
+    # parameter and fix the original one.
+    _float_reparametrized = True
     '''
     Class used to create Zfit PDFs by passing only the nicknames, e.g.:
 
@@ -628,6 +632,25 @@ class ModelFactory:
             par.floating = False
 
         return pdf
+    #-----------------------------------------
+    @classmethod
+    def reparametrization_parameters(cls, floating : bool):
+        '''
+        Parameters
+        ------------------
+        floating: If True, it will let the scales, resolutions, etc float and the original parameters fixed
+        '''
+        @contextmanager
+        def _context():
+            old_val = cls._float_reparametrized
+
+            cls._float_reparametrized = floating 
+            try:
+                yield
+            finally:
+                cls._float_reparametrized = old_val
+
+        return _context()
     #-----------------------------------------
     def get_pdf(self) -> zpdf:
         '''
