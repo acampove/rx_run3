@@ -2,16 +2,22 @@
 Module holding the Category class
 '''
 
+import re
 import yaml
 
+from typing      import Final, Self
+from functools   import cached_property
 from dataclasses import dataclass
 from omegaconf   import DictConfig
 from dmu         import LogStore
 from dmu.stats   import zfit
 from dmu.stats   import utilities as sut
+from rx_common   import Block, Brem
 
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:category')
+
+CATEGORY_REGEX : Final[str] = r'brem_(\d{3})_b(\d)'
 # -----------------------------------
 @dataclass
 class Category:
