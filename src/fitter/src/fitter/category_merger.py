@@ -1,6 +1,7 @@
 '''
 Module holding CategoryMerger class
 '''
+from typing    import Self
 from dmu       import LogStore
 from .category import Category
 
@@ -14,14 +15,19 @@ class CategoryMerger:
     - Each sample corresponds to a given brem category and block
     '''
     # ----------------------
-    def __init__(self, categories : dict[str,Category]):
+    def __init__(self, categories : list[Category]):
         '''
         Parameters
         -------------
-        categories: Dictionary 
-
+        categories: List of Category objects, representing fits to MC datasets 
+        '''
+        self._categories = categories
+    # ----------------------
+    def get_category(self) -> Self:
+        '''
         Returns
         -------------
-        
+        Category object resulting from merging input categories
         '''
-        
+
+# ----------------------
