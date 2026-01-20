@@ -28,6 +28,21 @@ class Correction(StrEnum):
     brem_fraction   = 'rfr'
     # ------------------------
     @property
+    def kind(self) -> str:
+        '''
+        Returns
+        --------------
+        reso or scale
+        '''
+        if self in [Correction.mass_scale]:
+            return 'scale'
+
+        if self in [Correction.mass_resolution, Correction.brem_fraction]:
+            return 'reso'
+
+        raise ValueError(f'Cannot retrieve kind for correction: {self}')
+    # ------------------------
+    @property
     def latex(self) -> str:
         '''
         Returns
