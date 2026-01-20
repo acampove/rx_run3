@@ -396,7 +396,7 @@ class SimFitter(BaseFitter, Cache):
 
             cat = Category(
                 name  = category,
-                model = model, 
+                pdf   = model, 
                 sumw  = sumw, 
                 cres  = cres,
                 **data)
