@@ -578,6 +578,7 @@ class SimFitter(BaseFitter, Cache):
 
             model, _ = val 
             model    = self._fix_tails(pdf=model, pars=res)
+            model    = self._float_pdf_parameters(pdf = model)
 
             return model
 
