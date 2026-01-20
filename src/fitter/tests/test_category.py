@@ -17,8 +17,12 @@ def test_simple():
     cres= OmegaConf.create(obj = {'mu' : [10., 1.]})
 
     cat = Category(
-        name = 'category',
-        model= pdf,
-        sumw = 1000.,
-        cres = cres)
+        name      = 'category',
+        pdf       = pdf,
+        sumw      = 1000.,
+        cres      = cres,
+        model     = ['gauss'],
+        selection = {'mass' : '(1)'})
+
+    assert cat.pdf == pdf
 
