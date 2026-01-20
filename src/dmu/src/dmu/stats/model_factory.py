@@ -309,27 +309,41 @@ class ModelFactory:
         zfit parameter after reprametrization, e.g. mu_reparametrized = scale * mu_original
         '''
         log.debug(f'Reparametrizing {par_name}')
-        par_const = zfit.Parameter(par_name, value, low, high)
-        par_const.floating = False
+        par_orig = zfit.Parameter(par_name, value, low, high)
 
         if   kind == 'reso':
-            par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
-
-            par       = zfit.ComposedParameter(
-                name  = f'{par_name}_cmp', 
-                func  = lambda d_par : d_par['par_const'] * d_par['reso' ], 
-                params={'par_const' : par_const, 'reso'  : par_reso } )
+            par_repr = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
+            def func(d_par) : return d_par['orig'] * d_par['repr' ]
         elif kind == 'scale':
-            par_scale = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
-
-            par       = zfit.ComposedParameter(
-                name  = f'{par_name}_cmp', 
-                func  = lambda d_par : d_par['par_const'] + d_par['scale'], 
-                params={'par_const' : par_const, 'scale' : par_scale} )
+            par_repr = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
+            def func(d_par) : return d_par['orig'] + d_par['repr']
         else:
             raise ValueError(f'Invalid kind: {kind}')
 
+        par       = zfit.ComposedParameter(
+            name  = f'{par_name}_cmp', 
+            func  = func, 
+            params= {'orig' : par_orig, 'repr' : par_repr} )
+
+        self._float_fix_reparametrized(orig = par_orig, repr = par_repr)
+
         return par
+    # ----------------------
+    def _float_fix_reparametrized(self, orig : zpar, repr : zpar) -> None:
+        '''
+        This method uses the _float_reparametrized class attribute to either
+        float the reparametrizing parameter (e.g. scale, resolution) or the original one, mu, sg.
+        Parameters
+        -------------
+        orig: Parameter before reparametrization
+        repr: Parameter after reparametrization
+        '''
+        if self._float_reparametrized:
+            orig.floating = False
+            repr.floating = True 
+        else:
+            orig.floating = True 
+            repr.floating = False 
     #-----------------------------------------
     @MethodRegistry.register('exp')
     def _get_exponential(self, suffix : str = '') -> zpdf:
