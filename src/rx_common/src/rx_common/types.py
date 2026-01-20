@@ -264,8 +264,12 @@ class Sample(StrEnum):
             # ------
             case 'bpkpjpsiee':
                 return ['bpjk', 'jpee']
+            case 'bppipjpsiee':
+                return ['bpjpi', 'jpee']
             case 'bpkpjpsimm':
                 return ['bpjk', 'jpmm']
+            case 'bppipjpsimm':
+                return ['bpjpi', 'jpmm']
             case 'bpkppsi2ee':
                 return ['bppsk', 'psee']
             case 'bpkppsi2mm':
