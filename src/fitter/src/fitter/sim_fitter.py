@@ -23,6 +23,8 @@ from zfit.param         import Parameter
 from .base_fitter       import BaseFitter
 from .data_preprocessor import DataPreprocessor
 from .prec              import PRec
+from .category          import Category
+from .category_merger   import CategoryMerger
 
 log=LogStore.add_logger('fitter:sim_fitter')
 # ------------------------
@@ -371,9 +373,7 @@ class SimFitter(BaseFitter, Cache):
         to the fitted values
         - Instance of DictConfig storing all the fitting parameters
         '''
-        l_pdf   = []
-        l_yield = []
-        l_cres  = []
+        categories : list[Category] = [] 
         for category, data in self._cfg.categories.items():
             l_model_name     = data['model']
             model, sumw, res = self._get_component(
@@ -391,17 +391,21 @@ class SimFitter(BaseFitter, Cache):
             if res is not None:
                 cres = sut.zres_to_cres(res)
 
-            l_pdf.append(model)
-            l_yield.append(sumw)
-            l_cres.append(cres)
+            cat = Category(
+                name  = category,
+                model = model, 
+                sumw  = sumw, 
+                cres  = cres,
+                **data)
 
-        if len(l_pdf) == 0:
+            categories.append(cat)
+
+        if not categories: 
             return None
 
-        return self._merge_categories(
-            l_pdf  =l_pdf,
-            l_yield=l_yield,
-            l_cres =l_cres)
+        mgr = CategoryMerger(categories = categories)
+
+        return mgr.get_model()
     # ------------------------
     def _merge_categories(
         self,
