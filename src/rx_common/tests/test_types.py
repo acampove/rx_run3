@@ -42,9 +42,12 @@ def test_brem():
     '''
     Test for Enum representing brem
     '''
-    assert Brem.zero == '000'
-    assert Brem.one  == '001'
-    assert Brem.two  == '002'
+    assert Brem.zero    == '000'
+    assert Brem.one     == '001'
+    assert Brem.two     == '002'
+    assert Brem.one_two == '012'
+
+    assert Brem.one + Brem.two == Brem.one_two
 # -------------------------------------------
 @pytest.mark.parametrize('sample', Sample)
 def test_sample_properties(sample : Sample):

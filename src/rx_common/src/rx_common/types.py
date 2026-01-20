@@ -1,7 +1,7 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum import StrEnum
+from enum import StrEnum, Enum
 
 # ---------------------------------------
 class Block(StrEnum):
@@ -67,13 +67,51 @@ class MVA(StrEnum):
     cmb = 'cmb'
     prc = 'prc'
 # ---------------------------------------
-class Brem(StrEnum):
+class Brem(Enum):
     '''
     Enum meant to represent brem category
     '''
-    zero = '000'
-    one  = '001'
-    two  = '002'
+    zero    = '000'
+    one     = '001'
+    two     = '002'
+    one_two = '012'
+    # ----------------------
+    def __add__(self, other : 'Brem') -> 'Brem':
+        '''
+        Parameters
+        -------------
+        other: Value of brem to add to this one 
+
+        Returns
+        -------------
+        Brem category resulting from sum, when sum means
+        merging corresponding samples
+        '''
+        c12 = self == Brem.one and other == Brem.two
+        c21 = self == Brem.two and other == Brem.one
+
+        if c12 or c21:
+            return Brem.one_two
+    
+        raise ValueError(f'Undefined sum of {self} and {other}')
+    # ----------------------
+    def __str__(self) -> str:
+        '''
+        Returns string representation
+        '''
+        return self.value
+    # ----------------------
+    def __eq__(self, other) -> bool:
+        if isinstance(other, str):
+            return self.value == other 
+
+        if isinstance(other, Brem):
+            return self.value == other.value
+
+        return False
+    # ----------------------
+    def __hash__(self) -> int:
+        return super().__hash__()
 # ---------------------------------------
 class Component(StrEnum):
     r'''
