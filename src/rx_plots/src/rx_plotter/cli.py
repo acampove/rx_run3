@@ -42,8 +42,7 @@ def refitting(
             refitting_plot(project=project, qsq=qsq, trigger=trigger)
     else:
         log.info(f'Running over full dataset with {nthread} threads')
-        with RDFGetter.multithreading(nthreads = nthread):
-            refitting_plot(project=project, qsq=qsq, trigger=trigger)
+        refitting_plot(project=project, qsq=qsq, trigger=trigger)
 # ----------------------
 @app.command()
 def control_region(
@@ -58,30 +57,29 @@ def control_region(
     trig   = info.get_trigger(project = proj, channel = chan, kind = kind)
     sample = 'DATA_24*'
 
-    with RDFGetter.multithreading(nthreads = 10):
-        gtr = RDFGetter(sample = Sample(sample), trigger = Trigger(trig))
-        rdf = gtr.get_rdf(per_file = False)
+    gtr = RDFGetter(sample = Sample(sample), trigger = Trigger(trig))
+    rdf = gtr.get_rdf(per_file = False)
 
-        if   mass == 'B_Mass_hdpipi':
-            tg_cut = 'L1_PROBNN_K < 0.1 && L1_PROBNN_K < 0.1'
-        elif mass == 'B_Mass_hdkk':
-            tg_cut = 'L1_PROBNN_K > 0.1 && L1_PROBNN_K > 0.1'
-        else:
-            raise ValueError(f'Invalid mass: {mass}')
+    if   mass == 'B_Mass_hdpipi':
+        tg_cut = 'L1_PROBNN_K < 0.1 && L1_PROBNN_K < 0.1'
+    elif mass == 'B_Mass_hdkk':
+        tg_cut = 'L1_PROBNN_K > 0.1 && L1_PROBNN_K > 0.1'
+    else:
+        raise ValueError(f'Invalid mass: {mass}')
 
-        l1_cut = 'L1_PROBNN_E < 0.2 || L1_PID_E < 3.0'
-        l2_cut = 'L2_PROBNN_E < 0.2 || L2_PID_E < 3.0'
-        mv_cut = '(mva_cmb > 0.50) && (mva_prc > 0.50)'
+    l1_cut = 'L1_PROBNN_E < 0.2 || L1_PID_E < 3.0'
+    l2_cut = 'L2_PROBNN_E < 0.2 || L2_PID_E < 3.0'
+    mv_cut = '(mva_cmb > 0.50) && (mva_prc > 0.50)'
 
-        with sel.custom_selection(d_sel = {'pid_l' : f'({l1_cut}) && ({l2_cut}) && ({tg_cut})', 'bdt' : mv_cut}):
-            rdf = sel.apply_full_selection(
-                rdf     = rdf, 
-                q2bin   = qsq, 
-                process = sample, 
-                out_path= Path('./cutflow'),
-                trigger = trig)
+    with sel.custom_selection(d_sel = {'pid_l' : f'({l1_cut}) && ({l2_cut}) && ({tg_cut})', 'bdt' : mv_cut}):
+        rdf = sel.apply_full_selection(
+            rdf     = rdf, 
+            q2bin   = qsq, 
+            process = sample, 
+            out_path= Path('./cutflow'),
+            trigger = trig)
 
-        arr_mass = rdf.AsNumpy([mass])[mass]
+    arr_mass = rdf.AsNumpy([mass])[mass]
 
     lmass = {'B_Mass_hdpipi' : r'$M_{e\to\pi}$', 'B_Mass_hdkk' : r'$M_{e\to K}$'}[mass]
     label = {'RK' : f'{lmass}$(B^+)$[MeV]' , 'RKst' : f'{lmass}$(B^0)$[MeV]'}[proj]
