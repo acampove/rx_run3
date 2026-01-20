@@ -174,7 +174,10 @@ class SimFitter(BaseFitter, Cache):
 
         return pdf
     # ------------------------
-    def _fix_tails(self, pdf : zpdf, pars : DictConfig) -> zpdf:
+    def _fix_tails(
+        self, 
+        pdf  : zpdf, 
+        pars : DictConfig) -> zpdf:
         '''
         Parameters
         --------------
@@ -354,7 +357,7 @@ class SimFitter(BaseFitter, Cache):
 
         return par
     # ------------------------
-    def _get_full_model(self, skip_fit : bool) -> tuple[zpdf,DictConfig]|None:
+    def _get_full_model(self, skip_fit : bool) -> tuple[zpdf, DictConfig] | None:
         '''
         Parameters
         ---------------
