@@ -313,7 +313,7 @@ def print_pdf(
     for msg in l_msg:
         if   level == 20:
             log.info(msg)
-        elif level == 30:
+        elif level == 10:
             log.debug(msg)
         else:
             raise ValueError(f'Invalid level: {level}')
