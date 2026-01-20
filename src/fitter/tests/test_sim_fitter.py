@@ -82,7 +82,11 @@ def test_signal(tmp_path : Path):
             obs     = obs,
             cfg     = cfg,
         )
-        _ = ftr.get_model()
+        pdf = ftr.get_model()
+
+        assert pdf is not None
+
+        sut.print_pdf(pdf)
 # ---------------------------------------------------
 @pytest.mark.parametrize('brem', [1, 2])
 def test_with_cat(tmp_path : Path, brem : int):
