@@ -223,16 +223,19 @@ def test_rep_signal(
     l_flt = []
     d_rep = {'mu' : 'scale', 'sg' : 'reso'}
 
-    mod   = ModelFactory(
-        preffix = name,
-        obs     = Data.obs,
-        l_pdf   = pdfs,
-        d_rep   = d_rep,
-        l_shared= l_shr,
-        l_float = l_flt)
-    pdf   = mod.get_pdf()
+    with ModelFactory.reparametrization_parameters(floating = scales_must_float):
+        mod = ModelFactory(
+            preffix = name,
+            obs     = Data.obs,
+            l_pdf   = pdfs,
+            d_rep   = d_rep,
+            l_shared= l_shr,
+            l_float = l_flt)
+        pdf = mod.get_pdf()
 
-    print_pdf(pdf)
+    _check_reparametrized_pdf(
+        pdf               = pdf, 
+        scales_must_float = scales_must_float)
 #--------------------------
 @pytest.mark.parametrize('kind', ['cbr', 'cbl', 'dscb', 'gauss'])
 def test_override_parameter(kind: str):
