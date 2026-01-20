@@ -6,6 +6,7 @@ provided by this project
 import os
 import typer
 import mplhep
+import pandas              as pnd
 import matplotlib.pyplot   as plt
 
 from pathlib               import Path
@@ -97,6 +98,45 @@ def control_region(
     out_path.parent.mkdir(parents = True, exist_ok = True)
 
     plt.savefig(out_path)
+# ----------------------
+@app.command()
+def block_fraction_vs_q2(
+    sample : Sample = typer.Option(..., '--sample' , '-s', help='MC sample, e.g. bpkpee'),
+    trigger: Trigger= typer.Option(..., '--trigger', '-t', help='Trigger, e.g. rk_os_ee')) -> None:
+    '''
+    Used to plot block fraction in MC vs q2 
+    '''
+    gtr_true = RDFGetter(sample = sample, trigger = trigger, tree = 'MCDecayTree')
+    rdf_true = gtr_true.get_rdf(per_file = False)
+
+    gtr_reco = RDFGetter(sample = sample, trigger = trigger, tree = 'DecayTree')
+    rdf_reco = gtr_reco.get_rdf(per_file = False)
+
+    with sel.custom_selection(d_sel = {'q2' : '(1)'}):
+        rdf_reco = sel.apply_full_selection(
+            rdf     = rdf_reco, 
+            process = sample,
+            q2bin   = Qsq.central,
+            trigger = trigger)
+
+    l_data : list[dict[str,int]] = [] 
+    for block in range(1, 9):
+        rdf_true_block = rdf_true.Filter(f'block == {block}')
+        rdf_reco_block = rdf_reco.Filter(f'block == {block}')
+
+        true_yield = rdf_true_block.Count().GetValue()
+        reco_yield = rdf_reco_block.Count().GetValue()
+
+        data = {
+            'true' : true_yield,
+            'reco' : reco_yield,
+        }
+
+        l_data.append(data)
+
+    df = pnd.DataFrame(l_data)
+
+    print(df)
 # ----------------------
 if __name__ == '__main__':
     app()
