@@ -2,10 +2,13 @@
 Module holding the Category class
 '''
 
+import yaml
+
 from dataclasses import dataclass
 from omegaconf   import DictConfig
-from dmu.stats   import zfit
 from dmu         import LogStore
+from dmu.stats   import zfit
+from dmu.stats   import utilities as sut
 
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:category')
