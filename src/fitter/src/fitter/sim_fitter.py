@@ -385,6 +385,9 @@ class SimFitter(BaseFitter, Cache):
                 log.warning(f'Skipping category {category}')
                 continue
 
+            if sumw is None:
+                raise ValueError(f'Yield in MC for category {category} is None')
+
             # Will be None if fit is cached
             # and this is only returning model
             cres = OmegaConf.create({})
