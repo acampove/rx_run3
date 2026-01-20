@@ -292,6 +292,18 @@ class ModelFactory:
         value     : float, 
         low       : float, 
         high      : float) -> zpar:
+        '''
+        Parameters
+        ------------------
+        par_name: Name of original (before reparametrization) parameter
+        kind    : E.g. reso, scale
+        value   : Default value of original parameter
+        low/high: Bounds for original parameter
+
+        Returns
+        ------------------
+        zfit parameter after reprametrization, e.g. mu_reparametrized = scale * mu_original
+        '''
         log.debug(f'Reparametrizing {par_name}')
         par_const = zfit.Parameter(par_name, value, low, high)
         par_const.floating = False
