@@ -6,11 +6,13 @@ import numexpr
 import mplhep
 import matplotlib.pyplot as plt
 
-from pathlib                        import Path
-from dmu.generic                    import utilities as gut
-from rx_plotter.fit_parameters_conf import FitParametersConf, GraphConf, Info, PlotConf
-from fitter                         import ParameterReader
-from dmu                            import LogStore, Measurement
+from pathlib              import Path
+from fitter               import ParameterReader
+from dmu                  import LogStore
+from dmu.stats            import Measurement
+from dmu.generic          import utilities as gut
+
+from .fit_parameters_conf import FitParametersConf, GraphConf, Info, PlotConf
 
 log=LogStore.add_logger('rx_plots:fit_parameters')
 # ----------------------
