@@ -26,3 +26,5 @@ def test_simple():
 
     assert cat.pdf == pdf
 
+    print(cat)
+
