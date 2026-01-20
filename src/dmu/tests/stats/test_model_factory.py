@@ -188,24 +188,33 @@ def test_all_pdf(name : str):
     print_pdf(pdf)
 #--------------------------
 @pytest.mark.parametrize(
-        'pdfs',
-        [
-            ['bgauss'],
-            ['ggauss'],
-            ['egauss'],
-            ['qgauss'],
-            ['gauss'],
-            ['cbl'],
-            ['cbr'],
-            ['cbg'],
-            ['dscb'],
-            ['cbl', 'cbl'],
-            ['cbl', 'cbr']])
-def test_rep_signal(pdfs : list[str]):
+    'pdfs', [
+    ['ggauss'],
+    ['egauss'],
+    ['qgauss'],
+    ['gauss'],
+    ['cbl'],
+    ['cbr'],
+    ['dscb'],
+    ['cbl', 'cbl'],
+    ['cbl', 'cbr']])
+@pytest.mark.parametrize(
+    'scales_must_float', 
+    [True, False])
+def test_rep_signal(
+    scales_must_float : bool,
+    pdfs              : list[str]):
     '''
     Test reparametrized signal PDFs, i.e.:
     - Use mass scales and resolutions
     - Use brem fractions
+
+    Skipping bgauss and cbg, which have two widths
+
+    Parameters
+    -----------------
+    pdfs             : List of PDF names
+    scales_must_float: If true will float scales, false will float original parameters
     '''
     name  = 'reparametrized'
     log.info(f'Testing {name}')
