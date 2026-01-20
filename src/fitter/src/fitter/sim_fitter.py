@@ -527,6 +527,29 @@ class SimFitter(BaseFitter, Cache):
             **kwargs)
 
         return pdf
+    # ----------------------
+    def _float_pdf_parameters(self, pdf : zpdf) -> zpdf:
+        '''
+        Parameters
+        -------------
+        pdf: zfit PDF
+
+        Returns
+        -------------
+        PDF where the right parameters are floating, right parameters are:
+
+        - Parameters whose names end in `_flt`
+        '''
+        pars = pdf.get_params(floating = False)
+
+        for par in pars:
+            if not par.name.endswith('_flt'):
+                continue
+
+            log.debug(f'Floating: {par.name}')
+            par.floating = True
+
+        return pdf
     # ------------------------
     def get_model(self) -> zpdf | None:
         '''
@@ -572,5 +595,8 @@ class SimFitter(BaseFitter, Cache):
         OmegaConf.save(cres, result_path)
 
         self._cache()
+
+        full_model = self._float_pdf_parameters(pdf = full_model)
+
         return full_model
 # ------------------------
