@@ -254,7 +254,7 @@ class ModelFactory:
 
         if rep_kind is not None:
             log.info(f'Reparametrizing {par_name}')
-            par  = self._get_reparametrization(
+            par  = self.get_reparametrization(
                 par_name = par_name, 
                 kind     = rep_kind, 
                 value    = val, 
@@ -289,8 +289,9 @@ class ModelFactory:
 
         return self._d_rep.get(name)
     #-----------------------------------------
-    def _get_reparametrization(
-        self, 
+    @classmethod
+    def get_reparametrization(
+        cls, 
         par_name  : str, 
         kind      : str, 
         value     : float, 
@@ -325,11 +326,12 @@ class ModelFactory:
             func  = func, 
             params= {'orig' : par_orig, 'repr' : par_repr} )
 
-        self._float_fix_reparametrized(orig = par_orig, repr = par_repr)
+        cls._float_fix_reparametrized(orig = par_orig, repr = par_repr)
 
         return par
     # ----------------------
-    def _float_fix_reparametrized(self, orig : zpar, repr : zpar) -> None:
+    @classmethod
+    def _float_fix_reparametrized(cls, orig : zpar, repr : zpar) -> None:
         '''
         This method uses the _float_reparametrized class attribute to either
         float the reparametrizing parameter (e.g. scale, resolution) or the original one, mu, sg.
@@ -338,7 +340,7 @@ class ModelFactory:
         orig: Parameter before reparametrization
         repr: Parameter after reparametrization
         '''
-        if self._float_reparametrized:
+        if cls._float_reparametrized:
             orig.floating = False
             repr.floating = True 
         else:
