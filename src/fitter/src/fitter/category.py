@@ -33,4 +33,19 @@ class Category:
         self._model= model
         self._sumw = sumw
         self._cres = cres
+    # ----------------------
+    @property
+    def cres(self) -> DictConfig:
+        """
+        Object holding parameternames
+        mapped to values and error tuples
+        """
+        return self._cres
+    # ----------------------
+    @property
+    def model(self) -> zpdf:
+        """
+        Zfit PDF
+        """
+        return self._model
 # -----------------------------------
