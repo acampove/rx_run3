@@ -56,9 +56,9 @@ class Brem(StrEnum):
     '''
     Enum meant to represent brem category
     '''
-    zero = '0'
-    one  = '1'
-    two  = '2'
+    zero = '000'
+    one  = '001'
+    two  = '002'
 # ---------------------------------------
 class Component(StrEnum):
     r'''
