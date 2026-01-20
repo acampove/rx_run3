@@ -4,22 +4,46 @@ Module used to test CategoryMerger class
 
 from dmu       import LogStore
 from dmu.stats import zfit
+from dmu.stats import utilities as sut
+from omegaconf import OmegaConf
 from fitter    import CategoryMerger
+from fitter    import Category
 
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:test_category_merger')
+# ----------------------------------------
+def _get_category(name : str) -> Category:
+    '''
+    Parameters
+    -------------
+    name: Nam of category
+
+    Returns
+    -------------
+    Category object
+    '''
+    pdf  = sut.get_model(kind = 'signal', suffix = 'brem_001_b1')
+    cres = OmegaConf.create({'mu' : [10., 1.]})
+
+    cat  = Category(
+        name      = name, 
+        pdf       = pdf, 
+        sumw      = 1000., 
+        cres      = cres,
+        selection = {'mass' : '(1)'},
+        model     = ['gauss'])
+
+    return cat
 # ----------------------------------------
 def test_simple():
     '''
     Simplest test of merger of categories
     '''
-    mgr = CategoryMerger(
-        pdfs       = l_pdf, 
-        yields     = l_yield, 
-        results    = l_cres,
-        categories = categories)
+    names      = [ f'brem_00{brem}_b{block}' for brem in range(1, 3) for block in range(1, 9) ]
+    categories = [ _get_category(name = name) for name in names ]
 
-    pdf = mgr.get_model()
+    mgr = CategoryMerger(categories = categories)
+    cat = mgr.get_category()
 
-    assert isinstance(pdf, zpdf)
+    assert isinstance(cat, Category)
 # ----------------------------------------
