@@ -40,6 +40,37 @@ class Category:
     cres      : DictConfig
     model     : list[str]
     selection : dict[str,str]
+    # ----------------------
+    @cached_property
+    def block(self) -> Block:
+        '''
+        Returns
+        -------------
+        Block associated to this category
+        '''
+        mtch = re.match(CATEGORY_REGEX, self.name)
+        if not mtch:
+            raise ValueError(f'Cannot extract block information from {self.name}')
+
+        block_str = mtch.group(2)
+
+        return Block(block_str)
+    # ----------------------
+    @cached_property
+    def brem(self) -> Brem:
+        '''
+        Returns
+        -------------
+        Block associated to this category
+        '''
+        mtch = re.match(CATEGORY_REGEX, self.name)
+        if not mtch:
+            raise ValueError(f'Cannot extract brem information from {self.name}')
+
+        brem_str = mtch.group(1)
+
+        return Brem(brem_str)
+    # ----------------------
     # ----------------------------
     def __str__(self) -> str:
         pdfs  = sut.print_pdf(pdf = self.pdf, level = 10)
