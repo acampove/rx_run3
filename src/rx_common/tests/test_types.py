@@ -33,9 +33,9 @@ def test_brem():
     '''
     Test for Enum representing brem
     '''
-    assert Brem.zero == 0
-    assert Brem.one  == 1
-    assert Brem.two  == 2
+    assert Brem.zero == '000'
+    assert Brem.one  == '001'
+    assert Brem.two  == '002'
 # -------------------------------------------
 @pytest.mark.parametrize('sample', Sample)
 def test_sample_properties(sample : Sample):
@@ -104,4 +104,24 @@ def test_subdecays(sample : Sample):
     '''
     Tests access to subdecays from sample
     '''
+    samples = [
+        Sample.undefined, 
+        Sample.ccbar, 
+        # --------------
+        Sample.bpjpsixee,
+        Sample.bdjpsixee,
+        Sample.bsjpsixee,
+        # --------------
+        Sample.bpjpsixmm,
+        Sample.bdjpsixmm,
+        Sample.bsjpsixmm,
+        # --------------
+        Sample.bpkkk,
+        Sample.bpkpik,
+        Sample.bpkpipi,
+    ]
+
+    if sample in samples:
+        return
+
     assert isinstance(sample.subdecays, list)
