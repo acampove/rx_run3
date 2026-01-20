@@ -502,7 +502,7 @@ class ModelFactory:
         sg  = self._get_parameter(kind = 'egauss', name = 'sg', suffix = suffix)
         lm  = self._get_parameter(kind = 'egauss', name = 'lm', suffix = suffix)
 
-        pdf = zfit.pdf.ExpModGauss(
+        pdf = zfit.pdf.ExpModGauss( # type: ignore
             mu   =mu, 
             sigma=sg, 
             lambd=lm, 
