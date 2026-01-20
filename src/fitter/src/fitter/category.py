@@ -34,4 +34,17 @@ class Category:
     cres      : DictConfig
     model     : list[str]
     selection : dict[str,str]
+    # ----------------------------
+    def __str__(self) -> str:
+        pdfs  = sut.print_pdf(pdf = self.pdf, level = 10)
+
+        value = f'Name: {self.name}\n'
+        value+= f'Sumw: {self.sumw:.2f}\n'
+        value+= f'Models: {self.model}\n'
+        value+= 'Selection:\n'
+        value+= yaml.safe_dump(self.selection) + '\n'
+        value+= 'PDF:\n'
+        value+= '\n'.join(pdfs)
+
+        return value
 # -----------------------------------
