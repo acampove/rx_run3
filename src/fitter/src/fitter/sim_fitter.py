@@ -407,8 +407,9 @@ class SimFitter(BaseFitter, Cache):
             return None
 
         mgr = CategoryMerger(categories = categories)
+        cat = mgr.get_category()
 
-        return mgr.get_model()
+        return cat.pdf, cat.cres
     # ------------------------
     def _merge_categories(
         self,
