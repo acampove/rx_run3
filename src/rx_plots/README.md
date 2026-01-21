@@ -220,3 +220,12 @@ which will plot the variables in the config:
 src/rx_plotter_data/refitting/vx.yaml
 ```
 
+## Efficiency checks
+
+### Efficiency ratio per block
+
+To check the fraction of efficiency for each block and in different $q^2$ bins do:
+
+```bash
+rxplt block-fraction-vs-q2 --sample Bu_Kee_eq_btosllball05_DPC --trigger Hlt2RD_BuToKpEE_MVA
+```
