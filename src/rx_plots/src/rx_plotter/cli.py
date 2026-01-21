@@ -4,6 +4,7 @@ provided by this project
 '''
 
 import os
+import tqdm
 import typer
 import mplhep
 import pandas              as pnd
@@ -106,6 +107,52 @@ def block_fraction_vs_q2(
     '''
     Used to plot block fraction in MC vs q2 
     '''
+    cache_path = Path(f'/tmp/block_fraction_vs_q2/{sample}_{trigger}.json')
+    if cache_path.exists():
+        log.info(f'Found cached data, loading from: {cache_path}')
+        df = pnd.read_json(cache_path)
+    else:
+        df = _calculate_stats(
+            sample     = sample,
+            trigger    = trigger,
+            cache_path = cache_path)
+
+    _plot_block_fraction_vs_q2(df = df)
+# ----------------------
+def _plot_block_fraction_vs_q2(df : pnd.DataFrame) -> None:
+    '''
+    Parameters
+    -------------
+    df: Pandas dataframe with block, q2bin, true and reco yields
+    '''
+    df['Efficiency'] = df['reco'] / df['true']
+
+    ax = None
+    for q2bin, df_q2 in df.groupby('q2bin'):
+        df_q2['eff_frac'] = df_q2['Efficiency'] / df_q2['Efficiency'].sum()
+
+        label = Qsq(q2bin).latex
+        ax    = df_q2.plot(x='block', y='eff_frac', label=label, ax = ax)
+
+    plt.ylim(bottom=0.0, top=0.20)
+    plt.ylabel(r'$\varepsilon^{block}(q^2)/\varepsilon(q^2)$')
+    plt.show()
+# ----------------------
+def _calculate_stats(
+    sample     : Sample,
+    trigger    : Trigger,
+    cache_path : Path) -> pnd.DataFrame:
+    '''
+    Parameters
+    -------------
+    cache_path: Path used to store as JSON, the dataframe
+    sample    : MC Sample to study
+    trigger   : Trigger under which to study it
+
+    Returns
+    -------------
+    Pandas dataframe with yields per q2bin, block and for true and reco columns
+    '''
     gtr_true = RDFGetter(sample = sample, trigger = trigger, tree = 'MCDecayTree')
     rdf_true = gtr_true.get_rdf(per_file = False)
 
@@ -119,24 +166,46 @@ def block_fraction_vs_q2(
             q2bin   = Qsq.central,
             trigger = trigger)
 
-    l_data : list[dict[str,int]] = [] 
-    for block in range(1, 9):
-        rdf_true_block = rdf_true.Filter(f'block == {block}')
-        rdf_reco_block = rdf_reco.Filter(f'block == {block}')
+    l_data : list[dict] = [] 
+    entries = [ (block, q2bin) for block in range(1, 9) for q2bin in Qsq ]
 
-        true_yield = rdf_true_block.Count().GetValue()
-        reco_yield = rdf_reco_block.Count().GetValue()
+    true_yield = rdf_true.Count()
+    for block, q2bin in entries:
+        if q2bin == Qsq.all:
+            continue
+
+        q2_cut     = sel.get_q2_cut(q2bin = q2bin)
+        rdf_sel    = rdf_reco
+        rdf_sel    = rdf_sel.Filter(f'block == {block}', 'block')
+        rdf_sel    = rdf_sel.Filter(             q2_cut, 'q2bin')
+        reco_yield = rdf_sel.Count()
 
         data = {
+            'block': block,
+            'q2bin': q2bin,
             'true' : true_yield,
             'reco' : reco_yield,
         }
 
         l_data.append(data)
 
-    df = pnd.DataFrame(l_data)
+    data = []
+    for item in tqdm.tqdm(l_data, ascii=' -'):
+        data.append({
+            'block': item['block'],
+            'q2bin': item['q2bin'],
+            'true' : item['true' ].GetValue(),
+            'reco' : item['reco' ].GetValue()
+        })
 
-    print(df)
+    df = pnd.DataFrame(data)
+
+    log.info(f'Caching to: {cache_path}')
+
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_json(cache_path, indent=2)
+
+    return df
 # ----------------------
 if __name__ == '__main__':
     app()
