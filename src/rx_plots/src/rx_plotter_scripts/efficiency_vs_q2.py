@@ -136,11 +136,10 @@ def _get_data() -> pnd.DataFrame:
 
     [sample, trigger] = Data.cfg.input[f'{Data.analysis}_{Data.channel}']
 
-    with RDFGetter.multithreading(nthreads=5):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
-        rdf = _add_flags(rdf=rdf, sample=sample, trigger=trigger)
-        data= rdf.AsNumpy(Data.l_col)
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf(per_file=False)
+    rdf = _add_flags(rdf=rdf, sample=sample, trigger=trigger)
+    data= rdf.AsNumpy(Data.l_col)
 
     df= pnd.DataFrame(data)
     df.attrs['total'] = _get_mcdt_q2(sample=sample, trigger=trigger)
