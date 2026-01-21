@@ -7,6 +7,7 @@ import re
 import copy
 import yaml
 
+from functools              import cache
 from pathlib                import Path
 from contextlib             import contextmanager
 from importlib.resources    import files
@@ -18,7 +19,7 @@ from dmu.generic            import utilities          as gut
 from ap_utilities.decays    import utilities          as aput
 from rx_selection           import truth_matching     as tm
 from rx_selection           import version_management as vman
-from rx_common              import info
+from rx_common              import Qsq, info
 
 log=LogStore.add_logger('rx_selection:selection')
 #-----------------------
