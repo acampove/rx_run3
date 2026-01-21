@@ -246,6 +246,28 @@ class Qsq(StrEnum):
     psi2    = 'psi2'
     high    = 'high'
     # --------------------------
+    @property
+    def latex(self) -> str:
+        '''
+        Returns
+        --------------
+        Latex representation of this bin
+        needed for plots 
+        '''
+        match self:
+            case Qsq.low:
+                return 'Low' 
+            case Qsq.central:
+                return 'Central' 
+            case Qsq.jpsi:
+                return r'$J/\psi$' 
+            case Qsq.psi2:
+                return r'$\psi(2S)$' 
+            case Qsq.high:
+                return 'High' 
+            case Qsq.all:
+                return 'All'
+    # --------------------------
     def __str__(self):
         return self.value
 # ---------------------------------------
