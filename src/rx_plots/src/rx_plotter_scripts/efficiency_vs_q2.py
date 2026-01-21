@@ -285,11 +285,10 @@ def _select_dataframe(df : pnd.DataFrame, q2bin : Qsq) -> pnd.DataFrame:
         log.debug('Skipping q2 cut')
         return df
 
-    d_sel      = sel.load_selection_config()
-    q2cut :str = d_sel['q2_common'][q2bin]
-    cut        = formulate.from_root(string=q2cut)
-    num_cut    = cut.to_numexpr() # type: ignore
-    df         = df.query(num_cut)
+    q2cut   = sel.get_q2_cut(q2bin = q2bin)
+    cut     = formulate.from_root(exp=q2cut)
+    num_cut = cut.to_numexpr() # type: ignore
+    df      = df.query(num_cut)
 
     return df
 # ----------------------
