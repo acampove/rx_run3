@@ -185,6 +185,21 @@ def selection(
     _print_selection(d_cut_final)
 
     return d_cut_final
+# ----------------------
+def get_q2_cut(q2bin : Qsq) -> str:
+    '''
+    Parameters
+    -------------
+    q2bin: E.g. central
+
+    Returns
+    -------------
+    Cut defining q2bin
+    '''
+    data = _load_selection_config()
+    q2sel= data['q2_common']
+
+    return q2sel[q2bin]
 #-----------------------
 def _update_mass_cuts(
         d_cut   : dict[str,str],
