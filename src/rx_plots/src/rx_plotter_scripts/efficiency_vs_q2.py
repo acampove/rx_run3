@@ -7,19 +7,20 @@ import copy
 import random
 import argparse
 import formulate
-from typing       import cast
-
 import numpy
 import mplhep
 import matplotlib.pyplot   as plt
 import pandas              as pnd
+
+from typing                import cast
 from hist                  import Hist
 from hist.axis             import Regular
 from ROOT                  import RDataFrame, RDF # type: ignore
 from omegaconf             import DictConfig
-from dmu.logging.log_store import LogStore
+from dmu                   import LogStore
 from dmu.generic           import utilities as gut
-from rx_data.rdf_getter    import RDFGetter
+from rx_common             import Qsq, Sample, Trigger
+from rx_data               import RDFGetter
 from rx_selection          import selection as sel
 
 log=LogStore.add_logger('rx_plots:efficiency_vs_q2')
