@@ -239,12 +239,13 @@ class Qsq(StrEnum):
     '''
     This class represents different q2 bins
     '''
+    all     = 'all'
     low     = 'low'
     central = 'central'
     jpsi    = 'jpsi'
     psi2    = 'psi2'
     high    = 'high'
-
+    # --------------------------
     def __str__(self):
         return self.value
 # ---------------------------------------
