@@ -255,7 +255,8 @@ def _use_smeared_masses(cuts : dict[str,str], q2bin : str) -> dict[str,str]:
 
     return cuts
 #-----------------------
-def load_selection_config() -> dict:
+@cache
+def _load_selection_config() -> dict:
     '''
     Returns dictionary with the latest selection config
     '''
@@ -276,7 +277,10 @@ def load_selection_config() -> dict:
 
     return d_sel
 #-----------------------
-def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
+def _get_selection(
+    chan   : str, 
+    proj   : str, 
+    q2_bin : str) -> dict[str,str]:
     '''
     Parameters
     -----------------
@@ -291,7 +295,7 @@ def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
     key  : Label of cut, e.g. q2
     value: Cut expression e.g. q2 > 1e6
     '''
-    cfg = load_selection_config()
+    cfg = _load_selection_config()
 
     if proj not in cfg:
         raise ValueError(f'Cannot find {proj} in config')
