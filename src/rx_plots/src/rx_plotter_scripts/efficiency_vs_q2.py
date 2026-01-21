@@ -99,7 +99,7 @@ def _add_flags(
 
     return rdf
 # ----------------------
-def _get_mcdt_q2(sample : str, trigger : str) -> numpy.ndarray:
+def _get_mcdt_q2(sample : Sample, trigger : Trigger) -> numpy.ndarray:
     '''
     Parameters
     -------------
@@ -271,7 +271,7 @@ def _get_out_path(var : str, q2bin : str) -> str:
 
     return out_path
 # ----------------------
-def _select_dataframe(df : pnd.DataFrame, q2bin : str) -> pnd.DataFrame:
+def _select_dataframe(df : pnd.DataFrame, q2bin : Qsq) -> pnd.DataFrame:
     '''
     Parameters
     -------------
@@ -297,7 +297,7 @@ def _select_dataframe(df : pnd.DataFrame, q2bin : str) -> pnd.DataFrame:
 def _plot(
     df   : pnd.DataFrame,
     var  : str,
-    q2bin: str) -> None:
+    q2bin: Qsq) -> None:
     '''
     Parameters
     -------------
@@ -340,7 +340,7 @@ def main(cfg : DictConfig | None = None) -> None:
     Data.cfg = gut.load_conf(package='rx_plotter_data', fpath='efficiency/vs_q2.yaml')
 
     df = _get_data()
-    for q2bin in ['none', 'low', 'cen_low', 'cen_high', 'central', 'jpsi', 'psi2', 'high']:
+    for q2bin in Qsq: 
         _plot(df=df, var='q2'     , q2bin=q2bin)
         _plot(df=df, var='q2_true', q2bin=q2bin)
 # ----------------------
