@@ -22,6 +22,10 @@ log = LogStore.add_logger('rx_data:copy_samples')
 class Data:
     '''
     Class holding attributes meant to be shared
+
+    Attributes:
+    -------------------
+    l_source: 
     '''
     kind    : str
     proj    : str
@@ -36,8 +40,8 @@ class Data:
     skipped_friend : str|None
     fcp            : FCopy
     out_dir        : Path # Path to ana_dir/{kind}/{version}
-    pfs_dir = Path(os.environ['PFS_ANADIR'])/'Data'
-    ana_dir = Path(os.environ['ANADIR'    ])/'Data'
+    pfs_dir = Path(os.environ['PFS_ANADIR']) / 'Data'
+    ana_dir = Path(os.environ['ANADIR'    ]) / 'Data'
     vers    = None
     l_kind  = [
         'all',
@@ -51,7 +55,6 @@ class Data:
         'brem_track_2']
     copied_files : int   = 0
     copied_size  : float = 0
-
 # -----------------------------------------
 def _parse_args():
     parser = argparse.ArgumentParser(description='Script used to copy files from remote server to laptop')
@@ -62,7 +65,7 @@ def _parse_args():
     parser.add_argument('-n', '--nprc', type=      int, help='Number of process to download with, with zero, will download all files at once', default=1)
     parser.add_argument('-t', '--tout', type=      int, help='Timeout, used to check if server is reachable', default = 50)
     parser.add_argument('-v', '--vers', type=      str, help='Version of files, only makes sense if kind is not "all"')
-    parser.add_argument('-h', '--host', type=_get_host, help='Server from which files will be transferred', choices = ['IHEP', 'LOCAL'], default = 'IHEP')
+    parser.add_argument('-H', '--host', type=_get_host, help='Server from which files will be transferred', choices = ['IHEP', 'LOCAL'], default = 'IHEP')
     parser.add_argument('-d', '--dry' ,           help='If used, will do not copy files', action='store_true')
     args = parser.parse_args()
 
@@ -168,14 +171,24 @@ def _get_version(kind : str) -> str:
     return vers
 # -----------------------------------------
 def _initialize(kind : str):
+    '''
+    This function will initialize:
+    - Data.out_dir : Full path to output directory 
+    - Data.l_source: List of paths with inputs to copy
+
+    Parameters
+    ---------------
+    kind: Kind of friend tree, e.g. main
+    '''
     if Data.vers is not None and Data.kind == 'all':
         raise ValueError(f'Specified version {Data.vers} for kind {Data.kind}')
 
+    log.info(f'Initializing for trees of type: {kind}')
     vers    = _get_version(kind)
-    inp_dir = Data.pfs_dir/f'{Data.proj}/{kind}/{vers}'
+    inp_dir = Data.pfs_dir / f'{Data.proj}/{kind}/{vers}'
     l_path  = list(inp_dir.glob('*.root'))
 
-    Data.out_dir = Data.ana_dir/f'{Data.proj}/{kind}/{vers}'
+    Data.out_dir = Data.ana_dir / f'{Data.proj}/{kind}/{vers}'
     Data.out_dir.mkdir(parents=True, exist_ok=True)
 
     log.info(f'Source: {inp_dir}')
@@ -277,7 +290,7 @@ def _download_kind(kind : str) -> None:
     '''
 
     log.info(f'Copying files for kind {kind}')
-    _initialize(kind)
+    _initialize(kind = kind)
 
     l_path = _get_source_paths()
     l_group= _group_paths(l_path)
@@ -305,7 +318,7 @@ def main():
         if kind == Data.skipped_friend:
             continue
 
-        _download_kind(kind)
+        _download_kind(kind = kind)
 
     log.info(f'Copied {Data.copied_files} ({Data.copied_size:.2f} Gb) files in total')
 # -----------------------------------------
