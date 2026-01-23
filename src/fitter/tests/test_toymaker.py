@@ -89,8 +89,9 @@ def test_integration(
     res, _ = Fitter.minimize(nll=nll, cfg={})
     res.freeze()
 
-    mkr = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
-    df  = mkr.get_parameter_information()
+    with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
+        mkr = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
+        df  = mkr.get_parameter_information()
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
     cfg.saving.plt_dir = tmp_path / 'toymaker/integration/plots'
