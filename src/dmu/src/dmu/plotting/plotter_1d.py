@@ -81,6 +81,9 @@ class Plotter1D(Plotter):
     def _get_binning(self, var : str, d_data : dict[str, numpy.ndarray]) -> tuple[float, float, int]:
         d_cfg  = self._cfg['plots'][var]
         minx, maxx, bins = d_cfg['binning']
+
+        minx = float(minx)
+        maxx = float(maxx)
         if maxx <= minx + 1e-5:
             log.info(f'Bounds not set for {var}, will calculated them')
             minx, maxx = self._find_bounds(d_data = d_data, qnt=minx)
