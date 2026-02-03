@@ -26,6 +26,7 @@ class Correction(StrEnum):
     mass_scale      = 'smu'
     mass_resolution = 'rsg'
     brem_fraction   = 'rfr'
+    blok_fraction   = 'rbk'
     # ------------------------
     @property
     def kind(self) -> str:
@@ -37,7 +38,7 @@ class Correction(StrEnum):
         if self in [Correction.mass_scale]:
             return 'scale'
 
-        if self in [Correction.mass_resolution, Correction.brem_fraction]:
+        if self in [Correction.mass_resolution, Correction.brem_fraction, Correction.blok_fraction]:
             return 'reso'
 
         raise ValueError(f'Cannot retrieve kind for correction: {self}')
@@ -56,6 +57,8 @@ class Correction(StrEnum):
                 return r'$\frac{\sigma^{Data}}{\sigma^{MC}}$'
             case Correction.brem_fraction:
                 return r'$\frac{BFr^{Data}}{BFr^{MC}}$'
+            case Correction.blok_fraction:
+                return r'$\frac{Block^{Data}}{Block^{MC}}$'
 # ---------------------------------------
 class MVA(StrEnum):
     r'''
