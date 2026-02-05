@@ -130,13 +130,9 @@ class Brem(IntEnum):
         Brem category resulting from sum, when sum means
         merging corresponding samples
         '''
-        c12 = self == Brem.one and other == Brem.two
-        c21 = self == Brem.two and other == Brem.one
+        total = self.value + other.value
 
-        if c12 or c21:
-            return Brem.one_two
-    
-        raise ValueError(f'Undefined sum of {self} and {other}')
+        return Brem(total)
     # ----------------------
     def __str__(self) -> str:
         '''
