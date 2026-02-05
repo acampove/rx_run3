@@ -18,7 +18,7 @@ zpar = zfit.param.Parameter
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:category')
 
-CATEGORY_REGEX : Final[str] = r'brem_(\d{3})_b(\d)'
+CATEGORY_REGEX : Final[str] = r'brem_(\d{3})_b(\d+)'
 # -----------------------------------
 @dataclass
 class Category:
@@ -55,7 +55,7 @@ class Category:
 
         block_str = mtch.group(2)
 
-        return Block(block_str)
+        return Block(value = block_str)
     # ----------------------
     @cached_property
     def brem(self) -> Brem:
