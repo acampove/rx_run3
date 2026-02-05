@@ -1,7 +1,7 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum        import StrEnum, Enum
+from enum        import StrEnum, IntEnum
 from pydantic    import BaseModel, field_validator
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
@@ -104,14 +104,20 @@ class MVA(StrEnum):
     cmb = 'cmb'
     prc = 'prc'
 # ---------------------------------------
-class Brem(Enum):
+class Brem(IntEnum):
     '''
     Enum meant to represent brem category
     '''
-    zero    = '000'
-    one     = '001'
-    two     = '002'
-    one_two = '012'
+    zero    = 10
+    one     = 100
+    two     = 1000
+    # ----------
+    # Composite brem
+    # ----------
+    br01x   =  110 
+    br02x   = 1010 
+    brx12   = 1100 
+    br012   = 1110 
     # ----------------------
     def __add__(self, other : 'Brem') -> 'Brem':
         '''
