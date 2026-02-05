@@ -176,8 +176,10 @@ class Category:
         -------------
         Fraction used to form model
         '''
-        if corr == Correction.brem_fraction:
+        if   corr == Correction.brem_fraction:
             suffix = f'brem_{self.brem}_b{self.block}'
+        elif corr == Correction.blok_fraction:
+            suffix = f'block_{self.brem}_b{self.block}'
         else:
             raise ValueError(f'Invalid kind: {corr}')
 
