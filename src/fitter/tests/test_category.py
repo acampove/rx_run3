@@ -32,7 +32,7 @@ def test_simple():
     print(cat)
 # ----------------------
 @pytest.mark.parametrize('brem' , Brem)
-@pytest.mark.parametrize('block', Block)
+@pytest.mark.parametrize('block', Block.blocks())
 def test_properties(brem : Brem, block : Block):
     '''
     Tests that properties are calculated correctly
