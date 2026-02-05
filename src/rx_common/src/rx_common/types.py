@@ -29,6 +29,15 @@ class Block(BaseModel):
 
         return value
     # ----------------
+    @classmethod
+    def blocks(cls) -> list['Block']:
+        '''
+        Returns
+        --------------
+        List of elementary blocks
+        '''
+        return [ cls(value = block) for block in ALL_BLOCKS ]
+    # ----------------
     def __add__(self, other : 'Block'):
         '''
         '''
