@@ -93,6 +93,21 @@ class Correction(StrEnum):
                 return r'$\frac{BFr^{Data}}{BFr^{MC}}$'
             case Correction.blok_fraction:
                 return r'$\frac{Block^{Data}}{Block^{MC}}$'
+    # ------------------------
+    @property
+    def nickname(self) -> str:
+        '''
+        String to be used when naming variables, etc
+        '''
+        match self:
+            case Correction.mass_scale:
+                return 'dmu' 
+            case Correction.mass_resolution:
+                return 'rsg' 
+            case Correction.brem_fraction:
+                return 'brem' 
+            case Correction.blok_fraction:
+                return 'block' 
 # ---------------------------------------
 class MVA(StrEnum):
     r'''
