@@ -138,7 +138,21 @@ class Brem(IntEnum):
         '''
         Returns string representation
         '''
-        return self.value
+        match self:
+            case Brem.zero:
+                return 'xx0' 
+            case Brem.one:
+                return 'xx1' 
+            case Brem.two:
+                return 'xx2' 
+            case Brem.br01x:
+                return '01x'
+            case Brem.br02x:
+                return '02x'
+            case Brem.brx12:
+                return 'x12'
+            case Brem.br012:
+                return '012'
     # ----------------------
     def __eq__(self, other) -> bool:
         if isinstance(other, str):
