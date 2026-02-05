@@ -85,6 +85,9 @@ class Category:
         if self.block == other.block:
             return self._add_brem(other = other)
 
+        if self.brem  == other.brem:
+            return self._add_block(other = other)
+
         raise ValueError(f'Cannot add current category to: {other}')
     # ----------------------
     def _add_brem(self, other : Self) -> Self:
@@ -117,6 +120,42 @@ class Category:
 
         return type(self)(
             name      = f'brem_{brem}_b{self.block}',
+            pdf       = pdf,
+            sumw      = self.sumw + other.sumw,
+            cres      = cres,
+            model     = self.model,
+            selection = {'merged' : ''}) # Cannot merge selections for categories with different selections
+    # ----------------------
+    def _add_block(self, other : Self) -> Self:
+        '''
+        Parameters
+        -------------
+        other: Category corresponding to different block
+
+        Returns
+        -------------
+        Result of adding current and other category
+        '''
+        if self.block == other.block:
+            raise ValueError(f'Cannot merge by block categories with same block: {self.block}')
+
+        if self.brem  != other.brem:
+            raise ValueError(f'Cannot merge by block categories with different brem: {self.brem} != {other.brem}')
+
+        frac = self._get_frac(
+            corr   = Correction.blok_fraction, 
+            prefix = 'fr')
+
+        pdf = zfit.pdf.SumPDF([self.pdf, other.pdf], frac)
+
+        cres = OmegaConf.merge(self.cres, other.cres)
+        if not isinstance(cres, DictConfig):
+            raise ValueError(f'Config result object is not a DictConfig after merge: {cres}')
+
+        block = self.block + other.block
+
+        return type(self)(
+            name      = f'brem_{self.brem}_b{block}',
             pdf       = pdf,
             sumw      = self.sumw + other.sumw,
             cres      = cres,
