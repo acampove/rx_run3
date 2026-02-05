@@ -10,6 +10,7 @@ class Block(BaseModel):
     r'''
     Type meant to represent data blocks, e.g. block 1
     '''
+    model_config = {'frozen' : True}
 
     value : str 
     # ----------------
