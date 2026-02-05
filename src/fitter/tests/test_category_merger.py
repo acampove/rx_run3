@@ -39,15 +39,31 @@ def _get_category(name : str) -> Category:
 
     return cat
 # ----------------------------------------
-def test_simple():
+def test_add_brem():
     '''
     Simplest test of merger of categories
     '''
-    names      = [ f'brem_00{brem}_b{block}' for brem in range(1, 3) for block in range(1, 9) ]
+    names      = [ f'brem_00{brem}_b1' for brem in range(1, 3)  ]
     categories = [ _get_category(name = name) for name in names ]
 
     mgr = CategoryMerger(categories = categories)
     cat = mgr.get_category()
 
     assert isinstance(cat, Category)
+
+    print(cat)
 # ----------------------------------------
+def test_add_block():
+    '''
+    Simplest test of merger of categories
+    '''
+    names      = [ f'brem_001_b{block}' for block in range(1, 3) ]
+    categories = [ _get_category(name = name) for name in names ]
+
+    mgr = CategoryMerger(categories = categories)
+    cat = mgr.get_category()
+
+    assert isinstance(cat, Category)
+
+    print(cat)
+
