@@ -31,6 +31,11 @@ class CategoryMerger:
         '''
         cat_by_block : dict[Block,list[Category]] = dict()
 
+        s_brem = { cat.brem for cat in self._categories }
+        if len(s_brem) == 1:
+            log.warning(f'Not merging by brem, found only: {s_brem}')
+            return self._categories
+
         for cat in self._categories:
             if cat.block in cat_by_block:
                 cat_by_block[cat.block].append(cat)
