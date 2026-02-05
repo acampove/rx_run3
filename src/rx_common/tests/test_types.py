@@ -158,3 +158,6 @@ def test_block():
     b2 = Block(value = '2')
 
     assert (b1 + b2) == Block(value = '12')
+    assert '1'       == str(b1)
+    assert '2'       == str(b2)
+    assert '12'      == str(b1 + b2)

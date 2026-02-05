@@ -47,6 +47,9 @@ class Block(BaseModel):
         new_value = ''.join(new_value)
 
         return Block(value=new_value)
+    # ----------------
+    def __str__(self):
+        return self.value
 # ---------------------------------------
 class Correction(StrEnum):
     r'''
