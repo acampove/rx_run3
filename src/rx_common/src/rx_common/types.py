@@ -1,21 +1,42 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum import StrEnum, Enum
+from enum        import StrEnum, Enum
+from pydantic    import BaseModel, field_validator
 
+ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
 # ---------------------------------------
-class Block(StrEnum):
+class Block(BaseModel):
     r'''
     Type meant to represent data blocks, e.g. block 1
     '''
-    b1 = '1'
-    b2 = '2'
-    b3 = '3'
-    b4 = '4'
-    b5 = '5'
-    b6 = '6'
-    b7 = '7'
-    b8 = '8'
+
+    value : str 
+    # ----------------
+    @field_validator('value')
+    @classmethod
+    def validate_value(cls, value) -> str:
+        '''
+        Validates block value
+        '''
+        values = list(value)
+        values = sorted(values)
+        if len(values) != len(set(values)):
+            raise ValueError(f'Invalid value, repeated blocks: {value}')
+
+        if not set(values).issubset(ALL_BLOCKS):
+            raise ValueError(f'Invalid value, invalid blocks: {values}')
+
+        return value
+    # ----------------
+    def __add__(self, other : 'Block'):
+        '''
+        '''
+        new_value = self.value + other.value
+        new_value = sorted(new_value)
+        new_value = ''.join(new_value)
+
+        return Block(value=new_value)
 # ---------------------------------------
 class Correction(StrEnum):
     r'''
