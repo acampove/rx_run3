@@ -22,7 +22,11 @@ def _get_category(name : str) -> Category:
     -------------
     Category object
     '''
-    pdf  = sut.get_model(kind = 'signal', suffix = 'brem_001_b1')
+    obs = zfit.Space('mass', limits = (0, 10))
+    pdf = sut.get_model(
+        obs    = obs,
+        kind   = 'signal', 
+        suffix = name)
     cres = OmegaConf.create({'mu' : [10., 1.]})
 
     cat  = Category(
