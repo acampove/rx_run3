@@ -12,7 +12,8 @@ from rx_common import Channel
 from dmu       import LogStore
 
 from rx_common import Trigger
-from rx_common import Project 
+from rx_common import Project
+from rx_common import Block 
 
 log=LogStore.add_logger('rx_common::test_types')
 # -------------------------------------------
@@ -137,3 +138,23 @@ def test_subdecays(sample : Sample):
         return
 
     assert isinstance(sample.subdecays, list)
+# -------------------------------------------
+def test_block():
+    '''
+    Test block class
+    '''
+    for block in range(1, 9):
+        str_block = str(block)
+
+        Block(value = str_block)
+
+    with pytest.raises(ValueError):
+        Block(value = '11')
+
+    with pytest.raises(ValueError):
+        Block(value = '10')
+
+    b1 = Block(value = '1')
+    b2 = Block(value = '2')
+
+    assert (b1 + b2) == Block(value = '12')
