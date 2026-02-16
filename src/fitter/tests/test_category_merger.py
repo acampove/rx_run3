@@ -75,3 +75,17 @@ def test_add_block():
 
     print(cat)
 # ----------------------------------------
+def test_add_brem_block():
+    '''
+    Add brems and then blocks
+    '''
+    names      = [ f'brem_{brem}_b{block}' for block in Block.blocks() for brem in Brem.brems() ]
+    categories = [ _get_category(name = name) for name in names ]
+
+    mgr = CategoryMerger(categories = categories)
+    cat = mgr.get_category()
+
+    assert isinstance(cat, Category)
+
+    print(cat)
+# ----------------------------------------
