@@ -94,9 +94,9 @@ class CategoryMerger:
         brem   = categories[0].brem
 
         corr   = Correction.blok_fraction
-        fracs  = [ self._get_frac(category = cat, corr = corr) for cat in categories ]
-        sumws  = [ cat.sumw                                    for cat in categories ]
-        pdfs   = [ cat.pdf                                     for cat in categories ]
+        totalw = sum(cat.sumw for cat in categories )
+        fracs  = [ self._get_frac(category = cat, totalw = totalw, corr = corr) for cat in categories ]
+        pdfs   = [ cat.pdf                                                      for cat in categories ]
         pdf    = zfit.pdf.SumPDF(pdfs, fracs[:-1])
         model  = self._model_from_categories(
             single_model= True,
@@ -171,11 +171,10 @@ class CategoryMerger:
         categories = sorted(categories)
 
         corr  = Correction.brem_fraction
-        fracs = [ self._get_frac(category = cat, corr = corr) for cat in categories ]
-        blok  = categories[0].block
-        pdfs  = [ cat.pdf                                     for cat in categories ]
-        brems = [ cat.brem                                    for cat in categories ]
-        sumws = [ cat.sumw                                    for cat in categories ]
+        totalw= sum(cat.sumw for cat in categories)
+        fracs = [ self._get_frac(category = cat, corr = corr, totalw = totalw) for cat in categories ]
+        pdfs  = [ cat.pdf                                                      for cat in categories ]
+        brems = [ cat.brem                                                     for cat in categories ]
 
         model = self._model_from_categories(
             single_model= False,        # Different brem categories can have different models
