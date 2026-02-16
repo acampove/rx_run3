@@ -5,7 +5,7 @@ output_directory : rare/rk/electron/signal
 categories:
 {% for brem in brems %}
 {% for block in blocks %}
-  brem_00{{brem}}_b{{block}}:
+  brem_xx{{brem}}_b{{block}}:
     selection:
       block       : block == {{block}}
       brem{{brem}}: nbrem == {{brem}}
