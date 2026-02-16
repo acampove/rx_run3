@@ -24,7 +24,8 @@ def initialize():
     Runs before any test
     '''
     log.info('Disabling caching')
-    with RDFGetter.max_entries(value = 100_000):
+    LogStore.set_level('fitter:sim_fitter', 10)
+    with RDFGetter.max_entries(value = 20_000):
         yield
 # ---------------------------------------------------
 def test_nomc(tmp_path : Path):
