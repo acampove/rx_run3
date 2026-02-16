@@ -7,7 +7,7 @@ from omegaconf        import DictConfig
 from dmu              import LogStore
 from dmu.stats        import zfit
 from dmu.stats        import ParameterLibrary as PL
-from rx_common        import Trigger
+from rx_common        import Qsq, Trigger
 from rx_common        import info
 from rx_data          import SpecMaker
 from zfit             import Space         as zobs
@@ -27,7 +27,7 @@ class DataModel:
         cfg     : DictConfig,
         obs     : zobs,
         trigger : Trigger,
-        q2bin   : str,
+        q2bin   : Qsq,
         name    : str|None=None):
         '''
         Parameters
