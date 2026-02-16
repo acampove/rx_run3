@@ -88,6 +88,7 @@ class CategoryMerger:
             kind       = Brem, 
             condition  = 'all_same')
 
+        categories = sorted(categories)
         blocks = [ cat.block for cat in categories ]
         block  = sum(blocks[:-1], blocks[-1])
         brem   = categories[0].brem
@@ -165,6 +166,8 @@ class CategoryMerger:
             categories = categories,
             kind       = Brem, 
             condition  = 'all_different')
+
+        categories = sorted(categories)
 
         corr  = Correction.brem_fraction
         fracs = [ self._get_frac(category = cat, corr = corr) for cat in categories ]
