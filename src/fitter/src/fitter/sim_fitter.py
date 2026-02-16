@@ -199,7 +199,7 @@ class SimFitter(BaseFitter, Cache):
 
             if par.name in pars:
                 par.set_value(pars[par.name].value)
-                log.debug(f'{par.name:<20}{"--->"}{pars[par.name].value:>20.3f}')
+                log.debug(f'{par.name:<40}{"--->"}{pars[par.name].value:>20.3f}')
                 par.floating = False
 
         return pdf
@@ -290,7 +290,7 @@ class SimFitter(BaseFitter, Cache):
         '''
         Parameters
         -------------
-        category: Category for which this cuts are used, e.g. brem_001_b1
+        category: Category for which this cuts are used, e.g. brem_xx1_b1
 
         Returns
         -------------
@@ -374,7 +374,12 @@ class SimFitter(BaseFitter, Cache):
         - Instance of DictConfig storing all the fitting parameters
         '''
         categories : list[Category] = [] 
+
         for category, data in self._cfg.categories.items():
+            log.debug( 30 * '-' )
+            log.debug(f'Building category: {category}')
+            log.debug( 30 * '-' )
+
             l_model_name     = data['model']
             model, sumw, res = self._get_component(
                 skip_fit     = skip_fit,
@@ -406,8 +411,12 @@ class SimFitter(BaseFitter, Cache):
         if not categories: 
             return None
 
+        log.debug( 30 * '-' )
+        log.debug('Merging categories')
+        log.debug( 30 * '-' )
+
         mgr = CategoryMerger(categories = categories)
-        cat = mgr.get_category()
+        cat = mgr.get_category(fix_fractions = True)
 
         return cat.pdf, cat.cres
     # ------------------------
