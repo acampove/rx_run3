@@ -141,6 +141,7 @@ class CategoryMerger:
         l_block_cats : list[Category] = []
         for cats_in_block in cat_by_block.values():
             category = self._merge_brems(categories = cats_in_block)
+            log.debug(f'Brem merged for block {category.block}')
             l_block_cats.append(category)
 
         return l_block_cats
