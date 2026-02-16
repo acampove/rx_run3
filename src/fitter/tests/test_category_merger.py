@@ -1,6 +1,7 @@
 '''
 Module used to test CategoryMerger class
 '''
+import pytest
 
 from dmu       import LogStore
 from dmu.stats import zfit
@@ -8,9 +9,15 @@ from dmu.stats import utilities as sut
 from omegaconf import OmegaConf
 from fitter    import CategoryMerger
 from fitter    import Category
+from rx_common import Brem
 
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:test_category_merger')
+
+BREM_012 = [ Brem.zero, Brem.one, Brem.two ]
+BREM_01  = [ Brem.zero, Brem.one           ]
+BREM_02  = [ Brem.zero, Brem.two           ]
+BREM_12  = [ Brem.one , Brem.two           ]
 # ----------------------------------------
 def _get_category(name : str) -> Category:
     '''
@@ -39,11 +46,12 @@ def _get_category(name : str) -> Category:
 
     return cat
 # ----------------------------------------
-def test_add_brem():
+@pytest.mark.parametrize('brems', [BREM_012, BREM_01, BREM_02, BREM_12])
+def test_add_brem(brems : list[Brem]):
     '''
     Simplest test of merger of categories
     '''
-    names      = [ f'brem_00{brem}_b1' for brem in range(1, 3)  ]
+    names      = [ f'brem_{brem:03}_b1' for brem in brems ]
     categories = [ _get_category(name = name) for name in names ]
 
     mgr = CategoryMerger(categories = categories)
@@ -66,4 +74,4 @@ def test_add_block():
     assert isinstance(cat, Category)
 
     print(cat)
-
+# ----------------------------------------
