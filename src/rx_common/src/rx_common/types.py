@@ -39,9 +39,16 @@ class Block(BaseModel):
         '''
         return [ cls(value = block) for block in ALL_BLOCKS ]
     # ----------------
-    def __add__(self, other : 'Block'):
+    def __add__(self, other : 'Block') -> 'Block':
         '''
+        Addition of block types. If blocks are the same
+        sum will be the same as the input block.
+
+        Use case: Adding datasets from same block and different brem categories 
         '''
+        if self == other:
+            return self
+
         new_value = self.value + other.value
         new_value = sorted(new_value)
         new_value = ''.join(new_value)
