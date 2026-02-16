@@ -1,11 +1,17 @@
 '''
 Module holding CategoryMerger class
 '''
-from dmu       import LogStore
-from rx_common import Block
-from .category import Category
+import zfit
+
+from omegaconf   import OmegaConf
+from dmu         import LogStore
+from rx_common   import Brem, Block, Correction
+from dmu.stats   import ModelFactory
+from .category   import Category
 
 log=LogStore.add_logger('fitter:category_merger')
+
+zpar = zfit.param.Parameter
 # ----------------------
 class CategoryMerger:
     '''
