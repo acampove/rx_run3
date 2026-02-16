@@ -70,7 +70,7 @@ class Category:
 
         brem_str = mtch.group(1)
 
-        return Brem(brem_str)
+        return Brem.from_str(brem_str)
     # ----------------------
     def __add__(self, other : Self) -> Self:
         '''
