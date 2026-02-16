@@ -2,7 +2,7 @@
 This module contains classes derived from Enum
 '''
 from enum        import StrEnum, Enum
-from pydantic    import BaseModel, field_validator
+from pydantic    import BaseModel, field_validator, ConfigDict
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
 # ---------------------------------------
@@ -10,7 +10,7 @@ class Block(BaseModel):
     r'''
     Type meant to represent data blocks, e.g. block 1
     '''
-    model_config = {'frozen' : True}
+    model_config = ConfigDict(frozen=True)
 
     value : str 
     # ----------------
@@ -57,6 +57,9 @@ class Block(BaseModel):
     # ----------------
     def __str__(self):
         return self.value
+    # ----------------
+    def __hash__(self):
+        return hash(self.value)
 # ---------------------------------------
 class Correction(StrEnum):
     r'''
