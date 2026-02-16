@@ -58,6 +58,9 @@ class Block(BaseModel):
     def __str__(self):
         return self.value
     # ----------------
+    def __lt__(self, other : 'Block') -> bool:
+        return self.value < other.value
+    # ----------------
     def __hash__(self):
         return hash(self.value)
 # ---------------------------------------
@@ -219,6 +222,9 @@ class Brem(Enum):
             return self.value == other.value
 
         return False
+    # ----------------
+    def __lt__(self, other : 'Brem') -> bool:
+        return self.value < other.value
     # ----------------------
     def __hash__(self) -> int:
         return super().__hash__()

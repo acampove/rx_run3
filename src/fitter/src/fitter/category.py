@@ -42,6 +42,23 @@ class Category:
     model     : list[str]
     selection : dict[str,str]
     # ----------------------
+    def __lt__(self, other : 'Category') -> bool:
+        '''
+        Used for enabling sorting of categories
+
+        Block superseeds Brem
+        '''
+        same_block = self.block == other.block
+        same_brem  = self.brem  == other.brem
+
+        if same_block and same_brem:
+            raise ValueError('Found two categories sharing block and brem')
+
+        if same_block: 
+            return self.brem < other.brem
+
+        return self.block < other.block
+    # ----------------------
     @cached_property
     def block(self) -> Block:
         '''
