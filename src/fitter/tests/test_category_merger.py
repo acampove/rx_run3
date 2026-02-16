@@ -18,6 +18,14 @@ BREM_012 = [ Brem.zero, Brem.one, Brem.two ]
 BREM_01  = [ Brem.zero, Brem.one           ]
 BREM_02  = [ Brem.zero, Brem.two           ]
 BREM_12  = [ Brem.one , Brem.two           ]
+
+# ----------------------
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    LogStore.set_level('fitter:category_merger', 10)
 # ----------------------------------------
 def _get_category(name : str) -> Category:
     '''
