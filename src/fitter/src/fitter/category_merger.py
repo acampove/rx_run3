@@ -105,7 +105,7 @@ class CategoryMerger:
         category      = Category(
             name      = f'brem_{brem}_b{block}',
             pdf       = pdf,
-            sumw      = sum(sumws),
+            sumw      = totalw,
             cres      = OmegaConf.create({}),
             model     = model, 
             selection = {'merged' : ''})
@@ -179,10 +179,11 @@ class CategoryMerger:
         model = self._model_from_categories(
             single_model= False,        # Different brem categories can have different models
             categories  = categories)
-        sumw  = sum(sumws)
+        sumw  = totalw 
         brem  = sum(brems[:-1], brems[-1])
         pdf   = zfit.pdf.SumPDF(pdfs, fracs[:-1])
 
+        blok  = categories[0].block
         category      = Category(
             name      = f'brem_{brem}_b{blok}',
             pdf       = pdf,
@@ -221,11 +222,13 @@ class CategoryMerger:
     def _get_frac(
         self, 
         category : Category,
+        totalw   : float,
         corr     : Correction) -> zpar:
         '''
         Parameters
         -------------
         category : Object representing fitting category
+        totalw   : Full yield across all categories that this fraction is used for
         corr     : Type of correction for which this fraction is needed
 
         Returns
@@ -272,9 +275,7 @@ class CategoryMerger:
         if fail:
             raise ValueError(f'Inconsistent brem categories found: {s_brem}')
     # ----------------------
-    def get_category(
-        self,
-        fix_fractions : bool) -> Category:
+    def get_category(self) -> Category:
         '''
         Returns
         -------------
