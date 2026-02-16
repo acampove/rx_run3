@@ -72,7 +72,7 @@ class CategoryMerger:
         '''
         Parameters
         -------------
-        categories: List of categories, all with the same brem
+        categories: List of categories, all with the same brem and different block
 
         Returns
         -------------
@@ -150,7 +150,7 @@ class CategoryMerger:
         '''
         Parameters
         -------------
-        categories: List of categories all in the same block
+        categories: List of categories all in the same block, all brems are different
 
         Returns
         -------------
@@ -160,6 +160,11 @@ class CategoryMerger:
             categories = categories,
             kind       = Block, 
             condition  = 'all_same')
+
+        self._enforce(
+            categories = categories,
+            kind       = Brem, 
+            condition  = 'all_different')
 
         corr  = Correction.brem_fraction
         fracs = [ self._get_frac(category = cat, corr = corr) for cat in categories ]
