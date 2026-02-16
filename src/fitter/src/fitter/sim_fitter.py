@@ -416,7 +416,7 @@ class SimFitter(BaseFitter, Cache):
         log.debug( 30 * '-' )
 
         mgr = CategoryMerger(categories = categories)
-        cat = mgr.get_category(fix_fractions = True)
+        cat = mgr.get_category()
 
         return cat.pdf, cat.cres
     # ------------------------
