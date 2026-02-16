@@ -9,7 +9,7 @@ from dmu.stats import utilities as sut
 from omegaconf import OmegaConf
 from fitter    import CategoryMerger
 from fitter    import Category
-from rx_common import Brem
+from rx_common import Brem, Block
 
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:test_category_merger')
@@ -49,7 +49,7 @@ def _get_category(name : str) -> Category:
 @pytest.mark.parametrize('brems', [BREM_012, BREM_01, BREM_02, BREM_12])
 def test_add_brem(brems : list[Brem]):
     '''
-    Simplest test of merger of categories
+    Add only brems for given block 
     '''
     names      = [ f'brem_{brem:03}_b1' for brem in brems ]
     categories = [ _get_category(name = name) for name in names ]
@@ -63,7 +63,7 @@ def test_add_brem(brems : list[Brem]):
 # ----------------------------------------
 def test_add_block():
     '''
-    Simplest test of merger of categories
+    Add only blocks for given brem
     '''
     names      = [ f'brem_xx1_b{block}' for block in range(1, 4) ]
     categories = [ _get_category(name = name) for name in names ]
