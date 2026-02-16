@@ -176,6 +176,29 @@ class Brem(Enum):
             case Brem.br012:
                 return '012'
     # ----------------------
+    @staticmethod
+    def from_str(string : str) -> 'Brem':
+        '''
+        Returns string representation
+        '''
+        match string:
+            case 'xx0':
+                return Brem.zero
+            case 'xx1':
+                return Brem.one
+            case 'xx2':
+                return Brem.two
+            case '01x':
+                return Brem.br01x
+            case '02x':
+                return Brem.br02x
+            case 'x12':
+                return Brem.brx12
+            case '012':
+                return Brem.br012
+            case _:
+                raise ValueError(f'Invalid brem string: {string}')
+    # ----------------------
     def __eq__(self, other) -> bool:
         if isinstance(other, str):
             return self.value == other 
