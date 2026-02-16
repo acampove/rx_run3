@@ -236,14 +236,13 @@ class CategoryMerger:
         Fraction used to form model
         '''
         suffix = f'{corr.nickname}_{category.brem}_b{category.block}'
+        value  = category.sumw / totalw
 
-        # Brem/block resolution needs to be fixed to 1 when building model
-        # It has to be let floating when fitting to data
-        with ModelFactory.reparametrization_parameters(floating = False):
+        with ModelFactory.reparametrization_parameters(floating = True):
             frac         = ModelFactory.get_reparametrization(
                 kind     = corr.kind,
                 par_name = f'fr_{suffix}',
-                value    = 0.5,
+                value    = value,
                 low      = 0.0,
                 high     = 1.0)
 
