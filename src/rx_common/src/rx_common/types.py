@@ -167,9 +167,17 @@ class Brem(Enum):
         Brem category resulting from sum, when sum means
         merging corresponding samples
         '''
+        if self == other:
+            return self
+
         total = self.value + other.value
 
-        return Brem(total)
+        try:
+            brem = Brem(total)
+        except Exception as exc:
+            raise ValueError(f'Cannot add {self} to {other}') from exc
+
+        return brem
     # ----------------------
     def __str__(self) -> str:
         '''
