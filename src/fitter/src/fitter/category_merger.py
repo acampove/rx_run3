@@ -65,28 +65,204 @@ class CategoryMerger:
             log.error(obj)
 
         raise ValueError(f'Condition {condition} failed')
+    # ----------------------
+    def _merge_blocks(
+        self, 
+        categories : list[Category]) -> Category:
+        '''
+        Parameters
+        -------------
+        categories: List of categories, all with the same brem
+
         Returns
         -------------
-        List of categories, one per block
+        Single category, resulting from adding all blocks
         '''
-        cat_by_block : dict[Block,list[Category]] = dict()
+        self._enforce(
+            categories = categories,
+            kind       = Block, 
+            condition  = 'all_different')
 
-        s_brem = { cat.brem for cat in self._categories }
+        self._enforce(
+            categories = categories,
+            kind       = Brem, 
+            condition  = 'all_same')
+
+        blocks = [ cat.block for cat in categories ]
+        block  = sum(blocks[:-1], blocks[-1])
+        brem   = categories[0].brem
+
+        corr   = Correction.blok_fraction
+        fracs  = [ self._get_frac(category = cat, corr = corr) for cat in categories ]
+        sumws  = [ cat.sumw                                    for cat in categories ]
+        pdfs   = [ cat.pdf                                     for cat in categories ]
+        pdf    = zfit.pdf.SumPDF(pdfs, fracs[:-1])
+        model  = self._model_from_categories(
+            single_model= True,
+            categories  = categories)
+
+        category      = Category(
+            name      = f'brem_{brem}_b{block}',
+            pdf       = pdf,
+            sumw      = sum(sumws),
+            cres      = OmegaConf.create({}),
+            model     = model, 
+            selection = {'merged' : ''})
+
+        return category
+    # ----------------------
+    def _group_brems(
+        self, 
+        categories : list[Category]) -> list[Category]:
+        '''
+        Parameters
+        -------------
+        categories: List of objects
+
+        Returns
+        -------------
+        List of categories merged by Brem
+        '''
+        s_brem = { cat.brem for cat in categories }
         if len(s_brem) == 1:
-            log.warning(f'Not merging by brem, found only: {s_brem}')
-            return self._categories
+            log.warning(f'Only one brem found, skipping merge by brem: {s_brem}')
+            return categories
 
-        for cat in self._categories:
-            if cat.block in cat_by_block:
-                cat_by_block[cat.block].append(cat)
-            else:
+        cat_by_block : dict[Block,list[Category]] = dict()
+        for cat in categories:
+            if cat.block not in cat_by_block:
                 cat_by_block[cat.block] = [cat]
+            else:
+                cat_by_block[cat.block].append(cat)
 
-        for block, categories in cat_by_block.items():
-            if len(categories) != 2:
-                raise ValueError(f'Not found two categories for block: {block}')
+        self._validate_brem_in_categories(categories = cat_by_block)
 
-        return [ c1 + c2 for [c1,c2] in cat_by_block.values() ]
+        l_block_cats : list[Category] = []
+        for cats_in_block in cat_by_block.values():
+            category = self._merge_brems(categories = cats_in_block)
+            l_block_cats.append(category)
+
+        return l_block_cats
+    # ----------------------
+    def _merge_brems(
+        self, 
+        categories : list[Category]) -> Category:
+        '''
+        Parameters
+        -------------
+        categories: List of categories all in the same block
+
+        Returns
+        -------------
+        Category resulting from merging brem categories
+        '''
+        self._enforce(
+            categories = categories,
+            kind       = Block, 
+            condition  = 'all_same')
+
+        corr  = Correction.brem_fraction
+        fracs = [ self._get_frac(category = cat, corr = corr) for cat in categories ]
+        blok  = categories[0].block
+        pdfs  = [ cat.pdf                                     for cat in categories ]
+        brems = [ cat.brem                                    for cat in categories ]
+        sumws = [ cat.sumw                                    for cat in categories ]
+
+        model = self._model_from_categories(
+            single_model= False,        # Different brem categories can have different models
+            categories  = categories)
+        sumw  = sum(sumws)
+        brem  = sum(brems[:-1], brems[-1])
+        pdf   = zfit.pdf.SumPDF(pdfs, fracs[:-1])
+
+        category      = Category(
+            name      = f'brem_{brem}_b{blok}',
+            pdf       = pdf,
+            sumw      = sumw,
+            cres      = OmegaConf.create({}),
+            model     = model, 
+            selection = {'merged' : ''})
+
+        return category
+    # ----------------------
+    def _model_from_categories(
+        self, 
+        single_model : bool,
+        categories   : list[Category]) -> list[str]:
+        '''
+        Parameters
+        -------------
+        single_model : If true, it will raise if categories contain different models
+        categories   : List of categories
+
+        Returns
+        -------------
+        List of strings, when each represents a model, e.g. [cbl, cbr]
+        '''
+        models : list[str] = []
+
+        first = categories[0].model
+        for cat in categories:
+            if cat.model != first and single_model:
+                raise ValueError(f'Found categories with different models: {cat.model} != {first}')
+
+            models += cat.model
+
+        return models 
+    # ----------------------
+    def _get_frac(
+        self, 
+        category : Category,
+        corr     : Correction) -> zpar:
+        '''
+        Parameters
+        -------------
+        category : Object representing fitting category
+        corr     : Type of correction for which this fraction is needed
+
+        Returns
+        -------------
+        Fraction used to form model
+        '''
+        suffix = f'{corr.nickname}_{category.brem}_b{category.block}'
+
+        # Brem/block resolution needs to be fixed to 1 when building model
+        # It has to be let floating when fitting to data
+        with ModelFactory.reparametrization_parameters(floating = False):
+            frac         = ModelFactory.get_reparametrization(
+                kind     = corr.kind,
+                par_name = f'fr_{suffix}',
+                value    = 0.5,
+                low      = 0.0,
+                high     = 1.0)
+
+        return frac 
+    # ----------------------
+    def _validate_brem_in_categories(
+        self, 
+        categories : dict[Block, list[Category]]) -> None:
+        '''
+        Parameters
+        ----------------
+        categories: dictionary where values are lists of categories, all in same block 
+
+        This method makes sure that every block contains the same
+        brem categories
+        '''
+        s_brem : set[Brem] | None = None
+        fail = False
+        for cat_in_block in categories.values():
+            current_brems = { cat.brem for cat in cat_in_block }
+            if s_brem is None:
+                s_brem = current_brems 
+                continue
+
+            if s_brem != current_brems:
+                log.error(current_brems)
+                fail = True
+
+        if fail:
+            raise ValueError(f'Inconsistent brem categories found: {s_brem}')
     # ----------------------
     def get_category(self) -> Category:
         '''
@@ -94,5 +270,8 @@ class CategoryMerger:
         -------------
         Category object resulting from merging input categories
         '''
+        cat_1 = self._group_brems(categories  = self._categories) 
+        cat_2 = self._merge_blocks(categories = cat_1)
 
+        return cat_2
 # ----------------------
