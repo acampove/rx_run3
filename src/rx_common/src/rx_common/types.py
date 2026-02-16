@@ -144,6 +144,15 @@ class Brem(Enum):
     brx12   = 1100 
     br012   = 1110 
     # ----------------------
+    @classmethod
+    def brems(cls) -> list['Brem']:
+        '''
+        Returns
+        -------------
+        List of elementary brem categories
+        '''
+        return [cls.zero, cls.one, cls.two]
+    # ----------------------
     def __add__(self, other : 'Brem') -> 'Brem':
         '''
         Parameters
