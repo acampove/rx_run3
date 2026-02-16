@@ -23,7 +23,7 @@ def _get_category(name : str) -> Category:
     '''
     Parameters
     -------------
-    name: Nam of category
+    name: Name of category
 
     Returns
     -------------
@@ -65,7 +65,7 @@ def test_add_block():
     '''
     Simplest test of merger of categories
     '''
-    names      = [ f'brem_001_b{block}' for block in range(1, 3) ]
+    names      = [ f'brem_xx1_b{block}' for block in range(1, 4) ]
     categories = [ _get_category(name = name) for name in names ]
 
     mgr = CategoryMerger(categories = categories)
