@@ -273,7 +273,9 @@ class CategoryMerger:
         if fail:
             raise ValueError(f'Inconsistent brem categories found: {s_brem}')
     # ----------------------
-    def get_category(self) -> Category:
+    def get_category(
+        self,
+        fix_fractions : bool) -> Category:
         '''
         Returns
         -------------

@@ -63,7 +63,7 @@ def test_add_brem(brems : list[Brem]):
     categories = [ _get_category(name = name) for name in names ]
 
     mgr = CategoryMerger(categories = categories)
-    cat = mgr.get_category()
+    cat = mgr.get_category(fix_fractions = True)
 
     assert isinstance(cat, Category)
 
@@ -77,7 +77,7 @@ def test_add_block():
     categories = [ _get_category(name = name) for name in names ]
 
     mgr = CategoryMerger(categories = categories)
-    cat = mgr.get_category()
+    cat = mgr.get_category(fix_fractions = True)
 
     assert isinstance(cat, Category)
 
@@ -91,7 +91,7 @@ def test_add_brem_block():
     categories = [ _get_category(name = name) for name in names ]
 
     mgr = CategoryMerger(categories = categories)
-    cat = mgr.get_category()
+    cat = mgr.get_category(fix_fractions = True)
 
     assert isinstance(cat, Category)
 
