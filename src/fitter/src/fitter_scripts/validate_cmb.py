@@ -3,30 +3,27 @@ Script used to validate PDFs needed to fit combinatorial
 '''
 import os
 import argparse
-from typing import cast
-
 import matplotlib.pyplot as plt
-from dmu.logging.log_store  import LogStore
-from dmu.generic            import utilities as gut
-from dmu.generic            import naming
-from dmu.stats.zfit         import zfit
-from dmu.stats.fitter       import Fitter
-from dmu.stats.zfit_plotter import ZFitPlotter
 
-from ROOT                   import RDF
-from zfit.interface         import ZfitData  as zdata
-from zfit.interface         import ZfitPDF   as zpdf
-from zfit.interface         import ZfitSpace as zobs
-from rx_data.rdf_getter     import RDFGetter
-from rx_selection           import selection as sel
-from fitter                 import models
+from dmu             import LogStore
+from dmu.generic     import utilities as gut
+from dmu.generic     import naming
+from dmu.stats       import zfit
+from dmu.stats       import Fitter
+from dmu.stats       import ZFitPlotter
+
+from ROOT            import RDF # type: ignore
+from rx_common       import Qsq, Sample, Trigger
+from zfit.data       import Data      as zdat
+from zfit.pdf        import BasePDF   as zpdf
+from zfit.interface  import ZfitSpace as zobs
+from rx_data         import RDFGetter
+from rx_selection    import selection as sel
+from fitter          import models
 
 log=LogStore.add_logger('rx_fitter:validate_cmb')
 # --------------------------------
 class Data:
-    '''
-    Dataclass
-    '''
     minx   : float
     maxx   : float
     mass   : str
@@ -37,12 +34,12 @@ class Data:
     obs    : zobs
     cfg    : dict
     out_dir: str
-    q2bin  : str
+    q2bin  : Qsq 
     q2_kind: str|None=None
     model  : str
     config : str
-    sample : str
-    trigger: str
+    sample : Sample 
+    trigger: Trigger 
     initial: int
     final  : int
     ntries : int
@@ -94,13 +91,14 @@ def _get_rdf() ->  RDF.RNode:
     return rdf
 # --------------------------------
 @gut.timeit
-def _fit(pdf : zpdf, data : zdata) -> None:
+def _fit(pdf : zpdf, data : zdat) -> None:
     fit_cfg = Data.cfg['fitting']
 
-    obj = Fitter(pdf, data)
-    res = obj.fit(cfg=fit_cfg)
+    obj = Fitter(
+        pdf  = pdf, 
+        data = data)
 
-    return res
+    obj.fit(cfg=fit_cfg)
 # --------------------------------
 def _get_out_dir() -> str:
     ana_dir = os.environ['ANADIR']
@@ -115,7 +113,7 @@ def _get_out_dir() -> str:
 
     return out_dir
 # --------------------------------
-def _plot(pdf : zpdf, data : zdata, name : str) -> None:
+def _plot(pdf : zpdf, data : zdat, name : str) -> None:
     suffix   = naming.clean_special_characters(name=name)
     nentries = data.value().shape[0]
     ext_text = f'Entries={nentries}\n{Data.sample}\n{Data.trigger}'
@@ -208,7 +206,7 @@ def _get_mva_cuts() -> dict[str,str]:
 @gut.timeit
 def _data_from_rdf(
     name : str,
-    rdf : RDF.RNode) -> zdata:
+    rdf : RDF.RNode) -> zdat:
     '''
     Parameters
     -------------
@@ -226,11 +224,12 @@ def _data_from_rdf(
 
     arr_mass = rdf.AsNumpy([Data.mass])[Data.mass]
     data     = zfit.Data.from_numpy(obs=Data.obs, array=arr_mass)
-    data     = cast(zdata, data)
+    if not isinstance(data, zdat):
+        raise ValueError('Dataset is not unbinned zfit data')
 
     return data
 # --------------------------------
-def _get_zfit_data() -> dict[str,zdata]:
+def _get_zfit_data() -> dict[str,zdat]:
     '''
     Returns
     -------------
