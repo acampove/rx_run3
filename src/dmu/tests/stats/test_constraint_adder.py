@@ -7,17 +7,17 @@ import tqdm
 import pandas as pnd
 import pytest
 
-from dmu.stats.zfit import zfit
 from typing      import Union
 from zfit.loss   import ExtendedUnbinnedNLL, UnbinnedNLL 
 from omegaconf   import DictConfig
+from dmu         import LogStore
+from dmu.stats   import zfit
 from dmu.stats   import Constraint1D, ConstraintND
 from dmu.stats   import ConstraintAdder
-from dmu.stats   import utilities as sut
+from dmu.stats   import print_constraints
 from dmu.generic import utilities as gut
 from dmu.generic import rxran
-from dmu         import LogStore
-from dmu.stats.constraint import print_constraints
+from dmu.testing import get_nll
 
 log        = LogStore.add_logger('dmu:stats:test_constraint_adder')
 Loss       = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
@@ -99,7 +99,7 @@ def test_uncorrelated() -> None:
     '''
     Test multiple uncorrelated constraints
     '''
-    nll = sut.get_nll(kind='s+b')
+    nll = get_nll(kind='s+b')
     cns = gut.load_data(package='dmu_data', fpath='tests/stats/constraints/uncorrelated.yaml')
     cons : list[Constraint] = [ Constraint1D(**data) for data in cns.values() ]
 
@@ -110,7 +110,7 @@ def test_correlated() -> None:
     '''
     Test constraints of correlated parameters
     '''
-    nll = sut.get_nll(kind='s+b')
+    nll = get_nll(kind='s+b')
     cns = gut.load_data(package='dmu_data', fpath='tests/stats/constraints/correlated.yaml')
     cons : list[Constraint] = [ ConstraintND(**data) for data in cns.values() ]
 
@@ -124,7 +124,7 @@ def test_toy() -> None:
     with timeout extended in order to profile
     '''
     ntoy= 100
-    nll = sut.get_nll(kind='s+b', nentries = 100)
+    nll = get_nll(kind='s+b', nentries = 2000) # Do not change 2000, constraints are for 2000
     cns = gut.load_conf(package='dmu_data', fpath='tests/stats/constraints/uncorrelated.yaml')
     cons : list[Constraint] = [ Constraint1D(kind=data.kind, name=data.name, mu=data.mu, sg=data.sg) for data in cns.values() ]
 
@@ -138,8 +138,8 @@ def test_toy() -> None:
     l_df : list[pnd.DataFrame] = []
     sam = nll.data[0]
     for _ in tqdm.trange(ntoy, ascii=' -'):
-        for cns in cons:
-            cns.resample()
+        for constraint in cons:
+            constraint.resample()
 
         sam.resample()
         mnm.minimize(nll)
