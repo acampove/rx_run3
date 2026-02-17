@@ -227,7 +227,7 @@ class Fitter:
 
             fval = numpy.random.uniform(par.lower.numpy(), par.upper.numpy())
             par.set_value(fval)
-            log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
+            log.debug(f'{par.name:<40}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
     #------------------------------
     def _set_pdf_pars(self, res):
         '''
