@@ -94,9 +94,10 @@ class ConstraintND(Constraint):
         -------------
         Copy of this constraint with means calibrated
         '''
-        new_values = []
+        new_values : list[float] = []
+
         for name, old_value in zip(self.parameters, self.values):
-            new_value = result[name]
+            new_value, _ = result[name]
             new_values.append(new_value)
 
             log.info(f'{name:<20}{old_value:<20.3f}{"--->":<20}{new_value:<20.3f}')
