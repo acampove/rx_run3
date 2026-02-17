@@ -1,15 +1,14 @@
 '''
 Script with functions meant to test Enums
 '''
-import ROOT
 import pytest
+
+from dmu       import LogStore
 
 from rx_common import Component
 from rx_common import Sample 
 from rx_common import Brem 
 from rx_common import Channel 
-from dmu       import LogStore
-
 from rx_common import Trigger
 from rx_common import Project 
 
@@ -104,4 +103,12 @@ def test_subdecays(sample : Sample):
     '''
     Tests access to subdecays from sample
     '''
+    # There are no subdecays for inclusive samples
+    if 'JpsiX' in sample:
+        return
+
+    if sample in ['undefined']:
+        return
+
+    assert len(sample.subdecays) >= 1
     assert isinstance(sample.subdecays, list)
