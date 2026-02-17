@@ -5,17 +5,18 @@ Module containing plotter class
 import os
 import json
 import math
-
-from matplotlib.figure import Figure
 import numpy
 import matplotlib.pyplot as plt
-from pathlib import Path
 
-from ROOT                  import RDF # type: ignore
-from omegaconf             import DictConfig, OmegaConf
-from dmu.logging.log_store import LogStore
+from typing            import Final
+from pathlib           import Path
+from matplotlib.figure import Figure
+from ROOT              import RDF # type: ignore
+from omegaconf         import DictConfig, OmegaConf
+from dmu               import LogStore
 
 log = LogStore.add_logger('dmu:plotting:Plotter')
+WEIGHTS : Final[str] = 'weights'
 # --------------------------------------------
 class Plotter:
     '''
@@ -46,8 +47,8 @@ class Plotter:
         else:
             self._cfg = cfg
 
-        self._d_rdf : dict[str, RDF.RNode]            = { name : self._preprocess_rdf(rdf=rdf, name=name) for name, rdf in d_rdf.items()}
-        self._d_wgt : dict[str, numpy.ndarray] | None = None
+        self._d_rdf : dict[str, RDF.RNode]     = { name : self._preprocess_rdf(rdf=rdf, name=name) for name, rdf in d_rdf.items()}
+        self._d_wgt : dict[str, numpy.ndarray] = self._get_weights() 
 
         self._title : str = ''
     #-------------------------------------
@@ -72,8 +73,8 @@ class Plotter:
         l_min = []
 
         for arr_val in d_data.values():
-            minv = numpy.quantile(arr_val, 1 - qnt)
-            maxv = numpy.quantile(arr_val,     qnt)
+            minv = numpy.nanquantile(arr_val, 1 - qnt)
+            maxv = numpy.nanquantile(arr_val,     qnt)
 
             l_max.append(maxv)
             l_min.append(minv)
@@ -191,7 +192,7 @@ class Plotter:
 
         return self._cfg.general.size
     #-------------------------------------
-    def _get_weights(self, var : str) -> dict[str, numpy.ndarray] | None:
+    def _get_weights(self) -> dict[str, numpy.ndarray]:
         '''
         Parameters
         ----------------
@@ -201,24 +202,16 @@ class Plotter:
         ----------------
         Dictionary with weights
         '''
-        cfg = self._cfg.plots[var]
-        if 'weights' not in cfg:
-            return None
-
-        # Pick cached weights
-        if self._d_wgt is not None: 
-            return self._d_wgt
-
-        d_weight    = {sam_name : self._read_weights(name=cfg.weights, rdf=rdf) for sam_name, rdf in self._d_rdf.items()}
+        d_weight    = {sam_name : self._read_weights(rdf=rdf) for sam_name, rdf in self._d_rdf.items()}
         self._d_wgt = d_weight
 
         return d_weight
     # --------------------------------------------
-    def _read_weights(self, name : str, rdf : RDF.RNode) -> numpy.ndarray:
+    def _read_weights(self, rdf : RDF.RNode) -> numpy.ndarray:
         '''
         Parameters
         -------------------
-        name: Name of column holding weights
+        cfg : Dictionary optionally holding 'weights' key
         rdf : ROOT dataframe with weights
 
         Returns
@@ -228,14 +221,14 @@ class Plotter:
         v_col = rdf.GetColumnNames()
         l_col = [ col.c_str() for col in v_col ]
 
-        if name not in l_col:
+        if WEIGHTS not in l_col:
             nentries = rdf.Count().GetValue()
-            log.debug(f'Weight {name} not found, using ones')
+            log.debug(f'Weight \"{WEIGHTS}\" not found, using ones')
 
             return numpy.ones(nentries)
 
-        log.debug(f'Weight {name} found')
-        arr_wgt = rdf.AsNumpy([name])[name]
+        log.debug(f'Weight {WEIGHTS} found')
+        arr_wgt = rdf.AsNumpy([WEIGHTS])[WEIGHTS]
 
         return arr_wgt
     #-------------------------------------

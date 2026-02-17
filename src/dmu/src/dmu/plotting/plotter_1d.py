@@ -9,12 +9,12 @@ from omegaconf import DictConfig
 import numpy
 import matplotlib.pyplot as plt
 
-from ROOT                  import RDF # type: ignore
-from scipy.stats           import norm
-from dmu.logging.log_store import LogStore
-from dmu.plotting.plotter  import Plotter
-from dmu.plotting.fwhm     import FWHM
-from dmu.generic           import naming
+from ROOT         import RDF # type: ignore
+from scipy.stats  import norm
+from dmu          import LogStore
+from dmu.generic  import naming
+from .plotter     import Plotter
+from .fwhm        import FWHM
 
 log = LogStore.add_logger('dmu:plotting:Plotter1D')
 
@@ -81,7 +81,15 @@ class Plotter1D(Plotter):
     def _get_binning(self, var : str, d_data : dict[str, numpy.ndarray]) -> tuple[float, float, int]:
         d_cfg  = self._cfg['plots'][var]
         minx, maxx, bins = d_cfg['binning']
-        if maxx <= minx + 1e-5:
+
+        minx      = float(minx)
+        maxx      = float(maxx)
+        are_close = numpy.isclose(minx, maxx, 1e-12)
+
+        if maxx < minx and not are_close:
+            raise ValueError(f'Wrong bounds for variable {var}: [{minx:.3e}, {maxx:.3e}]')
+
+        if are_close:
             log.info(f'Bounds not set for {var}, will calculated them')
             minx, maxx = self._find_bounds(d_data = d_data, qnt=minx)
             log.info(f'Using bounds [{minx:.3e}, {maxx:.3e}]')
@@ -163,12 +171,11 @@ class Plotter1D(Plotter):
         arr_val: Numpy array storing errors
         cfg    : Configuration
         '''
-        symbol = r'\varepsilon'
-        if 'symbol' in cfg:
-            symbol = cfg['symbol']
-
-        median = numpy.median(arr_val)
+        color  = cfg.get('color' ,          'red')
+        symbol = cfg.get('symbol', r'\varepsilon')
+        median = numpy.nanmedian(arr_val)
         median = float(median)
+
         if 'format' not in cfg:
             val = f'{median:.3f}'
         else:
@@ -177,7 +184,7 @@ class Plotter1D(Plotter):
 
         label = rf'$\mathrm{{Med}}({symbol})={val}$' 
 
-        plt.axvline(x=median, ls=':', label=label, c='red')
+        plt.axvline(x=median, ls=':', label=label, c=color)
     # ----------------------
     def _run_pulls(
         self,
@@ -319,28 +326,32 @@ class Plotter1D(Plotter):
     def _plot_var(self, var : str) -> float:
         '''
         Will plot a variable from a dictionary of dataframes
+
         Parameters
         --------------------
-        var   (str)  : name of column
+        var: name of column
 
         Return
         --------------------
         Largest bin content among all bins and among all histograms plotted
         '''
-        # pylint: disable=too-many-locals
-
         d_data           = self._data[var] 
         minx, maxx, bins = self._get_binning(var, d_data)
-        d_wgt            = self._get_weights(var = var)
 
         l_bc_all = []
         for name, arr_val in d_data.items():
             label        = self._label_from_name(name)
-            arr_wgt      = d_wgt[name] if d_wgt is not None else numpy.ones_like(arr_val)
+            arr_wgt      = self._d_wgt[name]
             arr_wgt      = self._normalize_weights(arr_wgt, var)
             hst          = Hist.new.Reg(bins=bins, start=minx, stop=maxx, name='x').Weight()
             hst.fill(x=arr_val, weight=arr_wgt)
-            self._run_plugins(arr_val, arr_wgt, hst, name, var)
+            self._run_plugins(
+                arr_val, 
+                arr_wgt, 
+                hst,  # type: ignore
+                name, 
+                var)
+
             style = self._get_style_config(var=var, label=label)
 
             log.debug(f'Style: {style}')

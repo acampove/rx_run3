@@ -8,11 +8,11 @@ import numpy
 import mplhep
 import matplotlib.pyplot as plt
 
-from hist                  import Hist
-from ROOT                  import RDataFrame # type: ignore
-from matplotlib.colors     import LogNorm
-from dmu.logging.log_store import LogStore
-from dmu.plotting.plotter  import Plotter
+from hist               import Hist
+from ROOT               import RNode # type: ignore
+from matplotlib.colors  import LogNorm
+from dmu                import LogStore
+from .plotter           import Plotter
 
 log = LogStore.add_logger('dmu:plotting:Plotter2D')
 # --------------------------------------------
@@ -30,7 +30,7 @@ class Plotter2D(Plotter):
         '''
 
         super().__init__({'single_rdf' : rdf}, cfg)
-        self._rdf : RDataFrame = self._d_rdf['single_rdf']
+        self._rdf : RNode = self._d_rdf['single_rdf']
 
         self._wgt : numpy.ndarray
     # --------------------------------------------
