@@ -1,4 +1,3 @@
-import typing
 from .. import z as z
 from ..core.basepdf import BasePDF as BasePDF
 from ..core.serialmixin import SerializableMixin as SerializableMixin
@@ -24,7 +23,7 @@ class BaseFunctor(FunctorMixin, BasePDF):
     def pdfs_extended(self): ...
 
 class SumPDF(BaseFunctor, SerializableMixin):
-    pdfs: typing.Collection
+    pdfs: list[BasePDF]
     def __init__(self, pdfs: Iterable[ZfitPDF], fracs: ztyping.ParamTypeInput | None = None, obs: ztyping.ObsTypeInput = None, extended: ExtendedInputType = None, norm: NormInputType = None, name: str = 'SumPDF', label: str | None = None) -> None: ...
     @property
     def fracs(self): ...

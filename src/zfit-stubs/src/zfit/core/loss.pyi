@@ -2,6 +2,8 @@ import abc
 import tensorflow as tf
 import zfit
 import zfit.z.numpy as znp
+
+from typing import Literal, Self
 from .. import settings as settings, z as z
 from ..exception import AutogradNotSupported as AutogradNotSupported, OutsideLimitsError as OutsideLimitsError, SpecificFunctionNotImplemented as SpecificFunctionNotImplemented
 from ..serialization.serializer import BaseRepr as BaseRepr, Serializer as Serializer
@@ -18,8 +20,9 @@ from .data import convert_to_data as convert_to_data
 from .parameter import convert_to_parameters as convert_to_parameters, set_values as set_values
 from .serialmixin import SerializableMixin as SerializableMixin
 from collections.abc import Callable as Callable, Iterable, Mapping
-from typing import Literal
 from zfit._interfaces import ZfitBinnedData as ZfitBinnedData, ZfitData as ZfitData, ZfitIndependentParameter as ZfitIndependentParameter, ZfitLoss as ZfitLoss, ZfitPDF as ZfitPDF, ZfitParameter as ZfitParameter, ZfitSpace as ZfitSpace, ZfitUnbinnedData as ZfitUnbinnedData
+
+from zfit.pdf import BasePDF
 
 DEFAULT_FULL_ARG: bool
 
@@ -49,7 +52,7 @@ class BaseLoss(ZfitLoss, BaseNumeric, metaclass=abc.ABCMeta):
     @property
     def name(self): ...
     @property
-    def model(self): ...
+    def model(self) -> list[BasePDF]: ...
     @property
     def data(self): ...
     @property
@@ -60,7 +63,7 @@ class BaseLoss(ZfitLoss, BaseNumeric, metaclass=abc.ABCMeta):
     def errordef(self) -> float | int: ...
     def __call__(self, _x: ztyping.DataInputType = None) -> znp.array: ...
     def value(self, *, params: ztyping.ParamTypeInput = None, full: bool | None = None) -> znp.ndarray: ...
-    def __add__(self, other): ...
+    def __add__(self, other) -> Self: ...
     def gradient(self, params: ztyping.ParamTypeInput = None, *, numgrad=None, paramvals: ztyping.ParamTypeInput = None) -> tf.Tensor: ...
     def gradients(self, *_, **__) -> None: ...
     def value_gradient(self, params: ztyping.ParamTypeInput = None, *, full: bool | None = None, numgrad: bool | None = None, paramvals: ztyping.ParamTypeInput = None) -> tuple[tf.Tensor, tf.Tensor]: ...
@@ -75,7 +78,13 @@ class BaseUnbinnedNLL(BaseLoss, SerializableMixin, metaclass=abc.ABCMeta):
     def create_new(self, model: ZfitPDF | Iterable[ZfitPDF] | None = ..., data: ZfitData | Iterable[ZfitData] | None = ..., fit_range=..., constraints=..., options=...): ...
 
 class UnbinnedNLL(BaseUnbinnedNLL):
-    def __init__(self, model: ZfitPDF | Iterable[ZfitPDF], data: ZfitData | Iterable[ZfitData], fit_range=None, constraints: ztyping.ConstraintsInputType = None, options: Mapping[str, object] | None = None) -> None: ...
+    def __init__(
+        self, 
+        model       : ZfitPDF | Iterable[ZfitPDF], 
+        data        : ZfitData | Iterable[ZfitData], 
+        fit_range   : tuple[float,float] | None    = None, 
+        constraints : ztyping.ConstraintsInputType = None, 
+        options     : Mapping[str, object] | None  = None) -> None: ...
     @property
     def is_extended(self): ...
 
@@ -83,7 +92,13 @@ class UnbinnedNLLRepr(BaseLossRepr):
     hs3_type: Literal['UnbinnedNLL']
 
 class ExtendedUnbinnedNLL(BaseUnbinnedNLL):
-    def __init__(self, model: ZfitPDF | Iterable[ZfitPDF], data: ZfitData | Iterable[ZfitData], fit_range=None, constraints: ztyping.ConstraintsInputType = None, options: Mapping[str, object] | None = None) -> None: ...
+    def __init__(
+        self, 
+        model      : ZfitPDF | Iterable[ZfitPDF], 
+        data       : ZfitData | Iterable[ZfitData], 
+        fit_range  : tuple[float,float] | None    = None, 
+        constraints: ztyping.ConstraintsInputType = None, 
+        options    : Mapping[str, object] | None  = None) -> None: ...
     @property
     def is_extended(self): ...
 
