@@ -4,7 +4,7 @@ Module with functions needed to handle random numbers
 import numpy
 import random 
 
-from dmu.stats.zfit import zfit
+from dmu.stats      import zfit
 from contextlib     import contextmanager
 
 # ----------------------

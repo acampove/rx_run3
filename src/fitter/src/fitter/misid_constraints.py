@@ -8,7 +8,7 @@ from rx_selection   import selection as sel
 from dmu.stats      import GofCalculator
 from dmu.stats      import ParameterLibrary as PL
 from dmu.stats      import Constraint1D
-from dmu.stats.zfit import zfit
+from dmu.stats      import zfit
 
 from dmu.generic    import utilities        as gut
 from dmu.workflow   import Cache

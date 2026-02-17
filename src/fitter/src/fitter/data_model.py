@@ -3,7 +3,7 @@ Module containing DataModel class
 '''
 
 from contextlib             import contextmanager
-from dmu.stats.zfit         import zfit
+from dmu.stats              import zfit
 from dmu.logging.log_store  import LogStore
 from dmu.stats.parameters   import ParameterLibrary as PL
 from omegaconf              import DictConfig
