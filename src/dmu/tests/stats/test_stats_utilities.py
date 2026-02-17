@@ -17,6 +17,7 @@ from dmu.stats.fitter       import Fitter
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.utilities    import pdf_to_tex
 from dmu.stats.utilities    import is_pdf_usable
+from dmu.testing            import placeholder_fit
 from dmu.generic            import rxran
 from zfit.data              import Data     as zdata
 from zfit.pdf               import BasePDF  as zpdf
