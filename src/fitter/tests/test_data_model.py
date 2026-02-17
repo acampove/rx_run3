@@ -3,17 +3,17 @@ This module has tests for the DataModel class
 '''
 import pytest
 
-from pathlib               import Path
-from rx_common.types       import Trigger
-from rx_selection          import selection as sel
-from rx_data.rdf_getter    import RDFGetter 
-from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.stats.zfit        import zfit
-from dmu.generic           import utilities as gut
-from dmu.stats             import utilities as sut
-from dmu.workflow          import Cache
-from dmu.logging.log_store import LogStore
-from fitter.data_model     import DataModel
+from pathlib       import Path
+from rx_common     import Trigger
+from rx_selection  import selection as sel
+from rx_data       import RDFGetter 
+from dmu           import LogStore
+from dmu.stats     import ParameterLibrary as PL
+from dmu.stats     import zfit
+from dmu.generic   import utilities as gut
+from dmu.stats     import utilities as sut
+from dmu.workflow  import Cache
+from fitter        import DataModel
 
 log=LogStore.add_logger('fitter:test_data_model')
 # ----------------------
