@@ -1,10 +1,9 @@
 '''
 Module with unit tests for testing/utilities.py functions
 '''
-# pylint: disable=no-name-in-module
 
 import pytest
-from ROOT import RDF
+from ROOT import RDF # type:ignore
 
 import dmu.testing.utilities as ut
 
@@ -12,8 +11,8 @@ from dmu.logging.log_store import LogStore
 
 log = LogStore.add_logger('dmu:tests:test_utilities')
 # ----------------------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
     LogStore.set_level('dmu:testing:utilities', 10)
 # ----------------------------------------------
 def _check_rdf(rdf : RDF.RNode) -> None:
