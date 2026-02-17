@@ -1,0 +1,22 @@
+nominal  : nominal
+systematics:
+  2CB signal ($ee$)            : ee_alt_sig
+  Pol1 combinatorial ($ee$)    : ee_alt_cmb
+  2CB signal ($\mu\mu$)        : mm_alt_sig
+  Pol4 combinatorial ($\mu\mu$): mm_alt_cmb
+  $K^+K^- J/\psi(\to ee)$      : bts_KKjpsi_ee
+  $p^+K^* J/\psi(\to \mu\mu)$  : bts_Kstjpsi_mm
+axes:
+  x:
+    label : $\Delta r_{J/\psi}^{-1}/r_{J/\psi}^{-1}$[%]
+    limits: [0, 3]
+    bins  : 50
+  y:
+    label : Entries 
+    limits: null 
+    bins  : 0
+vline:
+  style : '-'
+  width : 2
+  color : gray
+  skip  : true

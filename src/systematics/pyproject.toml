@@ -1,0 +1,17 @@
+[project]
+name            = "systematics"
+version         = "0.0.1"
+description     = "Project used to calculate systematics for LFU type of measurements"
+readme          = "README.md"
+dependencies    = [
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+# Scripts / CLI entry points
+[project.scripts]
+
+[tool.setuptools.package-data]
+'rx_selection_data' = ['**/*.yaml']
+

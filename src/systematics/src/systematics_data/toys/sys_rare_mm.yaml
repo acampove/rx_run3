@@ -1,0 +1,8 @@
+sig:
+  nominal  : dscb
+  variation: 2cb
+  suffix   : alt_sig
+cmb:
+  nominal  : expo
+  variation: pol4
+  suffix   : alt_cmb
