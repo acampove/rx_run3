@@ -1,31 +1,26 @@
 '''
 Module with functions needed to calculate systematics
 '''
-import zfit
 import numpy
 
 from typing        import Literal
-from rpk_log_store import log_store
-from rx_generic    import utilities as gut
-from rx_stats      import FitResult
-from rx_stats      import SystematicsCalculator
-from rx_stats      import ChannelHolder
-from rpk_tools     import Component
+from dmu           import LogStore
+from dmu.stats     import zfit
+from dmu.stats     import FitResult
+from dmu.generic   import utilities as gut
+from fitter        import ChannelHolder
+from fitter        import ComponentHolder
+from fitter        import FitConfig
+from .systematics  import Calculator as SystematicsCalculator
 
-from .             import fitting_utilities as fut
-from .holder       import Holder
-from .fit_config   import FitConfig
-from .zmodel_v2    import RpKPDF, RpKSumPDF
-
-log     = log_store.add_logger('rpk_tools:systematics_utilities')
+log     = LogStore.add_logger('systematics:utilities')
 zres    = zfit.result.FitResult
 zlos    = zfit.loss.ExtendedUnbinnedNLL
 zpar    = zfit.param.Parameter
 Channel = Literal['ee', 'mm']
 
 # Holders of objects
-hdat    = Holder[numpy.ndarray]
-hpdf    = Holder[RpKPDF]
+hdat    = ComponentHolder[numpy.ndarray]
 
 # Holders of objects by channel
 cfcg    = ChannelHolder[FitConfig]
