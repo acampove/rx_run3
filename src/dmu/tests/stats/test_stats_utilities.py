@@ -6,18 +6,16 @@ import re
 import math
 import pytest
 import numpy
-import pandas as pnd
 
 from importlib.resources    import files
 from pathlib                import Path
 from omegaconf              import OmegaConf
 from dmu.logging.log_store  import LogStore
 from dmu.stats              import utilities as sut
-from dmu.stats.zfit         import zfit
+from dmu.stats              import zfit
 from dmu.stats.fitter       import Fitter
 from dmu.stats.utilities    import print_pdf
 from dmu.stats.utilities    import pdf_to_tex
-from dmu.stats.utilities    import placeholder_fit
 from dmu.stats.utilities    import is_pdf_usable
 from dmu.generic            import rxran
 from zfit.data              import Data     as zdata
@@ -163,45 +161,6 @@ def test_pdf_to_tex(tmp_path : Path):
         in_path = in_path, 
         out_dir = tmp_path, 
         d_par   = d_par)
-#----------------------------------
-@pytest.mark.parametrize('make_plot', [True, False])
-def test_placeholder_fit(make_plot : bool, tmp_path : Path) -> None:
-    '''
-    Runs a placeholder fit needed to produce outputs useful
-    to develop tools
-    '''
-    placeholder_fit(
-        kind     = 's+b',
-        fit_dir  = tmp_path,
-        plot_fit = make_plot)
-# ----------------------
-@pytest.mark.parametrize('suffix', [None ,   'suff'])
-@pytest.mark.parametrize('kind'  , ['s+b', 'signal'])
-def test_get_placeholder_model(
-    kind   : str,
-    suffix : str|None) -> None:
-    '''
-    Test of get_model
-    '''
-    pdf = sut.get_model(kind=kind, suffix=suffix)
-    sut.is_pdf_usable(pdf=pdf)
-# ----------------------
-@pytest.mark.parametrize('kind'  , ['s+b', 'signal'])
-def test_get_placeholder_nll(kind : str) -> None:
-    '''
-    Test of get_nll
-    '''
-    _ = sut.get_nll(kind=kind)
-#----------------------------------
-def test_reuse_data(tmp_path : Path) -> None:
-    '''
-    Tests running fit on cached data
-    '''
-    placeholder_fit(kind='s+b', fit_dir=tmp_path, plot_fit=False)
-
-    df   = pnd.read_json(f'{tmp_path}/data.json')
-
-    placeholder_fit(kind='s+b', fit_dir=tmp_path, plot_fit=True, df=df)
 #----------------------------------
 def test_is_pdf_usable():
     '''
