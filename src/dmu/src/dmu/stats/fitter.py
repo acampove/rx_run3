@@ -5,14 +5,15 @@ Module holding zfitter class
 import contextlib
 import pprint
 import numpy
+import tempfile
 import pandas            as pd
 import matplotlib.pyplot as plt
 
-from typing                   import Protocol, Union
+from asdf                     import AsdfFile
+from typing                   import Protocol, Union, overload, Literal, Any
 from functools                import lru_cache
+from dmu                      import LogStore
 from dmu.logging              import messages  as mes
-from dmu.logging.log_store    import LogStore
-from dmu.stats.gof_calculator import GofCalculator
 
 from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
@@ -21,10 +22,16 @@ from zfit.pdf                 import BasePDF       as zpdf
 from zfit.param               import Parameter     as zpar
 from zfit.data                import Data          as zdat
 from zfit                     import Space         as zobs
-from .imports                 import zfit
 
-log = LogStore.add_logger('dmu:statistics:fitter')
-Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+from .minimizers              import ContextMinimizer
+from .gof_calculator          import GofCalculator
+from .zfit_plotter            import ZFitPlotter
+from .imports                 import zfit
+from .fit_result              import FitResult
+
+log = LogStore.add_logger('dmu:stats:fitter')
+Loss= ExtendedUnbinnedNLL | UnbinnedNLL
+zcns= zfit.constraint.GaussianConstraint
 #------------------------------
 class ParameterHolder(Protocol):
     '''
@@ -33,6 +40,11 @@ class ParameterHolder(Protocol):
     # ----------------------
     def get_params(self, floating : bool) -> set[zpar]:
         ...
+#------------------------------
+class FitterFailError(Exception):
+    '''
+    Exception used when fit fails in error calculation 
+    '''
 #------------------------------
 class FitterGofError(Exception):
     '''
@@ -48,6 +60,9 @@ class Fitter:
     '''
     Class meant to be an interface to underlying fitters
     '''
+    _status = True # Enforce status == 0 when declaring fits as good
+    _valid  = True # Enforce validity when declaring fits as good
+
     # This is meant to be used through a context manager
     # To allow the errors to be calculated or not
     _turn_off_errors  = False
@@ -62,17 +77,21 @@ class Fitter:
         'Loaded cuDNN version',
         'All log messages before absl::InitializeLog()']
     #------------------------------
-    def __init__(self, pdf : zpdf, data : zdat):
+    def __init__(
+        self,
+        pdf  : zpdf,
+        data : zdat | numpy.ndarray):
         '''
         Parameters
         ---------------
         pdf : PDF to fit
-        data: Datasets to fit
+        data: Datasets to fit, either zfit data object, or numpy array
         '''
         self._data_in = data
         self._pdf     = pdf
+        self._nll     : Loss | None = None
 
-        self._data_zf : zdat 
+        self._data_zf : zdat
         self._data_np : numpy.ndarray
         self._obs     : zfit.Space
 
@@ -180,7 +199,7 @@ class Fitter:
 
         Returns
         ---------------
-        Dictionary with keys as parameter names 
+        Dictionary with keys as parameter names
         and values as floating parameters
         '''
         npar     = 0
@@ -294,47 +313,40 @@ class Fitter:
 
         return cfg['likelihood']['nbins']
     #------------------------------
-    def _get_nll(self, data_zf, constraints, frange, cfg):
-        nbins     = self._get_nbins(cfg)
-        if nbins is None:
-            log.info('No binning was specified, will do unbinned fit')
-            pdf = self._pdf
-        else:
-            log.info(f'Using {nbins} bins for fit')
-            obs     = self._get_binned_observable(nbins)
-            pdf     = zfit.pdf.BinnedFromUnbinnedPDF(self._pdf, obs)
-            data_zf = data_zf.to_binned(obs)
+    def _get_nll(
+        self, 
+        data        : zdat, 
+        constraints : list[zcns], 
+        frange      : tuple[float,float] | None, 
+        cfg         : dict[str, Any]):
+        nbins = self._get_nbins(cfg = cfg)
 
         if not self._pdf.is_extended and nbins is None:
-            nll = zfit.loss.UnbinnedNLL(        model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
+            nll = zfit.loss.UnbinnedNLL(model=self._pdf, data=data, constraints=constraints, fit_range=frange)
             return nll
 
         if     self._pdf.is_extended and nbins is None:
-            nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
-            return nll
-
-        if frange is not None:
-            raise ValueError('Fit range cannot be defined for binned likelihoods')
-
-        if not self._pdf.is_extended:
-            nll = zfit.loss.BinnedNLL(          model=pdf, data=data_zf, constraints=constraints)
-            return nll
-
-        if     self._pdf.is_extended:
-            nll = zfit.loss.ExtendedBinnedNLL(  model=pdf, data=data_zf, constraints=constraints)
+            nll = zfit.loss.ExtendedUnbinnedNLL(model=self._pdf, data=data, constraints=constraints, fit_range=frange)
             return nll
 
         raise ValueError('Likelihood was neither Binned nor Unbinned nor Extended nor non-extended')
     #------------------------------
-    def _get_full_nll(self, cfg : dict):
+    def _get_full_nll(self, cfg : dict) -> Loss:
         constraints = Fitter.get_gaussian_constraints(
             obj = self._pdf,
             cfg = cfg.get('constraints'))
 
-        ranges      = self._get_ranges(cfg)
-        data_zf     = self._get_subdataset(cfg)
-        l_nll       = [ self._get_nll(data_zf, constraints, frange, cfg) for frange in ranges ]
-        nll         = sum(l_nll[1:], l_nll[0])
+        ranges  = self._get_ranges(cfg)
+        data    = self._get_subdataset(cfg)
+        l_nll   = [ self._get_nll(data, constraints, frange, cfg) for frange in ranges ]
+
+        nnll    = len(l_nll)
+        log.info(f'Using {nnll} likelihoods')
+        nll     = sum(l_nll[1:], l_nll[0])
+
+        if not isinstance(nll, Loss):
+            nll_type = type(nll)
+            raise ValueError(f'Invalid likelihood of type {nll_type}')
 
         return nll
     #------------------------------
@@ -362,8 +374,56 @@ class Fitter:
         log.info(header)
         log.info(parval)
     #------------------------------
+    @overload
     @staticmethod
-    def minimize(nll, cfg : dict, ndof : int = 10) -> tuple[zres, tuple]:
+    def minimize(
+        nll : Loss,
+        cfg : dict[str,Any],
+        *,
+        context_minimizer : Literal[True]) -> tuple[FitResult, tuple[float, int, float]]: ...
+    @overload
+    @staticmethod
+    def minimize(
+        nll : Loss,
+        cfg : dict[str,Any],
+        *,
+        context_minimizer : Literal[False]) -> tuple[zres, tuple[float, int, float]]: ...
+    @overload
+    @staticmethod
+    def minimize(
+        nll : Loss,
+        *,
+        cfg : dict[str,Any]) -> tuple[zres, tuple[float, int, float]]: ...
+    @overload
+    @staticmethod
+    def minimize(
+        nll : Loss,
+        cfg : dict[str,Any],
+        *,
+        ndof: int) -> tuple[zres, tuple[float, int, float]]: ...
+    @overload
+    @staticmethod
+    def minimize(
+        nll  : Loss,
+        cfg  : dict[str,Any],
+        *,
+        ndof : int,
+        context_minimizer : Literal[False]) -> tuple[zres, tuple[float,int,float]]:...
+    @overload
+    @staticmethod
+    def minimize(
+        nll  : Loss,
+        cfg  : dict[str,Any],
+        *,
+        ndof : int,
+        context_minimizer : Literal[True]) -> tuple[FitResult, tuple[float,int,float]]:...
+    @staticmethod
+    def minimize(
+        nll  : Loss,
+        cfg  : dict[str,Any],
+        *,
+        ndof : int               = 10,
+        context_minimizer : bool = False) -> tuple[zres|FitResult, tuple[float,int,float]]:
         '''
         Parameters
         --------------
@@ -382,8 +442,6 @@ class Fitter:
 
         Returns
         --------------
-        Tuple with:
-
         - Zfit result object
         - Tuple with goodness of fit (pvalue, ndof, chi2)
 
@@ -401,8 +459,30 @@ class Fitter:
                 log.debug(f'{key:<30}{val:<30}')
 
         mnm = zfit.minimize.Minuit(**min_cfg)
+
+        if 'minimizer' in cfg and context_minimizer: 
+            log.info('Using context minimizer')
+            mnm = ContextMinimizer(min = mnm)
+
         with mes.filter_stderr(banned_substrings=Fitter._l_hidden_tf_lines):
-            res = mnm.minimize(nll)
+            try:
+                res = mnm.minimize(loss = nll)
+            except (FailMinimizeNaN, FitterGofError, RuntimeError):
+                raise FitterFailError('Minimization failed')
+
+        gof = Fitter._calculate_gof(nll = nll, ndof = ndof)
+
+        # When using ContextMinimizer, res (of class FitResult)
+        # already has errors
+        if isinstance(res, FitResult):
+            return res, gof
+
+        if not Fitter.good_fit(res = res):
+            log.debug('Found bad fit')
+            if log.getEffectiveLevel() < 20:
+                log.info(res)
+
+            return res, gof 
 
         if not Fitter._turn_off_errors:
             log.debug('Calculating errors')
@@ -413,14 +493,8 @@ class Fitter:
         # TODO: Add a check to make sure the errors are added here
         # if not, raise
 
-        gcl = GofCalculator(nll, ndof=ndof)
-        try:
-            pval = gcl.get_gof(kind='pvalue')
-            chi2 = gcl.get_gof(kind='chi2')
-        except FitterGofError as exc:
-            raise FitterGofError('Cannot calculate GOF') from exc
-
-        stat = res.status
+        stat          = res.status
+        chi2, _, pval = gof
 
         log.debug(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
         pdf   = nll.model[0] # This class is not meant for simultaneous fits
@@ -428,7 +502,30 @@ class Fitter:
         d_par = Fitter.get_float_pars(pdf=pdf)
         Fitter.print_pars(cfg, d_par=d_par)
 
-        return res, (chi2, ndof, pval)
+        return res, gof 
+    # ----------------------
+    @staticmethod
+    def _calculate_gof(
+        nll,
+        ndof : int) -> tuple[float, int, float]:
+        '''
+        Parameters
+        -------------
+        nll : negative log likelihood after fit
+        ndof: Number of degrees of freedom to calculate chi2 with (input is unbinned data)
+
+        Returns
+        -------------
+        Tuple with chi2, NdoF and pvalue
+        '''
+        gcl = GofCalculator(nll, ndof=ndof)
+        try:
+            pval = gcl.get_gof(kind='pvalue')
+            chi2 = gcl.get_gof(kind='chi2')
+        except FitterGofError as exc:
+            raise FitterGofError('Cannot calculate GOF') from exc
+
+        return chi2, ndof, pval 
     # ----------------------
     @staticmethod
     def _calculate_errors(res : zres) -> zres:
@@ -457,14 +554,14 @@ class Fitter:
             if res.converged:
                 if log.getEffectiveLevel() < 20:
                     print(res)
-                log.warning(f'Error not calculated, retrying: {counter}/10')
+                log.debug(f'Error not calculated, retrying: {counter}/10')
             # Bad fit and cannot get error => Forget about fit
             else:
                 raise RuntimeError('Fit error could not be found')
 
         # Good fit and could not find error
         if not found_error:
-            raise RuntimeError('Fit error could not be found')
+            raise FitterFailError('Fit error could not be found')
 
         return res
     #------------------------------
@@ -477,86 +574,135 @@ class Fitter:
 
         return not (good_chi2 and good_pval and good_ndof)
     #------------------------------
-    def _fit_retries(self, cfg : dict) -> tuple[dict[tuple[float, int, float],zres], zres]:
+    @staticmethod
+    def good_fit(res : zres) -> bool:
+        '''
+        Parameters
+        -----------
+        res: Fit result
+
+        Returns
+        -----------
+        True if fit is good
+        '''
+        if Fitter._status and res.status != 0:
+            return False
+
+        if Fitter._valid  and not res.valid:
+            return False
+
+        return True
+    #------------------------------
+    def _fit_retries(
+        self, 
+        cfg : dict[str, Any]) -> dict[tuple[float, int, float],zres]:
         ntries       = cfg['strategy']['retry']['ntries']
         pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
         ignore_status= cfg['strategy']['retry']['ignore_status']
 
-        nll        = self._get_full_nll(cfg = cfg)
+        nll = self._get_full_nll(cfg = cfg)
+        if not isinstance(nll, Loss):
+            raise ValueError('NLL is not an allowed likelihood')
+
         d_pval_res = {}
         last_res   = None
         for i_try in range(ntries):
             try:
-                res, gof = self.minimize(nll, cfg, ndof=self._ndof)
+                res, gof = self.minimize(
+                    nll = nll, 
+                    cfg = cfg, 
+                    ndof= self._ndof)
+                if log.getEffectiveLevel() < 20:
+                    log.debug(res)
+
+                last_res = res
+                if gof is None:
+                    self._reshuffle_pdf_pars()
+                    continue
             except (FailMinimizeNaN, FitterGofError, RuntimeError):
                 self._reshuffle_pdf_pars()
                 log.warning(f'{i_try:03}/{ntries:03} failed due to exception')
                 continue
 
-            if log.getEffectiveLevel() < 20:
-                log.debug(res)
-
-            last_res = res
-            bad_fit  = res.status != 0 or not res.valid
-
-            if not ignore_status and bad_fit:
+            if not ignore_status and not self.good_fit(res = res):
                 self._reshuffle_pdf_pars()
                 log.info(f'{i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
                 continue
-
 
             if self._gof_is_bad(gof=gof):
                 log.debug('Reshufling and skipping, found bad gof')
                 self._reshuffle_pdf_pars()
                 continue
 
-            d_pval_res[gof]=res
-
             _, _, pval   = gof
             if pval > pvalue_thresh:
                 log.info(f'Reached {pval:.3f} (> {pvalue_thresh:.3f}) threshold after {i_try + 1} attempts')
-                return {gof : res}, res
+                return {gof : res}
+
+            log.info(f'Picking: {res}')
+            d_pval_res[gof]=res
 
             log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
             self._reshuffle_pdf_pars()
-
-        if last_res is None and isinstance(nll, Loss):
-            self._plot_data(nll=nll)
+        # Loop ends here
 
         if last_res is None:
-            # TODO: Need to plot binned data before raising for cases where fit fails
-            raise FitterFailedFit('Cannot find any valid fit')
+            self._plot_fit(nll=nll)
+            self._save_nll(nll=nll)
 
-        return d_pval_res, last_res
+            raise FitterFailedFit('Could not fit even once')
+
+        nres = len(d_pval_res)
+        if nres == 0:
+            raise FitterFailedFit('Could not find any valid fit')
+
+        log.info(f'Found {nres} results')
+
+        self._nll = nll
+
+        return d_pval_res
     #------------------------------
-    def _plot_data(self, nll : Loss) -> None:
+    def _save_nll(self, nll : Loss) -> None:
+        '''
+        Parameters
+        ---------------
+        nll: Negative log likelihood with model and data from fit
+        '''
+        out_path = tempfile.mkdtemp()
+        fpath    = f'{out_path}/nll.asdf'
+
+        obj : AsdfFile = nll.to_asdf()
+        try:
+            obj.write_to(fd = fpath)
+        except Exception:
+            log.error('Could not serialize NLL')
+            return
+
+        log.error(f'Saved NLL to: {fpath}')
+    #------------------------------
+    def _plot_fit(self, nll : Loss) -> None:
+        '''
+        Parameters
+        ---------------
+        nll: Negative log likelihood with model and data from fit
+        '''
         data = nll.data[0]
-        arr  = data.to_numpy()
-        arr  = arr[~numpy.isnan(arr)]
+        pdf  = nll.model[0]
 
-        rms  = numpy.std(arr)
-        mean = numpy.mean(arr)
-
-        plt.hist(arr, bins=100, range=(mean - 10 * rms, mean + 10 * rms))
+        obj  = ZFitPlotter(data=data, model=pdf, result=None)
+        obj.plot(nbins=50)
         plt.show()
     #------------------------------
     def _pick_best_fit(
-        self, 
-        d_pval_res : dict[tuple[float,int,float], zres], 
-        last_res   : zres) -> zres:
-        nsucc = len(d_pval_res)
-        if nsucc == 0:
-            log.warning('None of the fits succeeded, returning last result')
-            self._set_pdf_pars(last_res)
-
-            return last_res
-
+        self,
+        d_pval_res : dict[tuple[float,int,float], zres]) -> zres:
         l_pval_res= list(d_pval_res.items())
         l_pval_res.sort()
         (chi2, ndof, pval), res = l_pval_res[0]
         rchi2 = chi2 / ndof
 
-        log.info(f'Picking out best fit from {nsucc} fits reduced chi2/pvalue: {rchi2:.3f}/{pval:.3f}')
+        nfits = len(d_pval_res)
+        log.info(f'Picking out best fit from {nfits} fits reduced chi2/pvalue: {rchi2:.3f}/{pval:.3f}')
         for (chi2, ndof, pval), _ in l_pval_res:
             log.debug(f'{chi2:<20.3f}{ndof:<20}{pval:<20.3f}')
 
@@ -564,6 +710,8 @@ class Fitter:
 
         return res
     #------------------------------
+    # TODO: minimization is not protected by try/except
+    # Should this be wrapped?
     def _fit_in_steps(self, cfg : dict) -> zres:
         l_nsample = cfg['strategy']['steps']['nsteps']
         l_nsigma  = cfg['strategy']['steps']['nsigma']
@@ -575,18 +723,25 @@ class Fitter:
             cfg_step             = dict(cfg)
             cfg_step['nentries'] = nsample
 
-            nll    = self._get_full_nll(cfg = cfg_step)
-            res, _ = self.minimize(nll, cfg_step, ndof=self._ndof)
+            nll      = self._get_full_nll(cfg = cfg_step)
+            res, gof = self.minimize(nll, cfg_step, ndof=self._ndof)
+            if gof is None:
+                raise ValueError('Minimization failed')
+
             res.hesse(method='minuit_hesse')
             self._update_par_bounds(res, nsigma=nsigma, yields=l_yield)
 
         log.info('Fitting full sample')
-        nll    = self._get_full_nll(cfg = cfg)
-        res, _ = self.minimize(nll, cfg, ndof=self._ndof)
+        nll      = self._get_full_nll(cfg = cfg)
+        res, gof = self.minimize(nll, cfg, ndof=self._ndof)
+        if gof is None:
+            raise ValueError('Minimization failed')
 
         if res is None:
             nsteps = len(l_nsample)
             raise ValueError(f'No fit out of {nsteps} was done')
+
+        self._nll = nll
 
         return res
     #------------------------------
@@ -622,6 +777,16 @@ class Fitter:
             shape.upper = val + nsigma * err
 
             log.info(f'{name:<20}{val - err:<20.3e}{val + err:<20.3e}')
+    #------------------------------
+    @property
+    def nll(self) -> Loss:
+        '''
+        Negative log likelihood, raises if NLL missing
+        '''
+        if self._nll is None:
+            raise ValueError('Missing NLL, fit was not ran?')
+
+        return self._nll
     #------------------------------
     @staticmethod
     def get_gaussian_constraints(
@@ -685,18 +850,22 @@ class Fitter:
 
         if 'strategy' not in cfg:
             log.info('Not using any strategy, simple fit')
-            nll    = self._get_full_nll(cfg = cfg)
-            res, _ = self.minimize(nll, cfg, ndof=self._ndof)
+            nll      = self._get_full_nll(cfg = cfg)
+            res, gof = self.minimize(nll, cfg, ndof=self._ndof)
+            if gof is None:
+                raise ValueError('Minimization failed')
+
+            self._nll = nll
 
             return res
 
         log.info(30 * '-')
         log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         log.info(30 * '-')
-        if 'retry' in cfg['strategy']:
+        if   'retry' in cfg['strategy']:
             log.info('Using retry strategy')
-            d_pval_res, last_res = self._fit_retries(cfg)
-            res = self._pick_best_fit(d_pval_res, last_res)
+            d_pval_res = self._fit_retries(cfg)
+            res = self._pick_best_fit(d_pval_res)
         elif 'steps' in cfg['strategy']:
             log.info('Using steps strategy')
             res = self._fit_in_steps(cfg)
@@ -721,6 +890,33 @@ class Fitter:
                 yield
             finally:
                 Fitter._turn_off_errors = old_val
+
+        return _context()
+    # ----------------------
+    @classmethod
+    def criterion(
+        cls,
+        status : bool = True,
+        valid  : bool = True):
+        '''
+        Parameters
+        -------------
+        status: If False, it will ignore status when declaring fits as good
+        valid : If False, it will ignore validity when declaring fits as good
+        '''
+        old_status = Fitter._status
+        old_valid  = Fitter._valid
+
+        Fitter._status = status
+        Fitter._valid  = valid
+
+        @contextlib.contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                Fitter._valid  = old_valid
+                Fitter._status = old_status
 
         return _context()
 #------------------------------

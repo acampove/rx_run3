@@ -3,23 +3,22 @@ Module containing unit tests for Fitter class
 '''
 
 import os
-from functools   import cache
-
 import tqdm
 import numpy
 import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
-from omegaconf        import OmegaConf
 
-from dmu.stats.gof_calculator import GofCalculator
-from dmu.stats              import utilities as sut
-from dmu.generic            import utilities as gut
-from dmu.stats.zfit         import zfit
-from dmu.stats.fitter       import Fitter
-from dmu.stats.zfit_plotter import ZFitPlotter
-from dmu.logging.log_store  import LogStore
-from ROOT                   import RDF, gInterpreter # type: ignore
+from functools   import cache
+from omegaconf   import OmegaConf
+from dmu         import LogStore
+from dmu.testing import get_model, get_nll
+from dmu.generic import utilities as gut
+from dmu.stats   import GofCalculator
+from dmu.stats   import zfit
+from dmu.stats   import Fitter
+from dmu.stats   import ZFitPlotter
+from ROOT        import RDF, gInterpreter # type: ignore
 
 log = LogStore.add_logger('dmu:logging:test_fitter')
 #-------------------------------------
@@ -150,9 +149,9 @@ def test_ranges():
     '''
     Fit data in disjoint ranges
     '''
-    pdf   = sut.get_model('s+b')
+    pdf   = get_model('s+b')
     sam   = pdf.create_sampler(n=50_000)
-    pdf   = sut.get_model('s+b', lam = -0.0003)
+    pdf   = get_model('s+b', lam = -0.0003)
 
     rng   = [[4500, 5100], [5300, 6000]]
     cfg   = {'ranges': rng}
@@ -182,7 +181,7 @@ def test_wgt():
     dat = zfit.data.from_numpy(array=arr, weights=wgt, obs=pdf.space)
 
     obj=Fitter(pdf, dat)
-    res=obj.fit()
+    obj.fit()
 #-------------------------------------
 def test_steps():
     '''
@@ -226,7 +225,7 @@ def test_minimizer() -> None:
     '''
     Simplest test of minimizer static method
     '''
-    nll = sut.get_nll(kind='s+b')
+    nll = get_nll(kind='s+b')
     cfg = {
         'minimization' : 
         {'mode'     : 0,
@@ -242,7 +241,7 @@ def test_profiling_minimizer() -> None:
     Simplest test of minimizer static method
     '''
     ntoys = 30
-    nll   = sut.get_nll(kind='s+b')
+    nll   = get_nll(kind='s+b')
     sam   = nll.data[0]
     for _ in tqdm.trange(ntoys, ascii=' -'):
         sam.resample()
