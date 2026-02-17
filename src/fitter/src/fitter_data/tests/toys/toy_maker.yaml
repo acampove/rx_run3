@@ -1,5 +1,6 @@
 # This config is used for testing the ToyMaker class
-out_dir: toys/test
+output : toys/test.parquet
+rseed  : 42
 ntoys  : 20
 run_gof: false
 constraints : {}

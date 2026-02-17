@@ -1,16 +1,16 @@
 '''
 Module holding Calculator class
 '''
-import zfit 
 import pandas as pnd
 
+from dmu.stats     import zfit 
+from dmu.stats     import FitResult
 from zfit.data     import SamplerData
 from typing        import Generic, Literal, TypeVar
 from omegaconf     import DictConfig
-from rpk_log_store import log_store as LogStore
-from .toy_maker    import ToyMaker
-from .holders      import ChannelHolder 
-from .fit_result   import FitResult
+from dmu           import LogStore
+from fitter        import ToyMaker
+from fitter        import ChannelHolder 
 
 log    = LogStore.add_logger('rx_stats:systematics')
 SumPDF = zfit.pdf.SumPDF
