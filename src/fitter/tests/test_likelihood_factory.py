@@ -4,12 +4,12 @@ Module meant to test DataFitter class
 import pytest
 
 from pathlib               import Path
-from dmu.stats.fitter      import LogStore
-from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.stats.zfit        import zfit
+from dmu                   import LogStore
+from dmu.stats             import ParameterLibrary as PL
+from dmu.stats             import zfit
 from dmu.generic           import utilities  as gut
 from dmu.workflow          import Cache
-from rx_common.types       import Trigger
+from rx_common             import Qsq, Sample
 from rx_data               import RDFGetter
 from rx_selection          import selection  as sel
 from fitter                import LikelihoodFactory
@@ -56,8 +56,8 @@ def test_simple(tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = 'brem_000',
             obs    = obs,
-            sample = 'DATA_24_MagDown_24c2',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi,
             cfg    = cfg)
         nll = ftr.run()
 
@@ -80,8 +80,8 @@ def test_config(tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = 'likelihood_factory',
             obs    = obs,
-            sample = 'DATA_24_MagDown_24c2',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi,
             cfg    = cfg)
         cfg = ftr.get_config()
 
@@ -113,8 +113,8 @@ def test_reso_muon(tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = 'brem_000',
             obs    = obs,
-            sample = 'DATA_24_MagDown_24c2',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi,
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -132,8 +132,8 @@ def test_rare_muon(q2bin : str, tmp_path : Path):
          PL.parameter_schema(cfg=cfg.model.yields):
         ftr = LikelihoodFactory(
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = q2bin,
+            sample = Sample.data_24,
+            q2bin  = Qsq(value = q2bin),
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -157,8 +157,8 @@ def test_reso_electron(nbrem : int, tmp_path : Path):
         ftr = LikelihoodFactory(
             name   = f'brem_{nbrem:03}',
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = 'jpsi',
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi,
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -179,8 +179,8 @@ def test_rare_electron(q2bin : str, tmp_path : Path):
             'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
         ftr = LikelihoodFactory(
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = q2bin,
+            sample = Sample.data_24,
+            q2bin  = Qsq.jpsi,
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -202,8 +202,8 @@ def test_high_q2_track(tmp_path : Path):
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = LikelihoodFactory(
             obs    = obs,
-            sample = 'DATA_24_*',
-            q2bin  = 'high',
+            sample = Sample.data_24,
+            q2bin  = Qsq.high,
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
@@ -240,8 +240,8 @@ def test_rare_misid_electron(
         ftr = LikelihoodFactory(
             obs    = obs,
             name   = region,
-            sample = 'DATA_24_*',
-            q2bin  = q2bin,
+            sample = Sample.data_24,
+            q2bin  = Qsq(value = q2bin),
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
