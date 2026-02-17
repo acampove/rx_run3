@@ -16,7 +16,7 @@ import matplotlib.pyplot   as plt
 
 from omegaconf               import DictConfig
 from ROOT                    import RDF # type: ignore
-from dmu.stats.zfit          import zfit
+from dmu.stats               import zfit
 from zfit.pdf                import BasePDF   as zpdf
 from zfit.data               import Data      as zdata
 from zfit.result             import FitResult as zres

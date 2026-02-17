@@ -7,10 +7,10 @@ import dataclasses
 from functools      import cached_property
 from pathlib        import Path
 from typing         import Any
-from dmu.stats.zfit import zfit
 from omegaconf      import DictConfig
-from dmu.generic    import utilities  as gut
 from dmu            import LogStore
+from dmu.stats      import zfit
+from dmu.generic    import utilities  as gut
 from rx_common      import Qsq, info
 from zfit           import Space      as zobs
 

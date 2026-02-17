@@ -8,7 +8,7 @@ from pathlib        import Path
 from dmu.workflow   import Cache
 from dmu            import LogStore
 from dmu.stats      import ModelFactory, print_constraints
-from dmu.stats.zfit import zfit
+from dmu.stats      import zfit
 from dmu.generic    import utilities           as gut
 from rx_common      import Qsq
 from fitter         import FitConfig

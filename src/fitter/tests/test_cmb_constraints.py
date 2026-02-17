@@ -5,7 +5,6 @@ Module used to test CmbConstraints class
 from omegaconf import DictConfig
 import pytest 
 
-from dmu.stats.zfit import zfit
 from typing       import Final
 from pathlib      import Path
 from dmu.workflow import Cache
@@ -15,6 +14,7 @@ from fitter       import CmbConstraints
 from dmu          import LogStore
 from dmu.generic  import utilities           as gut
 from dmu.stats    import ModelFactory
+from dmu.stats    import zfit
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
 from rx_selection import selection           as sel
 

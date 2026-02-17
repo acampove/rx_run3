@@ -6,10 +6,10 @@ import mplhep
 import pytest
 import matplotlib.pyplot as plt
 
-from pathlib                import Path
-from zfit.core.basepdf      import BasePDF   as zpdf
-from dmu.stats.zfit         import zfit
-from dmu.stats.zfit_models  import ModExp
+from pathlib           import Path
+from zfit.core.basepdf import BasePDF   as zpdf
+from dmu.stats         import zfit
+from dmu.stats         import ModExp
 
 # -------------------------------
 class Data:

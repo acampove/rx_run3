@@ -4,7 +4,7 @@ This module is meant to test the SimFitter class
 import pytest
 
 from pathlib                import Path
-from dmu.stats.zfit         import zfit
+from dmu.stats              import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
 from dmu.workflow.cache     import Cache

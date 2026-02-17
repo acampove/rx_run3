@@ -2,11 +2,11 @@
 Script used to test custom zfit minimizers
 '''
 import pytest
-import zfit
 
 from dmu         import LogStore
 from dmu.stats   import AnealingMinimizer
 from dmu.stats   import ContextMinimizer
+from dmu.stats   import zfit
 from dmu.testing import get_nll
 from dmu.testing import SumLiteral
 

@@ -2,12 +2,12 @@
 Module holding functions needed for testing statistical tools
 '''
 
-import zfit
 import numpy
 import pandas as pnd
 
 from pathlib          import Path
 from typing           import overload, Literal
+from dmu.stats        import zfit
 from dmu.stats        import Fitter
 from dmu.stats        import print_pdf
 from dmu.stats        import save_fit 

@@ -4,8 +4,9 @@ Module meant to hold tests for the DataPreprocessor class
 import os
 import pytest
 import matplotlib.pyplot as plt
+
 from pathlib                  import Path
-from dmu.stats.zfit           import zfit
+from dmu.stats                import zfit
 from dmu.generic              import utilities as gut
 from dmu.stats                import utilities as sut
 from dmu.logging.log_store    import LogStore

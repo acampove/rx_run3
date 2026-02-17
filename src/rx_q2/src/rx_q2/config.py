@@ -7,9 +7,9 @@ from pathlib        import Path
 from typing         import Any
 from pydantic       import BaseModel, computed_field, model_validator, ConfigDict
 
-from dmu.stats.zfit        import zfit
-from zfit.interface        import ZfitSpace as zobs
-from dmu.logging.log_store import LogStore
+from dmu            import LogStore
+from dmu.stats      import zfit
+from zfit.interface import ZfitSpace as zobs
 
 log=LogStore.add_logger('rx_q2:config')
 #-------------------
