@@ -28,16 +28,20 @@ class Data:
         'b6' : 'block == 6',
         'b78': 'block == 7 || block == 8'}
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This runs before any test
     '''
-    LogStore.set_level('rx_data:rdf_getter'      , 30)
-    LogStore.set_level('rx_misid:sample_weighter', 30)
-    LogStore.set_level('fitter:LikelihoodFactory', 10)
+    LogStore.set_level('dmu:stats:fitter'         , 10)
+    LogStore.set_level('rx_data:rdf_getter'       , 30)
+    LogStore.set_level('rx_misid:sample_weighter' , 10)
+    LogStore.set_level('fitter:sim_fitter'        , 10)
+    LogStore.set_level('fitter:data_model'        , 10)
+    LogStore.set_level('fitter:data_preprocessor' , 10)
+    LogStore.set_level('fitter:likelihood_factory', 10)
 
-    with RDFGetter.max_entries(value = 10_000):
+    with RDFGetter.max_entries(value = 100_000):
         yield
 # -------------------------------------------
 def test_simple(tmp_path : Path):
@@ -163,7 +167,7 @@ def test_reso_electron(nbrem : int, tmp_path : Path):
         ftr.run()
 # -------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_rare_electron(q2bin : str, tmp_path : Path):
+def test_rare_electron(q2bin : Qsq, tmp_path : Path):
     '''
     Test fitting rare electron channel
     '''
@@ -180,7 +184,7 @@ def test_rare_electron(q2bin : str, tmp_path : Path):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = Sample.data_24,
-            q2bin  = Qsq.jpsi,
+            q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
