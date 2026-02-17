@@ -1,21 +1,22 @@
 '''
 Module containing DataFitter class
 '''
-from pathlib                  import Path
-from omegaconf                import DictConfig, OmegaConf
+from pathlib            import Path
+from omegaconf          import DictConfig, OmegaConf
 
-from dmu                      import LogStore
-from dmu.stats                import zfit
-from rx_common                import Qsq, Sample
-from rx_common                import Trigger
-from rx_selection             import selection  as sel
+from dmu                import LogStore
+from dmu.stats          import zfit
+from rx_common          import Qsq, Sample
+from rx_common          import Trigger
+from rx_selection       import selection  as sel
 
-from zfit.loss                import ExtendedUnbinnedNLL
-from zfit.interface           import ZfitSpace  as zobs
-from fitter.data_preprocessor import DataPreprocessor
-from fitter.data_model        import DataModel
+from zfit.loss          import ExtendedUnbinnedNLL
+from zfit.interface     import ZfitSpace  as zobs
 
-log=LogStore.add_logger('fitter:LikelihoodFactory')
+from .data_preprocessor import DataPreprocessor
+from .data_model        import DataModel
+
+log=LogStore.add_logger('fitter:likelihood_factory')
 # ------------------------
 class LikelihoodFactory:
     '''
