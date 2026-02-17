@@ -34,7 +34,7 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
     dataframe with fake fit parameter information
     '''
     numpy.random.seed(42)
-    l_df_var = []
+    l_df_var : list[pnd.DataFrame] = []
     for var in l_var:
         df_var              = pnd.DataFrame(columns=['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid'])
         df_var['Parameter'] = ntoys * [var]
@@ -68,6 +68,8 @@ def _get_df(ntoys : int, l_var : tuple[str]) -> pnd.DataFrame:
         log.info(f'Checking: {numeric}')
         assert numpy.isfinite(df[numeric]).all()
 
+    df['Hash'] = df['Toy']
+
     return df
 # ----------------------
 def test_simple(tmp_path : Path) -> None:
@@ -88,7 +90,7 @@ def test_simple(tmp_path : Path) -> None:
 
     assert math.isclose(cfg.a_pul.mu, 0.02316429312808755, rel_tol=1e-5)
     assert math.isclose(cfg.a_pul.sg, 0.982856552637077  , rel_tol=1e-5)
- # ----------------------
+# ----------------------
 def test_missing_variable(caplog, tmp_path : Path) -> None:
     '''
     Test that plotter class:
@@ -114,3 +116,4 @@ def test_missing_variable(caplog, tmp_path : Path) -> None:
     l_message= [ record.getMessage() for record in caplog.records ] 
 
     assert l_message == ['Parameters found:', 'b', 'c']
+# ----------------------

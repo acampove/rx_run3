@@ -5,16 +5,17 @@ import pytest
 import mplhep
 import matplotlib.pyplot as plt
 
-from pathlib               import Path
-from zfit.loss             import ExtendedUnbinnedNLL
-from fitter                import ToyPlotter
-from fitter                import ToyMaker
-from dmu.stats             import ConstraintAdder, build_constraint
-from dmu.stats             import utilities as sut
-from dmu.generic           import utilities as gut
-from dmu.stats             import Fitter
-from dmu.generic           import rxran
-from dmu                   import LogStore
+from pathlib     import Path
+from zfit.loss   import ExtendedUnbinnedNLL
+from fitter      import ToyPlotter
+from fitter      import ToyMaker
+from dmu.stats   import FitResult
+from dmu.stats   import ConstraintAdder, build_constraint
+from dmu.stats   import Fitter
+from dmu.testing import get_nll
+from dmu.generic import utilities as gut
+from dmu.generic import rxran
+from dmu         import LogStore
 
 log=LogStore.add_logger('fitter:test_toymaker')
 # ----------------------
@@ -39,7 +40,7 @@ def test_simple(tmp_path: Path) -> None:
     Simplest test of ToyMaker
     '''
     log.info('')
-    nll   = sut.get_nll(kind='s+b')
+    nll   = get_nll(kind='s+b')
     cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
     data  = gut.load_data(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
     cns   = [ build_constraint(data=block) for block in data.values() ] 
@@ -51,10 +52,14 @@ def test_simple(tmp_path: Path) -> None:
     res, _ = Fitter.minimize(nll=nll, cfg={})
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
-        mkr   = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
+        mkr   = ToyMaker(
+            nll=nll, 
+            res=FitResult.from_zfit(res), 
+            cfg=cfg, 
+            cns=cns)
         df    = mkr.get_parameter_information()
 
-    l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid']
+    l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid', 'Hash']
 
     assert df.columns.to_list() == l_col
 
@@ -74,7 +79,7 @@ def test_integration(
     ntoys    : Number of toys to override what is in config
     '''
     log.info('')
-    nll   = sut.get_nll(kind='s+b')
+    nll   = get_nll(kind='s+b')
     assert isinstance(nll, ExtendedUnbinnedNLL)
 
     cfg  = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
@@ -87,9 +92,12 @@ def test_integration(
     nll  = adr.get_nll()
 
     res, _ = Fitter.minimize(nll=nll, cfg={})
-    res.freeze()
 
-    mkr = ToyMaker(nll=nll, res=res, cfg=cfg, cns = cns)
+    mkr = ToyMaker(
+        nll=nll, 
+        res=FitResult.from_zfit(res), 
+        cfg=cfg, 
+        cns=cns)
     df  = mkr.get_parameter_information()
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
