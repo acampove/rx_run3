@@ -5,13 +5,17 @@ from .types import Project
 from .types import Sample
 from .types import Qsq 
 from .types import Brem 
+from .types import Parameter
+from .types import Mass
 
 __all__ = [
     'Component', 
+    'Parameter',
     'Trigger', 
     'Channel', 
     'Project', 
     'Sample',
-    'Qsq', 
+    'Mass',
     'Brem',
+    'Qsq', 
 ]

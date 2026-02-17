@@ -3,6 +3,39 @@ This module contains classes derived from Enum
 '''
 from enum import IntEnum, StrEnum
 
+
+# ------------------------------
+class Mass(StrEnum):
+    '''
+    Class meant to represent variables found in ROOT trees
+
+    Attributes
+    -----------------
+    lb/b         : Lambda/B meson mass
+    lb/b_dtf_jpsi: Lambda/B meson mass with DTF constraint on Jpsi mass
+    '''
+
+    lb_dtf_jpsi = 'Lb_cons_Jpsi_M'
+    lb          = 'Lb_M'
+    b           = 'B_M'
+    b_dtf_jpsi  = 'B_const_mass_M'
+# ------------------------------
+class Parameter(StrEnum):
+    '''
+    Class meant to store parameters of interest
+
+    Attributes:
+
+    rpk   : RpK
+    irjpsi: Inverse of rjpsi
+    '''
+    rk     = 'rk'
+    rx     = 'rx'
+    rpk    = 'rpk'
+    rkst   = 'rkst'
+
+    rjpsi  = 'rjpsi'
+    irjpsi = 'rjpsi_inv'
 # ---------------------------------------
 class Brem(IntEnum):
     '''
