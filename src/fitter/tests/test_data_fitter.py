@@ -6,13 +6,13 @@ import pytest
 from typing          import Final
 from pathlib         import Path
 from omegaconf       import OmegaConf
-from dmu.stats.zfit  import zfit
+from dmu.stats       import zfit
 from dmu.stats       import Constraint1D
-from dmu.stats       import utilities        as sut
 from dmu.stats       import constraint_adder as cad 
 from dmu.stats       import gof_calculator   as goc
 from dmu.generic     import utilities        as gut
 from dmu.workflow    import Cache
+from dmu.testing     import get_model
 from dmu             import LogStore
 from fitter          import DataFitter
 from fitter          import ToyMaker
@@ -42,7 +42,7 @@ def test_single_region(tmp_path : Path) -> None:
     '''
     Test fitting with single signal region
     '''
-    pdf = sut.get_model(kind='s+b')
+    pdf = get_model(kind='s+b')
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
@@ -63,11 +63,11 @@ def test_two_regions(tmp_path : Path) -> None:
     '''
     obs     = None
 
-    pdf_001 = sut.get_model(obs=obs, kind='s+b', suffix='001')
+    pdf_001 = get_model(obs=obs, kind='s+b', suffix='001')
     dat_001 = pdf_001.create_sampler(10_000)
     nll_001 = zfit.loss.ExtendedUnbinnedNLL(data=dat_001, model=pdf_001)
 
-    pdf_002 = sut.get_model(obs=obs, kind='s+b', suffix='002')
+    pdf_002 = get_model(obs=obs, kind='s+b', suffix='002')
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
 
@@ -94,12 +94,12 @@ def test_two_regions_common_pars(tmp_path : Path) -> None:
     nsig    = zfit.param.Parameter('nsig', 0, 0, 1000_000)
     obs     = None
 
-    pdf_001 = sut.get_model(obs=obs, kind='signal', suffix='001')
+    pdf_001 = get_model(obs=obs, kind='signal', suffix='001')
     pdf_001 = pdf_001.create_extended(yield_ = nsig)
     dat_001 = pdf_001.create_sampler(10_000)
     nll_001 = zfit.loss.ExtendedUnbinnedNLL(data=dat_001, model=pdf_001)
 
-    pdf_002 = sut.get_model(obs=obs, kind='signal', suffix='002')
+    pdf_002 = get_model(obs=obs, kind='signal', suffix='002')
     pdf_002 = pdf_002.create_extended(yield_ = nsig)
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
@@ -123,7 +123,7 @@ def test_with_constraints(tmp_path : Path) -> None:
     '''
     Test fitting with constraints
     '''
-    pdf = sut.get_model(kind='s+b')
+    pdf = get_model(kind='s+b')
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
@@ -154,7 +154,7 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     - Making toys
     - Plotting
     '''
-    pdf = sut.get_model(kind='s+b')
+    pdf = get_model(kind='s+b')
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
