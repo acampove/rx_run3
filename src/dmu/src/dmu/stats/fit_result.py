@@ -1,12 +1,12 @@
 '''
 Module containing FitResult class
 '''
-import zfit
 import math
 
 from pathlib   import Path
 from pydantic  import BaseModel, ConfigDict
 from dmu       import LogStore
+from .imports  import zfit
 
 zres = zfit.result.FitResult
 zpar = zfit.param.Parameter

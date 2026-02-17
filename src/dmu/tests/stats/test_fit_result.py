@@ -2,11 +2,11 @@
 File containing tests for FitResult class
 '''
 
-import zfit
 import pytest
 
 from pathlib     import Path
 from dmu.stats   import FitResult
+from dmu.stats   import zfit
 from dmu.testing import get_nll
 
 # -----------------------------
