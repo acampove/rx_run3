@@ -11,7 +11,7 @@ from dmu.stats.parameters   import ParameterLibrary as PL
 from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
-from dmu.stats.zfit         import zfit
+from .imports               import zfit
 
 log=LogStore.add_logger('dmu:stats:model_factory')
 #-----------------------------------------

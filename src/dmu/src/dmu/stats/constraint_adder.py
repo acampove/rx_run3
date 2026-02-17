@@ -2,7 +2,6 @@
 This module contains the ConstraintAdder class
 '''
 import numpy
-from dmu.stats.zfit        import zfit
 from dmu.logging.log_store import LogStore
 
 from typing          import Sequence, cast
@@ -10,6 +9,7 @@ from omegaconf       import DictConfig
 from zfit            import Parameter
 from zfit.loss       import ExtendedUnbinnedNLL
 from .constraint     import Constraint
+from .imports        import zfit
 
 log = LogStore.add_logger('dmu:stats:constraint_adder')
 # ----------------------

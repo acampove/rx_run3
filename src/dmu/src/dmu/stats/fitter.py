@@ -13,7 +13,6 @@ from functools                import lru_cache
 from dmu.logging              import messages  as mes
 from dmu.logging.log_store    import LogStore
 from dmu.stats.gof_calculator import GofCalculator
-from dmu.stats.zfit           import zfit
 
 from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
 from zfit.minimizers.strategy import FailMinimizeNaN
@@ -22,6 +21,7 @@ from zfit.pdf                 import BasePDF       as zpdf
 from zfit.param               import Parameter     as zpar
 from zfit.data                import Data          as zdat
 from zfit                     import Space         as zobs
+from .imports                 import zfit
 
 log = LogStore.add_logger('dmu:statistics:fitter')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]

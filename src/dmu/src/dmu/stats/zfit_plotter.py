@@ -20,8 +20,8 @@ from zfit.result            import FitResult  as zres
 import dmu.generic.utilities as gut
 import dmu.stats.utilities   as sut
 
-from dmu.stats.zfit         import zfit
 from dmu.logging.log_store  import LogStore
+from .imports               import zfit
 
 log = LogStore.add_logger('dmu:zfit_plotter')
 #----------------------------------------

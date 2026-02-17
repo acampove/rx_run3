@@ -19,7 +19,6 @@ from typing                 import Union, Any, overload
 from pathlib                import Path
 from contextlib             import contextmanager
 from dmu.logging.log_store  import LogStore
-from dmu.stats.zfit         import zfit
 
 from omegaconf        import OmegaConf, DictConfig
 from zfit.data        import Data          as zdata
@@ -32,6 +31,7 @@ from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 from .fitter          import Fitter
 from .measurement     import Measurement
 from .zfit_plotter    import ZFitPlotter
+from .imports         import zfit
 
 log = LogStore.add_logger('dmu:stats:utilities')
 Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
