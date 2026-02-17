@@ -8,7 +8,7 @@ from .parameters          import ParameterLibrary
 from .measurement         import Measurement
 from .gof_calculator      import GofCalculator
 from .model_factory       import ModelFactory, MethodRegistry
-from .fitter              import Fitter
+from .fitter              import Fitter, FitterFailError
 from .protocols           import ParsHolder
 from .utilities           import print_pdf
 from .utilities           import save_fit 
@@ -16,31 +16,22 @@ from .zfit_plotter        import ZFitPlotter
 from .zfit_models         import ModExp
 from .zfit_models         import HypExp
 from .imports             import zfit
+from .imports             import tensorflow 
 from .minimizers          import AnealingMinimizer
 from .minimizers          import ContextMinimizer
 from .fit_result          import FitResult
 
 __all__ = [
-    'LineCfg',
+    'tensorflow',
     'save_fit',
     'ContextMinimizer',
     'FitResult',
-    'UncertaintyChecker',
-    'UncertaintyCheckerCfg',
-    'ChannelHolder',
-    'SysAxis',
-    'ParsLoader',
-    'SysPlotter',
-    'SysPlotterCfg',
-    'MissingVariableConfiguration',
-    'ToyMaker',
-    'ToyPlotter',
     'AnealingMinimizer',
-    'SystematicsCalculator',
     'ZFitPlotter',
     'zfit',
     'print_pdf',
     'Fitter',
+    'FitterFailError',
     'build_constraint',
     'Constraint',
     'ModelFactory',
