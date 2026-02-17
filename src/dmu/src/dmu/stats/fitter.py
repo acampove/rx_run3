@@ -322,11 +322,19 @@ class Fitter:
         nbins = self._get_nbins(cfg = cfg)
 
         if not self._pdf.is_extended and nbins is None:
-            nll = zfit.loss.UnbinnedNLL(model=self._pdf, data=data, constraints=constraints, fit_range=frange)
+            nll = zfit.loss.UnbinnedNLL(
+                model      = self._pdf, 
+                data       = data, 
+                constraints= constraints, 
+                fit_range  = frange)
             return nll
 
         if     self._pdf.is_extended and nbins is None:
-            nll = zfit.loss.ExtendedUnbinnedNLL(model=self._pdf, data=data, constraints=constraints, fit_range=frange)
+            nll = zfit.loss.ExtendedUnbinnedNLL(
+                model      = self._pdf, 
+                data       = data, 
+                constraints= constraints, 
+                fit_range  = frange)
             return nll
 
         raise ValueError('Likelihood was neither Binned nor Unbinned nor Extended nor non-extended')
