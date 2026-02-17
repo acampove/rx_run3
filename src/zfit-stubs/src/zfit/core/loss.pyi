@@ -39,7 +39,13 @@ class ValueGradientHessianNotImplementedError(SpecificFunctionNotImplemented): .
 class HessianNotImplementedError(SpecificFunctionNotImplemented): ...
 
 class BaseLoss(ZfitLoss, BaseNumeric, metaclass=abc.ABCMeta):
-    def __init__(self, model: ztyping.ModelsInputType, data: ztyping.DataInputType, fit_range: ztyping.LimitsTypeInput = None, constraints: ztyping.ConstraintsTypeInput = None, options: Mapping | None = None) -> None: ...
+    def __init__(
+            self, 
+            model      : ztyping.ModelsInputType, 
+            data       : ztyping.DataInputType, 
+            fit_range  : ztyping.LimitsTypeInput | None = None, 
+            constraints: ztyping.ConstraintsTypeInput   = None, 
+            options    : Mapping | None = None) -> None: ...
     @property
     def is_weighted(self): ...
     @property
@@ -75,6 +81,14 @@ class BaseLoss(ZfitLoss, BaseNumeric, metaclass=abc.ABCMeta):
 def one_two_many(values, n: int = 3, many: str = 'multiple'): ...
 
 class BaseUnbinnedNLL(BaseLoss, SerializableMixin, metaclass=abc.ABCMeta):
+    def __init__(
+        self, 
+        model      : ZfitPDF | Iterable[ZfitPDF], 
+        data       : ZfitData | Iterable[ZfitData], 
+        fit_range  : tuple[float,float] | None    = None, 
+        constraints: ztyping.ConstraintsInputType = None, 
+        options    : Mapping[str, object] | None  = None) -> None: ...
+
     def create_new(self, model: ZfitPDF | Iterable[ZfitPDF] | None = ..., data: ZfitData | Iterable[ZfitData] | None = ..., fit_range=..., constraints=..., options=...): ...
 
 class UnbinnedNLL(BaseUnbinnedNLL):
