@@ -6,20 +6,19 @@ import json
 import math
 import numpy
 
-from pathlib               import Path
-from typing                import Self, Sequence
-from tabulate              import tabulate
-from functools             import cached_property
-from zfit.constraint       import GaussianConstraint as GConstraint
-from zfit.constraint       import PoissonConstraint  as PConstraint
-from zfit.param            import Parameter as zpar
-from zfit.result           import FitResult
-from pydantic              import BaseModel, model_validator, TypeAdapter
+from pathlib         import Path
+from typing          import Self, Sequence
+from tabulate        import tabulate
+from functools       import cached_property
+from zfit.constraint import GaussianConstraint as GConstraint
+from zfit.constraint import PoissonConstraint  as PConstraint
+from zfit.param      import Parameter as zpar
+from pydantic        import BaseModel, model_validator, TypeAdapter
 
-from dmu                   import LogStore
-from dmu.stats             import utilities  as sut
-from dmu.stats.protocols   import ParsHolder
-from .imports              import zfit
+from dmu             import LogStore
+from .fit_result     import FitResult
+from .protocols      import ParsHolder
+from .imports        import zfit
 
 log=LogStore.add_logger('dmu:stats:constraint')
 # ----------------------------------------
@@ -97,7 +96,7 @@ class ConstraintND(Constraint):
         '''
         new_values = []
         for name, old_value in zip(self.parameters, self.values):
-            new_value = sut.val_from_zres(name = name, res = result )
+            new_value = result[name]
             new_values.append(new_value)
 
             log.info(f'{name:<20}{old_value:<20.3f}{"--->":<20}{new_value:<20.3f}')
@@ -299,7 +298,7 @@ class Constraint1D(Constraint):
         -------------
         Copy of this constraint with means calibrated
         '''
-        new_value = sut.val_from_zres(name = self.name, res = result )
+        new_value, _ = result[self.name] 
 
         log.info(f'{self.name:<20}{self.mu:<20.3f}{"--->":<20}{new_value:<20.3f}')
 
