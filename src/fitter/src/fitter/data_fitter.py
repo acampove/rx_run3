@@ -93,6 +93,7 @@ class DataFitter(BaseFitter, Cache):
 
         OmegaConf.save(config=cfg_cns, f=out_path, resolve=True)
     # ----------------------
+    # TODO: Add fres option to return FitResult instances
     @overload
     def run(self, kind : Literal['zfit']) -> zres:...
     @overload
@@ -140,7 +141,7 @@ class DataFitter(BaseFitter, Cache):
         if kind == 'zfit':
             return res
 
-        cres = sut.zres_to_cres(res=res)
+        obj = sut.zres_to_cres(res=res)
 
-        return cres
+        return obj 
 # ----------------------

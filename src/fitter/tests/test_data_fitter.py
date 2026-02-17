@@ -6,7 +6,7 @@ import pytest
 from typing          import Final
 from pathlib         import Path
 from omegaconf       import OmegaConf
-from dmu.stats       import zfit
+from dmu.stats       import FitResult, zfit
 from dmu.stats       import Constraint1D
 from dmu.stats       import constraint_adder as cad 
 from dmu.stats       import gof_calculator   as goc
@@ -172,7 +172,11 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
         toy_cfg.ntoys = ntoys
-        mkr = ToyMaker(nll=nll, res=res, cfg=toy_cfg, cns = [])
+
+        mkr = ToyMaker(
+            nll=nll, 
+            res=FitResult.from_zfit(res = res), 
+            cfg=toy_cfg, cns = [])
         df  = mkr.get_parameter_information()
 
         plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
