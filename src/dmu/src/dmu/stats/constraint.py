@@ -7,7 +7,7 @@ import math
 import numpy
 
 from pathlib         import Path
-from typing          import Self, Sequence
+from typing          import Self, Sequence, Literal
 from tabulate        import tabulate
 from functools       import cached_property
 from zfit.constraint import GaussianConstraint as GConstraint
@@ -20,7 +20,8 @@ from .fit_result     import FitResult
 from .protocols      import ParsHolder
 from .imports        import zfit
 
-log=LogStore.add_logger('dmu:stats:constraint')
+log   = LogStore.add_logger('dmu:stats:constraint')
+CKind = Literal['GaussianConstraint', 'PoissonConstraint'] 
 # ----------------------------------------
 class Constraint(BaseModel):
     '''
@@ -252,7 +253,7 @@ class Constraint1D(Constraint):
     '''
     Class representing Gaussian 1D constrain
     '''
-    kind: str
+    kind: CKind 
     name: str
     mu  : float
     sg  : float
@@ -261,7 +262,7 @@ class Constraint1D(Constraint):
     def from_dict(
         cls,
         data : dict[str,tuple[float,float]],
-        kind : str) -> list['Constraint1D']:
+        kind : CKind) -> list['Constraint1D']:
         '''
         Parameters
         -----------------
@@ -364,8 +365,6 @@ class Constraint1D(Constraint):
                 cons = PConstraint(
                     params      = obs, 
                     observation = self.observation)
-            case _:
-                raise ValueError(f'Invalid constraint kind: {self.kind}')
 
         return cons
     # ----------------------
