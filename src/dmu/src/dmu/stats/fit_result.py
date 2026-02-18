@@ -148,6 +148,18 @@ class FitResult(BaseModel):
 
         raise ValueError(f'Parameter {name} not found in:\n {self}')
     # ----------------------
+    def __contains__(self, name : str) -> bool:
+        '''
+        Parameters
+        -------------
+        name: Parameter name
+
+        Returns
+        -------------
+        True if parameter exists in fit result
+        '''
+        return any(par.name == name for par in self.parameters)
+    # ----------------------
     def get(self, name : str, fall_back : float) -> tuple[float,float]:
         '''
         Parameters
