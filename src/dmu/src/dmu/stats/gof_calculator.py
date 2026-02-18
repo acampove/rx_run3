@@ -29,12 +29,21 @@ class GofCalculator:
     '''
     _disabled = False # If true, it will not run, returning chi2=0 and pvalue=1
     # ---------------------
-    def __init__(self, nll, ndof : int = 10):
+    def __init__(
+        self, 
+        nll  : Loss, 
+        ndof : int = 10):
+        '''
+        Parameters
+        ---------------
+        nll : Likelihood, after minimization
+        ndof: Number of degrees of freedom used to calculate pvalue from chi2
+        '''
+        self._ndof    = ndof
+        self._nll     = nll
+
         if GofCalculator._disabled:
             return
-
-        self._nll     = nll
-        self._ndof    = ndof
 
         self._pdf     = self._pdf_from_nll()
         self._data_in = self._data_from_nll()
