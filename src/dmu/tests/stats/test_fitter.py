@@ -10,10 +10,11 @@ import pandas              as pnd
 import matplotlib.pyplot   as plt
 
 from functools   import cache
-from omegaconf   import OmegaConf
 from dmu         import LogStore
+from dmu.stats   import Constraint1D
+from dmu.stats   import Retries
 from dmu.testing import get_model, get_nll
-from dmu.generic import utilities as gut
+from dmu.stats   import FitConf, minimizers
 from dmu.stats   import GofCalculator
 from dmu.stats   import zfit
 from dmu.stats   import Fitter
