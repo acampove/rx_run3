@@ -215,7 +215,7 @@ class AnealingMinimizer:
             try:
                 obj = self._min.minimize(loss, params = params, init = init)
             except (FailMinimizeNaN, ValueError, RuntimeError) as exc:
-                log.error(f'{i_try:02}/{self._strategy:02}{"Failed":>20}')
+                log.error(f'{i_try:02}/{self._strategy.ntries:02}{"Failed":>20}')
                 log.debug(exc)
                 continue
 
@@ -385,10 +385,12 @@ def minimize(
     --------------
     RuntimeError: If the errors could not be calculated
     '''
-    cfg = FitConf.default()
+    if cfg is None:
+        cfg = FitConf.default()
+
     mnm = zfit.minimize.Minuit(**cfg.minimization.model_dump())
 
-    if isinstance(cfg, Context):
+    if isinstance(cfg.strategy, Context):
         log.info('Using context minimizer')
         mnm = ContextMinimizer(min = mnm)
 
