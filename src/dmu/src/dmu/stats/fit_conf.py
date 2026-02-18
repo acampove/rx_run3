@@ -48,6 +48,7 @@ class FitConf(BaseModel):
     pvalue      : float
     minimization: Minimization                     = Minimization()
     nentries    : int                              = -1 
+    run_gof     : bool                             = True
     do_errors   : bool                             = True
     strategy    : Retries | Context         | None = None
     ranges      : list[tuple[float,float] ] | None = None
