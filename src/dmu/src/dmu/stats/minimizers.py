@@ -368,15 +368,8 @@ def minimize(
     Parameters
     --------------
     nll : Negative log likelihood
-    cfg : Configuration dictionary used for minimization, it should look like:
-          print_pars: # Optional, if not passed, will not print parameter values
-            - par 1
-            - par 2
-            ...
-          minimization: # Optional, if used, will pass these settings to zfit.minimizers.Minuit()
-            setting : value
-            setting : value
-            ...
+    cfg : Fit configuration object 
+
     Returns
     --------------
     Object storing fit results
