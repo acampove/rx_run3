@@ -5,16 +5,18 @@ Module holding GofCalculator class
 import numpy
 import pandas as pnd
 
-from dmu.logging.log_store  import LogStore
-from contextlib             import contextmanager
-from functools              import lru_cache
-from zfit.core.basepdf      import BasePDF   as zpdf
-from zfit.core.parameter    import Parameter as zpar
+from dmu         import LogStore
+from contextlib  import contextmanager
+from functools   import lru_cache
+from zfit.loss   import ExtendedUnbinnedNLL, UnbinnedNLL
+from zfit.pdf    import BasePDF   as zpdf
+from zfit.param  import Parameter as zpar
 
-from dmu.stats              import GoodnessOfFit
-from .imports               import zfit
+from .imports    import zfit
+from .fit_result import GoodnessOfFit
 
 log = LogStore.add_logger('dmu:stats:gofcalculator')
+Loss= ExtendedUnbinnedNLL | UnbinnedNLL
 #------------------------------
 class GofError(Exception):
     '''
