@@ -6,6 +6,7 @@ from typing          import Self, Final
 from .constraint     import Constraint
 
 _PVALUE : Final[float] = 0.05
+_NTRIES : Final[int  ] = 3
 #------------------------------
 # Strategies
 #------------------------------
@@ -16,6 +17,10 @@ class Retries(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     ntries : int
+    #------------
+    @classmethod
+    def default(cls) -> Self:
+        return cls(ntries = _NTRIES)
 #------------------------------
 class Context(BaseModel):
     '''
