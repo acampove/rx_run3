@@ -27,11 +27,12 @@ class GoodnessOfFit(BaseModel):
     pval: float = math.nan 
     ndof: int
     # --------------------------
-    @model_validator(mode='after')
-    def compute_or_validate(self):
-        chi2 = self.chi2
-        ndof = self.ndof
-        pval = self.pval
+    @model_validator(mode='before')
+    @classmethod
+    def compute_or_validate(cls, data):
+        chi2 = data.get('chi2', math.nan) 
+        pval = data.get('pval', math.nan) 
+        ndof = data['ndof']
 
         if not (MIN_NDOF < ndof < MAX_NDOF):
             raise ValueError(f'Invalid Ndof: {ndof}')
@@ -45,29 +46,29 @@ class GoodnessOfFit(BaseModel):
         # Got pvalue, not chi2, assign chi2
         # ----------------
         if   math.isnan(chi2) and not math.isnan(computed_chi2):
-            self.chi2 = computed_chi2
-            return self
+            data['chi2'] = computed_chi2
+            return data 
         elif math.isnan(chi2) and     math.isnan(computed_chi2):
             raise ValueError('Cannot compute chi2')
         # ----------------
         # Got chi2, not pvalue, assign pvalue 
         # ----------------
         if   math.isnan(pval) and not math.isnan(computed_pval):
-            self.pval = computed_pval
-            return self
+            data['pval'] = computed_pval
+            return data 
         elif math.isnan(pval) and     math.isnan(computed_pval):
             raise ValueError('Cannot compute pvalue')
         # ----------------
         # Got chi2 and pvalue, validate
         # ----------------
         if not math.isnan(chi2) and not numpy.isclose(chi2, computed_chi2, rtol = RTOL):
-            raise ValueError(f'Inconsistent input values: {self}')
+            raise ValueError(f'Inconsistent input values: {data}')
 
         if not math.isnan(pval) and not numpy.isclose(pval, computed_pval, rtol = RTOL):
-            raise ValueError(f'Inconsistent input values: {self}')
+            raise ValueError(f'Inconsistent input values: {data}')
         # ----------------
 
-        return self
+        return data 
     # --------------------------
     def __str__(self) -> str:
         fchi2 = -1 if self.chi2 is None else self.chi2
