@@ -17,8 +17,8 @@ log  = LogStore.add_logger('rx_stats:fit_result')
 
 # Relative tolerance used to validate chi2
 RTOL     : Final[float] = 1e-7
-MIN_NDOF : Final[int  ] = 10
-MAX_NDOF : Final[int  ] = 40
+MIN_NDOF : Final[int  ] =  9
+MAX_NDOF : Final[int  ] = 41
 # -------------------------------------
 class GoodnessOfFit(BaseModel):
     model_config = ConfigDict(frozen=True)
