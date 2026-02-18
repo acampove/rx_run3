@@ -97,15 +97,9 @@ def test_simple(dat):
     '''
     Simples fitting test
     '''
-    obj = gut.load_conf(package='dmu_data', fpath='stats/fitter/test_simple.yaml')
-    cfg = OmegaConf.to_container(obj, resolve=True)
-
-    if not isinstance(cfg, dict):
-        raise ValueError('Cannot load config')
-
     pdf = _get_pdf()
     obj = Fitter(pdf, dat)
-    res = obj.fit(cfg=cfg)
+    res = obj.fit()
 
     assert res.valid
 #-------------------------------------
@@ -113,15 +107,9 @@ def test_retry():
     '''
     Test fitting with multiple tries
     '''
-    cfg = {'strategy' :
-           {'retry' :
-            {
-                'ntries'        : 10,
-                'pvalue_thresh' : 0.05,
-                'ignore_status' : False
-            }
-            }
-           }
+    fcf = FitConf.default()
+    rtr = Retries.default()
+    cfg = fcf.model_copy(update = {'strategy' : rtr})
 
     pdf = _get_pdf()
     obj = Fitter(pdf, Data.arr)
@@ -133,12 +121,11 @@ def test_constrain():
     '''
     Fits with constraints to parameters
     '''
-    cfg = {
-            'constraints'   : {
-                'mu' : [5.0, 1.0],
-                'sg' : [1.0, 0.1],
-                }
-            }
+    mu  = Constraint1D(kind = 'GaussianConstraint', name = 'mu', mu = 5.0, sg = 1.0)
+    sg  = Constraint1D(kind = 'GaussianConstraint', name = 'sg', mu = 1.0, sg = 0.1)
+
+    fcf = FitConf.default()
+    cfg = fcf.model_copy(update = {'constraints' : [mu, sg]})
 
     pdf = _get_pdf()
     obj=Fitter(pdf, Data.arr)
@@ -154,12 +141,13 @@ def test_ranges():
     sam   = pdf.create_sampler(n=50_000)
     pdf   = get_model('s+b', lam = -0.0003)
 
-    rng   = [[4500, 5100], [5300, 6000]]
-    cfg   = {'ranges': rng}
+    rng   = [(4500, 5100), (5300, 6000)]
+    ftc   = FitConf.default()
+    cfg   = ftc.model_copy(update = {'ranges' : rng})
 
     with GofCalculator.disabled(value=True):
         obj   = Fitter(pdf, sam)
-        res   = obj.fit(cfg)
+        res   = obj.fit(cfg = cfg)
 
     print(res)
     assert res.valid
@@ -181,60 +169,16 @@ def test_wgt():
     pdf = _get_pdf()
     dat = zfit.data.from_numpy(array=arr, weights=wgt, obs=pdf.space)
 
-    obj=Fitter(pdf, dat)
+    obj = Fitter(pdf, dat)
     obj.fit()
-#-------------------------------------
-def test_steps():
-    '''
-    Tests the steps fitting strategy
-    '''
-    pdf = _get_pdf()
-
-    cfg = {
-            'strategy' : {
-                'steps' : {
-                    'nsteps' : [ 1000,  5000],
-                    'nsigma' : [  5.0,   2.0],
-                    'yields' : ['nsg', 'nbk'],
-                    }
-                }
-            }
-
-    obj = Fitter(pdf, Data.arr)
-    res = obj.fit(cfg)
-    print(res)
-
-    assert res.valid
-#-------------------------------------
-@pytest.mark.skip(reason='GofCalculator does not support binned data')
-@pytest.mark.parametrize('nbins', [None, 100])
-def test_binning(nbins : int):
-    '''
-    Test fitting with binning specified
-    '''
-    cfg = {'likelihood' : {'nbins' : nbins}}
-
-    pdf = _get_pdf()
-    obj = Fitter(pdf, Data.arr)
-    res = obj.fit(cfg)
-
-    log.info(res)
-
-    assert res.valid
 # ----------------------
 def test_minimizer() -> None:
     '''
     Simplest test of minimizer static method
     '''
     nll = get_nll(kind='s+b')
-    cfg = {
-        'minimization' : 
-        {'mode'     : 0,
-         'gradient' : 'zfit'} 
-    }
-
     with GofCalculator.disabled(value=True):
-        Fitter.minimize(nll=nll, cfg=cfg)
+        minimizers.minimize(nll=nll)
 # ----------------------
 @pytest.mark.timeout(100)
 def test_profiling_minimizer() -> None:
@@ -246,5 +190,5 @@ def test_profiling_minimizer() -> None:
     sam   = nll.data[0]
     for _ in tqdm.trange(ntoys, ascii=' -'):
         sam.resample()
-        Fitter.minimize(nll=nll, cfg={})
-
+        minimizers.minimize(nll=nll)
+# ----------------------
