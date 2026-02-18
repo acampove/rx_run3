@@ -12,7 +12,7 @@ from dmu.testing import SumLiteral
 
 log = LogStore.add_logger('dmu:ml:test_minimizer')
 #---------------------------------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     LogStore.set_level('dmu:ml:minimizers', 10)
 #---------------------------------------------
@@ -21,8 +21,8 @@ def test_anealing_pval():
     Test AnealingMinimizer with pvalue
     '''
     nll       = get_nll(kind = 's+b')
-    minimizer = AnealingMinimizer(ntries=10, pvalue=0.05)
-    res       = minimizer.minimize(nll)
+    minimizer = AnealingMinimizer()
+    res       = minimizer.get_result(nll)
 
     print(res)
 # -------------------------------------------
@@ -31,8 +31,8 @@ def test_anealing_chi2():
     Test AnealingMinimizer with chi2
     '''
     nll       = get_nll(kind = 's+b')
-    minimizer = AnealingMinimizer(ntries=10, chi2ndof=1.00)
-    res       = minimizer.minimize(nll)
+    minimizer = AnealingMinimizer()
+    res       = minimizer.get_result(nll)
 
     print(res)
 # -------------------------------------------
