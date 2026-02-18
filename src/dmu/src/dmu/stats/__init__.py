@@ -8,22 +8,27 @@ from .parameters          import ParameterLibrary
 from .measurement         import Measurement
 from .gof_calculator      import GofCalculator
 from .model_factory       import ModelFactory, MethodRegistry
-from .fitter              import Fitter, FitterFailError
+from .fitter              import Fitter
 from .protocols           import ParsHolder
 from .utilities           import print_pdf
 from .utilities           import save_fit 
 from .zfit_plotter        import ZFitPlotter
 from .zfit_models         import ModExp
 from .zfit_models         import HypExp
+from .fit_conf            import FitConf
 from .imports             import zfit
 from .imports             import tensorflow 
 from .minimizers          import AnealingMinimizer
 from .minimizers          import ContextMinimizer
+from .minimizers          import MinimizerFailError 
+from .minimizers          import Retries
 from .fit_result          import FitResult
 from .fit_result          import GoodnessOfFit
 
 __all__ = [
     'GoodnessOfFit',
+    'Retries',
+    'FitConf',
     'tensorflow',
     'save_fit',
     'ContextMinimizer',
@@ -33,7 +38,7 @@ __all__ = [
     'zfit',
     'print_pdf',
     'Fitter',
-    'FitterFailError',
+    'MinimizerFailError',
     'build_constraint',
     'Constraint',
     'ModelFactory',
