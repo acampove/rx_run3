@@ -12,6 +12,7 @@ from dmu.stats.gof_calculator import GofCalculator
 from dmu.logging.log_store    import LogStore
 
 log = LogStore.add_logger('dmu:stats:test_gofcalculator')
+zdat= zfit.Data
 #---------------------------------------------
 @dataclass
 class Data:
@@ -21,7 +22,7 @@ class Data:
     minimizer = zfit.minimize.Minuit()
     obs       = zfit.Space('x', limits=(-10, 10))
 #---------------------------------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     LogStore.set_level('dmu:stats:gofcalculator', 10)
 #---------------------------------------------
@@ -32,10 +33,13 @@ def _get_model():
 
     return pdf
 # -------------------------------------------
-def _get_data():
+def _get_data() -> zdat:
     numpy.random.seed(42)
     data_np = numpy.random.normal(0, 1, size=10000)
     data_zf = zfit.Data.from_numpy(obs=Data.obs, array=data_np)
+
+    if not isinstance(data_zf, zdat):
+        raise ValueError('Invalid data type')
 
     return data_zf
 # -------------------------------------------
@@ -55,7 +59,7 @@ def test_simple():
     print(res)
 
     gcl = GofCalculator(nll, ndof=10)
-    gof = gcl.get_gof(kind='pvalue')
+    gof = gcl.get_gof()
 
-    assert math.isclose(gof, 0.9649746, abs_tol=1e-5)
+    assert math.isclose(gof.pval, 0.9649746, abs_tol=1e-5)
 # -------------------------------------------
