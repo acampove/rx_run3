@@ -9,15 +9,17 @@ import pandas     as pnd
 
 from dmu         import LogStore
 from dmu.generic import rxran
-from dmu.stats   import zfit
+from dmu.stats   import minimizers, zfit
 from dmu.stats   import tensorflow as tf
 from dmu.stats   import Constraint
-from dmu.stats   import Fitter, GofCalculator
-from dmu.stats   import FitterFailError
+from dmu.stats   import GofCalculator
+from dmu.stats   import MinimizerFailError
 from dmu.stats   import FitResult
+from dmu.stats   import FitConf
 
 from pathlib     import Path
-from omegaconf   import DictConfig, OmegaConf
+from pydantic    import BaseModel, ConfigDict
+from omegaconf   import OmegaConf
 from zfit.data   import SamplerData
 
 log  = LogStore.add_logger('rx_stats:toy_maker')
