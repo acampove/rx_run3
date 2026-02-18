@@ -20,8 +20,10 @@ from .imports             import tensorflow
 from .minimizers          import AnealingMinimizer
 from .minimizers          import ContextMinimizer
 from .fit_result          import FitResult
+from .fit_result          import GoodnessOfFit
 
 __all__ = [
+    'GoodnessOfFit',
     'tensorflow',
     'save_fit',
     'ContextMinimizer',
