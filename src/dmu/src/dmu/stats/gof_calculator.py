@@ -5,15 +5,21 @@ Module holding GofCalculator class
 import numpy
 import pandas as pnd
 
-from scipy                  import stats
 from dmu.logging.log_store  import LogStore
 from contextlib             import contextmanager
 from functools              import lru_cache
 from zfit.core.basepdf      import BasePDF   as zpdf
 from zfit.core.parameter    import Parameter as zpar
+
+from dmu.stats              import GoodnessOfFit
 from .imports               import zfit
 
 log = LogStore.add_logger('dmu:stats:gofcalculator')
+#------------------------------
+class GofError(Exception):
+    '''
+    Exception used when GoF cannot be calculated
+    '''
 # ------------------------
 class GofCalculator:
     '''
@@ -111,8 +117,19 @@ class GofCalculator:
 
         return arr_data
     #------------------------------
-    @lru_cache(maxsize=30)
-    def _calculate_gof(self) -> tuple[float, int, float]:
+    def get_gof(self) -> GoodnessOfFit:
+        '''
+        Parameters
+        -----------------
+        kind: Type of goodness of fit: pvalue, chi2, chi2/ndof
+
+        Returns 
+        -----------------
+        Goodness of fit of a given kind
+        '''
+        if GofCalculator._disabled:
+            return GoodnessOfFit(pval = 0.5, ndof = self._ndof) 
+
         log.debug('Calculating GOF')
 
         arr_data    = self._get_data_bin_contents()
@@ -132,40 +149,7 @@ class GofCalculator:
         arr_chi2    = numpy.divide(arr_res ** 2, arr_data, out=numpy.zeros_like(arr_data), where=arr_data!=0)
         sum_chi2    = numpy.sum(arr_chi2)
 
-        pvalue      = 1 - stats.chi2.cdf(sum_chi2, self._ndof)
-        pvalue      = float(pvalue)
-
-        log.debug(f'Chi2: {sum_chi2:.3f}')
-        log.debug(f'Ndof: {self._ndof}')
-        log.debug(f'pval: {pvalue:<.3e}')
-
-        return sum_chi2, self._ndof, pvalue
-    # ---------------------
-    def get_gof(self, kind : str) -> float:
-        '''
-        Parameters
-        -----------------
-        kind: Type of goodness of fit: pvalue, chi2, chi2/ndof
-
-        Returns 
-        -----------------
-        Goodness of fit of a given kind
-        '''
-        if GofCalculator._disabled:
-            return {'pvalue' : 1, 'chi2' : 0, 'chi2/ndof' : 0}[kind]
-
-        chi2, ndof, pval = self._calculate_gof()
-
-        if kind == 'pvalue':
-            return pval
-
-        if kind == 'chi2/ndof':
-            return chi2/ndof
-
-        if kind == 'chi2':
-            return chi2
-
-        raise NotImplementedError(f'Invalid goodness of fit: {kind}')
+        return GoodnessOfFit(chi2 = sum_chi2, ndof = self._ndof)
     # ---------------------
     @classmethod
     def disabled(cls, value : bool):
