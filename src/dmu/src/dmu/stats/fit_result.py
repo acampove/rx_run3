@@ -277,11 +277,13 @@ class FitResult(BaseModel):
     def from_zfit(
         cls, 
         res          : zres,
-        no_errors_ok : bool = False) -> 'FitResult':
+        gof          : GoodnessOfFit | None = None,
+        no_errors_ok : bool                 = False) -> 'FitResult':
         '''
         Parameters
         ---------------
         res         : Zfit fitting result
+        gof         : Optional goodness of fit object
         no_errors_ok: If true, it won't raise exception if error not found
 
         Returns
@@ -302,6 +304,7 @@ class FitResult(BaseModel):
         return cls(
             status     = res.status,
             valid      = res.valid,
+            gof        = gof,
             parameters = pars)
     # ----------------------
     @classmethod
