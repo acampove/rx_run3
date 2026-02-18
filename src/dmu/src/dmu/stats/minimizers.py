@@ -402,17 +402,17 @@ def minimize(
     else:
         res = obj
 
-    if not res.valid:
-        log.debug('Found bad fit')
-        if log.getEffectiveLevel() < 20:
-            log.info(res)
-
+    if res.valid:
         return res
 
+    log.debug('Found bad fit')
     log.debug(f'{gof.chi2:<10.3f}{gof.pval:<10.3e}{res.status:<10}')
-    pdf   = nll.model[0] # This class is not meant for simultaneous fits
+
+    if log.getEffectiveLevel() < 20:
+        log.info(res)
+        pdf = nll.model[0] # This class is not meant for simultaneous fits
                          # There should only be one PDF
-    print_pdf(pdf)
+        print_pdf(pdf)
 
     return res
 # ------------------------
