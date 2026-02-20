@@ -14,6 +14,13 @@ class CompositeModel(UnpackerModel):
     number : int
     model  : SimpleModel
 # -----------------------------------
+class DictModel(UnpackerModel):
+    '''
+    Basic model using unpacker base class
+    '''
+    number : int
+    models : dict[str,SimpleModel]
+# -----------------------------------
 def test_simple(tmp_path : Path):
     simple_path = tmp_path / 'simple.yaml'
 
@@ -53,3 +60,16 @@ def test_with_package(mocker, tmp_path : Path):
     assert cmp.number == 1
     assert cmp.model  == obj 
 # -----------------------------------
+def test_dict_model(tmp_path : Path):
+    simple_path = tmp_path / 'simple_models.yaml'
+
+    data = {}
+    for val in ['a', 'b', 'c']:
+        data[val] = {'frequency' : 2}
+
+    string = yaml.safe_dump({'models' : data, 'number' : 1})
+    simple_path.write_text(string)
+
+    DictModel.from_yaml(path = simple_path)
+# -----------------------------------
+
