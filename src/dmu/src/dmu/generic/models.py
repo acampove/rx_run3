@@ -4,12 +4,17 @@ pydantic models
 '''
 
 import yaml
+import contextlib
 
 from importlib.resources import files
+from dmu                 import LogStore
 from typing              import Self
 from pathlib             import Path
 from pydantic            import BaseModel, model_validator, ConfigDict
 
+log=LogStore.add_logger('dmu:generic:models')
+
+_PACKAGE : str | None = None
 # --------------------------------------------------
 class UnpackerModel(BaseModel):
     '''
@@ -21,7 +26,7 @@ class UnpackerModel(BaseModel):
     model_config = ConfigDict(frozen=True)
     # --------------
     @staticmethod
-    def _update_path(path : Path, package : str) -> Path:
+    def _update_path(path : Path) -> Path:
         '''
         Parameters
         ---------------
@@ -32,13 +37,28 @@ class UnpackerModel(BaseModel):
         ---------------
         Full path to `path`, i.e. this method updates relative paths
         '''
-        pkg_path = str(files(package))
+        if _PACKAGE is None:
+            log.info(f'Not updating path: {path}')
+            return path
 
+        pkg_path = str(files(_PACKAGE))
+
+        log.info(f'Updating path with {pkg_path}')
         full_path = pkg_path / path
-        if not full_path.exists():
-            raise ValueError(f'Cannot find: {full_path}')
 
         return full_path
+    # --------------
+    @staticmethod
+    def _data_from_path(path : Path) -> dict:
+        path = UnpackerModel._update_path(path = path)
+        if not path.exists():
+            raise ValueError(f'File not found: {path}')
+
+        with open(path) as f:
+            log.info(f'Loading from: {path}')
+            loaded_data = yaml.safe_load(stream = f)
+
+        return loaded_data
     # --------------
     @model_validator(mode='before')
     @classmethod
@@ -56,24 +76,14 @@ class UnpackerModel(BaseModel):
             if not str(val).endswith('.yaml'):
                 continue
 
-            path = Path(val)
+            path        = Path(val)
+            loaded_data = cls._data_from_path(path = path)
+            FieldType   = field_info.annotation
 
-            if 'package' in data:
-                path = cls._update_path(
-                    path    = path, 
-                    package = data['package'])
-
-            if not path.exists():
-                raise ValueError(f'File not found: {path}')
-
-            annotation = field_info.annotation
-            if annotation is None:
+            if FieldType is None:
                 raise ValueError(f'Annotation not found for: {field_name}')
 
-            with open(path) as f:
-                loaded_data = yaml.safe_load(stream = f)
-
-            data[field_name] = annotation(**loaded_data)
+            data[field_name] = FieldType(**loaded_data)
 
         return data
     # --------------
@@ -104,9 +114,11 @@ class UnpackerModel(BaseModel):
         with open(path) as ifile:
             data = yaml.safe_load(ifile)
 
-        data['package'] = package
+        if package is None:
+            return cls(**data)
         
-        return cls(**data)
+        with cls.package(name = package):
+            return cls(**data)
     # --------------
     def to_yaml(self, path : Path) -> None:
         '''
@@ -117,4 +129,25 @@ class UnpackerModel(BaseModel):
         py_data = self.model_dump()
         ym_data = yaml.safe_dump(data = py_data, indent = 2)
         path.write_text(ym_data)
+    # --------------
+    @classmethod
+    def package(cls, name : str):
+        '''
+        Parameters
+        -------------
+        Package: name of package where YAML files will be searched
+        '''
+        global _PACKAGE
+        old_val  = _PACKAGE
+        _PACKAGE = name 
+
+        @contextlib.contextmanager
+        def _context():
+            try:
+                yield
+            finally:
+                global _PACKAGE
+                _PACKAGE = old_val
+
+        return _context()
 # --------------------------------------------------
