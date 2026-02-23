@@ -12,6 +12,8 @@ from .fitter              import Fitter
 from .protocols           import ParsHolder
 from .utilities           import print_pdf
 from .utilities           import save_fit 
+from .utilities           import pdf_to_tex 
+from .utilities           import is_pdf_usable 
 from .zfit_plotter        import ZFitPlotter, ZFitPlotterConf
 from .zfit_models         import ModExp
 from .zfit_models         import HypExp
@@ -27,6 +29,8 @@ from .fit_result          import GoodnessOfFit
 from .types               import Model, KDEModel
 
 __all__ = [
+    'pdf_to_tex',
+    'is_pdf_usable',
     'ZFitPlotterConf',
     'GoodnessOfFit',
     'Model',
