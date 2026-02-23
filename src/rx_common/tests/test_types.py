@@ -50,8 +50,8 @@ def test_brem():
     assert Brem.one  == 1
     assert Brem.two  == 2
 # -------------------------------------------
-@pytest.mark.parametrize('sample', Sample)
-def test_sample_properties(sample : Sample):
+@pytest.mark.parametrize('sample', Component)
+def test_sample_properties(sample : Component):
     '''
     Tests Sample enum properties
     '''
@@ -66,15 +66,15 @@ def test_mc_samples():
     '''
     Tests that one can access list of MC samples
     '''
-    mc_samples = Sample.get_mc_samples()
+    mc_samples = Component.get_mc_samples()
     assert isinstance(mc_samples, list)
     assert mc_samples
 
     for sample in mc_samples:
         log.info(sample)
 # -------------------------------------------
-@pytest.mark.parametrize('sample', Sample)
-def test_channel(sample : Sample):
+@pytest.mark.parametrize('sample', Component)
+def test_channel(sample : Component):
     '''
     Tests channel property of samples
     '''
