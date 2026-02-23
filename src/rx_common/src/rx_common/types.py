@@ -184,6 +184,7 @@ class Component(StrEnum):
     '''
     undefined      = 'undefined'
     comb           = 'combinatorial'
+    ccbar          = 'ccbar'
     # -----
     data_24        = 'DATA_24*'
     # -----
@@ -194,6 +195,9 @@ class Component(StrEnum):
     bpkpjpsiee     = 'Bu_JpsiK_ee_eq_DPC'
     bpkppsi2ee     = 'Bu_psi2SK_ee_eq_DPC'
     bpkpipiee      = 'Bu_Kpipiee_eq_DPC_LSFLAT'
+    # -----
+    bppijpsimm     = 'Bu_JpsiPi_mm_eq_DPC'
+    bppijpsiee     = 'Bu_JpsiPi_ee_eq_DPC'
     # -----
     bpkpmm         = 'Bu_Kmumu_eq_btosllball05_DPC'
     bpkpjpsimm     = 'Bu_JpsiK_mm_eq_DPC'
@@ -219,6 +223,20 @@ class Component(StrEnum):
     bpjpsixmm      = 'Bu_JpsiX_mm_eq_JpsiInAcc'
     bdjpsixmm      = 'Bd_JpsiX_mm_eq_JpsiInAcc'
     bsjpsixmm      = 'Bs_JpsiX_mm_eq_JpsiInAcc'
+    # -----
+    bsphijpsimm    = 'Bs_Jpsiphi_mm_eq_CPV_update2012_DPC'
+    bsphijpsiee    = 'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC'
+    # -----
+    lbpkjpsimm     = 'Lb_JpsipK_mm_eq_phsp_DPC'
+    lbpkjpsiee     = 'Lb_JpsipK_ee_eq_phsp_DPC'
+    # -----
+    # Emulated samples
+    # -----
+    bskstjpsimm     = 'Bs_JpsiKst_mm_eq_DPC'
+    bskstjpsiee     = 'Bs_JpsiKst_ee_eq_DPC'
+
+    bdkstjpsimm_swp = 'Bd_JpsiKst_mm_had_swp'
+    bdkstjpsiee_swp = 'Bd_JpsiKst_ee_had_swp'
     # --------------------------------------------
     @property
     def subdecays(self) -> list[str]:
