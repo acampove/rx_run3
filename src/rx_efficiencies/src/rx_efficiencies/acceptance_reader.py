@@ -8,7 +8,7 @@ import pandas as pnd
 from pathlib                        import Path
 from dmu.generic.version_management import get_last_version
 from dmu                            import LogStore
-from rx_common                      import Project, Sample
+from rx_common                      import Project, Component
 
 log=LogStore.add_logger('rx_efficiencies:acceptance_reader')
 #----------------------------------
@@ -21,7 +21,7 @@ class AcceptanceReader:
         self, 
         year   : str, 
         project: Project,
-        sample : Sample):
+        sample : Component):
         '''
         Parameters
         ---------------
