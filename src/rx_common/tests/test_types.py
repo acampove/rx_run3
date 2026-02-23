@@ -12,6 +12,12 @@ from rx_common import Trigger
 from rx_common import Project 
 
 log=LogStore.add_logger('rx_common::test_types')
+
+_COMPONENTS_WITH_DECAYS : list[Component] = [
+    Component.bdkstkpiee,
+    Component.bdkstkpimm,
+    Component.bpkpjpsiee,
+    Component.bpkpjpsimm]
 # -------------------------------------------
 def test_component():
     '''
@@ -106,17 +112,11 @@ def test_trigger(trigger : Trigger):
     with pytest.raises(ValueError):
         trigger.project
 # -------------------------------------------
-@pytest.mark.parametrize('sample', Sample.get_mc_samples())
-def test_subdecays(sample : Sample):
+@pytest.mark.parametrize('sample', _COMPONENTS_WITH_DECAYS)
+def test_subdecays(sample : Component):
     '''
     Tests access to subdecays from sample
     '''
-    # There are no subdecays for inclusive samples
-    if 'JpsiX' in sample:
-        return
-
-    if sample in ['undefined']:
-        return
-
     assert len(sample.subdecays) >= 1
     assert isinstance(sample.subdecays, list)
+# -------------------------------------------
