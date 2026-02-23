@@ -5,21 +5,21 @@ import pytest
 from pathlib         import Path
 from dmu.workflow    import Cache
 from dmu             import LogStore
-from rx_common       import Qsq, Trigger, Sample
+from rx_common       import Qsq, Trigger, Component
 from rx_data         import RDFGetter
 from rx_selection    import selection as sel
 from rx_efficiencies import EfficiencyCalculator
 
 _SAMPLES_RX    = [
-    (Sample.bpkpee    , Trigger.rk_ee_os),
-    (Sample.bpkpjpsiee, Trigger.rk_ee_os),
-    (Sample.bpkpmm    , Trigger.rk_mm_os),
-    (Sample.bpkpjpsimm, Trigger.rk_mm_os),
+    (Component.bpkpee    , Trigger.rk_ee_os),
+    (Component.bpkpjpsiee, Trigger.rk_ee_os),
+    (Component.bpkpmm    , Trigger.rk_mm_os),
+    (Component.bpkpjpsimm, Trigger.rk_mm_os),
 ]
 
 _SAMPLES_NOPID = [
-    (Sample.bpkpee    , Trigger.rk_ee_nopid),
-    (Sample.bpkpjpsiee, Trigger.rk_ee_nopid),
+    (Component.bpkpee    , Trigger.rk_ee_nopid),
+    (Component.bpkpjpsiee, Trigger.rk_ee_nopid),
 ]
 
 log = LogStore.add_logger('rx_efficiencies:test_efficiency_calculator')
@@ -39,7 +39,7 @@ def initialize():
 #-------------------------------------------------
 @pytest.mark.parametrize('sample, trigger',       _SAMPLES_RX)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_rx_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
+def test_rx_efficiency(q2bin : Qsq, sample : Component, trigger : Trigger, tmp_path : Path):
     '''
     Calculates efficiency over one sample at a time
     '''
@@ -57,7 +57,7 @@ def test_rx_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path
 #-------------------------------------------------
 @pytest.mark.parametrize('sample, trigger',    _SAMPLES_NOPID)
 @pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_nopid_efficiency(q2bin : Qsq, sample : Sample, trigger : Trigger, tmp_path : Path):
+def test_nopid_efficiency(q2bin : Qsq, sample : Component, trigger : Trigger, tmp_path : Path):
     '''
     Tests retrieval of total efficiency (acceptance x reco x selection)
     for RX project samples
