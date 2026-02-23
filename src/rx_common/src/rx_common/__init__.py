@@ -1,20 +1,21 @@
-from .types import Component
+from .types import Component, CCbarComponent
+from .types import Parameter
+from .types import Particle 
 from .types import Trigger 
 from .types import Channel 
 from .types import Project 
-from .types import Sample
-from .types import Qsq 
 from .types import Brem 
-from .types import Parameter
 from .types import Mass
+from .types import Qsq 
 
 __all__ = [
     'Component', 
+    'CCbarComponent',
     'Parameter',
+    'Particle',
     'Trigger', 
     'Channel', 
     'Project', 
-    'Sample',
     'Mass',
     'Brem',
     'Qsq', 
