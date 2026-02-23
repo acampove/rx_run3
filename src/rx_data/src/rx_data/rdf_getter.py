@@ -6,13 +6,13 @@ from contextlib import contextmanager
 from pathlib    import Path
 from typing     import Any, overload, Literal
 
-from ROOT                    import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
-from dmu.generic             import hashing
-from dmu                     import LogStore
-from dmu.generic             import utilities as gut
-from omegaconf               import DictConfig, OmegaConf
-from rx_data.spec_maker      import SpecMaker
-from rx_common               import Sample, Trigger
+from ROOT             import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
+from dmu.generic      import hashing
+from dmu              import LogStore
+from dmu.generic      import utilities as gut
+from omegaconf        import DictConfig, OmegaConf
+from rx_common        import Component, Trigger
+from .spec_maker      import SpecMaker
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
@@ -46,7 +46,7 @@ class RDFGetter(SpecMaker):
     # ---------------------------------------------------
     def __init__(
         self,
-        sample  : Sample,
+        sample  : Component,
         trigger : Trigger,
         tree    : str = 'DecayTree'):
         '''
