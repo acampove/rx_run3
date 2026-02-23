@@ -12,7 +12,7 @@ def test_import():
     Tests basic import
     '''
 
-    from dmu.stats.zfit import zfit
+    from dmu.stats import zfit
 
     zfit_path = zfit.__file__
     assert os.path.isfile(zfit_path)

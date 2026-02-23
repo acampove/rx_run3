@@ -6,7 +6,6 @@ import pytest
 from dmu       import LogStore
 
 from rx_common import Component
-from rx_common import Sample 
 from rx_common import Brem 
 from rx_common import Channel 
 from rx_common import Trigger
