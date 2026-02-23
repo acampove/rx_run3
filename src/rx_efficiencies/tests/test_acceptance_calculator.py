@@ -10,55 +10,56 @@ import matplotlib.pyplot as plt
 
 from pathlib         import Path
 from ROOT            import RDataFrame # type: ignore
-from dmu.generic     import version_management    as vmn
 from dmu             import LogStore
+from dmu.generic     import version_management    as vmn
+from dmu.generic     import rxran
 from rx_efficiencies import AcceptanceCalculator
 from rx_common       import Channel
 from rx_common       import Project 
-from rx_common       import Sample 
+from rx_common       import Component 
 
 log=LogStore.add_logger('rx_efficiencies:test_acceptance_calculator')
 
 _BACKGROUNDS = [
-    (Sample.bsphiee       , Channel.ee, Project.rk),
-    (Sample.bpkstkpiee    , Channel.ee, Project.rk),
+    (Component.bsphiee       , Channel.ee, Project.rk),
+    (Component.bpkstkpiee    , Channel.ee, Project.rk),
     # ------
-    (Sample.bpk1kpipiee   , Channel.ee, Project.rk),
-    (Sample.bpk2kpipiee   , Channel.ee, Project.rk),
+    (Component.bpk1kpipiee   , Channel.ee, Project.rk),
+    (Component.bpk2kpipiee   , Channel.ee, Project.rk),
     # ------
-    (Sample.bpk1kpipiee   , Channel.ee, Project.rkst),
-    (Sample.bpk2kpipiee   , Channel.ee, Project.rkst),
+    (Component.bpk1kpipiee   , Channel.ee, Project.rkst),
+    (Component.bpk2kpipiee   , Channel.ee, Project.rkst),
 ]
 
 _SIGNALS = [
-    (Sample.bpkpee        , Channel.ee, Project.rk),
-    (Sample.bpkpmm        , Channel.mm, Project.rk),
+    (Component.bpkpee        , Channel.ee, Project.rk),
+    (Component.bpkpmm        , Channel.mm, Project.rk),
     # ---
-    (Sample.bpkpjpsiee    , Channel.ee, Project.rk),
-    (Sample.bpkpjpsimm    , Channel.mm, Project.rk),
+    (Component.bpkpjpsiee    , Channel.ee, Project.rk),
+    (Component.bpkpjpsimm    , Channel.mm, Project.rk),
     # ---
-    (Sample.bpkppsi2ee    , Channel.ee, Project.rk),
-    (Sample.bpkppsi2mm    , Channel.mm, Project.rk),
-    # ---
-    # ---
-    (Sample.bdkstkpiee    , Channel.ee, Project.rk),
-    (Sample.bdkstkpimm    , Channel.mm, Project.rk),
-    # ---
-    (Sample.bdkstkpijpsiee, Channel.ee, Project.rk),
-    (Sample.bdkstkpijpsimm, Channel.mm, Project.rk),
-    # ---
-    (Sample.bdkstkpipsi2ee, Channel.ee, Project.rk),
-    (Sample.bdkstkpipsi2mm, Channel.mm, Project.rk),
+    (Component.bpkppsi2ee    , Channel.ee, Project.rk),
+    (Component.bpkppsi2mm    , Channel.mm, Project.rk),
     # ---
     # ---
-    (Sample.bdkstkpiee    , Channel.ee, Project.rkst),
-    (Sample.bdkstkpimm    , Channel.mm, Project.rkst),
+    (Component.bdkstkpiee    , Channel.ee, Project.rk),
+    (Component.bdkstkpimm    , Channel.mm, Project.rk),
     # ---
-    (Sample.bdkstkpijpsiee, Channel.ee, Project.rkst),
-    (Sample.bdkstkpijpsimm, Channel.mm, Project.rkst),
+    (Component.bdkstkpijpsiee, Channel.ee, Project.rk),
+    (Component.bdkstkpijpsimm, Channel.mm, Project.rk),
     # ---
-    (Sample.bdkstkpipsi2ee, Channel.ee, Project.rkst),
-    (Sample.bdkstkpipsi2mm, Channel.mm, Project.rkst),
+    (Component.bdkstkpipsi2ee, Channel.ee, Project.rk),
+    (Component.bdkstkpipsi2mm, Channel.mm, Project.rk),
+    # ---
+    # ---
+    (Component.bdkstkpiee    , Channel.ee, Project.rkst),
+    (Component.bdkstkpimm    , Channel.mm, Project.rkst),
+    # ---
+    (Component.bdkstkpijpsiee, Channel.ee, Project.rkst),
+    (Component.bdkstkpijpsimm, Channel.mm, Project.rkst),
+    # ---
+    (Component.bdkstkpipsi2ee, Channel.ee, Project.rkst),
+    (Component.bdkstkpipsi2mm, Channel.mm, Project.rkst),
 ]
 #--------------------------
 class Data:
@@ -78,6 +79,9 @@ def initialize():
 
     ana_dir      = Path(os.environ['ANADIR'])
     Data.rsm_dir = vmn.get_last_version(dir_path=ana_dir / 'Rapidsim', version_only=False)
+
+    with rxran.seed(value = 42):
+        yield
 #--------------------------
 def _get_rdf(sample : str, energy : str) -> RDataFrame:
     file_path = f'{Data.rsm_dir}/{sample}/{energy}/{sample}_tree.root'
@@ -89,7 +93,7 @@ def _get_rdf(sample : str, energy : str) -> RDataFrame:
 @pytest.mark.parametrize('sample, channel, project', _SIGNALS + _BACKGROUNDS)
 def test_sample(
     energy   : str, 
-    sample   : Sample, 
+    sample   : Component, 
     channel  : Channel,
     project  : Project,
     tmp_path : Path):
