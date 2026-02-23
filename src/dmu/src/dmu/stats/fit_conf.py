@@ -65,9 +65,9 @@ class FitConf(BaseModel):
     nentries    : int                                = -1 
     run_gof     : bool                               = True
     do_errors   : bool                               = True
-    strategy    : dict[str,Retries | Context]| None  = None
     ranges      : list[tuple[float,float] ]  | None  = None
     constraints : list[Constraint]           | None  = None
+    strategy    : Retries | Context | None           = None
     # --------------------------
     @classmethod
     def default(cls) -> Self:
