@@ -3,7 +3,7 @@ This module contains functions needed by tests
 '''
 import yaml
 
-from rx_common              import Sample
+from rx_common              import Component
 from rx_common              import Trigger
 from rx_selection           import selection as sel
 from rx_data.rdf_getter     import RDFGetter
@@ -78,28 +78,28 @@ def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     ROOT dataframe
     '''
     if   kind == 'dt_ss':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'dt_ee':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'dt_mi':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'dt_mm':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'mc_ee':
-        sample = Sample.bdkstkpiee
+        sample = Component.bdkstkpiee
     elif kind == 'mc_mm':
-        sample = Sample.bdkstkpimm 
+        sample = Component.bdkstkpimm 
     else:
         raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
     with RDFGetter.only_friends(s_friend = set()):
         trigger = Trigger(prefix)
-        rdf     = rdf_from_sample(sample=Sample(sample), trigger=Trigger(trigger))
+        rdf     = rdf_from_sample(sample=Component(sample), trigger=Trigger(trigger))
 
     return rdf
 # ----------------------------------
 def rdf_from_sample(
-    sample          : Sample, 
+    sample          : Component, 
     trigger         : Trigger,
     nentries        : int  = 10_000,
     apply_selection : bool =  False) -> RDF.RNode:
