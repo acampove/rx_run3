@@ -1,4 +1,5 @@
 pytest-cov
+pytest-mock
 pytest-split
 pytest-xdist
 pre-commit
