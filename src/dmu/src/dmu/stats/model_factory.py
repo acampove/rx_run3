@@ -1,19 +1,19 @@
 '''
 Module storing ZModel class
 '''
-from pydantic               import BaseModel, ConfigDict, Field
-from typing                 import Callable, Union, Literal
-from zfit.interface         import ZfitSpace     as zobs
-from zfit.pdf               import BasePDF       as zpdf
-from zfit.param             import Parameter     as zpar
+from pydantic        import BaseModel, ConfigDict, Field
+from typing          import Callable, Union, Literal
+from zfit.interface  import ZfitSpace     as zobs
+from zfit.pdf        import BasePDF       as zpdf
+from zfit.param      import Parameter     as zpar
 
-from dmu.stats.parameters   import ParameterLibrary as PL
-from dmu.logging.log_store  import LogStore
+from dmu             import LogStore
+from dmu.stats       import ParameterLibrary as PL
 
-from .imports               import zfit
-from .types                 import Model
-from .zfit_models           import HypExp
-from .zfit_models           import ModExp
+from .imports        import zfit
+from .types          import Model
+from .zfit_models    import HypExp
+from .zfit_models    import ModExp
 
 log=LogStore.add_logger('dmu:stats:model_factory')
 
@@ -119,7 +119,7 @@ class ModelFactory:
     def __init__(self,
         preffix  : str,
         obs      : zobs,
-        l_pdf    : list[str],
+        l_pdf    : list[Model],
         l_shared : list[str],
         l_float  : list[str],
         l_reuse  : None | list[zpar]      = None,
