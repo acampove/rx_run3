@@ -10,7 +10,7 @@ from dmu         import LogStore
 from dmu.stats   import print_pdf
 from dmu.stats   import ModelFactory, MethodRegistry
 from dmu.stats   import ParameterLibrary
-from dmu.stats.zfit import zfit
+from dmu.stats   import zfit
 
 log=LogStore.add_logger('dmu:stats:test_model_factory')
 #--------------------------

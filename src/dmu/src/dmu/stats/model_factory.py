@@ -1,8 +1,8 @@
 '''
 Module storing ZModel class
 '''
-
-from typing                 import Callable, Union
+from pydantic               import BaseModel, ConfigDict, Field
+from typing                 import Callable, Union, Literal
 from zfit.interface         import ZfitSpace     as zobs
 from zfit.pdf               import BasePDF       as zpdf
 from zfit.param             import Parameter     as zpar
@@ -12,8 +12,39 @@ from dmu.stats.zfit_models  import HypExp
 from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
 from .imports               import zfit
+from .types                 import Model
 
 log=LogStore.add_logger('dmu:stats:model_factory')
+
+Reparametrization = Literal['scale', 'reso']
+# ------------------------------
+class ModelFactoryConf(BaseModel):
+    '''
+    Class meant to configure the fitter
+    '''
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True, # Due to reuse field that uses zpar
+        frozen                 =True)
+
+    shared        : list[str]
+    reparametrize : dict[str,Reparametrization]
+    fix           : dict[str,float]
+    floating      : list[str]
+    reuse         : dict[str,zpar ] = Field(default_factory=dict) 
+    # ------------------------------
+    @classmethod
+    def default(cls) -> 'ModelFactoryConf':
+        '''
+        Returns
+        ------------
+        Default configuration for ModelFactory
+        '''
+        return cls(
+            shared        = [],
+            floating      = [],
+            reparametrize = dict(),
+            fix           = dict(),
+            reuse         = dict())
 #-----------------------------------------
 class MethodRegistry:
     '''
@@ -299,14 +330,14 @@ class ModelFactory:
 
         return par
     #-----------------------------------------
-    @MethodRegistry.register('exp')
+    @MethodRegistry.register(Model.exp)
     def _get_exponential(self, suffix : str = '') -> zpdf:
         c   = self._get_parameter(kind = 'exp', name = 'c', suffix = suffix)
         pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
-    @MethodRegistry.register('hypexp')
+    @MethodRegistry.register(Model.hypexp)
     def _get_hypexp(self, suffix : str = '') -> zpdf:
         mu = self._get_parameter(kind = 'hypexp', name = 'mu', suffix = suffix)
         ap = self._get_parameter(kind = 'hypexp', name = 'ap', suffix = suffix)
@@ -316,7 +347,7 @@ class ModelFactory:
 
         return pdf
     # ---------------------------------------------
-    @MethodRegistry.register('modexp')
+    @MethodRegistry.register(Model.modexp)
     def _get_modexp(self, suffix : str = '') -> zpdf:
         mu = self._get_parameter(kind = 'modexp', name = 'mu', suffix = suffix)
         ap = self._get_parameter(kind = 'modexp', name = 'ap', suffix = suffix)
@@ -326,14 +357,14 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('pol1')
+    @MethodRegistry.register(Model.pol1)
     def _get_pol1(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol1', name = 'a', suffix = suffix)
         pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=f'pol1_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('pol2')
+    @MethodRegistry.register(Model.pol2)
     def _get_pol2(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol2', name = 'a', suffix = suffix)
         b   = self._get_parameter(kind = 'pol2', name = 'b', suffix = suffix)
@@ -341,7 +372,7 @@ class ModelFactory:
 
         return pdf
     # ---------------------------------------------
-    @MethodRegistry.register('pol3')
+    @MethodRegistry.register(Model.pol3)
     def _get_pol3(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol3', name = 'a', suffix = suffix)
         b   = self._get_parameter(kind = 'pol3', name = 'b', suffix = suffix)
@@ -351,7 +382,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('cbr')
+    @MethodRegistry.register(Model.cbr)
     def _get_cbr(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cbr', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'cbr', name = 'sg', suffix = suffix)
@@ -362,7 +393,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('suj')
+    @MethodRegistry.register(Model.suj)
     def _get_suj(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'suj', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'suj', name = 'sg', suffix = suffix)
@@ -373,7 +404,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('cbl')
+    @MethodRegistry.register(Model.cbl)
     def _get_cbl(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cbl', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'cbl', name = 'sg', suffix = suffix)
@@ -384,7 +415,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('gauss')
+    @MethodRegistry.register(Model.gauss)
     def _get_gauss(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'gauss', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'gauss', name = 'sg', suffix = suffix)
@@ -393,7 +424,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('dscb')
+    @MethodRegistry.register(Model.dscb)
     def _get_dscb(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'dscb', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'dscb', name = 'sg', suffix = suffix)
@@ -406,7 +437,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('voigt')
+    @MethodRegistry.register(Model.voigt)
     def _get_voigt(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'voigt', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'voigt', name = 'sg', suffix = suffix)
@@ -416,7 +447,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('qgauss')
+    @MethodRegistry.register(Model.qgauss)
     def _get_qgauss(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'qgauss', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'qgauss', name = 'sg', suffix = suffix)
@@ -426,7 +457,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('cauchy')
+    @MethodRegistry.register(Model.cauchy)
     def _get_cauchy(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cauchy', name = 'mu', suffix = suffix)
         gm  = self._get_parameter(kind = 'cauchy', name = 'gm', suffix = suffix)
