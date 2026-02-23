@@ -120,6 +120,39 @@ class FitResult(BaseModel):
     parameters : tuple[FitParameter,...]
     gof        : GoodnessOfFit | None = None
     # ----------------------
+    def pars_covariance(self, pars : list[str]) -> list[list[float]]:
+        '''
+        Parameters
+        -------------
+        pars: List of names of parameters
+
+        Returns
+        -------------
+        Covariance matrix among parameters 
+        '''
+        indexes : list[int] = []
+        for index, par in enumerate(self.parameters):
+            if par.name not in pars:
+                continue
+
+            indexes.append(index)
+
+        reduced_cov : list[list[float]] = []
+        for irow, row in enumerate(self.covariance):
+            if irow not in indexes:
+                continue
+
+            this_row : list[float] = []
+            for icol, val in enumerate(row):
+                if icol not in indexes:
+                    continue
+
+                this_row.append(val)
+
+            reduced_cov.append(this_row)
+
+        return reduced_cov
+    # ----------------------
     def __lt__(self, other : 'FitResult') -> bool:
         '''
         Better fit is greater

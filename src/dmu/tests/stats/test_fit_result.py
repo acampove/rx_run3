@@ -2,13 +2,23 @@
 File containing tests for FitResult class
 '''
 
+import numpy
 import pytest
 
 from pathlib     import Path
 from dmu.stats   import FitResult
 from dmu.stats   import zfit
 from dmu.testing import get_nll
+from dmu.generic import rxran 
 
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
+    '''
+    This will run before any test
+    '''
+    with rxran.seed(value = 42):
+        yield
 # -----------------------------
 def test_from_zfit():
     '''
@@ -21,8 +31,13 @@ def test_from_zfit():
     res.hesse(name = 'minuit_hesse')
 
     val = FitResult.from_zfit(res = res)
-    print(val)
-    print(val.covariance)
+    _   = val.covariance
+
+    cov = numpy.array(val.pars_covariance(pars = ['nbkg', 'nsig']), dtype=int)
+    assert cov.tolist() == [[943, -420], [-420, 898]]
+
+    cov = numpy.array(val.pars_covariance(pars = ['mu', 'sg']), dtype=int)
+    assert cov.tolist() == [[86, 3], [3, 81]]
 # -----------------------------
 def test_serialize(tmp_path : Path):
     '''
