@@ -22,6 +22,7 @@ def test_from_zfit():
 
     val = FitResult.from_zfit(res = res)
     print(val)
+    print(val.covariance)
 # -----------------------------
 def test_serialize(tmp_path : Path):
     '''
@@ -107,3 +108,4 @@ def test_hash():
 
     val = FitResult.from_zfit(res = res)
     hash(val)
+# -----------------------------

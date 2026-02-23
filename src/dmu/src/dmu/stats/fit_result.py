@@ -3,6 +3,7 @@ Module containing FitResult class
 '''
 import math
 import numpy
+import pprint
 
 from typing      import Final
 from scipy.stats import chi2 as chi2_dist
@@ -115,6 +116,7 @@ class FitResult(BaseModel):
 
     valid      : bool
     status     : int
+    covariance : list[list[float]] 
     parameters : tuple[FitParameter,...]
     gof        : GoodnessOfFit | None = None
     # ----------------------
@@ -255,18 +257,14 @@ class FitResult(BaseModel):
         elif no_errors_ok:
             error = math.nan
         else:
-            import pprint
-
             pprint.pprint(data)
-
             raise KeyError(f'Cannot extract error from parameter: {name}')
 
         try:
             value = data['value']
-        except KeyError:
-            import pprint
+        except KeyError as exc:
             pprint.pprint(data)
-            raise KeyError(f'Cannot extract value from parameter: {name}')
+            raise KeyError(f'Cannot extract value from parameter: {name}') from exc
 
         return FitParameter(
             name = name,
@@ -301,7 +299,10 @@ class FitResult(BaseModel):
 
         pars = tuple(l_par)
 
+        covariance = res.covariance().tolist()
+
         return cls(
+            covariance = covariance,
             status     = res.status,
             valid      = res.valid,
             gof        = gof,
