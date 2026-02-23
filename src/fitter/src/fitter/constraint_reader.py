@@ -5,7 +5,7 @@ Script holding ConstraintReader class
 from typing              import Final
 from dmu                 import LogStore
 from dmu.stats           import Constraint, Constraint1D
-from rx_common           import Sample
+from rx_common           import Component
 from zfit.loss           import ExtendedUnbinnedNLL
 from .fit_config         import FitConfig
 from .prec_scales        import PrecScales
@@ -68,7 +68,7 @@ class ConstraintReader:
             raise ValueError(f'Prec scale parameter does not start with {prefix} but {par_name}')
 
         name   = par_name.removeprefix(prefix)
-        sample = Sample(name)
+        sample = Component(name)
 
         return sample.name 
     # ----------------------
