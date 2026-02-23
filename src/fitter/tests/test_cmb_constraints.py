@@ -2,21 +2,24 @@
 Module used to test CmbConstraints class
 '''
 
-from omegaconf import DictConfig
 import pytest 
 
 from typing       import Final
 from pathlib      import Path
-from dmu.workflow import Cache
-from dmu.stats    import ConstraintND
-from rx_common    import Qsq
-from fitter       import CmbConstraints
+from zfit.loss    import ExtendedUnbinnedNLL as zlos
+
 from dmu          import LogStore
+from dmu.workflow import Cache
 from dmu.generic  import utilities           as gut
+from dmu.stats    import ConstraintND
 from dmu.stats    import ModelFactory
 from dmu.stats    import zfit
-from zfit.loss    import ExtendedUnbinnedNLL as zlos
+
+from rx_common    import Qsq, Trigger
 from rx_selection import selection           as sel
+
+from fitter       import CmbConstraints
+from fitter       import CombinatorialConf
 
 _COMBINATORIAL_NAME : Final[str] = 'combinatorial'
 
@@ -28,18 +31,18 @@ def initialize():
     This will run before any test
     '''
     LogStore.set_level('fitter:cmb_constraints', 10)
-    LogStore.set_level('dmu:statistics:fitter' , 10)
+    LogStore.set_level('dmu:stats:fitter'      , 10)
+    LogStore.set_level('dmu:stats:minimizers'  , 10)
 # ----------------------
 def _get_nll(
-    cfg   : DictConfig,
+    cfg   : CombinatorialConf,
     q2bin : Qsq) -> zlos:
     '''
     Returns
     -------------
     Likelihood with a combinatorial PDF
     '''
-    pdfs= cfg.model.components['combinatorial'].categories.main.models[q2bin]
-
+    pdfs= cfg.models[q2bin].pdfs
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     mod = ModelFactory(
         preffix = 'combinatorial',
@@ -58,15 +61,20 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
     '''
     Simplest test of CmbConstraints
     '''
-    fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
-    nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
+    data = gut.load_data(
+        package= 'fitter_data', 
+        fpath  = 'rare/rkst/electron/combinatorial.yaml')
+
+    cfg  = CombinatorialConf(**data)
+    nll  = _get_nll(cfg = cfg, q2bin = q2bin)
 
     with Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.8'}):
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
             nll   = nll,
-            cfg   = fit_cfg,
+            cfg   = cfg,
+            trig  = Trigger.rkst_ee_os,
             q2bin = q2bin)
 
     constraint = calc.get_constraint()
