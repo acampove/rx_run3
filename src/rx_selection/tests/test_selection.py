@@ -5,7 +5,7 @@ import os
 import pytest
 from pathlib      import Path
 from dmu          import LogStore
-from rx_common    import Sample, Trigger
+from rx_common    import Component, Trigger
 from rx_selection import selection as sel
 from rx_data      import RDFGetter 
 
@@ -177,7 +177,7 @@ def test_apply_full_selection(tmp_path : Path):
     Tests application of selection
     '''
     q2bin  = 'jpsi'
-    sample = Sample.data_24 
+    sample = Component.data_24 
     trigger= Trigger.rk_ee_os 
 
     with RDFGetter.max_entries(10_000):
@@ -200,7 +200,7 @@ def test_apply_selection(tmp_path : Path):
     Tests application of selection
     '''
     q2bin  = 'jpsi'
-    sample = Sample.data_24 
+    sample = Component.data_24 
     trigger= Trigger.rk_ee_os 
 
     with RDFGetter.max_entries(10_000):
