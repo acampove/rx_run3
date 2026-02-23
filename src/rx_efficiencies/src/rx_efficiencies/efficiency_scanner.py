@@ -6,6 +6,7 @@ import numpy
 import tqdm
 import pandas as pnd
 
+from pathlib               import Path
 from ROOT                  import RDF # type: ignore
 from dmu.workflow.cache    import Cache
 from dmu.logging.log_store import LogStore
@@ -28,7 +29,7 @@ class EfficiencyScanner(Cache):
     # --------------------------------
     def __init__(self, cfg : dict):
         super().__init__(
-                out_path= 'EfficiencyScanner',
+                out_path= Path('EfficiencyScanner'),
                 cfg     = cfg)
 
         self._cfg    = cfg
@@ -147,9 +148,15 @@ class EfficiencyScanner(Cache):
         if self._yld_default == 0:
             raise ValueError('Default WP yield is zero')
 
-        sample = self._cfg['input']['sample']
-        obj    = EfficiencyCalculator(q2bin='central', sample=sample)
-        eff, _ = obj.get_efficiency(sample = sample)
+        sample = self._cfg['input']['sample' ]
+        trigger= self._cfg['input']['trigger']
+
+        obj    = EfficiencyCalculator(
+            q2bin   = 'central', 
+            trigger = trigger,
+            sample  = sample)
+
+        eff, _ = obj.get_efficiency()
 
         # eff = self._yld_default / yld_total
         # Therefore this should provide efficiency at given WP
