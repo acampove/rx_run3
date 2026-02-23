@@ -2,8 +2,15 @@
 This module contains classes derived from Enum
 '''
 from enum import IntEnum, StrEnum
+from typing import Literal
 
-
+# ------------------------------
+class Particle(StrEnum):
+    '''
+    Model meant to store particle properties
+    '''
+    kaon = 'kaon'
+    pion = 'pion'
 # ------------------------------
 class Mass(StrEnum):
     '''
@@ -13,12 +20,23 @@ class Mass(StrEnum):
     -----------------
     lb/b         : Lambda/B meson mass
     lb/b_dtf_jpsi: Lambda/B meson mass with DTF constraint on Jpsi mass
+    b_bcor       : B meson mass with brem corrected electrons
+    b_bcor_smr   : B meson mass with brem correction and smearing
+    
+    Attributes for MisID
+    -----------------
+    b_bcorr_pipi : B meson mass with electrons reconstructed as pions
+    b_bcorr_kk   : B meson mass with electrons reconstructed as kaons
     '''
 
     lb_dtf_jpsi = 'Lb_cons_Jpsi_M'
     lb          = 'Lb_M'
     b           = 'B_M'
     b_dtf_jpsi  = 'B_const_mass_M'
+    b_bcor      = 'B_Mass'
+    b_bcor_smr  = 'B_Mass_smr'
+    b_bcorr_pipi= 'B_Mass_hdpipi'
+    b_bcorr_kk  = 'B_Mass_hdkk'
 # ------------------------------
 class Parameter(StrEnum):
     '''
@@ -307,3 +325,11 @@ class Sample(StrEnum):
 
         raise ValueError(f'Sample {self} does not belong to electron or muon Channel')
 # ---------------------------------------
+CCbarComponent = Literal[
+    Component.bpjpsixee,
+    Component.bdjpsixee,
+    Component.bsjpsixee,
+    # --------
+    Component.bpjpsixmm,
+    Component.bdjpsixmm,
+    Component.bsjpsixmm]
