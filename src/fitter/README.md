@@ -53,12 +53,12 @@ and the ratio of rare part reco background to signal.
 - Minimizes the negative log-likelihood.
 
 ```python
-from dmu.stats.zfit             import zfit
-from dmu.generic                import utilities as gut
-from dmu.stats.constraint_adder import ConstraintAdder
+from dmu.generic import utilities as gut
+from dmu.stats   import zfit
+from dmu.stats   import ConstraintAdder
 
-from fitter.data_fitter        import DataFitter
-from fitter.likelihood_factory import LikelihoodFactory
+from fitter      import DataFitter
+from fitter      import LikelihoodFactory
 
 fit_cfg = gut.load_conf(package='fitter_data', fpath='rare/electron/data.yaml')
 
