@@ -1,67 +1,77 @@
+# -------------------------
+# Aliases
+# -------------------------
 reso_veto: &reso_veto
   jpsi veto  : "TMath::Abs(B_const_mass_M       - 5280) > 200"
   psi2s veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
-
-constraints: &cons
-    sample     : DATA_24* 
-    trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA
-    selection  : 
-      <<: *reso_veto
-    parameters : # Will constrain parameters starting
-      - mu       # with any of these strings
-      - ap       # E.g mu_hypexp_combinatorial_1
-      - bt
-    fit:
-      strategy : 
-        retry :
-          ntries        : 20
-          pvalue_thresh : 0.05
-          ignore_status : False 
-    plots:
-      nbins : 60
-
+fit_strat: &fit_strat
+  strategy : 
+    retry :
+      ntries : 20
+      pvalue : 0.05
+plot_conf: &plot_conf
+  nbins  : 60
+  stacked: True
+  d_leg  : {}
+# -------------------------
+constraints_high: &cons_hi
+  sample     : DATA_24* 
+  trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA
+  parameters : # Will constrain parameters starting
+    - mu       # with any of these strings
+    - sg       # E.g mu_hypexp_combinatorial_1
+  selection  : 
+    <<: *reso_veto
+  fit:
+    <<: *fit_strat
+  plots:
+    <<: *plot_conf
+# -------------------------
+constraints_low_central: &cons_lc
+  sample     : DATA_24* 
+  trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA
+  parameters : # Will constrain parameters starting
+    - mu       # with any of these strings
+    - ap       # E.g mu_hypexp_combinatorial_1
+    - bt
+  selection  : 
+    <<: *reso_veto
+  fit:
+    <<: *fit_strat
+  plots:
+    <<: *plot_conf
+# -------------------------
+# Proper config
+# -------------------------
 output_directory : rare/rkst/electron/combinatorial
-categories:
-  main:
-    models : 
-      low     : [hypexp]
-      central : [hypexp]
-      high    : [suj]
-bins:
+# -----------------
+constraints:
   low:
-    shared        : []
-    floating      : []
-    reparametrize : {}
-    fix           : {}
-    constraints:
-      <<: *cons
+    <<: *cons_lc
   central:
+    <<: *cons_lc
+  high:
+    <<: *cons_hi
+# -----------------
+models:
+  low:
+    pdfs          : [hypexp]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           : {}
-    constraints:
-      <<: *cons
+  central:
+    pdfs          : [hypexp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
   high:
+    pdfs          : [suj]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           :
       dl_suj : 2.5
       gm_suj : -10
-    constraints:
-      sample     : DATA_24* 
-      trigger    : Hlt2RD_B0ToKpPimEE_SameSign_MVA
-      selection  : 
-        <<: *reso_veto
-      parameters : # Will constrain parameters starting
-        - mu       # with any of these strings
-        - sg       # E.g mu_hypexp_combinatorial_1
-      fit:
-        strategy : 
-          retry :
-            ntries        : 20
-            pvalue_thresh : 0.05
-            ignore_status : False 
-      plots:
-        nbins : 60
+# -----------------
