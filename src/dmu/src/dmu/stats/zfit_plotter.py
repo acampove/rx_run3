@@ -5,14 +5,15 @@ Module containing plot class, used to plot fits
 import math
 import warnings
 import pprint
-
 import hist
 import mplhep
 import tensorflow            as tf
 import pandas                as pd
 import numpy                 as np
 import matplotlib.pyplot     as plt
-from pydantic               import BaseModel, ConfigDict
+
+from typing                 import Self
+from pydantic               import BaseModel, ConfigDict, Field
 from matplotlib.axes        import Axes
 from zfit.pdf               import BasePDF    as zpdf
 from zfit.data              import Data       as zdat
