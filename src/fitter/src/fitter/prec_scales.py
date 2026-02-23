@@ -9,7 +9,7 @@ import jacobi   as jac
 from dmu             import LogStore
 from dmu.generic     import hashing
 from dmu.generic     import utilities  as gut
-from rx_common.types import Sample
+from rx_common.types import Component
 from rx_common.types import Trigger 
 from rx_selection    import selection  as sel
 from rx_efficiencies import EfficiencyCalculator
@@ -36,7 +36,7 @@ class PrecScales:
         self._hash        = self._get_hash()
     #------------------------------------------
     def _get_hash(self) -> str:
-        process = Sample[self._proc] 
+        process = Component[self._proc] 
         d_sel   = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=process)
         hsh     = hashing.hash_object([self._proc, self._q2bin, d_sel])
 
@@ -103,7 +103,7 @@ class PrecScales:
     def _get_br(self, proc : str) -> tuple[float,float]:
         log.debug(f'Calculating BR for {proc}')
 
-        l_dec = Sample[proc].subdecays
+        l_dec = Component[proc].subdecays
         l_bf  = [ self._d_frbf['bf'][dec] for dec in l_dec ]
 
         return self._mult_brs(l_bf)
@@ -118,7 +118,7 @@ class PrecScales:
         --------------
         Tuple with efficiency value and error
         '''
-        sample = Sample[proc]
+        sample = Component[proc]
 
         log.debug(f'Calculating efficiencies for {sample}')
         obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample, trigger=self._trigger)
