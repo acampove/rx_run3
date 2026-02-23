@@ -15,7 +15,7 @@ from dmu.pdataframe           import utilities  as put
 from dmu                      import LogStore
 from zfit.data                import Data
 from zfit.interface           import ZfitSpace  as zobs
-from rx_common                import Sample, Trigger
+from rx_common                import Component, Trigger
 from rx_data                  import RDFGetter
 from rx_selection             import selection  as sel
 from rx_misid.sample_splitter import SampleSplitter
@@ -38,7 +38,7 @@ class DataPreprocessor(Cache):
         self,
         out_dir : Path,
         obs     : zobs,
-        sample  : Sample,
+        sample  : Component,
         trigger : Trigger,
         q2bin   : str,
         wgt_cfg : DictConfig|None,
@@ -75,7 +75,6 @@ class DataPreprocessor(Cache):
         self._df_ctf = df_ctf
 
         self._is_sig = is_sig
-        self._rdf_uid= None if self._rdf is None else getattr(self._rdf, 'uid')
 
         super().__init__(
             out_path = out_dir,
@@ -84,7 +83,7 @@ class DataPreprocessor(Cache):
             d_sel    = d_sel,
             is_sig   = is_sig,
             wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
-            rdf_uid  = self._rdf_uid)
+            rdf_uid  = self._rdf.uid)
     # ------------------------
     def _get_rdf(
         self, 
@@ -232,7 +231,7 @@ class DataPreprocessor(Cache):
         '''
         Unique identifier of ROOT dataframe after selection
         '''
-        return self._rdf_uid
+        return self._rdf.uid
     # ------------------------
     def _data_from_numpy(
         self,
