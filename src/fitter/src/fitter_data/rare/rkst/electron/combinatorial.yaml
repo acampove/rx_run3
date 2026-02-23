@@ -6,9 +6,8 @@ reso_veto: &reso_veto
   psi2s veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
 fit_strat: &fit_strat
   strategy : 
-    retry :
-      ntries : 20
-      pvalue : 0.05
+    ntries : 20
+    pvalue : 0.05
 plot_conf: &plot_conf
   nbins  : 60
   stacked: True
