@@ -323,7 +323,7 @@ class Fitter:
             obj = AnealingMinimizer(cfg = cfg)
             res = obj.get_result(loss = nll)
         else:
-            raise ValueError('Unsupported fitting strategy')
+            raise ValueError(f'Unsupported fitting strategy: {cfg.strategy}')
 
         self._set_pdf_pars(res)
 
