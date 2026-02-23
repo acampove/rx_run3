@@ -16,7 +16,8 @@ from zfit.result                   import FitResult as zres
 from zfit.util                     import ztyping
 from zfit.pdf                      import BasePDF           as zpdf
 from zfit.minimizers.strategy      import FailMinimizeNaN
-from dmu                           import LogStore
+
+from dmu                           import LogStore, LogLevels
 from dmu.logging                   import messages  as mes
 
 from .gof_calculator import GofCalculator
@@ -25,7 +26,7 @@ from .utilities      import print_pdf
 from .fit_conf       import Context, Retries, FitConf
 from .imports        import zfit
 
-log = LogStore.add_logger('dmu:ml:minimizers')
+log = LogStore.add_logger('dmu:stats:minimizers')
 zlos= ExtendedUnbinnedNLL | UnbinnedNLL
 zpar= zfit.param.Parameter
 zmin= zfit.minimize.Minuit
@@ -40,8 +41,7 @@ _HIDDEN_TF_LINES          : Final[list[str]] = [
         'All log messages before absl::InitializeLog()']
 
 # Configurations
-_NDOF                     : Final[int] = 10
-_ERROR_CALCULATION_NTRIES : Final[int] = 10
+_NDOF : Final[int] = 10
 
 Loss= ExtendedUnbinnedNLL | UnbinnedNLL
 #------------------------------
@@ -73,7 +73,7 @@ class AnealingMinimizer:
         self._strategy   = cfg.strategy
         self._cfg        = cfg
         self._target_gof = GoodnessOfFit(
-            pval = self._cfg.pvalue, 
+            pval = self._strategy.pvalue, 
             ndof = _NDOF)
 
         self._l_bad_fit_res : list[zres] = []
@@ -209,8 +209,9 @@ class AnealingMinimizer:
         Object holding fit result
         '''
         results : list[FitResult] = []
-        for i_try in range(self._strategy.ntries):
-            self._randomize_parameters(loss)
+        for i_try in range(1, self._strategy.ntries + 1):
+            if i_try > 1:
+                self._randomize_parameters(loss)
 
             try:
                 obj = self._min.minimize(loss, params = params, init = init)
@@ -220,13 +221,13 @@ class AnealingMinimizer:
                 continue
 
             obj = _calculate_errors(res = obj)
-            res = FitResult.from_zfit(res = obj)
-            if not res.valid:
-                log.warning(f'{i_try:02}/{self._strategy:02}{"Bad fit":>20}')
+            if not obj.valid:
+                log.warning(f'{i_try:02}/{self._strategy.ntries:02}{"Bad fit":>20}')
                 continue
 
             gcl = GofCalculator(nll = loss)
             gof = gcl.get_gof()
+            res = FitResult.from_zfit(res = obj, gof = gof)
 
             log.info(f'{i_try:02}/{self._strategy.ntries:02}{gof.chi2:>20.3f}')
             if gof < self._target_gof: 
@@ -335,31 +336,22 @@ def _calculate_errors(res : zres) -> zres:
     None if error could not be calculated after 10 attempts
     '''
     log.debug('Calculating errors')
-    found_error = False
-    counter     = 0
-    while not found_error and counter < _ERROR_CALCULATION_NTRIES:
-        res.hesse(name='minuit_hesse')
-        counter += 1
+
+    for method in ['minuit_hesse', 'approx']:
+        res.hesse(name='minuit_hesse', method = method)
         d_val = list(res.params.values())[0]
 
         if 'minuit_hesse' in d_val:
-            found_error = True
-            break
+            log.debug('Error found')
+            return res 
 
-        # Good fit, and cannot get error => Keep trying
-        if not res.valid:
-            if log.getEffectiveLevel() < 20:
-                print(res)
-            log.debug(f'Error not calculated, retrying: {counter}/10')
-        # Bad fit and cannot get error => Forget about fit
-        else:
-            raise RuntimeError('Fit error could not be found')
+        log.warning(f'Failed error calculation with: {method}')
+        if log.getEffectiveLevel() < LogLevels.info:
+            print(res)
 
-    # Good fit and could not find error
-    if not found_error:
-        raise MinimizerFailError('Fit error could not be found')
+    log.error(res)
 
-    return res
+    raise MinimizerFailError('Fit error could not be found')
 # ------------------------
 def minimize(
     nll : zlos,
