@@ -12,6 +12,7 @@ import tensorflow            as tf
 import pandas                as pd
 import numpy                 as np
 import matplotlib.pyplot     as plt
+from pydantic               import BaseModel, ConfigDict
 from matplotlib.axes        import Axes
 from zfit.pdf               import BasePDF    as zpdf
 from zfit.data              import Data       as zdat
@@ -24,6 +25,16 @@ from dmu.logging.log_store  import LogStore
 from .imports               import zfit
 
 log = LogStore.add_logger('dmu:zfit_plotter')
+#----------------------------------------
+class ZFitPlotterConf(BaseModel):
+    '''
+    Class meant to hold configuration for ZFitPlotter
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    nbins   : int
+    stacked : bool
+    d_leg   : dict[str,str]
 #----------------------------------------
 class ZFitPlotter:
     '''
