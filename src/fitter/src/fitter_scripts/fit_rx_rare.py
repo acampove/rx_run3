@@ -23,7 +23,7 @@ from dmu           import LogStore
 from zfit.loss     import ExtendedUnbinnedNLL
 from rx_data       import RDFGetter
 from rx_selection  import selection as sel
-from rx_common     import Sample, info
+from rx_common     import Component, info
 
 from fitter        import FitConfig
 from fitter        import ConstraintReader
@@ -33,7 +33,7 @@ from fitter        import ToyMaker
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 
-DATA_SAMPLE : Final[Sample] = Sample.data_24 
+DATA_SAMPLE : Final[Component] = Component.data_24 
 # ----------------------
 def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
     '''

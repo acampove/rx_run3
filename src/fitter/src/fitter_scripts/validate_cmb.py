@@ -13,7 +13,7 @@ from dmu.stats       import Fitter
 from dmu.stats       import ZFitPlotter
 
 from ROOT            import RDF # type: ignore
-from rx_common       import Qsq, Sample, Trigger
+from rx_common       import Qsq, Component, Trigger
 from zfit.data       import Data      as zdat
 from zfit.pdf        import BasePDF   as zpdf
 from zfit.interface  import ZfitSpace as zobs
@@ -38,7 +38,7 @@ class Data:
     q2_kind: str|None=None
     model  : str
     config : str
-    sample : Sample 
+    sample : Component 
     trigger: Trigger 
     initial: int
     final  : int
