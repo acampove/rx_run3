@@ -7,15 +7,15 @@ from .constraint_adder    import ConstraintAdder
 from .parameters          import ParameterLibrary
 from .measurement         import Measurement
 from .gof_calculator      import GofCalculator
-from .model_factory       import ModelFactory, MethodRegistry
+from .model_factory       import ModelFactory, MethodRegistry, ModelFactoryConf
 from .fitter              import Fitter
 from .protocols           import ParsHolder
 from .utilities           import print_pdf
 from .utilities           import save_fit 
-from .zfit_plotter        import ZFitPlotter
+from .zfit_plotter        import ZFitPlotter, ZFitPlotterConf
 from .zfit_models         import ModExp
 from .zfit_models         import HypExp
-from .fit_conf            import FitConf
+from .fit_conf            import FitConf, KDEConf
 from .imports             import zfit
 from .imports             import tensorflow 
 from .minimizers          import AnealingMinimizer
@@ -24,11 +24,16 @@ from .minimizers          import MinimizerFailError
 from .minimizers          import Retries
 from .fit_result          import FitResult
 from .fit_result          import GoodnessOfFit
+from .types               import Model, KDEModel
 
 __all__ = [
+    'ZFitPlotterConf',
     'GoodnessOfFit',
+    'Model',
+    'KDEModel',
     'Retries',
     'FitConf',
+    'KDEConf',
     'tensorflow',
     'save_fit',
     'ContextMinimizer',
@@ -42,6 +47,7 @@ __all__ = [
     'build_constraint',
     'Constraint',
     'ModelFactory',
+    'ModelFactoryConf',
     'ModExp',
     'HypExp',
     'MethodRegistry',
