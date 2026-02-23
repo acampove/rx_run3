@@ -8,11 +8,12 @@ from zfit.pdf               import BasePDF       as zpdf
 from zfit.param             import Parameter     as zpar
 
 from dmu.stats.parameters   import ParameterLibrary as PL
-from dmu.stats.zfit_models  import HypExp
-from dmu.stats.zfit_models  import ModExp
 from dmu.logging.log_store  import LogStore
+
 from .imports               import zfit
 from .types                 import Model
+from .zfit_models           import HypExp
+from .zfit_models           import ModExp
 
 log=LogStore.add_logger('dmu:stats:model_factory')
 
