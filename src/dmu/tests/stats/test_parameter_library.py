@@ -3,17 +3,17 @@ Module with tests for ParameterLibrary class
 '''
 
 import pytest
-from zfit.interface        import ZfitParameter    as zpar
-from dmu.stats.zfit        import zfit
-from dmu.generic           import utilities        as gut
-from dmu.stats.parameters  import ParameterLibrary as PL
-from dmu.logging.log_store import LogStore
+
+from zfit.interface import ZfitParameter    as zpar
+from dmu            import LogStore
+from dmu.stats      import zfit
+from dmu.stats      import ParameterLibrary as PL
+from dmu.generic    import utilities        as gut
 
 log=LogStore.add_logger('dmu:test_parameter_library')
-
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
     '''
     This runs before the tests
     '''
