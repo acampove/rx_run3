@@ -24,7 +24,7 @@ def test_from_zfit():
     '''
     Test conversion from zfit object
     '''
-    nll = get_nll(kind = 's+b')
+    nll = get_nll(kind = 's+b', suffix = '_gaus_test_1')
     min = zfit.minimize.Minuit()
 
     res = min.minimize(loss = nll)
@@ -43,7 +43,7 @@ def test_serialize(tmp_path : Path):
     '''
     Test conversion from zfit object
     '''
-    nll = get_nll(kind = 's+b')
+    nll = get_nll(kind = 's+b', suffix = '_gaus_test_1')
     min = zfit.minimize.Minuit()
 
     res = min.minimize(loss = nll)
@@ -62,7 +62,7 @@ def test_getitem():
     '''
     Test conversion from zfit object
     '''
-    nll = get_nll(kind = 's+b')
+    nll = get_nll(kind = 's+b', suffix = '_gaus_test_1')
     min = zfit.minimize.Minuit()
 
     res = min.minimize(loss = nll)
@@ -70,7 +70,7 @@ def test_getitem():
 
     val = FitResult.from_zfit(res = res)
 
-    x, y = val['mu']
+    x, y = val['mu_gaus_test_1']
 
     print(val)
     print(x,y)
@@ -79,7 +79,7 @@ def test_get():
     '''
     Test conversion from zfit object
     '''
-    nll = get_nll(kind = 's+b')
+    nll = get_nll(kind = 's+b', suffix = '_gaus_test_1')
     min = zfit.minimize.Minuit()
 
     res = min.minimize(loss = nll)
@@ -87,8 +87,8 @@ def test_get():
 
     val = FitResult.from_zfit(res = res)
 
-    x, y = val['mu']
-    a, b = val.get('mu', 3)
+    x, y = val['mu_gaus_test_1']
+    a, b = val.get('mu_gaus_test_1', 3)
 
     assert a == x
     assert b == y
@@ -102,7 +102,7 @@ def test_no_errors_ok():
     '''
     Test no_errors_ok
     '''
-    nll = get_nll(kind = 's+b')
+    nll = get_nll(kind = 's+b', suffix = '_gaus_test_1')
     min = zfit.minimize.Minuit()
 
     res = min.minimize(loss = nll)
@@ -115,7 +115,7 @@ def test_hash():
     '''
     Test conversion from zfit object
     '''
-    nll = get_nll(kind = 's+b')
+    nll = get_nll(kind = 's+b', suffix = '_gaus_test_1')
     min = zfit.minimize.Minuit()
 
     res = min.minimize(loss = nll)

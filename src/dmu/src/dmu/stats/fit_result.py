@@ -1,6 +1,7 @@
 '''
 Module containing FitResult class
 '''
+import re
 import math
 import numpy
 import pprint
@@ -20,6 +21,7 @@ log  = LogStore.add_logger('rx_stats:fit_result')
 RTOL     : Final[float] = 1e-7
 MIN_NDOF : Final[int  ] =  9
 MAX_NDOF : Final[int  ] = 41
+PAR_REGX : Final[str  ] = r'\w+_\w+_\w+_\d+'
 # -------------------------------------
 class GoodnessOfFit(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -98,6 +100,28 @@ class FitParameter(BaseModel):
     value: float 
     error: float
     # ----------------------
+    def model_post_init(self, _) -> None:
+        mtch = re.match(PAR_REGX, self.name)
+
+        if not mtch:
+            log.error(f'Parameters should follow naming: {PAR_REGX}')
+            raise ValueError(f'Invalid parameter name: {self.name}')
+    # ----------------------
+    @property
+    def prefix(self) -> str:
+        '''
+        Parameters are meant to be called as
+
+        {PREFIX}_{MODEL}_{COMPONENT}_{INDEX}
+
+        e.g. mu_suj_combinatorial_1
+
+        This will return PREFIX
+        '''
+        parts = self.name.split('_')
+
+        return parts[0]
+    # ----------------------
     def __str__(self) -> str:
         '''
         Returns
@@ -120,22 +144,49 @@ class FitResult(BaseModel):
     parameters : tuple[FitParameter,...]
     gof        : GoodnessOfFit | None = None
     # ----------------------
+    def __hash__(self) -> int:
+        cov  = tuple( tuple(row) for row in self.covariance )
+        data = cov, self.valid, self.status, self.parameters, self.gof
+
+        return hash(data)
+    # ----------------------
+    def _get_parameter_indexes(self, pars : list[str]) -> list[int]:
+        '''
+        Parameters
+        -------------
+        pars: List of prefixes of names of parmeters
+
+        Returns
+        -------------
+        List of indices of corresponding parameters
+        '''
+        prefixes : set[str] = { par.prefix for par in self.parameters }
+        if len(prefixes) != len(self.parameters):
+            for par in self.parameters:
+                log.error(par.name)
+
+            raise ValueError('Repeated prefixes found, cannot retrieve parameter indexes safely')
+
+        indexes : list[int] = []
+        for index, par in enumerate(self.parameters):
+            if par.prefix not in pars:
+                continue
+
+            indexes.append(index)
+
+        return indexes
+    # ----------------------
     def pars_covariance(self, pars : list[str]) -> list[list[float]]:
         '''
         Parameters
         -------------
-        pars: List of names of parameters
+        pars: List of prefixes of names of parameters
 
         Returns
         -------------
         Covariance matrix among parameters 
         '''
-        indexes : list[int] = []
-        for index, par in enumerate(self.parameters):
-            if par.name not in pars:
-                continue
-
-            indexes.append(index)
+        indexes : list[int] = self._get_parameter_indexes(pars = pars)
 
         reduced_cov : list[list[float]] = []
         for irow, row in enumerate(self.covariance):
