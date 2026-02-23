@@ -4,17 +4,15 @@ This module contains BaseFitter
 import yaml
 import textwrap
 
-from pathlib                  import Path
-from typing                   import cast
-from omegaconf                import OmegaConf, DictConfig
-from dmu                      import LogStore
-from dmu.stats                import Fitter
-from dmu.stats                import utilities  as sut
-from zfit.result              import FitResult  as zres
-from zfit.data                import Data       as zdata
-from zfit.pdf                 import BasePDF    as zpdf
-from rx_common                import Sample
-from rx_common                import Trigger
+from pathlib     import Path
+from omegaconf   import OmegaConf, DictConfig
+from dmu         import LogStore
+from dmu.stats   import FitConf, FitResult, Fitter, ZFitPlotterConf
+from dmu.stats   import utilities  as sut
+from zfit.data   import Data       as zdata
+from zfit.pdf    import BasePDF    as zpdf
+from rx_common   import Component, Qsq
+from rx_common   import Trigger
 
 log=LogStore.add_logger('fitter:base_fitter')
 # ------------------------
