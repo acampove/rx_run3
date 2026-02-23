@@ -1,10 +1,10 @@
 '''
 This module contains functions meant to be shared by code in rx_efficiencies
 '''
-from rx_common import Project, Sample
+from rx_common import Project, Component
 
 # ---------------------------------------
-def is_acceptance_defined(sample : Sample, project : Project) -> bool:
+def is_acceptance_defined(sample : Component, project : Project) -> bool:
     '''
     Parameters
     -------------
@@ -25,11 +25,11 @@ def is_acceptance_defined(sample : Sample, project : Project) -> bool:
     # and cannot be used to calculate geometric
     # acceptance under rkst hypothesis
     rk_only_samples = {
-        Sample.bsphiee,
-        Sample.bpkstkpiee, # This is a neutral pion
-        Sample.bpkpmm    , Sample.bpkpee, 
-        Sample.bpkpjpsiee, Sample.bpkpjpsimm,
-        Sample.bpkppsi2ee, Sample.bpkppsi2mm,
+        Component.bsphiee,
+        Component.bpkstkpiee, # This is a neutral pion
+        Component.bpkpmm    , Component.bpkpee, 
+        Component.bpkpjpsiee, Component.bpkpjpsimm,
+        Component.bpkppsi2ee, Component.bpkppsi2mm,
     }
 
     if sample in rk_only_samples:
