@@ -13,7 +13,7 @@ import tensorflow        as tf
 import dmu.pdataframe.utilities  as put
 import dmu.generic.utilities     as gut
 
-from dmu              import LogStore
+from dmu              import LogStore, LogLevels
 from .imports         import zfit
 from typing           import Union, Any, Literal, overload
 from pathlib          import Path
@@ -313,9 +313,9 @@ def print_pdf(
         return l_msg
 
     for msg in l_msg:
-        if   level == 20:
+        if   level == LogLevels.info:
             log.info(msg)
-        elif level == 10:
+        elif level == LogLevels.debug:
             log.debug(msg)
         else:
             raise ValueError(f'Invalid level: {level}')
@@ -325,7 +325,7 @@ def print_pdf(
 def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
     d_par = {}
     log.debug('Reading parameters from:')
-    if log.getEffectiveLevel() < 20:
+    if log.getEffectiveLevel() < LogLevels.info:
         print(result)
 
     log.debug(60 * '-')

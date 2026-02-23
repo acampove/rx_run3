@@ -3,18 +3,28 @@ Module holding LogStore
 '''
 import logging
 import contextlib
-from typing import Union
 
+from enum    import IntEnum
+from typing  import Union
 from logging import Logger as StdLogger
 
-VERBOSE = 5
-setattr(logging, 'VERBOSE', VERBOSE)
+# -----------------------------------
+class LogLevels(IntEnum):
+    '''
+    Class meant to symbolize logging levels
+    '''
+    error   = logging.ERROR
+    info    = logging.INFO
+    debug   = logging.DEBUG
+    verbose = 5 
+#------------------------------------------------------------
+setattr(logging, 'VERBOSE', LogLevels.verbose)
 #------------------------------------------------------------
 class Logger(StdLogger):
     def verbose(self, msg, *args, **kwargs):
-        if self.isEnabledFor(VERBOSE):
+        if self.isEnabledFor(LogLevels.verbose):
             kwargs.setdefault('stacklevel', 2)
-            self._log(VERBOSE, msg, args, **kwargs)
+            self._log(LogLevels.verbose, msg, args, **kwargs)
 
 logging.setLoggerClass(Logger)
 #------------------------------------------------------------
@@ -23,7 +33,7 @@ class StoreFormater(logging.Formatter):
     Custom formatter
     '''
     LOG_COLORS = {
-        logging.VERBOSE : '\033[32m',      # Green
+        logging.VERBOSE : '\033[32m',      # Green # type: ignore
         logging.DEBUG   : '\033[94m',      # Gray
         logging.INFO    : '\033[37m',      # White
         logging.WARNING : '\033[93m',      # Yellow
