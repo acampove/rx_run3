@@ -7,10 +7,10 @@ import numpy
 import pytest
 import matplotlib.pyplot as plt
 
-from dmu.stats.zfit import zfit
 from dataclasses  import dataclass
-from dmu.stats    import ZFitPlotter
 from dmu          import LogStore
+from dmu.stats    import zfit
+from dmu.stats    import ZFitPlotter
 from zfit.data    import Data         as zdat
 
 log = LogStore.add_logger('dmu:test_fit_plotter')
