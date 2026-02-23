@@ -63,30 +63,6 @@ class Brem(IntEnum):
     one  = 1 
     two  = 2 
 # ---------------------------------------
-class Component(StrEnum):
-    r'''
-    This class is meant to hold elements representing fitting components 
-
-    data          : Real data
-    jpsi          : E.g. B^+ -> J/psi K^+, B^0 J/psi K^*
-    psi2          : E.g. B^+ -> psi(2s) K^+, B^0 psi(2S) K^*
-    ccbar         : Charmonium inclusive samples
-    cabibbo       : B^+ \to \pi^+ J/\psi
-    lbjpsipk      : Lb -> p K J/psi
-    bsjpsiphi     : B_s \to J/\psi \phi
-    bsjpsikst     : B_s \to J/\psi K^* 
-    bdjpsikst_swp : B_d \to J/\psi K^* with K -> pi and pi -> K
-    '''
-    data          = 'data'
-    jpsi          = 'jpsi'
-    psi2          = 'psi2'
-    ccbar         = 'ccbar'
-    cabibbo       = 'cabibbo'
-    lbjpsipk      = 'lbjpsipk'
-    bsjpsiphi     = 'bsjpsiphi'
-    bsjpsikst     = 'bsjpsikst'
-    bdjpsikst_swp = 'bdjpsikst_swp'
-# ---------------------------------------
 class Trigger(StrEnum):
     '''
     Class meant to represent MVA HLT2 triggers
@@ -198,21 +174,26 @@ class Qsq(StrEnum):
     def __str__(self):
         return self.value
 # ---------------------------------------
-class Sample(StrEnum):
+class Component(StrEnum):
     '''
-    Class meant to represent MC or data sample
+    Class meant to represent decay 
 
     Naming constraints:
 
-    - Except for data, all samples meant to be used with the electron/muon channel should end with ee/mm
+    - Except for data, undefined and combinatorial, all samples meant to be used with the electron/muon channel should end with ee/mm
     '''
     undefined      = 'undefined'
+    comb           = 'combinatorial'
     # -----
     data_24        = 'DATA_24*'
+    # -----
+    bpkkk          = 'Bu_KplKplKmn_eq_sqDalitz_DPC'
+    bpkpipi        = 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
     # -----
     bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
     bpkpjpsiee     = 'Bu_JpsiK_ee_eq_DPC'
     bpkppsi2ee     = 'Bu_psi2SK_ee_eq_DPC'
+    bpkpipiee      = 'Bu_Kpipiee_eq_DPC_LSFLAT'
     # -----
     bpkpmm         = 'Bu_Kmumu_eq_btosllball05_DPC'
     bpkpjpsimm     = 'Bu_JpsiK_mm_eq_DPC'
@@ -284,14 +265,19 @@ class Sample(StrEnum):
                 raise NotImplementedError(f'Cannot find subdecays for: {self.name}') 
     # --------------------------------------------
     @classmethod
-    def get_mc_samples(cls) -> list['Sample']:
+    def get_mc_samples(cls) -> list['Component']:
         '''
         Returns
         ---------------
         List of MC samples known to analysis
         '''
+        return [ sample for sample in cls if sample.has_mc() ] 
+    # --------------------------------------------
+    def has_mc(self) -> bool:
+        if self.value in ['undefined', 'comb', 'data_24']:
+            return False
 
-        return [ sample for sample in cls if not sample.name.startswith('data') ] 
+        return True
     # --------------------------------------------
     def __str__(self):
         '''
