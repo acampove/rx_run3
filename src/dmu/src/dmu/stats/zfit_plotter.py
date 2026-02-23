@@ -31,11 +31,23 @@ class ZFitPlotterConf(BaseModel):
     '''
     Class meant to hold configuration for ZFitPlotter
     '''
-    model_config = ConfigDict(frozen=True)
+    # This cannot be frozen because title will change
+    # based on result of fits, e.g. sensitivity of fit
+    model_config = ConfigDict(frozen=False)
 
-    nbins   : int
-    stacked : bool
-    d_leg   : dict[str,str]
+    nbins      : int
+    stacked    : bool
+    ext_text   : str                       = ''
+    title      : str | None                = None
+    d_leg      : dict[str,str]             = Field(default_factory=dict)
+    plot_range : tuple[float,float] | None = None
+    # ---------------------------
+    @classmethod
+    def default(cls) -> Self:
+        '''
+        Returns default instance of current class
+        '''
+        return cls(nbins = 50, stacked = False)
 #----------------------------------------
 class ZFitPlotter:
     '''
