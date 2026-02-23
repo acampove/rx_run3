@@ -5,10 +5,10 @@ Module holding AcceptanceReader class
 import os
 import pandas as pnd
 
-from pathlib                        import Path
-from dmu.generic.version_management import get_last_version
-from dmu                            import LogStore
-from rx_common                      import Project, Component
+from pathlib     import Path
+from dmu         import LogStore
+from dmu.generic import get_last_version
+from rx_common   import Project, Component
 
 log=LogStore.add_logger('rx_efficiencies:acceptance_reader')
 #----------------------------------
