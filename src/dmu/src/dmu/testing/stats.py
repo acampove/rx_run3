@@ -9,14 +9,15 @@ from pathlib          import Path
 from typing           import overload, Literal
 from dmu.stats        import zfit
 from dmu.stats        import Fitter
+from dmu.stats        import FitConf
+from dmu.stats        import FitResult
 from dmu.stats        import print_pdf
 from dmu.stats        import save_fit 
-from dmu.stats        import ZFitPlotter 
+from dmu.stats        import ZFitPlotter, ZFitPlotterConf
 from zfit.pdf         import BasePDF       as zpdf
 from zfit.data        import Data          as zdata
 from zfit.interface   import ZfitSpace     as zobs
 from zfit.param       import Parameter     as zpar
-from zfit.result      import FitResult     as zres
 from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 from dmu              import LogStore
 
