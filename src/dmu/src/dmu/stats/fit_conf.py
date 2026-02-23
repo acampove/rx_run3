@@ -4,9 +4,24 @@ Module holding FitConf class
 from pydantic        import BaseModel, ConfigDict
 from typing          import Self, Final
 from .constraint     import Constraint
+from .types          import KDEModel
 
 _PVALUE : Final[float] = 0.05
 _NTRIES : Final[int  ] = 3
+#------------------------------
+# Non-parametric
+#------------------------------
+class PaddingConf(BaseModel):
+    lowermirror : float = 0.0
+    uppermirror : float = 0.0
+#------------------------------
+class KDEConf(BaseModel):
+    '''
+    Class meant to configure building of KDE PDFs
+    '''
+    kind      : KDEModel
+    bandwidth : int
+    padding   : PaddingConf
 #------------------------------
 # Strategies
 #------------------------------
@@ -17,10 +32,11 @@ class Retries(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     ntries : int
+    pvalue : float
     #------------
     @classmethod
     def default(cls) -> Self:
-        return cls(ntries = _NTRIES)
+        return cls(ntries = _NTRIES, pvalue = _PVALUE)
 #------------------------------
 class Context(BaseModel):
     '''
@@ -45,14 +61,13 @@ class FitConf(BaseModel):
     '''
     model_config = ConfigDict(frozen=True)
 
-    pvalue      : float
-    minimization: Minimization                     = Minimization()
-    nentries    : int                              = -1 
-    run_gof     : bool                             = True
-    do_errors   : bool                             = True
-    strategy    : Retries | Context         | None = None
-    ranges      : list[tuple[float,float] ] | None = None
-    constraints : list[Constraint]          | None = None
+    minimization: Minimization                       = Minimization()
+    nentries    : int                                = -1 
+    run_gof     : bool                               = True
+    do_errors   : bool                               = True
+    strategy    : dict[str,Retries | Context]| None  = None
+    ranges      : list[tuple[float,float] ]  | None  = None
+    constraints : list[Constraint]           | None  = None
     # --------------------------
     @classmethod
     def default(cls) -> Self:
@@ -61,5 +76,5 @@ class FitConf(BaseModel):
         ----------
         Default fit configuration for minimal fit
         '''
-        return cls(pvalue = _PVALUE)
+        return cls()
 #------------------------------
