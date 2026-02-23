@@ -27,6 +27,7 @@ class ModelFactoryConf(BaseModel):
         arbitrary_types_allowed=True, # Due to reuse field that uses zpar
         frozen                 =True)
 
+    pdfs          : list[Model]
     shared        : list[str]
     reparametrize : dict[str,Reparametrization]
     fix           : dict[str,float]
