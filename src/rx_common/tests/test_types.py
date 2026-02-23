@@ -30,8 +30,8 @@ def test_component():
     assert Component.lbpkjpsimm      == 'Lb_JpsipK_mm_eq_phsp_DPC'
     assert Component.lbpkjpsiee      == 'Lb_JpsipK_ee_eq_phsp_DPC'
     # ------
-    assert Component.bskstjpsiee     == 'Bs_JpsiKst_mm_eq_DPC'
-    assert Component.bskstjpsimm     == 'Bs_JpsiKst_ee_eq_DPC'
+    assert Component.bskstjpsimm     == 'Bs_JpsiKst_mm_eq_DPC'
+    assert Component.bskstjpsiee     == 'Bs_JpsiKst_ee_eq_DPC'
 
     assert Component.bdkstjpsimm_swp == 'Bd_JpsiKst_mm_had_swp'
     assert Component.bdkstjpsiee_swp == 'Bd_JpsiKst_ee_had_swp'
