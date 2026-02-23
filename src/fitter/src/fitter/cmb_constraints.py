@@ -103,8 +103,6 @@ class CmbConstraints(BaseFitter, Cache):
         -------------
         Updated version of cuts dictionary, e.g. adding vetoes
         '''
-        _ = self._q2bin 
-
         selection = self._cfg.constraints[self._q2bin].selection
 
         if selection is None: 
