@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import tensorflow        as tf
 
 import dmu.pdataframe.utilities  as put
-import dmu.generic.utilities     as gut
 
 from dmu              import LogStore, LogLevels
 from .imports         import zfit
@@ -27,8 +26,9 @@ from zfit.pdf         import BasePDF       as zpdf
 from zfit.result      import FitResult     as zres
 from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 
+from .fit_result      import FitResult
 from .measurement     import Measurement
-from .zfit_plotter    import ZFitPlotter
+from .zfit_plotter    import ZFitPlotter, ZFitPlotterConf
 
 log           = LogStore.add_logger('dmu:stats:utilities')
 Loss          = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
@@ -322,73 +322,39 @@ def print_pdf(
 
     return l_msg
 #---------------------------------------------
-def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
-    d_par = {}
-    log.debug('Reading parameters from:')
-    if log.getEffectiveLevel() < LogLevels.info:
-        print(result)
-
-    log.debug(60 * '-')
-    log.debug('Reading parameters')
-    log.debug(60 * '-')
-    for name, d_val in result.params.items():
-        name = str(name) # Result object is frozen already, name should be a string
-        if _is_par_blinded(name=name, l_blind=Data.l_blind_vars):
-            continue
-
-        value = d_val['value']
-        error = None
-        if 'hesse'         in d_val:
-            error = d_val['hesse']['error']
-
-        if 'minuit_hesse'  in d_val:
-            error = d_val['minuit_hesse']['error']
-
-        log.debug(f'{name:<20}{value:<20.3f}{error}')
-
-        if not isinstance(value, (float, numpy.floating)):
-            raise ValueError(f'No value found for parameter {name}')
-
-        if not isinstance(value, (float, numpy.floating)):
-            raise ValueError(f'No value found for parameter {name}')
-
-        d_par[name] = value, error
-
-    return d_par
-#---------------------------------------------
 @overload
 def save_fit(
     data    : zdata,
     model   : None,
     res     : None,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> None: ...
 #---------------------------------------------
 @overload
 def save_fit(
     data    : zdata,
     model   : zpdf,
-    res     : zres,
+    res     : FitResult,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> Measurement: ...
 #---------------------------------------------
 @overload
 def save_fit(
     data    : zdata,
     model   : zpdf | None,
-    res     : zres | None,
+    res     : FitResult | None,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> Measurement | None: ...
 #---------------------------------------------
 def save_fit(
     data    : zdata,
     model   : zpdf|None,
-    res     : zres|None,
+    res     : FitResult | None,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> Measurement | None:
     '''
     Parameters
@@ -407,15 +373,14 @@ def save_fit(
     if plt_cfg is None:
         return None
 
-    if isinstance(plt_cfg, dict):
-        plt_cfg = OmegaConf.create(plt_cfg)
+    if isinstance(fit_dir, str):
+        fit_dir = Path(fit_dir)
 
-    # TODO: This needs to work the other way around
-    # the whole code dowstream needs to use Path
-    if isinstance(fit_dir, Path):
-        fit_dir = str(fit_dir)
-
-    _save_fit_plot(data=data, model=model, cfg=plt_cfg, fit_dir=fit_dir)
+    _save_fit_plot(
+        data   =data, 
+        model  =model, 
+        cfg    =plt_cfg, 
+        fit_dir=fit_dir)
 
     if model and not model.extended:
         # TODO: Update this when the issue with this property be fixed in zfit
@@ -423,7 +388,11 @@ def save_fit(
     else:
         nentries = None
 
-    pars  = _save_result(fit_dir=fit_dir, res=res, nentries = nentries)
+    pars  = _save_result(
+        res      = res, 
+        fit_dir  = fit_dir, 
+        nentries = nentries)
+
     df    = data.to_pandas(weightsname=Data.weight_name)
     opath = f'{fit_dir}/data.json'
     log.debug(f'Saving data to: {opath}')
@@ -444,8 +413,8 @@ def save_fit(
 def _save_fit_plot(
     data   : zdata, 
     model  : zpdf|None, 
-    fit_dir: str,
-    cfg    : DictConfig) -> None:
+    fit_dir: Path,
+    cfg    : ZFitPlotterConf) -> None:
     '''
     Parameters
     -------------
@@ -454,10 +423,10 @@ def _save_fit_plot(
     fit_dir: Directory where plot will go
     cfg    : Config used for plotting
     '''
-    os.makedirs(fit_dir, exist_ok=True)
+    fit_dir.mkdir(parents = True, exist_ok = True)
+
     fit_path_lin = f'{fit_dir}/fit_linear.png'
     fit_path_log = f'{fit_dir}/fit_log.png'
-    log.info(f'Saving fit to: {fit_dir}')
 
     if model is None:
         log.warning('Model not found, saving dummy plot')
@@ -467,47 +436,28 @@ def _save_fit_plot(
         plt.yscale('log')
         plt.savefig(fit_path_log)
         plt.close('all')
+
         return
 
-    # Here we know the config is a dictionary with a string as a key
-    # so we ignore the error. Need pydantic for configs...
-    pyconf : dict[str,Any] = OmegaConf.to_container(cfg, resolve=True) # type: ignore
-    if 'yrange' in pyconf:
-        yrange_log = pyconf['yrange']['log'   ]
-        yrange_lin = pyconf['yrange']['linear']
-
-        del pyconf['yrange']
-    else:
-        yrange_log = None
-        yrange_lin = None
-
     ptr = ZFitPlotter(data=data, model=model)
-    ptr.plot(**pyconf)
+    ptr.plot(**cfg.model_dump())
 
     log.info(f'Saving fit to: {fit_path_lin}')
-    if yrange_lin:
-        log.debug(f'Using linear yrange: {yrange_lin}')
-        ptr.axs[0].set_ylim(yrange_lin)
-    else:
-        ptr.axs[0].set_ylim(bottom=0.0)
-
+    ptr.axs[0].set_yscale('linear')
+    ptr.axs[0].set_ylim(bottom=0.0)
     plt.savefig(fit_path_lin)
 
-    ptr.axs[0].set_yscale('log')
-    if yrange_log:
-        log.debug(f'Using log yrange: {yrange_log}')
-        ptr.axs[0].set_ylim(yrange_log)
-    else:
-        ptr.axs[0].set_ylim(bottom=1.0)
-
     log.info(f'Saving fit to: {fit_path_log}')
+    ptr.axs[0].set_yscale('log')
+    ptr.axs[0].set_ylim(bottom=1.0)
     plt.savefig(fit_path_log)
+
     plt.close()
 #-------------------------------------------------------
 def _save_result(
     nentries: float | None,
-    fit_dir : str, 
-    res     : zres  | None) -> Measurement | None:
+    fit_dir : Path, 
+    res     : FitResult | None) -> None:
     '''
     Saves result as yaml, JSON, pkl
 
@@ -515,40 +465,13 @@ def _save_result(
     ---------------
     nentries: Number of entries or sum of weights, if not None 
     fit_dir : Directory where fit result will go
-    res     : Zfit result object
-
-    Returns
-    ---------------
-    Object holding values and errors of fitting parameters or None if result not found
-    because fit did not run
+    res     : Fit result object
     '''
     if res is None:
         log.info('No result object found, not saving parameters in pkl or JSON')
         return None
 
-    # TODO: Needs to be removed once
-    # https://github.com/zfit/zfit/issues/702
-    # be sorted out
-    try:
-        res.covariance()
-    except Exception as exc:
-        raise ValueError('Cannot calculate covariance matrix, result was likely already frozen') from exc
-
-    d_par  = _parameters_from_result(result=res)
-    d_par  = dict(sorted(d_par.items()))
-
-    if nentries:
-        d_par['nentries'] = nentries, 0
-
-    opath  = f'{fit_dir}/parameters.json'
-    log.debug(f'Saving parameters to: {opath}')
-    gut.dump_json(data = d_par, path = opath, exists_ok = True)
-
-    opath  = f'{fit_dir}/parameters.yaml'
-    log.debug(f'Saving parameters to: {opath}')
-    gut.dump_json(data = d_par, path = opath, exists_ok = True)
-
-    return Measurement(data = d_par)
+    res.to_json(path = fit_dir / 'parameters.json')
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
