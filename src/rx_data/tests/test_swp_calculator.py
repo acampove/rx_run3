@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 from ROOT                   import RDF # type: ignore
 from pathlib                import Path
-from rx_common              import Project, Sample, Trigger
+from rx_common              import Project, Component, Trigger
 from rx_data                import SWPCalculator
 from rx_data                import testing  as tst
 from rx_data                import RDFGetter
@@ -53,10 +53,10 @@ def _get_hadron_mapping(trigger : Trigger) -> dict[str,int]:
     raise ValueError(f'Invalid trigger: {trigger}')
 # ----------------------------------
 @pytest.mark.parametrize('trigger', [Trigger.rk_ee_ss])
-@pytest.mark.parametrize('sample' , [Sample.data_24])
+@pytest.mark.parametrize('sample' , [Component.data_24])
 def test_dzero_misid(
     trigger  : Trigger, 
-    sample   : Sample, 
+    sample   : Component, 
     tmp_path : Path):
     '''
     Tests dzero decay contamination
