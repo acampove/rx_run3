@@ -38,23 +38,23 @@ def get_model(
     kind   : SumLiteral,
     nsample: int                   = 1000,
     obs    : zobs           | None = None,
-    suffix : str            | None = None,
     pars   : dict[str,zpar] | None = None, 
+    suffix : str                   = '_gaus_test_1',
     lam    : float                 = -0.0001) -> SumPDF:...
 @overload
 def get_model(
     kind   : SingleLiteral,
     nsample: int                   = 1000,
     obs    : zobs           | None = None,
-    suffix : str            | None = None,
     pars   : dict[str,zpar] | None = None, 
+    suffix : str                   = '_gaus_test_1',
     lam    : float                 = -0.0001) -> zpdf:...
 def get_model(
     kind   : AllLiteral,
     nsample: int                   = 1000,
     obs    : zobs           | None = None,
-    suffix : str            | None = None,
     pars   : dict[str,zpar] | None = None, 
+    suffix : str                   = '_gaus_test_1',
     lam    : float                 = -0.0001) -> zpdf | SumPDF:
     '''
     Parameters
@@ -155,19 +155,19 @@ def _get_signal_yield(
 @overload
 def get_nll(
     kind     : SumLiteral, 
-    suffix   : str            | None = None, 
     pars     : dict[str,zpar] | None = None, 
+    suffix   : str                   = '_gaus_test_1',
     nentries : int                   = 1000) -> ExtendedUnbinnedNLL:...
 @overload
 def get_nll(
     kind     : SingleLiteral, 
-    suffix   : str            | None = None, 
     pars     : dict[str,zpar] | None = None, 
+    suffix   : str                   = '_gaus_test_1',
     nentries : int                   = 1000) -> UnbinnedNLL:...
 def get_nll(
     kind     : AllLiteral, 
-    suffix   : str            | None = None, 
     pars     : dict[str,zpar] | None = None, 
+    suffix   : str                   = '_gaus_test_1',
     nentries : int                   = 1000) -> Loss:
     '''
     Parameters
@@ -214,7 +214,7 @@ def placeholder_fit(
     kind     : AllLiteral,
     fit_dir  : Path|None,
     df       : pnd.DataFrame|None = None,
-    plot_fit : bool               = True) -> zres:
+    plot_fit : bool               = True) -> FitResult:
     '''
     Function meant to run toy fits that produce output needed as an input
     to develop tools on top of them
@@ -240,12 +240,12 @@ def placeholder_fit(
     else:
         data = zfit.Data.from_pandas(df, obs=pdf.space, weights=_WEIGHT_NAME)
 
-    d_const = {'sg' : (50., 3.)}
     if not isinstance(data, zdata):
-        raise TypeError('Data is not a zfit Data object')
+        raise ValueError('Dataset not unbinned zfit')
 
+    cfg = FitConf.default()
     obj = Fitter(pdf, data)
-    res = obj.fit(cfg={'constraints' : d_const})
+    res = obj.fit(cfg=cfg)
 
     if fit_dir is None:
         log.debug('Not saving placeholder fit')
@@ -261,8 +261,8 @@ def placeholder_fit(
         model  =pdf, 
         res    =res, 
         fit_dir=fit_dir, 
-        plt_cfg={'nbins' : 50, 'stacked' : True},
-        d_const=d_const)
+        plt_cfg=ZFitPlotterConf.default(),
+        d_const={})
 
     return res
 #---------------------------------------------

@@ -41,9 +41,9 @@ def initialize():
 #----------------------------------
 def _get_pdf_simple(is_extended : bool = True) -> zpdf:
     obs = zfit.Space('m',    limits=(-10, 10))
-    mu  = zfit.Parameter("mu", 0.4,   -5,     5)
-    sg  = zfit.Parameter("sg", 1.3,  0.5,     2)
-    ne  = zfit.Parameter('ne',  10,    1, 10000)
+    mu  = zfit.Parameter("mu_gaus_test_1", 0.4,   -5,     5)
+    sg  = zfit.Parameter("sg_gaus_test_1", 1.3,  0.5,     2)
+    ne  = zfit.Parameter('ne_gaus_test_1',  10,    1, 10000)
 
     sg.floating = False
 
