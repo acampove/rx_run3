@@ -23,8 +23,6 @@ model:
     combinatorial : misid/rk/electron/combinatorial.yaml
     hdpipi        : misid/rk/electron/kpipi.yaml
     hdkk          : misid/rk/electron/kkk.yaml
-  constraints:
-    yields : [] # Constraints on rare yields have to be calculated with correct noPID trigger
 fit:
   strategy :
     retry :

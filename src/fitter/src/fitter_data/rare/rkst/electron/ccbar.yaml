@@ -7,5 +7,8 @@ weights:
   dec : 1
   sam : 1
 fitting:
+  kind      : KDE1DimFFT
   bandwidth : 40
-  padding   : False
+  padding   :
+    lowermirror : 0.0
+    uppermirror : 0.0

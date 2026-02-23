@@ -1,16 +1,13 @@
 sample           : Bu_KplKplKmn_eq_sqDalitz_DPC
 trigger          : Hlt2RD_BuToKpEE_MVA_noPID
-project          : nopid
+project          : rk_nopid
 output_directory : rare/electron/misid/hdkk
 categories:
   main: 
-    model    : KDE1DimFFT  # Use KDE
     selection: 
       pid_l : (1)  # Built removing PID on leptons
-    weights : 
-      PID:
-        splitting : model/weights/splitting.yaml
-        weights   : model/weights/weights.yaml
+    splitting_weights : model/weights/splitting.yaml
+    pid_weights       : model/weights/weights.yaml
 fit:
   strategy  : KDE1DimFFT
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting

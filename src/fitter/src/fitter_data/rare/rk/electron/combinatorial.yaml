@@ -5,20 +5,21 @@ categories:
       low     : [hypexp]
       central : [hypexp]
       high    : [suj]
-low:
-  shared        : []
-  float         : []
-  reparametrize : {}
-  fix           : {}
-central:
-  shared        : []
-  float         : []
-  reparametrize : {}
-  fix           : {}
-high:
-  shared        : []
-  float         : []
-  reparametrize : {}
-  fix           :
-    dl_suj : 2.5
-    gm_suj : -10
+bins:
+  low:
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+  central:
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+  high:
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           :
+      dl_suj : 2.5
+      gm_suj : -10

@@ -5,18 +5,19 @@ categories:
       low     : [exp]
       central : [exp]
       high    : [exp]
-low:
-  shared        : []
-  float         : []
-  reparametrize : {}
-  fix           : {}
-central:
-  shared        : []
-  float         : []
-  reparametrize : {}
-  fix           : {}
-high:
-  shared        : []
-  float         : []
-  reparametrize : {}
-  fix           : {}
+bins:
+  low:
+    shared        : []
+    float         : []
+    reparametrize : {}
+    fix           : {}
+  central:
+    shared        : []
+    float         : []
+    reparametrize : {}
+    fix           : {}
+  high:
+    shared        : []
+    float         : []
+    reparametrize : {}
+    fix           : {}

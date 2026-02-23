@@ -1,10 +1,12 @@
 output_directory : rare/electron/bsphiee
-categories:
-  main: 
-    model : KDE1DimFFT
-sample    : Bs_phiee_eq_Ball_DPC
+sample     : Bs_phiee_eq_Ball_DPC
 fit:
-  strategy  : KDE1DimFFT
+  kind     : KDE1DimFFT
+  bandwidth: 20
+  padding  :
+    lowermirror : 0.0
+    uppermirror : 0.0
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
   stacked : True
+  d_leg   : {}

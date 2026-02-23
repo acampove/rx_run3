@@ -1,10 +1,12 @@
 output_directory : rare/electron/bdkstee
-categories:
-  main: 
-    model : KDE1DimFFT
 sample    : Bd_Kstee_eq_btosllball05_DPC
 fit:
-  strategy  : KDE1DimFFT
+  kind     : KDE1DimFFT
+  bandwidth: 20
+  padding  :
+    lowermirror : 0.0
+    uppermirror : 0.0
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
   stacked : True
+  d_leg   : {}

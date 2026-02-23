@@ -1,6 +1,6 @@
 common_settings: &settings
   shared        : []
-  float         : []
+  floating      : []
   reparametrize : {}
   fix           : {}
 
@@ -13,13 +13,14 @@ categories:
       jpsi    : [exp]
       psi2    : [exp]
       high    : [exp]
-low:
-  <<: *settings
-central:
-  <<: *settings
-jpsi:
-  <<: *settings
-psi2:
-  <<: *settings
-high:
-  <<: *settings
+bins:
+  low:
+    <<: *settings
+  central:
+    <<: *settings
+  jpsi:
+    <<: *settings
+  psi2:
+    <<: *settings
+  high:
+    <<: *settings

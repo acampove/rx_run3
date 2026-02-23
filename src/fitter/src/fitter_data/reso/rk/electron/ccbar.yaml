@@ -4,8 +4,11 @@ ccbar_samples:
   - Bu_JpsiX_ee_eq_JpsiInAcc
   - Bs_JpsiX_ee_eq_JpsiInAcc
 weights:
-  dec : 1
-  sam : 1
+  dec : True
+  sam : True 
 fitting:
+  kind      : KDE1DimFFT
   bandwidth : 20
-  padding   : False
+  padding   :
+    lowermirror : 0.0
+    uppermirror : 0.0
