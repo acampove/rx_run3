@@ -12,7 +12,7 @@ from dmu.stats          import Fitter
 from dmu.stats          import utilities as sut
 from dmu.stats          import zfit
 from dmu.workflow.cache import Cache
-from rx_common.types    import Sample, Trigger
+from rx_common.types    import Component, Trigger
 from rx_selection       import selection as sel
 from rx_data.rdf_getter import RDFGetter
 from fitter.prec        import PRec
@@ -39,7 +39,7 @@ def test_electron(tmp_path : Path, trig : Trigger):
     mass   = 'B_const_mass_M'
     label  = r'$M_{DTF}$'
 
-    l_samp  = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp  = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
     obs     = zfit.Space(label, limits=(4500, 6900))
     out_dir = Path(f'electron_{trig}')
 
@@ -67,7 +67,7 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
     Simplest test in electron channel
     '''
     label   = r'$M_{DTF}$'
-    l_samp  = [ Sample.bpjpsixmm, Sample.bdjpsixmm, Sample.bsjpsixmm ]
+    l_samp  = [ Component.bpjpsixmm, Component.bdjpsixmm, Component.bsjpsixmm ]
     obs     = zfit.Space(label, limits=(4500, 6900))
     out_dir = Path(f'{trig}_{q2bin}')
 
@@ -93,7 +93,7 @@ def test_muon_by_block(tmp_path : Path, trig : Trigger, block : int):
     mass   = 'B_const_mass_M'
     label  = r'$M_{DTF}$'
 
-    l_samp = [ Sample.bpjpsixmm, Sample.bdjpsixmm, Sample.bsjpsixmm ]
+    l_samp = [ Component.bpjpsixmm, Component.bdjpsixmm, Component.bsjpsixmm ]
     obs    = zfit.Space(label, limits=(4500, 6900))
     d_wgt  = {'dec' : 1, 'sam' : 1}
     out_dir= Path(f'muon_by_block_{block:03}_{trig}')
@@ -131,7 +131,7 @@ def test_reso(q2bin : str, tmp_path : Path):
         'psi2'    :r'$M_{DTF}(K^+e^+e^-)$',
         'high'    :r'$M(K^+e^+e^-)$'}[q2bin]
 
-    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
 
     d_maxe = {
         'low'     : -1,
@@ -170,7 +170,7 @@ def test_fit(tmp_path : Path):
     trig   = Trigger.rk_ee_os 
     mass   = 'B_Mass_smr'
     label  = r'$M(K^+e^+e^-)$'
-    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
     obs    = zfit.Space(label, limits=(4500, 6900))
     out_dir= Path(f'reso/fit/{q2bin}')
 
@@ -220,7 +220,7 @@ def test_bdt(q2bin : str, bdt_cut : str, tmp_path : Path):
     obs=zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
 
     d_wgt   = {'dec' : 1, 'sam' : 1}
     out_dir = Path('bdt')
@@ -244,7 +244,7 @@ def test_brem(brem_cut : str, tmp_path : Path):
     obs    = zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
     d_wgt  = {'dec' : 1, 'sam' : 1}
     out_dir= Path('brem')
 
@@ -268,7 +268,7 @@ def test_cache(tmp_path : Path):
     obs    = zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
     mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
     d_wgt  = {'dec' : 1, 'sam' : 1}
     out_dir= Path('cache')
 
@@ -298,7 +298,7 @@ def test_extended(tmp_path : Path):
     obs    = zfit.Space('mass', limits=(4500, 6000))
     trig   = Trigger.rk_ee_os 
     d_wgt  = {'dec' : 1, 'sam' : 1}
-    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
     out_dir= Path('extended')
 
     with Cache.cache_root(path = tmp_path):
@@ -324,7 +324,7 @@ def test_low_stats(mass : str, tmp_path : Path):
     obs    = zfit.Space(mass, limits=(4500, 7000))
     trig   = Trigger.rk_ee_os 
     d_wgt  = {'dec' : 1, 'sam' : 1}
-    l_samp = [ Sample.bpjpsixee, Sample.bdjpsixee, Sample.bsjpsixee ]
+    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
     out_dir= Path('low_stats')
 
     with Cache.cache_root(path=tmp_path),\
