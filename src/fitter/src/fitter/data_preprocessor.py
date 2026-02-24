@@ -4,22 +4,23 @@ Module holding DataPreprocessor class
 import numpy
 import pandas   as pnd
 
-from pathlib                  import Path
-from omegaconf                import DictConfig, OmegaConf
-from ROOT                     import RDF # type: ignore
-from dmu.workflow             import Cache
-from dmu.stats                import utilities  as sut
-from dmu.generic              import utilities  as gut
-from dmu.rdataframe           import utilities  as rut
-from dmu.pdataframe           import utilities  as put
-from dmu                      import LogStore
-from zfit.data                import Data
-from zfit.interface           import ZfitSpace  as zobs
-from rx_common                import Component, Trigger
-from rx_data                  import RDFGetter
-from rx_selection             import selection  as sel
-from rx_misid.sample_splitter import SampleSplitter
-from rx_misid.sample_weighter import SampleWeighter
+from pathlib         import Path
+from omegaconf       import OmegaConf
+from ROOT            import RDF # type: ignore
+from dmu.workflow    import Cache
+from dmu.stats       import utilities  as sut
+from dmu.generic     import utilities  as gut
+from dmu.rdataframe  import utilities  as rut
+from dmu.pdataframe  import utilities  as put
+from dmu             import LogLevels, LogStore
+from zfit.data       import Data
+from zfit.interface  import ZfitSpace  as zobs
+from rx_data         import RDFGetter
+from rx_common       import Component, Trigger, Correction
+from rx_selection    import selection  as sel
+from rx_misid        import SampleSplitter
+from rx_misid        import SampleWeighter
+from rx_misid        import MisIDSampleWeights
 
 log=LogStore.add_logger('fitter:data_preprocessor')
 # ------------------------
@@ -41,9 +42,9 @@ class DataPreprocessor(Cache):
         sample  : Component,
         trigger : Trigger,
         q2bin   : str,
-        wgt_cfg : DictConfig|None,
-        is_sig  : bool               = True,
-        cut     : dict[str,str]|None = None):
+        wgt_cfg : dict[Correction,MisIDSampleWeights] | None,
+        is_sig  : bool                        = True,
+        cut     : dict[str,str] | None = None):
         '''
         Parameters
         --------------------
@@ -55,7 +56,7 @@ class DataPreprocessor(Cache):
         max_entries: If used (default None), limit number of entries to this value
         wgt_cfg: Dictionary with:
                  key: Representing kind of weight, e.g. pid
-                 value: Actual configuration for kind of weight
+                 value: Actual configuration for kind of weight, in a pydantic model
 
         is_sig : If true (default) it will pick PID weights for signal region.
                  Otherwise it will use misID control region weights.
@@ -147,7 +148,6 @@ class DataPreprocessor(Cache):
             return wgt
 
         for kind, cfg in self._wgt_cfg.items():
-            kind    = str(kind)
             new_wgt = self._get_extra_weight(kind=kind, cfg=cfg)
             if new_wgt.shape != wgt.shape:
                 raise ValueError(
@@ -158,7 +158,7 @@ class DataPreprocessor(Cache):
 
         return wgt
     # ----------------------
-    def _get_extra_weight(self, kind : str, cfg : DictConfig) -> numpy.ndarray:
+    def _get_extra_weight(self, kind : str, cfg : MisIDSampleWeights) -> numpy.ndarray:
         '''
         Parameters
         -------------
@@ -176,7 +176,7 @@ class DataPreprocessor(Cache):
 
         return arr_wgt
     # ----------------------
-    def _get_pid_weights(self, cfg : DictConfig) -> numpy.ndarray:
+    def _get_pid_weights(self, cfg : MisIDSampleWeights) -> numpy.ndarray:
         '''
         Parameters
         -------------
@@ -188,13 +188,15 @@ class DataPreprocessor(Cache):
         Array with PID weights
         '''
         log.info(f'Splitting sample: {self._sample}/{self._q2bin}')
-        spl   = SampleSplitter(rdf = self._rdf, cfg = cfg.splitting)
+        spl   = SampleSplitter(
+            rdf = self._rdf, 
+            cfg = cfg.splitting)
         df    = spl.get_sample()
 
         log.info(f'Getting PID weights for: {self._sample}/{self._q2bin}')
         wgt   = SampleWeighter(
             df    = df,
-            cfg   = cfg.weights,
+            cfg   = cfg,
             sample= self._sample,
             is_sig= self._is_sig) # We want weights for the control region
         df  = wgt.get_weighted_data()
@@ -209,7 +211,7 @@ class DataPreprocessor(Cache):
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
 
         rdf = self._rdf
-        if log.getEffectiveLevel() < 20:
+        if log.getEffectiveLevel() < LogLevels.info:
             rep = rdf.Report()
             rep.Print()
 
