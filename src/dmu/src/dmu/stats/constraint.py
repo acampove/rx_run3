@@ -169,6 +169,9 @@ class ConstraintND(Constraint):
                 obs.append(par)
 
         if not obs:
+            for par in s_par:
+                log.error(par.name)
+
             raise ValueError('No observable found')
 
         ninit = len(self.parameters)
