@@ -7,16 +7,20 @@ import numpy
 import pytest
 import mplhep
 import matplotlib.pyplot as plt
-import pandas as pnd
-from pathlib                  import Path
-from ROOT                     import RDF     # type: ignore
-from dmu.workflow             import Cache
-from dmu.generic              import utilities   as gut
-from dmu.logging.log_store    import LogStore
-from rx_selection             import selection   as sel
-from rx_common.types          import Trigger
-from rx_data.rdf_getter       import RDFGetter
-from rx_misid.sample_splitter import SampleSplitter
+import pandas            as pnd
+
+from pathlib        import Path
+from ROOT           import RDF     # type: ignore
+
+from dmu            import LogStore
+from dmu.workflow   import Cache
+from dmu.generic    import utilities   as gut
+
+from rx_selection   import selection   as sel
+from rx_common      import Component, Trigger
+from rx_data        import RDFGetter
+from rx_misid       import SampleSplitter
+from rx_misid.types import MisIDSampleSplitting
 
 log=LogStore.add_logger('rx_misid:test_data_splitter')
 # -------------------------------------------------------
@@ -37,7 +41,7 @@ def initialize():
     LogStore.set_level('rx_data:rdf_getter'    , 30)
     LogStore.set_level('rx_data:path_splitter' , 30)
 # -------------------------------------------------------
-def _get_rdf(sample : str, trigger : Trigger):
+def _get_rdf(sample : Component, trigger : Trigger):
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     uid = gtr.get_uid()
@@ -130,10 +134,12 @@ def test_simulation(sample : str, tmp_path : Path):
     log.info('')
 
     rdf   = _get_rdf(
-        sample = sample,
+        sample = Component(sample),
         trigger= Trigger.rk_ee_nopid)
 
-    cfg   = gut.load_conf(package='rx_misid_data', fpath='splitting.yaml')
+    data = gut.load_data(package='rx_misid_data', fpath='splitting.yaml')
+    cfg  = MisIDSampleSplitting(**data)
+
     with Cache.cache_root(path = tmp_path):
         spl = SampleSplitter(rdf = rdf, cfg = cfg)
         df  = spl.get_sample()

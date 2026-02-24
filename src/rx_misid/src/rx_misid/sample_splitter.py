@@ -5,11 +5,13 @@ Module holding SampleSplitter class
 import numpy
 import pandas as pnd
 
-from ROOT                   import RDF # type: ignore
-from omegaconf              import DictConfig, OmegaConf
-from dmu.logging.log_store  import LogStore
-from dmu.rdataframe         import utilities as rut
-from dmu.workflow.cache     import Cache     as Wcache
+from pathlib         import Path
+from ROOT            import RDF # type: ignore
+from dmu             import LogStore
+from dmu.rdataframe  import utilities as rut
+from dmu.workflow    import Cache     as Wcache
+
+from .types          import MisIDSampleSplitting 
 
 log=LogStore.add_logger('rx_misid:sample_splitter')
 # --------------------------------
@@ -29,17 +31,16 @@ class SampleSplitter(Wcache):
     def __init__(
         self,
         rdf      : RDF.RNode,
-        cfg      : DictConfig):
+        cfg      : MisIDSampleSplitting):
         '''
         Parameters
         --------------------
         rdf      : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
         cfg      : omegaconf dictionary with configuration specifying how to split the samples
         '''
-        cfg_data = OmegaConf.to_container(cfg, resolve=True)
         super().__init__(
-            out_path = 'data_sample_splitter',
-            args     = [rdf.uid, cfg_data])
+            out_path = Path('data_sample_splitter'),
+            args     = [rdf.uid, cfg.model_dump()])
 
         self._cfg      = cfg
         self._rdf      = rdf
@@ -112,7 +113,7 @@ class SampleSplitter(Wcache):
             return df
 
         particle     = self._particle_from_simulation()
-        columns      = self._cfg['branches']
+        columns      = self._cfg.branches
         df           = rut.rdf_to_df(rdf=self._rdf, columns=columns)
         df['hadron'] = particle
         df['block']  = df['block'].astype(int)
