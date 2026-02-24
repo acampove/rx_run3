@@ -1,4 +1,6 @@
-from .types import Component, CCbarComponent
+from .types import CCbarComponent
+from .types import Correction 
+from .types import Component
 from .types import Parameter
 from .types import Particle 
 from .types import Trigger 
@@ -9,8 +11,9 @@ from .types import Mass
 from .types import Qsq 
 
 __all__ = [
-    'Component', 
     'CCbarComponent',
+    'Correction',
+    'Component', 
     'Parameter',
     'Particle',
     'Trigger', 
