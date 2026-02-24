@@ -35,7 +35,7 @@ def test_electron(tmp_path : Path, trig : Trigger):
     '''
     Simplest test in electron channel
     '''
-    q2bin  = 'jpsi'
+    q2bin  = Qsq.jpsi
     mass   = 'B_const_mass_M'
     label  = r'$M_{DTF}$'
 
@@ -75,11 +75,11 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
          Cache.cache_root(tmp_path):
         d_wgt= {'dec' : 1, 'sam' : 1}
         obp_1= PRec(
-            samples =l_samp, 
-            trig    =trig, 
-            q2bin   =q2bin, 
-            d_weight=d_wgt,
-            out_dir =out_dir)
+            samples = l_samp, 
+            trig    = Trigger(trig), 
+            q2bin   = Qsq(q2bin), 
+            d_weight= d_wgt,
+            out_dir = out_dir)
 
         obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
 #-----------------------------------------------
@@ -89,7 +89,7 @@ def test_muon_by_block(tmp_path : Path, trig : Trigger, block : int):
     '''
     Simplest test in electron channel
     '''
-    q2bin  = 'jpsi'
+    q2bin  = Qsq.jpsi 
     mass   = 'B_const_mass_M'
     label  = r'$M_{DTF}$'
 
@@ -116,6 +116,7 @@ def test_reso(q2bin : str, tmp_path : Path):
     Tests PRec building in resonant bins
     '''
     trig   = Trigger.rk_ee_os
+    q2bin  = Qsq(q2bin)
 
     mass   = {
         'low'     : 'B_Mass_smr',
@@ -166,7 +167,7 @@ def test_fit(tmp_path : Path):
     '''
     Tests that the PDF is fittable
     '''
-    q2bin  = 'high'
+    q2bin  = Qsq.high
     trig   = Trigger.rk_ee_os 
     mass   = 'B_Mass_smr'
     label  = r'$M(K^+e^+e^-)$'
@@ -229,7 +230,7 @@ def test_bdt(q2bin : str, bdt_cut : str, tmp_path : Path):
         obp=PRec(
             samples = l_samp, 
             trig    = trig, 
-            q2bin   = q2bin, 
+            q2bin   = Qsq(q2bin), 
             d_weight= d_wgt,
             out_dir = out_dir,
         )
@@ -252,8 +253,8 @@ def test_brem(brem_cut : str, tmp_path : Path):
         Cache.cache_root(path = tmp_path):
         obp=PRec(
             samples =l_samp, 
-            trig    =trig, 
-            q2bin   =q2bin, 
+            trig    =Trigger(trig), 
+            q2bin   =Qsq(q2bin), 
             d_weight=d_wgt,
             out_dir = out_dir,
         )
@@ -275,8 +276,8 @@ def test_cache(tmp_path : Path):
     with Cache.cache_root(path = tmp_path):
         obp=PRec(
             samples = l_samp, 
-            trig    = trig, 
-            q2bin   = q2bin, 
+            trig    = Trigger(trig), 
+            q2bin   = Qsq(q2bin), 
             d_weight= d_wgt,
             out_dir = out_dir,
         )
@@ -284,8 +285,8 @@ def test_cache(tmp_path : Path):
 
         obp=PRec(
             samples =l_samp, 
-            trig    =trig, 
-            q2bin   =q2bin, 
+            trig    = Trigger(trig), 
+            q2bin   = Qsq(q2bin), 
             d_weight=d_wgt,
             out_dir =out_dir,
         )
@@ -304,8 +305,8 @@ def test_extended(tmp_path : Path):
     with Cache.cache_root(path = tmp_path):
         obp=PRec(
             samples =l_samp, 
-            trig    =trig, 
-            q2bin   ='jpsi', 
+            trig    = Trigger(trig), 
+            q2bin   = Qsq.jpsi, 
             d_weight=d_wgt,
             out_dir = out_dir,
         )
@@ -332,7 +333,7 @@ def test_low_stats(mass : str, tmp_path : Path):
         obp=PRec(
             samples =l_samp, 
             trig    =trig, 
-            q2bin   ='high', 
+            q2bin   =Qsq.high, 
             d_weight=d_wgt,
             out_dir = out_dir,
         )
