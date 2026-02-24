@@ -11,11 +11,11 @@ from dmu                import LogStore
 from dmu.stats          import Fitter
 from dmu.stats          import utilities as sut
 from dmu.stats          import zfit
-from dmu.workflow.cache import Cache
-from rx_common.types    import Component, Trigger
+from dmu.workflow       import Cache
+from rx_common          import Component, Trigger, Qsq
 from rx_selection       import selection as sel
-from rx_data.rdf_getter import RDFGetter
-from fitter.prec        import PRec
+from rx_data            import RDFGetter
+from fitter             import PRec
 
 log=LogStore.add_logger('fitter:test_prec')
 #-----------------------------------------------

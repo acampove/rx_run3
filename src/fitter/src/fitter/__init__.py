@@ -15,6 +15,7 @@ from .holders            import ChannelHolder
 from .holders            import ComponentHolder 
 from .misid_constraints  import MisIDConstraints
 from .types              import CCbarWeight
+from .prec               import PRec
 # ----------
 # Configs
 # ----------
@@ -42,6 +43,7 @@ __all__ = [
     'MisIDSampleWeights',
     'MisIDConstraintConf',
     # ------------------
+    'PRec',
     'CCbarWeight',
     'ChannelHolder',
     'ComponentHolder',
