@@ -1,5 +1,4 @@
 from .fit_summary        import FitSummary
-from .fit_config         import RXFitConfig
 from .parameter_reader   import ParameterReader
 from .likelihood_factory import LikelihoodFactory
 from .toy_maker          import ToyMaker
@@ -30,9 +29,11 @@ from .configs import CombinatorialConf
 from .configs import CCbarConf 
 from .configs import NonParametricConf 
 from .configs import ParametricConf 
+from .configs import RXFitConfig
 
 __all__ = [
     # ------------------
+    'RXFitConfig',
     'FitModelConf',
     'NonParametricConf',
     'ParametricConf',
