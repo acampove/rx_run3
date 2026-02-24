@@ -4,14 +4,15 @@ Module containing tests for MisIDConstraints class
 import pytest
 
 from pathlib       import Path
+from rx_common     import Qsq
 from rx_selection  import selection as sel
 from rx_data       import RDFGetter
 from dmu           import LogStore
 from dmu.workflow  import Cache
 from dmu.stats     import print_constraints
 from dmu.stats     import zfit
-from dmu.generic   import utilities     as gut
-from fitter        import MisIDConstraints 
+from dmu.generic   import UnpackerModel, utilities     as gut
+from fitter        import MisIDConstraints, MisIDConstraintConf
 
 log=LogStore.add_logger('fitter:test_misid_constraints')
 # --------------------------------------------------------------
