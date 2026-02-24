@@ -113,9 +113,14 @@ class ConstraintReader:
 
         log.info('Adding MisID constraints')
         
+        cfg = self._cfg.mod_cfg.model.constraints.misid
+        if cfg is None:
+            log.debug('No MisID constraints config found, not adding constraints')
+            return
+
         mrd       = MisIDConstraints(
+            cfg   = cfg,
             obs   = self._cfg.observable,
-            cfg   = self._cfg.mod_cfg.model.constraints.misid,
             q2bin = self._cfg.q2bin)
 
         self._constraints += mrd.get_constraints()
