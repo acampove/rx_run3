@@ -192,7 +192,15 @@ class Component(StrEnum):
     comb           = 'combinatorial'
     ccbar          = 'ccbar'
     # -----
+    # Data
+    # -----
     data_24        = 'DATA_24*'
+    data_24_mu_c2  = 'DATA_24_MagUp_24c2'
+    data_24_md_c2  = 'DATA_24_MagDown_24c2'
+    data_24_mu_c3  = 'DATA_24_MagUp_24c3'
+    data_24_md_c3  = 'DATA_24_MagDown_24c3'
+    data_24_mu_c4  = 'DATA_24_MagUp_24c4'
+    data_24_md_c4  = 'DATA_24_MagDown_24c4'
     # -----
     bpkkk          = 'Bu_KplKplKmn_eq_sqDalitz_DPC'
     bpkpipi        = 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
