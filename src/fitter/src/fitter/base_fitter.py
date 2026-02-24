@@ -5,7 +5,6 @@ import yaml
 import textwrap
 
 from pathlib     import Path
-from omegaconf   import OmegaConf, DictConfig
 from dmu         import LogStore
 from dmu.stats   import FitConf, FitResult, Fitter, ZFitPlotterConf
 from dmu.stats   import utilities  as sut
@@ -28,43 +27,34 @@ class BaseFitter:
         '''
         Used to hold attributes passed from derived classes
         '''
-        self._project : str     = ''
-        self._q2bin   : str     = ''
-        self._sig_yld : str     = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
-        self._trigger : Trigger = Trigger.uninitialized
-        self._sample  : Sample  = Sample.undefined
+        self._q2bin   : Qsq
+        self._trigger : Trigger
+        self._project : str        = ''
+        self._sig_yld : str        = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
+        self._sample  : Component  = Component.undefined
     # ------------------------
     def _fit(
         self,
-        cfg   : DictConfig,
+        cfg   : FitConf,
         data  : zdata,
-        model : zpdf,
-        d_cns : dict[str,tuple[float,float]]|None = None) -> zres:
+        model : zpdf) -> FitResult:
         '''
         Parameters
         --------------------
         cfg  : Fitting configuration
         data : Zfit data object
         model: Zfit PDF
-        d_cns: Dictionary mapping parameter names to tuples of value and error
-               This is needed to apply constraints to fit
 
         Returns
         --------------------
-        DictConfig object with parameters names, values and errors
+        Fit result object
         '''
-        fit_cfg = OmegaConf.to_container(cfg, resolve=True)
-        fit_cfg = cast(dict, fit_cfg)
-
-        if d_cns is not None:
-            fit_cfg['constraints'] = d_cns
-
         ftr = Fitter(pdf=model, data=data)
-        res = ftr.fit(cfg=fit_cfg)
+        res = ftr.fit(cfg=cfg)
 
         return res
     # ------------------------
-    def _get_sensitivity(self, res : zres|None) -> float:
+    def _get_sensitivity(self, res : FitResult | None) -> float:
         '''
         Parameters
         --------------
