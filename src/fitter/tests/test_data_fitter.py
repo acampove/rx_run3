@@ -6,17 +6,18 @@ import pytest
 from typing          import Final
 from pathlib         import Path
 from omegaconf       import OmegaConf
-from dmu.stats       import FitResult, zfit
+from dmu             import LogStore
+from dmu.stats       import FitParameter, zfit
 from dmu.stats       import Constraint1D
 from dmu.stats       import constraint_adder as cad 
 from dmu.stats       import gof_calculator   as goc
 from dmu.generic     import utilities        as gut
 from dmu.workflow    import Cache
 from dmu.testing     import get_model
-from dmu             import LogStore
 from fitter          import DataFitter
 from fitter          import ToyMaker
 from fitter          import ToyPlotter
+from fitter          import ToyConf
 
 _SEL_CFG : Final[dict] = {
     'selection' : {'default' : {}, 'fit' : {}}
@@ -31,12 +32,15 @@ _CONSTRAINTS : Final[dict] = {
 
 log=LogStore.add_logger('fitter:test_data_fitter')
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This will run before any test
     '''
     LogStore.set_level('dmu:stats:gofcalculator', 30)
+
+    with FitParameter.enforce_naming_convention(value = False):
+        yield
 # ----------------------
 def test_single_region(tmp_path : Path) -> None:
     '''
@@ -144,8 +148,7 @@ def test_with_constraints(tmp_path : Path) -> None:
 
         ftr.run(kind='conf')
 # ----------------------
-slow_with_toys = pytest.param(500, marks=pytest.mark.slow)
-@pytest.mark.parametrize('ntoys', [20, slow_with_toys])
+@pytest.mark.parametrize('ntoys', [20])
 def test_with_toys(ntoys : int, tmp_path : Path) -> None:
     '''
     Integration test
@@ -167,16 +170,18 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
             name = 'with_toys',
             d_nll= d_nll, 
             cfg  = fit_cfg)
-        res = ftr.run(kind='zfit')
+        res = ftr.run(kind='fres')
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
-        toy_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-        toy_cfg.ntoys = ntoys
+        data = gut.load_data(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+        toy_cfg = ToyConf(**data)
+        toy_cfg = toy_cfg.model_copy(update = {'ntoys' : ntoys, 'output' : tmp_path / 'toys.parquet'})
 
         mkr = ToyMaker(
-            nll=nll, 
-            res=FitResult.from_zfit(res = res), 
-            cfg=toy_cfg, cns = [])
+            nll = nll, 
+            res = res, 
+            cfg = toy_cfg, 
+            cns = [])
         df  = mkr.get_parameter_information()
 
         plt_cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
