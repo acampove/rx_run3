@@ -4,13 +4,11 @@ Module with CmbConstraints class
 
 from typing       import cast
 from pathlib      import Path
-from omegaconf    import OmegaConf
 from ROOT         import RDF # type: ignore 
 from dmu          import LogStore
 from dmu.stats    import zfit
 from dmu.workflow import Cache
 from dmu.stats    import ConstraintND
-from omegaconf    import DictConfig
 from zfit         import Data                as zdat
 from zfit.pdf     import BasePDF             as zpdf
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
@@ -112,7 +110,7 @@ class CmbConstraints(BaseFitter, Cache):
 
         return cuts
     # ---------------------
-    def _get_rdf(self) -> tuple[RDF.RNode, str, DictConfig]:
+    def _get_rdf(self) -> tuple[RDF.RNode, str, dict[str,dict[str,str]]]:
         '''
         Returns
         -------------
@@ -130,16 +128,16 @@ class CmbConstraints(BaseFitter, Cache):
 
         out_path = Cache._cache_root / self._base_path
 
-        cuts = sel.selection(
+        fit_cuts = sel.selection(
             process = self._sample,
             trigger = self._trigger,
             q2bin   = self._q2bin)
 
         uid  = gtr.get_uid()
-        cuts = self._update_selection(cuts = cuts)
+        fit_cuts = self._update_selection(cuts = fit_cuts)
         rdf  = sel.apply_selection(
             rdf      = rdf, 
-            cuts     = cuts, 
+            cuts     = fit_cuts, 
             uid      = uid,
             out_path = out_path)
 
@@ -152,13 +150,9 @@ class CmbConstraints(BaseFitter, Cache):
                 trigger  = self._trigger,
             )
 
-        cuts= {'default' : default_cuts, 'fit' : cuts}
+        all_cuts : dict[str,dict[str,str]] = {'default' : default_cuts, 'fit' : fit_cuts}
 
-        cuts= OmegaConf.create(obj=cuts)
-        if not isinstance(cuts, DictConfig):
-            raise ValueError('Cuts cannot be transformed to DictConfig')
-
-        return rdf, uid, cuts
+        return rdf, uid, all_cuts
     # ---------------------
     def _get_data(self, rdf : RDF.RNode) -> zdat:
         '''
