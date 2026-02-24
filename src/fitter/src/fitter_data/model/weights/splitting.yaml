@@ -1,0 +1,24 @@
+branches: # all these branches will be picked in the dataframe
+  - B_Mass
+  - B_Mass_smr
+  - block
+  - L1_HASBREM
+  - L2_HASBREM
+  - L1_PID_E
+  - L2_PID_E
+  - L1_PROBNN_E
+  - L2_PROBNN_E
+  - L1_TRACK_PT
+  - L1_TRACK_ETA
+  - L2_TRACK_PT
+  - L2_TRACK_ETA
+  - weight # Data: This is where the prescale weight of 10 should be
+tracks: # This is needed to assign the right electrons to PassFail, FailPass ... datasets
+  ss : L1 # Lepton with same charge as B
+  os : L2 # Lepton with opposite charge as B
+hadron_tagging:
+  kaon : LEP_PROBNN_K > 0.1
+  pion : LEP_PROBNN_K < 0.1
+lepton_tagging:
+  pass : LEP_PROBNN_E > 0.2 && LEP_PID_E > 3.0
+  fail : LEP_PROBNN_E < 0.2 || LEP_PID_E < 3.0
