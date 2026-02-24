@@ -26,14 +26,30 @@ class ComponentConf(BaseModel):         # Tested
 
     output_directory : Path
 # ------------------------------
+class CmbConstraintConf(BaseModel):
+    '''
+    Class meant to represent configuration for combintorial constraints
+
+    Attributes
+    ---------------
+    selection : Selection that sample will go through on top of nominal selection, e.g. vetos
+    parameters: Parameters that will be constrained
+    '''
+    sample    : Component
+    trigger   : Trigger
+    parameters: list[str]
+    selection : dict[str,str]
+    fit       : FitConf
+    plots     : ZFitPlotterConf
+# ------------------------------
 class CombinatorialConf(ComponentConf, UnpackerModel): # Tested
     '''
     Class mean to control configuration of fit to combinatorial
     '''
     model_config = ConfigDict(frozen=True)
 
-    bins       : dict[Qsq, ModelFactoryConf]
-    categories : dict[str,  CmbCategoryConf]
+    models     : dict[Qsq, ModelFactoryConf ]
+    constraints: dict[Qsq, CmbConstraintConf]
 # ------------------------------
 class NonParametricConf(ComponentConf): # Tested
     '''
