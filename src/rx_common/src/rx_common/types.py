@@ -1,7 +1,7 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum import IntEnum, StrEnum
+from enum   import IntEnum, StrEnum
 from typing import Literal
 
 # ------------------------------
@@ -93,7 +93,7 @@ class Trigger(StrEnum):
         return self.value
     # -----------
     @property
-    def channel(self) -> str:
+    def channel(self) -> Literal['electron', 'muon']:
         '''
         Either 'muon' or 'electron'
         '''
