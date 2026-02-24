@@ -350,6 +350,9 @@ class Constraint1D(Constraint):
             if par.name == self.name and isinstance(par, zpar):
                 return par
 
+        for par in s_par:
+            log.error(par.name)
+
         raise ValueError(f'Cannot find {self.name} in NLL')
     # ----------------------
     def zfit_cons(self, holder : ParsHolder) -> GConstraint | PConstraint:
