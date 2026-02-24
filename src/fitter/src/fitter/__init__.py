@@ -22,8 +22,6 @@ from .prec               import PRec
 from .configs import FitModelConf
 from .configs import YieldConf 
 from .configs import MisIDConf 
-from .configs import MisIDSampleSplitting
-from .configs import MisIDSampleWeights
 from .configs import MisIDConstraintConf
 from .configs import CombinatorialConf 
 from .configs import CCbarConf 
@@ -41,8 +39,6 @@ __all__ = [
     'CombinatorialConf',
     'YieldConf',
     'MisIDConf',
-    'MisIDSampleSplitting',
-    'MisIDSampleWeights',
     'MisIDConstraintConf',
     # ------------------
     'PRec',
