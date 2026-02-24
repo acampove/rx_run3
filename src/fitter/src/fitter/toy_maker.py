@@ -26,6 +26,23 @@ log  = LogStore.add_logger('fitter:toy_maker')
 zlos = zfit.loss.ExtendedUnbinnedNLL | zfit.loss.UnbinnedNLL
 zres = zfit.result.FitResult
 # ----------------------
+class ToyConf(BaseModel):
+    '''
+    Class meant to configure how toys are generated
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    fit_conf : FitConf
+
+    output   : Path
+    ntoys    : int
+    rseed    : int
+    # ----------------
+    def __str__(self) -> str:
+        data = self.model_dump()
+
+        return yaml.safe_dump(data)
+# ----------------------
 class ToyMaker:
     '''
     This class is meant to:
@@ -39,9 +56,9 @@ class ToyMaker:
     def __init__(
         self,
         nll   : zlos,
-        res   : FitResult,
         cns   : list[Constraint],
-        cfg   : DictConfig):
+        res   : FitResult,
+        cfg   : ToyConf):
         '''
         Parameters
         -------------
@@ -56,46 +73,13 @@ class ToyMaker:
 
         self._nll   = nll
         self._res   = res
-        self._cfg   = self._check_config(cfg=cfg)
+        self._cfg   = cfg
         self._cns   = [ cons.calibrate(result = res) for cons in cns ]
-
-        if 'minimizer' in cfg.fitting and cfg.fitting.minimizer == 'context_minimizer':
-            self._context_minimizer = True
-        else:
-            self._context_minimizer = False 
 
         for cons in self._cns:
             log.debug(cons)
 
-        self._check_gof()
         self._check_gpu()
-    # ----------------------
-    def _check_config(self, cfg : DictConfig) -> DictConfig:
-        '''
-        Parameters
-        -------------
-        cfg: Config passed by user before check
-
-        Returns
-        -------------
-        Config after:
-        - Checks
-        - Update of out_dir with full path WRT ANADIR
-        '''
-        if 'rseed' not in cfg:
-            raise ValueError('Missing random seed')
-
-        if 'output' not in cfg:
-            raise ValueError('No "output" key found')
-
-        out_path : Path = self._ana_dir / cfg.output 
-
-        log.debug(f'Using output directory: {out_path}')
-        out_path.parent.mkdir(parents = True, exist_ok = True)
-
-        cfg.output = out_path
-
-        return cfg
     # ----------------------
     def _check_gpu(self) -> None:
         '''
@@ -106,25 +90,10 @@ class ToyMaker:
         else:
             log.debug('Running with CPU')
     # ----------------------
-    def _check_gof(self) -> None:
-        '''
-        Check if GOF setting was specified
-        If running GOF show warning
-        '''
-        if 'run_gof' not in self._cfg:
-            raise ValueError('GOF setting not found in config')
-
-        if self._cfg.run_gof:
-            log.warning('Running GOF calculation')
-            return
-
-        log.debug('Running with GOF disabled')
-    # ----------------------
     def _add_parameters(
         self,
         df  : pnd.DataFrame,
         res : FitResult,
-        gof : tuple[float,int,float],
         hash: int,
         itoy: int) -> pnd.DataFrame:
         '''
@@ -132,7 +101,6 @@ class ToyMaker:
         -------------
         df  : Pandas dataframe with potentially information already in it
         res : FitResult object from last fit
-        gof : Tuple with pvalue, nodf and chi2
         hash: Sum of values of masses for all samplers
         itoy: Index for current fit
 
@@ -141,7 +109,8 @@ class ToyMaker:
         Input pandas dataframe with extra rows added
         It will add one row per parameter
         '''
-        pvalue = gof[0]
+        pvalue = -1 if res.gof is None else res.gof.pval
+
         for parameter in res.parameters:
             nrows            = len(df)
             name             = parameter.name
@@ -387,8 +356,7 @@ class ToyMaker:
             raise ValueError('Failed to create NLL with sampler')
 
         log.debug('Running toys with config:')
-        cfg_str = OmegaConf.to_yaml(self._cfg)
-        log.debug('\n' + cfg_str)
+        log.debug(self._cfg)
 
         l_total = []
         columns = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid', 'Hash']
@@ -402,13 +370,12 @@ class ToyMaker:
                 total = self._resample(samplers = samplers)
                 l_total.append(total)
 
-            with GofCalculator.disabled(value = not self._cfg.run_gof):
+            with GofCalculator.disabled(value = not self._cfg.fit_conf.run_gof):
                 try:
-                    obj, gof = Fitter.minimize(
-                        nll               = nll, 
-                        cfg               = self._cfg.fitting,
-                        context_minimizer = self._context_minimizer)
-                except FitterFailError:
+                    obj = minimizers.minimize(
+                        nll = nll, 
+                        cfg = self._cfg.fit_conf)
+                except MinimizerFailError:
                     n_lost += 1
                     continue
 
@@ -431,7 +398,6 @@ class ToyMaker:
             df = self._add_parameters(
                 df  = df,
                 res = res,
-                gof = gof,
                 hash= hash, 
                 itoy= itoy)
 
