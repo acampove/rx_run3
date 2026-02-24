@@ -5,17 +5,17 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 
-from pathlib                  import Path
-from dmu.stats                import zfit
-from dmu.generic              import utilities as gut
-from dmu.stats                import utilities as sut
-from dmu.logging.log_store    import LogStore
-from dmu.workflow             import Cache
-from omegaconf                import OmegaConf
-from rx_common.types          import Trigger
-from rx_data.rdf_getter       import RDFGetter
-from zfit.data                import Data      as zdata
-from fitter.data_preprocessor import DataPreprocessor
+from pathlib       import Path
+from dmu.stats     import zfit
+from dmu.generic   import utilities as gut
+from dmu.stats     import utilities as sut
+from dmu           import LogStore
+from dmu.workflow  import Cache
+from rx_common     import Correction, Trigger, Component
+from rx_data       import RDFGetter
+from rx_misid      import MisIDSampleWeights
+from zfit.data     import Data      as zdata
+from fitter        import DataPreprocessor
 
 log=LogStore.add_logger('fitter:test_data_preprocessor')
 # -------------------------------------------------
@@ -35,12 +35,11 @@ def max_entries():
 # -------------------------------------------------
 def _validate_data(
     data     : zdata, 
-    name     : str,
     tmp_path : Path) -> None:
     '''
     Makes validation plots from zfit data
     '''
-    plt_path = tmp_path / f'{name}.png'
+    plt_path = tmp_path / 'plot.png'
 
     arr_data = data.numpy()
     rng      = sut.range_from_obs(obs=data.space)
@@ -62,19 +61,18 @@ def test_muon_data(tmp_path : Path, sample : str):
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
-    name= f'data_preprocessor/{sample}_muon_data'
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
             obs    = obs,
-            out_dir= name,
-            sample = sample,
+            out_dir= tmp_path,
+            sample = Component(sample),
             trigger= Trigger.rk_mm_os,
             wgt_cfg= None,
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
-    _validate_data(data=dat, name=name, tmp_path = tmp_path)
+    _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------
 @pytest.mark.parametrize('sample', [
     'DATA_24_MagDown_24c2',
@@ -85,21 +83,20 @@ def test_brem_cat_data(tmp_path : Path, sample : str, brem_cat : int):
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 6000))
-    name= f'data_preprocessor/{sample}_brem_{brem_cat:03}'
     cut = {'brem' : f'nbrem == {brem_cat}'}
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
             obs    = obs,
-            out_dir= name,
-            sample = sample,
+            out_dir= tmp_path,
+            sample = Component(sample),
             trigger= Trigger.rk_ee_os,
             cut    =  cut, 
             wgt_cfg= None,
             q2bin  = 'jpsi')
         dat = prp.get_data()
 
-    _validate_data(data=dat, name=name, tmp_path = tmp_path)
+    _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
 @pytest.mark.parametrize('sample', [
@@ -119,32 +116,21 @@ def test_with_pid_weights(
     region: Kind of control region
     kind  : Either 'signal' or 'control'
     '''
-    cfg_spl = gut.load_conf(package='fitter_data', fpath='model/weights/splitting.yaml')
-    cfg_wgt = gut.load_conf(package='fitter_data', fpath='model/weights/weights.yaml')
-
-    wgt_cfg = {'PID' : {
-           'splitting' : cfg_spl,
-           'weights'   : cfg_wgt}}
-
-    obs     = zfit.Space(f'B_Mass_{region}', limits=(4500, 6000))
-    wgt_cfg = OmegaConf.create(wgt_cfg)
-    cut     = {
-        'brem' : 'nbrem == 1',
-        'pid_l': '(1)'}
-
-    name = f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}'
+    data = gut.load_data(package='fitter_data', fpath='model/weights/weights.yaml')
+    cfg  = MisIDSampleWeights(**data)
+    obs  = zfit.Space(f'B_Mass_{region}', limits=(4500, 6000))
 
     with Cache.cache_root(path = tmp_path):
         prp  = DataPreprocessor(
             obs    = obs,
-            out_dir= name,
-            sample = sample,
+            out_dir= tmp_path,
+            sample = Component(sample),
             trigger= Trigger.rk_ee_nopid,
-            cut    = cut, 
-            wgt_cfg= wgt_cfg,
+            cut    = dict(), 
+            wgt_cfg= {Correction.pid : cfg},
             is_sig = kind == 'signal',
             q2bin  = 'jpsi')
         dat  = prp.get_data()
 
-    _validate_data(data=dat, name=name, tmp_path = tmp_path)
+    _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------
