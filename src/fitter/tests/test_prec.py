@@ -188,7 +188,7 @@ def test_fit(tmp_path : Path):
     if pdf is None:
         raise ValueError('No PDF found')
 
-    nev = zfit.Parameter('nev', 0, 0, 10_000)
+    nev = zfit.Parameter('nev_model_prec_1', 0, 0, 10_000)
     pdf.set_yield(nev)
 
     sam = pdf.create_sampler(n=1000)
