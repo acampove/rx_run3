@@ -9,9 +9,11 @@ from pathlib     import Path
 from zfit.loss   import ExtendedUnbinnedNLL
 from fitter      import ToyPlotter
 from fitter      import ToyMaker
+from fitter      import ToyConf
 from dmu.stats   import FitResult
+from dmu.stats   import FitParameter
 from dmu.stats   import ConstraintAdder, build_constraint
-from dmu.stats   import Fitter
+from dmu.stats   import zfit 
 from dmu.testing import get_nll
 from dmu.generic import utilities as gut
 from dmu.generic import rxran
@@ -32,7 +34,8 @@ def initialize():
     LogStore.set_level('fitter:toy_maker'       , 10)
     LogStore.set_level('fitter:constraint_adder', 10)
 
-    with rxran.seed(value = 42):
+    with rxran.seed(value = 42),\
+         FitParameter.enforce_naming_convention(value = False):
         yield
 # ----------------------
 def test_simple(tmp_path: Path) -> None:
