@@ -39,7 +39,7 @@ def get_model(
     nsample: int                   = 1000,
     obs    : zobs           | None = None,
     pars   : dict[str,zpar] | None = None, 
-    suffix : str                   = '_gaus_test_1',
+    suffix : str            | None = None,
     lam    : float                 = -0.0001) -> SumPDF:...
 @overload
 def get_model(
@@ -47,14 +47,14 @@ def get_model(
     nsample: int                   = 1000,
     obs    : zobs           | None = None,
     pars   : dict[str,zpar] | None = None, 
-    suffix : str                   = '_gaus_test_1',
+    suffix : str            | None = None,
     lam    : float                 = -0.0001) -> zpdf:...
 def get_model(
     kind   : AllLiteral,
     nsample: int                   = 1000,
     obs    : zobs           | None = None,
     pars   : dict[str,zpar] | None = None, 
-    suffix : str                   = '_gaus_test_1',
+    suffix : str            | None = None,
     lam    : float                 = -0.0001) -> zpdf | SumPDF:
     '''
     Parameters
