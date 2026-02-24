@@ -3,6 +3,7 @@ from .fit_config         import FitConfig
 from .parameter_reader   import ParameterReader
 from .likelihood_factory import LikelihoodFactory
 from .toy_maker          import ToyMaker
+from .toy_maker          import ToyConf
 from .toy_plotter        import ToyPlotter
 from .data_fitter        import DataFitter 
 from .data_model         import DataModel
@@ -59,5 +60,6 @@ __all__ = [
     'SimFitter',
     'DataFitter',
     'ToyMaker',
+    'ToyConf',
     'ToyPlotter',
     'LikelihoodFactory']

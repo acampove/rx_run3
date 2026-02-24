@@ -25,6 +25,7 @@ from .minimizers          import ContextMinimizer
 from .minimizers          import MinimizerFailError 
 from .minimizers          import Retries
 from .fit_result          import FitResult
+from .fit_result          import FitParameter
 from .fit_result          import GoodnessOfFit
 from .types               import Model, KDEModel
 
@@ -42,6 +43,7 @@ __all__ = [
     'save_fit',
     'ContextMinimizer',
     'FitResult',
+    'FitParameter',
     'AnealingMinimizer',
     'ZFitPlotter',
     'zfit',
