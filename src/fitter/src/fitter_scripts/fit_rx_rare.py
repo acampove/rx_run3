@@ -81,7 +81,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> RXFitConfig:
 
     cfg = RXFitConfig(
         name    = name,
-        fit_cfg = fit_cfg, 
+        mod_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
         group   = args.group,
         block   = args.block,
@@ -123,7 +123,7 @@ def _add_constraints(
     cons_str    = [ str(constraint) for constraint in cons ]
     constraints = '\n\n'.join(cons_str)
 
-    cfg.fit_cfg['used_constraints'] = constraints
+    cfg.mod_cfg['used_constraints'] = constraints
 
     cad  = ConstraintAdder(nll=nll, constraints=cons)
     nll  = cad.get_nll()
@@ -138,7 +138,7 @@ def _fit(cfg : RXFitConfig) -> None:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = DATA_SAMPLE,
-        cfg    = cfg.fit_cfg)
+        cfg    = cfg.mod_cfg)
     nll     = ftr.run()
     cfg_mod = ftr.get_config()
 
@@ -147,7 +147,7 @@ def _fit(cfg : RXFitConfig) -> None:
     ftr = DataFitter(
         name = cfg.q2bin,
         d_nll= {cfg.name : (nll, cfg_mod)}, 
-        cfg  = cfg.fit_cfg)
+        cfg  = cfg.mod_cfg)
     res = ftr.run(kind='zfit')
 
     if cfg.toy_cfg is None:
@@ -171,7 +171,7 @@ def main(args : DictConfig | None = None):
 
     with ExitStack() as stack:
         stack.enter_context(Cache.cache_root(path=cfg.output_directory))
-        stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
+        stack.enter_context(PL.parameter_schema(cfg=cfg.mod_cfg.model.yields))
         stack.enter_context(sel.custom_selection(d_sel=cfg.overriding_selection))
         stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))

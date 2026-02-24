@@ -66,7 +66,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> RXFitConfig:
     toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
 
     cfg         = RXFitConfig(
-        fit_cfg = fit_cfg, 
+        mod_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
         block   = args.block,
         q2bin   = args.q2bin,
@@ -95,8 +95,8 @@ def _get_nll(cfg : RXFitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = 'DATA_24_*',
-        trigger= cfg.fit_cfg.trigger,
-        cfg    = cfg.fit_cfg)
+        trigger= cfg.mod_cfg.trigger,
+        cfg    = cfg.mod_cfg)
     nll = ftr.run()
     cfg_mod = ftr.get_config()
 
@@ -124,7 +124,7 @@ def _fit_electron(cfg : RXFitConfig) -> None:
         ftr = DataFitter(
             name = cfg.q2bin,
             d_nll= d_nll, 
-            cfg  = cfg.fit_cfg)
+            cfg  = cfg.mod_cfg)
         ftr.run(kind='zfit')
 # ----------------------
 def _fit_muon(cfg : RXFitConfig) -> None:
@@ -140,7 +140,7 @@ def _fit_muon(cfg : RXFitConfig) -> None:
         ftr = DataFitter(
             name = cfg.q2bin,
             d_nll= d_nll, 
-            cfg  = cfg.fit_cfg)
+            cfg  = cfg.mod_cfg)
         ftr.run(kind='zfit')
 # ----------------------
 def main(args : DictConfig | None = None):
@@ -159,7 +159,7 @@ def main(args : DictConfig | None = None):
 
     Cache.set_cache_root(root=cfg.output_directory)
     with ExitStack() as stack:
-        stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
+        stack.enter_context(PL.parameter_schema(cfg=cfg.mod_cfg.model.yields))
         stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
         stack.enter_context(Cache.turn_off_cache(val=[]))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))

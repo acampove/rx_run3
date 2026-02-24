@@ -136,7 +136,7 @@ def _get_nll(
     - PDF used to fit combinatorial
     - Parameters needed for misID
     '''
-    pdf_names = cfg.fit_cfg.model.components.combinatorial.categories.main.models[q2bin]
+    pdf_names = cfg.mod_cfg.model.components.combinatorial.categories.main.models[q2bin]
 
     mu   = zfit.Parameter('mu', 5200, 4500, 6000)
     sg   = zfit.Parameter('sg',  150,   10, 200)
@@ -183,7 +183,7 @@ def _get_fit_config(q2bin : Qsq) -> RXFitConfig:
     return RXFitConfig(
         name    = 'test',
         group   = 'test',
-        fit_cfg = fit_cfg, 
+        mod_cfg = fit_cfg, 
         mva_cmb = 0.0,
         mva_prc = 0.0,
         q2bin   = q2bin,
@@ -210,12 +210,12 @@ def test_all_but_cmb(
     nll = cast(ExtendedUnbinnedNLL, nll) # Tests will only need get_params
 
     cfg = _get_fit_config(q2bin = q2bin)
-    del cfg.fit_cfg.model.components[_COMBINATORIAL_NAME]
+    del cfg.mod_cfg.model.components[_COMBINATORIAL_NAME]
 
     if not slow_mode:
         log.info('Skipping misid constraints')
-        del cfg.fit_cfg.model.components['kkk']
-        del cfg.fit_cfg.model.components['kpipi']
+        del cfg.mod_cfg.model.components['kkk']
+        del cfg.mod_cfg.model.components['kpipi']
     else:
         log.info('Running full test')
 
@@ -246,8 +246,8 @@ def test_only_cmb(
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = _get_fit_config(q2bin = q2bin)
     nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
-    del cfg.fit_cfg.model.components['kkk']
-    del cfg.fit_cfg.model.components['kpipi']
+    del cfg.mod_cfg.model.components['kkk']
+    del cfg.mod_cfg.model.components['kpipi']
 
     with Cache.cache_root(path = tmp_path):
         obj         = ConstraintReader(nll=nll, cfg=cfg)

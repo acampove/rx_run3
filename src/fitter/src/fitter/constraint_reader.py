@@ -7,7 +7,8 @@ from dmu                 import LogStore
 from dmu.stats           import Constraint, Constraint1D
 from rx_common           import Component
 from zfit.loss           import ExtendedUnbinnedNLL
-from .fit_config         import RXFitConfig
+
+from .configs            import RXFitConfig
 from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
 from .cmb_constraints    import CmbConstraints
@@ -100,7 +101,7 @@ class ConstraintReader:
         '''
         Adds constraints for fully hadronic MisID components
         '''
-        components= self._cfg.fit_cfg.model.components
+        components= self._cfg.mod_cfg.model.components
         all_found = all(component in components for component in _MISID_COMPONENTS)
         any_found = any(component in components for component in _MISID_COMPONENTS)
         if not all_found and     any_found:
@@ -114,7 +115,7 @@ class ConstraintReader:
         
         mrd       = MisIDConstraints(
             obs   = self._cfg.observable,
-            cfg   = self._cfg.fit_cfg.model.constraints.misid,
+            cfg   = self._cfg.mod_cfg.model.constraints.misid,
             q2bin = self._cfg.q2bin)
 
         self._constraints += mrd.get_constraints()
@@ -123,15 +124,16 @@ class ConstraintReader:
         '''
         Adds combinatorial constraints
         '''
-        components= self._cfg.fit_cfg.model.components
+        components= self._cfg.mod_cfg.model.components
         if _COMBINATORIAL_NAME not in components:
             log.warning(f'Combinatorial {_COMBINATORIAL_NAME} component not found, not calculating constraints')
             return
 
         calc      = CmbConstraints(
             name  = _COMBINATORIAL_NAME,
+            trig  = self._cfg.mod_cfg.trigger,
             nll   = self._nll,
-            cfg   = self._cfg.fit_cfg,
+            cfg   = self._cfg.mod_cfg,
             q2bin = self._cfg.q2bin)
 
         self._constraints.append( calc.get_constraint() )

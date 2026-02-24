@@ -41,10 +41,10 @@ def test_replace():
         mva_cmb = 0.,
         mva_prc = 0.,
         q2bin   = Qsq.central,
-        fit_cfg = fit_cfg)
+        mod_cfg = fit_cfg)
     cfg.replace(substring=org, value=new)
 
-    assert cfg.fit_cfg == _get_config(name=new)
+    assert cfg.mod_cfg == _get_config(name=new)
 # ----------------------
 def test_save(tmp_path : Path):
     '''
@@ -60,8 +60,8 @@ def test_save(tmp_path : Path):
             mva_cmb = 0.,
             mva_prc = 0.,
             q2bin   = Qsq.central,
-            fit_cfg = fit_cfg,
+            mod_cfg = fit_cfg,
         )
         cfg.save(kind = 'test')
 
-    assert cfg.fit_cfg == _get_config(name=name)
+    assert cfg.mod_cfg == _get_config(name=name)
