@@ -17,7 +17,7 @@ from zfit           import Space      as zobs
 log=LogStore.add_logger('fitter:fit_config')
 # ----------------------
 @dataclasses.dataclass
-class FitConfig:
+class RXFitConfig:
     '''
     Class used to store configuration needed for fits
     '''

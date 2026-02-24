@@ -18,7 +18,7 @@ from dmu.workflow.cache        import Cache
 from dmu.logging.log_store     import LogStore
 from zfit.loss                 import ExtendedUnbinnedNLL
 
-from fitter.fit_config         import FitConfig
+from fitter.fit_config         import RXFitConfig
 from fitter.data_fitter        import DataFitter
 from fitter.likelihood_factory import LikelihoodFactory
 from rx_data.rdf_getter        import RDFGetter
@@ -43,7 +43,7 @@ def _set_logs() -> None:
     LogStore.set_level('fitter:sim_fitter'        , 30)
     LogStore.set_level('fitter:likelihood_factory', 30)
 # ----------------------
-def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
+def _parse_args(args : DictConfig | argparse.Namespace | None) -> RXFitConfig:
     '''
     Returns
     --------------
@@ -65,7 +65,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
     fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
     toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
 
-    cfg         = FitConfig(
+    cfg         = RXFitConfig(
         fit_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
         block   = args.block,
@@ -78,7 +78,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
 
     return cfg
 # ----------------------
-def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
+def _get_nll(cfg : RXFitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
     '''
     Parameters
     -------------
@@ -105,7 +105,7 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
 
     return nll, cfg_mod
 # ----------------------
-def _fit_electron(cfg : FitConfig) -> None:
+def _fit_electron(cfg : RXFitConfig) -> None:
     '''
     This is where DataFitter is used
     '''
@@ -127,7 +127,7 @@ def _fit_electron(cfg : FitConfig) -> None:
             cfg  = cfg.fit_cfg)
         ftr.run(kind='zfit')
 # ----------------------
-def _fit_muon(cfg : FitConfig) -> None:
+def _fit_muon(cfg : RXFitConfig) -> None:
     '''
     This is where DataFitter is used
     '''

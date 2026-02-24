@@ -25,7 +25,7 @@ from rx_data       import RDFGetter
 from rx_selection  import selection as sel
 from rx_common     import Component, info
 
-from fitter        import FitConfig
+from fitter        import RXFitConfig
 from fitter        import ConstraintReader
 from fitter        import DataFitter
 from fitter        import LikelihoodFactory
@@ -35,7 +35,7 @@ log=LogStore.add_logger('fitter:fit_rx_rare')
 
 DATA_SAMPLE : Final[Component] = Component.data_24 
 # ----------------------
-def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
+def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> RXFitConfig:
     '''
     Returns
     --------------
@@ -57,7 +57,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConf
 
     return _cfg_from_args(args = args)
 # ----------------------
-def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
+def _cfg_from_args(args : DictConfig | argparse.Namespace) -> RXFitConfig:
     '''
     Parameters
     -------------
@@ -79,7 +79,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
     else:
         raise NotImplementedError(f'Invalid channel: {channel}')
 
-    cfg = FitConfig(
+    cfg = RXFitConfig(
         name    = name,
         fit_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
@@ -96,7 +96,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
 # ----------------------
 def _add_constraints(
     nll : ExtendedUnbinnedNLL,
-    cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
+    cfg : RXFitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
     '''
     Parameters
     -------------
@@ -130,7 +130,7 @@ def _add_constraints(
 
     return nll, cons
 # ----------------------
-def _fit(cfg : FitConfig) -> None:
+def _fit(cfg : RXFitConfig) -> None:
     '''
     This is where DataFitter is used
     '''

@@ -7,7 +7,7 @@ from dmu                 import LogStore
 from dmu.stats           import Constraint, Constraint1D
 from rx_common           import Component
 from zfit.loss           import ExtendedUnbinnedNLL
-from .fit_config         import FitConfig
+from .fit_config         import RXFitConfig
 from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
 from .cmb_constraints    import CmbConstraints
@@ -25,7 +25,7 @@ class ConstraintReader:
     def __init__(
         self, 
         nll   : ExtendedUnbinnedNLL, 
-        cfg   : FitConfig,
+        cfg   : RXFitConfig,
         signal: str = 'bpkpee',
         pprefx: str = 'pscale'):
         '''

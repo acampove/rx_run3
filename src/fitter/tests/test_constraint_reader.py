@@ -11,7 +11,7 @@ from dmu.stats      import ModelFactory, print_constraints
 from dmu.stats      import zfit
 from dmu.generic    import utilities           as gut
 from rx_common      import Qsq
-from fitter         import FitConfig
+from fitter         import RXFitConfig
 from zfit.loss      import ExtendedUnbinnedNLL
 from zfit.param     import Parameter           as zpar
 from zfit           import Space               as zobs
@@ -121,7 +121,7 @@ class Parameters:
 def _get_nll(
     obs  : zobs, 
     q2bin: Qsq,
-    cfg  : FitConfig) -> ExtendedUnbinnedNLL:
+    cfg  : RXFitConfig) -> ExtendedUnbinnedNLL:
     '''
     Parameters
     -------------
@@ -168,7 +168,7 @@ def initialize():
     LogStore.set_level('fitter:constraint_reader', 10)
     LogStore.set_level('fitter:cmb_constraints'  , 10)
 # --------------------------------------------------------------
-def _get_fit_config(q2bin : Qsq) -> FitConfig:
+def _get_fit_config(q2bin : Qsq) -> RXFitConfig:
     '''
     Parameters
     -------------
@@ -180,7 +180,7 @@ def _get_fit_config(q2bin : Qsq) -> FitConfig:
     '''
     fit_cfg = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
 
-    return FitConfig(
+    return RXFitConfig(
         name    = 'test',
         group   = 'test',
         fit_cfg = fit_cfg, 

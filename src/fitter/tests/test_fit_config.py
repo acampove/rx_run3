@@ -5,7 +5,7 @@ This module contains tests for the FitConfig class
 import pytest
 from pathlib           import Path
 from omegaconf         import OmegaConf, DictConfig
-from fitter.fit_config import FitConfig
+from fitter.fit_config import RXFitConfig
 from dmu               import LogStore
 from dmu.generic       import utilities as gut
 from rx_common.types   import Qsq
@@ -35,7 +35,7 @@ def test_replace():
     new     = '7634244'
     fit_cfg = _get_config(name = org)
 
-    cfg = FitConfig(
+    cfg = RXFitConfig(
         name    = 'test_replace', 
         group   = 'tests',
         mva_cmb = 0.,
@@ -54,7 +54,7 @@ def test_save(tmp_path : Path):
     fit_cfg = _get_config(name = name)
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
-        cfg = FitConfig(
+        cfg = RXFitConfig(
             name    = name, 
             group   = 'tests',
             mva_cmb = 0.,

@@ -1,5 +1,5 @@
 from .fit_summary        import FitSummary
-from .fit_config         import FitConfig
+from .fit_config         import RXFitConfig
 from .parameter_reader   import ParameterReader
 from .likelihood_factory import LikelihoodFactory
 from .toy_maker          import ToyMaker
@@ -51,7 +51,7 @@ __all__ = [
     'DataModel',
     'FitSummary', 
     'ParsLoader',
-    'FitConfig',
+    'RXFitConfig',
     'MisIDConstraints',
     'ConstraintReader',
     'CmbConstraints',
