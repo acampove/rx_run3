@@ -8,7 +8,8 @@ from pathlib     import Path
 from dmu         import LogStore
 from dmu.generic import utilities as gut
 from fitter      import YieldConf
-from fitter      import MisIDSampleWeights, MisIDSampleSplitting, NonParametricConf 
+from rx_misid    import MisIDSampleWeights, MisIDSampleSplitting
+from fitter      import NonParametricConf 
 from fitter      import CCbarConf, CombinatorialConf, MisIDConf
 from fitter      import MisIDConstraintConf, ParametricConf
 from fitter      import FitModelConf
@@ -28,14 +29,26 @@ def test_yield_conf(analysis : str):
 @pytest.mark.parametrize('analysis', ['rk'      , 'rkst'])
 @pytest.mark.parametrize('kind'    , ['reso'    , 'rare'])
 @pytest.mark.parametrize('channel' , ['electron', 'muon'])
-def test_combinatorial(
+def test_combinatorial_sr(
         analysis : str, 
         channel  : str,
         kind     : str):
-
+    '''
+    Test for combinatorial in signal region
+    '''
     data = gut.load_data(
         package = 'fitter_data', 
         fpath   = f'{kind}/{analysis}/{channel}/combinatorial.yaml')
+
+    CombinatorialConf(**data)
+# ----------------------
+def test_combinatorial_cr():
+    '''
+    Test for combinatorial in misid control region
+    '''
+    data = gut.load_data(
+        package = 'fitter_data', 
+        fpath   = 'misid/rk/electron/combinatorial.yaml')
 
     CombinatorialConf(**data)
 # ----------------------
