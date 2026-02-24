@@ -2,9 +2,8 @@
 output : toys/test.parquet
 rseed  : 42
 ntoys  : 20
-run_gof: false
-constraints : {}
-fitting:
+fit_conf:
+  run_gof: false
   minimization:
     mode     : 0
     gradient : zfit
