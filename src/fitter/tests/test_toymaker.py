@@ -43,16 +43,22 @@ def test_simple(tmp_path: Path) -> None:
     Simplest test of ToyMaker
     '''
     log.info('')
-    nll   = get_nll(kind='s+b')
-    cfg   = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    data  = gut.load_data(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
-    cns   = [ build_constraint(data=block) for block in data.values() ] 
+    nll   = get_nll(kind='s+b', suffix = '')
+
+    cfg_dt= gut.load_data(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    cfg   = ToyConf(**cfg_dt)
+    cfg   = cfg.model_copy(update = {'output' : tmp_path / 'data.parquet'})
+
+    cns_dt= gut.load_data(package='fitter_data', fpath='tests/fits/constraint_adder.yaml')
+    cns   = [ build_constraint(data=block) for block in cns_dt.values() ] 
 
     assert isinstance(nll, ExtendedUnbinnedNLL)
     adr = ConstraintAdder(nll = nll, constraints = cns)
     nll = adr.get_nll()
 
-    res, _ = Fitter.minimize(nll=nll, cfg={})
+    min = zfit.minimize.Minuit()
+    res = min.minimize(loss = nll)
+    res.hesse(name = 'minuit_hesse')
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         mkr   = ToyMaker(
@@ -82,19 +88,21 @@ def test_integration(
     ntoys    : Number of toys to override what is in config
     '''
     log.info('')
-    nll   = get_nll(kind='s+b')
+    nll   = get_nll(kind='s+b', suffix = '')
     assert isinstance(nll, ExtendedUnbinnedNLL)
 
-    cfg  = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
-    if ntoys:
-        cfg.ntoys = ntoys
+    cfg_dat  = gut.load_data(package='fitter_data', fpath='tests/toys/toy_maker.yaml')
+    cfg      = ToyConf(**cfg_dat)
+    cfg      = cfg.model_copy(update = {'ntoys' : ntoys, 'output' : tmp_path / 'parameters.parquet'})
 
     data = gut.load_data(package='fitter_data', fpath='tests/fits/constraint_adder.yaml') 
     cns  = [ build_constraint(data=block) for block in data.values() ] 
     adr  = ConstraintAdder(nll = nll, constraints = cns)
     nll  = adr.get_nll()
 
-    res, _ = Fitter.minimize(nll=nll, cfg={})
+    min = zfit.minimize.Minuit()
+    res = min.minimize(loss = nll)
+    res.hesse(name = 'minuit_hesse')
 
     mkr = ToyMaker(
         nll=nll, 
