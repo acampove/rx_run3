@@ -106,10 +106,14 @@ def test_misid_splitting():
     MisIDSampleSplitting(**data)
 # ----------------------
 @pytest.mark.parametrize('component', ['kkk', 'kpipi'])
-def test_misid(component : str):
+@pytest.mark.parametrize('analysis' , ['rk'])
+def test_misid(
+    analysis  : str,
+    component : str):
+
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rk/electron/{component}.yaml')
+        fpath   = f'rare/{analysis}/electron/{component}.yaml')
 
     with MisIDConf.package(name = 'fitter_data'):
         MisIDConf(**data)
