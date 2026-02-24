@@ -6,6 +6,8 @@ import math
 import numpy
 import pprint
 
+from contextvars import ContextVar
+from contextlib  import contextmanager
 from typing      import Final
 from scipy.stats import chi2 as chi2_dist
 from pathlib     import Path
@@ -22,6 +24,8 @@ RTOL     : Final[float] = 1e-7
 MIN_NDOF : Final[int  ] =  9
 MAX_NDOF : Final[int  ] = 41
 PAR_REGX : Final[str  ] = r'\w+_\w+_\w+_\d+'
+
+_VALIDATE_PAR_NAME : ContextVar[bool] = ContextVar('_validate_par_name', default = True)
 # -------------------------------------
 class GoodnessOfFit(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -101,6 +105,9 @@ class FitParameter(BaseModel):
     error: float
     # ----------------------
     def model_post_init(self, _) -> None:
+        if not _VALIDATE_PAR_NAME.get():
+            return
+
         mtch = re.match(PAR_REGX, self.name)
 
         if not mtch:
@@ -131,6 +138,25 @@ class FitParameter(BaseModel):
         msg = f'{self.name:<30}{self.value:<30}{"±":<10}{self.error:<30}'
 
         return msg
+    # ----------------------
+    @classmethod
+    def enforce_naming_convention(cls, value : bool):
+        '''
+        Parameters
+        --------------
+        value: If True (default) will enforce naming convention of fitting parameters
+        '''
+
+        @contextmanager
+        def _context():
+            token = _VALIDATE_PAR_NAME.set(value)
+
+            try:
+                yield
+            finally:
+                _VALIDATE_PAR_NAME.reset(token)
+
+        return _context()
 # -------------------------------------
 class FitResult(BaseModel):
     '''
@@ -352,8 +378,8 @@ class FitResult(BaseModel):
 
         return FitParameter(
             name = name,
-            value= value,
-            error= error)
+            value= float(value),
+            error= float(error))
     # ----------------------
     @classmethod
     def from_zfit(
