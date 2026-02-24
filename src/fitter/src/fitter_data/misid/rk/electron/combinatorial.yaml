@@ -1,23 +1,26 @@
 output_directory : rare/electron/misid/combinatorial
-categories:
-  main:
-    models : 
-      low     : [exp]
-      central : [exp]
-      high    : [exp]
-bins:
+# -----------------
+constraints: {}
+# -----------------
+models:
   low:
+    pdfs          : [hypexp]
     shared        : []
-    float         : []
+    floating      : []
     reparametrize : {}
     fix           : {}
   central:
+    pdfs          : [hypexp]
     shared        : []
-    float         : []
+    floating      : []
     reparametrize : {}
     fix           : {}
   high:
+    pdfs          : [suj]
     shared        : []
-    float         : []
+    floating      : []
     reparametrize : {}
-    fix           : {}
+    fix           :
+      dl_suj : 2.5
+      gm_suj : -10
+# -----------------
