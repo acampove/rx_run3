@@ -2,17 +2,19 @@
 Script holding functions needed to test SampleWeighter class
 '''
 import os
-from functools import cache, lru_cache
-from pathlib   import Path
 
 import pickle
 import numpy
 import pytest
 import pandas            as pnd
-from boost_histogram          import Histogram
-from dmu.logging.log_store    import LogStore
-from dmu.generic              import utilities      as gut
-from rx_misid.sample_weighter import FloatArray, SampleWeighter
+
+from functools       import cache, lru_cache
+from pathlib         import Path
+from boost_histogram import Histogram
+from dmu             import LogStore
+from dmu.generic     import utilities      as gut
+from rx_misid        import SampleWeighter
+from rx_misid.types import MisIDSampleWeights
 
 log=LogStore.add_logger('rx_misid:test_weighter')
 # -------------------------------------------------------
@@ -102,7 +104,7 @@ def _check_weights(df : pnd.DataFrame) -> None:
 # ----------------------
 def _check_blocks(
     df            : pnd.DataFrame,
-    arr_block_inp : FloatArray) -> None:
+    arr_block_inp : numpy.ndarray) -> None:
     '''
     Parameters
     -------------
@@ -250,8 +252,7 @@ def _get_binning() -> tuple[list[float], list[float]]:
 def test_simple(
     is_sig : bool, 
     sample : str, 
-    block  : int,
-    tmp_path : Path):
+    block  : int):
     '''
     Parameters
     -------------
@@ -260,11 +261,11 @@ def test_simple(
     sample: MC and data samples need to be weighted in different ways
     block : Number from 1 to 8
     '''
-    cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
+    data= gut.load_data(package='rx_misid_data', fpath='weights.yaml')
+    cfg = MisIDSampleWeights(**data)
+
     df  = _get_dataframe(good_phase_space=False, sample=sample, block=block)
     arr_block_inp = df['block'].to_numpy().astype(float)
-
-    cfg.plots_path = tmp_path 
 
     wgt = SampleWeighter(
         df    = df,
@@ -281,7 +282,9 @@ def test_get_maps():
     '''
     Test of get_maps method
     '''
-    cfg = gut.load_conf(package='rx_misid_data', fpath='weights.yaml')
+    data  = gut.load_data(package='rx_misid_data', fpath='weights.yaml')
+    cfg   = MisIDSampleWeights(**data)
+
     d_map = SampleWeighter.get_maps(cfg=cfg, kind='brem')
 
     assert len(d_map) == 32
