@@ -9,23 +9,12 @@ from rx_common   import Brem, Mass, Project, Qsq, Particle
 from rx_common   import Component, Trigger, CCbarComponent
 from pydantic    import BaseModel, ConfigDict
 from dmu.stats   import ModelFactoryConf
-from dmu.stats   import Model
 from dmu.stats   import KDEConf
 from dmu.stats   import FitConf
 from dmu.stats   import ZFitPlotterConf 
 from dmu.stats   import Model as FModel
 from .types      import CCbarWeight
 
-# ------------------------------
-# Component elements
-# ------------------------------
-class CmbCategoryConf(BaseModel):
-    '''
-    Class meant to configure fitting categories for combinatorial component
-    '''
-    model_config = ConfigDict(frozen=True)
-
-    models : dict[Qsq, list[Model]]
 # ------------------------------
 # Components
 # ------------------------------
@@ -140,7 +129,7 @@ class MisIDFitComponents(UnpackerModel):
     '''
     model_config = ConfigDict(frozen=True)
 
-    cominatorial : CmbCategoryConf
+    cominatorial : CombinatorialConf 
     hdpipi       : NonParametricConf
     hdkk         : NonParametricConf
 # ------------------------------
