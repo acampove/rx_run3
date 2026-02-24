@@ -2,11 +2,12 @@
 Module containing DataFitter class
 '''
 from pathlib                   import Path
-from typing                    import Literal, overload
+from typing                    import Literal, cast, overload
 from omegaconf                 import DictConfig, OmegaConf
 from dmu                       import LogStore
 from dmu.workflow              import Cache
-from dmu.stats                 import Fitter
+from dmu.stats                 import FitResult, ZFitPlotterConf
+from dmu.stats                 import zfit
 from dmu.stats                 import utilities as sut
 from zfit.exception            import ParamNameNotUniqueError
 from zfit.result               import FitResult           as zres
@@ -64,12 +65,12 @@ class DataFitter(BaseFitter, Cache):
         l_nll = [ nll for nll, _ in self._d_nll.values() ]
         try:
             nll   = sum(l_nll[1:], l_nll[0])
-        except ParamNameNotUniqueError:
+        except ParamNameNotUniqueError as exc:
             for nll in l_nll:
                 pdf = nll.model[0]
                 sut.print_pdf(pdf=pdf)
 
-            raise ParamNameNotUniqueError('Models contain multiple parameters with the same name')
+            raise ParamNameNotUniqueError('Models contain multiple parameters with the same name') from exc
 
         return nll
     # ----------------------
@@ -93,12 +94,13 @@ class DataFitter(BaseFitter, Cache):
 
         OmegaConf.save(config=cfg_cns, f=out_path, resolve=True)
     # ----------------------
-    # TODO: Add fres option to return FitResult instances
+    @overload
+    def run(self, kind : Literal['fres']) -> FitResult:...
     @overload
     def run(self, kind : Literal['zfit']) -> zres:...
     @overload
     def run(self, kind : Literal['conf']) -> DictConfig:...
-    def run(self, kind :             str) -> zres|DictConfig:
+    def run(self, kind :             str) -> zres | DictConfig | FitResult:
         '''
         Entry point for fitter
 
@@ -120,20 +122,26 @@ class DataFitter(BaseFitter, Cache):
         if nll is None:
             raise ValueError('Likelihood is missing')
 
-        res, _ = Fitter.minimize(nll=nll, cfg=self._cfg.fit)
-        res.hesse(name='minuit_hesse')
+        min = zfit.minimize.Minuit()
+        res = min.minimize(loss = nll)
+        res.hesse(name='minuit_hesse', method = 'minuit_hesse')
+        fres = FitResult.from_zfit(res = res)
 
-        for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam):
+        plot_obj         = OmegaConf.to_container(self._cfg.plots, resolve = True)
+        plot_data : dict = cast(dict, plot_obj)
+        plt_cfg   = ZFitPlotterConf(**plot_data)
+
+        for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
             out_path = self._out_path / name
 
             log.info(f'Saving fit to: {out_path}')
 
             self._save_fit(
                 cut_cfg  = cfg.selection,
-                plt_cfg  = self._cfg.plots,
+                plt_cfg  = plt_cfg,
                 data     = data,
                 model    = model,
-                res      = res,
+                res      = fres,
                 out_path = out_path)
 
             self._save_constraints(out_dir=out_path)
@@ -141,7 +149,11 @@ class DataFitter(BaseFitter, Cache):
         if kind == 'zfit':
             return res
 
-        obj = sut.zres_to_cres(res=res)
+        if kind == 'fres':
+            return fres 
 
-        return obj 
+        if kind == 'conf':
+            return sut.zres_to_cres(res=res)
+
+        raise ValueError(f'Invalid kind: {kind}')
 # ----------------------
