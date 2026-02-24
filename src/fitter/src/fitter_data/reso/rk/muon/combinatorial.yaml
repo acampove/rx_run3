@@ -1,26 +1,24 @@
-common_settings: &settings
-  shared        : []
-  floating      : []
-  reparametrize : {}
-  fix           : {}
-
 output_directory : reso/rk/muon/combinatorial
-categories:
-  main:
-    models :
-      low     : [exp]
-      central : [exp]
-      jpsi    : [exp]
-      psi2    : [exp]
-      high    : [exp]
-bins:
+# -----------------
+constraints: {}
+# -----------------
+models:
   low:
-    <<: *settings
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
   central:
-    <<: *settings
-  jpsi:
-    <<: *settings
-  psi2:
-    <<: *settings
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
   high:
-    <<: *settings
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+# -----------------

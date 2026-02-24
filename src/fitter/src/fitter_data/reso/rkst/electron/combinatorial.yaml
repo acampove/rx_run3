@@ -1,16 +1,24 @@
-common_settings: &settings
-  shared        : []
-  floating      : []
-  reparametrize : {}
-  fix           : {}
 output_directory : reso/rkst/electron/combinatorial
-categories:
-  main:
-    models :
-      jpsi    : [exp]
-      psi2    : [exp]
-bins:
-  jpsi:
-    <<: *settings
-  psi2:
-    <<: *settings
+# -----------------
+constraints: {}
+# -----------------
+models:
+  low:
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+  central:
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+  high:
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+# -----------------

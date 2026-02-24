@@ -1,25 +1,76 @@
-output_directory : rare/electron/combinatorial
-categories:
-  main:
-    models : 
-      low     : [hypexp]
-      central : [hypexp]
-      high    : [suj]
-bins:
+# -------------------------
+# Aliases
+# -------------------------
+reso_veto: &reso_veto
+  jpsi veto  : "TMath::Abs(B_const_mass_M       - 5280) > 200"
+  psi2s veto : "TMath::Abs(B_const_mass_psi2S_M - 5280) > 100"
+fit_strat: &fit_strat
+  strategy : 
+    ntries : 20
+    pvalue : 0.05
+plot_conf: &plot_conf
+  nbins  : 60
+  stacked: True
+  d_leg  : {}
+# -------------------------
+constraints_high: &cons_hi
+  sample     : DATA_24* 
+  trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
+  parameters : # Will constrain parameters starting
+    - mu       # with any of these strings
+    - sg       # E.g mu_hypexp_combinatorial_1
+  selection  : 
+    <<: *reso_veto
+  fit:
+    <<: *fit_strat
+  plots:
+    <<: *plot_conf
+# -------------------------
+constraints_low_central: &cons_lc
+  sample     : DATA_24* 
+  trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
+  parameters : # Will constrain parameters starting
+    - mu       # with any of these strings
+    - ap       # E.g mu_hypexp_combinatorial_1
+    - bt
+  selection  : 
+    <<: *reso_veto
+  fit:
+    <<: *fit_strat
+  plots:
+    <<: *plot_conf
+# -------------------------
+# Proper config
+# -------------------------
+output_directory : rare/rk/electron/combinatorial
+# -----------------
+constraints:
   low:
+    <<: *cons_lc
+  central:
+    <<: *cons_lc
+  high:
+    <<: *cons_hi
+# -----------------
+models:
+  low:
+    pdfs          : [hypexp]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           : {}
   central:
+    pdfs          : [hypexp]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           : {}
   high:
+    pdfs          : [suj]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           :
       dl_suj : 2.5
       gm_suj : -10
+# -----------------
