@@ -5,6 +5,12 @@ from enum   import IntEnum, StrEnum
 from typing import Literal
 
 # ------------------------------
+class Correction(StrEnum):
+    '''
+    Enum meant to symbolize corrections, e.g. PID
+    '''
+    pid = 'PID'
+# ------------------------------
 class Particle(StrEnum):
     '''
     Model meant to store particle properties
