@@ -3,6 +3,7 @@ Module holding ToyMaker class
 '''
 import os
 import tqdm
+import yaml
 import math
 import numpy
 import pandas     as pnd
@@ -19,10 +20,9 @@ from dmu.stats   import FitConf
 
 from pathlib     import Path
 from pydantic    import BaseModel, ConfigDict
-from omegaconf   import OmegaConf
 from zfit.data   import SamplerData
 
-log  = LogStore.add_logger('rx_stats:toy_maker')
+log  = LogStore.add_logger('fitter:toy_maker')
 zlos = zfit.loss.ExtendedUnbinnedNLL | zfit.loss.UnbinnedNLL
 zres = zfit.result.FitResult
 # ----------------------
