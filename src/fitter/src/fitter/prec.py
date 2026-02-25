@@ -83,6 +83,7 @@ class CCbarComponent(BaseModel):
             log.debug('Using FFT KDE for low statistics sample')
 
             pdf = zfit.pdf.KDE1DimFFT(
+                obs       = self.obs,
                 data      = self.mass,
                 weights   = self.wgt, 
                 padding   = self.cfg.padding.model_dump(),
@@ -416,7 +417,6 @@ class PRec(Cache):
         else:
             log.warning('Not using sample weights')
             df['wgt_sam'] = 1.
-            raise ValueError(f'Invalid value of wgt_sam: {sam}')
 
         arr_wgt      = df.wgt_sam.to_numpy()
         arr_wgt      = self.__normalize_weights(arr_wgt)
