@@ -394,11 +394,12 @@ class PRec(Cache):
 
         if  dec:
             log.debug(f'Adding decay weights to: {sample}')
-            project       = info.project_from_trigger(trigger=self._trig, lower_case=True)
-            df['wgt_dec'] = df.apply(read_weight, args=(project,), axis=1)
+            project          = info.project_from_trigger(trigger=self._trig, lower_case=True)
+            val : pnd.Series = df.apply(read_weight, args=(project,), axis=1)
+            df['wgt_dec']    = 1. if val.empty else val
         else:
             log.warning(f'Not using decay weights in: {sample}')
-            df['wgt_dec'] = 1.
+            df['wgt_dec']    = 1.
 
         arr_wgt      = df.wgt_dec.to_numpy()
         arr_wgt      = self.__normalize_weights(arr_wgt)
@@ -423,11 +424,12 @@ class PRec(Cache):
 
         if   sam:
             log.debug('Adding sample weights')
-            obj           = inclusive_sample_weights(df)
-            df['wgt_sam'] = obj.get_weights()
+            obj              = inclusive_sample_weights(df)
+            val : pnd.Series = obj.get_weights()
+            df['wgt_sam']    = 1. if val.empty else val
         else:
             log.warning('Not using sample weights')
-            df['wgt_sam'] = 1.
+            df['wgt_sam']    = 1.
 
         arr_wgt      = df.wgt_sam.to_numpy()
         arr_wgt      = self.__normalize_weights(arr_wgt)
