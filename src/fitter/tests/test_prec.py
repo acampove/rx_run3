@@ -161,24 +161,25 @@ def test_fit(tmp_path : Path):
     '''
     Tests that the PDF is fittable
     '''
-    q2bin  = Qsq.high
-    trig   = Trigger.rk_ee_os 
-    mass   = 'B_Mass_smr'
-    label  = r'$M(K^+e^+e^-)$'
-    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
-    obs    = zfit.Space(label, limits=(4500, 6900))
-    out_dir= Path(f'reso/fit/{q2bin}')
+    q2bin   = Qsq.high
+    mass    = Mass.bp_bcor_smr
+    trig    = Trigger.rk_ee_os 
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6000))
 
-    d_wgt= {'dec' : 1, 'sam' : 1}
-    with Cache.cache_root(path = tmp_path):
+    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+
+    with RDFGetter.max_entries(value = 100_000),\
+         Cache.cache_root(tmp_path):
         obp = PRec(
-            samples = l_samp, 
-            trig    = trig, 
-            q2bin   = q2bin, 
-            d_weight= d_wgt,
-            out_dir = out_dir,
-        )
-        pdf = obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+            cfg   = cfg,
+            obs   = obs,
+            trig  = trig, 
+            q2bin = q2bin)
+
+        pdf = obp.get_sum(name = 'ccbar')
 
     if pdf is None:
         raise ValueError('No PDF found')
@@ -188,16 +189,16 @@ def test_fit(tmp_path : Path):
 
     sam = pdf.create_sampler(n=1000)
 
-    obj = Fitter(pdf, sam)
+    obj = Fitter(pdf = pdf, data = sam)
     res = obj.fit()
 
     sut.save_fit(
-        data   =sam,
-        model  =pdf,
-        res    =res,
-        plt_cfg=None,
-        fit_dir= tmp_path / out_dir,
-        d_const={})
+        data    = sam,
+        model   = pdf,
+        res     = res,
+        plt_cfg = None,
+        fit_dir =  tmp_path,
+        d_const = {})
 #-----------------------------------------------
 @pytest.mark.parametrize('bdt_cut', [
     'mva.mva_prc > 0.0 && mva.mva_cmb > 0.0',
