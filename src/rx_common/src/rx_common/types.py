@@ -393,6 +393,31 @@ class Component(StrEnum):
             return Channel.mm
 
         raise ValueError(f'Sample {self} does not belong to electron or muon Channel')
+    # --------------------------------------------
+    @classmethod
+    def inclusive(cls, channel : Channel) -> list['CCbarComponent']:
+        '''
+        Parameters
+        --------------
+        channel: E.g. ee, mm
+
+        Returns
+        --------------
+        List of charmonium components
+        '''
+        if channel == Channel.ee:
+            return [
+                Component.bpjpsixee,
+                Component.bdjpsixee,
+                Component.bsjpsixee]
+
+        if channel == Channel.mm:
+            return [
+                Component.bpjpsixmm,
+                Component.bdjpsixmm,
+                Component.bsjpsixmm]
+
+        raise ValueError(f'Invalid channel: {channel}')
 # ---------------------------------------
 CCbarComponent = Literal[
     Component.bpjpsixee,
