@@ -3,7 +3,6 @@ Module with SimFitter class
 '''
 from pathlib                  import Path
 from typing                   import overload, Literal, Final
-from omegaconf                import OmegaConf
 
 from dmu                      import LogStore
 from dmu.stats                import FitResult, ModelFactoryConf
@@ -73,13 +72,12 @@ class SimFitter(BaseFitter, Cache):
         self._name      = name
         self._cfg       = cfg
         self._obs       = obs
-        self._base_path = Path(f'{cfg.output_directory}/{name}/{trigger}_{q2bin}')
+        self._base_path = cfg.output_directory / f'{name}/{trigger}_{q2bin}'
 
         log.debug(f'For component {self._component} using output: {self._base_path}')
 
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
-
 
         # All the PDFs will share the mu and sigma below and these will float
         self._mu_par = Parameter('mu_flt', 5280, 5000, 5500)
@@ -89,7 +87,7 @@ class SimFitter(BaseFitter, Cache):
             self,
             out_path = self._base_path,
             l_rdf_uid= self._l_rdf_uid,
-            config   = OmegaConf.to_container(cfg, resolve=True))
+            config   = self._cfg.model_dump())
     # ------------------------
     # Data getting section
     # ------------------------
