@@ -47,6 +47,7 @@ class Mass(StrEnum):
 
     bd           = 'B_M'
     bd_dtf_jpsi  = 'B_const_mass_M'
+    bd_dtf_psi2  = 'B_const_mass_psi2S_M'
     bd_bcor      = 'B_Mass'
     bd_bcor_smr  = 'B_Mass_smr'
     bd_bcorr_kk  = 'B_Mass_hdkk'
@@ -69,6 +70,8 @@ class Mass(StrEnum):
                 return r'$M(B^+)$'
             case Mass.bp_dtf_jpsi:
                 return r'$M_{DTF}^{J/\psi}(B^+)$'
+            case Mass.bp_dtf_psi2:
+                return r'$M_{DTF}^{\psi(2S)}(B^+)$'
             case Mass.bp_bcor:
                 return r'$M_{corr}(B^+)$'
             case Mass.bp_bcor_smr:
@@ -84,6 +87,8 @@ class Mass(StrEnum):
                 return r'$M(B^0)$'
             case Mass.bd_dtf_jpsi:
                 return r'$M_{DTF}^{J/\psi}(B^0)$'
+            case Mass.bd_dtf_psi2:
+                return r'$M_{DTF}^{\psi(2S)}(B^0)$'
             case Mass.bd_bcor:
                 return r'$M_{corr}(B^0)$'
             case Mass.bd_bcor_smr:
@@ -92,8 +97,6 @@ class Mass(StrEnum):
                 return r'$M_{corr}^{KK}(B^0)$'
             case Mass.bd_bcorr_pipi:
                 return r'$M_{corr}^{\pi\pi}(B^0)$'
-            case _:
-                raise ValueError(f'No LaTeX label defined for {self}')
 # ------------------------------
 class Parameter(StrEnum):
     '''
