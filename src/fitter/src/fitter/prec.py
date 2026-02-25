@@ -119,6 +119,13 @@ class CCbarModel(BaseModel):
     models    : list[CCbarComponent] 
     fractions : list[float]
     # -------------------------
+    @property
+    def is_empty(self) -> bool:
+        '''
+        True if no component models were created
+        '''
+        return len(self.models) == 0
+    # -------------------------
     @model_validator(mode = 'after')
     def check_sizes(self):
         if len(self.models) != len(self.fractions):
@@ -127,16 +134,20 @@ class CCbarModel(BaseModel):
         return self
     # -------------------------
     @cached_property
-    def pdf(self) -> SumPDF | KDEPDF:
+    def pdf(self) -> SumPDF | KDEPDF | None:
         '''
         Returns
         -----------------
-        Full PDF
+        Either:
+
+        - Full PDF
+        - Single component PDF when only one survives
+        - None if no model could be built
         '''
         models = [ model for model in self.models if model.pdf is not None ]
 
         if not models:
-            raise ValueError('No models found')
+            return
 
         if len(models) == 1:
             pdf = models[0].get_pdf()
@@ -664,8 +675,8 @@ class PRec(Cache):
         model   : CCbarComponent | CCbarModel,
         name    : str,
         out_dir : Path,
-        title   : str        = '',
-        maxy    : float|None = None) -> None:
+        title   : str          = '',
+        maxy    : float | None = None) -> None:
         '''
         Utility method, meant to plot PDF after it was built
 
@@ -677,6 +688,8 @@ class PRec(Cache):
         maxy   : Will be used to plot fit properly in case labels overlap
         out_dir: Directory where plots will go
         '''
+        if isinstance(model, CCbarModel) and model.is_empty:
+            return
 
         if model.pdf:
             obj = ZFitPlotter(data=model.mass, model=model.pdf, weights=model.wgt)
@@ -726,6 +739,8 @@ class PRec(Cache):
         title  : Plot title
         out_dir: Directory where files will be saved
         '''
+        if isinstance(model, CCbarModel) and model.is_empty:
+            return
 
         plt.hist(model.sam, bins=30, label='sample', histtype='step', linestyle='-' )
         plt.hist(model.dec, bins=30, label='decay' , histtype='step', linestyle='--')
@@ -752,7 +767,7 @@ class PRec(Cache):
 
         Returns:
         ----------------
-        Sum of all charmonium components
+        Sum of all charmonium components or None if no PDF could be made
         '''
         l_ltex      = list(self._d_match) # Get component names in latex and map them to parquet files to save
         d_ltex_slug = { ltex : slugify.slugify(ltex, lowercase=False) for ltex       in l_ltex }
