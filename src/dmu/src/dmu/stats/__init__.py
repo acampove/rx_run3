@@ -17,7 +17,7 @@ from .utilities           import is_pdf_usable
 from .zfit_plotter        import ZFitPlotter, ZFitPlotterConf
 from .zfit_models         import ModExp
 from .zfit_models         import HypExp
-from .fit_conf            import FitConf, KDEConf
+from .fit_conf            import FitConf, KDEConf, PaddingConf
 from .imports             import zfit
 from .imports             import tensorflow 
 from .minimizers          import AnealingMinimizer
@@ -38,6 +38,7 @@ __all__ = [
     'KDEModel',
     'Retries',
     'FitConf',
+    'PaddingConf',
     'KDEConf',
     'tensorflow',
     'save_fit',
