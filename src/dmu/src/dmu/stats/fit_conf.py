@@ -14,6 +14,10 @@ _NTRIES : Final[int  ] = 3
 class PaddingConf(BaseModel):
     lowermirror : float = 0.0
     uppermirror : float = 0.0
+    #-----------
+    @classmethod
+    def default(cls) -> Self:
+        return cls()
 #------------------------------
 class KDEConf(BaseModel):
     '''
@@ -22,6 +26,13 @@ class KDEConf(BaseModel):
     kind      : KDEModel
     bandwidth : int
     padding   : PaddingConf
+    #-----------
+    @classmethod
+    def default(cls) -> Self:
+        return cls(
+            kind      = KDEModel.kde_fft,
+            bandwidth = 20,
+            padding   = PaddingConf.default())
 #------------------------------
 # Strategies
 #------------------------------
