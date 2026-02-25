@@ -142,7 +142,7 @@ def test_reso_by_weights(
 
     cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
     fit_cfg = KDEConf.default()
-    pad_cfg = PaddingConf(lowermirror=0.5)
+    pad_cfg = PaddingConf(lowermirror=0.2)
     fit_cfg = fit_cfg.model_copy(update = {'padding' : pad_cfg})
     cfg     = cfg.model_copy(update = {'fit' : fit_cfg})
     cfg     = cfg.model_copy(update = {'weights' : {CCbarWeight.dec : dec, CCbarWeight.sam : sam}})
