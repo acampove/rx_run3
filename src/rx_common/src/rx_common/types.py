@@ -40,6 +40,7 @@ class Mass(StrEnum):
 
     bp           = 'B_M'
     bp_dtf_jpsi  = 'B_const_mass_M'
+    bp_dtf_psi2  = 'B_const_mass_psi2S_M'
     bp_bcor      = 'B_Mass'
     bp_bcor_smr  = 'B_Mass_smr'
     bp_bcorr_kk  = 'B_Mass_hdkk'
