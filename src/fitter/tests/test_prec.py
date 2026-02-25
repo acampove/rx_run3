@@ -121,57 +121,41 @@ def test_electron_by_block(tmp_path : Path, trig : Trigger, block : int):
         obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'jpsi', 'psi2', 'high'])
-def test_reso(q2bin : str, tmp_path : Path):
+@pytest.mark.parametrize('dec'  , [True, False])
+@pytest.mark.parametrize('sam'  , [True, False])
+def test_reso_by_weights(
+    q2bin    : str, 
+    dec      : bool,
+    sam      : bool,
+    tmp_path : Path):
     '''
-    Tests PRec building in resonant bins
+    Build charmonium model with and without weights
     '''
-    trig   = Trigger.rk_ee_os
-    q2bin  = Qsq(q2bin)
+    q2bin   = Qsq(q2bin)
+    mass    = Mass.bd_dtf_jpsi
+    trig    = Trigger.rk_ee_os
 
-    mass   = {
-        'low'     : 'B_Mass_smr',
-        'central' : 'B_Mass_smr',
-        'jpsi'    : 'B_const_mass_M',
-        'psi2'    : 'B_const_mass_psi2S_M',
-        'high'    : 'B_Mass_smr'}[q2bin]
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6000))
 
-    label  = {
-        'low'     :r'$M(K^+e^+e^-)$',
-        'central' :r'$M(K^+e^+e^-)$',
-        'jpsi'    :r'$M_{DTF}(K^+e^+e^-)$',
-        'psi2'    :r'$M_{DTF}(K^+e^+e^-)$',
-        'high'    :r'$M(K^+e^+e^-)$'}[q2bin]
+    cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
+    fit_cfg = KDEConf.default()
+    pad_cfg = PaddingConf(lowermirror=0.5)
+    fit_cfg = fit_cfg.model_copy(update = {'padding' : pad_cfg})
+    cfg     = cfg.model_copy(update = {'fit' : fit_cfg})
+    cfg     = cfg.model_copy(update = {'weights' : {CCbarWeight.dec : dec, CCbarWeight.sam : sam}})
 
-    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
-
-    d_maxe = {
-        'low'     : -1,
-        'central' : -1,
-        'jpsi'    : 50_000,
-        'psi2'    : 50_000,
-        'high'    : -1}
-
-    obs     = zfit.Space(label, limits=(4500, 6900))
-    out_dir = Path('reso')
-
-    maxe = d_maxe[q2bin]
-    with RDFGetter.max_entries(value = maxe),\
+    with RDFGetter.max_entries(value = 1000_000),\
          Cache.cache_root(tmp_path):
-        d_wgt= {'dec' : 0, 'sam' : 0}
-        obp_4=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
-        obp_4.get_sum(mass=mass, name='PRec_4', obs=obs)
+        obp = PRec(
+            cfg   = cfg,
+            obs   = obs,
+            trig  = trig, 
+            q2bin = q2bin)
 
-        d_wgt= {'dec' : 0, 'sam' : 1}
-        obp_3=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
-        obp_3.get_sum(mass=mass, name='PRec_3', obs=obs)
-
-        d_wgt= {'dec' : 1, 'sam' : 0}
-        obp_2=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
-        obp_2.get_sum(mass=mass, name='PRec_2', obs=obs)
-
-        d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1=PRec(samples=l_samp, trig=trig, q2bin=q2bin, d_weight=d_wgt, out_dir = out_dir)
-        obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
+        obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
 def test_fit(tmp_path : Path):
     '''
