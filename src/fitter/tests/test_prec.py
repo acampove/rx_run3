@@ -18,6 +18,7 @@ from rx_selection import selection as sel
 from rx_data      import RDFGetter
 from fitter       import PRec
 from fitter       import CCbarConf
+from fitter       import CCbarWeight
 
 log=LogStore.add_logger('fitter:test_prec')
 #-----------------------------------------------
@@ -42,7 +43,7 @@ def test_electron(tmp_path : Path, trig : Trigger):
     obs     = zfit.Space(
         obs   = mass.latex, 
         label = mass,
-        limits=(4500, 6900))
+        limits=(4500, 6000))
 
     cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
 
@@ -72,7 +73,7 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
     obs     = zfit.Space(
         obs   = mass.latex, 
         label = mass,
-        limits=(4500, 6900))
+        limits=(4500, 6000))
 
     cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
     fit_cfg = KDEConf.default()
@@ -101,7 +102,7 @@ def test_electron_by_block(tmp_path : Path, trig : Trigger, block : int):
     obs     = zfit.Space(
         obs   = mass.latex, 
         label = mass,
-        limits=(4500, 6900))
+        limits=(4500, 6000))
 
     cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
     fit_cfg = KDEConf.default()
