@@ -90,32 +90,34 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
 
         obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
-@pytest.mark.parametrize('trig' , [Trigger.rk_mm_os, Trigger.rkst_mm_os])
+@pytest.mark.parametrize('trig' , [Trigger.rk_ee_os, Trigger.rkst_ee_os])
 @pytest.mark.parametrize('block', range(1, 9))
-def test_muon_by_block(tmp_path : Path, trig : Trigger, block : int):
+def test_electron_by_block(tmp_path : Path, trig : Trigger, block : int):
     '''
-    Simplest test in electron channel
+    Test electron charmonium components per block
     '''
-    q2bin  = Qsq.jpsi 
-    mass   = 'B_const_mass_M'
-    label  = r'$M_{DTF}$'
+    q2bin   = Qsq.jpsi
+    mass    = Mass.bd_dtf_jpsi
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6900))
 
-    l_samp = [ Component.bpjpsixmm, Component.bdjpsixmm, Component.bsjpsixmm ]
-    obs    = zfit.Space(label, limits=(4500, 6900))
-    d_wgt  = {'dec' : 1, 'sam' : 1}
-    out_dir= Path(f'muon_by_block_{block:03}_{trig}')
+    cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
+    fit_cfg = KDEConf.default()
+    pad_cfg = PaddingConf(lowermirror=0.5)
+    fit_cfg = fit_cfg.model_copy(update = {'padding' : pad_cfg})
+    cfg     = cfg.model_copy(update = {'fit' : fit_cfg})
 
     with sel.custom_selection(d_sel={'block' : f'block == {block}'}),\
          Cache.cache_root(tmp_path):
-        d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1= PRec(
-            samples =l_samp, 
-            trig    =trig, 
-            q2bin   =q2bin, 
-            d_weight=d_wgt,
-            out_dir =out_dir)
+        obp = PRec(
+            cfg   = cfg,
+            obs   = obs,
+            trig  = trig, 
+            q2bin = q2bin)
 
-        obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
+        obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'jpsi', 'psi2', 'high'])
 def test_reso(q2bin : str, tmp_path : Path):
