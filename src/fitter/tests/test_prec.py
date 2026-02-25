@@ -240,24 +240,25 @@ def test_brem(brem_cut : str, tmp_path : Path):
     '''
     Testing by brem category
     '''
-    q2bin  = 'jpsi'
-    obs    = zfit.Space('mass', limits=(4500, 6000))
-    trig   = Trigger.rk_ee_os 
-    mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
-    d_wgt  = {'dec' : 1, 'sam' : 1}
-    out_dir= Path('brem')
+    q2bin   = Qsq.jpsi
+    mass    = {'jpsi' : Mass.bp_dtf_jpsi, 'psi2' : Mass.bp_dtf_psi2}[q2bin]
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6000))
+
+    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
 
     with sel.custom_selection(d_sel={'brem' : brem_cut}),\
-        Cache.cache_root(path = tmp_path):
-        obp=PRec(
-            samples =l_samp, 
-            trig    =Trigger(trig), 
-            q2bin   =Qsq(q2bin), 
-            d_weight=d_wgt,
-            out_dir = out_dir,
-        )
-        obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+        RDFGetter.max_entries(value = 100_000),\
+        Cache.cache_root(tmp_path):
+        obp = PRec(
+            cfg   = cfg,
+            obs   = obs,
+            trig  = Trigger.rk_ee_os, 
+            q2bin = q2bin)
+
+        obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
 def test_cache(tmp_path : Path):
     '''
