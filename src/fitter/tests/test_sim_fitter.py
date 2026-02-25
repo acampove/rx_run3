@@ -4,15 +4,19 @@ This module is meant to test the SimFitter class
 import pytest
 
 from pathlib                import Path
+from dmu                    import LogStore
 from dmu.stats              import zfit
 from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
-from dmu.workflow.cache     import Cache
-from rx_common.types        import Trigger
-from rx_data.rdf_getter     import RDFGetter
+from dmu.workflow           import Cache
+
+from rx_common              import Component, Qsq
+from rx_common              import Trigger
+from rx_data                import RDFGetter
 from rx_selection           import selection as sel
-from fitter.sim_fitter      import SimFitter
-from dmu.logging.log_store  import LogStore
+from fitter                 import CombinatorialConf
+from fitter                 import SimFitter
+from fitter                 import ParametricConf
 
 log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
@@ -29,17 +33,19 @@ def test_nomc(tmp_path : Path):
     '''
     Test for components that have no MC associated
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    obs = zfit.Space(obs = 'B_Mass_smr', limits=(4500, 7000), label = 'nomc')
 
-    cfg = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/combinatorial.yaml')
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/electron/combinatorial.yaml')
+    cfg  = CombinatorialConf(**data)
+
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
             name     = 'test_nomc',
-            component= 'combinatorial',
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
-            q2bin   = 'low')
+            component= Component.comb,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.low)
         _ = ftr.get_model()
 # ---------------------------------------------------
 def test_nocat(tmp_path : Path):
