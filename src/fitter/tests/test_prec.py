@@ -197,7 +197,7 @@ def test_fit(tmp_path : Path):
         model   = pdf,
         res     = res,
         plt_cfg = None,
-        fit_dir =  tmp_path,
+        fit_dir = tmp_path,
         d_const = {})
 #-----------------------------------------------
 @pytest.mark.parametrize('bdt_cut', [
@@ -213,23 +213,27 @@ def test_bdt(q2bin : str, bdt_cut : str, tmp_path : Path):
     '''
     Testing application of BDT cuts
     '''
-    obs=zfit.Space('mass', limits=(4500, 6000))
-    trig   = Trigger.rk_ee_os 
-    mass   = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
+    mass    = {'jpsi' : Mass.bp_dtf_jpsi, 'psi2' : Mass.bp_dtf_psi2}[q2bin]
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6000))
 
-    d_wgt   = {'dec' : 1, 'sam' : 1}
-    out_dir = Path('bdt')
-    with Cache.cache_root(tmp_path),\
-        sel.custom_selection(d_sel={'bdt' : bdt_cut}):
-        obp=PRec(
-            samples = l_samp, 
-            trig    = trig, 
-            q2bin   = Qsq(q2bin), 
-            d_weight= d_wgt,
-            out_dir = out_dir,
-        )
-        obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+    trig   = Trigger.rk_ee_os 
+    q2bin  = Qsq(q2bin)
+    cfg    = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+
+    with RDFGetter.max_entries(value = 100_000),\
+         Cache.cache_root(tmp_path),\
+         sel.custom_selection(d_sel={'bdt' : bdt_cut}):
+
+        obp = PRec(
+            cfg   = cfg,
+            obs   = obs,
+            trig  = trig, 
+            q2bin = q2bin)
+
+        obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
 @pytest.mark.parametrize('brem_cut', ['nbrem == 0', 'nbrem == 1', 'nbrem >= 2'])
 def test_brem(brem_cut : str, tmp_path : Path):
