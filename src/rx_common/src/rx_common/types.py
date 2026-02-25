@@ -165,21 +165,21 @@ class Trigger(StrEnum):
         return self.value
     # -----------
     @property
-    def channel(self) -> Literal['electron', 'muon']:
+    def channel(self) -> Channel:
         '''
         Either 'muon' or 'electron'
         '''
         if 'EE_MVA'            in self.value:
-            return 'electron'
+            return Channel.ee
 
         if 'EE_SameSign_MVA'   in self.value:
-            return 'electron'
+            return Channel.ee
 
         if 'MuMu_MVA'          in self.value:
-            return 'muon'
+            return Channel.mm
         
         if 'MuMu_SameSign_MVA' in self.value:
-            return 'muon'
+            return Channel.mm
 
         raise ValueError(f'Cannot determine channel for trigger: {self}')
     # -----------
