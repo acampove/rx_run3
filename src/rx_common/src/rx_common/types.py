@@ -124,6 +124,17 @@ class Brem(IntEnum):
     one  = 1 
     two  = 2 
 # ---------------------------------------
+class Channel(StrEnum):
+    '''
+    This class repsesents the electron, muon or emu channel types
+    '''
+    ee = 'ee'
+    mm = 'mm'
+    em = 'em'
+
+    def __str__(self):
+        return self.value
+# ---------------------------------------
 class Trigger(StrEnum):
     '''
     Class meant to represent MVA HLT2 triggers
@@ -193,17 +204,6 @@ class Trigger(StrEnum):
             return Project.rkst
 
         raise ValueError(f'Cannot assign trigger {self} to any project')
-# ---------------------------------------
-class Channel(StrEnum):
-    '''
-    This class repsesents the electron, muon or emu channel types
-    '''
-    ee = 'ee'
-    mm = 'mm'
-    em = 'em'
-
-    def __str__(self):
-        return self.value
 # ---------------------------------------
 class Project(StrEnum):
     '''
