@@ -35,14 +35,65 @@ class Mass(StrEnum):
     b_bcorr_kk   : B meson mass with electrons reconstructed as kaons
     '''
 
-    lb_dtf_jpsi = 'Lb_cons_Jpsi_M'
-    lb          = 'Lb_M'
-    b           = 'B_M'
-    b_dtf_jpsi  = 'B_const_mass_M'
-    b_bcor      = 'B_Mass'
-    b_bcor_smr  = 'B_Mass_smr'
-    b_bcorr_pipi= 'B_Mass_hdpipi'
-    b_bcorr_kk  = 'B_Mass_hdkk'
+    lb_dtf_jpsi  = 'Lb_cons_Jpsi_M'
+    lb           = 'Lb_M'
+
+    bp           = 'B_M'
+    bp_dtf_jpsi  = 'B_const_mass_M'
+    bp_bcor      = 'B_Mass'
+    bp_bcor_smr  = 'B_Mass_smr'
+    bp_bcorr_kk  = 'B_Mass_hdkk'
+    bp_bcorr_pipi= 'B_Mass_hdpipi'
+
+    bd           = 'B_M'
+    bd_dtf_jpsi  = 'B_const_mass_M'
+    bd_bcor      = 'B_Mass'
+    bd_bcor_smr  = 'B_Mass_smr'
+    bd_bcorr_kk  = 'B_Mass_hdkk'
+    bd_bcorr_pipi= 'B_Mass_hdpipi'
+
+    @property
+    def latex(self) -> str:
+        match self:
+            # ------------
+            # Lambda_b
+            # ------------
+            case Mass.lb_dtf_jpsi:
+                return r'$M_{DTF}^{J/\psi}(\Lambda_b)$'
+            case Mass.lb:
+                return r'$M(\Lambda_b)$'
+            # ------------
+            # B+
+            # ------------
+            case Mass.bp:
+                return r'$M(B^+)$'
+            case Mass.bp_dtf_jpsi:
+                return r'$M_{DTF}^{J/\psi}(B^+)$'
+            case Mass.bp_bcor:
+                return r'$M_{corr}(B^+)$'
+            case Mass.bp_bcor_smr:
+                return r'$M_{corr}^{smr}(B^+)$'
+            case Mass.bp_bcorr_kk:
+                return r'$M_{corr}^{KK}(B^+)$'
+            case Mass.bp_bcorr_pipi:
+                return r'$M_{corr}^{\pi\pi}(B^+)$'
+            # ------------
+            # B0
+            # ------------
+            case Mass.bd:
+                return r'$M(B^0)$'
+            case Mass.bd_dtf_jpsi:
+                return r'$M_{DTF}^{J/\psi}(B^0)$'
+            case Mass.bd_bcor:
+                return r'$M_{corr}(B^0)$'
+            case Mass.bd_bcor_smr:
+                return r'$M_{corr}^{smr}(B^0)$'
+            case Mass.bd_bcorr_kk:
+                return r'$M_{corr}^{KK}(B^0)$'
+            case Mass.bd_bcorr_pipi:
+                return r'$M_{corr}^{\pi\pi}(B^0)$'
+            case _:
+                raise ValueError(f'No LaTeX label defined for {self}')
 # ------------------------------
 class Parameter(StrEnum):
     '''
