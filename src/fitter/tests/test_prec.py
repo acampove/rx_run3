@@ -294,48 +294,52 @@ def test_cache(tmp_path : Path):
 #-----------------------------------------------
 def test_extended(tmp_path : Path):
     '''
-    Testing that PDFs are not extended
+    Test that PDF is not extended
     '''
-    obs    = zfit.Space('mass', limits=(4500, 6000))
-    trig   = Trigger.rk_ee_os 
-    d_wgt  = {'dec' : 1, 'sam' : 1}
-    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
-    out_dir= Path('extended')
+    q2bin   = Qsq.jpsi
+    trig    = Trigger.rk_ee_os
+    mass    = Mass.bp_dtf_jpsi
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6000))
 
-    with Cache.cache_root(path = tmp_path):
-        obp=PRec(
-            samples =l_samp, 
-            trig    = Trigger(trig), 
-            q2bin   = Qsq.jpsi, 
-            d_weight=d_wgt,
-            out_dir = out_dir,
-        )
-        pdf=obp.get_sum(mass='B_Mass_smr', name='PRec_1', obs=obs)
+    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
 
-    if pdf is None:
-        raise ValueError('No PDF found')
+    with RDFGetter.max_entries(value = 100_000),\
+         Cache.cache_root(tmp_path):
+        obp = PRec(
+            cfg   = cfg,
+            obs   = obs,
+            trig  = trig, 
+            q2bin = q2bin)
 
-    assert pdf.is_extended is False
+        pdf = obp.get_sum(name = 'ccbar')
+
+    assert pdf is not None
+    assert not pdf.is_extended
 #-----------------------------------------------
 @pytest.mark.parametrize('mass' , ['B_M', 'B_Mass', 'B_Mass_smr'])
 def test_low_stats(mass : str, tmp_path : Path):
     '''
     Testing with low statistics sample, tight MVA
     '''
-    obs    = zfit.Space(mass, limits=(4500, 7000))
-    trig   = Trigger.rk_ee_os 
-    d_wgt  = {'dec' : 1, 'sam' : 1}
-    l_samp = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
-    out_dir= Path('low_stats')
+    q2bin   = Qsq.jpsi
+    trig    = Trigger.rk_ee_os
+    mass    = Mass.bp_dtf_jpsi
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6000))
 
+    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
     with Cache.cache_root(path=tmp_path),\
         sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.9 && mva_prc > 0.9'}):
-        obp=PRec(
-            samples =l_samp, 
-            trig    =trig, 
-            q2bin   =Qsq.high, 
-            d_weight=d_wgt,
-            out_dir = out_dir,
-        )
-        obp.get_sum(mass=mass, name='PRec_1', obs=obs)
+        obp = PRec(
+            cfg   = cfg,
+            obs   = obs,
+            trig  = trig, 
+            q2bin = q2bin)
+
+        obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
