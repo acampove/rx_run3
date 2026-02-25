@@ -12,14 +12,15 @@ from dmu.stats          import Fitter
 from dmu.stats          import utilities as sut
 from dmu.stats          import zfit
 from dmu.workflow       import Cache
-from rx_common          import Component, Trigger, Qsq
+from rx_common          import Component, Mass, Trigger, Qsq, Channel
 from rx_selection       import selection as sel
 from rx_data            import RDFGetter
 from fitter             import PRec
+from fitter.configs import CCbarConf
 
 log=LogStore.add_logger('fitter:test_prec')
 #-----------------------------------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This runs before any test
@@ -35,25 +36,24 @@ def test_electron(tmp_path : Path, trig : Trigger):
     '''
     Simplest test in electron channel
     '''
-    q2bin  = Qsq.jpsi
-    mass   = 'B_const_mass_M'
-    label  = r'$M_{DTF}$'
+    q2bin   = Qsq.jpsi
+    mass    = Mass.bp_dtf_jpsi
+    obs     = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits=(4500, 6900))
 
-    l_samp  = [ Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee ]
-    obs     = zfit.Space(label, limits=(4500, 6900))
-    out_dir = Path(f'electron_{trig}')
+    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
-        d_wgt= {'dec' : 1, 'sam' : 1}
-        obp_1= PRec(
-            samples =l_samp, 
-            trig    =trig, 
-            q2bin   =q2bin, 
-            d_weight=d_wgt,
-            out_dir =out_dir)
+        obp = PRec(
+            cfg   = cfg,
+            obs   = obs,
+            trig  = trig, 
+            q2bin = q2bin)
 
-        obp_1.get_sum(mass=mass, name='PRec_1', obs=obs)
+        obp.get_sum(name = 'ccbar')
 #-----------------------------------------------
 @pytest.mark.parametrize('trig, q2bin, mass', [
     (Trigger.rk_mm_os  , 'jpsi', 'B_const_mass_M'), 
