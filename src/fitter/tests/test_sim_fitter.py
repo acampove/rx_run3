@@ -204,27 +204,36 @@ def test_reso_rk_ee(
 
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('component', ['jpsi', 'psi2'])
-@pytest.mark.parametrize('q2bin'    , ['jpsi', 'psi2'])
-def test_reso_rkst_mm(component : str, q2bin : str, tmp_path : Path):
+@pytest.mark.parametrize('component', [Component.bdkstkpijpsimm, Component.bdkstkpipsi2mm])
+@pytest.mark.parametrize('q2bin'    , [Qsq.jpsi, Qsq.psi2])
+def test_reso_rkst_mm(
+    component : Component, 
+    q2bin     : Qsq, 
+    tmp_path  : Path):
     '''
     Test resonant jpsi and psi2S in rkst muon channel
     '''
+    mass = {
+        Qsq.jpsi : Mass.bd_dtf_jpsi, 
+        Qsq.psi2 : Mass.bd_dtf_psi2}[q2bin]
 
-    obs_name = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    obs = zfit.Space(obs_name, limits=(5000, 6000))
+    obs = zfit.Space(
+        obs   = mass, 
+        label = mass.latex,
+        limits= mass.limits)
 
-    cfg = gut.load_conf(package='fitter_data', fpath=f'reso/rkst/muon/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rkst/muon/{component}.yaml')
+    cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={'mass'  : '(1)'}):
         ftr = SimFitter(
             name     = 'reso_rkst_mm',
             component= component,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rkst_mm_os,
-            q2bin   = q2bin)
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rkst_mm_os,
+            q2bin    = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('name', ['name_001', 'name_002'])
