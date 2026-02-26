@@ -180,23 +180,27 @@ def test_ccbar_rare(tmp_path : Path):
     Tests retriveval of PDF associated to ccbar inclusive decays
     for rare modes, i.e. without jpsi mass constraint
     '''
-    component = 'ccbar'
-    mass      = 'B_Mass'
-    q2bin     = 'high'
-    obs       = zfit.Space(mass, limits=(4500, 6000))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+    component = Component.ccbar
+    mass      = Mass.bp_bcor_smr 
+    q2bin     = Qsq.high
+    obs       = zfit.Space(
+        label = mass,
+        obs   = mass.latex,
+        limits= mass.limits)
+
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+    cfg  = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel={
-            'nobr0' : 'nbrem != 0',
-            'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
+        sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
+
         ftr = SimFitter(
-            name     = 'test_ccbar_rare',
+            name     = 'ccbar_rare',
             component= component,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
-            q2bin   = q2bin)
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', [Component.bpkpjpsiee, Component.bppijpsiee])
