@@ -13,7 +13,7 @@ from dmu.stats    import Fitter, KDEConf
 from dmu.stats    import utilities as sut
 from dmu.stats    import zfit
 from dmu.workflow import Cache
-from rx_common    import Component, Mass, Trigger, Qsq, Channel
+from rx_common    import Mass, Trigger, Qsq, Channel
 from rx_selection import selection as sel
 from rx_data      import RDFGetter
 from fitter       import PRec
