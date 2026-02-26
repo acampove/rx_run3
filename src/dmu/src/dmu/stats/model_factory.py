@@ -32,21 +32,26 @@ class ModelFactoryConf(BaseModel):
     reparametrize : dict[str,Reparametrization]
     fix           : dict[str,float]
     floating      : list[str]
-    reuse         : dict[str,zpar ] = Field(default_factory=dict) 
+    reuse         : list[zpar] = Field(default_factory=list) 
     # ------------------------------
     @classmethod
-    def default(cls) -> 'ModelFactoryConf':
+    def default(cls, pdfs : list[Model]) -> 'ModelFactoryConf':
         '''
+        Parameters
+        ------------
+        pdfs: List of nicknames to PDFs 
+
         Returns
         ------------
         Default configuration for ModelFactory
         '''
         return cls(
+            pdfs          = pdfs,
             shared        = [],
             floating      = [],
             reparametrize = dict(),
             fix           = dict(),
-            reuse         = dict())
+            reuse         = [])
 #-----------------------------------------
 class MethodRegistry:
     '''
@@ -123,9 +128,9 @@ class ModelFactory:
         l_pdf    : list[Model],
         l_shared : list[str],
         l_float  : list[str],
-        l_reuse  : None | list[zpar]      = None,
-        d_fix    : None | dict[str,float] = None,
-        d_rep    : None | dict[str,str]   = None):
+        l_reuse  : None | list[zpar]                  = None,
+        d_fix    : None | dict[str,float]             = None,
+        d_rep    : None | dict[str,Reparametrization] = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
