@@ -1,14 +1,13 @@
 output_directory : reso/rk/electron/ccbar
-ccbar_samples:
+samples:
   - Bd_JpsiX_ee_eq_JpsiInAcc
   - Bu_JpsiX_ee_eq_JpsiInAcc
   - Bs_JpsiX_ee_eq_JpsiInAcc
 weights:
   dec : True
   sam : True 
-fitting:
+fit:
   kind      : KDE1DimFFT
   bandwidth : 20
-  padding   :
-    lowermirror : 0.0
-    uppermirror : 0.0
+  padding   : 
+    flag : False
