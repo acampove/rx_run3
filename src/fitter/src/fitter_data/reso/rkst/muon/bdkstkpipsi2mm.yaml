@@ -6,12 +6,12 @@ categories:
     model :
       pdfs:
         - dscb
-    shared        : []
-    float         :
-      - mu
-      - sg
-    reparametrize : {}
-    fix           : {}
+      shared        : []
+      floating      :
+        - mu
+        - sg
+      reparametrize : {}
+      fix           : {}
 fit:
   strategy :
     ntries : 10
