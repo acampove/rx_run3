@@ -18,6 +18,7 @@ from fitter        import CombinatorialConf
 from fitter        import SimFitter
 from fitter        import ParametricConf
 from fitter        import CCbarConf
+from fitter        import NonParametricConf
 
 log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
@@ -90,22 +91,28 @@ def test_with_cat(tmp_path : Path):
 
         _ = ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('component', ['bdkstee', 'bukstee', 'bsphiee'])
-def test_kde(component : str, tmp_path : Path):
+@pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bpkstkpiee, Component.bsphiee])
+def test_kde(component : Component, tmp_path : Path):
     '''
     Test fitting with KDE
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+    mass = Mass.bp_bcor_smr
+
+    obs = zfit.Space(
+        obs   = mass.latex,
+        label = mass,
+        limits= mass.limits)
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+    cfg  = NonParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name     = 'test_kde',
+            name     = 'kde',
             component= component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            q2bin    = 'central')
+            q2bin    = Qsq.central)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
