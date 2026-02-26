@@ -123,7 +123,7 @@ dscb:
     high: 6000
   sg:
     val : 50
-    low :  5 
+    low :  2 
     high: 500
   ar:
     val : 1
