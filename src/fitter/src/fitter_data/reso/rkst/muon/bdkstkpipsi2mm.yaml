@@ -1,0 +1,24 @@
+output_directory : reso/rkst/muon/psi2
+sample           : Bd_psi2SKst_mm_eq_DPC
+categories:
+  brem_xx0:
+    selection : {}
+    model :
+      pdfs:
+        - dscb
+    shared        : []
+    float         :
+      - mu
+      - sg
+    reparametrize : {}
+    fix           : {}
+fit:
+  strategy :
+    ntries : 10
+    pvalue : 0.05
+plots:
+  nbins   : 50
+  stacked : True
+  plot_range:
+    - 5100
+    - 5500
