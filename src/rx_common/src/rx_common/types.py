@@ -125,7 +125,7 @@ class Mass(StrEnum):
             case Mass.bp_dtf_jpsi:
                 return 5080, 5680 
             case Mass.bp_dtf_psi2:
-                return 4800, 5680 
+                return 5150, 5850 
             case Mass.bp_bcor:
                 return Mass.bp.limits 
             case Mass.bp_bcor_smr:
@@ -142,7 +142,7 @@ class Mass(StrEnum):
             case Mass.bd_dtf_jpsi:
                 return 5080, 5680 
             case Mass.bd_dtf_psi2:
-                return 4800, 5680 
+                return 5150, 5850 
             case Mass.bd_bcor:
                 return Mass.bd.limits
             case Mass.bd_bcor_smr:
