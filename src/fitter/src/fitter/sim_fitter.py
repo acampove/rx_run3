@@ -229,7 +229,7 @@ class SimFitter(BaseFitter, Cache):
                 val, _ = res[par.name]
 
                 par.set_value(val)
-                log.debug(f'{par.name:<20}{"--->"}{par.value:>20.3f}')
+                log.debug(f'{par.name:<20}{"--->"}{val:>20.3f}')
                 par.floating = False
 
         return pdf
