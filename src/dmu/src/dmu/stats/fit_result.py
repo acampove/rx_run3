@@ -26,7 +26,7 @@ MIN_NDOF : Final[int  ] =  9
 MAX_NDOF : Final[int  ] = 41
 PAR_REGX : Final[str  ] = r'\w+_\w+_\w+_\d+'
 
-_VALIDATE_PAR_NAME : ContextVar[bool] = ContextVar('_validate_par_name', default = True)
+_VALIDATE_PAR_NAME : ContextVar[bool] = ContextVar('_validate_par_name', default = False)
 # -------------------------------------
 class GoodnessOfFit(BaseModel):
     model_config = ConfigDict(frozen=True)
