@@ -85,7 +85,7 @@ class DataPreprocessor(Cache):
             obs_range= sut.range_from_obs(obs=obs),
             d_sel    = d_sel,
             is_sig   = is_sig,
-            wgt_cfg  = self._wgt_cfg, 
+            wgt_cfg  = '' if self._wgt_cfg is None else {key : val.model_dump() for key, val in self._wgt_cfg.items()}, 
             rdf_uid  = self._rdf.uid)
     # ------------------------
     def _get_rdf(
