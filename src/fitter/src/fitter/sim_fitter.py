@@ -25,7 +25,7 @@ from .prec                    import PRec
 
 log=LogStore.add_logger('fitter:sim_fitter')
 
-ModelConf = CombinatorialConf | ParametricConf | NonParametricConf
+ModelConf = CombinatorialConf | ParametricConf | NonParametricConf | CCbarConf
 MAIN_CATEGORY   : Final[str] = 'main'
 
 # Will not build (fit) a parametric PDF if fewer than these entries
@@ -97,7 +97,11 @@ class SimFitter(BaseFitter, Cache):
         Key  : Name of MC category, e.g. brem category
         Value: Zfit dataset
         '''
-        if isinstance(self._cfg, CombinatorialConf):
+        # Combinatorial does not have MC to fix tails
+        # CCbar will be fitted using PRec class, which will pick data
+        SkipDataConf = CombinatorialConf | CCbarConf
+
+        if isinstance(self._cfg, SkipDataConf):
             return dict() 
 
         if isinstance(self._cfg, ParametricConf):
