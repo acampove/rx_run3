@@ -215,14 +215,14 @@ class AnealingMinimizer:
 
             try:
                 obj = self._min.minimize(loss, params = params, init = init)
-            except (FailMinimizeNaN, ValueError, RuntimeError):
-                log.warning('Failed minimization')
+            except (FailMinimizeNaN, ValueError, RuntimeError) as exc:
+                log.warning(f'Failed minimization: {exc}')
                 continue
 
             try:
                 obj = _calculate_errors(res = obj)
-            except MinimizerFailError:
-                log.warning('Could not calculate error')
+            except MinimizerFailError as exc:
+                log.warning(f'Could not calculate error: {exc}')
                 continue
 
             gcl = GofCalculator(nll = loss)
@@ -342,14 +342,16 @@ def _calculate_errors(res : zres) -> zres:
 
         if not res.valid:
             log.warning('Result invalid after error calculation')
+            log.debug(res)
             continue
 
         try:
             # If result is not readable, raise
             FitResult.from_zfit(res = res)
             return res
-        except Exception:
+        except Exception as exc:
             log.warning(f'Failed error calculation with: {method}')
+            log.warning(exc)
             log.debug(res)
 
     raise MinimizerFailError('Fit error could not be found')
