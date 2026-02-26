@@ -1,7 +1,7 @@
 '''
 Module holding FitConf class
 '''
-from pydantic        import BaseModel, ConfigDict
+from pydantic        import BaseModel, ConfigDict, model_validator
 from typing          import Self, Final
 from .constraint     import Constraint
 from .types          import KDEModel
@@ -12,8 +12,42 @@ _NTRIES : Final[int  ] = 3
 # Non-parametric
 #------------------------------
 class PaddingConf(BaseModel):
+    '''
+    Class meant to configure padding in zfit KDEs
+    '''
     lowermirror : float = 0.0
     uppermirror : float = 0.0
+    flag        : bool  = False
+    #------------------------------
+    @model_validator(mode = 'after')
+    def check_values(self) -> Self:
+        '''
+        - Do not allow negative padding
+        - If mirror is used, set flag = True
+        '''
+        if self.lowermirror < 0.0 or self.uppermirror < 0:
+            raise ValueError('Either upper/lower mirror is negative')
+
+        if self.lowermirror ==0.0 and self.uppermirror ==0:
+            return self
+
+        self.flag = True
+
+        return self
+    #------------------------------
+    @property
+    def value(self) -> dict[str,float] | bool:
+        '''
+        This is meant to be used as argument to zfit KDE
+        padding argument
+        '''
+        if not self.flag:
+            return False
+
+        padding = {'lowermirror' : self.lowermirror,
+                   'uppermirror' : self.uppermirror}
+
+        return padding
     #-----------
     @classmethod
     def default(cls) -> Self:
