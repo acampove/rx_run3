@@ -24,10 +24,10 @@ model:
   components:
     combinatorial            : rare/rkst/electron/combinatorial.yaml
     ccbar                    : rare/rkst/electron/ccbar.yaml
-    Bu_Kpipiee_eq_DPC_LSFLAT : rare/rkst/electron/prec.yaml
-    jpsi_leakage             : rare/rkst/electron/jpsi_leakage.yaml
-    psi2_leakage             : rare/rkst/electron/psi2_leakage_parametric.yaml
-    signal                   : rare/rkst/electron/signal.yaml
+    Bu_Kpipiee_eq_DPC_LSFLAT : rare/rkst/electron/bpkstkpiee.yaml
+    jpsi_leakage             : rare/rkst/electron/bdkstkpijpsiee.yaml
+    psi2_leakage             : rare/rkst/electron/bdkstkpipsi2ee.yaml
+    signal                   : rare/rkst/electron/bdkstkpiee.yaml
   constraints : {}
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
@@ -38,7 +38,5 @@ plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#f
     ccbar                    : $B\to c\bar{c}(\to e^+e^-) + X$
     jpsi_leakage             : $B^0\to K^*(\to K^+\pi^-) J/\psi(\to e^+e^-)$ 
     psi2_leakage             : $B^0\to K^*(\to K^+\pi^-) \psi(2S)(\to e^+e^-)$ 
-    kpikk                    : $B^0\to K^*(\to K^+\pi^-)K^+K^-$ 
-    kpipipi                  : $B^0\to K^*(\to K^+\pi^-)\pi^+\pi^-$ 
     Bu_Kpipiee_eq_DPC_LSFLAT : $B^+\to K_1^+(1270)(\to K^+\pi^+\pi^-)e^+e^-$
     signal                   : $B^0\to K^*(\to K^+\pi^-)e^+e^-$ 
