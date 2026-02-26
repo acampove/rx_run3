@@ -68,14 +68,11 @@ class BaseFitter:
             log.debug('Missing result object, cannot get sensitivity')
             return -1
 
-        cres = sut.zres_to_cres(res=res)
-
-        if self._sig_yld not in cres:
+        if self._sig_yld not in res:
             log.info('Missing nsig entry, cannot get sensitivity')
             return -1
 
-        value = cres[self._sig_yld]['value']
-        error = cres[self._sig_yld]['error']
+        value, error = res[self._sig_yld]
 
         return 100 * error / value
     # --------------------------
@@ -134,7 +131,7 @@ class BaseFitter:
 
         return '; '.join(diff)
     # --------------------------
-    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str,str]:
+    def _get_selection_text(self, selection : dict[str,dict[str,str]]) -> tuple[str,str,str]:
         '''
         Parameters
         --------------
@@ -193,13 +190,13 @@ class BaseFitter:
     def _get_text(
         self,
         data      : zdata,
-        res       : zres|None,
-        selection : DictConfig) -> tuple[str,str,str]:
+        res       : FitResult | None,
+        selection : dict[str,dict[str,str]]) -> tuple[str,str,str]:
         '''
         Parameters
         --------------
-        data: Zfit data used for fit
-        res : zfit result object
+        data     : Zfit data used for fit
+        res      : Fit result object
         Selection: Object storing selections for `fit` and `default` keys
 
         Returns
@@ -220,11 +217,11 @@ class BaseFitter:
     # ------------------------
     def _save_fit(
         self,
-        cut_cfg  : DictConfig,
-        plt_cfg  : DictConfig,
+        cut_cfg  : dict[str,dict[str,str]],
+        plt_cfg  : ZFitPlotterConf,
         out_path : Path,
-        model    : zpdf | None,
-        res      : zres | None,
+        model    : zpdf      | None,
+        res      : FitResult | None,
         data     : zdata,
         d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
         '''
@@ -236,7 +233,7 @@ class BaseFitter:
         plt_cfg  : Plotting configuration
         out_path : Directory where fit will be saved
         model    : PDF from fit, can be None if dataset was empty
-        res      : Zfit result object, can be None if fit was to get a KDE
+        res      : Fit result object, can be None if fit was to get a KDE
         data     : data from fit
         d_cns    : Dictionary mapping parameter name to value error tuple.
                    Used for constraining that parameter
@@ -245,8 +242,8 @@ class BaseFitter:
         # There will not be PDF
         title, sel_fit, sel_dif = self._get_text(data=data, res=res, selection=cut_cfg)
         text                    = '\n'.join(textwrap.wrap(sel_dif, width=40))
-        plt_cfg['title'   ]     = title
-        plt_cfg['ext_text']     = text
+        plt_cfg.title    = title
+        plt_cfg.ext_text = text
 
         sel_path = out_path / 'selection.yaml'
         out_path.mkdir(parents = True, exist_ok = True)
