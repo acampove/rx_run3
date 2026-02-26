@@ -290,22 +290,3 @@ def test_name(name : str, tmp_path : Path):
             q2bin    = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('component', ['kpipi', 'kkk'])
-def test_weights(component : str, tmp_path : Path):
-    '''
-    Test fitting weighted MC sample
-    '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'misid/rk/electron/{component}.yaml')
-
-    with Cache.cache_root(path = tmp_path):
-        ftr = SimFitter(
-            name     = 'test_weights',
-            component= component,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_nopid,
-            q2bin   = 'central')
-        ftr.get_model()
-# ---------------------------------------------------
