@@ -229,8 +229,7 @@ def test_reso_rkst_mm(
     data = gut.load_data(package='fitter_data', fpath=f'reso/rkst/muon/{component}.yaml')
     cfg  = ParametricConf(**data)
 
-    with Cache.cache_root(path = tmp_path),\
-         sel.custom_selection(d_sel={'mass'  : '(1)'}):
+    with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
             name     = 'reso_rkst_mm',
             component= component,
