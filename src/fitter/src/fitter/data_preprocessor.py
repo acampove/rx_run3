@@ -6,14 +6,17 @@ import pandas   as pnd
 
 from pathlib         import Path
 from ROOT            import RDF # type: ignore
+
+from dmu             import LogLevels, LogStore
 from dmu.workflow    import Cache
 from dmu.stats       import utilities  as sut
 from dmu.generic     import utilities  as gut
 from dmu.rdataframe  import utilities  as rut
 from dmu.pdataframe  import utilities  as put
-from dmu             import LogLevels, LogStore
+
+from zfit            import Space      as zobs
 from zfit.data       import Data
-from zfit.interface  import ZfitSpace  as zobs
+
 from rx_data         import RDFGetter
 from rx_common       import Component, Trigger, Correction
 from rx_selection    import selection  as sel
