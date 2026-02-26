@@ -5,7 +5,7 @@ fit:
     ntries : 15
     pvalue : 0.05
 categories:
-  '1':
+  brem_xx1:
     selection :
       brem : 'nbrem == 1'
     model :
@@ -22,7 +22,7 @@ categories:
         - nr
       reparametrize : {}
       fix           : {}
-  '2':
+  brem_xx2:
     selection :
       brem : 'nbrem == 2'
     model :
