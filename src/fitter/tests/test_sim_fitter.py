@@ -179,9 +179,7 @@ def test_ccbar_rare(tmp_path : Path):
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', [Component.bpkpjpsiee, Component.bppijpsiee])
-@pytest.mark.parametrize('brem'     , [1, 2])
 def test_reso_rk_ee(
-    brem      : int, 
     component : Component, 
     tmp_path  : Path):
     '''
@@ -195,13 +193,9 @@ def test_reso_rk_ee(
     data = gut.load_data(package='fitter_data', fpath=f'reso/rk/electron/{component.name}.yaml')
     cfg  = ParametricConf(**data)
 
-    with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel={
-            'mass'  : '(1)',
-            'nbrem' :f'nbrem == {brem}'}):
-
+    with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name     = 'test_mc_reso',
+            name     = 'test',
             component= Component(component),
             obs      = obs,
             cfg      = cfg,
