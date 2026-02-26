@@ -10,7 +10,7 @@ from dmu.generic            import utilities as gut
 from dmu.stats              import utilities as sut
 from dmu.workflow           import Cache
 
-from rx_common              import Component, Qsq
+from rx_common              import Component, Mass, Qsq
 from rx_common              import Trigger
 from rx_data                import RDFGetter
 from rx_selection           import selection as sel
@@ -53,34 +53,40 @@ def test_nocat(tmp_path : Path):
     Test for components without categories, e.g. muon
     '''
     obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
-    cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
+    data  = gut.load_data(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
+    cfg   = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value=30_000):
         ftr = SimFitter(
             name     = 'test_nocat',
-            component= 'signal_muon',
+            component= Component.bpkpjpsimm,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_mm_os,
-            q2bin    = 'jpsi')
+            q2bin    = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
 def test_with_cat(tmp_path : Path):
     '''
     Test for components with brem categories
     '''
-    obs   = zfit.Space('B_Mass', limits=(4500, 7000))
-    cfg   = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/signal_parametric.yaml')
+    obs  = zfit.Space(
+        obs   = Mass.bp_bcor_smr, 
+        label = Mass.bp_bcor_smr.latex,
+        limits=(4500, 7000))
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/electron/signal.yaml')
+    cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
             name     = 'test_with_cat',
-            component= 'signal_electron',
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
-            q2bin   = 'jpsi')
+            component= Component.bpkpee,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.jpsi)
+
         _ = ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', ['bdkstee', 'bukstee', 'bsphiee'])
@@ -172,26 +178,36 @@ def test_ccbar_rare(tmp_path : Path):
             q2bin   = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('component', ['jpsi', 'cabibbo'])
+@pytest.mark.parametrize('component', [Component.bpkpjpsiee, Component.bppijpsiee])
 @pytest.mark.parametrize('brem'     , [1, 2])
-def test_reso_rk_ee(component : str, brem : int, tmp_path : Path):
+def test_reso_rk_ee(
+    brem      : int, 
+    component : Component, 
+    tmp_path  : Path):
     '''
     Test electron resonant with rk trigger
     '''
-    obs   = zfit.Space('B_const_mass_M', limits=(5000, 6900))
-    cfg   = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
+    obs  = zfit.Space(
+        obs   = Mass.bp_dtf_jpsi,
+        label = Mass.bp_dtf_jpsi.latex,
+        limits= (4800, 6000))
+
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/electron/{component.name}.yaml')
+    cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel={
             'mass'  : '(1)',
             'nbrem' :f'nbrem == {brem}'}):
+
         ftr = SimFitter(
             name     = 'test_mc_reso',
-            component= component,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
-            q2bin   = 'jpsi')
+            component= Component(component),
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.jpsi)
+
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', ['jpsi', 'psi2'])
