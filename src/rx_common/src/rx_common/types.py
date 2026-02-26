@@ -423,9 +423,9 @@ class Component(StrEnum):
         '''
         Returns
         ----------------
-        String representing sample name, e.g. Bu_JpsiK_ee_eq_DPC
+        String representing sample name, e.g. bpkpee 
         '''
-        return self.value
+        return self.name
     # --------------------------------------------
     @property
     def latex(self) -> str:
