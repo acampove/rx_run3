@@ -217,10 +217,8 @@ class DataPreprocessor(Cache):
             rep = rdf.Report()
             rep.Print()
 
-        name = sut.name_from_obs(obs=self._obs)
-
         log.debug('Retrieving data')
-        arr  = rdf.AsNumpy([name])[name]
+        arr  = rdf.AsNumpy([self._obs.label])[self._obs.label]
         wgt  = rdf.AsNumpy(['weight'])['weight']
         wgt  = wgt.astype(float)
         wgt  = self._add_extra_weights(wgt=wgt)
