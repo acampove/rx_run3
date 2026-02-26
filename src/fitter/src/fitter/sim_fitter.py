@@ -308,7 +308,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data,
             model    = model,
             res      = res,
-            out_path = self._out_path / 'category')
+            out_path = self._out_path / category)
 
         model = self._fix_tails(pdf=model, res=res)
 
