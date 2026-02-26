@@ -141,11 +141,18 @@ class SimFitter(BaseFitter, Cache):
         --------------
         cfg: Object storing configuration
         '''
+        if isinstance(cfg, MisIDConf):
+            wgt_cfg = {Correction.pid : cfg.weights}
+            cut     = cfg.selection
+        else:
+            wgt_cfg = None
+            cut     = None
+
         d_data = {}
         prp   = DataPreprocessor(
-            wgt_cfg = dict(),
+            wgt_cfg = wgt_cfg,
             obs     = self._obs,
-            cut     = dict(),
+            cut     = cut,
             trigger = self._trigger,
             q2bin   = self._q2bin,
             out_dir = self._base_path,
