@@ -282,10 +282,12 @@ class SimFitter(BaseFitter, Cache):
         if skip_fit:
             return model, sumw, None
 
+        cut_cfg = self._get_cut_config(cfg = cfg, category = category)
+
         if sumw < MIN_FIT_ENTRIES:
             log.warning(f'Found to few entries {sumw:.1f} < {MIN_FIT_ENTRIES}, skipping {self._component} component')
             self._save_fit(
-                cut_cfg  = self._get_cut_config(cfg = cfg),
+                cut_cfg  = cut_cfg,
                 plt_cfg  = cfg.plots,
                 data     = data,
                 model    = None,
@@ -300,7 +302,7 @@ class SimFitter(BaseFitter, Cache):
             cfg  = cfg.fit)
 
         self._save_fit(
-            cut_cfg  = self._get_cut_config(cfg = cfg),
+            cut_cfg  = cut_cfg,
             plt_cfg  = cfg.plots,
             data     = data,
             model    = model,
@@ -311,19 +313,31 @@ class SimFitter(BaseFitter, Cache):
 
         return model, sumw, res
     # ----------------------
-    def _get_cut_config(self, cfg : ParametricConf | NonParametricConf) -> dict[str,dict[str,str]]:
+    def _get_cut_config(
+        self, 
+        category : str | None,
+        cfg      : ParametricConf | NonParametricConf) -> dict[str,dict[str,str]]:
         '''
+        Parameters
+        -------------
+        category: Fit category, e.g. brem_xx1 or None, if it does not make sense, e.g. KDE fits
+
         Returns
         -------------
         Dictionary with:
             Keys  : `fit`, `default`
             Values: Selection for data that was fitted and default
         '''
-        cuts        = {}
-        cuts['fit'] = sel.selection(
+        cuts_current= sel.selection(
             process = cfg.sample, 
             trigger = self._trigger, 
             q2bin   = self._q2bin)
+
+        if isinstance(cfg, ParametricConf) and category is not None:
+            fit_cuts = cfg.categories[category].selection
+            cuts_current.update(fit_cuts)
+
+        cuts = {'fit' : cuts_current}
 
         with sel.custom_selection(d_sel={}, force_override=True):
             cuts['default'] = sel.selection(
