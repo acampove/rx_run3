@@ -3,10 +3,13 @@ sample           : Bd_psi2SKst_mm_eq_DPC
 categories:
   brem_xx0:
     selection : {}
-    model :
+    model:
       pdfs:
         - dscb
-      shared        : []
+        - gauss
+      shared        :
+        - mu
+        - sg
       floating      :
         - mu
         - sg
