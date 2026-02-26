@@ -5,7 +5,6 @@ import numpy
 import pandas   as pnd
 
 from pathlib         import Path
-from omegaconf       import OmegaConf
 from ROOT            import RDF # type: ignore
 from dmu.workflow    import Cache
 from dmu.stats       import utilities  as sut
@@ -83,7 +82,7 @@ class DataPreprocessor(Cache):
             obs_range= sut.range_from_obs(obs=obs),
             d_sel    = d_sel,
             is_sig   = is_sig,
-            wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
+            wgt_cfg  = self._wgt_cfg, 
             rdf_uid  = self._rdf.uid)
     # ------------------------
     def _get_rdf(
