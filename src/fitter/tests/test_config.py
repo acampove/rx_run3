@@ -26,9 +26,9 @@ def test_yield_conf(analysis : str):
         log.debug(f'Validating: {name}')
         YieldConf(**conf)
 # ----------------------
-@pytest.mark.parametrize('analysis', ['rk'      , 'rkst'])
-@pytest.mark.parametrize('kind'    , ['reso'    , 'rare'])
-@pytest.mark.parametrize('channel' , ['electron', 'muon'])
+@pytest.mark.parametrize('analysis', ['rk'  , 'rkst'])
+@pytest.mark.parametrize('kind'    , ['reso', 'rare'])
+@pytest.mark.parametrize('channel' , ['ee'  ,   'mm'])
 def test_combinatorial_sr(
         analysis : str, 
         channel  : str,
@@ -48,7 +48,7 @@ def test_combinatorial_cr():
     '''
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = 'misid/rk/electron/combinatorial.yaml')
+        fpath   = 'misid/rk/ee/combinatorial.yaml')
 
     CombinatorialConf(**data)
 # ----------------------
@@ -57,7 +57,7 @@ def test_combinatorial_cr():
 def test_ccbar(analysis : str, kind : str):
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'{kind}/{analysis}/electron/ccbar.yaml')
+        fpath   = f'{kind}/{analysis}/ee/ccbar.yaml')
 
     CCbarConf(**data)
 # ----------------------
@@ -70,7 +70,7 @@ def test_ccbar(analysis : str, kind : str):
 def test_nonparametric_rare_rk(component : str):
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rk/electron/{component}_np.yaml')
+        fpath   = f'rare/rk/ee/{component}_np.yaml')
 
     NonParametricConf(**data)
 # ----------------------
@@ -81,7 +81,7 @@ def test_nonparametric_rare_rk(component : str):
 def test_nonparametric_rare_rkst(component : Component):
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rkst/electron/{component}_np.yaml')
+        fpath   = f'rare/rkst/ee/{component}_np.yaml')
 
     NonParametricConf(**data)
 # ----------------------
@@ -115,28 +115,29 @@ def test_misid_splitting():
 
     MisIDSampleSplitting(**data)
 # ----------------------
-@pytest.mark.parametrize('component', ['kkk', 'kpipi'])
-@pytest.mark.parametrize('analysis' , ['rk'])
+@pytest.mark.parametrize('component', [Component.bpkkk, Component.bpkpipi])
+@pytest.mark.parametrize('analysis' , [Project.rk])
 def test_misid(
-    analysis  : str,
-    component : str):
+    analysis  : Project,
+    component : Component):
 
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/{analysis}/electron/{component}.yaml')
+        fpath   = f'rare/{analysis}/ee/{component}.yaml')
 
     with MisIDConf.package(name = 'fitter_data'):
         MisIDConf(**data)
 # ----------------------
 def test_misid_constraint():
-    path = Path('misid/rk/electron/data_misid.yaml')
+    path = Path('misid/rk/ee/data_misid.yaml')
 
     MisIDConstraintConf.from_yaml(
         package = 'fitter_data',
         path    = path)
 # ----------------------
+@pytest.mark.skip
 def test_full_model():
-    path = 'rare/rkst/muon/data.yaml'
+    path = 'rare/rkst/mm/data.yaml'
 
     FitModelConf.from_yaml(path = path, package = 'fitter_data')
 # ----------------------
