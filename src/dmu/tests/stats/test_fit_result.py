@@ -12,7 +12,7 @@ from dmu.testing import get_nll
 from dmu.generic import rxran 
 
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This will run before any test

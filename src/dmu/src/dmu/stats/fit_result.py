@@ -6,6 +6,7 @@ import math
 import numpy
 import pprint
 
+from typing      import Self
 from contextvars import ContextVar
 from contextlib  import contextmanager
 from typing      import Final
@@ -169,6 +170,27 @@ class FitResult(BaseModel):
     covariance : list[list[float]] 
     parameters : tuple[FitParameter,...]
     gof        : GoodnessOfFit | None = None
+    # ----------------------
+    @classmethod
+    def merge(cls, results : list[Self]) -> Self:
+        '''
+        Parameters
+        --------------
+        results: List of fit results
+
+        Returns
+        --------------
+        Fit result object, resulting from adding up all the parameters
+        only parameters are kept, everything else is set to a default
+        '''
+        pars : tuple[FitParameter,...] = tuple(par for result in results for par in result.parameters)
+
+        return cls(
+            valid      = True,
+            status     = 0,
+            covariance = [],
+            parameters = pars,
+            gof        = None)
     # ----------------------
     def __hash__(self) -> int:
         cov  = tuple( tuple(row) for row in self.covariance )
