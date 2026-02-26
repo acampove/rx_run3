@@ -6,6 +6,7 @@ pydantic models
 import yaml
 import contextlib
 
+from contextvars         import ContextVar
 from importlib.resources import files
 from dmu                 import LogStore
 from typing              import Self
@@ -14,7 +15,7 @@ from pydantic            import BaseModel, model_validator, ConfigDict
 
 log=LogStore.add_logger('dmu:generic:models')
 
-_PACKAGE : str | None = None
+_PACKAGE = ContextVar('_PACKAGE', default = '') 
 # --------------------------------------------------
 class UnpackerModel(BaseModel):
     '''
@@ -37,11 +38,11 @@ class UnpackerModel(BaseModel):
         ---------------
         Full path to `path`, i.e. this method updates relative paths
         '''
-        if _PACKAGE is None:
+        if _PACKAGE.get() == '':
             log.info(f'Not updating path: {path}')
             return path
 
-        pkg_path = str(files(_PACKAGE))
+        pkg_path = str(files(_PACKAGE.get()))
 
         log.info(f'Updating path with {pkg_path}')
         full_path = pkg_path / path
@@ -137,17 +138,14 @@ class UnpackerModel(BaseModel):
         -------------
         Package: name of package where YAML files will be searched
         '''
-        global _PACKAGE
-        old_val  = _PACKAGE
-        _PACKAGE = name 
+        token = _PACKAGE.set(name)
 
         @contextlib.contextmanager
         def _context():
             try:
                 yield
             finally:
-                global _PACKAGE
-                _PACKAGE = old_val
+                _PACKAGE.reset(token) 
 
         return _context()
 # --------------------------------------------------
