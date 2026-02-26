@@ -3,20 +3,21 @@ This module is meant to test the SimFitter class
 '''
 import pytest
 
-from pathlib                import Path
-from dmu                    import LogStore
-from dmu.stats              import zfit
-from dmu.generic            import utilities as gut
-from dmu.stats              import utilities as sut
-from dmu.workflow           import Cache
+from pathlib       import Path
+from dmu           import LogStore
+from dmu.stats     import zfit
+from dmu.generic   import utilities as gut
+from dmu.stats     import utilities as sut
+from dmu.workflow  import Cache
 
-from rx_common              import Component, Mass, Qsq
-from rx_common              import Trigger
-from rx_data                import RDFGetter
-from rx_selection           import selection as sel
-from fitter                 import CombinatorialConf
-from fitter                 import SimFitter
-from fitter                 import ParametricConf
+from rx_common     import Component, Mass, Qsq
+from rx_common     import Trigger
+from rx_data       import RDFGetter
+from rx_selection  import selection as sel
+from fitter        import CombinatorialConf
+from fitter        import SimFitter
+from fitter        import ParametricConf
+from fitter        import CCbarConf
 
 log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
@@ -244,9 +245,16 @@ def test_name(name : str, tmp_path : Path):
     '''
     Will run test and specify the name argument
     '''
-    component = 'ccbar'
-    obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
+    component = Component.ccbar
+    mass      = Mass.bp_dtf_jpsi
+
+    obs       = zfit.Space(
+        obs   = mass.latex,
+        label = mass,
+        limits= mass.limits)
+
+    data      = gut.load_data(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
+    cfg       = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
@@ -255,7 +263,7 @@ def test_name(name : str, tmp_path : Path):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            q2bin    = 'jpsi')
+            q2bin    = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
