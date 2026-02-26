@@ -27,11 +27,11 @@ class BaseFitter:
         '''
         Used to hold attributes passed from derived classes
         '''
-        self._q2bin   : Qsq
-        self._trigger : Trigger
-        self._project : str        = ''
-        self._sig_yld : str        = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
-        self._sample  : Component  = Component.undefined
+        self._q2bin     : Qsq
+        self._trigger   : Trigger
+        self._project   : str        = ''
+        self._sig_yld   : str        = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
+        self._component : Component  = Component.undefined
     # ------------------------
     def _fit(
         self,
