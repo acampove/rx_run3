@@ -293,7 +293,7 @@ class SimFitter(BaseFitter, Cache):
                 data     = data,
                 model    = None,
                 res      = None,
-                out_path = self._out_path / 'category')
+                out_path = self._out_path / category )
 
             return None, 0, None
 
