@@ -152,20 +152,20 @@ class BaseFitter:
         '''
         # For components like combinatorial, there is no MC sample
         # Therefore the selection or brem category does not make sense
-        if self._sample == Sample.undefined:
+        if self._component == Component.undefined:
             return '', '', ''
 
-        cuts_ini : dict[str,str] = OmegaConf.to_container(selection.default) # type: ignore
-        cuts_fit : dict[str,str] = OmegaConf.to_container(selection.fit)     # type: ignore
+        cuts_ini : dict[str,str] = selection['default']
+        cuts_fit : dict[str,str] = selection['fit'    ]
 
         sel_dif  = self._get_selection_diff(ini = cuts_ini, fit = cuts_fit)
 
         try:
             brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
-        except Exception:
-            raise ValueError('Cannot retrieve brem cut string from cuts dictionary')
+        except Exception as exc:
+            raise ValueError('Cannot retrieve brem cut string from cuts dictionary') from exc
 
-        sel_fit = yaml.dump(cuts_fit)
+        sel_fit = yaml.dump(cuts_fit, indent = 2)
 
         return sel_fit, sel_dif, brem_cuts
     # --------------------------
@@ -250,8 +250,7 @@ class BaseFitter:
 
         sel_path = out_path / 'selection.yaml'
         out_path.mkdir(parents = True, exist_ok = True)
-        with open(sel_path, 'w') as ofile:
-            ofile.write(sel_fit)
+        sel_path.write_text(sel_fit)
 
         sut.save_fit(
             data   = data,
