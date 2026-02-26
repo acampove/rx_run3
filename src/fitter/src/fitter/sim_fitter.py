@@ -488,7 +488,7 @@ class SimFitter(BaseFitter, Cache):
             padding   = cfg.fit.padding)
 
         self._save_fit(
-            cut_cfg  = self._get_cut_config(cfg = cfg),
+            cut_cfg  = self._get_cut_config(cfg = cfg, category = None),
             plt_cfg  = cfg.plots,
             data     = data,
             model    = pdf,
