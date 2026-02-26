@@ -1,7 +1,6 @@
 '''
 Module with SimFitter class
 '''
-from pathlib                  import Path
 from typing                   import overload, Literal, Final
 
 from dmu                      import LogStore
@@ -11,7 +10,6 @@ from dmu.stats                import zfit
 from dmu.stats                import utilities        as sut
 from dmu.workflow             import Cache
 
-from rx_efficiencies          import DecayNames
 from rx_common                import Qsq, Trigger, Component
 from rx_selection             import selection        as sel
 
@@ -65,7 +63,6 @@ class SimFitter(BaseFitter, Cache):
         log.info(f'Fitting {component}/{name}')
         log.info(20 * '-')
 
-        self._sample    = Component(DecayNames.sample_from_decay(component, fall_back='undefined'))
         self._component = component
         self._trigger   = trigger
         self._q2bin     = q2bin
