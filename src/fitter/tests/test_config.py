@@ -7,7 +7,7 @@ from pathlib     import Path
 from dmu         import LogStore
 from dmu.generic import utilities as gut
 from rx_misid    import MisIDSampleWeights, MisIDSampleSplitting
-from rx_common   import Component
+from rx_common   import Component, Project
 from fitter      import YieldConf
 from fitter      import NonParametricConf 
 from fitter      import CCbarConf, CombinatorialConf, MisIDConf
@@ -85,17 +85,19 @@ def test_nonparametric_rare_rkst(component : Component):
 
     NonParametricConf(**data)
 # ----------------------
-@pytest.mark.parametrize('component', ['signal'])
-@pytest.mark.parametrize('analysis' , ['rk', 'rkst'])
-@pytest.mark.parametrize('channel'  , ['electron', 'muon'])
-def test_parametric(
-    analysis  : str,
-    channel   : str,
-    component : str):
-
+@pytest.mark.parametrize('component', [Component.bpkpee, Component.bpkpmm])
+def test_parametric_rk(component : Component):
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/{analysis}/{channel}/{component}.yaml')
+        fpath   = f'rare/rk/{component.channel}/{component}.yaml')
+
+    ParametricConf(**data)
+# ----------------------
+@pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bdkstkpimm])
+def test_parametric_rkst(component : Component):
+    data = gut.load_data(
+        package = 'fitter_data', 
+        fpath   = f'rare/rkst/{component.channel}/{component}.yaml')
 
     ParametricConf(**data)
 # ----------------------
