@@ -3,12 +3,12 @@ Module with functions that test config classes
 '''
 import pytest
 
-
 from pathlib     import Path
 from dmu         import LogStore
 from dmu.generic import utilities as gut
-from fitter      import YieldConf
 from rx_misid    import MisIDSampleWeights, MisIDSampleSplitting
+from rx_common   import Component
+from fitter      import YieldConf
 from fitter      import NonParametricConf 
 from fitter      import CCbarConf, CombinatorialConf, MisIDConf
 from fitter      import MisIDConstraintConf, ParametricConf
@@ -61,19 +61,27 @@ def test_ccbar(analysis : str, kind : str):
 
     CCbarConf(**data)
 # ----------------------
-@pytest.mark.parametrize('component', ['bdkstee', 'bukstee', 'bsphiee', 'psi2_leakage', 'jpsi_leakage', 'signal_non_parametric'])
+@pytest.mark.parametrize('component', [
+    Component.bdkstkpiee, 
+    Component.bpkstkpiee,
+    Component.bsphiee,
+    Component.bpkpjpsiee,
+    Component.bpkpee])
 def test_nonparametric_rare_rk(component : str):
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rk/electron/{component}.yaml')
+        fpath   = f'rare/rk/electron/{component}_np.yaml')
 
     NonParametricConf(**data)
 # ----------------------
-@pytest.mark.parametrize('component', ['prec', 'psi2_leakage', 'jpsi_leakage', 'signal_non_parametric'])
-def test_nonparametric_rare_rkst(component : str):
+@pytest.mark.parametrize('component', 
+        [Component.bdkstkpiee, 
+         Component.bdkstkpipsi2ee,
+         Component.bdkstkpijpsiee])
+def test_nonparametric_rare_rkst(component : Component):
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rkst/electron/{component}.yaml')
+        fpath   = f'rare/rkst/electron/{component}_np.yaml')
 
     NonParametricConf(**data)
 # ----------------------
