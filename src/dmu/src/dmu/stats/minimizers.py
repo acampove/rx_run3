@@ -215,14 +215,14 @@ class AnealingMinimizer:
 
             try:
                 obj = self._min.minimize(loss, params = params, init = init)
-            except (FailMinimizeNaN, ValueError, RuntimeError) as exc:
-                log.error(f'{i_try:02}/{self._strategy.ntries:02}{"Failed":>20}')
-                log.debug(exc)
+            except (FailMinimizeNaN, ValueError, RuntimeError):
+                log.warning('Failed minimization')
                 continue
 
-            obj = _calculate_errors(res = obj)
-            if not obj.valid:
-                log.warning(f'{i_try:02}/{self._strategy.ntries:02}{"Bad fit":>20}')
+            try:
+                obj = _calculate_errors(res = obj)
+            except MinimizerFailError:
+                log.warning('Could not calculate error')
                 continue
 
             gcl = GofCalculator(nll = loss)
@@ -339,17 +339,18 @@ def _calculate_errors(res : zres) -> zres:
 
     for method in ['minuit_hesse', 'approx']:
         res.hesse(name='minuit_hesse', method = method)
-        d_val = list(res.params.values())[0]
 
-        if 'minuit_hesse' in d_val:
-            log.debug('Error found')
-            return res 
+        if not res.valid:
+            log.warning('Result invalid after error calculation')
+            continue
 
-        log.warning(f'Failed error calculation with: {method}')
-        if log.getEffectiveLevel() < LogLevels.info:
-            print(res)
-
-    log.error(res)
+        try:
+            # If result is not readable, raise
+            FitResult.from_zfit(res = res)
+            return res
+        except Exception:
+            log.warning(f'Failed error calculation with: {method}')
+            log.debug(res)
 
     raise MinimizerFailError('Fit error could not be found')
 # ------------------------
