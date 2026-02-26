@@ -1,0 +1,47 @@
+output_directory : reso/rk/electron/cabibbo
+sample : Bu_JpsiPi_ee_eq_DPC
+fit:
+  strategy  :
+    ntries : 15
+    pvalue : 0.05
+categories:
+  '1':
+    selection :
+      brem : 'nbrem == 1'
+    model :
+      pdfs:
+        - dscb 
+        - cbl
+      shared        :
+        - mu
+        - sg
+      floating      :
+        - mu
+        - sg
+        - ar
+        - nr
+      reparametrize : {}
+      fix           : {}
+  '2':
+    selection :
+      brem : 'nbrem == 2'
+    model :
+      pdfs:
+        - dscb 
+        - cbl
+      shared        :
+        - mu
+        - sg
+      floating      :
+        - mu
+        - sg
+        - ar
+        - nr
+      reparametrize : {}
+      fix           : {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins     : 50
+  stacked   : True
+  d_leg :
+    dscb_1 : DSCB 
+    cbl_1  : Crystal Ball 
