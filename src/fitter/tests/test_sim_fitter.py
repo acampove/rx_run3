@@ -190,7 +190,7 @@ def test_reso_rk_ee(
     obs  = zfit.Space(
         obs   = Mass.bp_dtf_jpsi,
         label = Mass.bp_dtf_jpsi.latex,
-        limits= (4800, 6000))
+        limits= Mass.bp_dtf_jpsi.limits)
 
     data = gut.load_data(package='fitter_data', fpath=f'reso/rk/electron/{component.name}.yaml')
     cfg  = ParametricConf(**data)
