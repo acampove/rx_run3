@@ -78,7 +78,7 @@ class CCbarComponent(BaseModel):
                 obs     = self.obs,
                 data    = self.mass, 
                 weights = self.wgt, 
-                padding = self.cfg.padding.model_dump())
+                padding = self.cfg.padding.value)
         else:
             log.debug('Using FFT KDE for low statistics sample')
 
@@ -86,7 +86,7 @@ class CCbarComponent(BaseModel):
                 obs       = self.obs,
                 data      = self.mass,
                 weights   = self.wgt, 
-                padding   = self.cfg.padding.model_dump(),
+                padding   = self.cfg.padding.value,
                 bandwidth = self.cfg.bandwidth)
 
         if not is_pdf_usable(pdf = pdf):
