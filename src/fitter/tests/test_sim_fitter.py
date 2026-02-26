@@ -205,17 +205,21 @@ def test_reso_rk_ee(
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', [Component.bdkstkpijpsimm, Component.bdkstkpipsi2mm])
-@pytest.mark.parametrize('q2bin'    , [Qsq.jpsi, Qsq.psi2])
 def test_reso_rkst_mm(
     component : Component, 
-    q2bin     : Qsq, 
     tmp_path  : Path):
     '''
     Test resonant jpsi and psi2S in rkst muon channel
     '''
+    q2bin = {
+        Component.bdkstkpijpsimm : Qsq.jpsi,
+        Component.bdkstkpipsi2mm : Qsq.psi2,
+    }[component]
+
     mass = {
         Qsq.jpsi : Mass.bd_dtf_jpsi, 
-        Qsq.psi2 : Mass.bd_dtf_psi2}[q2bin]
+        Qsq.psi2 : Mass.bd_dtf_psi2
+    }[q2bin]
 
     obs = zfit.Space(
         obs   = mass, 
