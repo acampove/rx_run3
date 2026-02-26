@@ -20,9 +20,9 @@ model:
         - 4500
         - 6000
   components:
-    combinatorial : misid/rk/electron/combinatorial.yaml
-    hdpipi        : misid/rk/electron/kpipi.yaml
-    hdkk          : misid/rk/electron/kkk.yaml
+    combinatorial : misid/rk/ee/combinatorial.yaml
+    hdpipi        : misid/rk/ee/kpipi.yaml
+    hdkk          : misid/rk/ee/kkk.yaml
 fit:
   strategy :
     retry :
