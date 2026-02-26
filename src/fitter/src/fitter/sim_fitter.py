@@ -489,7 +489,7 @@ class SimFitter(BaseFitter, Cache):
             data      = data, 
             name      = self._component, 
             bandwidth = cfg.fit.bandwidth,
-            padding   = cfg.fit.padding)
+            padding   = cfg.fit.padding.value)
 
         self._save_fit(
             cut_cfg  = self._get_cut_config(cfg = cfg, category = None),
