@@ -529,7 +529,7 @@ class SimFitter(BaseFitter, Cache):
 
         return pdf
     # ------------------------
-    def get_model(self) -> zpdf|None:
+    def get_model(self) -> zpdf | None:
         '''
         Returns
         ------------
