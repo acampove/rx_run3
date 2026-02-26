@@ -6,7 +6,7 @@ import pytest
 from pathlib       import Path
 from dmu           import LogStore
 from dmu.stats     import zfit
-from dmu.generic   import utilities as gut
+from dmu.generic   import UnpackerModel, utilities as gut
 from dmu.stats     import utilities as sut
 from dmu.workflow  import Cache
 
@@ -19,6 +19,7 @@ from fitter        import SimFitter
 from fitter        import ParametricConf
 from fitter        import CCbarConf
 from fitter        import NonParametricConf
+from fitter        import MisIDConf
 
 log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
@@ -115,19 +116,30 @@ def test_kde(component : Component, tmp_path : Path):
             q2bin    = Qsq.central)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('component', ['kkk', 'kpipi'])
-@pytest.mark.parametrize('q2bin'    , ['low', 'central', 'high'])
-def test_misid(component : str, q2bin : str, tmp_path : Path):
+@pytest.mark.parametrize('component', [Component.bpkkk, Component.bpkpipi])
+@pytest.mark.parametrize('q2bin'    , [Qsq.low, Qsq.central, Qsq.high])
+def test_misid(
+    component : Component, 
+    q2bin     : Qsq, 
+    tmp_path  : Path):
     '''
     Test fitting misID simulation 
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+
+    mass = Mass.bp_bcor
+    obs  = zfit.Space(
+        obs   = mass.latex,
+        label = mass, 
+        limits= mass.limits)
+
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+
+    with UnpackerModel.package('fitter_data'):
+        cfg  = MisIDConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name     = 'test_misid',
+            name     = 'misid',
             component= component,
             obs      = obs,
             cfg      = cfg,
