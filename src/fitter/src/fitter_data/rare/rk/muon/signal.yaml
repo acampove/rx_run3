@@ -1,21 +1,21 @@
 output_directory : rare/rk/muon/signal
+sample        : Bu_Kmumu_eq_btosllball05_DPC
+fit:
+  strategy:
+    ntries : 10
+    pvalue : 0.05
 categories:
   '0':
     selection : {}
-    model :
-      - dscb
-sample        : Bu_Kmumu_eq_btosllball05_DPC
-fit:
-  shared        : []
-  float         :
-    - mu
-    - sg
-  reparametrize : {}
-  fix           : {}
-  strategy  :
-    retry   :
-      ntries        : 10
-      pvalue_thresh : 0.05
+    model:
+      pdfs :
+        - dscb
+      shared        : []
+      floating      :
+        - mu
+        - sg
+      reparametrize : {}
+      fix           : {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True

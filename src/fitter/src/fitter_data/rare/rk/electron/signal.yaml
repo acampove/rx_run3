@@ -4,26 +4,35 @@ categories:
   '0': 
     selection : 
       brem : nbrem == 1
-    model :
-      - dscb
+    model:
+      pdfs :
+        - dscb
+      fix           : {}
+      reparametrize : {}
+      shared        :
+        - mu
+        - sg
+      floating      :
+        - mu
+        - sg
   '1':
     selection :
       brem : nbrem == 2
-    model :
-      - dscb
+    model:
+      pdfs :
+        - dscb
+      fix           : {}
+      reparametrize : {}
+      shared        :
+        - mu
+        - sg
+      floating      :
+        - mu
+        - sg
 fit:
-  fix           : {}
-  reparametrize : {}
-  shared        :
-    - mu
-    - sg
-  float         :
-    - mu
-    - sg
   strategy  :
-    retry   :
-      pvalue : 0.05
-      ntries : 10
+    pvalue : 0.05
+    ntries : 10
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
   stacked : True
