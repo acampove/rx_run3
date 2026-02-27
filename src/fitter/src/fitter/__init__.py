@@ -19,7 +19,6 @@ from .prec               import PRec
 # ----------
 # Configs
 # ----------
-from .configs import DataModelConf
 from .configs import FitModelConf
 from .configs import YieldConf 
 from .configs import MisIDConf 
@@ -33,7 +32,6 @@ from .configs import RXFitConfig
 __all__ = [
     # ------------------
     'RXFitConfig',
-    'DataModelConf',
     'FitModelConf',
     'NonParametricConf',
     'ParametricConf',

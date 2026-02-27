@@ -243,28 +243,19 @@ AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonP
 # ------------------------------
 # Fits
 # ------------------------------
-class FitModelConf(UnpackerModel):
+class FitModelConf(ComponentConf):
     '''
     Class representing fitting model
     '''
     model_config = ConfigDict(frozen = True)
 
+    trigger    : Trigger
     yields     : dict[str,YieldConf]
     observable : dict[Qsq, ObservableConf]
     components : dict[Component, AnyModelConf]
     constraints: ConstraintsCfg
     plots      : ZFitPlotterConf
     fit        : FitConf
-# ------------------------------
-class DataModelConf(UnpackerModel):
-    '''
-    Configuration needed to do a fit to data
-    '''
-    model_config = ConfigDict(frozen=True)
-    
-    trigger          : Trigger
-    output_directory : Path
-    model            : FitModelConf
 # ------------------------------
 # Full config
 # ----------------------
@@ -279,7 +270,7 @@ class RXFitConfig:
     mva_prc : float
     q2bin   : Qsq
 
-    mod_cfg : DataModelConf 
+    mod_cfg : FitModelConf 
     block   : int             = -1 
     nthread : int             = 1
     log_lvl : int             = 20
@@ -475,7 +466,7 @@ class RXFitConfig:
         -------------
         Zfit observable
         '''
-        cfg_obs      = self.mod_cfg.model.observable[self.q2bin]
+        cfg_obs      = self.mod_cfg.observable[self.q2bin]
         [minx, maxx] = cfg_obs.range
         obs          = zfit.Space(cfg_obs.name, minx, maxx)
     
