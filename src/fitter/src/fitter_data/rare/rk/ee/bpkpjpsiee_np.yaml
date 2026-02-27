@@ -1,5 +1,5 @@
 output_directory : rare/electron/jpsi_leakage
-sample    : Bu_JpsiK_ee_eq_DPC
+component        : bpkpjpsiee
 fit:
   kind     : KDE1DimFFT
   bandwidth: 20

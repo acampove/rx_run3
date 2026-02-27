@@ -1,5 +1,5 @@
 output_directory : rare/rk/muon/signal
-sample        : Bu_Kmumu_eq_btosllball05_DPC
+component        : bpkpmm
 categories:
   '0':
     selection : {}

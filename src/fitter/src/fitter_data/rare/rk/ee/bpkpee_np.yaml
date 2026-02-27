@@ -1,8 +1,8 @@
 output_directory : rare/electron/signal 
+component : bpkpee
 categories:
   main: 
     model : KDE1DimFFT
-sample    : Bu_Kee_eq_btosllball05_DPC
 fit:
   kind      : KDE1DimFFT
   bandwidth : 20

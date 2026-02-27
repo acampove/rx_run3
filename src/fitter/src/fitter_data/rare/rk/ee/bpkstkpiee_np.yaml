@@ -1,5 +1,5 @@
 output_directory : rare/electron/bukstee
-sample           : Bu_Kstee_Kpi0_eq_btosllball05_DPC
+component        : bpkstkpiee
 fit:
   kind      : KDE1DimFFT
   bandwidth : 20

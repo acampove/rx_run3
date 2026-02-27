@@ -3,41 +3,40 @@
 
 trigger          : Hlt2RD_BuToKpEE_MVA
 output_directory : rare/rk/electron/data
-model:
-  yields    : model/yields/rk/rare_electron.yaml
-  observable:
-    low:
-      name : B_Mass_smr
-      range:
-        - 4500 
-        - 6900
-    central:
-      name : B_Mass_smr
-      range:
-        - 4600 
-        - 6900
-    high:
-      name : B_Mass_smr
-      range:
-        - 4500 
-        - 6900
-  components:
-    ccbar                             : rare/rk/electron/ccbar.yaml
-    combinatorial                     : rare/rk/electron/combinatorial.yaml
-    Bd_Kstee_eq_btosllball05_DPC      : rare/rk/electron/bdkstee.yaml
-    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/rk/electron/bukstee.yaml
-    Bs_phiee_eq_Ball_DPC              : rare/rk/electron/bsphiee.yaml
-    jpsi_leakage                      : rare/rk/electron/jpsi_leakage.yaml
-    psi2_leakage                      : rare/rk/electron/psi2_leakage.yaml
-    kkk                               : rare/rk/electron/kkk.yaml
-    kpipi                             : rare/rk/electron/kpipi.yaml
-    signal                            : rare/rk/electron/signal_non_parametric.yaml
-  constraints:
-    misid     : misid/rk/electron/data_misid.yaml
-    prec_rare :
-      - Bd_Kstee_eq_btosllball05_DPC
-      - Bu_Kstee_Kpi0_eq_btosllball05_DPC
-      - Bs_phiee_eq_Ball_DPC
+yields           : model/yields/rk/rare_electron.yaml
+observable:
+  low:
+    name : B_Mass_smr
+    range:
+      - 4500 
+      - 6900
+  central:
+    name : B_Mass_smr
+    range:
+      - 4600 
+      - 6900
+  high:
+    name : B_Mass_smr
+    range:
+      - 4500 
+      - 6900
+components:
+  ccbar      : rare/rk/ee/ccbar.yaml
+  comb       : rare/rk/ee/comb.yaml
+  bdkstkpiee : rare/rk/ee/bdkstkpiee_np.yaml
+  bpkstkpiee : rare/rk/ee/bpkstkpiee_np.yaml
+  bsphiee    : rare/rk/ee/bsphiee_np.yaml
+  bpkpjpsiee : rare/rk/ee/bpkpjpsiee_np.yaml
+  bpkppsi2ee : rare/rk/ee/bpkppsi2ee_np.yaml
+  bpkkk      : rare/rk/ee/bpkkk_np.yaml
+  bpkpipi    : rare/rk/ee/bpkpipi_np.yaml
+  bpkpee     : rare/rk/ee/bpkpee.yaml
+constraints:
+  misid     : misid/rk/ee/data_misid.yaml
+  prec_rare :
+    - Bd_Kstee_eq_btosllball05_DPC
+    - Bu_Kstee_Kpi0_eq_btosllball05_DPC
+    - Bs_phiee_eq_Ball_DPC
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30

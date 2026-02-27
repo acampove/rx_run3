@@ -1,5 +1,5 @@
 output_directory : rare/electron/signal 
-sample           : Bu_Kee_eq_btosllball05_DPC
+component        : bpkpee
 categories:
   '0': 
     selection : 

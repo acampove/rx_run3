@@ -1,8 +1,8 @@
 output_directory : rare/electron/psi2_leakage
+component        : bpkppsi2ee
 categories:
   main: 
     model : KDE1DimFFT
-sample    : Bu_psi2SK_ee_eq_DPC
 fit:
   kind     : KDE1DimFFT
   bandwidth: 20
