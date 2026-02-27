@@ -16,6 +16,7 @@ from .holders            import ComponentHolder
 from .misid_constraints  import MisIDConstraints
 from .types              import CCbarWeight
 from .prec               import PRec
+from .prec_scales        import PrecScales
 # ----------
 # Configs
 # ----------
@@ -40,6 +41,7 @@ __all__ = [
     'YieldConf',
     'MisIDConf',
     'MisIDFitModel',
+    'PrecScales',
     # ------------------
     'PRec',
     'CCbarWeight',
