@@ -69,114 +69,6 @@ class YieldConf(BaseModel):
 
     def __getattr__(self, item):
         return getattr(self.root, item)
-    '''
-    model_config = ConfigDict(frozen=True)
-
-    output_directory : Path
-# ------------------------------
-class CmbConstraintConf(BaseModel):
-    '''
-    Class meant to represent configuration for combintorial constraints
-
-    Attributes
-    ---------------
-    selection : Selection that sample will go through on top of nominal selection, e.g. vetos
-    parameters: Parameters that will be constrained
-    '''
-    sample    : Component
-    trigger   : Trigger
-    parameters: list[str]
-    selection : dict[str,str]
-    fit       : FitConf
-    plots     : ZFitPlotterConf
-# ------------------------------
-class CombinatorialConf(ComponentConf, UnpackerModel): # Tested
-    '''
-    Class mean to control configuration of fit to combinatorial
-    '''
-    model_config = ConfigDict(frozen=True)
-
-    models     : dict[Qsq, ModelFactoryConf ]
-    constraints: dict[Qsq, CmbConstraintConf]
-# ------------------------------
-class NonParametricConf(ComponentConf): # Tested
-    '''
-    Class mean to control configuration of fit to non parametric models 
-    '''
-    sample : Component
-    fit    : KDEConf
-    plots  : ZFitPlotterConf 
-# ------------------------------
-class BremCatConf(BaseModel):  # Tested
-    '''
-    Class meant to configure a brem category fit
-    '''
-    selection : dict[str,str]
-    model     : list[FModel ]
-# ------------------------------
-class ParametricConf(ComponentConf):  # Tested
-    '''
-    Class mean to control configuration of fit to parametric models 
-    '''
-    sample     : Component
-    fit        : FitConf 
-    categories : dict[Brem, BremCatConf]
-    plots      : ZFitPlotterConf 
-# ------------------------------
-class CCbarConf(ComponentConf):         # Tested
-    '''
-    Class mean to control configuration to fit ccbar components
-    '''
-    model_config = ConfigDict(frozen=True)
-
-    ccbar_samples : list[CCbarComponent]
-    weights       : dict[CCbarWeight,bool]
-    fitting       : KDEConf
-# ------------------------------
-# MisID
-# ------------------------------
-class MisIDSampleWeights(UnpackerModel):       # Tested
-    '''
-    Configuration controlling how to pick weights for misID samples
-    '''
-    maps_path : Path
-    regions   : dict[str,str]
-    pars      : tuple[str,str]
-# ------------------------------
-class MisIDSampleSplitting(UnpackerModel):    # Tested
-    '''
-    Configuration controlling how samples are split into control and
-    signal region
-    '''
-    branches      : list[str]
-    tracks        : dict[str,str]
-    hadron_tagging: dict[Particle,str]
-    lepton_tagging: dict[str,str]
-# ------------------------------
-class MisIDCategory(UnpackerModel):          # Tested
-    selection  : dict[str,str]
-    weights    : MisIDSampleWeights 
-    splitting  : MisIDSampleSplitting 
-# ------------------------------
-class MisIDConf(UnpackerModel, NonParametricConf): # Tested
-    '''
-    Configuration needed to build MisID components
-    '''
-    trigger    : Trigger
-    project    : Project
-    categories : dict[str,MisIDCategory]
-# ------------------------------
-# Yields, observables, etc
-# ------------------------------
-class YieldConf(BaseModel):            # Tested
-    '''
-    Class representing configuration for yields
-    '''
-    val    : float
-    min    : float
-    max    : float
-    scl    : list[str]         | None = None
-    prefix : Literal['pscale'] | None = None
 # ------------------------------
 class ObservableConf(BaseModel):
     '''
@@ -187,15 +79,125 @@ class ObservableConf(BaseModel):
     name : Mass
     range: tuple[int,int]
 # ------------------------------
+# Components
+# ------------------------------
+class CmbConstraintConf(BaseModel):
+    '''
+    Class meant to represent configuration for combintorial constraints
+
+    Attributes
+    ---------------
+    selection : Selection that sample will go through on top of nominal selection, e.g. vetos
+    parameters: Parameters that will be constrained
+    '''
+    component : Component
+    trigger   : Trigger
+    parameters: list[str]
+    selection : dict[str,str]
+    fit       : FitConf
+    plots     : ZFitPlotterConf
+# ------------------------------
+class CategoryConf(BaseModel):  # Tested
+    '''
+    Class meant to configure a fit category
+    '''
+    selection : dict[str,str]
+    model     : ModelFactoryConf
+# ------------------------------
+# ------------------------------
+class ComponentConf(UnpackerModel):         # Tested
+    '''
+    Class meant to configure the fit for different components
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    output_directory : Path
+# ------------------------------
+class CCbarConf(ComponentConf):         # Tested
+    '''
+    Class mean to control configuration to fit ccbar components
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    samples : list[CCbarComponent]
+    weights : dict[CCbarWeight,bool]
+    fit     : KDEConf
+    # -----------------
+    @classmethod
+    def default(
+        cls,
+        out_dir : Path,
+        channel : Channel) -> Self:
+        '''
+        Returns
+        -----------
+        Default instance of config, used for tests 
+        '''
+
+        samples = Component.inclusive(channel = channel)
+        weights = {
+            CCbarWeight.dec : True,
+            CCbarWeight.sam : True,
+        }
+
+        return cls(
+            output_directory = out_dir,
+            samples          = samples,
+            weights          = weights,
+            fit              = KDEConf.default())
+# ------------------------------
+class ParametricConf(ComponentConf):  # Tested
+    '''
+    Class mean to control configuration of fit to parametric models 
+    '''
+    component  : Component
+    fit        : FitConf 
+    categories : dict[str, CategoryConf]
+    plots      : ZFitPlotterConf 
+# ------------------------------
+class NonParametricConf(ComponentConf): # Tested
+    '''
+    Class mean to control configuration of fit to non parametric models 
+    Attributes
+    -------------------
+    sample : MC sample used to build KDE
+    fit    : Fit configuration for KDE
+    plots  : Configuration for plotting
+    '''
+    component : Component
+    fit       : KDEConf
+    plots     : ZFitPlotterConf 
+# ------------------------------
+class CombinatorialConf(ComponentConf): # Tested
+    '''
+    Class mean to control configuration of fit to combinatorial
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    models      : dict[Qsq, ModelFactoryConf ]
+    constraints : dict[Qsq, CmbConstraintConf]
+# ------------------------------
+# MisID
+# ------------------------------
+class MisIDConf(NonParametricConf): # Tested
+    '''
+    Configuration needed to build MisID components
+    '''
+    output_directory : Path
+    trigger          : Trigger
+    project          : Project
+    selection        : dict[str,str]
+    weights          : MisIDSampleWeights 
+# ------------------------------
 class MisIDFitComponents(UnpackerModel):
     '''
     Class describing fitting components for fits to misID control region
     '''
     model_config = ConfigDict(frozen=True)
 
-    cominatorial : CombinatorialConf 
-    hdpipi       : NonParametricConf
-    hdkk         : NonParametricConf
+    comb    : CombinatorialConf 
+    bpkpipi : MisIDConf
+    bpkkk   : MisIDConf 
 # ------------------------------
 class MisIDFitModel(UnpackerModel):
     '''
@@ -204,23 +206,29 @@ class MisIDFitModel(UnpackerModel):
     '''
     model_config = ConfigDict(frozen=True)
 
-    yields     : dict[str,YieldConf]
-    observable : dict[str,ObservableConf]
-    components : MisIDFitComponents
-# ------------------------------
-class MisIDConstraintConf(UnpackerModel):
-    '''
-    Configuration meant to control how fits used to get misID constraints
-    are used to get the constraints
-    '''
-    model_config = ConfigDict(frozen=True)
-
+    # Strings are hdkk or hdpipi
     output_directory : Path
     trigger          : Trigger
     selection        : dict[str,str]
+    yields           : dict[str,YieldConf]
+    observable       : dict[str,ObservableConf]
+    components       : MisIDFitComponents
     fit              : FitConf
     plots            : ZFitPlotterConf
-    model            : MisIDFitModel 
+    # ------------------------------
+    @property
+    def python_yields(self) -> dict[str,dict]:
+        '''
+        Returns
+        -------------
+        Yields in python dictionary instead of pydantic model
+        '''
+
+        res = { key : value.model_dump() for key, value in self.yields.items() }
+
+        return res
+# ------------------------------
+# Constraints
 # ------------------------------
 class ConstraintsCfg(UnpackerModel):
     '''
@@ -228,10 +236,10 @@ class ConstraintsCfg(UnpackerModel):
     '''
     model_config = ConfigDict(frozen=True)
 
-    misid   : MisIDConstraintConf | None = None
-    pre_rare: list[Component]     | None = None
+    misid   : MisIDFitModel   | None = None
+    pre_rare: list[Component] | None = None
 # ------------------------------
-AnyModel = CombinatorialConf | ParametricConf
+AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonParametricConf
 # ------------------------------
 # Fits
 # ------------------------------
@@ -243,7 +251,7 @@ class FitModelConf(UnpackerModel):
 
     yields     : dict[str,YieldConf]
     observable : dict[Qsq, ObservableConf]
-    components : dict[Component, CombinatorialConf]
+    components : dict[Component, AnyModelConf]
     constraints: ConstraintsCfg
     plots      : ZFitPlotterConf
     fit        : FitConf
@@ -258,3 +266,218 @@ class DataModelConf(UnpackerModel):
     output_directory : Path
     model            : FitModelConf
 # ------------------------------
+# Full config
+# ----------------------
+@dataclasses.dataclass
+class RXFitConfig:
+    '''
+    Class used to store configuration needed for fits
+    '''
+    name    : str
+    group   : str        # E.g. toys, needed to name directory where fit outputs will go
+    mva_cmb : float
+    mva_prc : float
+    q2bin   : Qsq
+
+    mod_cfg : DataModelConf 
+    block   : int             = -1 
+    nthread : int             = 1
+    log_lvl : int             = 20
+    ntoys   : int             = 0
+    toy_cfg : ToyConf |  None = None
+    # ----------------------
+    def __post_init__(self):
+        '''
+        This runs after initialization
+        '''
+        self._set_logs()
+        self._initialize_toy_config()
+
+        try:
+            self.block = int(self.block)
+        except Exception as exc:
+            raise TypeError(f'Cannot cast block {self.block} as int') from exc
+
+        if not (0 <= self.mva_cmb < 1):
+            raise ValueError(f'Invalid value for combinatorial MVA WP: {self.mva_cmb}')
+
+        if not (0 <= self.mva_prc < 1):
+            raise ValueError(f'Invalid value for part reco MVA WP: {self.mva_prc}')
+    # ----------------------
+    def _initialize_toy_config(self) -> None:
+        if self.toy_cfg is None:
+            return
+
+        out_dir = self.output_directory / self.q2bin
+        update  = {'output' : out_dir / 'toys', 'ntoys' : self.ntoys}
+        self.toy_cfg.model_copy(update = update)
+
+        log.info(f'Sending toys to: {out_dir}')
+        log.info(f'Setting number of toys to: {self.ntoys}')
+    # ----------------------
+    def _set_logs(self) -> None:
+        '''
+        Will put classes in a given logging level
+        '''
+        TOOL_LEVEL = self.log_lvl
+
+        if TOOL_LEVEL < LogLevels.info:
+            DEPENDENCIES_LEVEL = TOOL_LEVEL
+        else:
+            DEPENDENCIES_LEVEL = 30
+
+        LogStore.set_level('dmu:statistics:fitter'                , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:workflow:cache'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:utilities'                  , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:model_factory'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:gofcalculator'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:rdf_getter'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:path_splitter'                , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:sample_emulator'              , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:spec_maker'                   , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_data:sample_patcher'               , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_efficiencies:efficiency_calculator', DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_selection:truth_matching'          , DEPENDENCIES_LEVEL)
+        LogStore.set_level('rx_selection:selection'               , DEPENDENCIES_LEVEL)
+        LogStore.set_level('dmu:stats:constraint_adder'           , DEPENDENCIES_LEVEL)
+        # ---------
+        LogStore.set_level('fitter:fit_config'                    ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:likelihood_factory'            ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:data_preprocessor'             ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:prec'                          ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:prec_scales'                   ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:constraint_reader'             ,         TOOL_LEVEL)
+        LogStore.set_level('fitter:fit_rx_data'                   ,         TOOL_LEVEL)
+    # ----------------------
+    def save(self, kind : str) -> None:
+        '''
+        Saves to JSON fit configuration in directory where data fit will be saved
+        '''
+        data_fit_directory = self.output_directory / kind / self.q2bin / self.name
+
+        data = dataclasses.asdict(self)
+        path = data_fit_directory / 'config.json'
+        log.info(f'Saving fit configuration to: {path}')
+
+        gut.dump_json(data = data, path = path, exists_ok = True)
+    # ----------------------
+    # Cached properties
+    # ----------------------
+    @cached_property
+    def mva_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        Cut used for MVA
+        '''
+        return f'(mva_cmb > {self.mva_cmb}) && (mva_prc > {self.mva_prc})'
+    # ----------------------
+    @cached_property
+    def block_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        String used to select block, e.g. `block == 3`
+        '''
+        if self.block == -1:
+            return '(1)'
+
+        if self.block == 12:
+            return  '(block == 1) || (block == 2)'
+
+        if self.block == 78:
+            return  '(block == 7) || (block == 8)'
+
+        if self.block in [1, 2, 3, 4, 5, 6, 7, 8]:
+            return f'block == {self.block}'
+
+        raise ValueError(f'Invalid block {self.block}')
+    # ----------------------
+    @cached_property
+    def brem_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        Cut on nbrem, normally exclude brem 0 for electron and do nothing for muon
+        '''
+        if self.mod_cfg.trigger.channel == 'electron':
+            return 'nbrem != 0'
+
+        if self.mod_cfg.trigger.channel == 'muon':
+            return 'nbrem == 0'
+
+        raise ValueError(f'Invalid trigger: {self.mod_cfg.trigger}')
+    # ----------------------
+    @cached_property
+    def overriding_selection(self) -> dict[str,str]:
+        '''
+        Returns
+        -------------
+        Dictionary mapping cut name with expression
+        Needed to override default selection
+        '''
+        return {
+            'block' : self.block_cut,
+            'brem'  : self.brem_cut,
+            'bdt'   : self.mva_cut,
+        }
+    # ----------------------
+    @cached_property
+    def is_electron(self) -> bool:
+        '''
+        Returns
+        -------------
+        True if using electron trigger, false otherwise
+        '''
+        return self.mod_cfg.trigger.channel == 'electron'
+    # ----------------------
+    @cached_property
+    def fit_name(self) -> str:
+        '''
+        Builds fit identifier from MVA working points
+        '''
+        cmb  = int(100 * self.mva_cmb)
+        prc  = int(100 * self.mva_prc)
+        name = f'{cmb:03d}_{prc:03d}'
+    
+        return name
+    # ----------------------
+    @cached_property
+    def output_directory(self) -> Path:
+        '''
+        Returns
+        -----------------
+        This function will return the directory WRT which
+        the `output_directory` key in the fit config will be defined
+        '''
+        if not isinstance(self.block, int):
+            raise ValueError(f'Block is not an int but {type(self.block)} = {self.block}')
+
+        if self.block == -1:
+            block_name = 'all'
+        else:
+            block_name = f'b{self.block}'
+    
+        ana_dir = os.environ.get('ANADIR')
+        if ana_dir is None:
+            raise RuntimeError('ANADIR variable not set')
+
+        out_dir = f'{ana_dir}/fits/data/{self.group}/{self.fit_name}_{block_name}'
+
+        log.debug(f'Using output directory: {out_dir}')
+    
+        return Path(out_dir)
+    # ----------------------
+    @cached_property
+    def observable(self) -> zobs:
+        '''
+        Returns
+        -------------
+        Zfit observable
+        '''
+        cfg_obs      = self.mod_cfg.model.observable[self.q2bin]
+        [minx, maxx] = cfg_obs.range
+        obs          = zfit.Space(cfg_obs.name, minx, maxx)
+    
+        return obs
+# ----------------------
