@@ -1,0 +1,15 @@
+output_directory : reso/rkst/muon/bdjpsikst_swp
+component        : bdkstjpsimm_swp
+fit:
+  kind      : KDE1DimFFT
+  bandwidth : 20
+  padding   :
+    flag : False
+plots:
+  nbins   : 50
+  stacked : True
+  d_leg :
+    gauss_1 : Gauss 
+  #plot_range:
+  #  - 5180
+  #  - 5700

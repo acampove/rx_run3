@@ -1,15 +1,15 @@
 output_directory : reso/rkst/muon/bsjpsiphi
-categories:
-  main:
-    model : KDE1DimFFT
-sample        : Bs_Jpsiphi_mm_eq_CPV_update2012_DPC
+component        : bsphijpsimm
 fit:
-  strategy  : KDE1DimFFT
+  kind      : KDE1DimFFT
+  bandwidth : 20
+  padding   :
+    flag : False
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
-  plot_range:
-    - 5100
-    - 5500
   d_leg :
     gauss_1 : Gauss 
+  #plot_range:
+  #  - 5100
+  #  - 5500

@@ -1,5 +1,5 @@
 output_directory : reso/rkst/muon/psi2
-sample           : Bd_psi2SKst_mm_eq_DPC
+component        : bdkstkpipsi2mm
 categories:
   brem_xx0:
     selection : {}

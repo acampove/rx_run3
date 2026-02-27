@@ -1,9 +1,9 @@
-output_directory : reso/rkst/muon/jpsi
-component        : bdkstkpijpsimm
+output_directory : reso/rkst/muon/bsjpsikst
+component        : bskstjpsimm 
 categories:
   brem_xx0:
     selection : {}
-    model:
+    model :
       pdfs:
         - dscb
         - gauss
@@ -11,20 +11,19 @@ categories:
         - mu
         - sg
       floating      :
-        - mu
         - sg
       reparametrize : {}
       fix           : {}
 fit:
-  strategy :
+  strategy  :
     ntries : 10
     pvalue : 0.05
-plots:
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
-  plot_range:
-    - 5180
-    - 5700
   d_leg :
     gauss_1 : Gauss 
     dscb_1  : DSCB 
+  #plot_range:
+  #  - 5100
+  #  - 5500
