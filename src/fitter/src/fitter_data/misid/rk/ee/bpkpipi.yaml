@@ -1,10 +1,10 @@
-sample           : Bu_KplKplKmn_eq_sqDalitz_DPC
+output_directory : rare/electron/misid/hdpipi
+component        : bpkpipi
 trigger          : Hlt2RD_BuToKpEE_MVA_noPID
 project          : rk_nopid
-output_directory : rare/electron/kkk
 selection: 
-  pid_l : (1)  # Built removing PID on leptons
-weights : model/weights/weights.yaml
+  pid_l   : (1)  # Built removing PID on leptons
+weights   : model/weights/weights.yaml
 fit:
   kind     : KDE1DimFFT
   bandwidth: 20

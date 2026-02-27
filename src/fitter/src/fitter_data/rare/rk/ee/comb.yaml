@@ -14,7 +14,7 @@ plot_conf: &plot_conf
   d_leg  : {}
 # -------------------------
 constraints_high: &cons_hi
-  sample     : DATA_24* 
+  component  : data_24 
   trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
   parameters : # Will constrain parameters starting
     - mu       # with any of these strings
@@ -27,7 +27,7 @@ constraints_high: &cons_hi
     <<: *plot_conf
 # -------------------------
 constraints_low_central: &cons_lc
-  sample     : DATA_24* 
+  component  : data_24 
   trigger    : Hlt2RD_BuToKpEE_SameSign_MVA
   parameters : # Will constrain parameters starting
     - mu       # with any of these strings
