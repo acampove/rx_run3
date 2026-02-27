@@ -1,0 +1,41 @@
+output_directory : reso/rk/muon/cabibbo
+component        : bppijpsiee 
+categories:
+  brem_xx1:
+    selection :
+      brem : nbrem == 1
+    model :
+      pdfs :
+        - dscb 
+        - cbl
+      shared        :
+        - mu
+        - sg
+      floating      :
+        - sg
+      reparametrize : {}
+      fix           : {}
+  brem_xx2:
+    selection :
+      brem : nbrem == 2
+    model :
+      pdfs :
+        - dscb 
+        - cbl
+      shared        :
+        - mu
+        - sg
+      floating      :
+        - sg
+      reparametrize : {}
+      fix           : {}
+fit:
+  strategy  :
+    ntries : 15
+    pvalue : 0.05
+plots:
+  nbins     : 50
+  stacked   : True
+  d_leg :
+    cbl_1   : Crystal Ball 
+    dscb_1  : DSCB

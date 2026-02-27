@@ -1,11 +1,13 @@
 output_directory : reso/rk/muon/ccbar/
-ccbar_samples:
-  - Bd_JpsiX_mm_eq_JpsiInAcc
-  - Bu_JpsiX_mm_eq_JpsiInAcc
-  - Bs_JpsiX_mm_eq_JpsiInAcc
+samples:
+  - bdjpsixmm 
+  - bpjpsixmm 
+  - bsjpsixmm 
 weights:
-  dec : 1
-  sam : 1
-fitting:
+  dec : True
+  sam : True 
+fit:
+  kind      : KDE1DimFFT
   bandwidth : 20
-  padding   : False
+  padding   :
+    flag : False
