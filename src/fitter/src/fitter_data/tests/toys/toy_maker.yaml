@@ -1,9 +1,0 @@
-# This config is used for testing the ToyMaker class
-output : toys/test.parquet
-rseed  : 42
-ntoys  : 20
-fit_conf:
-  run_gof: false
-  minimization:
-    mode     : 0
-    gradient : zfit
