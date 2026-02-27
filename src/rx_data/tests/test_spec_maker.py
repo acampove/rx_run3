@@ -4,9 +4,9 @@ Module with tests for SpecMaker class
 
 import pytest
 
-from rx_common.types    import Project, Trigger
-from rx_data.spec_maker import SpecMaker, Specification
-from dmu                import LogStore
+from rx_common import Component, Project, Trigger
+from rx_data   import SpecMaker, Specification
+from dmu       import LogStore
 
 _NOPIDSAMPLES=[
     'Bu_KplKplKmn_eq_sqDalitz_DPC', 
@@ -22,8 +22,8 @@ _GOODSAMPLES=[
 ]
 
 _PATCHING_SAMPLES = [
-    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
-    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    (Component.bpjpsixmm, Trigger.rk_mm_os),
+    (Component.bsjpsixmm, Trigger.rk_mm_os),
 ]
 
 _INCLUSIVE_SAMPLES = [
