@@ -51,7 +51,7 @@ def test_combinatorial_sr(
     '''
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'{kind}/{analysis}/{channel}/combinatorial.yaml')
+        fpath   = f'{kind}/{analysis}/{channel}/comb.yaml')
 
     CombinatorialConf(**data)
 # ----------------------
@@ -61,7 +61,7 @@ def test_combinatorial_cr():
     '''
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = 'misid/rk/ee/combinatorial.yaml')
+        fpath   = 'misid/rk/ee/comb.yaml')
 
     CombinatorialConf(**data)
 # ----------------------
@@ -136,7 +136,7 @@ def test_misid(
 
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/{analysis}/ee/{component}.yaml')
+        fpath   = f'rare/{analysis}/ee/{component}_np.yaml')
 
     with MisIDConf.package(name = 'fitter_data'):
         MisIDConf(**data)
