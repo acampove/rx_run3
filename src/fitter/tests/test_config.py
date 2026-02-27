@@ -7,12 +7,13 @@ from pathlib     import Path
 from dmu         import LogStore
 from dmu.generic import utilities as gut
 from rx_misid    import MisIDSampleWeights, MisIDSampleSplitting
-from rx_common   import Component, Project
+from rx_common   import Channel, Component, Project
 from fitter      import YieldConf
 from fitter      import NonParametricConf 
 from fitter      import CCbarConf, CombinatorialConf, MisIDConf
-from fitter      import MisIDConstraintConf, ParametricConf
+from fitter      import ParametricConf
 from fitter      import FitModelConf
+from fitter      import MisIDFitModel
 
 log=LogStore.add_logger('fitter:test_config')
 # ----------------------
@@ -131,7 +132,7 @@ def test_misid(
 def test_misid_constraint():
     path = Path('misid/rk/ee/data_misid.yaml')
 
-    MisIDConstraintConf.from_yaml(
+    MisIDFitModel.from_yaml(
         package = 'fitter_data',
         path    = path)
 # ----------------------
