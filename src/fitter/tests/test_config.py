@@ -17,14 +17,26 @@ from fitter      import MisIDFitModel
 
 log=LogStore.add_logger('fitter:test_config')
 # ----------------------
-@pytest.mark.parametrize('analysis', ['rk', 'rkst'])
-def test_yield_conf(analysis : str):
+@pytest.mark.parametrize('analysis', [Project.rk, Project.rkst])
+@pytest.mark.parametrize('fname'   , [
+    'reso_muon', 
+    'reso_electron',
+    'rare_muon', 
+    'rare_electron',
+    'misid_electron',
+])
+def test_yield_conf(
+    fname    : str,
+    analysis : Project):
+    '''
+    Test yield configuration class
+    '''
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'model/yields/{analysis}/misid_electron.yaml')
+        fpath   = f'model/yields/{analysis}/{fname}.yaml')
 
     for name, conf in data.items():
-        log.debug(f'Validating: {name}')
+        log.info(f'Validating: {name}')
         YieldConf(**conf)
 # ----------------------
 @pytest.mark.parametrize('analysis', ['rk'  , 'rkst'])
