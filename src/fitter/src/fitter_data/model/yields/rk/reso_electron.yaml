@@ -31,19 +31,23 @@ yld_psi2:
   <<: *yields
 # -------------------------
 yld_jpsi_brem_001:
-  mul: 
+  kind : mul
+  pars : 
     - yld_jpsi
     - jpsi_fraction
 yld_jpsi_brem_002:
-  dif: 
+  kind : dif 
+  pars :
     - yld_jpsi
     - yld_jpsi_brem_001 
 # -------------------------
 yld_psi2_brem_001:
-  mul: 
+  kind : mul
+  pars :
     - yld_psi2
     - psi2_fraction
 yld_psi2_brem_002:
-  dif: 
+  kind : dif 
+  pars :
     - yld_psi2
     - yld_psi2_brem_001 
