@@ -135,9 +135,9 @@ def test_misid_constraint():
         package = 'fitter_data',
         path    = path)
 # ----------------------
-@pytest.mark.skip
 def test_full_model():
     path = 'rare/rkst/mm/data.yaml'
 
-    FitModelConf.from_yaml(path = path, package = 'fitter_data')
+    cfg  = FitModelConf.from_yaml(path = path, package = 'fitter_data')
+    
 # ----------------------
