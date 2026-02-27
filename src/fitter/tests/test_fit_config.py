@@ -5,7 +5,7 @@ This module contains tests for the FitConfig class
 import pytest
 from pathlib           import Path
 from omegaconf         import OmegaConf, DictConfig
-from fitter.fit_config import RXFitConfig
+from fitter            import RXFitConfig
 from dmu               import LogStore
 from dmu.generic       import utilities as gut
 from rx_common.types   import Qsq
