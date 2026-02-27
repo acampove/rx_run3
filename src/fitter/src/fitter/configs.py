@@ -1,22 +1,25 @@
 '''
 Module containing classes representing configurations used for fitting
 '''
+import os
 import dataclasses
 
 from functools   import cached_property
+from pydantic    import BaseModel, ConfigDict, TypeAdapter, model_validator
 from pathlib     import Path
-from typing      import Literal
-from dmu.generic import UnpackerModel
-from rx_common   import Brem, Mass, Project, Qsq, Particle
+from typing      import Literal, Self
+
+from rx_common   import Channel, Mass, Project, Qsq
 from rx_common   import Component, Trigger, CCbarComponent
-from pydantic    import BaseModel, ConfigDict
+from rx_misid    import MisIDSampleWeights
 from dmu         import LogLevels, LogStore
 from dmu.stats   import ModelFactoryConf
 from dmu.stats   import KDEConf
 from dmu.stats   import FitConf
 from dmu.stats   import ZFitPlotterConf 
-from dmu.stats   import Model as FModel
 from dmu.stats   import zfit
+from dmu.generic import UnpackerModel
+from dmu.generic import utilities  as gut
 from zfit        import Space      as zobs
 from .types      import CCbarWeight
 from .toy_maker  import ToyConf
