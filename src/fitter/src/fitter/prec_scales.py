@@ -9,8 +9,9 @@ import jacobi   as jac
 from dmu             import LogStore
 from dmu.generic     import hashing
 from dmu.generic     import utilities  as gut
-from rx_common.types import Component
-from rx_common.types import Trigger 
+from rx_common       import Qsq
+from rx_common       import Component
+from rx_common       import Trigger 
 from rx_selection    import selection  as sel
 from rx_efficiencies import EfficiencyCalculator
 
