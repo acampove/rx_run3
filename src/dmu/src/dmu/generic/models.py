@@ -44,7 +44,7 @@ class UnpackerModel(BaseModel):
 
         pkg_path = str(files(_PACKAGE.get()))
 
-        log.info(f'Updating path with {pkg_path}')
+        log.debug(f'Updating path with {pkg_path}')
         full_path = pkg_path / path
 
         return full_path
@@ -68,25 +68,43 @@ class UnpackerModel(BaseModel):
         This method will update data by unpacking yaml file paths
         and inserting the python data in the `data` variable
         '''
-        for field_name, field_info in cls.model_fields.items():
+        log.info(20 * '-')
+        log.info(f'At {cls}')
+        log.info(20 * '-')
+        if cls._is_unpackable(data):
+            log.info(f'Unpacking directly: {data}')
+            path        = Path(data)
+            loaded_data = cls._data_from_path(path = path)
+            return loaded_data
+        else:
+            log.info(f'Not unpacking directly: {data}')
+
+        for field_name in cls.model_fields:
             val = data.get(field_name)
 
-            if not isinstance(val, (str, Path)):
+            if not cls._is_unpackable(val):
+                log.info(f'Not unpacking {field_name} = {val}')
                 continue
-
-            if not str(val).endswith('.yaml'):
-                continue
-
-            path        = Path(val)
-            loaded_data = cls._data_from_path(path = path)
-            FieldType   = field_info.annotation
-
-            if FieldType is None:
-                raise ValueError(f'Annotation not found for: {field_name}')
-
-            data[field_name] = FieldType(**loaded_data)
+                
+            log.info(f'Unpacking field {field_name}')
+            path             = Path(val)
+            data[field_name] = cls._data_from_path(path = path)
 
         return data
+    # --------------
+    @staticmethod
+    def _is_unpackable(val) -> bool:
+        '''
+        Check if val is a valid yaml path to a config
+        that can be made into a config
+        '''
+        if not isinstance(val, (str, Path)):
+            return False
+
+        if not str(val).endswith('.yaml'):
+            return False
+
+        return True
     # --------------
     @classmethod
     def from_yaml(
