@@ -1,11 +1,11 @@
 output_directory : reso/rkst/electron/ccbar/
 samples:
-  - Bd_JpsiX_ee_eq_JpsiInAcc
-  - Bu_JpsiX_ee_eq_JpsiInAcc
-  - Bs_JpsiX_ee_eq_JpsiInAcc
+  - bdjpsixee 
+  - bpjpsixee 
+  - bsjpsixee 
 weights:
-  dec : 1
-  sam : 1
+  dec : True
+  sam : True 
 fit:
   kind      : KDE1DimFFT
   bandwidth : 20

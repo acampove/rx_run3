@@ -1,14 +1,14 @@
-output_directory : reso/rk/electron/cabibbo
-component : bppijpsiee 
+output_directory : reso/rkst/electron/jpsi
+component        : bdkstkpijpsiee 
 categories:
   brem_xx1:
     selection :
-      brem : 'nbrem == 1'
-    model :
+      brem : nbrem == 1
+    model:
       pdfs:
-        - dscb 
-        - cbl
-      shared        :
+        - dscb
+        - gauss
+      shared        : 
         - mu
         - sg
       floating      :
@@ -20,12 +20,12 @@ categories:
       fix           : {}
   brem_xx2:
     selection :
-      brem : 'nbrem == 2'
-    model :
+      brem : nbrem == 2
+    model:
       pdfs:
-        - dscb 
-        - cbl
-      shared        :
+        - dscb
+        - gauss
+      shared        : 
         - mu
         - sg
       floating      :
@@ -37,11 +37,11 @@ categories:
       fix           : {}
 fit:
   strategy  :
-    ntries : 15
+    ntries : 10
     pvalue : 0.05
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  nbins     : 50
-  stacked   : True
+  nbins   : 50
+  stacked : True
   d_leg :
-    dscb_1 : DSCB 
-    cbl_1  : Crystal Ball 
+    gauss_1 : Gauss 
+    dscb_1  : DSCB 
