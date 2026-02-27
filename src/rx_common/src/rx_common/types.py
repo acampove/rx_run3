@@ -1,7 +1,7 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum   import IntEnum, StrEnum
+from enum   import IntEnum, StrEnum, auto
 from typing import Literal
 
 # ------------------------------
@@ -296,69 +296,173 @@ class Component(StrEnum):
 
     - Except for data, undefined and combinatorial, all samples meant to be used with the electron/muon channel should end with ee/mm
     '''
-    undefined      = 'undefined'
-    comb           = 'combinatorial'
-    ccbar          = 'ccbar'
+    undefined      = auto() 
+    comb           = auto() 
+    ccbar          = auto() 
     # -----
     # Data
     # -----
-    data_24        = 'DATA_24*'
-    data_24_mu_c2  = 'DATA_24_MagUp_24c2'
-    data_24_md_c2  = 'DATA_24_MagDown_24c2'
-    data_24_mu_c3  = 'DATA_24_MagUp_24c3'
-    data_24_md_c3  = 'DATA_24_MagDown_24c3'
-    data_24_mu_c4  = 'DATA_24_MagUp_24c4'
-    data_24_md_c4  = 'DATA_24_MagDown_24c4'
+    data_24        = auto() 
+    data_24_mu_c2  = auto() 
+    data_24_md_c2  = auto() 
+    data_24_mu_c3  = auto() 
+    data_24_md_c3  = auto() 
+    data_24_mu_c4  = auto() 
+    data_24_md_c4  = auto() 
     # -----
-    bpkkk          = 'Bu_KplKplKmn_eq_sqDalitz_DPC'
-    bpkpipi        = 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+    bpkkk          = auto() 
+    bpkpipi        = auto() 
     # -----
-    bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
-    bpkpjpsiee     = 'Bu_JpsiK_ee_eq_DPC'
-    bpkppsi2ee     = 'Bu_psi2SK_ee_eq_DPC'
-    bpkpipiee      = 'Bu_Kpipiee_eq_DPC_LSFLAT'
+    bpkpee         = auto() 
+    bpkpjpsiee     = auto() 
+    bpkppsi2ee     = auto() 
+    bpkpipiee      = auto() 
     # -----
-    bppijpsimm     = 'Bu_JpsiPi_mm_eq_DPC'
-    bppijpsiee     = 'Bu_JpsiPi_ee_eq_DPC'
+    bppijpsimm     = auto() 
+    bppijpsiee     = auto() 
     # -----
-    bpkpmm         = 'Bu_Kmumu_eq_btosllball05_DPC'
-    bpkpjpsimm     = 'Bu_JpsiK_mm_eq_DPC'
-    bpkppsi2mm     = 'Bu_psi2SK_mm_eq_DPC'
+    bpkpmm         = auto() 
+    bpkpjpsimm     = auto() 
+    bpkppsi2mm     = auto() 
     # -----
-    bdkstkpiee     = 'Bd_Kstee_eq_btosllball05_DPC'
-    bdkstkpijpsiee = 'Bd_JpsiKst_ee_eq_DPC'
-    bdkstkpipsi2ee = 'Bd_psi2SKst_ee_eq_DPC'
+    bdkstkpiee     = auto() 
+    bdkstkpijpsiee = auto() 
+    bdkstkpipsi2ee = auto() 
     # -----
-    bdkstkpimm     = 'Bd_Kstmumu_eq_btosllball05_DPC'
-    bdkstkpijpsimm = 'Bd_JpsiKst_mm_eq_DPC'
-    bdkstkpipsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
+    bdkstkpimm     = auto() 
+    bdkstkpijpsimm = auto() 
+    bdkstkpipsi2mm = auto() 
     # -----
-    bpk1kpipiee    = 'Bu_K1ee_eq_DPC'
-    bpk2kpipiee    = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
-    bpkstkpiee     = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
-    bsphiee        = 'Bs_phiee_eq_Ball_DPC'
+    bpk1kpipiee    = auto() 
+    bpk2kpipiee    = auto() 
+    bpkstkpiee     = auto() 
+    bsphiee        = auto() 
     # -----
-    bpjpsixee      = 'Bu_JpsiX_ee_eq_JpsiInAcc'
-    bdjpsixee      = 'Bd_JpsiX_ee_eq_JpsiInAcc'
-    bsjpsixee      = 'Bs_JpsiX_ee_eq_JpsiInAcc'
+    bpjpsixee      = auto() 
+    bdjpsixee      = auto() 
+    bsjpsixee      = auto() 
     # -----
-    bpjpsixmm      = 'Bu_JpsiX_mm_eq_JpsiInAcc'
-    bdjpsixmm      = 'Bd_JpsiX_mm_eq_JpsiInAcc'
-    bsjpsixmm      = 'Bs_JpsiX_mm_eq_JpsiInAcc'
+    bpjpsixmm      = auto() 
+    bdjpsixmm      = auto() 
+    bsjpsixmm      = auto() 
     # -----
-    bsphijpsimm    = 'Bs_Jpsiphi_mm_eq_CPV_update2012_DPC'
-    bsphijpsiee    = 'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC'
+    bsphijpsimm    = auto() 
+    bsphijpsiee    = auto() 
     # -----
-    lbpkjpsimm     = 'Lb_JpsipK_mm_eq_phsp_DPC'
-    lbpkjpsiee     = 'Lb_JpsipK_ee_eq_phsp_DPC'
+    lbpkjpsimm     = auto() 
+    lbpkjpsiee     = auto() 
     # -----
-    # Emulated samples
+    # Emulated
     # -----
-    bskstjpsimm     = 'Bs_JpsiKst_mm_eq_DPC'
-    bskstjpsiee     = 'Bs_JpsiKst_ee_eq_DPC'
+    bskstjpsimm    = auto()
+    bskstjpsiee    = auto()
 
-    bdkstjpsimm_swp = 'Bd_JpsiKst_mm_had_swp'
-    bdkstjpsiee_swp = 'Bd_JpsiKst_ee_had_swp'
+    bdkstjpsimm_swp= auto()
+    bdkstjpsiee_swp= auto()     
+    # --------------------------------------------
+    @property
+    def sample(self) -> str:
+        match self:
+          case Component.data_24:
+            return 'DATA_24*'
+          case Component.data_24_mu_c2:
+            return 'DATA_24_MagUp_24c2'
+          case Component.data_24_md_c2:
+            return 'DATA_24_MagDown_24c2'
+          case Component.data_24_mu_c3:
+            return 'DATA_24_MagUp_24c3'
+          case Component.data_24_md_c3:
+            return 'DATA_24_MagDown_24c3'
+          case Component.data_24_mu_c4:
+            return 'DATA_24_MagUp_24c4'
+          case Component.data_24_md_c4:
+            return 'DATA_24_MagDown_24c4'
+          # -----
+          case Component.bpkkk:
+            return 'Bu_KplKplKmn_eq_sqDalitz_DPC'
+          case Component.bpkpipi:
+            return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+          # -----
+          case Component.bpkpee:
+            return 'Bu_Kee_eq_btosllball05_DPC'
+          case Component.bpkpjpsiee:
+            return 'Bu_JpsiK_ee_eq_DPC'
+          case Component.bpkppsi2ee:
+            return 'Bu_psi2SK_ee_eq_DPC'
+          case Component.bpkpipiee:
+            return 'Bu_Kpipiee_eq_DPC_LSFLAT'
+          # -----
+          case Component.bppijpsimm:
+            return 'Bu_JpsiPi_mm_eq_DPC'
+          case Component.bppijpsiee:
+            return 'Bu_JpsiPi_ee_eq_DPC'
+          # -----
+          case Component.bpkpmm:
+            return 'Bu_Kmumu_eq_btosllball05_DPC'
+          case Component.bpkpjpsimm:
+            return 'Bu_JpsiK_mm_eq_DPC'
+          case Component.bpkppsi2mm:
+            return 'Bu_psi2SK_mm_eq_DPC'
+          # -----
+          case Component.bdkstkpiee:
+            return 'Bd_Kstee_eq_btosllball05_DPC'
+          case Component.bdkstkpijpsiee:
+            return 'Bd_JpsiKst_ee_eq_DPC'
+          case Component.bdkstkpipsi2ee:
+            return 'Bd_psi2SKst_ee_eq_DPC'
+          # -----
+          case Component.bdkstkpimm:
+            return 'Bd_Kstmumu_eq_btosllball05_DPC'
+          case Component.bdkstkpijpsimm:
+            return 'Bd_JpsiKst_mm_eq_DPC'
+          case Component.bdkstkpipsi2mm:
+            return 'Bd_psi2SKst_mm_eq_DPC'
+          # -----
+          case Component.bpk1kpipiee:
+            return 'Bu_K1ee_eq_DPC'
+          case Component.bpk2kpipiee:
+            return 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
+          case Component.bpkstkpiee:
+            return 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
+          case Component.bsphiee:
+            return 'Bs_phiee_eq_Ball_DPC'
+          # -----
+          case Component.bpjpsixee:
+            return 'Bu_JpsiX_ee_eq_JpsiInAcc'
+          case Component.bdjpsixee:
+            return 'Bd_JpsiX_ee_eq_JpsiInAcc'
+          case Component.bsjpsixee:
+            return 'Bs_JpsiX_ee_eq_JpsiInAcc'
+          # -----
+          case Component.bpjpsixmm:
+            return 'Bu_JpsiX_mm_eq_JpsiInAcc'
+          case Component.bdjpsixmm:
+            return 'Bd_JpsiX_mm_eq_JpsiInAcc'
+          case Component.bsjpsixmm:
+            return 'Bs_JpsiX_mm_eq_JpsiInAcc'
+          # -----
+          case Component.bsphijpsimm:
+            return 'Bs_Jpsiphi_mm_eq_CPV_update2012_DPC'
+          case Component.bsphijpsiee:
+            return 'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC'
+          # -----
+          case Component.lbpkjpsimm:
+            return 'Lb_JpsipK_mm_eq_phsp_DPC'
+          case Component.lbpkjpsiee:
+            return 'Lb_JpsipK_ee_eq_phsp_DPC'
+          # -----
+          # Emulated samples
+          # -----
+          case Component.bskstjpsimm:
+            return 'Bs_JpsiKst_mm_eq_DPC'
+          case Component.bskstjpsiee:
+            return 'Bs_JpsiKst_ee_eq_DPC'
+          case Component.bdkstjpsimm_swp:
+            return 'Bd_JpsiKst_mm_had_swp'
+          case Component.bdkstjpsiee_swp:
+            return 'Bd_JpsiKst_ee_had_swp'
+          case _:
+            raise ValueError(f'No sample defined for: {self}')
     # --------------------------------------------
     @property
     def subdecays(self) -> list[str]:
