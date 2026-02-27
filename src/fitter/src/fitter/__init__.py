@@ -23,7 +23,6 @@ from .configs import DataModelConf
 from .configs import FitModelConf
 from .configs import YieldConf 
 from .configs import MisIDConf 
-from .configs import MisIDConstraintConf
 from .configs import CombinatorialConf 
 from .configs import CCbarConf 
 from .configs import NonParametricConf 
@@ -41,7 +40,6 @@ __all__ = [
     'CombinatorialConf',
     'YieldConf',
     'MisIDConf',
-    'MisIDConstraintConf',
     # ------------------
     'PRec',
     'CCbarWeight',
