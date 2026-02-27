@@ -21,8 +21,8 @@ observable:
       - 5150
       - 5850
 components:
-  combinatorial                  : rare/rkst/muon/combinatorial.yaml
-  #Bd_Kstmumu_eq_btosllball05_DPC : rare/rkst/muon/signal.yaml
+  combinatorial                  : rare/rkst/mm/combinatorial.yaml
+  Bd_Kstmumu_eq_btosllball05_DPC : rare/rkst/mm/bdkstkpimm.yaml
 constraints: {}
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
