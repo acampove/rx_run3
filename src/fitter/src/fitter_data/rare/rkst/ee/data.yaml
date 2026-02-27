@@ -21,7 +21,7 @@ observable:
       - 4500 
       - 6996
 components:
-  comb           : rare/rkst/ee/combinatorial.yaml
+  comb           : rare/rkst/ee/comb.yaml
   ccbar          : rare/rkst/ee/ccbar.yaml
   bpkpipiee      : rare/rkst/ee/bpkpipiee_np.yaml
   bdkstkpijpsiee : rare/rkst/ee/bdkstkpijpsiee_np.yaml

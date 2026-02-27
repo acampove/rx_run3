@@ -21,7 +21,7 @@ observable:
       - 5150
       - 5850
 components:
-  comb       : rare/rkst/mm/combinatorial.yaml
+  comb       : rare/rkst/mm/comb.yaml
   bdkstkpimm : rare/rkst/mm/bdkstkpimm.yaml
 constraints: {}
 fit: {}
