@@ -518,7 +518,7 @@ class Component(StrEnum):
         return [ sample for sample in cls if sample.has_mc() ] 
     # --------------------------------------------
     def has_mc(self) -> bool:
-        if self.value in ['undefined', 'combinatorial', 'DATA_24*']:
+        if self in [Component.undefined, Component.comb, Component.data_24]:
             return False
 
         return True
