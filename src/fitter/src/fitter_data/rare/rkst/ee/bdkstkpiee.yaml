@@ -1,5 +1,5 @@
 output_directory : rare/rkst/electron/signal 
-sample : Bd_Kstee_eq_btosllball05_DPC
+component : bdkstkpiee
 categories:
   brem_xx1:
     selection :

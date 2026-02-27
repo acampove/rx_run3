@@ -1,5 +1,5 @@
 output_directory : rare/rkst/electron/psi2_leakage
-sample : Bd_psi2SKst_ee_eq_DPC
+component : bdkstkpipsi2ee 
 fit:
   kind     : KDE1DimFFT
   bandwidth: 20

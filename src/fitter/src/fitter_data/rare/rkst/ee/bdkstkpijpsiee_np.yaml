@@ -1,5 +1,5 @@
 output_directory : rare/rkst/electron/jpsi_leakage
-sample    : Bd_JpsiKst_ee_eq_DPC
+component : bdkstkpijpsiee 
 fit:
   kind     : KDE1DimFFT
   bandwidth: 20

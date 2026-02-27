@@ -1,5 +1,5 @@
 output_directory : rare/rkst/electron/prec
-sample    : Bu_Kpipiee_eq_DPC_LSFLAT
+component : bpkpipiee 
 fit:
   kind     : KDE1DimFFT
   bandwidth: 20

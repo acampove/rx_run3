@@ -3,32 +3,31 @@
 
 trigger          : Hlt2RD_B0ToKpPimEE_MVA
 output_directory : rare/rkst/electron/data
-model:
-  yields    : model/yields/rkst/rare_electron.yaml
-  observable:
-    low:
-      name : B_Mass_smr
-      range:
-        - 4500 
-        - 6996
-    central:
-      name : B_Mass_smr
-      range:
-        - 4500 
-        - 6996
-    high:
-      name : B_Mass_smr
-      range:
-        - 4500 
-        - 6996
-  components:
-    combinatorial            : rare/rkst/electron/combinatorial.yaml
-    ccbar                    : rare/rkst/electron/ccbar.yaml
-    Bu_Kpipiee_eq_DPC_LSFLAT : rare/rkst/electron/bpkstkpiee.yaml
-    jpsi_leakage             : rare/rkst/electron/bdkstkpijpsiee.yaml
-    psi2_leakage             : rare/rkst/electron/bdkstkpipsi2ee.yaml
-    signal                   : rare/rkst/electron/bdkstkpiee.yaml
-  constraints : {}
+yields           : model/yields/rkst/rare_electron.yaml
+observable:
+  low:
+    name : B_Mass_smr
+    range:
+      - 4500 
+      - 6996
+  central:
+    name : B_Mass_smr
+    range:
+      - 4500 
+      - 6996
+  high:
+    name : B_Mass_smr
+    range:
+      - 4500 
+      - 6996
+components:
+  comb           : rare/rkst/ee/combinatorial.yaml
+  ccbar          : rare/rkst/ee/ccbar.yaml
+  bpkpipiee      : rare/rkst/ee/bpkpipiee_np.yaml
+  bdkstkpijpsiee : rare/rkst/ee/bdkstkpijpsiee_np.yaml
+  bdkstkpipsi2ee : rare/rkst/ee/bdkstkpipsi2ee_np.yaml
+  bdkstkpiee     : rare/rkst/ee/bdkstkpiee.yaml
+constraints : {}
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 78

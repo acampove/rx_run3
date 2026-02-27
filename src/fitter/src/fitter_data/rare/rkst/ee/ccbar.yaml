@@ -1,8 +1,8 @@
 output_directory : rare/rkst/electron/ccbar
 samples:
-  - Bd_JpsiX_ee_eq_JpsiInAcc
-  - Bu_JpsiX_ee_eq_JpsiInAcc
-  - Bs_JpsiX_ee_eq_JpsiInAcc
+  - bdjpsixee 
+  - bpjpsixee 
+  - bsjpsixee 
 weights:
   dec : True
   sam : True 
