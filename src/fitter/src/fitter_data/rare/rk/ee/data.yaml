@@ -34,9 +34,9 @@ components:
 constraints:
   misid     : misid/rk/ee/data_misid.yaml
   prec_rare :
-    - Bd_Kstee_eq_btosllball05_DPC
-    - Bu_Kstee_Kpi0_eq_btosllball05_DPC
-    - Bs_phiee_eq_Ball_DPC
+    - bdkstkpiee
+    - bpkstkpiee
+    - bsphiee
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30
