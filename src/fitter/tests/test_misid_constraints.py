@@ -12,7 +12,8 @@ from dmu.workflow  import Cache
 from dmu.stats     import print_constraints
 from dmu.stats     import zfit
 from dmu.generic   import UnpackerModel, utilities     as gut
-from fitter        import MisIDConstraints, MisIDConstraintConf
+from fitter        import MisIDConstraints
+from fitter        import MisIDFitModel
 
 log=LogStore.add_logger('fitter:test_misid_constraints')
 # --------------------------------------------------------------
@@ -27,14 +28,16 @@ def initialize():
     LogStore.set_level('fitter:data_preprocessor', 10)
     LogStore.set_level('rx_misid:sample_weighter', 20)
 # ----------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_simple(q2bin : str, tmp_path : Path) -> None:
+@pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
+def test_simple(q2bin : Qsq, tmp_path : Path) -> None:
     '''
     Basic test for building misID component
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 6000))
-    cfg = gut.load_conf(package='fitter_data', fpath='misid/rk/electron/data_misid.yaml')
-    cfg.output_directory = 'misid_constraints' 
+    obs  = zfit.Space('B_Mass_smr', limits=(4500, 6000))
+    data = gut.load_data(package='fitter_data', fpath='misid/rk/ee/data_misid.yaml')
+
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg  = MisIDFitModel(**data)
 
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}),\
          RDFGetter.max_entries(value = -1),\
