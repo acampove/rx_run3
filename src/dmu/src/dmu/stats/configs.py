@@ -11,6 +11,8 @@ class SimpleYieldConf(BaseModel):            # Tested
     '''
     Class representing configuration for yields
     '''
+    model_config = ConfigDict(frozen=True)
+
     val    : float
     min    : float
     max    : float
@@ -28,6 +30,8 @@ class CompositeYieldConf(BaseModel):
     '''
     Class meant to represent composite yield
     '''
+    model_config = ConfigDict(frozen=True)
+
     kind : Literal['mul', 'dif']
     pars : list[str]
     # ----------------------
@@ -46,8 +50,6 @@ class YieldConf(RootModel):
     Class meant to wrap SimpleYieldConf and CompositeYieldConf
     pydantic models
     '''
-    model_config = ConfigDict(frozen=True)
-
     root : SimpleYieldConf | CompositeYieldConf
 # ------------------------------
 class YieldsConf(RootModel):
