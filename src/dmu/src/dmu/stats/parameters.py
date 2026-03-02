@@ -55,9 +55,14 @@ class ParameterLibrary:
         '''
         cfg = cls._values
         if kind not in cfg:
+            for val in cfg:
+                log.error(val)
             raise ValueError(f'Cannot find parameters for PDF of kind: {kind}')
 
-        log.info(cfg[kind])
+        pdf_pars = cfg[kind]
+        data     = pdf_pars.model_dump()
+
+        log.info(yaml.safe_dump(data, indent=2))
     # --------------------------------
     @classmethod
     def get_values(cls, kind : str, parameter : str) -> tuple[float,float,float]:
