@@ -31,7 +31,7 @@ class ParameterLibrary:
     # --------------------------------
     @classmethod
     def _load_data(cls) -> None:
-        if hasattr(cls, '_values'):
+        if len(cls._values) > 0:
             return
 
         data_path = files('dmu_data').joinpath('stats/parameters/data.yaml')
