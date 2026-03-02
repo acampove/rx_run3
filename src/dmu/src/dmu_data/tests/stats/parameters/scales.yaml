@@ -23,4 +23,8 @@ BuKstee:
   min     : 0
   max     : 1
 nBuKmm:
-  mul : [iCK, RK, BuKee]
+  kind : mul
+  pars :
+    - iCK
+    - RK
+    - BuKee
