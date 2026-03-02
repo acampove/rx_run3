@@ -8,13 +8,12 @@ from pathlib               import Path
 from contextvars           import ContextVar
 from contextlib            import contextmanager
 from importlib.resources   import files
-
-from dmu                   import LogStore
-from dmu.stats             import YieldsConf
-from dmu.stats             import SimpleYieldConf
-from dmu.stats             import CompositeYieldConf
 from zfit.param            import Parameter as zpar
 
+from dmu                   import LogStore
+from .configs              import YieldsConf
+from .configs              import SimpleYieldConf
+from .configs              import CompositeYieldConf
 from .imports              import zfit
 
 log      = LogStore.add_logger('dmu:parameters')
