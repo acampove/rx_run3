@@ -1,6 +1,10 @@
+'''
+Module with classes meant to represent configurations needed to build yields
+'''
 
 from typing   import Literal, Self
 from pydantic import BaseModel, model_validator
+from pydantic import RootModel, ConfigDict
 
 # ------------------------------
 class SimpleYieldConf(BaseModel):            # Tested
@@ -10,8 +14,15 @@ class SimpleYieldConf(BaseModel):            # Tested
     val    : float
     min    : float
     max    : float
-    scl    : list[str]         | None = None
-    prefix : Literal['pscale'] | None = None
+    scl    : list[str] | None = None
+    prefix : str       | None = None
+    # ----------------------------------
+    @model_validator(mode = 'after')
+    def check_bounds(self) -> Self:
+        if not (self.min < self.val < self.max):
+            raise ValueError(f'Invalid bounds: {self}')
+
+        return self
 # ------------------------------
 class CompositeYieldConf(BaseModel):
     '''
