@@ -13,7 +13,7 @@ from dmu.stats     import print_constraints
 from dmu.stats     import zfit
 from dmu.generic   import UnpackerModel, utilities     as gut
 from fitter        import MisIDConstraints
-from fitter        import MisIDFitModel
+from fitter        import FitModelConf
 
 log=LogStore.add_logger('fitter:test_misid_constraints')
 # --------------------------------------------------------------
@@ -37,7 +37,7 @@ def test_simple(q2bin : Qsq, tmp_path : Path) -> None:
     data = gut.load_data(package='fitter_data', fpath='misid/rk/ee/data_misid.yaml')
 
     with UnpackerModel.package(name = 'fitter_data'):
-        cfg  = MisIDFitModel(**data)
+        cfg  = FitModelConf(**data)
 
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}),\
          RDFGetter.max_entries(value = -1),\
