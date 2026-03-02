@@ -9,16 +9,16 @@ from rx_common import Component, Project, Trigger
 from rx_data   import SpecMaker, Specification
 
 _NOPIDSAMPLES=[
-    'Bu_KplKplKmn_eq_sqDalitz_DPC', 
-    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
+    Component.bpkkk, 
+    Component.bpkpipi, 
 ]
 
 # These samples need minimal patching/emulation, etc
 _GOODSAMPLES=[
-    ('Bu_JpsiK_ee_eq_DPC'            , Trigger.rk_ee_os),
-    ('Bu_JpsiK_mm_eq_DPC'            , Trigger.rk_mm_os),
-    ('Bd_Kstee_eq_btosllball05_DPC'  , Trigger.rkst_ee_os),
-    ('Bd_Kstmumu_eq_btosllball05_DPC', Trigger.rkst_mm_os),
+    (Component.bpkpjpsiee, Trigger.rk_ee_os),
+    (Component.bpkpjpsimm, Trigger.rk_mm_os),
+    (Component.bdkstkpiee, Trigger.rkst_ee_os),
+    (Component.bdkstkpimm, Trigger.rkst_mm_os),
 ]
 
 _PATCHING_SAMPLES = [
@@ -27,18 +27,18 @@ _PATCHING_SAMPLES = [
 ]
 
 _INCLUSIVE_SAMPLES = [
-    ('Bu_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
-    ('Bd_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
-    ('Bs_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    (Component.bpjpsixee, Trigger.rk_ee_os),
+    (Component.bdjpsixee, Trigger.rk_ee_os),
+    (Component.bsjpsixee, Trigger.rk_ee_os),
     # ----------
-    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
-    ('Bd_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
-    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    (Component.bpjpsixmm, Trigger.rk_mm_os),
+    (Component.bdjpsixmm, Trigger.rk_mm_os),
+    (Component.bsjpsixmm, Trigger.rk_mm_os),
 ]
 
 log=LogStore.add_logger('rx_data:test_spec_maker')
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This will run before any test

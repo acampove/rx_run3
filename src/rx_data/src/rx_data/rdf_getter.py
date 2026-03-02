@@ -56,7 +56,7 @@ class RDFGetter(SpecMaker):
         trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
         tree   : E.g. DecayTree or MCDecayTree, default DecayTree
         '''
-        super().__init__(sample=sample, trigger=trigger, tree=tree)
+        super().__init__(component=sample, trigger=trigger, tree=tree)
 
         log.debug(f'Process identifier: {RDFGetter._identifier}')
 

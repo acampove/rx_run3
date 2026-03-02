@@ -29,7 +29,7 @@ class LikelihoodFactory:
     def __init__(
         self,
         obs     : zobs,
-        sample  : Sample,
+        sample  : Component,
         q2bin   : Qsq,
         cfg     : DictConfig,
         name    : str|None = None):
