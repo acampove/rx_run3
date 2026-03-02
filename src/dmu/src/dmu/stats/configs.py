@@ -49,6 +49,25 @@ class YieldConf(RootModel):
     model_config = ConfigDict(frozen=True)
 
     root : SimpleYieldConf | CompositeYieldConf
+# ------------------------------
+class YieldsConf(RootModel):
+    '''
+    Class meant to represent dictionary between
+    parameter and configuration
+    '''
+    model_config = ConfigDict(frozen=True)
 
-    def __getattr__(self, item):
-        return getattr(self.root, item)
+    root : dict[str, YieldConf]
+    # --------------------
+    def __iter__(self):  # type: ignore[override]
+        return iter(self.root.items())
+    # --------------------
+    def __contains__(self, item: object) -> bool:
+        return item in self.root
+    # --------------------
+    def __getitem__(self, key: str) -> YieldConf:
+        return self.root[key]
+    # --------------------
+    def __setitem__(self, key: str, val : YieldConf) -> None:
+        self.root[key].root = val.root
+# ------------------------------
