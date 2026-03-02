@@ -19,7 +19,7 @@ from dmu.workflow        import Cache
 from zfit                import Space               as zobs
 from zfit.loss           import ExtendedUnbinnedNLL as zlos
 
-from .configs            import MisIDFitModel
+from .configs            import FitModelConf
 from .data_fitter        import DataFitter
 from .likelihood_factory import LikelihoodFactory
 from .data_preprocessor  import DataPreprocessor
@@ -43,7 +43,7 @@ class MisIDConstraints(Cache):
     def __init__(
         self, 
         obs      : zobs,
-        cfg      : MisIDFitModel, 
+        cfg      : FitModelConf, 
         q2bin    : Qsq):
         '''
         Parameters
