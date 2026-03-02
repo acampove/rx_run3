@@ -13,7 +13,6 @@ from fitter      import NonParametricConf
 from fitter      import CCbarConf, CombinatorialConf, MisIDConf
 from fitter      import ParametricConf
 from fitter      import FitModelConf
-from fitter      import MisIDFitModel
 
 log=LogStore.add_logger('fitter:test_config')
 # ----------------------
@@ -144,7 +143,7 @@ def test_misid(
 def test_misid_constraint():
     path = Path('misid/rk/ee/data_misid.yaml')
 
-    MisIDFitModel.from_yaml(
+    FitModelConf.from_yaml(
         package = 'fitter_data',
         path    = path)
 # ----------------------
