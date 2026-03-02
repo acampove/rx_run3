@@ -22,7 +22,6 @@ from .prec_scales        import PrecScales
 # ----------
 from .configs import FitModelConf
 from .configs import MisIDConf 
-from .configs import MisIDFitModel
 from .configs import CombinatorialConf 
 from .configs import CCbarConf 
 from .configs import NonParametricConf 
@@ -38,7 +37,6 @@ __all__ = [
     'CCbarConf',
     'CombinatorialConf',
     'MisIDConf',
-    'MisIDFitModel',
     'PrecScales',
     # ------------------
     'PRec',
