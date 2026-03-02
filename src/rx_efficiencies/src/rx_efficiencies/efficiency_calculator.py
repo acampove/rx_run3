@@ -14,7 +14,7 @@ from dmu                import LogStore
 from dmu.workflow       import Cache
 from dmu.generic        import hashing
 
-from rx_common          import Component, Trigger
+from rx_common          import Component, Qsq, Trigger
 from rx_data            import RDFGetter
 from rx_selection       import selection as sel
 from .acceptance_reader import AcceptanceReader
@@ -31,7 +31,7 @@ class EfficiencyCalculator(Cache):
     #------------------------------------------
     def __init__(
         self, 
-        q2bin   : str, 
+        q2bin   : Qsq, 
         trigger : Trigger,
         sample  : Component):
         '''
@@ -95,7 +95,7 @@ class EfficiencyCalculator(Cache):
         Takes sample and returns geometric acceptance
         '''
         obj = AcceptanceReader(
-            sample =sample, 
+            sample =sample.sample, 
             year   =self._year, 
             project=self._trigger.project)
 
