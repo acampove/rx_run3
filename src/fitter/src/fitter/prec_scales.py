@@ -22,24 +22,30 @@ class PrecScales:
     Class used to calculate scale factor between yields of partially reconstructed component and signal
     '''
     #------------------------------------------
-    def __init__(self, proc : str, q2bin : str):
+    def __init__(
+        self, 
+        comp  : Component, 
+        q2bin : Qsq):
         '''
         proc : Nickname of decay process, nicknames are in the DecayNames class
         q2bin: Needed to apply correct selection to get correct efficiencies and scales
         '''
-        self._proc        = proc
+        self._comp        = comp 
         self._q2bin       = q2bin
 
         self._d_frbf      : dict
-        self._trigger     = Trigger('Hlt2RD_BuToKpEE_MVA')
+        self._trigger     = Trigger.rk_ee_os
         self._initialized = False
 
         self._hash        = self._get_hash()
     #------------------------------------------
     def _get_hash(self) -> str:
-        process = Component[self._proc] 
-        d_sel   = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=process)
-        hsh     = hashing.hash_object([self._proc, self._q2bin, d_sel])
+        d_sel   = sel.selection(
+            q2bin   = self._q2bin, 
+            trigger = self._trigger, 
+            process = self._comp)
+
+        hsh = hashing.hash_object([self._comp, self._q2bin, d_sel])
 
         return hsh
     #------------------------------------------
@@ -137,7 +143,7 @@ class PrecScales:
             log.debug(f'{name:<20}{val:<20.3e}{err:<20.3e}')
         log.debug('-' * 20)
     #------------------------------------------
-    def get_scale(self, signal : str) -> tuple[float,float]:
+    def get_scale(self, signal : Component) -> tuple[float,float]:
         '''
         Parameters
         -----------------------
@@ -153,9 +159,9 @@ class PrecScales:
         '''
         self._initialize()
 
-        fr_bkg = self._get_fr(self._proc)
-        br_bkg = self._get_br(self._proc)
-        ef_bkg = self._get_ef(self._proc)
+        fr_bkg = self._get_fr(self._comp)
+        br_bkg = self._get_br(self._comp)
+        ef_bkg = self._get_ef(self._comp)
 
         fr_sig = self._get_fr(signal)
         br_sig = self._get_br(signal)
@@ -167,7 +173,7 @@ class PrecScales:
         cov   = numpy.diag(l_err) ** 2
 
         self._print_vars(l_tup[:3], proc=    signal)
-        self._print_vars(l_tup[3:], proc=self._proc)
+        self._print_vars(l_tup[3:], proc=self._comp)
 
         val, var = jac.propagate(lambda x : (x[3] * x[4] * x[5]) / (x[0] * x[1] * x[2]), l_val, cov) # type: ignore
         val = float(val)

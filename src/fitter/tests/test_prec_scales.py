@@ -55,34 +55,54 @@ def _validate_scales(scales : Any) -> None:
     assert isinstance(val, float)
     assert isinstance(err, float)
 #-------------------------------
-@pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
-@pytest.mark.parametrize('process', ['bdkstkpiee', 'bpkstkpiee', 'bsphiee'])
-def test_all_datasets(q2bin : str, process : str, tmp_path : Path):
+@pytest.mark.parametrize('q2bin'    , [
+    Qsq.low, 
+    Qsq.central, 
+    Qsq.high])
+@pytest.mark.parametrize('component', [
+    Component.bdkstkpiee, 
+    Component.bpkstkpiee,
+    Component.bsphiee])
+def test_all_datasets(
+    q2bin    : Qsq, 
+    component: Component, 
+    tmp_path : Path):
     '''
     Tests retrieval of scales between signal and PRec yields
     '''
-    signal   = 'bpkpee'
+    signal   = Component.bpkpee
     with Cache.cache_root(path = tmp_path):
-        obj    = PrecScales(proc=process, q2bin=q2bin)
+        obj    = PrecScales(
+            comp  = component, 
+            q2bin = q2bin)
+
         scales = obj.get_scale(signal=signal)
 
     _validate_scales(scales = scales)
 #-------------------------------
-@pytest.mark.parametrize('process', ['bdkstkpiee', 'bpkstkpiee', 'bsphiee'])
-@pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin'    , [
+    Qsq.low, 
+    Qsq.central, 
+    Qsq.high])
+@pytest.mark.parametrize('component', [
+    Component.bdkstkpiee, 
+    Component.bpkstkpiee,
+    Component.bsphiee])
 @pytest.mark.parametrize('mva_cut', _get_seq_wp(min_cmb=0.9, min_prc=0.9, step=0.1))
 def test_seq_scan_scales(
-    mva_cut : str, 
-    q2bin   : str, 
-    process : str,
-    tmp_path: Path) -> None:
+    mva_cut   : str, 
+    q2bin     : Qsq, 
+    component : Component,
+    tmp_path  : Path) -> None:
     '''
     Tests retrieval of scales between signal and PRec yields, by cutting first on combinatorial and then on PRec
     '''
-    signal = 'bpkpee'
+    signal = Component.bpkpee
     with sel.custom_selection(d_sel={'bdt' : mva_cut}),\
          Cache.cache_root(path = tmp_path):
-        obj    = PrecScales(proc=process, q2bin=q2bin)
+        obj    = PrecScales(
+            comp  = component, 
+            q2bin = q2bin)
         scales = obj.get_scale(signal=signal)
 
     _validate_scales(scales = scales)
