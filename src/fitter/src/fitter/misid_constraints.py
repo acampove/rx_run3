@@ -122,7 +122,7 @@ class MisIDConstraints(Cache):
 
         return value, error
     # ----------------------
-    def __get_transfer_factor(self, nickname : Literal['hdkk', 'hdpipi']) -> float:
+    def __get_transfer_factor(self, nickname : ControlRegion) -> float:
         '''
         Parameters
         -------------
