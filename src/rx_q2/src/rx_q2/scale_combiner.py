@@ -19,7 +19,7 @@ class ScaleCombiner:
     Class in charge of:
 
     - Load scales from each sample, given a version
-    - Combine them statisticall
+    - Combine them statistically
     - Write combined scales to JSON file
     '''
     # ----------------------
