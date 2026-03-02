@@ -36,6 +36,17 @@ class ObservableConf(BaseModel):
     name : Mass
     range: tuple[int,int]
 # ------------------------------
+# Constraints
+# ------------------------------
+class ConstraintsCfg(UnpackerModel):
+    '''
+    Class meant to configure constraints
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    misid   : 'FitModelConf   | None' = None
+    pre_rare: list[Component] | None  = None
+# ------------------------------
 # Components
 # ------------------------------
 class CmbConstraintConf(BaseModel):
@@ -172,17 +183,6 @@ class MisIDFitModel(UnpackerModel):
     components       : MisIDFitComponents
     fit              : FitConf
     plots            : ZFitPlotterConf
-# ------------------------------
-# Constraints
-# ------------------------------
-class ConstraintsCfg(UnpackerModel):
-    '''
-    Class meant to configure constraints
-    '''
-    model_config = ConfigDict(frozen=True)
-
-    misid   : MisIDFitModel   | None = None
-    pre_rare: list[Component] | None = None
 # ------------------------------
 AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonParametricConf
 # ------------------------------
