@@ -123,9 +123,9 @@ def _get_truth(event_type : int|str, trigger : str) -> str:
     raise ValueError(f'Invalid project {project} for trigger: {trigger}')
 #-----------------------
 def selection(
-    q2bin     : str,
-    process   : str,
-    trigger   : str,
+    q2bin     : Qsq,
+    process   : Component,
+    trigger   : Trigger,
     skip_truth: bool = False,
     smeared   : bool = True) -> dict[str,str]:
     '''
@@ -364,9 +364,9 @@ def _save_cutflow(
 #-----------------------
 def apply_full_selection(
     rdf      : RDF.RNode,
-    q2bin    : str,
-    process  : str,
-    trigger  : str,
+    q2bin    : Qsq,
+    process  : Component,
+    trigger  : Trigger,
     ext_cut  : str|None = None,
     uid      : str|None = None,
     out_path : Path|None= None) -> RDF.RNode:
@@ -386,7 +386,11 @@ def apply_full_selection(
     If uid was passed, the uid will be recalculated and attached to the dataframe.
     '''
 
-    d_sel = selection(q2bin=q2bin, process=process, trigger=trigger)
+    d_sel = selection(
+        q2bin  =q2bin, 
+        process=process, 
+        trigger=trigger)
+
     if ext_cut is not None:
         d_sel['extra'] = ext_cut
 
