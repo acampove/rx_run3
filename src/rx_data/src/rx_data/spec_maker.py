@@ -57,7 +57,7 @@ class SpecMaker:
         trigger   : Hlt2RD_BuToKpEE_MVA
         skip_patch: If true, it will not patch for missing samples, false by default
         '''
-        self._emulator  = SampleEmulator(sample=component)
+        self._emulator  = SampleEmulator(sample=component.sample)
         self._sample    = self._emulator.get_sample_name()
 
         cache_dir       = tempfile.mkdtemp(prefix=f'{component}_{trigger}_{tree}')
