@@ -162,12 +162,33 @@ class ParameterLibrary:
                 cls._d_par[name] = par
 
         return par
+    # ----------------------
+    @classmethod
+    def _get_composite_yield(
+        cls, 
+        name: str,
+        cfg : CompositeYieldConf) -> zpar:
+        '''
+        Parameters
+        -------------
+        name: Parameter name
+        cfg : Configuration needed to make composite yield
 
-        # scl and non alias
-        l_par    = [ cls.get_yield(name=comp_name) for comp_name in yld_cfg[name]['scl'] ]
-        par      = cls._parameter_from_conf(name=name, cfg=yld_cfg, is_scale=True)
-        l_par.append(par)
-        comp_par = cls._multiply_pars(name=name, pars=l_par)
+        Returns
+        -------------
+        Composite zfit parameter
+        '''
+        log.debug(f'Building {name} with:')
+        log.debug(cfg)
+
+        match cfg.kind:
+            case 'mul':
+                l_par    = [ cls.get_yield(name=comp_name) for comp_name in cfg.pars ]
+                comp_par = cls._multiply_pars(name=name, pars=l_par)
+            case 'dif':
+                par_1    = cls.get_yield(name=cfg.pars[0])
+                par_2    = cls.get_yield(name=cfg.pars[1])
+                comp_par = cls._subtract_pars(name = name, par_1=par_1, par_2=par_2)
 
         return comp_par
     # ----------------------
@@ -207,32 +228,25 @@ class ParameterLibrary:
         return comp_par
     # ----------------------
     @classmethod
-    def _parameter_from_conf(cls, name : str, cfg : DictConfig, is_scale : bool = False) -> zpar:
+    def _get_simple_yield(
+        cls, 
+        name : str, 
+        cfg  : SimpleYieldConf) -> zpar:
         '''
         Parameters
         -------------
         name    : Name of parameter to be returned
         cfg     : Config defining values of parameter bounds and default value of parameter
-        is_scale: If True, this parameter is a scale, not an actual yield. Scales on yield nPar is called s_nPar
 
         Returns
         -------------
         A zfit parameter
         '''
-        val = cfg[name]['val']
-        minv= cfg[name]['min']
-        maxv= cfg[name]['max']
+        log.debug(f'Building {name} with:')
+        log.debug(cfg)
 
-        preffix  = cfg[name].get('preffix', 's')
-        par_name = f'{preffix}_{name}' if is_scale else name
-
-        if minv > maxv:
-            raise ValueError(f'For parameter {name}, minimum edge is larger: {minv:.3e} > {maxv:.3e}')
-
-        if math.isclose(minv, maxv, rel_tol=1e-5):
-            par = zfit.Parameter(par_name, val, minv, maxv + 1, floating=False)
-        else:
-            par = zfit.Parameter(par_name, val, minv, maxv + 0, floating= True)
+        par = zfit.Parameter(name, cfg.val, cfg.min, cfg.max,)
+        par.floating = not cfg.fix
 
         return par
 # --------------------------------
