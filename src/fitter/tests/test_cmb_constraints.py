@@ -4,7 +4,6 @@ Module used to test CmbConstraints class
 
 import pytest 
 
-from typing       import Final
 from pathlib      import Path
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
 
@@ -15,13 +14,11 @@ from dmu.stats    import ConstraintND
 from dmu.stats    import ModelFactory
 from dmu.stats    import zfit
 
-from rx_common    import Qsq, Trigger
+from rx_common    import Component, Qsq, Trigger
 from rx_selection import selection           as sel
 
 from fitter       import CmbConstraints
 from fitter       import CombinatorialConf
-
-_COMBINATORIAL_NAME : Final[str] = 'combinatorial'
 
 log=LogStore.add_logger('test_cmb_constraints')
 # ----------------------
@@ -63,7 +60,7 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
     '''
     data = gut.load_data(
         package= 'fitter_data', 
-        fpath  = 'rare/rkst/electron/combinatorial.yaml')
+        fpath  = 'rare/rkst/ee/comb.yaml')
 
     cfg  = CombinatorialConf(**data)
     nll  = _get_nll(cfg = cfg, q2bin = q2bin)
@@ -71,7 +68,7 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.8'}):
         calc      = CmbConstraints(
-            name  = _COMBINATORIAL_NAME,
+            name  = Component.comb,
             nll   = nll,
             cfg   = cfg,
             trig  = Trigger.rkst_ee_os,
