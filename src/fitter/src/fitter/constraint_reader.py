@@ -13,9 +13,7 @@ from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
 from .cmb_constraints    import CmbConstraints
 
-_MISID_COMPONENTS   : Final[set[str]] = {'kkk', 'kpipi'}
-_COMBINATORIAL_NAME : Final[str]      = 'combinatorial'
-
+_MISID_COMPONENTS   : Final[set[Component]] = {Component.bpkkk, Component.bpkpipi}
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
 class ConstraintReader:
@@ -27,7 +25,7 @@ class ConstraintReader:
         self, 
         nll   : ExtendedUnbinnedNLL, 
         cfg   : RXFitConfig,
-        signal: str = 'bpkpee',
+        signal: Component = Component.bpkpee,
         pprefx: str = 'pscale'):
         '''
         Parameters
@@ -54,11 +52,11 @@ class ConstraintReader:
     def _add_signal_constraints(self) -> None:
         raise NotImplementedError('This needs to be implemented with DataFitter')
     # ----------------------
-    def _proc_from_par(self, par_name : str) -> str:
+    def _proc_from_par(self, par_name : str) -> Component:
         '''
         Parameters
         ------------------
-        par_name : Name of part reco scale parameter to constrain, e.g. pscale_yld_Bp_KpEE_DT...
+        par_name : Name of part reco scale parameter to constrain, e.g. pscale_yld_bpkpee_...
 
         Returns
         ------------------
@@ -71,7 +69,7 @@ class ConstraintReader:
         name   = par_name.removeprefix(prefix)
         sample = Component(name)
 
-        return sample.name 
+        return sample
     # ----------------------
     def _add_prec_constraints(self) -> None:
         '''
@@ -135,7 +133,7 @@ class ConstraintReader:
             return
 
         calc      = CmbConstraints(
-            name  = _COMBINATORIAL_NAME,
+            name  = Component.comb,
             trig  = self._cfg.mod_cfg.trigger,
             nll   = self._nll,
             cfg   = self._cfg.mod_cfg,
