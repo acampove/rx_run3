@@ -4,7 +4,6 @@ Module containing the MisIDConstraints class
 
 from pathlib             import Path
 from typing              import Final, Literal
-from omegaconf           import DictConfig, OmegaConf
 from rx_common           import Component, Correction, Qsq
 from rx_selection        import selection as sel
 
@@ -212,13 +211,7 @@ class MisIDConstraints(Cache):
         obs     = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
         pid_cut = self.__get_pid_cut(kind=kind)
 
-        data    = self._cfg.python_yields
-        yld_cfg = OmegaConf.create(data)
-
-        data    = self._cfg.model_dump()
-        fit_cfg = OmegaConf.create(data)
-
-        with PL.parameter_schema(cfg=yld_cfg),\
+        with PL.parameter_schema(cfg=self._cfg.yields),\
              sel.update_selection(d_sel={'pid_l' : pid_cut}):
 
             ftr = LikelihoodFactory(
@@ -226,7 +219,7 @@ class MisIDConstraints(Cache):
                 name   = kind,
                 sample = self._data_sample, 
                 q2bin  = self._q2bin,
-                cfg    = fit_cfg)
+                cfg    = self._cfg)
             nll = ftr.run()
             cfg = ftr.get_config()
 
