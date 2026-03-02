@@ -1,8 +1,8 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum   import IntEnum, StrEnum, auto
-from typing import Literal
+from enum   import IntEnum, StrEnum
+from .mass  import Mass
 
 # ------------------------------
 class Correction(StrEnum):
@@ -153,5 +153,34 @@ class Qsq(StrEnum):
 
     def __str__(self):
         return self.value
+# ---------------------------------------
+class MisID(StrEnum):
+    '''
+    Class meant to represent different
+    misID control regions
+    '''
+    bp_kk   = 'bp_kk'
+    bp_pipi = 'bp_pipi'
+
+    bd_kk   = 'bd_kk'
+    bd_pipi = 'bd_pipi'
+    # ----------------------------
+    def __str__(self):
+        return self.value
+    # ----------------------------
+    @property
+    def mass(self) -> Mass:
+        '''
+        Mass meant to be fitted in this region
+        '''
+        match self:
+            case MisID.bp_kk:
+                return Mass.bp_kk
+            case MisID.bp_pipi:
+                return Mass.bp_pipi
+            case MisID.bd_kk:
+                return Mass.bd_kk
+            case MisID.bd_pipi:
+                return Mass.bd_pipi
 # ---------------------------------------
 
