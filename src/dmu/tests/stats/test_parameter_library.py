@@ -36,10 +36,10 @@ def _check_parameter(par : zpar) -> None:
     assert isinstance(val, float)
 
     if 'BdKstee' in par.name:
-        assert _composed_has_par(name='s_BdKstee'         , par=par)
+        assert _composed_has_par(name='s_BdKstee', par=par)
 
     if 'BuKstee' in par.name:
-        assert _composed_has_par(name='my_preffix_BuKstee', par=par)
+        assert _composed_has_par(name='s_BuKstee', par=par)
 # ----------------------
 def _composed_has_par(name : str, par : zpar) -> bool:
     '''
