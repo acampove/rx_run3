@@ -2,17 +2,17 @@
 Module containing DataModel class
 '''
 
-from contextlib             import contextmanager
-from dmu.stats              import zfit
-from dmu.logging.log_store  import LogStore
-from dmu.stats.parameters   import ParameterLibrary as PL
-from omegaconf              import DictConfig
-from rx_common.types        import Trigger
-from rx_common              import info
-from rx_data.stats          import SpecMaker
-from zfit.pdf               import BasePDF       as zpdf
-from zfit.interface         import ZfitSpace     as zobs
-from fitter.sim_fitter      import SimFitter
+from contextlib   import contextmanager
+from dmu          import LogStore
+from dmu.stats    import zfit
+from dmu.stats    import ParameterLibrary as PL
+from rx_common    import Qsq, Trigger
+from rx_data      import SpecMaker
+from zfit         import Space         as zobs
+from zfit.pdf     import BasePDF       as zpdf
+
+from .configs     import FitModelConf
+from .sim_fitter  import SimFitter
 
 log = LogStore.add_logger('fitter:data_model')
 # ------------------------
@@ -24,10 +24,10 @@ class DataModel:
     # ------------------------
     def __init__(
         self,
-        cfg     : DictConfig,
+        cfg     : FitModelConf,
         obs     : zobs,
         trigger : Trigger,
-        q2bin   : str,
+        q2bin   : Qsq,
         name    : str|None=None):
         '''
         Parameters
@@ -76,21 +76,20 @@ class DataModel:
         Fitting model for data fit
         '''
         l_pdf = []
-        npdf  = len(self._cfg.model)
+        npdf  = len(self._cfg.components)
         if npdf == 0:
-            log.info(self._cfg.model)
             raise ValueError('Found zero components in model')
 
         log.debug(f'Found {npdf} components')
-        for component, cfg in self._cfg.model.components.items():
+
+        trigger = self._cfg.trigger
+        for component, cfg in self._cfg.components.items():
             if component in self._skipped_components:
                 log.warning(f'Skipping {component} component')
                 continue
 
             name    = '' if self._name is None else self._name
-            trigger = cfg.get('trigger', self._trigger)
-            project = info.project_from_trigger(trigger = trigger, lower_case=True)
-            with SpecMaker.project(name = project):
+            with SpecMaker.project(name = trigger.project):
                 ftr  = SimFitter(
                     name     = name,
                     component= component,
