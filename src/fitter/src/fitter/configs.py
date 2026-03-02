@@ -145,8 +145,6 @@ class CombinatorialConf(ComponentConf): # Tested
     models      : dict[Qsq, ModelFactoryConf ]
     constraints : dict[Qsq, CmbConstraintConf]
 # ------------------------------
-# MisID
-# ------------------------------
 class MisIDConf(NonParametricConf): # Tested
     '''
     Configuration needed to build MisID components
@@ -157,34 +155,7 @@ class MisIDConf(NonParametricConf): # Tested
     selection        : dict[str,str]
     weights          : MisIDSampleWeights 
 # ------------------------------
-class MisIDFitComponents(UnpackerModel):
-    '''
-    Class describing fitting components for fits to misID control region
-    '''
-    model_config = ConfigDict(frozen=True)
-
-    comb    : CombinatorialConf 
-    bpkpipi : MisIDConf
-    bpkkk   : MisIDConf 
-# ------------------------------
-class MisIDFitModel(UnpackerModel):
-    '''
-    Class meant to configure how the fit model for misID control region
-    fits are done
-    '''
-    model_config = ConfigDict(frozen=True)
-
-    # Strings are hdkk or hdpipi
-    output_directory : Path
-    trigger          : Trigger
-    selection        : dict[str,str]
-    yields           : dict[str,YieldConf]
-    observable       : dict[str,ObservableConf]
-    components       : MisIDFitComponents
-    fit              : FitConf
-    plots            : ZFitPlotterConf
-# ------------------------------
-AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonParametricConf
+AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonParametricConf | MisIDConf
 # ------------------------------
 # Fits
 # ------------------------------
