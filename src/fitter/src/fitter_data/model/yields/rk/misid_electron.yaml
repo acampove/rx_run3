@@ -7,10 +7,13 @@ flt_yields: &flt_yields
   min : 0
   max : 10000
 
+# KK(pipi) yield in pipi (KK) misID control region
+# is negligible and not fittable, set it to zero
 cns_yields: &cns_yields
-  val : 0
-  min : 0
-  max : 0 
+  val : 10
+  min :  0
+  max : 20
+  fix : True
 
 yld_combinatorial_hdkk:
   <<: *flt_yields
