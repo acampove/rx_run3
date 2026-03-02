@@ -143,36 +143,25 @@ class ParameterLibrary:
         if name in cls._d_par:
             return cls._d_par[name]
 
-        if cls._yld_cfg is None:
+        cfg = _YLD_CFG.get()
+        if cfg is None:
             raise ValueError('Parameter schema not set')
 
-        yld_cfg = cls._yld_cfg
-        if name not in yld_cfg:
-            log.error(OmegaConf.to_yaml(yld_cfg))
+        if name not in cfg:
+            log.error(cfg)
             raise ValueError(f'Parameter {name} not found in configuration')
 
-        this_yld = yld_cfg[name]
+        cfg_yld = cfg[name]
 
-        if 'mul' in this_yld:
-            l_par    = [ cls.get_yield(name=comp_name) for comp_name in this_yld.mul ]
-            comp_par = cls._multiply_pars(name=name, pars=l_par)
-            cls._d_par[name] = comp_par
+        match cfg_yld.root:
+            case CompositeYieldConf() as cfg:
+                par = cls._get_composite_yield(name = name, cfg = cfg)
+                cls._d_par[name] = par
+            case SimpleYieldConf()    as cfg:
+                par = cls._get_simple_yield(name = name, cfg = cfg)
+                cls._d_par[name] = par
 
-            return comp_par
-
-        if 'dif' in this_yld:
-            par_1 = cls.get_yield(name=this_yld.dif[0])
-            par_2 = cls.get_yield(name=this_yld.dif[1])
-            comp_par = cls._subtract_pars(name = name, par_1=par_1, par_2=par_2)
-            cls._d_par[name] = comp_par
-
-            return comp_par
-
-        # This is a non-alias, non-scl parameter, e.g. simple one
-        if 'scl' not in yld_cfg[name]:
-            par = cls._parameter_from_conf(name=name, cfg=yld_cfg)
-            cls._d_par[name] = par
-            return par
+        return par
 
         # scl and non alias
         l_par    = [ cls.get_yield(name=comp_name) for comp_name in yld_cfg[name]['scl'] ]
