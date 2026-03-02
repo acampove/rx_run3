@@ -31,11 +31,13 @@ from .types               import Model, KDEModel
 from .configs             import SimpleYieldConf
 from .configs             import CompositeYieldConf
 from .configs             import YieldConf
+from .configs             import YieldsConf
 
 __all__ = [
     'SimpleYieldConf',
     'CompositeYieldConf',
     'YieldConf',
+    'YieldsConf',
     'pdf_to_tex',
     'is_pdf_usable',
     'ZFitPlotterConf',
