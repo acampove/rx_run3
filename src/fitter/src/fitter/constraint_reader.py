@@ -84,7 +84,7 @@ class ConstraintReader:
             log.debug(f'Adding constraint for: {par}')
 
             process  = self._proc_from_par(par_name = par)
-            obj      = PrecScales(proc=process, q2bin=self._cfg.q2bin)
+            obj      = PrecScales(comp=process, q2bin=self._cfg.q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
             cns = Constraint1D(
@@ -99,7 +99,7 @@ class ConstraintReader:
         '''
         Adds constraints for fully hadronic MisID components
         '''
-        components= self._cfg.mod_cfg.model.components
+        components= self._cfg.mod_cfg.components
         all_found = all(component in components for component in _MISID_COMPONENTS)
         any_found = any(component in components for component in _MISID_COMPONENTS)
         if not all_found and     any_found:
@@ -111,7 +111,7 @@ class ConstraintReader:
 
         log.info('Adding MisID constraints')
         
-        cfg = self._cfg.mod_cfg.model.constraints.misid
+        cfg = self._cfg.mod_cfg.constraints.misid
         if cfg is None:
             log.debug('No MisID constraints config found, not adding constraints')
             return
@@ -127,16 +127,20 @@ class ConstraintReader:
         '''
         Adds combinatorial constraints
         '''
-        components= self._cfg.mod_cfg.model.components
-        if _COMBINATORIAL_NAME not in components:
-            log.warning(f'Combinatorial {_COMBINATORIAL_NAME} component not found, not calculating constraints')
+        components= self._cfg.mod_cfg.components
+        if Component.comb not in components:
+            log.warning(f'Combinatorial {Component.comb} component not found, not calculating constraints')
             return
+
+        cmb_cfg = self._cfg.mod_cfg.components[Component.comb]
+        if not isinstance(cmb_cfg, CombinatorialConf):
+            raise ValueError(f'Expected combinatorial config, got: {cmb_cfg}')
 
         calc      = CmbConstraints(
             name  = Component.comb,
             trig  = self._cfg.mod_cfg.trigger,
             nll   = self._nll,
-            cfg   = self._cfg.mod_cfg,
+            cfg   = cmb_cfg,
             q2bin = self._cfg.q2bin)
 
         self._constraints.append( calc.get_constraint() )
