@@ -89,22 +89,26 @@ class ParameterLibrary:
         This function will override the value and range for the given parameter
         It should be typically used before using the ModelFactory class
         '''
-        old_val, old_low, old_high   = cls.get_values(kind=kind, parameter=parameter)
-        cls._values[kind][parameter] = {'val' : val, 'low' : low, 'high' : high}
+        old_par = cls._values[kind][parameter].root
+
+        cls._values[kind][parameter].root = SimpleYieldConf(
+            val = val, 
+            min = low, 
+            max = high)
 
         @contextmanager
         def _context():
             try:
                 yield
             finally:
-                cls._values[kind][parameter] = {'val' : old_val, 'low' : old_low, 'high' : old_high}
+                cls._values[kind][parameter].root = old_par 
 
         return _context()
     # ----------------------
     @classmethod
-    def parameter_schema(cls, cfg : DictConfig):
+    def parameter_schema(cls, cfg : YieldsConf):
         '''
-        This context manager sets `_yld_cfg`, which defines
+        This context manager sets `_YLD_CFG`, which defines
 
         - How parameters are related. I.e. if they are multiplied
         - What their values are
@@ -113,15 +117,14 @@ class ParameterLibrary:
         -------------
         cfg: DictConfig representing the values and relationships between paramaters
         '''
-        old_val      = cls._yld_cfg
-        cls._yld_cfg = cfg
+        token = _YLD_CFG.set(cfg)
 
         @contextmanager
         def _context():
             try:
                 yield
             finally:
-                cls._yld_cfg = old_val
+                _YLD_CFG.reset(token)
 
         return _context()
     # ----------------------
