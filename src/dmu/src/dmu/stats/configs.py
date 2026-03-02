@@ -41,17 +41,14 @@ class CompositeYieldConf(BaseModel):
 
         return self
 # ------------------------------
-class YieldConf(BaseModel):
+class YieldConf(RootModel):
     '''
     Class meant to wrap SimpleYieldConf and CompositeYieldConf
     pydantic models
     '''
-    root : SimpleYieldConf | CompositeYieldConf
+    model_config = ConfigDict(frozen=True)
 
-    @model_validator(mode='before')
-    @classmethod
-    def _pack_data(cls, data):
-        return {'root' :  data}
+    root : SimpleYieldConf | CompositeYieldConf
 
     def __getattr__(self, item):
         return getattr(self.root, item)
