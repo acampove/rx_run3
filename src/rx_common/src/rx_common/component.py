@@ -10,67 +10,67 @@ from ap_utilities.decays import utilities as aput
 
 class Component(StrEnum):
     '''
-    Class meant to represent decay 
+    Class meant to represent decay
 
     Naming constraints:
 
     - Except for data, undefined and combinatorial, all samples meant to be used with the electron/muon channel should end with ee/mm
     '''
-    undefined      = auto() 
-    comb           = auto() 
-    ccbar          = auto() 
+    undefined      = auto()
+    comb           = auto()
+    ccbar          = auto()
     # -----
     # Data
     # -----
-    data_24        = auto() 
-    data_24_mu_c2  = auto() 
-    data_24_mu_c3  = auto() 
-    data_24_mu_c4  = auto() 
-    data_24_md_c2  = auto() 
-    data_24_md_c3  = auto() 
-    data_24_md_c4  = auto() 
+    data_24        = auto()
+    data_24_mu_c2  = auto()
+    data_24_mu_c3  = auto()
+    data_24_mu_c4  = auto()
+    data_24_md_c2  = auto()
+    data_24_md_c3  = auto()
+    data_24_md_c4  = auto()
     # -----
-    bpkkk          = auto() 
-    bpkpipi        = auto() 
+    bpkkk          = auto()
+    bpkpipi        = auto()
     # -----
-    bpkpee         = auto() 
-    bpkpjpsiee     = auto() 
-    bpkppsi2ee     = auto() 
-    bpkpipiee      = auto() 
+    bpkpee         = auto()
+    bpkpjpsiee     = auto()
+    bpkppsi2ee     = auto()
+    bpkpipiee      = auto()
     # -----
-    bppijpsimm     = auto() 
-    bppijpsiee     = auto() 
+    bppijpsimm     = auto()
+    bppijpsiee     = auto()
     # -----
-    bpkpmm         = auto() 
-    bpkpjpsimm     = auto() 
-    bpkppsi2mm     = auto() 
+    bpkpmm         = auto()
+    bpkpjpsimm     = auto()
+    bpkppsi2mm     = auto()
     # -----
-    bdkstkpiee     = auto() 
-    bdkstkpijpsiee = auto() 
-    bdkstkpipsi2ee = auto() 
+    bdkstkpiee     = auto()
+    bdkstkpijpsiee = auto()
+    bdkstkpipsi2ee = auto()
     # -----
-    bdkstkpimm     = auto() 
-    bdkstkpijpsimm = auto() 
-    bdkstkpipsi2mm = auto() 
+    bdkstkpimm     = auto()
+    bdkstkpijpsimm = auto()
+    bdkstkpipsi2mm = auto()
     # -----
-    bpk1kpipiee    = auto() 
-    bpk2kpipiee    = auto() 
-    bpkstkpiee     = auto() 
-    bsphiee        = auto() 
+    bpk1kpipiee    = auto()
+    bpk2kpipiee    = auto()
+    bpkstkpiee     = auto()
+    bsphiee        = auto()
     # -----
-    bpjpsixee      = auto() 
-    bdjpsixee      = auto() 
-    bsjpsixee      = auto() 
+    bpjpsixee      = auto()
+    bdjpsixee      = auto()
+    bsjpsixee      = auto()
     # -----
-    bpjpsixmm      = auto() 
-    bdjpsixmm      = auto() 
-    bsjpsixmm      = auto() 
+    bpjpsixmm      = auto()
+    bdjpsixmm      = auto()
+    bsjpsixmm      = auto()
     # -----
-    bsphijpsimm    = auto() 
-    bsphijpsiee    = auto() 
+    bsphijpsimm    = auto()
+    bsphijpsiee    = auto()
     # -----
-    lbpkjpsimm     = auto() 
-    lbpkjpsiee     = auto() 
+    lbpkjpsimm     = auto()
+    lbpkjpsiee     = auto()
     # -----
     # Emulated
     # -----
@@ -78,7 +78,7 @@ class Component(StrEnum):
     bskstjpsiee    = auto()
 
     bdkstjpsimm_swp= auto()
-    bdkstjpsiee_swp= auto()     
+    bdkstjpsiee_swp= auto()
     # --------------------------------------------
     @property
     def is_mc(self) -> bool:
@@ -255,7 +255,7 @@ class Component(StrEnum):
             case 'bpkstkpiee':
                 return ['bpks', 'kokp']
             case _:
-                raise NotImplementedError(f'Cannot find subdecays for: {self.name}') 
+                raise NotImplementedError(f'Cannot find subdecays for: {self.name}')
     # --------------------------------------------
     @classmethod
     def get_mc_samples(cls) -> list['Component']:
@@ -264,7 +264,7 @@ class Component(StrEnum):
         ---------------
         List of MC samples known to analysis
         '''
-        return [ sample for sample in cls if sample.has_mc() ] 
+        return [ sample for sample in cls if sample.has_mc() ]
     # --------------------------------------------
     def has_mc(self) -> bool:
         if self in [Component.undefined, Component.comb, Component.data_24]:
@@ -276,7 +276,7 @@ class Component(StrEnum):
         '''
         Returns
         ----------------
-        String representing sample name, e.g. bpkpee 
+        String representing sample name, e.g. bpkpee
         '''
         return self.name
     # --------------------------------------------
