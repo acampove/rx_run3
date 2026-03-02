@@ -29,23 +29,23 @@ _COMPONENTS : Final[list[Component]] = [
 
 log=LogStore.add_logger('rx_efficiencies:test_acceptance_reader')
 #------------------------------------
-@pytest.mark.parametrize('sample' , _COMPONENTS)
-@pytest.mark.parametrize('year'   , ['2018', '2024'])
-@pytest.mark.parametrize('project', [Project.rk, Project.rkst])
-def test_simple(year : str, sample : Component, project : Project):
+@pytest.mark.parametrize('component', _COMPONENTS)
+@pytest.mark.parametrize('year'     , ['2018', '2024'])
+@pytest.mark.parametrize('project'  , [Project.rk, Project.rkst])
+def test_simple(year : str, component : Component, project : Project):
     '''
     Test reading acceptances from JSON files for multiple processes and years
     '''
-    if not is_acceptance_defined(sample = sample, project = project):
+    if not is_acceptance_defined(sample = component, project = project):
         return
 
     obj=AcceptanceReader(
         year   =year, 
         project=project,
-        sample =sample)
+        sample =component.sample)
     acc=obj.read()
 
-    log.info(f'{year:<20}{sample:<20}{acc:10.3f}')
+    log.info(f'{year:<20}{component:<20}{acc:10.3f}')
 
     assert 0.1 < acc < 0.2
 #------------------------------------
