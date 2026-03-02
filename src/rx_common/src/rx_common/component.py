@@ -1,0 +1,309 @@
+'''
+Module holding Component and CCbarComponent
+'''
+
+from enum   import StrEnum, auto
+from typing import Literal
+
+from .types import Channel
+
+class Component(StrEnum):
+    '''
+    Class meant to represent decay 
+
+    Naming constraints:
+
+    - Except for data, undefined and combinatorial, all samples meant to be used with the electron/muon channel should end with ee/mm
+    '''
+    undefined      = auto() 
+    comb           = auto() 
+    ccbar          = auto() 
+    # -----
+    # Data
+    # -----
+    data_24        = 'DATA_24*' 
+    data_24_mu_c2  = 'DATA_24_MagUp_24c2' 
+    data_24_mu_c3  = 'DATA_24_MagUp_24c3' 
+    data_24_mu_c4  = 'DATA_24_MagUp_24c4' 
+    data_24_md_c2  = 'DATA_24_MagDown_24c2'
+    data_24_md_c3  = 'DATA_24_MagDown_24c3'
+    data_24_md_c4  = 'DATA_24_MagDown_24c4'
+    # -----
+    bpkkk          = auto() 
+    bpkpipi        = auto() 
+    # -----
+    bpkpee         = auto() 
+    bpkpjpsiee     = auto() 
+    bpkppsi2ee     = auto() 
+    bpkpipiee      = auto() 
+    # -----
+    bppijpsimm     = auto() 
+    bppijpsiee     = auto() 
+    # -----
+    bpkpmm         = auto() 
+    bpkpjpsimm     = auto() 
+    bpkppsi2mm     = auto() 
+    # -----
+    bdkstkpiee     = auto() 
+    bdkstkpijpsiee = auto() 
+    bdkstkpipsi2ee = auto() 
+    # -----
+    bdkstkpimm     = auto() 
+    bdkstkpijpsimm = auto() 
+    bdkstkpipsi2mm = auto() 
+    # -----
+    bpk1kpipiee    = auto() 
+    bpk2kpipiee    = auto() 
+    bpkstkpiee     = auto() 
+    bsphiee        = auto() 
+    # -----
+    bpjpsixee      = auto() 
+    bdjpsixee      = auto() 
+    bsjpsixee      = auto() 
+    # -----
+    bpjpsixmm      = auto() 
+    bdjpsixmm      = auto() 
+    bsjpsixmm      = auto() 
+    # -----
+    bsphijpsimm    = auto() 
+    bsphijpsiee    = auto() 
+    # -----
+    lbpkjpsimm     = auto() 
+    lbpkjpsiee     = auto() 
+    # -----
+    # Emulated
+    # -----
+    bskstjpsimm    = auto()
+    bskstjpsiee    = auto()
+
+    bdkstjpsimm_swp= auto()
+    bdkstjpsiee_swp= auto()     
+    # --------------------------------------------
+    @property
+    def sample(self) -> str:
+        match self:
+          case Component.data_24:
+            return 'DATA_24*'
+          case Component.data_24_mu_c2:
+            return 'DATA_24_MagUp_24c2'
+          case Component.data_24_md_c2:
+            return 'DATA_24_MagDown_24c2'
+          case Component.data_24_mu_c3:
+            return 'DATA_24_MagUp_24c3'
+          case Component.data_24_md_c3:
+            return 'DATA_24_MagDown_24c3'
+          case Component.data_24_mu_c4:
+            return 'DATA_24_MagUp_24c4'
+          case Component.data_24_md_c4:
+            return 'DATA_24_MagDown_24c4'
+          # -----
+          case Component.bpkkk:
+            return 'Bu_KplKplKmn_eq_sqDalitz_DPC'
+          case Component.bpkpipi:
+            return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+          # -----
+          case Component.bpkpee:
+            return 'Bu_Kee_eq_btosllball05_DPC'
+          case Component.bpkpjpsiee:
+            return 'Bu_JpsiK_ee_eq_DPC'
+          case Component.bpkppsi2ee:
+            return 'Bu_psi2SK_ee_eq_DPC'
+          case Component.bpkpipiee:
+            return 'Bu_Kpipiee_eq_DPC_LSFLAT'
+          # -----
+          case Component.bppijpsimm:
+            return 'Bu_JpsiPi_mm_eq_DPC'
+          case Component.bppijpsiee:
+            return 'Bu_JpsiPi_ee_eq_DPC'
+          # -----
+          case Component.bpkpmm:
+            return 'Bu_Kmumu_eq_btosllball05_DPC'
+          case Component.bpkpjpsimm:
+            return 'Bu_JpsiK_mm_eq_DPC'
+          case Component.bpkppsi2mm:
+            return 'Bu_psi2SK_mm_eq_DPC'
+          # -----
+          case Component.bdkstkpiee:
+            return 'Bd_Kstee_eq_btosllball05_DPC'
+          case Component.bdkstkpijpsiee:
+            return 'Bd_JpsiKst_ee_eq_DPC'
+          case Component.bdkstkpipsi2ee:
+            return 'Bd_psi2SKst_ee_eq_DPC'
+          # -----
+          case Component.bdkstkpimm:
+            return 'Bd_Kstmumu_eq_btosllball05_DPC'
+          case Component.bdkstkpijpsimm:
+            return 'Bd_JpsiKst_mm_eq_DPC'
+          case Component.bdkstkpipsi2mm:
+            return 'Bd_psi2SKst_mm_eq_DPC'
+          # -----
+          case Component.bpk1kpipiee:
+            return 'Bu_K1ee_eq_DPC'
+          case Component.bpk2kpipiee:
+            return 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
+          case Component.bpkstkpiee:
+            return 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
+          case Component.bsphiee:
+            return 'Bs_phiee_eq_Ball_DPC'
+          # -----
+          case Component.bpjpsixee:
+            return 'Bu_JpsiX_ee_eq_JpsiInAcc'
+          case Component.bdjpsixee:
+            return 'Bd_JpsiX_ee_eq_JpsiInAcc'
+          case Component.bsjpsixee:
+            return 'Bs_JpsiX_ee_eq_JpsiInAcc'
+          # -----
+          case Component.bpjpsixmm:
+            return 'Bu_JpsiX_mm_eq_JpsiInAcc'
+          case Component.bdjpsixmm:
+            return 'Bd_JpsiX_mm_eq_JpsiInAcc'
+          case Component.bsjpsixmm:
+            return 'Bs_JpsiX_mm_eq_JpsiInAcc'
+          # -----
+          case Component.bsphijpsimm:
+            return 'Bs_Jpsiphi_mm_eq_CPV_update2012_DPC'
+          case Component.bsphijpsiee:
+            return 'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC'
+          # -----
+          case Component.lbpkjpsimm:
+            return 'Lb_JpsipK_mm_eq_phsp_DPC'
+          case Component.lbpkjpsiee:
+            return 'Lb_JpsipK_ee_eq_phsp_DPC'
+          # -----
+          # Emulated samples
+          # -----
+          case Component.bskstjpsimm:
+            return 'Bs_JpsiKst_mm_eq_DPC'
+          case Component.bskstjpsiee:
+            return 'Bs_JpsiKst_ee_eq_DPC'
+          case Component.bdkstjpsimm_swp:
+            return 'Bd_JpsiKst_mm_had_swp'
+          case Component.bdkstjpsiee_swp:
+            return 'Bd_JpsiKst_ee_had_swp'
+          case _:
+            raise ValueError(f'No sample defined for: {self}')
+    # --------------------------------------------
+    @property
+    def subdecays(self) -> list[str]:
+        '''
+        Returns list of subdecays
+        '''
+        match self.name:
+            case 'bpkpee':
+                return ['bpkp']
+            case 'bpkpmm':
+                return ['bpkp']
+            case 'bdkstkpiee':
+                return ['bdks', 'k+kp']
+            case 'bdkstkpimm':
+                return ['bdks', 'k+kp']
+            # ------
+            case 'bpkpjpsiee':
+                return ['bpjk', 'jpee']
+            case 'bpkpjpsimm':
+                return ['bpjk', 'jpmm']
+            case 'bpkppsi2ee':
+                return ['bppsk', 'psee']
+            case 'bpkppsi2mm':
+                return ['bppsk', 'psmm']
+            # ------
+            case 'bdkstkpijpsiee':
+                return ['bdjkst' , 'jpee', 'kstkpi']
+            case 'bdkstkpijpsimm':
+                return ['bdjkst' , 'jpmm', 'kstkpi']
+            case 'bdkstkpipsi2ee':
+                return ['bdpskst', 'psee', 'kstkpi']
+            case 'bdkstkpipsi2mm':
+                return ['bdpskst', 'psmm', 'kstkpi']
+            # ------
+            case 'bsphiee':
+                return ['bsph', 'phkk']
+            case 'bpk1kpipiee':
+                return ['bpk1', 'k13h']
+            case 'bpk2kpipiee':
+                return ['bpk2', 'k23h']
+            case 'bpkstkpiee':
+                return ['bpks', 'kokp']
+            case _:
+                raise NotImplementedError(f'Cannot find subdecays for: {self.name}') 
+    # --------------------------------------------
+    @classmethod
+    def get_mc_samples(cls) -> list['Component']:
+        '''
+        Returns
+        ---------------
+        List of MC samples known to analysis
+        '''
+        return [ sample for sample in cls if sample.has_mc() ] 
+    # --------------------------------------------
+    def has_mc(self) -> bool:
+        if self in [Component.undefined, Component.comb, Component.data_24]:
+            return False
+
+        return True
+    # --------------------------------------------
+    def __str__(self):
+        '''
+        Returns
+        ----------------
+        String representing sample name, e.g. bpkpee 
+        '''
+        return self.name
+    # --------------------------------------------
+    @property
+    def latex(self) -> str:
+        '''
+        Returns
+        ----------------
+        Latex string for decay associated to sample
+        '''
+        return self.name
+    # --------------------------------------------
+    @property
+    def channel(self) -> Channel:
+        '''
+        Returns
+        ----------------
+        Channel to which current sample belongs
+        '''
+        if self.name.endswith('ee'):
+            return Channel.ee
+
+        if self.name.endswith('mm'):
+            return Channel.mm
+
+        raise ValueError(f'Sample {self} does not belong to electron or muon Channel')
+    # --------------------------------------------
+    @classmethod
+    def inclusive(cls, channel : Channel) -> list['CCbarComponent']:
+        '''
+        Parameters
+        --------------
+        channel: E.g. ee, mm
+
+        Returns
+        --------------
+        List of charmonium components
+        '''
+        if channel == Channel.ee:
+            return [
+                Component.bpjpsixee,
+                Component.bdjpsixee,
+                Component.bsjpsixee]
+
+        if channel == Channel.mm:
+            return [
+                Component.bpjpsixmm,
+                Component.bdjpsixmm,
+                Component.bsjpsixmm]
+
+        raise ValueError(f'Invalid channel: {channel}')
+
+CCbarComponent = Literal[
+    Component.bpjpsixee,
+    Component.bdjpsixee,
+    Component.bsjpsixee,
+    # --------
+    Component.bpjpsixmm,
+    Component.bdjpsixmm,
+    Component.bsjpsixmm]
