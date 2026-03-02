@@ -172,18 +172,6 @@ class MisIDFitModel(UnpackerModel):
     components       : MisIDFitComponents
     fit              : FitConf
     plots            : ZFitPlotterConf
-    # ------------------------------
-    @property
-    def python_yields(self) -> dict[str,dict]:
-        '''
-        Returns
-        -------------
-        Yields in python dictionary instead of pydantic model
-        '''
-
-        res = { key : value.model_dump() for key, value in self.yields.items() }
-
-        return res
 # ------------------------------
 # Constraints
 # ------------------------------
