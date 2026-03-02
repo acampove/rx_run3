@@ -87,8 +87,8 @@ def test_values(parameter : str):
     Will test retrieving values for different parameters of cbl
     '''
     kind = 'cbl'
-    x_in = 11111
-    y_in = 22222
+    x_in = 22222
+    y_in = 11111
     z_in = 33333
 
     with PL.values(kind=kind, parameter=parameter, val=x_in, low=y_in, high=z_in):
