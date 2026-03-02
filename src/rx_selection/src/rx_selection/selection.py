@@ -18,7 +18,7 @@ from dmu.generic            import utilities          as gut
 from ap_utilities.decays    import utilities          as aput
 from rx_selection           import truth_matching     as tm
 from rx_selection           import version_management as vman
-from rx_common              import info
+from rx_common              import Component, Qsq, Trigger, info
 
 log=LogStore.add_logger('rx_selection:selection')
 #-----------------------

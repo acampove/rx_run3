@@ -6,7 +6,7 @@ from omegaconf          import DictConfig, OmegaConf
 
 from dmu                import LogStore
 from dmu.stats          import zfit
-from rx_common          import Qsq, Sample
+from rx_common          import Qsq, Component
 from rx_common          import Trigger
 from rx_selection       import selection  as sel
 

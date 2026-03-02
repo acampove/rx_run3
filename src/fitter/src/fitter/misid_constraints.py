@@ -2,27 +2,31 @@
 Module containing the MisIDConstraints class
 '''
 
-from typing         import Final
-from rx_selection   import selection as sel
+from pathlib             import Path
+from typing              import Final, Literal
+from omegaconf           import DictConfig, OmegaConf
+from rx_common           import Component, Correction, Qsq
+from rx_selection        import selection as sel
 
-from dmu.stats      import GofCalculator
-from dmu.stats      import ParameterLibrary as PL
-from dmu.stats      import Constraint1D
-from dmu.stats      import zfit
+from dmu.stats           import FitResult, GofCalculator
+from dmu.stats           import ParameterLibrary as PL
+from dmu.stats           import Constraint1D
+from dmu.stats           import zfit
 
-from dmu.generic    import utilities        as gut
-from dmu.workflow   import Cache
-from dmu            import LogStore
+from dmu                 import LogStore
+from dmu.generic         import utilities        as gut
+from dmu.workflow        import Cache
 
-from omegaconf      import DictConfig, OmegaConf
-from zfit           import Space               as zobs
-from zfit.loss      import ExtendedUnbinnedNLL as zlos
+from zfit                import Space               as zobs
+from zfit.loss           import ExtendedUnbinnedNLL as zlos
 
-from fitter         import DataFitter
-from fitter         import LikelihoodFactory
-from fitter         import DataPreprocessor
+from .configs            import MisIDFitModel
+from .data_fitter        import DataFitter
+from .likelihood_factory import LikelihoodFactory
+from .data_preprocessor  import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid_constraints')
+ControlRegion = Literal['hdkk', 'hdpipi']
 # -------------------------        
 class MisIDConstraints(Cache):
     '''

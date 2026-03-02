@@ -5,13 +5,14 @@ Module used to test PrecScales class
 import numpy
 import pytest
 
-from typing              import Any
-from pathlib             import Path
-from rx_selection        import selection  as sel
-from fitter.prec_scales  import PrecScales
+from typing        import Any
+from pathlib       import Path
+from rx_common     import Component, Qsq
+from rx_selection  import selection  as sel
+from fitter        import PrecScales
 
-from dmu                 import LogStore
-from dmu.workflow        import Cache
+from dmu           import LogStore
+from dmu.workflow  import Cache
 
 log=LogStore.add_logger('fitter:test_prec_scales')
 # -----------------------------------

@@ -8,7 +8,7 @@ from dmu.stats           import Constraint, Constraint1D
 from rx_common           import Component
 from zfit.loss           import ExtendedUnbinnedNLL
 
-from .configs            import RXFitConfig
+from .configs            import CombinatorialConf, RXFitConfig
 from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
 from .cmb_constraints    import CmbConstraints

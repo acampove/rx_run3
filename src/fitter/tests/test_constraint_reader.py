@@ -9,19 +9,18 @@ from dmu.workflow   import Cache
 from dmu            import LogStore
 from dmu.stats      import ModelFactory, print_constraints
 from dmu.stats      import zfit
-from dmu.generic    import utilities           as gut
-from rx_common      import Qsq
+from dmu.generic    import UnpackerModel, utilities           as gut
+from rx_common      import Qsq, Component
 from fitter         import RXFitConfig
 from zfit.loss      import ExtendedUnbinnedNLL
 from zfit.param     import Parameter           as zpar
 from zfit           import Space               as zobs
 from fitter         import ConstraintReader
-from zfit.core.loss import ZfitParameter
+from fitter.configs import CombinatorialConf, FitModelConf
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
-_COMBINATORIAL_NAME : Final[str]       = 'combinatorial'
-_CONSTRAINTS        : Final[list[str]] = [
+_CONSTRAINTS : Final[list[str]] = [
     'sig_par', 
     'rare_prec_rk', 
     'invalid', 
