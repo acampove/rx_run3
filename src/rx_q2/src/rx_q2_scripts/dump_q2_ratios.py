@@ -244,9 +244,9 @@ def _get_entry(name : str, df : pnd.DataFrame) -> tuple[float,float]:
     try:
         val = df[f'{name}_val'].iloc[0]
         err = df[f'{name}_err'].iloc[0]
-    except Exception:
+    except Exception as exc:
         log.error(df)
-        raise ValueError(f'Cannot find value or error of {name}')
+        raise ValueError(f'Cannot find value or error of {name}') from exc
 
     return val, err
 #-------------------------------------
