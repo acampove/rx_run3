@@ -231,8 +231,8 @@ class SpecMaker:
             try:
                 d_trigger = d_data[sample]
             except KeyError as exc:
-                for sample in d_data:
-                    log.info(sample)
+                for val in d_data:
+                    log.info(val)
                 raise KeyError(f'Sample {sample} not found') from exc
 
             l_path_sample = self._get_trigger_paths(
