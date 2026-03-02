@@ -4,11 +4,12 @@ Module with tests for ParameterLibrary class
 
 import pytest
 
-from zfit.interface import ZfitParameter    as zpar
 from dmu            import LogStore
 from dmu.stats      import zfit
+from dmu.stats      import YieldsConf
 from dmu.stats      import ParameterLibrary as PL
 from dmu.generic    import utilities        as gut
+from zfit.param     import Parameter        as zpar
 
 log=LogStore.add_logger('dmu:test_parameter_library')
 # ----------------------
@@ -108,9 +109,10 @@ def test_get_yield(config : str) -> None:
     '''
     Tests get_yield method
     '''
-    cfg = gut.load_conf(package='dmu_data', fpath=f'tests/stats/parameters/{config}.yaml')
+    data = gut.load_data(package='dmu_data', fpath=f'tests/stats/parameters/{config}.yaml')
+    cfg  = YieldsConf(**data)
     with PL.parameter_schema(cfg=cfg):
-        for parname in cfg:
-            parname = str(parname)
+        for parname, _ in cfg:
             par = PL.get_yield(name=parname)
             _check_parameter(par=par)
+# ------------------------------------
