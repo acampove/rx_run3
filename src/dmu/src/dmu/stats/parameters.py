@@ -40,6 +40,12 @@ class ParameterLibrary:
 
         cls._values = { pdf_name : YieldsConf(**pdf_data) 
             for pdf_name, pdf_data in data.items()} 
+
+        npdf = len(cls._values)
+        if npdf == 0:
+            raise ValueError(f'Could not load any value from: {data_path}')
+
+        log.debug(f'Found {npdf} PDFs')
     # --------------------------------
     @classmethod
     def print_parameters(cls, kind : str) -> None:
