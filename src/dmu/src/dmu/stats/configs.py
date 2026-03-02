@@ -13,11 +13,10 @@ class SimpleYieldConf(BaseModel):            # Tested
     '''
     model_config = ConfigDict(frozen=True)
 
-    val    : float
-    min    : float
-    max    : float
-    scl    : list[str] | None = None
-    prefix : str       | None = None
+    val : float
+    min : float
+    max : float
+    fix : bool  = False
     # ----------------------------------
     @model_validator(mode = 'after')
     def check_bounds(self) -> Self:
