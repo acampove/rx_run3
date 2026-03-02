@@ -17,7 +17,7 @@ from dmu.stats   import ModelFactoryConf
 from dmu.stats   import KDEConf
 from dmu.stats   import FitConf
 from dmu.stats   import ZFitPlotterConf 
-from dmu.stats   import YieldConf 
+from dmu.stats   import YieldsConf 
 from dmu.stats   import zfit
 from dmu.generic import UnpackerModel
 from dmu.generic import utilities  as gut
@@ -191,11 +191,16 @@ AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonP
 class FitModelConf(ComponentConf):
     '''
     Class representing fitting model
+
+    Attributes
+    --------------------
+    yields: Contains configurations to build yields for a fitting region/PDF, etc
     '''
     model_config = ConfigDict(frozen = True)
 
     trigger    : Trigger
-    yields     : dict[str,YieldConf]
+    selection  : dict[str,str]
+    yields     : YieldsConf 
     observable : dict[Qsq, ObservableConf]
     components : dict[Component, AnyModelConf]
     constraints: ConstraintsCfg
