@@ -26,9 +26,8 @@ class ParameterLibrary:
     - Connect to database (YAML file) with parameter values and make them available
     - Allow parameter values to be overriden
     '''
-    _values : DictConfig
-    _yld_cfg: DictConfig|None = None # Configuration used for yields
-    _d_par  : dict[str,zpar]  = {}   # When building parameters, they will be stored here, such that they can be reused, for simultaneous fits
+    _d_par  : dict[str,zpar      ] = {}   # When building parameters, they will be stored here, such that they can be reused, for simultaneous fits
+    _values : dict[str,YieldsConf] = {}   # Values of parameters for all PDFs are in YAML file, they will be loaded here
     # --------------------------------
     @classmethod
     def _load_data(cls) -> None:
@@ -36,13 +35,11 @@ class ParameterLibrary:
             return
 
         data_path = files('dmu_data').joinpath('stats/parameters/data.yaml')
-        data_path = str(data_path)
+        data_path = Path(str(data_path))
+        data      = yaml.safe_load(data_path.read_text())
 
-        values = OmegaConf.load(data_path)
-        if not isinstance(values, DictConfig):
-            raise TypeError(f'Wrong (not dictionary) data loaded from: {data_path}')
-
-        cls._values = values
+        cls._values = { pdf_name : YieldsConf(**pdf_data) 
+            for pdf_name, pdf_data in data.items()} 
     # --------------------------------
     @classmethod
     def print_parameters(cls, kind : str) -> None:
@@ -74,11 +71,11 @@ class ParameterLibrary:
         if parameter not in cls._values[kind]:
             raise ValueError(f'For PDF {kind}, cannot find parameter: {parameter}')
 
-        val = cls._values[kind][parameter]['val' ]
-        low = cls._values[kind][parameter]['low' ]
-        hig = cls._values[kind][parameter]['high']
+        par = cls._values[kind][parameter].root
+        if not isinstance(par, SimpleYieldConf):
+            raise ValueError(f'Parameter {parameter} is not elementary: {par}')
 
-        return val, low, hig
+        return par.val, par.min, par.max 
     # --------------------------------
     @classmethod
     def values(
