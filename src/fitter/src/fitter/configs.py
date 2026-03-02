@@ -9,7 +9,7 @@ from pydantic    import BaseModel, ConfigDict
 from pathlib     import Path
 from typing      import Self
 
-from rx_common   import Channel, Mass, Project, Qsq
+from rx_common   import Channel, Mass, Project, Qsq, MisID
 from rx_common   import Component, Trigger, CCbarComponent
 from rx_misid    import MisIDSampleWeights
 from dmu         import LogLevels, LogStore
@@ -172,7 +172,7 @@ class FitModelConf(ComponentConf):
     trigger    : Trigger
     selection  : dict[str,str]
     yields     : YieldsConf 
-    observable : dict[Qsq, ObservableConf]
+    observable : dict[Qsq | MisID, ObservableConf]
     components : dict[Component, AnyModelConf]
     constraints: ConstraintsCfg
     plots      : ZFitPlotterConf
