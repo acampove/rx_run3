@@ -5,8 +5,8 @@ Module holding Component and CCbarComponent
 from enum   import StrEnum, auto
 from typing import Literal
 
-from .types      import Channel
-from dmu.generic import utilities as gut
+from .types              import Channel
+from ap_utilities.decays import utilities as aput
 
 class Component(StrEnum):
     '''
@@ -107,14 +107,7 @@ class Component(StrEnum):
         if not self.is_mc:
             raise ValueError(f'Current sample is not MC but: {self}')
 
-        data = gut.load_data(
-            package = 'ap_utilities_data',
-            fpath   = 'naming/form_evt.yaml')
-
-        if self.sample not in data:
-            raise ValueError(f'Sample {self.value} not found in form_evt.yaml')
-
-        return data[self.value]
+        return aput.read_event_type(nickname = self.sample)
     # --------------------------------------------
     @property
     def sample(self) -> str:
