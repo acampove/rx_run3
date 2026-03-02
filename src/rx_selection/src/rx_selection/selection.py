@@ -15,7 +15,6 @@ from dmu                    import LogStore
 from dmu.generic            import hashing
 from dmu.rdataframe         import utilities          as rut
 from dmu.generic            import utilities          as gut
-from ap_utilities.decays    import utilities          as aput
 from rx_selection           import truth_matching     as tm
 from rx_selection           import version_management as vman
 from rx_common              import Component, Qsq, Trigger, info
@@ -146,10 +145,10 @@ def selection(
 
     d_cut : dict[str,str] = {}
 
-    event_type     = process if process.startswith('DATA') else aput.read_event_type(nickname=process)
+    event_type = process if not process.is_mc else process.event_type 
     log.info(f'{process:<40}{"->":20}{event_type:<20}')
 
-    if process.startswith('DATA'):
+    if not process.is_mc:
         log.debug('Adding cleaning requirement for data')
         d_cut['clean'] = 'dataq == 1'
         d_cut['block'] = 'block >= 1'
