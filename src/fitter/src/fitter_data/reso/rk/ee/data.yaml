@@ -4,6 +4,7 @@
 trigger          : Hlt2RD_BuToKpEE_MVA
 output_directory : reso/rk/electron/data
 yields           : model/yields/rk/reso_electron.yaml
+selection        : {}
 observable:
   jpsi:
     name : B_const_mass_M

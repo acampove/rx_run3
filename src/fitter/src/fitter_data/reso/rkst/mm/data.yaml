@@ -4,6 +4,7 @@
 trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
 output_directory : reso/rkst/muon/data
 yields           : model/yields/rkst/reso_muon.yaml
+selection        : {}
 observable:
   jpsi:
     name : B_const_mass_M

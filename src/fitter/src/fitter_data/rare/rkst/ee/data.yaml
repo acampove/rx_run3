@@ -4,6 +4,7 @@
 trigger          : Hlt2RD_B0ToKpPimEE_MVA
 output_directory : rare/rkst/electron/data
 yields           : model/yields/rkst/rare_electron.yaml
+selection        : {}
 observable:
   low:
     name : B_Mass_smr

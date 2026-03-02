@@ -4,6 +4,7 @@
 trigger          : Hlt2RD_BuToKpMuMu_MVA
 output_directory : rare/rk/muon/data
 yields           : model/yields/rk/rare_muon.yaml
+selection        : {}
 observable:
   low:
     name : B_Mass

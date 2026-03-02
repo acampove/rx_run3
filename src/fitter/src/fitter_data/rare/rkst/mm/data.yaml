@@ -4,6 +4,7 @@
 trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
 output_directory : rare/rkst/muon/data
 yields           : model/yields/rkst/rare_muon.yaml
+selection        : {}
 observable:
   low:
     name : B_Mass
