@@ -47,9 +47,9 @@ class CmbConstraints(BaseFitter, Cache):
         self._q2bin = q2bin
         self._cfg   = cfg
 
-        cons         = self._cfg.constraints[q2bin]
-        self._sample = Component(cons.sample)
-        self._trigger= Trigger(cons.trigger)
+        cons            = self._cfg.constraints[q2bin]
+        self._component = cons.component
+        self._trigger   = Trigger(cons.trigger)
 
         model = self._model_from_models(models = nll.model)
         if model is None:
@@ -120,7 +120,9 @@ class CmbConstraints(BaseFitter, Cache):
         - Unique identifier for input ntuples and selection
         - Dictionary with selection used
         '''
-        gtr = RDFGetter(sample = self._sample, trigger = self._trigger)
+        gtr = RDFGetter(
+            sample  = self._component, 
+            trigger = self._trigger)
         rdf = gtr.get_rdf(per_file = False)
 
         if Cache._cache_root is None:
@@ -129,7 +131,7 @@ class CmbConstraints(BaseFitter, Cache):
         out_path = Cache._cache_root / self._base_path
 
         fit_cuts = sel.selection(
-            process = self._sample,
+            process = self._component,
             trigger = self._trigger,
             q2bin   = self._q2bin)
 
@@ -146,7 +148,7 @@ class CmbConstraints(BaseFitter, Cache):
         with sel.custom_selection(d_sel = {}, force_override = True):
             default_cuts = sel.selection(
                 q2bin    = self._q2bin, 
-                process  = self._sample,
+                process  = self._component,
                 trigger  = self._trigger,
             )
 
