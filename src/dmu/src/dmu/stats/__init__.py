@@ -28,8 +28,14 @@ from .fit_result          import FitResult
 from .fit_result          import FitParameter
 from .fit_result          import GoodnessOfFit
 from .types               import Model, KDEModel
+from .configs             import SimpleYieldConf
+from .configs             import CompositeYieldConf
+from .configs             import YieldConf
 
 __all__ = [
+    'SimpleYieldConf',
+    'CompositeYieldConf',
+    'YieldConf',
     'pdf_to_tex',
     'is_pdf_usable',
     'ZFitPlotterConf',
