@@ -5,10 +5,10 @@ import pytest
 
 from pathlib     import Path
 from dmu         import LogStore
+from dmu.stats   import YieldConf
 from dmu.generic import utilities as gut
 from rx_misid    import MisIDSampleWeights, MisIDSampleSplitting
 from rx_common   import Channel, Component, Project
-from fitter      import YieldConf
 from fitter      import NonParametricConf 
 from fitter      import CCbarConf, CombinatorialConf, MisIDConf
 from fitter      import ParametricConf
