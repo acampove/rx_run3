@@ -2,15 +2,23 @@
 Module with ParameterLibrary class
 '''
 import math
+import yaml
 
+from pathlib               import Path
+from contextvars           import ContextVar
 from contextlib            import contextmanager
 from importlib.resources   import files
-from dmu.logging.log_store import LogStore
+
+from dmu                   import LogStore
+from dmu.stats             import YieldsConf
+from dmu.stats             import SimpleYieldConf
+from dmu.stats             import CompositeYieldConf
 from zfit.param            import Parameter as zpar
-from omegaconf             import DictConfig, OmegaConf
+
 from .imports              import zfit
 
-log=LogStore.add_logger('dmu:parameters')
+log      = LogStore.add_logger('dmu:parameters')
+_YLD_CFG : ContextVar[YieldsConf | None] = ContextVar('_YLD_CFG', default = None)
 # --------------------------------
 class ParameterLibrary:
     '''
