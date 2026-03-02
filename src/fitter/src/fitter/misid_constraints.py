@@ -43,9 +43,9 @@ class MisIDConstraints(Cache):
     # ----------------------
     def __init__(
         self, 
-        obs       : zobs,
-        cfg       : DictConfig, 
-        q2bin     : str):
+        obs      : zobs,
+        cfg      : MisIDFitModel, 
+        q2bin    : Qsq):
         '''
         Parameters
         -------------
@@ -53,9 +53,9 @@ class MisIDConstraints(Cache):
         cfg      : configuration needed to build PDF
         q2bin    : E.g. central
         '''
-        self._name        : Final[str]       = 'misid_constraints'
-        self._regions     : Final[list[str]] = ['hdpipi', 'hdkk']
-        self._data_sample : Final[str]       = 'DATA_24_*'
+        self._name        : Final[str]                 = 'misid_constraints'
+        self._regions     : Final[list[ControlRegion]] = ['hdpipi', 'hdkk']
+        self._data_sample : Final[Component]           = Component.data_24 
 
         self._obs   = obs
         self._cfg   = cfg
@@ -68,13 +68,13 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = f'{self._cfg.output_directory}/{q2bin}',
+            out_path = self._cfg.output_directory / q2bin,
             q2bin    = self._q2bin,
             d_sel    = d_sel, 
-            config   = OmegaConf.to_container(cfg, resolve=True),
+            config   = cfg.model_dump(),
         )
     # ----------------------
-    def __get_constraints(self, pars : DictConfig) -> dict[str,tuple[float,float]]:
+    def __get_constraints(self, pars : FitResult) -> dict[str,tuple[float,float]]:
         '''
         Parameters
         -------------
@@ -96,8 +96,8 @@ class MisIDConstraints(Cache):
     def __get_signal_region_yield(
         self, 
         region   : str,
-        nickname : str, 
-        pars     : DictConfig) -> tuple[float,float]:
+        nickname : ControlRegion, 
+        pars     : FitResult) -> tuple[float,float]:
         '''
         Parameters
         -------------
@@ -109,9 +109,8 @@ class MisIDConstraints(Cache):
         -------------
         Tuple with expected signal region yield and error
         '''
-        control_yield = pars[f'yld_{region}_{nickname}'].value
-        control_error = pars[f'yld_{region}_{nickname}'].error
-        scale         = self.__get_transfer_factor(nickname=nickname)
+        control_yield, control_error = pars[f'yld_{region}_{nickname}']
+        scale = self.__get_transfer_factor(nickname=nickname)
 
         # Use it to scale yield from control region in data
         value = control_yield * scale
@@ -123,11 +122,11 @@ class MisIDConstraints(Cache):
 
         return value, error
     # ----------------------
-    def __get_transfer_factor(self, nickname : str) -> float:
+    def __get_transfer_factor(self, nickname : Literal['hdkk', 'hdpipi']) -> float:
         '''
         Parameters
         -------------
-        nickname: Sample nickname, e.g. kkk, kpipi        
+        nickname: Sample nickname, e.g. hdkk, hdpipi        
 
         Returns
         -------------
@@ -135,10 +134,14 @@ class MisIDConstraints(Cache):
         Needed to translate MisID yields in control region to expectation
         in signal region
         '''
-        cfg     = self._cfg.model.components[nickname]
-        sample  = cfg.sample
-        wgt_cfg = cfg.categories.main.weights
-        trigger = cfg.trigger
+        if nickname == 'hdkk':
+            cfg     = self._cfg.components.bpkkk
+        else:
+            cfg     = self._cfg.components.bpkpipi
+
+        sample  = cfg.component
+        wgt_cfg = cfg.weights
+        trigger = self._cfg.trigger
 
         sig_yld, ctr_yld = 0, 0 
         pid_sel          = {'pid_l' : '(1)'}
@@ -148,10 +151,10 @@ class MisIDConstraints(Cache):
         for is_sig in [True, False]:
             prp = DataPreprocessor(
                 obs    = self._obs,
-                out_dir= nickname,
+                out_dir= Path(nickname),
                 sample = sample,
                 trigger= trigger,
-                wgt_cfg= wgt_cfg,
+                wgt_cfg= {Correction.pid : wgt_cfg},
                 is_sig = is_sig,
                 cut    = pid_sel,
                 q2bin  = self._q2bin)
@@ -168,18 +171,17 @@ class MisIDConstraints(Cache):
 
         return sig_yld / ctr_yld
     # ----------------------
-    def __get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
+    def __get_pid_cut(self, kind : str) -> str:
         '''
         Parameters
         -------------
-        cfg : Config taken from YAML file for data, e.g. data.yaml
         kind: Type of control region, e.g. kkk or kpipi
 
         Returns
         -------------
         PID cut needed to build control region
         '''
-        cut = cfg.selection[kind]
+        cut = self._cfg.selection[kind]
 
         cut_l1 = cut.replace('LEP_', 'L1_')
         cut_l2 = cut.replace('LEP_', 'L2_')
@@ -194,7 +196,7 @@ class MisIDConstraints(Cache):
 
         return cut
     # ----------------------
-    def __get_control_nll(self, kind : str) -> tuple[zlos,DictConfig]:
+    def __get_control_nll(self, kind : ControlRegion) -> tuple[zlos,DictConfig]:
         '''
         Parameters
         -------------
@@ -208,9 +210,15 @@ class MisIDConstraints(Cache):
         '''
 
         obs     = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
-        pid_cut = self.__get_pid_cut(cfg=self._cfg, kind=kind)
+        pid_cut = self.__get_pid_cut(kind=kind)
 
-        with PL.parameter_schema(cfg=self._cfg.model.yields),\
+        data    = self._cfg.python_yields
+        yld_cfg = OmegaConf.create(data)
+
+        data    = self._cfg.model_dump()
+        fit_cfg = OmegaConf.create(data)
+
+        with PL.parameter_schema(cfg=yld_cfg),\
              sel.update_selection(d_sel={'pid_l' : pid_cut}):
 
             ftr = LikelihoodFactory(
@@ -218,7 +226,7 @@ class MisIDConstraints(Cache):
                 name   = kind,
                 sample = self._data_sample, 
                 q2bin  = self._q2bin,
-                cfg    = self._cfg)
+                cfg    = fit_cfg)
             nll = ftr.run()
             cfg = ftr.get_config()
 
@@ -247,8 +255,11 @@ class MisIDConstraints(Cache):
             d_nll[region] = self.__get_control_nll(kind=region)
 
         with GofCalculator.disabled(value=True):
-            ftr  = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=self._cfg)
-            pars = ftr.run(kind='conf')
+            data    = self._cfg.model_dump()
+            fit_cfg = OmegaConf.create(data)
+
+            ftr     = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=fit_cfg)
+            pars    = ftr.run(kind='fres')
 
         d_cns = self.__get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)
