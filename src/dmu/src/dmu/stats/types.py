@@ -30,3 +30,4 @@ class KDEModel(StrEnum):
     '''
     kde_fft = 'KDE1DimFFT'
 # --------------------------
+
