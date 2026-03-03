@@ -42,7 +42,7 @@ KDEPDF                       = KDE1DimFFT | KDE1DimISJ
 MIN_ISJ_ENTRIES : Final[int] = 500 # If Fewer entries than this, switch from ISJ to FFT
 MIN_ENTRIES     : Final[int] =  40 # Will not build KDE if fewer entries than this are found
 #-----------------------------------------------------------
-class CCbarComponent(BaseModel):
+class CharmoniumComponent(BaseModel):
     '''
     Class meant to represent a single charmonium component
     '''
@@ -116,7 +116,7 @@ class CCbarModel(BaseModel):
     '''
     Class meant to represent PDF meant to model all the charmonium components 
     '''
-    models    : list[CCbarComponent] 
+    models    : list[CharmoniumComponent] 
     fractions : list[float]
     # -------------------------
     @property
@@ -273,15 +273,15 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def __filter_rdf(
         self,
-        rdf    : RDF.RNode,
-        uid    : str,
-        sample : str) -> tuple[RDF.RNode,str]:
+        rdf       : RDF.RNode,
+        uid       : str,
+        component : Component) -> tuple[RDF.RNode,str]:
         '''
         Parameters
         -----------------
-        rdf    : ROOT dataframe before selection
-        uid    : Unique identifier of dataframe
-        sample : Sample for which selection is done, e.g. Bu_JpsiX...
+        rdf       : ROOT dataframe before selection
+        uid       : Unique identifier of dataframe
+        component : Fit component for which selection is needed 
 
         Returns
         -----------------
@@ -290,14 +290,18 @@ class PRec(Cache):
         - ROOT dataframe after selection
         - Updated Unique identifier that takes into account the selection
         '''
-        d_sel         = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
+        d_sel      = sel.selection(
+            trigger=self._trig, 
+            q2bin  =self._q2bin, 
+            process=component)
+
         d_sel['mass'] = '(1)'
         for name, expr in d_sel.items():
             rdf = rdf.Filter(expr, name)
 
         rep = rdf.Report()
 
-        self._cut_info[sample] = rep, d_sel
+        self._cut_info[component] = rep, d_sel
 
         uid = hashing.hash_object([uid, d_sel])
 
@@ -322,7 +326,7 @@ class PRec(Cache):
         df.to_markdown(f'{self._out_path}/{sample}.md')
         gut.dump_json(data=selection, path=f'{self._out_path}/{sample}.yaml', exists_ok=True)
     #-----------------------------------------------------------
-    def __get_samples_rdf(self) -> tuple[dict[str,RDF.RNode],str]:
+    def __get_samples_rdf(self) -> tuple[dict[CCbarComponent,RDF.RNode],str]:
         '''
         IMPORTANT: This method has to run dataframe creation lazily
 
@@ -336,15 +340,15 @@ class PRec(Cache):
 
         - Concatenation of unique identifiers
         '''
-        d_rdf    = {}
+        d_rdf : dict[CCbarComponent, RDF.RNode] = {}
         full_uid = ''
-        for sample in self._cfg.samples:
-            gtr        = RDFGetter(sample=sample, trigger=self._trig)
+        for component in self._cfg.samples:
+            gtr        = RDFGetter(sample=component, trigger=self._trig)
             rdf        = gtr.get_rdf(per_file=False)
             uid        = gtr.get_uid()
-            rdf, uid   = self.__filter_rdf(rdf=rdf, sample=sample, uid=uid)
+            rdf, uid   = self.__filter_rdf(rdf=rdf, component=component, uid=uid)
 
-            d_rdf[sample] = rdf
+            d_rdf[component] = rdf
             full_uid     += uid
 
         return d_rdf, full_uid
@@ -409,7 +413,7 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def __add_sam_weights(
         self, 
-        df     : pnd.DataFrame) -> pnd.DataFrame:
+        df : pnd.DataFrame) -> pnd.DataFrame:
         '''
         Parameters
         --------------
@@ -424,7 +428,7 @@ class PRec(Cache):
 
         if   sam:
             log.debug('Adding sample weights')
-            obj              = inclusive_sample_weights(df)
+            obj              = SampleWeightReader(df = df)
             val : pnd.Series = obj.get_weights()
             df['wgt_sam']    = 1. if val.empty else val
         else:
@@ -533,7 +537,7 @@ class PRec(Cache):
         self, 
         mass : Mass,
         cfg  : KDEConf,
-        df   : pnd.DataFrame) -> CCbarComponent:
+        df   : pnd.DataFrame) -> CharmoniumComponent:
         '''
         Parameters
         --------------
@@ -560,7 +564,7 @@ class PRec(Cache):
 
             raise ValueError(f'Cannot access {mass} and wgt_br') from exc
 
-        model = CCbarComponent(
+        model = CharmoniumComponent(
             obs = self._obs,
             cfg = cfg,
             mass= arr_mass, 
@@ -575,7 +579,7 @@ class PRec(Cache):
         mass           : Mass,
         df             : pnd.DataFrame,
         component_name : str,
-        cfg            : KDEConf) -> CCbarComponent:
+        cfg            : KDEConf) -> CharmoniumComponent:
         '''
         Parameters
         ------------------
@@ -610,7 +614,7 @@ class PRec(Cache):
         return model 
     #-----------------------------------------------------------
     #-----------------------------------------------------------
-    def __yield_in_range(self, model : CCbarComponent) -> float:
+    def __yield_in_range(self, model : CharmoniumComponent) -> float:
         '''
         The mass and weights are defined in the WHOLE range. This method extracts the yields
         in the observable range. Needed to calculate fractions of componets, used to put
@@ -657,14 +661,14 @@ class PRec(Cache):
         if not d_df:
             raise ValueError('No dataframes with components data')
 
-        all_models: list[CCbarComponent] = [ 
+        all_models: list[CharmoniumComponent] = [ 
             self.__get_model(
                 mass           = self._obs.label, 
                 component_name = ltex, 
                 df             = df, 
                 cfg            = self._cfg.fit) for ltex, df in d_df.items() ]
 
-        models    : list[CCbarComponent] = [ model for model in all_models if model.pdf is not None ]
+        models    : list[CharmoniumComponent] = [ model for model in all_models if model.pdf is not None ]
         yields    : list[float   ] = [ self.__yield_in_range(model=model) for    model in models ]
         fractions : list[float   ] = [ wgt_yld / sum(yields)              for  wgt_yld in yields ]
 
@@ -674,7 +678,7 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def _plot_pdf(
         self,
-        model   : CCbarComponent | CCbarModel,
+        model   : CharmoniumComponent | CCbarModel,
         name    : str,
         out_dir : Path,
         title   : str          = '',
@@ -727,7 +731,7 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def _plot_weights(
         self, 
-        model   : CCbarModel | CCbarComponent,
+        model   : CCbarModel | CharmoniumComponent,
         name    : str,
         title   : str,
         out_dir : Path) -> None:
