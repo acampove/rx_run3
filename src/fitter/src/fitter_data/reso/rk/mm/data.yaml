@@ -19,22 +19,20 @@ observable:
 components:
   comb       : reso/rk/mm/comb.yaml
   bppijpsimm : reso/rk/mm/bppijpsimm.yaml
-  ccbar      : reso/rk/mm/ccbar.yaml
   bpkppsi2mm : reso/rk/mm/bpkppsi2mm.yaml
   bpkpjpsimm : reso/rk/mm/bpkpjpsimm.yaml
 constraints:
   yields : []
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
-  yrange:
-    log   : [1.0,  1e7]
-    linear: [0.0, null]
   nbins           : 100
   stacked         : True
-  plot_components : ccbar
   d_leg :
-    ccbar         : $B_{s,d,u}\to c\bar{c} X$
     bpkpjpsimm    : $B^+\to J/\psi(\to \mu^+\mu^-) K^+$ 
     bppijpsimm    : $B^+\to J/\psi(\to \mu^+\mu^-) \pi^+$ 
     bpkppsi2mm    : $B^+\to \psi(2S)(\to \mu^+\mu^-) K^+$ 
-    combinatorial : Combinatorial
+    comb          : Combinatorial
+  #plot_components : ccbar
+  #yrange:
+  #  log   : [1.0,  1e7]
+  #  linear: [0.0, null]
