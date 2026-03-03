@@ -5,7 +5,7 @@ Module with tests for SpecMaker class
 import pytest
 
 from dmu       import LogStore
-from rx_common import Component, Project, Trigger
+from rx_common import Component, Project, Trigger, component
 from rx_data   import SpecMaker, Specification
 
 _NOPIDSAMPLES=[
@@ -161,7 +161,19 @@ def test_project(sample : Component, trigger : Trigger, project : Project):
     assert path.exists()
 # ----------------------
 @pytest.mark.parametrize('sample', _NOPIDSAMPLES)
-def test_nopid(sample : Component):
+def test_nopid_mc(sample : Component):
+    '''
+    Test specification building for noPID samples
+    '''
+    gtr = SpecMaker(component=sample, trigger=Trigger.rk_ee_nopid)
+    path= gtr.get_spec_path(per_file=False)
+
+    assert path.exists()
+
+    log.info(f'Specification saved to: {path}')
+# ----------------------
+@pytest.mark.parametrize('sample', [Component.data_24])
+def test_nopid_data(sample : Component):
     '''
     Test specification building for noPID samples
     '''
