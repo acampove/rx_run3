@@ -111,8 +111,8 @@ def _check_truem_columns(rdf : RDF.RNode):
 def _check_block(rdf : RDF.RNode) -> None:
     arr_block = rdf.AsNumpy(['block'])['block']
 
-    assert numpy.all(arr_block >= 0)
-    assert numpy.all(arr_block <= 8)
+    assert numpy.all(arr_block >=        0)
+    assert numpy.all(arr_block <= _NBLOCKS)
 # ----------------------
 def _name_from_raw_name(name : str) -> str:
     '''
@@ -200,7 +200,7 @@ def _plot_block(rdf : RDF.RNode, name : str, out_dir : Path) -> None:
 # ------------------------------------------------
 def _plot_bmass(
     rdf         : RDF.RNode,
-    is_electron : bool,
+    trigger     : Trigger,
     brem_track_2: bool,
     out_dir     : Path,
     test_name   : str) -> None:
@@ -210,7 +210,7 @@ def _plot_bmass(
 
     minx = 4500
     maxx = 6000
-    if is_electron and brem_track_2:
+    if trigger.is_electron and brem_track_2:
         masses = ['B_Mass_smr', 'B_M']
     else:
         masses = ['B_M']
@@ -301,13 +301,17 @@ def _plot_hop(rdf : RDF.RNode, test : str, out_dir : Path) -> None:
 # ------------------------------------------------
 def _apply_selection(
         rdf      : RDF.RNode,
-        trigger  : str,
-        sample   : str,
+        trigger  : Trigger,
+        sample   : Component,
         override : None|dict[str,str] = None) -> RDF.RNode:
     '''
     Apply full selection but q2 and mass
     '''
-    d_sel = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
+    d_sel = sel.selection(
+        trigger=trigger, 
+        q2bin  =Qsq.jpsi, 
+        process=sample)
+
     if override is not None:
         d_sel.update(override)
 
@@ -440,8 +444,8 @@ def _check_mcdt(rdf : RDF.RNode, name : str, out_dir : Path) -> None:
 def _run_default_checks(
     rdf          : RDF.RNode,
     test_name    : str,
-    trigger      : str,
-    sample       : str,
+    trigger      : Trigger,
+    sample       : Component,
     tmp_path     : Path,
     friends      : bool = True,
     brem_track_2 : bool = True) -> None:
@@ -453,13 +457,11 @@ def _run_default_checks(
         friends      = friends,
         brem_track_2 = brem_track_2)
 
-    sample = sample.replace('*', 'p')
-
     _plot_bmass(
         out_dir      = tmp_path,
         brem_track_2 = brem_track_2,
         rdf          = rdf,
-        is_electron  = 'MuMu' not in trigger,
+        trigger      = trigger, 
         test_name    = f'{test_name}_{sample}')
 
     if not friends: # Not friends no checks below
@@ -476,8 +478,10 @@ def test_guid(trigger : Trigger, per_file : bool):
     '''
     Tests retrieval of unique identifier for underlying data
     '''
-    sam1= 'Bd_Kstee_eq_btosllball05_DPC'
-    sam2= 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
+    trigger = Trigger(trigger)
+
+    sam1 = Component.bdkstkpiee
+    sam2 = Component.bpkstkpiee
 
     with pytest.raises(ValueError):
         gtr11= RDFGetter(sample=sam1, trigger=trigger)
