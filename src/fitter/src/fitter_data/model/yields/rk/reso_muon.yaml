@@ -9,8 +9,8 @@ yld_bppijpsimm_brem_xx0:
   <<: *yields
 yld_comb_brem_xx0:
   <<: *yields
-yld_bpkpjpsiee_brem_xx0:
+yld_bpkpjpsimm_brem_xx0:
   <<: *yields
-yld_bpkppsi2ee_brem_xx0:
+yld_bpkppsi2mm_brem_xx0:
   <<: *yields
 # -------------------------
