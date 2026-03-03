@@ -46,6 +46,13 @@ class ConstraintsCfg(UnpackerModel):
 
     misid   : 'FitModelConf   | None' = None
     pre_rare: list[Component] | None  = None
+    # ---------------------
+    @property
+    def is_empty(self) -> bool:
+        '''
+        True if no constraints are present 
+        '''
+        return self.misid is None and self.pre_rare is None
 # ------------------------------
 # Components
 # ------------------------------
