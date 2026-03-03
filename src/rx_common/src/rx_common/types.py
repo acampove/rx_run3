@@ -115,6 +115,14 @@ class Trigger(StrEnum):
         return self.value
     # -----------
     @property
+    def is_electron(self) -> bool:
+        return self.channel == Channel.ee
+    # -----------
+    @property
+    def is_muon(self) -> bool:
+        return self.channel == Channel.mm
+    # -----------
+    @property
     def channel(self) -> Channel:
         '''
         Either 'muon' or 'electron'
@@ -141,19 +149,56 @@ class Trigger(StrEnum):
         return 'SameSign' in self.value
     # -----------
     @property
-    def project(self) -> 'Project':
+    def project(self) -> Project:
         '''
         Returns
         -----------------
         Project for which this trigger is meant to be used, e.g. rk, rkst etc
         '''
-        if self.name.startswith('rk_'):
-            return Project.rk
+        if self == Trigger.uninitialized:
+            raise ValueError('Trigger is not initialized')
 
-        if self.name.startswith('rkst_'):
-            return Project.rkst
-
-        raise ValueError(f'Cannot assign trigger {self} to any project')
+        match self:
+            # --------------
+            # rk
+            # --------------
+            case Trigger.rk_ee_os:
+                return Project.rk
+            case Trigger.rk_ee_ss:
+                return Project.rk
+            case Trigger.rk_ee_cal:
+                return Project.rk
+            case Trigger.rk_ee_misid:
+                return Project.rk
+            case Trigger.rk_ee_nopid:
+                return Project.rk_no_pid
+            # --------------
+            case Trigger.rk_mm_os:
+                return Project.rk
+            case Trigger.rk_mm_ss:
+                return Project.rk
+            case Trigger.rk_mm_nopid:
+                return Project.rk_no_pid
+            # --------------
+            # rkst
+            # --------------
+            case Trigger.rkst_ee_os:
+                return Project.rkst
+            case Trigger.rkst_ee_ss:
+                return Project.rkst
+            case Trigger.rkst_ee_cal:
+                return Project.rkst
+            case Trigger.rkst_ee_misid:
+                return Project.rkst
+            case Trigger.rkst_ee_nopid:
+                return Project.rkst_no_pid
+            # --------------
+            case Trigger.rkst_mm_os:
+                return Project.rkst
+            case Trigger.rkst_mm_ss:
+                return Project.rkst
+            case Trigger.rkst_mm_nopid:
+                return Project.rkst_no_pid
 # ---------------------------------------
 class Qsq(StrEnum):
     '''
