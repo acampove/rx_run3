@@ -12,8 +12,8 @@ import tempfile
 from contextlib       import contextmanager
 from pathlib          import Path
 from typing           import overload, Literal, Final
-from rx_common        import Trigger
-from rx_common        import Component, info
+from rx_common        import Project, Trigger
+from rx_common        import Component
 from dmu              import LogStore
 from dmu.generic      import hashing
 from dmu.generic      import version_management as vmn
@@ -37,7 +37,7 @@ class SpecMaker:
     - Save file and make path available to user
     '''
     _custom_versions : dict[str,str] = {}
-    _custom_project  : str | None    = None        # If set, will use this project instead of the one deduced from trigger
+    _custom_project  : Project | None= None        # If set, will use this project instead of the one deduced from trigger
     _default_excluded: list[str]     = []          # These friend trees will always be excluded, unless explicitly changed
     _excluded_friends: list[str]     = []          # Will not pick up any of the friend trees in this list
     _only_friends    : set[str]|None = None        # Will only pick up the friend trees in this list, if the list is not None
@@ -81,7 +81,7 @@ class SpecMaker:
             self._spec    = self._patcher.get_patched_specification()
             self._emulator.extend_redefinitions(redefinitions = self._patcher.redefinitions)
     # ----------------------
-    def _set_project(self, trigger : Trigger) -> str:
+    def _set_project(self, trigger : Trigger) -> Project:
         '''
         Parameters
         -------------
@@ -123,7 +123,7 @@ class SpecMaker:
             log.debug(f'Default excluding {ftree}')
             return True
 
-        if ftree in _ELECTRON_ONLY_TREES and info.is_mm(trigger = self._trigger):
+        if ftree in _ELECTRON_ONLY_TREES and self._trigger.is_muon:
             log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
             return True
 
@@ -608,7 +608,7 @@ class SpecMaker:
         return _context()
     # ---------------------------------------------------
     @classmethod
-    def project(cls, name : str):
+    def project(cls, name : Project):
         '''
         Parameters
         --------------
