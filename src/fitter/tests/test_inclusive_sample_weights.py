@@ -6,15 +6,18 @@ Module with tests for the Reader class of the inclusive_sample_weights module
 import numpy
 import pandas as pnd
 
+from rx_common                       import Component
+from dmu                             import LogStore
 from fitter.inclusive_sample_weights import Reader
-from dmu.logging.log_store           import LogStore
 
 log=LogStore.add_logger('fitter:test_inclusive_sample_weights')
+
+ccbar_components = [Component.bpjpsixee, Component.bdjpsixee, Component.bsjpsixee]
 #------------------------------------
 def _get_df() -> pnd.DataFrame:
     d_data         = {'proc' : [], 'b' : []}
-    d_data['proc'] = numpy.random.choice(['Bu_JpsiX_ee_eq_JpsiInAcc', 'Bd_JpsiX_ee_eq_JpsiInAcc', 'Bs_JpsiX_ee_eq_JpsiInAcc'], size=10)
-    d_data['b']    = numpy.random.normal(0, 1, size=10)
+    d_data['proc'] = numpy.random.choice(ccbar_components, size=10).tolist()
+    d_data['b']    = numpy.random.normal(0, 1, size=10).tolist()
 
     return pnd.DataFrame(d_data)
 #------------------------------------
