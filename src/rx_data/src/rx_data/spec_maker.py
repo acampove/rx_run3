@@ -91,14 +91,19 @@ class SpecMaker:
         -------------
         E.g. rk, rkst
         '''
-        default_project = info.project_from_trigger(trigger=trigger, lower_case=True) 
-        if not self._custom_project or self._custom_project == default_project:
-            log.debug(f'Using project {default_project} for trigger {trigger}')
-            return default_project
+        if self._custom_project:
+            log.warning(f'Using custom project: {self._custom_project}')
+            return self._custom_project
 
-        log.warning(f'Using custom project: {self._custom_project}')
+        if self._component.is_mc:
+            log.debug(f'Using project: {trigger.project}')
+            return trigger.project
 
-        return self._custom_project
+        # If this is Data, use the PID project, even if noPID was requested
+        # Data has no noPID version, only MC does, can't remove PID to data
+        # No PID is achieved by merging, misID trigger with main trigger
+
+        return trigger.project.with_pid
     # ---------------------------------------------------
     def _skip_ftree(self, ftree : str) -> bool:
         '''
@@ -178,26 +183,23 @@ class SpecMaker:
         ----------------
         Gets list of paths to ROOT files for a given HLT2 trigger
         '''
-        if self._trigger in d_trigger:
+        component = Component.from_sample(sample = sample)
+
+        if component.is_mc and self._trigger in d_trigger:
             log.debug(f'Found paths for ROOT files associated to: {self._trigger}/{sample}/{ftree}')
             return d_trigger[self._trigger]
 
-        if not self._trigger.endswith('_ext'):
+        if component.is_mc:
             raise ValueError(f'Invalid trigger {self._trigger} for sample {sample}, project {self._project} and friend tree {ftree}')
 
-        # TODO: When misid trigger be processed also for MC, this has to be updated
-        if self._sample.startswith('mc_'):
-            trigger = self._trigger.replace('_ext', '')
-            log.warning(f'For sample {self._sample} will use {trigger} instead of {self._trigger}')
-            return d_trigger[trigger]
+        if self._trigger.has_pid:
+            log.debug(f'Found paths for ROOT files associated to: {self._trigger}/{sample}/{ftree}')
+            return d_trigger[self._trigger]
 
         # NOTE: If it was not explicitly stated that this is 2024 data, ext trigger does not make sense
-        if not self._sample.startswith('DATA_24'):
-            raise ValueError(f'Requested EXT trigger for non-2024 data sample: {self._sample}')
-
         log.debug(f'Found extended trigger: {self._trigger}')
-        trig_misid   = self._trigger.replace('_ext', '_misid')
-        trig_default = self._trigger.replace('_ext',       '')
+        trig_misid   = self._trigger.replace('_noPID', '_misid')
+        trig_default = self._trigger.replace('_noPID',       '')
 
         l_path = []
         l_path+= d_trigger[trig_default]
