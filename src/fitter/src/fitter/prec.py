@@ -28,13 +28,13 @@ from zfit.pdf              import BasePDF       as zpdf
 from zfit.pdf              import KDE1DimFFT, KDE1DimISJ, SumPDF
 
 from rx_data               import RDFGetter
-from rx_common             import Project, Qsq, Trigger, Mass
+from rx_common             import Component, Project, Qsq, Trigger, Mass, CCbarComponent
 from rx_common             import info
 from rx_selection          import selection     as sel
 
 from .configs                  import CCbarConf, CCbarWeight
 from .inclusive_decays_weights import read_weight 
-from .inclusive_sample_weights import Reader as inclusive_sample_weights
+from .inclusive_sample_weights import Reader as SampleWeightReader
 
 log=LogStore.add_logger('fitter:prec')
 
