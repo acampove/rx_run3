@@ -9,7 +9,7 @@ from dmu.stats       import ParameterLibrary as PL
 from dmu.stats       import zfit
 from dmu.generic     import UnpackerModel, utilities  as gut
 from dmu.workflow    import Cache
-from rx_common       import Qsq, Component
+from rx_common       import Mass, Qsq, Component
 from rx_data         import RDFGetter
 from rx_selection    import selection  as sel
 from fitter          import LikelihoodFactory
@@ -101,7 +101,7 @@ def test_config(tmp_path : Path):
 # -------------------------------------------
 def test_reso_muon(tmp_path : Path):
     '''
-    Test using toy data
+    Test resonant muon fit with
     '''
     data = gut.load_data(
         package='fitter_data',
@@ -110,14 +110,13 @@ def test_reso_muon(tmp_path : Path):
     with UnpackerModel.package(name = 'fitter_data'):
         cfg  = FitModelConf(**data)
 
-    obs = zfit.Space('B_Mass_smr', limits=(5000, 6000))
+    obs = zfit.Space(Mass.bp_dtf_jpsi, limits=(5000, 6000))
     with PL.parameter_schema(cfg=cfg.yields),\
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
          Cache.cache_root(path = tmp_path),\
-         RDFGetter.max_entries(value=100_000):
+         RDFGetter.max_entries(value=20_000):
 
         ftr = LikelihoodFactory(
-            name   = 'brem_xx0',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq.jpsi,
@@ -146,8 +145,7 @@ def test_rare_muon(q2bin : str, tmp_path : Path):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-@pytest.mark.parametrize('nbrem', [1, 2])
-def test_reso_electron(nbrem : int, tmp_path : Path):
+def test_reso_electron(tmp_path : Path):
     '''
     Test fitting resonant electron channel
     '''
@@ -156,15 +154,14 @@ def test_reso_electron(nbrem : int, tmp_path : Path):
         fpath  ='reso/rk/ee/data.yaml')
 
     with UnpackerModel.package(name = 'fitter_data'):
-        cfg  = FitModelConf(**data)
+        cfg = FitModelConf(**data)
 
-    obs = zfit.Space('B_const_mass_M', limits=(4800, 6000))
+    obs = zfit.Space(Mass.bp_dtf_jpsi, limits=(5100, 5800))
     with PL.parameter_schema(cfg=cfg.yields),\
          RDFGetter.max_entries(value = 200_000),\
         Cache.cache_root(path = tmp_path):
 
         ftr = LikelihoodFactory(
-            name   = f'brem_xx{nbrem}',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq.jpsi,
