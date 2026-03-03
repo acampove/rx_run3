@@ -510,13 +510,18 @@ def test_guid(trigger : Trigger, per_file : bool):
     assert uid11 != uid22
     assert uid22 != uid23
 # ------------------------------------------------
-@pytest.mark.parametrize('sample'   , ['Bd_Kstee_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('sample'   , [Component.bdkstkpiee])
 @pytest.mark.parametrize('trigger'  , ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('requested', [1_000, 10_000, 20_000])
-def test_max_entries(sample : str, requested : int, trigger : Trigger):
+def test_max_entries(
+    sample    : Component, 
+    requested : int, 
+    trigger   : Trigger):
     '''
     Check that one can filter randomly entries in dataframe
     '''
+    trigger = Trigger(trigger)
+
     with RDFGetter.max_entries(value=requested):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -528,25 +533,28 @@ def test_max_entries(sample : str, requested : int, trigger : Trigger):
     assert math.isclose(nentries, requested, rel_tol=0.1)
 # ------------------------------------------------
 @pytest.mark.parametrize('kind'   , ['data', 'mc'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_per_file(kind : str, trigger : Trigger, tmp_path : Path):
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rkst_ee_os])
+def test_per_file(
+    kind     : str, 
+    trigger  : Trigger, 
+    tmp_path : Path):
     '''
     Test of per_file flag set to True
     '''
     if   kind == 'data':
-        sample = 'DATA_24_MagDown_24c2'
-    elif kind == 'mc' and 'EE'   in trigger:
-        sample = 'Bd_Kstee_eq_btosllball05_DPC'
-    elif kind == 'mc' and 'MuMu' in trigger:
-        sample = 'Bd_Kstmumu_eq_btosllball05_DPC'
+        sample = Component.data_24_md_c2
+    elif kind == 'mc' and trigger.is_electron:
+        sample = Component.bdkstkpiee
+    elif kind == 'mc' and trigger.is_muon:
+        sample = Component.bdkstkpimm
     else:
         raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
 
     gtr   = RDFGetter(sample=sample, trigger=trigger)
     d_rdf = gtr.get_rdf(per_file=True)
 
-    for name, rdf in d_rdf.items():
-        name = hash(name)
+    for val, rdf in d_rdf.items():
+        name = hash(val)
         name = abs(name)
         name = str(name)
         name = name[:10]
@@ -555,9 +563,7 @@ def test_per_file(kind : str, trigger : Trigger, tmp_path : Path):
         if 'B0ToKpPim' in trigger:
             continue
 
-        _check_branches(rdf, is_ee = 'MuMu' not in trigger, is_mc = False)
-
-        sample = sample.replace('*', 'p')
+        _check_branches(rdf, is_ee = trigger.is_electron, is_mc = sample.is_mc)
 
         _plot_mva_mass(rdf, f'{name}_{sample}', out_dir = tmp_path)
         _plot_mva(rdf     , f'{name}_{sample}', out_dir = tmp_path)
@@ -569,11 +575,12 @@ def test_electron(kind : str, trigger : Trigger, tmp_path : Path):
     '''
     Tests for electron samples
     '''
+    trigger = Trigger(trigger)
 
     if   kind == 'data':
-        sample = 'DATA_24_MagDown_24c2'
+        sample = Component.data_24_md_c2
     elif kind == 'mc':
-        sample = 'Bd_Kstee_eq_btosllball05_DPC'
+        sample = Component.bdkstkpiee
     else:
         raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
 
@@ -593,21 +600,26 @@ def test_electron(kind : str, trigger : Trigger, tmp_path : Path):
 # ------------------------------------------------
 @pytest.mark.parametrize(
     'sample' , [
-    'DATA_24_MagDown_24c2',
-    'DATA_24_MagDown_24c3',
-    'DATA_24_MagDown_24c4',
-    'DATA_24_MagUp_24c2',
-    'DATA_24_MagUp_24c3',
-    'DATA_24_MagUp_24c4'])
+    Component.data_24_md_c2,
+    Component.data_24_md_c3,
+    Component.data_24_md_c4,
+    Component.data_24_mu_c2,
+    Component.data_24_mu_c3,
+    Component.data_24_mu_c4])
 @pytest.mark.parametrize('trigger', 
     ['Hlt2RD_BuToKpEE_MVA', 
      'Hlt2RD_BuToKpMuMu_MVA',
      'Hlt2RD_B0ToKpPimEE_MVA',
      'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_data(sample : str, trigger : Trigger, tmp_path : Path):
+def test_data(
+    sample  : Component,
+    trigger : Trigger, 
+    tmp_path: Path):
     '''
     Test of getter class in data
     '''
+    trigger = Trigger(trigger)
+
     with RDFGetter.max_entries(value=100_000):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -620,18 +632,23 @@ def test_data(sample : str, trigger : Trigger, tmp_path : Path):
         return
 
     _run_default_checks(
-        rdf      =rdf,
-        sample   =sample,
-        trigger  =trigger,
-        tmp_path =tmp_path,
-        test_name=f'data_{sample}_{trigger}')
+        rdf      = rdf,
+        sample   = sample,
+        trigger  = trigger,
+        tmp_path = tmp_path,
+        test_name= f'data_{sample}_{trigger}')
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('sample', [Component.bpkpee])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_mc(sample : str, trigger : Trigger, tmp_path : Path):
+def test_mc(
+    sample  : Component, 
+    trigger : Trigger, 
+    tmp_path: Path):
     '''
     Test of getter class in mc
     '''
+    trigger = Trigger(trigger)
+
     with RDFGetter.max_entries(value=-1):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -643,19 +660,23 @@ def test_mc(sample : str, trigger : Trigger, tmp_path : Path):
         return
 
     _print_dotted_branches(rdf)
-    _check_branches(rdf, is_ee=True, is_mc=True)
+    _check_branches(rdf, is_ee=True, is_mc=sample.is_mc)
 
     _plot_mc_qsq(rdf, f'test_mc/{sample}', sample, out_dir = tmp_path)
     _plot_mva_mass(rdf, f'test_mc/{sample}', out_dir = tmp_path)
     _plot_mva(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
     _plot_hop(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstee_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2, Component.bdkstkpiee])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_q2_track_electron(sample : str, trigger : Trigger, tmp_path : Path):
+def test_q2_track_electron(
+    sample   : Component, 
+    trigger  : Trigger, 
+    tmp_path : Path):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
+    trigger = Trigger(trigger)
 
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
@@ -663,28 +684,30 @@ def test_q2_track_electron(sample : str, trigger : Trigger, tmp_path : Path):
     rep = rdf.Report()
     rep.Print()
 
-    sample = sample.replace('*', 'p')
     _plot_q2_track(rdf, sample, out_dir = tmp_path)
 
     if 'B0ToKpPim' in trigger:
         return
 
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee=True, is_mc = is_mc)
+    _check_branches(rdf, is_ee=True, is_mc = sample.is_mc)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bd_Kstmumu_eq_btosllball05_DPC'])
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2, Component.bdkstkpimm])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_q2_track_muon(sample : str, trigger : Trigger, tmp_path : Path):
+def test_q2_track_muon(
+    sample   : Component, 
+    trigger  : Trigger, 
+    tmp_path : Path):
     '''
     Checks the distributions of q2_track vs normal q2
     '''
+    trigger = Trigger(trigger)
+
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, sample=sample)
     rep = rdf.Report()
     rep.Print()
 
-    sample     = sample.replace('*', 'p')
     identifier = f'{trigger}_{sample}'
 
     _plot_q2_track(rdf, identifier, out_dir = tmp_path)
@@ -692,25 +715,27 @@ def test_q2_track_muon(sample : str, trigger : Trigger, tmp_path : Path):
     if 'B0ToKpPim' in trigger:
         return
 
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee=False, is_mc=is_mc)
+    _check_branches(rdf, is_ee=False, is_mc=sample.is_mc)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2', 'Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2, Component.bpkpjpsiee])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA'])
-def test_brem_track_2(sample : str, trigger : Trigger, tmp_path : Path):
+def test_brem_track_2(
+    sample  : Component, 
+    trigger : Trigger, 
+    tmp_path: Path):
     '''
     Test brem_track_2 correction
     '''
+    trigger = Trigger(trigger)
+
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     rdf = _apply_selection(rdf=rdf, trigger=trigger, override = {'mass' : 'B_const_mass_M > 5160'}, sample=sample)
     rep = rdf.Report()
     rep.Print()
 
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee=True, is_mc=is_mc)
+    _check_branches(rdf, is_ee=True, is_mc=sample.is_mc)
 
-    sample = sample.replace('*', 'p')
     _plot_brem_track_2(rdf, sample, 'brem_track_2', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
