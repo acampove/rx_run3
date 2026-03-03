@@ -4,7 +4,7 @@ This module has tests for the DataModel class
 import pytest
 
 from pathlib       import Path
-from rx_common     import Trigger
+from rx_common     import Mass, Trigger, Qsq
 from rx_selection  import selection as sel
 from rx_data       import RDFGetter 
 from dmu           import LogStore
@@ -14,6 +14,7 @@ from dmu.generic   import utilities as gut
 from dmu.stats     import utilities as sut
 from dmu.workflow  import Cache
 from fitter        import DataModel
+from fitter        import FitModelConf
 
 log=LogStore.add_logger('fitter:test_data_model')
 # ----------------------

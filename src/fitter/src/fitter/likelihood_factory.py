@@ -120,7 +120,7 @@ class LikelihoodFactory:
 
         return nll
     # ----------------------
-    def get_config(self) -> DictConfig:
+    def get_config(self) -> dict[str,dict[str,str]]:
         '''
         Returns
         -------------

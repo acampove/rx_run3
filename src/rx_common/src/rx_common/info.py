@@ -3,8 +3,9 @@ This script contains functions needed to get information on samples
 '''
 
 from ROOT        import RDF # type: ignore
-from dmu.generic import utilities  as gut
 from dmu         import LogStore
+from dmu.generic import utilities  as gut
+from .types      import Channel, Project
 
 _triggers = gut.load_data(package='rx_common_data', fpath='triggers.yaml')
 
@@ -105,15 +106,15 @@ def project_from_trigger(trigger : str, lower_case : bool) -> str:
     raise ValueError(f'Trigger {trigger} not found')
 # ---------------------------------
 def get_trigger(
-    project : str, 
+    project : Project, 
     kind    : str,
-    channel : str) -> str:
+    channel : Channel) -> str:
     '''
     Parameters
     --------------
     project: E.g. RK 
     channel: E.g. EE
-    kind   : E.g. OS, SS, EXT
+    kind   : E.g. OS, SS, NOPID
 
     Returns
     --------------
