@@ -31,7 +31,7 @@ class LikelihoodFactory:
         sample  : Component,
         q2bin   : Qsq,
         cfg     : FitModelConf,
-        name    : str|None = None):
+        name    : str | None = None):
         '''
         name   : Identifier for fit, e.g. block. This is optional
         cfg    : configuration for the fit as a DictConfig object
@@ -53,9 +53,9 @@ class LikelihoodFactory:
         Returns directory where outputs will go
         '''
         if self._name is None:
-            return self._cfg.output_directory / f'{self._sample}/{self._trigger}_{self._q2bin}'
+            return self._cfg.output_directory / f'{self._trigger}_{self._q2bin}'
 
-        return self._cfg.output_directory / f'{self._sample}/{self._name}/{self._trigger}_{self._q2bin}'
+        return self._cfg.output_directory / f'{self._name}/{self._trigger}_{self._q2bin}'
     # ------------------------
     def run(self) -> ExtendedUnbinnedNLL:
         '''
