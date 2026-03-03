@@ -80,6 +80,38 @@ class Component(StrEnum):
     bdkstjpsimm_swp= auto()
     bdkstjpsiee_swp= auto()
     # --------------------------------------------
+    @classmethod
+    def from_sample(cls, sample : str) -> 'Component':
+        '''
+        Parameters
+        ----------------
+        sample: String representing MC sample
+
+        Returns
+        ----------------
+        Corresponding component
+        '''
+        for cmp in cls:
+            if not cmp.has_sample: 
+                continue
+
+            if cmp.sample != sample:
+                continue
+
+            return cmp
+
+        raise ValueError(f'Cannot find component for: {sample}')
+    # --------------------------------------------
+    @property
+    def has_sample(self) -> bool:
+        '''
+        True if there is a sample, MC or Data, associated to component
+        '''
+        if self in {Component.undefined, Component.comb, Component.ccbar}:
+            return False
+
+        return True
+    # --------------------------------------------
     @property
     def is_mc(self) -> bool:
         '''

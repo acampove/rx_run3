@@ -108,7 +108,17 @@ class Trigger(StrEnum):
     rkst_mm_ss   = 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA'
     # -----------
     uninitialized= 'uninitialized'
+    # -----------
+    @property
+    def has_pid(self) -> bool:
+        '''
+        False for triggers associated to PID removed samples
+        '''
+        if self in {Trigger.rk_ee_nopid, Trigger.rkst_ee_nopid}:
+            return False
 
+        return True
+    # -----------
     def __str__(self):
         return self.value
     # -----------
