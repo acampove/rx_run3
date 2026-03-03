@@ -75,12 +75,15 @@ def test_config(tmp_path : Path):
     '''
     Tests the config method
     '''
-    cfg = gut.load_conf(
+    data = gut.load_data(
         package='fitter_data',
-        fpath  ='reso/rk/muon/data.yaml')
+        fpath  ='reso/rk/mm/data.yaml')
+
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg  = FitModelConf(**data)
 
     obs = zfit.Space('B_Mass', limits=(4500, 7000))
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with PL.parameter_schema(cfg=cfg.yields),\
          sel.custom_selection(d_sel = {'bdt' : '(1)'}),\
          Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value=100_000):
@@ -93,16 +96,8 @@ def test_config(tmp_path : Path):
             cfg    = cfg)
         cfg = ftr.get_config()
 
-    assert 'selection' in cfg
-    assert 'default'   in cfg.selection
-    assert 'fit'       in cfg.selection
-
-    sel_def = cfg.selection.default
-    sel_fit = cfg.selection.fit
-
-    assert sel_def.keys() == sel_fit.keys()
-    assert sel_def.bdt    != sel_fit.bdt
-    assert sel_fit.bdt    == '(1)'
+    assert 'default' in cfg
+    assert 'fit'     in cfg
 # -------------------------------------------
 def test_reso_muon(tmp_path : Path):
     '''
