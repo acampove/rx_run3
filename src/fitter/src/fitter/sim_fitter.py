@@ -127,7 +127,7 @@ class SimFitter(BaseFitter, Cache):
                 trigger = self._trigger,
                 q2bin   = self._q2bin,
                 out_dir = self._base_path,
-                sample  = cfg.sample)
+                sample  = cfg.component)
 
             d_data[cat_name] = prp.get_data()
 
@@ -156,7 +156,7 @@ class SimFitter(BaseFitter, Cache):
             trigger = self._trigger,
             q2bin   = self._q2bin,
             out_dir = self._base_path,
-            sample  = cfg.sample)
+            sample  = cfg.component)
 
         d_data['main'] = prp.get_data()
 
@@ -340,7 +340,7 @@ class SimFitter(BaseFitter, Cache):
             Values: Selection for data that was fitted and default
         '''
         cuts_current= sel.selection(
-            process = cfg.sample, 
+            process = cfg.component, 
             trigger = self._trigger, 
             q2bin   = self._q2bin)
 
@@ -352,7 +352,7 @@ class SimFitter(BaseFitter, Cache):
 
         with sel.custom_selection(d_sel={}, force_override=True):
             cuts['default'] = sel.selection(
-                process = cfg.sample, 
+                process = cfg.component, 
                 trigger = self._trigger, 
                 q2bin   = self._q2bin)
 
