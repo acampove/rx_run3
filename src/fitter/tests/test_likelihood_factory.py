@@ -103,18 +103,21 @@ def test_reso_muon(tmp_path : Path):
     '''
     Test using toy data
     '''
-    cfg = gut.load_conf(
+    data = gut.load_data(
         package='fitter_data',
-        fpath  ='reso/rk/muon/data.yaml')
+        fpath  ='reso/rk/mm/data.yaml')
+
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg  = FitModelConf(**data)
 
     obs = zfit.Space('B_Mass_smr', limits=(5000, 6000))
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with PL.parameter_schema(cfg=cfg.yields),\
          sel.custom_selection(d_sel = {'bdt' : '(1)'}), \
          Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value=100_000):
 
         ftr = LikelihoodFactory(
-            name   = 'brem_000',
+            name   = 'brem_xx0',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq.jpsi,
