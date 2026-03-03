@@ -738,9 +738,9 @@ def test_brem_track_2(
 
     _plot_brem_track_2(rdf, sample, 'brem_track_2', out_dir = tmp_path)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bd_Kstee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2, Component.bdkstkpiee])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_check_vars(sample : str, trigger : Trigger):
+def test_check_vars(sample : Component, trigger : Trigger):
     '''
     Checks that variables from:
 
@@ -749,23 +749,28 @@ def test_check_vars(sample : str, trigger : Trigger):
 
     Can be accessed
     '''
+    trigger = Trigger(trigger)
+
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
-    is_mc = not sample.startswith('DATA_24_')
-    _check_branches(rdf, is_ee=True, is_mc=is_mc)
+    _check_branches(rdf, is_ee=True, is_mc=sample.is_mc)
 
     _print_dotted_branches(rdf)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger',
-    [
-    ('Bu_Kee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA'),
-    ('Bd_Kstee_eq_btosllball05_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'),
-    ('Bu_Kmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA')])
-def test_mcdecaytree(sample : str, trigger : Trigger, tmp_path : Path):
+    [(Component.bpkpee    , 'Hlt2RD_BuToKpEE_MVA'),
+     (Component.bdkstkpiee, 'Hlt2RD_B0ToKpPimEE_MVA'),
+     (Component.bpkpmm    , 'Hlt2RD_BuToKpMuMu_MVA')])
+def test_mcdecaytree(
+    sample  : Component, 
+    trigger : Trigger, 
+    tmp_path: Path):
     '''
     Builds dataframe from MCDecayTree
     '''
+    trigger = Trigger(trigger)
+
     with RDFGetter.max_entries(value=10_000):
         gtr = RDFGetter(sample=sample, trigger=trigger, tree='MCDecayTree')
         rdf = gtr.get_rdf(per_file=False)
@@ -780,13 +785,14 @@ def test_mcdecaytree(sample : str, trigger : Trigger, tmp_path : Path):
     _check_mcdt(rdf=rdf, name=f'mcdt/{sample}', out_dir = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('period'  ,['24c2','24c3','24c4'])
-@pytest.mark.parametrize('polarity',['MagUp', 'MagDown'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA_ext', 'Hlt2RD_B0ToKpPimEE_MVA_ext'])
+@pytest.mark.parametrize('polarity',['mu', 'md'])
+@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA_noPID', 'Hlt2RD_B0ToKpPimEE_MVA_noPID'])
 def test_ext_trigger(period : str, polarity : str, trigger : Trigger, tmp_path : Path):
     '''
     Test of getter class for combination of analysis and misID trigger
     '''
-    sample=f'DATA_24_{polarity}_{period}'
+    trigger = Trigger(trigger)
+    sample  = Component(f'data_24_{polarity}_{period}')
     with RDFGetter.max_entries(-1):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -801,21 +807,25 @@ def test_custom_columns(trigger : Trigger):
     '''
     d_def = {'xbrem' : 'int(L1_HASBREMADDED) + int(L2_HASBREMADDED)'}
 
+    trigger = Trigger(trigger)
     with RDFGetter.custom_columns(columns = d_def):
-        obj = RDFGetter(trigger=trigger, sample='DATA_24_MagDown_24c2')
+        obj = RDFGetter(trigger=trigger, sample=Component.data_24_md_c2)
         rdf = obj.get_rdf(per_file=False)
 
     l_col = [ col.c_str() for col in rdf.GetColumnNames() ]
 
     assert 'xbrem' in l_col
 # ------------------------------------------------
-# TODO: This test is very slow, needs to be disabled for now
-@pytest.mark.parametrize('sample' , ['Bd_JpsiKst_ee_eq_DPC'  ])
+@pytest.mark.parametrize('sample' , [Component.bdkstkpijpsiee])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_B0ToKpPimEE_MVA'])
-def test_block(sample : str, trigger : Trigger, tmp_path : Path):
+def test_block(
+    sample  : Component, 
+    trigger : Trigger, 
+    tmp_path: Path):
     '''
     Test of getter class with check for block assignment
     '''
+    trigger = Trigger(trigger)
     with RDFGetter.max_entries(value=-1):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -826,7 +836,6 @@ def test_block(sample : str, trigger : Trigger, tmp_path : Path):
 
     _check_block(rdf)
 
-    sample = sample.replace('*', 'p')
     name   = f'block/{sample}_{trigger}'
 
     _plot_block(rdf=rdf, name=name, out_dir = tmp_path)
@@ -849,10 +858,12 @@ def test_add_truem(project : str):
     _check_truem_columns(rdf)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _INCLUSIVE_SAMPLES) 
-def test_ccbar(sample : str, trigger : Trigger):
+def test_ccbar(sample : Component, trigger : Trigger):
     '''
     Tests reading of ccbar + X samples
     '''
+    sample  = Component(sample)
+    trigger = Trigger(trigger)
     with RDFGetter.max_entries(10_000):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -861,12 +872,13 @@ def test_ccbar(sample : str, trigger : Trigger):
 
     assert nentries > 0
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_exclude_friends(sample : str, trigger : Trigger):
+def test_exclude_friends(sample : Component, trigger : Trigger):
     '''
     Tests excluding friend trees through a context manager
     '''
+    trigger = Trigger(trigger)
     with RDFGetter.exclude_friends(names=['mva']):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -882,10 +894,11 @@ def test_skip_brem_track_2(kind : str, trigger : Trigger, tmp_path : Path):
     '''
     Tests for electron samples
     '''
+    trigger = Trigger(trigger)
     if   kind == 'data':
-        sample = 'DATA_24_MagDown_24c2'
+        sample = Component.data_24_md_c2 
     elif kind == 'mc' and trigger == 'Hlt2RD_BuToKpEE_MVA':
-        sample = 'Bu_JpsiK_ee_eq_DPC'
+        sample = Component.bpkpjpsiee
     else:
         raise ValueError(f'Invalid kind/trigger: {kind}/{trigger}')
 
@@ -901,12 +914,16 @@ def test_skip_brem_track_2(kind : str, trigger : Trigger, tmp_path : Path):
         tmp_path     = tmp_path,
         sample       = sample)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_custom_friend(sample : str, trigger : Trigger, tmp_path : Path):
+def test_custom_friend(
+    sample  : Component, 
+    trigger : Trigger, 
+    tmp_path: Path):
     '''
     Tests getting data with a custom version for a given tree, either friend or main
     '''
+    trigger = Trigger(trigger)
     with RDFGetter.custom_friends(versions={'mva' : 'v8'}):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -914,18 +931,23 @@ def test_custom_friend(sample : str, trigger : Trigger, tmp_path : Path):
     _run_default_checks(rdf=rdf, sample=sample, trigger=trigger, test_name='custom_friend', tmp_path = tmp_path)
 # ------------------------------------------------
 @pytest.mark.parametrize('sample, trigger' , [
-    ('Bu_KplKplKmn_eq_sqDalitz_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
-    ('Bu_piplpimnKpl_eq_sqDalitz_DPC', 'Hlt2RD_BuToKpEE_MVA_noPID'),
-    ('Bu_JpsiPi_ee_eq_DPC'           , 'Hlt2RD_BuToKpEE_MVA_noPID'),
-    ('Bu_Kee_eq_btosllball05_DPC'    , 'Hlt2RD_BuToKpEE_MVA_noPID'),
-    ('Bd_Kstee_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    (Component.bpkkk     , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    (Component.bpkpipi   , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    (Component.bppijpsiee, 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    (Component.bpkpee    , 'Hlt2RD_BuToKpEE_MVA_noPID'),
+    (Component.bdkstkpiee, 'Hlt2RD_BuToKpEE_MVA_noPID'),
     # -------------
-    ('Bu_Kmumu_eq_btosllball05_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
-    ('Bd_Kstmumu_eq_btosllball05_DPC', 'Hlt2RD_BuToKpMuMu_MVA_noPID')])
-def test_no_pid(sample : str, trigger : Trigger, tmp_path : Path):
+    (Component.bpkpmm    , 'Hlt2RD_BuToKpMuMu_MVA_noPID'),
+    (Component.bdkstkpimm, 'Hlt2RD_BuToKpMuMu_MVA_noPID')])
+def test_no_pid(
+    sample  : Component, 
+    trigger : Trigger, 
+    tmp_path: Path):
     '''
     Tests loading of noPID samples
     '''
+    trigger = Trigger(trigger)
+
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
     _run_default_checks(
@@ -940,11 +962,18 @@ def test_no_pid(sample : str, trigger : Trigger, tmp_path : Path):
 # TODO: Check for negative numbers
 @pytest.mark.parametrize('nthreads', [1, 6])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_multithreading(nthreads : int, trigger : Trigger, tmp_path : Path):
+def test_multithreading(
+    nthreads : int, 
+    trigger  : str, 
+    tmp_path : Path):
     '''
     This will test the context manager used to enable multithreading
     '''
-    sample   = 'Bd_Kstee_eq_btosllball05_DPC'
+    trigger = Trigger(trigger)
+    sample  = Component.bpkpjpsiee 
+    gtr = RDFGetter(sample=sample, trigger=trigger)
+    rdf = gtr.get_rdf(per_file=False)
+
     nentries = 1000 if nthreads == 1 else -1
     nthcheck =    0 if nthreads == 1 else nthreads
 
@@ -957,7 +986,7 @@ def test_multithreading(nthreads : int, trigger : Trigger, tmp_path : Path):
         assert GetThreadPoolSize() == nthcheck
 
         _print_dotted_branches(rdf)
-        _check_branches(rdf, is_ee=True, is_mc=True)
+        _check_branches(rdf, is_ee=True, is_mc=sample.is_mc)
 
         _plot_mva_mass(rdf, f'test_mc/{sample}', out_dir = tmp_path)
         _plot_mva(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
@@ -973,7 +1002,7 @@ def test_multithreading_invalid(nthreads : int):
     This will test the context manager used to enable multithreading
     with invalid number of threads
     '''
-    sample   = 'Bu_JpsiK_ee_eq_DPC'
+    sample  = Component.bpkpjpsiee 
     with pytest.raises(ValueError):
         with RDFGetter.multithreading(nthreads=nthreads):
             gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
@@ -984,7 +1013,7 @@ def test_multithreading_locked():
     This will test multithreading with locked class
     '''
     nthreads = 2
-    sample   = 'Bu_JpsiK_ee_eq_DPC'
+    sample   = Component.bpkpjpsiee 
 
     with pytest.raises(ValueError):
         with RDFGetter.multithreading(nthreads=nthreads):
@@ -992,8 +1021,8 @@ def test_multithreading_locked():
                 gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
                 gtr.get_rdf(per_file=False)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample', ['Bu_JpsiX_ee_eq_JpsiInAcc'] )
-def test_skip_adding_columns(sample : str):
+@pytest.mark.parametrize('sample', [Component.bpjpsixee] )
+def test_skip_adding_columns(sample : Component):
     '''
     Tests reading of ccbar + X samples
     '''
@@ -1012,30 +1041,33 @@ def test_skip_adding_columns(sample : str):
 
     assert len(l_col_1) > len(l_col_2)
 # ------------------------------------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpMuMu_MVA' ])
-def test_only_friends(sample : str, trigger : Trigger):
+def test_only_friends(sample : Component, trigger : Trigger):
     '''
     Tests the only_friends manager, which allows only a subset of friend trees
     '''
     s_friend = {'mva', 'hop'}
+    trigger  = Trigger(trigger)
     with RDFGetter.only_friends(s_friend=s_friend):
         gtr = RDFGetter(sample=sample, trigger=trigger)
 
     assert gtr.friend_trees == s_friend
 # ------------------------------------------------
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-@pytest.mark.parametrize('sample' , ['Bd_Kstee_eq_btosllball05_DPC', 'DATA*'])
+@pytest.mark.parametrize('sample' , [Component.bdkstkpiee, Component.data_24])
 @pytest.mark.parametrize('smeared', [True, False])
-@pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
+@pytest.mark.parametrize('q2bin'  , Qsq)
 def test_selection(
-    sample  : str, 
+    sample  : Component, 
     trigger : Trigger,
     smeared : bool, 
-    q2bin   : str):
+    q2bin   : Qsq):
     '''
     Basic test of selection
     '''
+    trigger = Trigger(trigger)
+
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
@@ -1066,16 +1098,18 @@ def test_selection(
 @pytest.mark.parametrize('q2bin' , Data.l_q2bin)
 def test_full_selection_electron(
     sample  : str, 
-    q2bin   : str, 
+    q2bin   : Qsq, 
     trigger : Trigger):
     '''
     Applies full selection to all q2 bins in electron channel
     '''
+    component = Component.from_sample(sample = sample)
+    trigger   = Trigger(trigger)
     with RDFGetter.max_entries(value=100_000):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
+        gtr = RDFGetter(sample=component, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
-    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
+    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=component)
 
     rep     = rdf.Report()
     rep.Print()
@@ -1089,15 +1123,17 @@ def test_full_selection_electron(
 @pytest.mark.parametrize('sample' , ['Bd_Kstmumu_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
 @pytest.mark.parametrize('q2bin'  , Data.l_q2bin)
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpMuMu_MVA', 'Hlt2RD_B0ToKpPimMuMu_MVA'])
-def test_full_selection_muon(sample : str, q2bin : str, trigger : Trigger):
+def test_full_selection_muon(sample : str, q2bin : Qsq, trigger : Trigger):
     '''
     Applies full selection to all q2 bins in muon channel
     '''
+    component = Component.from_sample(sample = sample)
+    trigger   = Trigger(trigger)
     with RDFGetter.max_entries(value=100_000):
-        gtr = RDFGetter(sample=sample, trigger=trigger)
+        gtr = RDFGetter(sample=component, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
 
-    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=sample)
+    rdf     = sel.apply_full_selection(rdf = rdf, trigger=trigger, q2bin=q2bin, process=component)
     rep     = rdf.Report()
     rep.Print()
 
@@ -1125,12 +1161,16 @@ def test_emulated_samples(
 
     B0 -> Jpsi K* => Bs -> Jpsi K*
     '''
+    source  = Component.from_sample(source)
+    target  = Component.from_sample(target)
+
+    trigger = Trigger(trigger)
     with RDFGetter.max_entries(value=100_000):
         gtr_1   = RDFGetter(sample=target, trigger=trigger)
         rdf_tar = gtr_1.get_rdf(per_file=False)
         rdf_tar = sel.apply_full_selection(
             rdf      = rdf_tar, 
-            q2bin    = 'jpsi', 
+            q2bin    = Qsq.jpsi, 
             process  = target, 
             trigger  = trigger,
             out_path = tmp_path)
@@ -1184,13 +1224,14 @@ _CUSTOM_PROJECTS=[
     ('DATA_24_MagUp_24c2'          , 'rk_no_refit'),
 ]
 @pytest.mark.parametrize('sample, project', _CUSTOM_PROJECTS)
-def test_project(sample : str, project : str):
+def test_project(sample : str, project : Project):
     '''
     Will test `project` context manager
     '''
+    component = Component.from_sample(sample = sample)
     with RDFGetter.max_entries(value=1000),\
          RDFGetter.project(name=project):
-        gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
+        gtr = RDFGetter(sample=component, trigger=Trigger.rk_ee_os)
         rdf = gtr.get_rdf(per_file=False)
 
     nentries = rdf.Count().GetValue()
