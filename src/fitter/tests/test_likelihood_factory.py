@@ -151,20 +151,20 @@ def test_reso_electron(nbrem : int, tmp_path : Path):
     '''
     Test fitting resonant electron channel
     '''
-    cfg   = gut.load_conf(
+    data = gut.load_data(
         package='fitter_data',
-        fpath  ='reso/rk/electron/data.yaml')
+        fpath  ='reso/rk/ee/data.yaml')
+
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg  = FitModelConf(**data)
 
     obs = zfit.Space('B_const_mass_M', limits=(4800, 6000))
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with PL.parameter_schema(cfg=cfg.yields),\
          RDFGetter.max_entries(value = 200_000),\
-         Cache.cache_root(path = tmp_path),\
-         sel.custom_selection(d_sel={
-            'brm12' : f'nbrem == {nbrem}',
-            'mass'  : '(1)'}):
+        Cache.cache_root(path = tmp_path):
 
         ftr = LikelihoodFactory(
-            name   = f'brem_{nbrem:03}',
+            name   = f'brem_xx{nbrem}',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq.jpsi,
