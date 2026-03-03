@@ -5,7 +5,6 @@ import pytest
 
 from typing          import Final
 from pathlib         import Path
-from omegaconf       import OmegaConf
 from dmu             import LogStore
 from dmu.stats       import FitParameter, zfit
 from dmu.stats       import Constraint1D
@@ -18,6 +17,7 @@ from fitter          import DataFitter
 from fitter          import ToyMaker
 from fitter          import ToyPlotter
 from fitter          import ToyConf
+from fitter          import FitModelConf
 
 _SEL_CFG : Final[dict] = {
     'selection' : {'default' : {}, 'fit' : {}}
@@ -50,16 +50,16 @@ def test_single_region(tmp_path : Path) -> None:
     dat = pdf.create_sampler(10_000)
     nll = zfit.loss.ExtendedUnbinnedNLL(data=dat, model=pdf)
 
-    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
-    d_nll   = {'signal_region' : (nll, sel_cfg)}
+    d_nll= {'signal_region' : (nll, _SEL_CFG)}
+    data = gut.load_data(package='fitter_data', fpath='tests/fits/single_region.yaml')
+    cfg  = FitModelConf(**data)
 
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/single_region.yaml')
     with Cache.cache_root(path = tmp_path):
         ftr = DataFitter(
             name = 'single_region',
             d_nll= d_nll, 
             cfg  = cfg)
-        ftr.run(kind='conf')
+        ftr.run(kind='fres')
 # ----------------------
 def test_two_regions(tmp_path : Path) -> None:
     '''
