@@ -18,7 +18,7 @@ from zfit            import Space      as zobs
 from zfit.data       import Data
 
 from rx_data         import RDFGetter
-from rx_common       import Component, Trigger, Correction
+from rx_common       import Component, Qsq, Trigger, Correction
 from rx_selection    import selection  as sel
 from rx_misid        import SampleSplitter
 from rx_misid        import SampleWeighter
@@ -43,7 +43,7 @@ class DataPreprocessor(Cache):
         obs     : zobs,
         sample  : Component,
         trigger : Trigger,
-        q2bin   : str,
+        q2bin   : Qsq,
         wgt_cfg : dict[Correction,MisIDSampleWeights] | None,
         is_sig  : bool                        = True,
         cut     : dict[str,str] | None = None):
