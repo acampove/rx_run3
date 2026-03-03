@@ -5,7 +5,7 @@ yields: &yields
   min : 0
   max : 1000000
 
-yld_signal:
+yld_bpkpmm:
   <<: *yields
-yld_combinatorial:
+yld_comb:
   <<: *yields
