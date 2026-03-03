@@ -227,6 +227,7 @@ class SpecMaker:
         nosamp = True
         for sample in d_data:
             if not fnmatch.fnmatch(sample, self._sample):
+                log.debug(f'For target {self._sample} skipping {sample}')
                 continue
 
             nosamp = False
@@ -244,10 +245,10 @@ class SpecMaker:
 
             nsamp = len(l_path_sample)
             if nsamp == 0:
-                log.error(f'No paths found for {sample} in {json_path} and friend tree {ftree}')
+                log.error(f'No paths found for {sample}/{self._trigger} in {json_path} and friend tree {ftree}')
                 nopath = True
             else:
-                log.debug(f'Found {nsamp} paths for {sample} in {json_path}')
+                log.debug(f'Found {nsamp} paths for {sample}/{self._trigger} in {json_path}')
 
             l_path += l_path_sample
 
@@ -263,7 +264,7 @@ class SpecMaker:
 
         return Sample(trees = [self._tree_name], files = l_path, metadata = {'kind' : ftree})
     # ---------------------------------------------------
-    def _filter_samples(
+    def _filter_friends(
         self, 
         d_ftree_dir : dict[str,Path]) -> dict[str,Path]:
         '''
@@ -304,7 +305,7 @@ class SpecMaker:
             raise ValueError(f'No directories with samples found in: {ftree_wc}')
 
         d_ftree_dir  = { os.path.basename(ftree_dir) : ftree_dir for ftree_dir in l_ftree_dir }
-        d_ftree_dir  = self._filter_samples(d_ftree_dir=d_ftree_dir)
+        d_ftree_dir  = self._filter_friends(d_ftree_dir=d_ftree_dir)
         self._s_ftree= { ftree for ftree in d_ftree_dir if ftree != _MAIN_TREE } # These friend trees both exist and are picked up
 
         log.info(40 * '-')
