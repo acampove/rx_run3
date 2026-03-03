@@ -1,0 +1,45 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+output_directory : test/data
+trigger   : Hlt2RD_BuToKpEE_MVA
+selection : {}
+yields    : 
+  nsig001:
+    val : 10
+    min : 0
+    max : 100000
+observable:
+  central:
+    name : B_M 
+    range:
+      - 4500 
+      - 7000
+components:
+  comb   :
+    output_directory : test/comb
+    models:
+      central : 
+        pdfs :
+          - gauss
+        shared        : []
+        reparametrize : {}
+        fix           : {} 
+        floating      : []
+    constraints: {}
+  bpkpee :
+    output_directory : test/signal
+    component : bpkpee
+    fit       : {}
+    categories: {}
+    plots     :
+      nbins  : 60
+      stacked: True
+constraints: {}
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    Gauss_ext       : Signal
+    Exponential_ext : Combinatorial
