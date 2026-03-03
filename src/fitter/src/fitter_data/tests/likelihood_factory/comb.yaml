@@ -13,6 +13,12 @@ models:
     floating      : []
     reparametrize : {}
     fix           : {}
+  jpsi:
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
   high:
     pdfs          : [exp]
     shared        : []
