@@ -29,8 +29,8 @@ class DataFitter(BaseFitter, Cache):
     def __init__(
         self,
         name  : str,
-        d_nll : dict[str,tuple[NLL,DictConfig]],
-        cfg   : DictConfig) -> None:
+        d_nll : dict[str,tuple[NLL,dict[str,dict[str,str]]]],
+        cfg   : FitModelConf) -> None:
         '''
         Parameters
         -------------
@@ -80,27 +80,21 @@ class DataFitter(BaseFitter, Cache):
         -------------
         out_dir: Path to output directory
         '''
-        if 'constraints' not in self._cfg:
+        if self._cfg.constraints.is_empty:
             log.info('Constraints not found, not saving them')
             return
-
-        cfg_cns = self._cfg.constraints
-        if cfg_cns is None:
-            cfg_cns = dict() # Need to store these constraints
-                             # This will be None in no constraint case
 
         out_path= out_dir / 'constraints.yaml'
         log.info(f'Saving constraints to: {out_path}')
 
-        OmegaConf.save(config=cfg_cns, f=out_path, resolve=True)
+        self._cfg.to_yaml(path = out_path)
     # ----------------------
     @overload
     def run(self, kind : Literal['fres']) -> FitResult:...
     @overload
     def run(self, kind : Literal['zfit']) -> zres:...
-    @overload
-    def run(self, kind : Literal['conf']) -> DictConfig:...
-    def run(self, kind :             str) -> zres | DictConfig | FitResult:
+    # ----------------------
+    def run(self, kind : Literal['zfit', 'fres']) -> zres | FitResult:
         '''
         Entry point for fitter
 
@@ -127,18 +121,14 @@ class DataFitter(BaseFitter, Cache):
         res.hesse(name='minuit_hesse', method = 'minuit_hesse')
         fres = FitResult.from_zfit(res = res)
 
-        plot_obj         = OmegaConf.to_container(self._cfg.plots, resolve = True)
-        plot_data : dict = cast(dict, plot_obj)
-        plt_cfg   = ZFitPlotterConf(**plot_data)
-
         for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
             out_path = self._out_path / name
 
             log.info(f'Saving fit to: {out_path}')
 
             self._save_fit(
-                cut_cfg  = cfg.selection,
-                plt_cfg  = plt_cfg,
+                cut_cfg  = cfg,
+                plt_cfg  = self._cfg.plots,
                 data     = data,
                 model    = model,
                 res      = fres,
@@ -151,9 +141,4 @@ class DataFitter(BaseFitter, Cache):
 
         if kind == 'fres':
             return fres 
-
-        if kind == 'conf':
-            return sut.zres_to_cres(res=res)
-
-        raise ValueError(f'Invalid kind: {kind}')
 # ----------------------
