@@ -5,12 +5,12 @@ yields: &yields
   min : 0
   max : 1000000
 # -------------------------
-yld_bppijpsimm_brem_xx0:
+yld_bppijpsimm:
   <<: *yields
-yld_comb_brem_xx0:
+yld_comb:
   <<: *yields
-yld_bpkpjpsimm_brem_xx0:
+yld_bpkpjpsimm:
   <<: *yields
-yld_bpkppsi2mm_brem_xx0:
+yld_bpkppsi2mm:
   <<: *yields
 # -------------------------
