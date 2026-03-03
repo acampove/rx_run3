@@ -75,20 +75,21 @@ def test_two_regions(tmp_path : Path) -> None:
     dat_002 = pdf_002.create_sampler(10_000)
     nll_002 = zfit.loss.ExtendedUnbinnedNLL(data=dat_002, model=pdf_002)
 
-    sel_cfg = OmegaConf.create(obj=_SEL_CFG)
     d_nll   = {
-        'region_001' : (nll_001, sel_cfg),
-        'region_002' : (nll_002, sel_cfg),
+        'region_001' : (nll_001, _SEL_CFG),
+        'region_002' : (nll_002, _SEL_CFG),
     }
 
     with goc.GofCalculator.disabled(True),\
          Cache.cache_root(path = tmp_path):
-        cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/two_regions.yaml')
+        data = gut.load_data(package='fitter_data', fpath='tests/fits/two_regions.yaml')
+        cfg  = FitModelConf(**data)
+
         ftr = DataFitter(
             name = 'two_regions',
             d_nll= d_nll, 
             cfg  = cfg)
-        ftr.run(kind='conf')
+        ftr.run(kind='fres')
 # ----------------------
 def test_two_regions_common_pars(tmp_path : Path) -> None:
     '''
