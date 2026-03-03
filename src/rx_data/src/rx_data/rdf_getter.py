@@ -314,13 +314,15 @@ class RDFGetter(SpecMaker):
         # TODO: The weight (taking into account prescale) should be removed
         # for 2025 data
         
-        # Do not use prescaling of triggers for MC, 
-        # MC has noPID samples 
-        if   self._component.is_mc:
-            rdf = rdf.Define('weight',              '1')
-        elif self._trigger in [Trigger.rk_ee_nopid, Trigger.rkst_ee_nopid]:
+        # If doing data with noPID trigger, undo prescale
+        # of misID trigger candidates
+        is_no_pid = self._trigger in [Trigger.rk_ee_nopid, Trigger.rkst_ee_nopid]
+
+        if not self._component.is_mc and is_no_pid:
             log.info('Adding weight of 10 to MisID sample')
             rdf = rdf.Define('weight', self._ext_weight)
+        else:
+            rdf = rdf.Define('weight',              '1')
 
         return rdf
     # ---------------------------------------------------
