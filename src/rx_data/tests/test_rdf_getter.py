@@ -11,7 +11,7 @@ import pytest
 import mplhep
 import numpy
 
-from typing         import cast
+from typing         import cast, Final
 from pathlib        import Path
 from ROOT           import RDataFrame, GetThreadPoolSize, RDF # type: ignore
 from dmu            import LogStore
@@ -19,24 +19,26 @@ from dmu.plotting   import Plotter2D
 from dmu.generic    import utilities as gut
 from dmu.rdataframe import utilities as ut
 
-from rx_common      import Component
+from rx_common      import Component, Project, Qsq
 from rx_selection   import selection as sel
 from rx_data        import collector as col
 from rx_data        import RDFGetter
 from rx_common      import Trigger
 
 _INCLUSIVE_SAMPLES = [
-    ('Bu_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
-    ('Bd_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
-    ('Bs_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
+    (Component.bdjpsixee, Trigger.rk_ee_os),
+    (Component.bpjpsixee, Trigger.rk_ee_os),
+    (Component.bsjpsixee, Trigger.rk_ee_os),
     # ----------
-    ('Bu_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
-    ('Bd_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
-    ('Bs_JpsiX_mm_eq_JpsiInAcc', Trigger.rk_mm_os),
+    (Component.bdjpsixmm, Trigger.rk_mm_os),
+    (Component.bpjpsixmm, Trigger.rk_mm_os),
+    (Component.bsjpsixmm, Trigger.rk_mm_os),
 ]
 
 # TODO: Need test for default_skip manager
 log=LogStore.add_logger('rx_data:test_rdf_getter')
+
+_NBLOCKS : Final[int] = 8
 # ------------------------------------------------
 class Data:
     '''
