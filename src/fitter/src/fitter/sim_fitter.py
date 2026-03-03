@@ -168,7 +168,7 @@ class SimFitter(BaseFitter, Cache):
             out_dir = self._base_path,
             sample  = cfg.component)
 
-        d_data['main'] = prp.get_data()
+        d_data[MAIN_CATEGORY] = prp.get_data()
 
         self._l_rdf_uid.append(prp.rdf_uid)
 
@@ -514,7 +514,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data,
             model    = pdf,
             res      = None,
-            out_path = self._out_path / MAIN_CATEGORY)
+            out_path = self._out_path)
 
         return pdf
     # ------------------------
