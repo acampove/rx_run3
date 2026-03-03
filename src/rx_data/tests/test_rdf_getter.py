@@ -784,7 +784,7 @@ def test_mcdecaytree(
 
     _check_mcdt(rdf=rdf, name=f'mcdt/{sample}', out_dir = tmp_path)
 # ------------------------------------------------
-@pytest.mark.parametrize('period'  ,['24c2','24c3','24c4'])
+@pytest.mark.parametrize('period'  ,['c2','c3','c4'])
 @pytest.mark.parametrize('polarity',['mu', 'md'])
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA_noPID', 'Hlt2RD_B0ToKpPimEE_MVA_noPID'])
 def test_ext_trigger(period : str, polarity : str, trigger : Trigger, tmp_path : Path):
@@ -970,7 +970,7 @@ def test_multithreading(
     This will test the context manager used to enable multithreading
     '''
     trigger = Trigger(trigger)
-    sample  = Component.bpkpjpsiee 
+    sample  = Component.bdkstkpiee
     gtr = RDFGetter(sample=sample, trigger=trigger)
     rdf = gtr.get_rdf(per_file=False)
 
