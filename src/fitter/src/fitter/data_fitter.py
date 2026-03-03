@@ -1,18 +1,18 @@
 '''
 Module containing DataFitter class
 '''
-from pathlib                   import Path
-from typing                    import Literal, cast, overload
-from omegaconf                 import DictConfig, OmegaConf
-from dmu                       import LogStore
-from dmu.workflow              import Cache
-from dmu.stats                 import FitResult, ZFitPlotterConf
-from dmu.stats                 import zfit
-from dmu.stats                 import utilities as sut
-from zfit.exception            import ParamNameNotUniqueError
-from zfit.result               import FitResult           as zres
-from zfit.loss                 import ExtendedUnbinnedNLL as NLL
-from fitter.base_fitter        import BaseFitter
+from pathlib         import Path
+from typing          import Literal, overload
+from dmu             import LogStore
+from dmu.workflow    import Cache
+from dmu.stats       import FitResult
+from dmu.stats       import zfit
+from dmu.stats       import utilities as sut
+from zfit.exception  import ParamNameNotUniqueError
+from zfit.result     import FitResult           as zres
+from zfit.loss       import ExtendedUnbinnedNLL as NLL
+from .base_fitter    import BaseFitter
+from .configs        import FitModelConf
 
 log=LogStore.add_logger('fitter:data_fitter')
 # ----------------------
