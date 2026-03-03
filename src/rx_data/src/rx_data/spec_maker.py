@@ -58,6 +58,7 @@ class SpecMaker:
         trigger   : Hlt2RD_BuToKpEE_MVA
         skip_patch: If true, it will not patch for missing samples, false by default
         '''
+        self._component = component
         self._emulator  = SampleEmulator(sample=component.sample)
         self._sample    = self._emulator.get_sample_name()
 
