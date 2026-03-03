@@ -48,7 +48,7 @@ class SimFitter(BaseFitter, Cache):
         q2bin     : Qsq,
         cfg       : ModelConf,
         obs       : zobs,
-        name      : str):
+        name      : str | None = None):
         '''
         Parameters
         --------------------
@@ -70,7 +70,7 @@ class SimFitter(BaseFitter, Cache):
         self._name      = name
         self._cfg       = cfg
         self._obs       = obs
-        self._base_path = cfg.output_directory / f'{name}/{trigger}_{q2bin}'
+        self._base_path = self._get_base_path() 
 
         log.debug(f'For component {self._component} using output: {self._base_path}')
 
@@ -86,6 +86,15 @@ class SimFitter(BaseFitter, Cache):
             out_path = self._base_path,
             l_rdf_uid= self._l_rdf_uid,
             config   = self._cfg.model_dump())
+    # ------------------------
+    def _get_base_path(self) -> Path:
+        '''
+        Returns directory where outputs will go
+        '''
+        if self._name is None:
+            return self._cfg.output_directory / f'{self._trigger}_{self._q2bin}'
+
+        return self._cfg.output_directory / f'{self._name}/{self._trigger}_{self._q2bin}'
     # ------------------------
     # Data getting section
     # ------------------------
