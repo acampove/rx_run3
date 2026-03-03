@@ -5,14 +5,14 @@ yields: &yields
   min : 0
   max : 1000000
 # -------------------------
-yld_cabibbo_brem_000:
+yld_bppijpsimm_brem_xx0:
   <<: *yields
-yld_combinatorial_brem_000:
+yld_comb_brem_xx0:
   <<: *yields
-yld_jpsi_brem_000:
+yld_jpsi_brem_xx0:
   <<: *yields
-yld_psi2_brem_000:
+yld_psi2_brem_xx0:
   <<: *yields
-yld_ccbar_brem_000:
+yld_ccbar_brem_xx0:
   <<: *yields
 # -------------------------
