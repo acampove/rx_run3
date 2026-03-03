@@ -109,7 +109,7 @@ def test_integration(
         res=FitResult.from_zfit(res), 
         cfg=cfg, 
         cns=cns)
-    df  = mkr.get_parameter_information()
+    df  = mkr.get_parameter_information(name = 'nominal')
 
     cfg = gut.load_conf(package='fitter_data', fpath='tests/toys/toy_plotter_integration.yaml')
     cfg.saving.plt_dir = tmp_path / 'toymaker/integration/plots'

@@ -8,7 +8,7 @@ import math
 import numpy
 import pandas     as pnd
 
-from dmu         import LogStore
+from dmu         import LogLevels, LogStore
 from dmu.generic import rxran
 from dmu.stats   import minimizers, zfit
 from dmu.stats   import tensorflow as tf
@@ -29,14 +29,20 @@ zres = zfit.result.FitResult
 class ToyConf(BaseModel):
     '''
     Class meant to configure how toys are generated
+
+    Attributes
+    --------------------
+    fit_conf        : Configuration for fits to toy data
+    output_directory: Directory where files (e.g. parquet files) will be saved
+    rseed           : Random seed will be a Cantor mapping of rseed and index of toy
+    ntoys           : Number of toys
     '''
     model_config = ConfigDict(frozen=True)
 
-    fit_conf : FitConf
-
-    output   : Path
-    ntoys    : int
-    rseed    : int
+    fit_conf         : FitConf
+    output_directory : Path
+    ntoys            : int
+    rseed            : int
     # ----------------
     def __str__(self) -> str:
         data = self.model_dump()
@@ -319,11 +325,13 @@ class ToyMaker:
     # ----------------------
     def get_parameter_information(
         self, 
+        name     : str,
         update   : bool = True,
         samplers : list[SamplerData] | None = None) -> pnd.DataFrame:
         '''
         Parameters
         ------------
+        name    : Prefix of parquet file with toy fits parameter, i.e. {NAME}_{SEED}.parquet
         update  : By default True, it will create the file even if already found
         samplers: By default None. If not None, will use these samplers to make toys.
 
@@ -331,9 +339,12 @@ class ToyMaker:
         ------------
         Pandas dataframe where each row represents a parameter
         '''
-        if not update and os.path.isfile(self._cfg.output):
-            log.info(f'Output already found, reusing: {self._cfg.output}')
-            return pnd.read_parquet(path = self._cfg.output)
+        fname = f'{name}_{self._cfg.rseed:03}.parquet'
+        fpath = self._ana_dir / self._cfg.output_directory / fname
+
+        if not update and fpath.exists():
+            log.info(f'Output already found, reusing: {fpath}')
+            return pnd.read_parquet(path = fpath)
 
         self._print_parameters()
 
@@ -384,7 +395,7 @@ class ToyMaker:
                 else:
                     res = obj
 
-                if log.getEffectiveLevel() < 20:
+                if log.getEffectiveLevel() < LogLevels.info:
                     self._print_result(res = res, msg = 'Toy fit')
 
             hashes = [ self._sampler_identifier(sampler = sam) for sam in samplers ]
@@ -408,9 +419,11 @@ class ToyMaker:
 
         self._print_yield_stats(yields = l_total)
 
-        log.info(f'Saving to: {self._cfg.output}')
+        fpath.parent.mkdir(parents = True, exist_ok = True)
+
+        log.info(f'Saving to: {fpath}')
         df = df.sort_values(by = 'Parameter')
-        df.to_parquet(self._cfg.output)
+        df.to_parquet(fpath)
 
         return df
 # ----------------------
