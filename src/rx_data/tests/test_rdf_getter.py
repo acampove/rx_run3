@@ -4,24 +4,26 @@ Class testing RDFGetter
 import os
 import glob
 import math
-from typing  import cast
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas            as pnd
 import pytest
 import mplhep
 import numpy
-from ROOT                    import RDataFrame, GetThreadPoolSize, RDF # type: ignore
-from dmu.logging.log_store   import LogStore
-from dmu.plotting.plotter_2d import Plotter2D
-from dmu.generic             import utilities as gut
-from dmu.rdataframe          import utilities as ut
 
-from rx_selection           import selection as sel
-from rx_data                import collector as col
-from rx_data.rdf_getter     import RDFGetter
-from rx_common.types        import Trigger
+from typing         import cast
+from pathlib        import Path
+from ROOT           import RDataFrame, GetThreadPoolSize, RDF # type: ignore
+from dmu            import LogStore
+from dmu.plotting   import Plotter2D
+from dmu.generic    import utilities as gut
+from dmu.rdataframe import utilities as ut
+
+from rx_common      import Component
+from rx_selection   import selection as sel
+from rx_data        import collector as col
+from rx_data        import RDFGetter
+from rx_common      import Trigger
 
 _INCLUSIVE_SAMPLES = [
     ('Bu_JpsiX_ee_eq_JpsiInAcc', Trigger.rk_ee_os),
