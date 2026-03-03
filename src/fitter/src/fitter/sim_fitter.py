@@ -1,27 +1,28 @@
 '''
 Module with SimFitter class
 '''
-from typing                   import overload, Literal, Final
+from pathlib             import Path
+from typing              import overload, Literal, Final
 
-from dmu                      import LogStore
-from dmu.stats                import FitResult, ModelFactoryConf
-from dmu.stats                import ModelFactory
-from dmu.stats                import zfit
-from dmu.stats                import utilities        as sut
-from dmu.workflow             import Cache
+from dmu                 import LogStore
+from dmu.stats           import FitResult, ModelFactoryConf
+from dmu.stats           import ModelFactory
+from dmu.stats           import zfit
+from dmu.stats           import utilities        as sut
+from dmu.workflow        import Cache
 
-from rx_common                import Correction, Qsq, Trigger, Component
-from rx_selection             import selection        as sel
+from rx_common           import Correction, Qsq, Trigger, Component
+from rx_selection        import selection        as sel
 
-from zfit.data                import Data             as zdata
-from zfit.pdf                 import BasePDF          as zpdf
-from zfit                     import Space            as zobs
-from zfit.param               import Parameter
+from zfit.data           import Data             as zdata
+from zfit.pdf            import BasePDF          as zpdf
+from zfit                import Space            as zobs
+from zfit.param          import Parameter
 
-from .base_fitter             import BaseFitter
-from .configs                 import CombinatorialConf, MisIDConf, NonParametricConf, ParametricConf, CCbarConf 
-from .data_preprocessor       import DataPreprocessor
-from .prec                    import PRec
+from .base_fitter        import BaseFitter
+from .configs            import CombinatorialConf, MisIDConf, NonParametricConf, ParametricConf, CCbarConf 
+from .data_preprocessor  import DataPreprocessor
+from .prec               import PRec
 
 log=LogStore.add_logger('fitter:sim_fitter')
 
