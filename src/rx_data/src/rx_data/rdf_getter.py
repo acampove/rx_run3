@@ -72,14 +72,14 @@ class RDFGetter(SpecMaker):
             'Hlt2RD_BuToKpEE_MVA',
             'Hlt2RD_BuToKpEE_MVA_cal',
             'Hlt2RD_BuToKpEE_MVA_misid',
-            'Hlt2RD_BuToKpEE_MVA_ext',
+            'Hlt2RD_BuToKpEE_MVA_noPID',
             'Hlt2RD_BuToKpEE_SameSign_MVA']
 
         _l_bd_ee_trigger = [
             'Hlt2RD_B0ToKpPimEE_MVA',
             'Hlt2RD_B0ToKpPimEE_MVA_cal',
             'Hlt2RD_B0ToKpPimEE_MVA_misid',
-            'Hlt2RD_B0ToKpPimEE_MVA_ext',
+            'Hlt2RD_B0ToKpPimEE_MVA_noPID',
             'Hlt2RD_B0ToKpPimEE_SameSign_MVA']
 
         self._l_ee_trigger  = _l_bd_ee_trigger + _l_bu_ee_trigger

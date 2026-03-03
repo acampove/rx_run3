@@ -5,7 +5,7 @@ This script contains functions needed to get information on samples
 from ROOT        import RDF # type: ignore
 from dmu         import LogStore
 from dmu.generic import utilities  as gut
-from .types      import Channel, Project
+from .types      import Channel, Project, Trigger
 
 _triggers = gut.load_data(package='rx_common_data', fpath='triggers.yaml')
 
@@ -108,7 +108,7 @@ def project_from_trigger(trigger : str, lower_case : bool) -> str:
 def get_trigger(
     project : Project, 
     kind    : str,
-    channel : Channel) -> str:
+    channel : Channel) -> Trigger:
     '''
     Parameters
     --------------
@@ -118,7 +118,7 @@ def get_trigger(
 
     Returns
     --------------
-    Hlt2 trigger name
+    Hlt2 trigger enum 
     '''
     if project not in _triggers:
         raise ValueError(f'Invalid project: {project}')
@@ -130,19 +130,15 @@ def get_trigger(
 
     if kind == 'SS':
         [trigger] = [ value for value in triggers if value.endswith('SameSign_MVA') ]
-        return trigger
-
-    if kind == 'EXT':
-        [trigger] = [ value for value in triggers if value.endswith('_MVA_ext') ]
-        return trigger
+        return Trigger(trigger)
 
     if kind == 'OS':
         [trigger] = [ value for value in triggers if value.endswith(f'{channel}_MVA') ]
-        return trigger
+        return Trigger(trigger)
 
     if kind == 'NOPID':
         [trigger] = [ value for value in triggers if value.endswith('_MVA_noPID') ]
-        return trigger
+        return Trigger(trigger)
 
     raise NotImplementedError(f'Invalid kind of trigger: {kind}')
 # ---------------------------------
