@@ -1,23 +1,8 @@
 output_directory : reso/rk/muon/cabibbo
-component        : bppijpsiee 
+component        : bppijpsimm
 categories:
-  brem_xx1:
-    selection :
-      brem : nbrem == 1
-    model :
-      pdfs :
-        - dscb 
-        - cbl
-      shared        :
-        - mu
-        - sg
-      floating      :
-        - sg
-      reparametrize : {}
-      fix           : {}
-  brem_xx2:
-    selection :
-      brem : nbrem == 2
+  brem_xx0:
+    selection : {}
     model :
       pdfs :
         - dscb 

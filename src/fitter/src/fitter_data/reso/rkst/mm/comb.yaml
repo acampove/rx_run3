@@ -3,19 +3,13 @@ output_directory : reso/rkst/muon/combinatorial
 constraints: {}
 # -----------------
 models:
-  low:
+  jpsi:
     pdfs          : [exp]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           : {}
-  central:
-    pdfs          : [exp]
-    shared        : []
-    floating      : []
-    reparametrize : {}
-    fix           : {}
-  high:
+  psi2:
     pdfs          : [exp]
     shared        : []
     floating      : []
