@@ -129,13 +129,16 @@ def test_rare_muon(q2bin : str, tmp_path : Path):
     '''
     Test using toy data
     '''
-    cfg = gut.load_conf(
+    data = gut.load_data(
         package='fitter_data',
-        fpath  ='rare/rk/muon/data.yaml')
+        fpath  ='rare/rk/mm/data.yaml')
+
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg  = FitModelConf(**data)
 
     obs = zfit.Space('B_Mass', limits=(5000, 6000))
     with Cache.cache_root(path = tmp_path),\
-         PL.parameter_schema(cfg=cfg.model.yields):
+         PL.parameter_schema(cfg=cfg.yields):
         ftr = LikelihoodFactory(
             obs    = obs,
             sample = Component.data_24,
