@@ -52,13 +52,10 @@ class LikelihoodFactory:
         '''
         Returns directory where outputs will go
         '''
-        sample = self._sample.replace('*', 'p')
-        if self._name is not None:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._name}/{self._trigger}_{self._q2bin}'
-        else:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._q2bin}'
+        if self._name is None:
+            return self._cfg.output_directory / f'{self._sample}/{self._trigger}_{self._q2bin}'
 
-        return Path(sample)
+        return self._cfg.output_directory / f'{self._sample}/{self._name}/{self._trigger}_{self._q2bin}'
     # ------------------------
     def run(self) -> ExtendedUnbinnedNLL:
         '''
