@@ -10,6 +10,7 @@ from .types import Qsq
 
 from .component import CCbarComponent
 from .component import Component
+from .region    import Region
 from .mass      import Mass
 
 __all__ = [
@@ -21,6 +22,7 @@ __all__ = [
     'Trigger', 
     'Channel', 
     'Project', 
+    'Region',
     'MisID',
     'Mass',
     'Brem',
