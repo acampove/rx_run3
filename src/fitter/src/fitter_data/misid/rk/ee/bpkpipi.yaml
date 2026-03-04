@@ -1,4 +1,4 @@
-output_directory : rare/electron/misid/hdpipi
+output_directory : rare/rk/electron/misid/hdpipi
 component        : bpkpipi
 project          : rk_nopid
 selection: 

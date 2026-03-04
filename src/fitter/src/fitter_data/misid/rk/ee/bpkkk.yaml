@@ -1,4 +1,4 @@
-output_directory : rare/electron/misid/hdkk
+output_directory : rare/rk/electron/misid/hdkk
 component        : bpkkk
 project          : rk_nopid
 selection: 
