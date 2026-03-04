@@ -171,7 +171,10 @@ class DataPreprocessor(Cache):
 
         return wgt
     # ----------------------
-    def _get_extra_weight(self, kind : str, cfg : MisIDSampleWeights) -> numpy.ndarray:
+    def _get_extra_weight(
+        self, 
+        kind : Correction, 
+        cfg  : MisIDSampleWeights) -> numpy.ndarray:
         '''
         Parameters
         -------------
@@ -182,12 +185,10 @@ class DataPreprocessor(Cache):
         -------------
         Array of weights
         '''
-        if kind == 'PID':
-            arr_wgt = self._get_pid_weights(cfg=cfg)
-        else:
-            raise ValueError(f'Invalid type of weight {kind}')
-
-        return arr_wgt
+        match kind:
+            case Correction.pid:
+                log.debug('Adding PID weights')
+                return self._get_pid_weights(cfg=cfg)
     # ----------------------
     def _get_pid_weights(self, cfg : MisIDSampleWeights) -> numpy.ndarray:
         '''
