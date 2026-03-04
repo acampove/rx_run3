@@ -5,8 +5,8 @@ output_directory : rare/rk/electron/misid/data
 trigger          : Hlt2RD_BuToKpEE_MVA_noPID
 yields           : model/yields/rk/misid_electron.yaml
 selection:
-  hdkk  : (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K > 0.1
-  hdpipi: (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K < 0.1
+  bpkk  : (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K > 0.1
+  bppipi: (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K < 0.1
 observable:
   bp_pipi:
     name : B_Mass_hdpipi
