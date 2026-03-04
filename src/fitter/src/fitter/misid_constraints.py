@@ -39,16 +39,15 @@ class MisIDConstraints(Cache):
     # ----------------------
     def __init__(
         self, 
-        cfg      : FitModelConf, 
-        q2bin    : Qsq):
+        cfg   : FitModelConf, 
+        q2bin : Qsq):
         '''
         Parameters
         -------------
         cfg      : configuration needed to build PDF
         q2bin    : E.g. central
         '''
-        self._name        : Final[str]                 = 'misid_constraints'
-        self._data_sample : Final[Component]           = Component.data_24 
+        self._data_sample : Final[Component] = Component.data_24 
 
         self._cfg   = cfg
         self._q2bin = q2bin
@@ -60,7 +59,7 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / q2bin,
+            out_path = self._cfg.output_directory,
             q2bin    = self._q2bin,
             d_sel    = d_sel, 
             config   = cfg.model_dump(),
@@ -236,7 +235,7 @@ class MisIDConstraints(Cache):
 
         with GofCalculator.disabled(value=True):
             ftr      = DataFitter(
-                name = self._q2bin, 
+                q2bin= self._q2bin, 
                 d_nll= d_nll, 
                 cfg  = self._cfg)
 
