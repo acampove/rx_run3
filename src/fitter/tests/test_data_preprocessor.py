@@ -92,13 +92,13 @@ def test_brem_cat_data(
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
-            obs    = obs,
-            out_dir= tmp_path,
-            sample = component, 
-            trigger= Trigger.rk_ee_os,
-            cut    =  cut, 
-            wgt_cfg= None,
-            q2bin  = Qsq.jpsi)
+            obs       = obs,
+            out_dir   = tmp_path,
+            sample    = component, 
+            trigger   = Trigger.rk_ee_os,
+            wgt_cfg   = None,
+            selection = cut, 
+            q2bin     = Qsq.jpsi)
         dat = prp.get_data()
 
     _validate_data(data=dat, tmp_path = tmp_path)
