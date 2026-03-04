@@ -6,7 +6,7 @@ from contextlib   import contextmanager
 from dmu          import LogStore
 from dmu.stats    import zfit
 from dmu.stats    import ParameterLibrary as PL
-from rx_common    import Qsq, Trigger
+from rx_common    import Component, Qsq, Trigger
 from rx_data      import SpecMaker
 from zfit         import Space         as zobs
 from zfit.pdf     import BasePDF       as zpdf
@@ -28,7 +28,7 @@ class DataModel:
         obs     : zobs,
         trigger : Trigger,
         q2bin   : Qsq,
-        name    : str|None=None):
+        name    : str | None=None):
         '''
         Parameters
         ------------------
@@ -46,18 +46,21 @@ class DataModel:
         self._q2bin  = q2bin
         self._name   = name
     # ------------------------
-    def _extend(self, pdf : zpdf, name : str) -> zpdf:
+    def _extend(
+        self, 
+        pdf       : zpdf, 
+        component : Component) -> zpdf:
         '''
         Parameters
         -------------------
-        name: Name of component
-        pdf : zfit pdf
+        component: Fit component
+        pdf      : zfit pdf
 
         Returns
         -------------------
         PDF with yield
         '''
-        yield_name = f'yld_{name}' if self._name is None else f'yld_{name}_{self._name}'
+        yield_name = f'yld_{component}' if self._name is None else f'yld_{component}_{self._name}'
 
         nevt = PL.get_yield(name=yield_name)
         kdes = zfit.pdf.KDE1DimFFT, zfit.pdf.KDE1DimExact, zfit.pdf.KDE1DimISJ
@@ -65,7 +68,7 @@ class DataModel:
             pdf.set_yield(nevt)
             return pdf
 
-        pdf = pdf.create_extended(nevt, name=name)
+        pdf = pdf.create_extended(nevt, name=component)
 
         return pdf
     # ------------------------
@@ -88,10 +91,9 @@ class DataModel:
                 log.warning(f'Skipping {component} component')
                 continue
 
-            name    = '' if self._name is None else self._name
             with SpecMaker.project(name = trigger.project):
                 ftr  = SimFitter(
-                    name     = name,
+                    name     = self._name,
                     component= component,
                     trigger  = trigger,
                     q2bin    = self._q2bin,
@@ -103,7 +105,7 @@ class DataModel:
                 log.warning(f'Skipping component: {component}')
                 continue
 
-            pdf = self._extend(pdf=pdf, name=component)
+            pdf = self._extend(pdf=pdf, component=component)
             l_pdf.append(pdf)
 
         pdf = zfit.pdf.SumPDF(l_pdf)
