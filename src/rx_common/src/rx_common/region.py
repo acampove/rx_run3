@@ -1,5 +1,6 @@
-from enum  import StrEnum, auto
-from .mass import Mass
+from enum      import StrEnum, auto
+from .mass     import Mass
+from dmu.stats import zfit
 
 # ------------------------
 class Region(StrEnum):
@@ -10,6 +11,17 @@ class Region(StrEnum):
     # ---------------------
     bpkk   = auto()
     bppipi = auto()
+    # ---------------------
+    @property
+    def obs(self) -> zfit.Space:
+        '''
+        Observable for corresponding region
+        '''
+        obs = zfit.Space(
+            obs    = self.mass, 
+            limits = self.mass.limits)
+
+        return obs
     # ---------------------
     @property
     def mass(self) -> Mass:
