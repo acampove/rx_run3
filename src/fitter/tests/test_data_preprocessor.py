@@ -1,7 +1,6 @@
 '''
 Module meant to hold tests for the DataPreprocessor class
 '''
-import os
 import pytest
 import matplotlib.pyplot as plt
 
@@ -18,12 +17,13 @@ from zfit.data     import Data      as zdata
 from fitter        import DataPreprocessor
 
 log=LogStore.add_logger('fitter:test_data_preprocessor')
-# -------------------------------------------------
-class Data:
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
     '''
-    Meant to hold shared attributes
+    This will run before any test
     '''
-    user    = os.environ['USER']
+    LogStore.set_level('fitter:data_preprocessor', 10)
 # -------------------------------------------------
 @pytest.mark.fixture(autouse=True)
 def max_entries():
