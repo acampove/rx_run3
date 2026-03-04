@@ -5,7 +5,7 @@ import copy
 from contextlib   import contextmanager
 from pathlib      import Path
 from typing       import Any, overload, Literal
-from ROOT         import RDF, GetThreadPoolSize, TFile, EnableImplicitMT, DisableImplicitMT # type: ignore
+from ROOT         import RDF, GetThreadPoolSize, TFile # type: ignore
 from dmu          import LogStore
 from dmu.generic  import hashing
 from dmu.generic  import utilities as gut
@@ -36,12 +36,9 @@ class RDFGetter(SpecMaker):
     friends     : List of names of samples, to be treated as friend trees. By default this is None and everything will be processed
     skip_adding_columns : By default false. If true, it will skip defining new columns.
     '''
-
     _max_entries                      = -1
     _skip_adding_columns              = False
     _d_custom_columns : dict[str,str] = {}
-    _allow_multithreading             = False
-    _nthreads                         = None
     # ---------------------------------------------------
     def __init__(
         self,
@@ -153,10 +150,6 @@ class RDFGetter(SpecMaker):
         '''
         This method will raise if running with mulithreading and if it was not explicitly allowed
         '''
-        if self._allow_multithreading:
-            log.info(f'Using {self._nthreads} threads')
-            return
-
         nthreads = GetThreadPoolSize()
         if nthreads > 1:
             raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
@@ -664,46 +657,6 @@ class RDFGetter(SpecMaker):
                 yield
             finally:
                 cls._d_custom_columns = old_val
-
-        return _context()
-    # ---------------------------------------------------
-    @classmethod
-    def multithreading(cls, nthreads : int):
-        '''
-        Multithreading should be used with care. This should be the only
-        place where multithreading is allowed to be turned on.
-
-        Parameters
-        ----------------
-        nthreads: Number of threads for EnableImplicitMT. If number
-        of threads is 1, multithreading will be off
-        '''
-
-        if nthreads <= 0:
-            raise ValueError(f'Invalid number of threads: {nthreads}')
-
-        if cls._allow_multithreading:
-            raise ValueError(f'Multithreading was already set to {cls._nthreads}, cannot set to {nthreads}')
-
-        @contextmanager
-        def _context():
-            if nthreads == 1:
-                yield
-                return
-
-            old_val = cls._allow_multithreading
-            old_nth = cls._nthreads
-
-            cls._nthreads             = nthreads
-            cls._allow_multithreading = True
-            EnableImplicitMT(nthreads)
-
-            try:
-                yield
-            finally:
-                DisableImplicitMT()
-                cls._allow_multithreading = old_val
-                cls._nthreads             = old_nth
 
         return _context()
 # ---------------------------------------------------
