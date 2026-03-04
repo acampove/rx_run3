@@ -87,6 +87,14 @@ class ComponentConf(UnpackerModel):         # Tested
     model_config = ConfigDict(frozen=True)
 
     output_directory : Path
+    # ----------------------------------
+    @property
+    def component_trigger(self) -> Trigger | None:
+        '''
+        Trigger for current component, if valid, or None
+        if it does not exist
+        '''
+        return getattr(self, 'trigger', None)
 # ------------------------------
 class CCbarConf(ComponentConf):         # Tested
     '''
@@ -157,11 +165,12 @@ class MisIDConf(NonParametricConf): # Tested
     Configuration needed to build MisID components
     '''
     output_directory : Path
+    trigger          : Trigger
     project          : Project
     selection        : dict[str,str]
     weights          : MisIDSampleWeights 
 # ------------------------------
-AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonParametricConf | MisIDConf
+AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonParametricConf
 # ------------------------------
 # Fits
 # ------------------------------
