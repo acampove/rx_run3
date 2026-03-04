@@ -225,11 +225,7 @@ class DataPreprocessor(Cache):
         '''
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
 
-        rdf = self._rdf
-        if log.getEffectiveLevel() < LogLevels.info:
-            rep = rdf.Report()
-            rep.Print()
-
+        rdf  = self._rdf
         log.debug('Retrieving data')
         arr  = rdf.AsNumpy([self._obs.label])[self._obs.label]
         wgt  = rdf.AsNumpy(['weight'])['weight']
