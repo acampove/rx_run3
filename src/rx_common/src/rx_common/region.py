@@ -1,6 +1,12 @@
-from enum      import StrEnum, auto
-from .mass     import Mass
-from dmu.stats import zfit
+'''
+Module with Region enum
+'''
+
+from enum       import StrEnum, auto
+from dmu.stats  import zfit
+
+from .mass      import Mass
+from .component import Component
 
 # ------------------------
 class Region(StrEnum):
@@ -11,6 +17,17 @@ class Region(StrEnum):
     # ---------------------
     bpkk   = auto()
     bppipi = auto()
+    # ---------------------
+    @property
+    def signal(self) -> Component:
+        '''
+        Signal component for this region
+        '''
+        match self:
+            case Region.bpkk:
+                return Component.bpkkk
+            case Region.bppipi:
+                return Component.bpkpipi
     # ---------------------
     @property
     def obs(self) -> zfit.Space:
