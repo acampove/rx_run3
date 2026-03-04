@@ -9,7 +9,7 @@ from pydantic    import BaseModel, ConfigDict
 from pathlib     import Path
 from typing      import Self
 
-from rx_common   import Channel, Mass, Project, Qsq, MisID
+from rx_common   import Channel, Mass, Project, Qsq, MisID, Region
 from rx_common   import Component, Trigger, CCbarComponent
 from rx_misid    import MisIDSampleWeights
 from dmu         import LogLevels, LogStore
@@ -171,12 +171,13 @@ class FitModelConf(ComponentConf):
 
     Attributes
     --------------------
-    yields: Contains configurations to build yields for a fitting region/PDF, etc
+    yields   : Contains configurations to build yields for a fitting region/PDF, etc
+    selection: Dictionary mapping signal region with selection used to create it
     '''
     model_config = ConfigDict(frozen = True)
 
     trigger    : Trigger
-    selection  : dict[str,str]
+    selection  : dict[Region,str]
     yields     : YieldsConf 
     observable : dict[Qsq | MisID, ObservableConf]
     components : dict[Component, AnyModelConf]
