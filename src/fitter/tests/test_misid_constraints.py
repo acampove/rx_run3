@@ -10,7 +10,6 @@ from rx_data       import RDFGetter
 from dmu           import LogStore
 from dmu.workflow  import Cache
 from dmu.stats     import print_constraints
-from dmu.stats     import zfit
 from dmu.generic   import UnpackerModel, utilities     as gut
 from fitter        import MisIDConstraints
 from fitter        import FitModelConf
@@ -33,18 +32,16 @@ def test_simple(q2bin : Qsq, tmp_path : Path) -> None:
     '''
     Basic test for building misID component
     '''
-    obs  = zfit.Space('B_Mass_smr', limits=(4500, 6000))
     data = gut.load_data(package='fitter_data', fpath='misid/rk/ee/data_misid.yaml')
 
     with UnpackerModel.package(name = 'fitter_data'):
-        cfg  = FitModelConf(**data)
+        cfg = FitModelConf(**data)
 
     with sel.custom_selection(d_sel={'nobrm0' : 'nbrem != 0'}),\
          RDFGetter.max_entries(value = -1),\
          RDFGetter.multithreading(nthreads=8),\
          Cache.cache_root(path = tmp_path):
             obj = MisIDConstraints(
-                obs      = obs,
                 cfg      = cfg,
                 q2bin    = q2bin)
             constraints = obj.get_constraints()
