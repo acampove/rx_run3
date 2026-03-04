@@ -5,6 +5,7 @@ Module holding SampleSplitter class
 import numpy
 import pandas as pnd
 
+from typing          import Final
 from pathlib         import Path
 from ROOT            import RDF # type: ignore
 from dmu             import LogStore
@@ -14,6 +15,9 @@ from dmu.workflow    import Cache     as Wcache
 from .types          import MisIDSampleSplitting 
 
 log=LogStore.add_logger('rx_misid:sample_splitter')
+
+PION_ID : Final[int] = 211
+KAON_ID : Final[int] = 321
 # --------------------------------
 class SampleSplitter(Wcache):
     '''
@@ -88,9 +92,9 @@ class SampleSplitter(Wcache):
         if lep1_id != lep2_id:
             raise ValueError(f'Lepton IDs differ: {lep1_id} != {lep2_id}')
 
-        if   lep1_id == 211:
+        if   lep1_id == PION_ID:
             particle = 'pion'
-        elif lep1_id == 321:
+        elif lep1_id == KAON_ID:
             particle = 'kaon'
         else:
             raise ValueError(f'Unexpected lepton ID: {lep1_id}')
