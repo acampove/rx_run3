@@ -70,6 +70,7 @@ class DataPreprocessor(Cache):
         self._trigger= trigger
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
+        self._out_dir= out_dir
 
         rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir)
 
@@ -191,8 +192,9 @@ class DataPreprocessor(Cache):
         '''
         log.info(f'Splitting sample: {self._sample}/{self._q2bin}')
         spl   = SampleSplitter(
-            rdf = self._rdf, 
-            cfg = cfg.splitting)
+            rdf     = self._rdf, 
+            out_dir = self._out_dir,
+            cfg     = cfg.splitting)
         df    = spl.get_sample()
 
         log.info(f'Getting PID weights for: {self._sample}/{self._q2bin}')
