@@ -3,12 +3,13 @@ This module contains tests for the FitConfig class
 '''
 
 import pytest
-from pathlib           import Path
-from omegaconf         import OmegaConf, DictConfig
-from fitter            import RXFitConfig
-from dmu               import LogStore
-from dmu.generic       import utilities as gut
-from rx_common.types   import Qsq
+from pathlib      import Path
+from dmu          import LogStore
+from dmu.generic  import utilities as gut
+from rx_common    import Qsq
+
+from fitter       import RXFitConfig
+from fitter       import FitModelConf
 
 log=LogStore.add_logger('fitter:test_fit_config')
 # ----------------------
