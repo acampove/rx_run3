@@ -103,15 +103,15 @@ def test_brem_cat_data(
 
     _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------
-@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('sample', [
-    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
-    'Bu_KplKplKmn_eq_sqDalitz_DPC'])
+#@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
+@pytest.mark.parametrize('component', [
+    Component.bpkkk,
+    Component.bpkpipi])
 @pytest.mark.parametrize('region', ['kpipi' ,     'kkk'])
 @pytest.mark.parametrize('kind'  , ['signal', 'control'])
 def test_with_pid_weights(
     tmp_path : Path,
-    sample   : str,
+    component: Component,
     region   : str, 
     kind     : str) -> None:
     '''
@@ -129,7 +129,7 @@ def test_with_pid_weights(
         prp  = DataPreprocessor(
             obs    = obs,
             out_dir= tmp_path,
-            sample = Component(sample),
+            sample = component,
             trigger= Trigger.rk_ee_nopid,
             cut    = dict(), 
             wgt_cfg= {Correction.pid : cfg},
