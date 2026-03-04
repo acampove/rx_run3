@@ -134,7 +134,37 @@ class DataPreprocessor(Cache):
             rep = rdf.Report()
             df  = rut.rdf_report_to_df(rep=rep)
 
+        self._check_data(
+            rdf = rdf, 
+            sel = cfg_sel, 
+            df  = df)
+
         return rdf, cfg_sel, df
+    # ----------------------
+    def _check_data(
+        self, 
+        rdf : RDF.RNode, 
+        sel : dict[str,str], 
+        df  : pnd.DataFrame) -> None:
+        '''
+        Check that selected data is not empty 
+
+        Parameters
+        -------------
+        rdf : DataFrame after selection
+        sel : Dictionary with selection
+        df  : Cutflow
+        '''
+        nentries = rdf.Count().GetValue()
+        if nentries > 0:
+            return
+
+        for key, val in sel.items():
+            log.info(f'{key:<15}{val}')
+
+        log.info(df)
+
+        raise ValueError('Found empty data after selection')
     # ------------------------
     def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
         '''
