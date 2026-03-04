@@ -7,17 +7,7 @@ yields           : model/yields/rk/misid_electron.yaml
 selection:
   bpkk  : (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K > 0.1
   bppipi: (LEP_PID_E < 3.0 || LEP_PROBNN_E < 0.2) && LEP_PROBNN_K < 0.1
-observable:
-  bp_pipi:
-    name : B_Mass_hdpipi
-    range:
-      - 4500
-      - 6000
-  bp_kk:
-    name : B_Mass_hdkk
-    range:
-      - 4500
-      - 6000
+observable: {}
 components:
   comb   : misid/rk/ee/comb.yaml
   bpkpipi: misid/rk/ee/bpkpipi.yaml
