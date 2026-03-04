@@ -131,7 +131,7 @@ def test_with_pid_weights(
             sample    = component,
             trigger   = Trigger.rk_ee_nopid,
             wgt_cfg   = {Correction.pid : cfg},
-            selection = {'pid_l' : '(1)', 'pid_k' : '(1)'}, 
+            selection = {'pid_l' : '(1)'}, 
             is_sig    = kind == 'signal',
             q2bin     = Qsq.jpsi)
         dat  = prp.get_data()
