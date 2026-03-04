@@ -139,6 +139,11 @@ class DataPreprocessor(Cache):
             rep = rdf_sel.Report()
             df  = rut.rdf_report_to_df(rep=rep)
 
+        if log.getEffectiveLevel() < LogLevels.info:
+            rep.Print()
+            for name, val in cfg_sel.items():
+                log.info(f'{name:<15}{val}')
+
         return rdf_sel, cfg_sel, df
     # ------------------------
     def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
