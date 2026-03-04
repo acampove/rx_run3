@@ -154,9 +154,11 @@ class SimFitter(BaseFitter, Cache):
         if isinstance(cfg, MisIDConf):
             wgt_cfg = {Correction.pid : cfg.weights}
             cut     = cfg.selection
+            log.debug(f'Overriding cuts {cut} and using weights')
         else:
             wgt_cfg = None
             cut     = None
+            log.debug('Not overriding cuts or using weights')
 
         d_data = {}
         prp   = DataPreprocessor(
