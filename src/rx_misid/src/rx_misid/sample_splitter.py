@@ -34,20 +34,26 @@ class SampleSplitter(Wcache):
     # --------------------------------
     def __init__(
         self,
-        rdf      : RDF.RNode,
-        cfg      : MisIDSampleSplitting):
+        rdf     : RDF.RNode,
+        out_dir : Path,
+        cfg     : MisIDSampleSplitting):
         '''
         Parameters
         --------------------
-        rdf      : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
-        cfg      : omegaconf dictionary with configuration specifying how to split the samples
+        rdf     : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
+        out_dir : Path (WRT ANADIR) to directory with outputs
+        cfg     : omegaconf dictionary with configuration specifying how to split the samples
         '''
+        nentries = rdf.Count().GetValue()
+        if nentries == 0:
+            raise ValueError('Got an empty dataframe')
+
         super().__init__(
-            out_path = Path('data_sample_splitter'),
+            out_path = out_dir,
             args     = [rdf.uid, cfg.model_dump()])
 
-        self._cfg      = cfg
-        self._rdf      = rdf
+        self._cfg = cfg
+        self._rdf = rdf
     # --------------------------------
     def _id_from_array(self, array : numpy.ndarray) -> int:
         '''
@@ -109,7 +115,7 @@ class SampleSplitter(Wcache):
         the output contains the `hadron` column, signaling if this is
         a kaon (kkk) or pion sample (kpipi)
         '''
-        parquet_path = f'{self._out_path}/sample.parquet'
+        parquet_path = self._out_path / 'sample.parquet'
         if self._copy_from_cache():
             log.warning(f'Cached path found, reusing: {parquet_path}')
             df = pnd.read_parquet(parquet_path, engine='pyarrow')
