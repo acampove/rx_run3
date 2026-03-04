@@ -200,7 +200,7 @@ def test_high_q2_track(tmp_path : Path):
     '''
     data = gut.load_data(
         package='fitter_data',
-        fpath  ='rare/rk/electron/data.yaml')
+        fpath  ='rare/rk/ee/data.yaml')
 
     with UnpackerModel.package(name = 'fitter_data'):
         cfg = FitModelConf(**data)
@@ -233,7 +233,7 @@ def test_rare_misid_electron(
     '''
     data = gut.load_data(
         package='fitter_data',
-        fpath  ='misid/rk/electron/data_misid.yaml')
+        fpath  ='misid/rk/ee/data_misid.yaml')
 
     with UnpackerModel.package(name = 'fitter_data'):
         cfg = FitModelConf(**data)
