@@ -9,7 +9,7 @@ from dmu.stats       import ParameterLibrary as PL
 from dmu.stats       import zfit
 from dmu.generic     import UnpackerModel, utilities  as gut
 from dmu.workflow    import Cache
-from rx_common       import Mass, Qsq, Component
+from rx_common       import Mass, Qsq, Component, Region
 from rx_data         import RDFGetter
 from rx_selection    import selection  as sel
 from fitter          import LikelihoodFactory
@@ -219,13 +219,13 @@ def test_high_q2_track(tmp_path : Path):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-@pytest.mark.parametrize('q2bin' , ['central'])
+@pytest.mark.parametrize('q2bin' , [Qsq.central])
 @pytest.mark.parametrize('region, tag_cut', [
-    ('hdkk'  , 'PROBNN_K > 0.1'), 
-    ('hdpipi', 'PROBNN_K < 0.1')])
+    (Region.bpkk  , 'PROBNN_K > 0.1'), 
+    (Region.bppipi, 'PROBNN_K < 0.1')])
 def test_rare_misid_electron(
-    q2bin   : str,
-    region  : str, 
+    q2bin   : Qsq,
+    region  : Region, 
     tag_cut : str,
     tmp_path: Path):
     '''
@@ -241,17 +241,15 @@ def test_rare_misid_electron(
     l1_in_cr = f'((L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)) && L1_{tag_cut}'
     l2_in_cr = f'((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L2_{tag_cut}'
 
-    obs = zfit.Space(f'B_Mass_{region}', limits=(4500, 7000))
-
     with PL.parameter_schema(cfg=cfg.yields),\
          RDFGetter.max_entries(value = -1),\
          Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})'}):
         ftr = LikelihoodFactory(
-            obs    = obs,
+            obs    = region.obs,
             name   = region,
             sample = Component.data_24,
-            q2bin  = Qsq(value = q2bin),
+            q2bin  = q2bin,
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
