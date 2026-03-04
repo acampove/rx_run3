@@ -3,8 +3,8 @@ Module containing the MisIDConstraints class
 '''
 
 from pathlib             import Path
-from typing              import Final, Literal
-from rx_common           import Component, Correction, Qsq
+from typing              import Final
+from rx_common           import Component, Correction, Qsq, Region
 from rx_selection        import selection as sel
 
 from dmu.stats           import FitResult, GofCalculator
@@ -19,13 +19,12 @@ from dmu.workflow        import Cache
 from zfit                import Space               as zobs
 from zfit.loss           import ExtendedUnbinnedNLL as zlos
 
-from .configs            import FitModelConf
+from .configs            import FitModelConf, MisIDConf
 from .data_fitter        import DataFitter
 from .likelihood_factory import LikelihoodFactory
 from .data_preprocessor  import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid_constraints')
-ControlRegion = Literal['hdkk', 'hdpipi']
 # -------------------------        
 class MisIDConstraints(Cache):
     '''
@@ -53,7 +52,6 @@ class MisIDConstraints(Cache):
         q2bin    : E.g. central
         '''
         self._name        : Final[str]                 = 'misid_constraints'
-        self._regions     : Final[list[ControlRegion]] = ['hdpipi', 'hdkk']
         self._data_sample : Final[Component]           = Component.data_24 
 
         self._obs   = obs
@@ -84,7 +82,7 @@ class MisIDConstraints(Cache):
         Dictionary with yields in signal region
         '''
         d_yield   = {}
-        for region in self._regions:
+        for region in Region.hadronic_misid():
             d_yield[f'yld_{region}_{region}'  ] = self.__get_signal_region_yield(
                 nickname = region, 
                 region   = region,
@@ -95,7 +93,7 @@ class MisIDConstraints(Cache):
     def __get_signal_region_yield(
         self, 
         region   : str,
-        nickname : ControlRegion, 
+        nickname : Region, 
         pars     : FitResult) -> tuple[float,float]:
         '''
         Parameters
@@ -109,7 +107,7 @@ class MisIDConstraints(Cache):
         Tuple with expected signal region yield and error
         '''
         control_yield, control_error = pars[f'yld_{region}_{nickname}']
-        scale = self.__get_transfer_factor(nickname=nickname)
+        scale = self.__get_transfer_factor(region=nickname)
 
         # Use it to scale yield from control region in data
         value = control_yield * scale
@@ -121,7 +119,7 @@ class MisIDConstraints(Cache):
 
         return value, error
     # ----------------------
-    def __get_transfer_factor(self, nickname : ControlRegion) -> float:
+    def __get_transfer_factor(self, region : Region) -> float:
         '''
         Parameters
         -------------
@@ -133,10 +131,15 @@ class MisIDConstraints(Cache):
         Needed to translate MisID yields in control region to expectation
         in signal region
         '''
-        if nickname == 'hdkk':
-            cfg     = self._cfg.components.bpkkk
-        else:
-            cfg     = self._cfg.components.bpkpipi
+        match region:
+            case Region.bpkk:
+                cfg = self._cfg.components[Component.bpkkk  ]
+            case Region.bppipi:
+                cfg = self._cfg.components[Component.bpkpipi]
+
+        if not isinstance(cfg, MisIDConf):
+            cfg_type = type(cfg)
+            raise ValueError(f'Config for hadronic misID components of type: {cfg_type}')
 
         sample  = cfg.component
         wgt_cfg = cfg.weights
@@ -150,7 +153,7 @@ class MisIDConstraints(Cache):
         for is_sig in [True, False]:
             prp = DataPreprocessor(
                 obs    = self._obs,
-                out_dir= Path(nickname),
+                out_dir= Path(region),
                 sample = sample,
                 trigger= trigger,
                 wgt_cfg= {Correction.pid : wgt_cfg},
@@ -170,17 +173,17 @@ class MisIDConstraints(Cache):
 
         return sig_yld / ctr_yld
     # ----------------------
-    def __get_pid_cut(self, kind : str) -> str:
+    def __get_pid_cut(self, region : Region) -> str:
         '''
         Parameters
         -------------
-        kind: Type of control region, e.g. kkk or kpipi
+        region: Type of control region, e.g. kkk or kpipi
 
         Returns
         -------------
         PID cut needed to build control region
         '''
-        cut = self._cfg.selection[kind]
+        cut = self._cfg.selection[region]
 
         cut_l1 = cut.replace('LEP_', 'L1_')
         cut_l2 = cut.replace('LEP_', 'L2_')
@@ -189,17 +192,17 @@ class MisIDConstraints(Cache):
         cut = f'({cut_l1}) && ({cut_l2})'
 
         log.info('')
-        log.info(f'Building {kind} PID control region with:')
+        log.info(f'Building {region} PID control region with:')
         log.info(cut)
         log.info('')
 
         return cut
     # ----------------------
-    def __get_control_nll(self, kind : ControlRegion) -> tuple[zlos,DictConfig]:
+    def __get_control_nll(self, region : Region) -> tuple[zlos,dict]:
         '''
         Parameters
         -------------
-        kind: Control region type, e.g. kkk, kpipi
+        region: Control region type, e.g. kkk, kpipi
 
         Returns
         -------------
@@ -208,15 +211,18 @@ class MisIDConstraints(Cache):
             - Configuration used to build that likelihood
         '''
 
-        obs     = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
-        pid_cut = self.__get_pid_cut(kind=kind)
+        obs       = zfit.Space(
+            obs   = region.mass, 
+            limits= region.mass.limits)
+
+        pid_cut = self.__get_pid_cut(region=region)
 
         with PL.parameter_schema(cfg=self._cfg.yields),\
              sel.update_selection(d_sel={'pid_l' : pid_cut}):
 
             ftr = LikelihoodFactory(
                 obs    = obs,
-                name   = kind,
+                name   = region,
                 sample = self._data_sample, 
                 q2bin  = self._q2bin,
                 cfg    = self._cfg)
@@ -244,15 +250,16 @@ class MisIDConstraints(Cache):
 
         log.info(f'Running full calculation, nothing cached in: {cons_path}')
         d_nll   = {}
-        for region in self._regions:
-            d_nll[region] = self.__get_control_nll(kind=region)
+        for region in Region.hadronic_misid():
+            d_nll[region] = self.__get_control_nll(region=region)
 
         with GofCalculator.disabled(value=True):
-            data    = self._cfg.model_dump()
-            fit_cfg = OmegaConf.create(data)
+            ftr  = DataFitter(
+                name = self._q2bin, 
+                d_nll= d_nll, 
+                cfg  = self._cfg)
 
-            ftr     = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=fit_cfg)
-            pars    = ftr.run(kind='fres')
+            pars = ftr.run(kind='fres')
 
         d_cns = self.__get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)
