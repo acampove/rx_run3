@@ -130,8 +130,11 @@ class DataPreprocessor(Cache):
                 process = self._sample,
                 out_path= out_path)
 
-            cfg_sel = sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
             rep = rdf.Report()
+            cfg_sel = sel.selection(
+                process = self._sample, 
+                trigger = self._trigger, 
+                q2bin   = self._q2bin)
             df  = rut.rdf_report_to_df(rep=rep)
 
         self._check_data(
