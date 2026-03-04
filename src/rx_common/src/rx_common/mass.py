@@ -116,7 +116,7 @@ class Mass(StrEnum):
             case Mass.bp_bcor_smr:
                 return Mass.bp.limits 
             case Mass.bp_kk:
-                return 5000, 5800 
+                return 4800, 6500 
             case Mass.bp_pipi:
                 return Mass.bp_kk.limits
             # ------------
