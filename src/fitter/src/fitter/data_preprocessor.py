@@ -130,25 +130,28 @@ class DataPreprocessor(Cache):
                 process = self._sample,
                 out_path= out_path)
 
-            rep = rdf.Report()
             cfg_sel = sel.selection(
                 process = self._sample, 
                 trigger = self._trigger, 
                 q2bin   = self._q2bin)
+
+            rep = rdf_sel.Report()
             df  = rut.rdf_report_to_df(rep=rep)
 
         self._check_data(
-            rdf = rdf, 
-            sel = cfg_sel, 
-            df  = df)
+            rdf_raw = rdf_raw,
+            rdf_sel = rdf_sel, 
+            sel     = cfg_sel, 
+            df      = df)
 
-        return rdf, cfg_sel, df
+        return rdf_sel, cfg_sel, df
     # ----------------------
     def _check_data(
         self, 
-        rdf : RDF.RNode, 
-        sel : dict[str,str], 
-        df  : pnd.DataFrame) -> None:
+        rdf_raw : RDF.RNode,
+        rdf_sel : RDF.RNode, 
+        sel     : dict[str,str], 
+        df      : pnd.DataFrame) -> None:
         '''
         Check that selected data is not empty 
 
@@ -158,9 +161,12 @@ class DataPreprocessor(Cache):
         sel : Dictionary with selection
         df  : Cutflow
         '''
-        nentries = rdf.Count().GetValue()
+        nentries = rdf_sel.Count().GetValue()
         if nentries > 0:
             return
+
+        original = rdf_raw.Count().GetValue()
+        log.error(f'Found zero entries from dataframe with {original} entries')
 
         for key, val in sel.items():
             log.info(f'{key:<15}{val}')
