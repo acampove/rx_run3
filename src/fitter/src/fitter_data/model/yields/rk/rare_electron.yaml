@@ -24,20 +24,22 @@ yld_bpkpee:
 # --------------------
 yld_bdkstkpiee:
   kind : mul
-  params:
+  pars :
     - s_bdkstkpiee
     - yld_bpkpee
 yld_bpkstkpiee:
   kind : mul
-  params:
+  pars :
     - s_bpkstkpiee
     - yld_bpkpee
 yld_bsphiee:
   kind : mul
-  params:
+  pars :
     - s_bsphiee
     - yld_bpkpee
 # --------------------
+yld_bpkpee:
+  <<      : *yields
 yld_ccbar:
   <<      : *yields
 yld_comb:
