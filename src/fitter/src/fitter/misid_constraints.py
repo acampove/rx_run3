@@ -141,8 +141,8 @@ class MisIDConstraints(Cache):
                 out_dir   = Path(region),
                 sample    = cfg.component,
                 trigger   = self._cfg.trigger,
-                wgt_cfg   = {Correction.pid : cfg.weights},
                 is_sig    = is_sig,
+                wgt_cfg   = {Correction.pid : cfg.weights},
                 selection = {'pid_l' : '(1)'},
                 q2bin     = self._q2bin)
             dat = prp.get_data()
