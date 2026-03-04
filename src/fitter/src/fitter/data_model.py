@@ -85,8 +85,11 @@ class DataModel:
 
         log.debug(f'Found {npdf} components')
 
-        trigger = self._cfg.trigger
         for component, cfg in self._cfg.components.items():
+            # If component has its own trigger (e.g. MisID with its noPID) pick that
+            # otherwise pick full model trigger
+            trigger = self._cfg.trigger if cfg.component_trigger is None else cfg.component_trigger 
+
             if component in self._skipped_components:
                 log.warning(f'Skipping {component} component')
                 continue
