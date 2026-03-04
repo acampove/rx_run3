@@ -39,14 +39,14 @@ class DataPreprocessor(Cache):
     # ------------------------
     def __init__(
         self,
-        out_dir : Path,
-        obs     : zobs,
-        sample  : Component,
-        trigger : Trigger,
-        q2bin   : Qsq,
-        wgt_cfg : dict[Correction,MisIDSampleWeights] | None,
-        is_sig  : bool                        = True,
-        cut     : dict[str,str] | None = None):
+        out_dir   : Path,
+        obs       : zobs,
+        sample    : Component,
+        trigger   : Trigger,
+        q2bin     : Qsq,
+        wgt_cfg   : dict[Correction,MisIDSampleWeights] | None,
+        is_sig    : bool                        = True,
+        selection : dict[str,str] | None = None):
         '''
         Parameters
         --------------------
@@ -62,7 +62,7 @@ class DataPreprocessor(Cache):
 
         is_sig : If true (default) it will pick PID weights for signal region.
                  Otherwise it will use misID control region weights.
-        cut    : Selection defining this component category, represented by dictionary where the key are labels
+        selection : Selection defining this component category, represented by dictionary where the key are labels
                  and the values are the expressions of the cut
         '''
         self._obs    = obs
@@ -72,7 +72,7 @@ class DataPreprocessor(Cache):
         self._wgt_cfg= wgt_cfg
         self._out_dir= out_dir
 
-        rdf , d_sel, df_ctf  = self._get_rdf(cut = cut, out_dir = out_dir)
+        rdf , d_sel, df_ctf  = self._get_rdf(selection = selection, out_dir = out_dir)
 
         self._rdf    = rdf 
         self._d_sel  = d_sel
@@ -91,12 +91,13 @@ class DataPreprocessor(Cache):
     # ------------------------
     def _get_rdf(
         self, 
-        out_dir     : Path,
-        cut         : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
+        out_dir   : Path,
+        selection : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
         -------------------
-        category_cut: Selection to be added on top, used for categories.
+        out_dir  : Directory where cutflow information will go
+        selection: Selection to be added on top, used for categories.
 
         Returns
         -------------------
@@ -121,7 +122,7 @@ class DataPreprocessor(Cache):
         out_path = Path(Cache._cache_root) / out_dir
 
         # overriding only happens for simulation samples
-        with sel.custom_selection(d_sel=cut, force_override=True):
+        with sel.custom_selection(d_sel=selection, force_override=True):
             rdf_sel = sel.apply_full_selection(
                 rdf     = rdf_raw,
                 uid     = uid,

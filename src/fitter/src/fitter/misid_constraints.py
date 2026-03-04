@@ -137,14 +137,14 @@ class MisIDConstraints(Cache):
         log.info(20 * '-')
         for is_sig in [True, False]:
             prp = DataPreprocessor(
-                obs    = region.obs,
-                out_dir= Path(region),
-                sample = cfg.component,
-                trigger= self._cfg.trigger,
-                wgt_cfg= {Correction.pid : cfg.weights},
-                is_sig = is_sig,
-                cut    = {'pid_l' : '(1)'},
-                q2bin  = self._q2bin)
+                obs       = region.obs,
+                out_dir   = Path(region),
+                sample    = cfg.component,
+                trigger   = self._cfg.trigger,
+                wgt_cfg   = {Correction.pid : cfg.weights},
+                is_sig    = is_sig,
+                selection = {'pid_l' : '(1)'},
+                q2bin     = self._q2bin)
             dat = prp.get_data()
             yld = dat.weights.numpy().sum()
             yld = float(yld)

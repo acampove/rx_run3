@@ -130,14 +130,14 @@ class SimFitter(BaseFitter, Cache):
         '''
         d_data = {}
         for cat_name, cat_cfg in cfg.categories.items():
-            prp   = DataPreprocessor(
-                wgt_cfg = dict(),
-                obs     = self._obs,
-                cut     = cat_cfg.selection,
-                trigger = self._trigger,
-                q2bin   = self._q2bin,
-                out_dir = self._base_path,
-                sample  = cfg.component)
+            prp = DataPreprocessor(
+                wgt_cfg   = dict(),
+                obs       = self._obs,
+                trigger   = self._trigger,
+                q2bin     = self._q2bin,
+                out_dir   = self._base_path,
+                selection = cat_cfg.selection,
+                sample    = cfg.component)
 
             d_data[cat_name] = prp.get_data()
 
@@ -160,13 +160,13 @@ class SimFitter(BaseFitter, Cache):
 
         d_data = {}
         prp   = DataPreprocessor(
-            wgt_cfg = wgt_cfg,
-            obs     = self._obs,
-            cut     = cut,
-            trigger = self._trigger,
-            q2bin   = self._q2bin,
-            out_dir = self._base_path,
-            sample  = cfg.component)
+            wgt_cfg   = wgt_cfg,
+            obs       = self._obs,
+            trigger   = self._trigger,
+            q2bin     = self._q2bin,
+            out_dir   = self._base_path,
+            selection = cut,
+            sample    = cfg.component)
 
         d_data[MAIN_CATEGORY] = prp.get_data()
 

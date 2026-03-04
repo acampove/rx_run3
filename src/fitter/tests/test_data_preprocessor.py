@@ -127,14 +127,14 @@ def test_with_pid_weights(
 
     with Cache.cache_root(path = tmp_path):
         prp  = DataPreprocessor(
-            obs    = obs,
-            out_dir= tmp_path,
-            sample = component,
-            trigger= Trigger.rk_ee_nopid,
-            cut    = dict(), 
-            wgt_cfg= {Correction.pid : cfg},
-            is_sig = kind == 'signal',
-            q2bin  = Qsq.jpsi)
+            obs       = region.obs,
+            out_dir   = tmp_path,
+            sample    = component,
+            trigger   = Trigger.rk_ee_nopid,
+            wgt_cfg   = {Correction.pid : cfg},
+            selection = {'pid_l' : '(1)', 'pid_k' : '(1)'}, 
+            is_sig    = kind == 'signal',
+            q2bin     = Qsq.jpsi)
         dat  = prp.get_data()
 
     _validate_data(data=dat, tmp_path = tmp_path)
