@@ -193,6 +193,23 @@ class FitModelConf(ComponentConf):
     constraints: ConstraintsCfg
     plots      : ZFitPlotterConf
     fit        : FitConf
+    # ------------------------
+    @classmethod
+    def default(cls) -> 'FitModelConf':
+        '''
+        Returns default version of config
+        used mainly for fits
+        '''
+        return cls(
+            output_directory = Path('/tmp/test'),
+            trigger          = Trigger.rk_ee_os,
+            selection        = {},
+            yields           = YieldsConf(root = {}),
+            observable       = {},
+            components       = {},
+            constraints      = ConstraintsCfg(),
+            plots            = ZFitPlotterConf.default(),
+            fit              = FitConf.default())
 # ------------------------------
 # Full config
 # ----------------------
