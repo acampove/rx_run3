@@ -11,7 +11,7 @@ from dmu.generic   import utilities as gut
 from dmu.stats     import utilities as sut
 from dmu           import LogStore
 from dmu.workflow  import Cache
-from rx_common     import Correction, Trigger, Component
+from rx_common     import Correction, Qsq, Trigger, Component
 from rx_data       import RDFGetter
 from rx_misid      import MisIDSampleWeights
 from zfit.data     import Data      as zdata
@@ -53,10 +53,12 @@ def _validate_data(
     plt.savefig(plt_path)
     plt.close()
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', [
-    'DATA_24_MagDown_24c2',
-    'Bu_JpsiK_mm_eq_DPC'])
-def test_muon_data(tmp_path : Path, sample : str):
+@pytest.mark.parametrize('component', [
+    Component.data_24_md_c2,
+    Component.bpkpjpsimm])
+def test_muon_data(
+    tmp_path : Path, 
+    component: Component):
     '''
     Tests class with toys
     '''
@@ -66,19 +68,22 @@ def test_muon_data(tmp_path : Path, sample : str):
         prp = DataPreprocessor(
             obs    = obs,
             out_dir= tmp_path,
-            sample = Component(sample),
+            sample = component,
             trigger= Trigger.rk_mm_os,
             wgt_cfg= None,
-            q2bin  = 'jpsi')
+            q2bin  = Qsq.jpsi)
         dat = prp.get_data()
 
     _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', [
-    'DATA_24_MagDown_24c2',
-    'Bu_JpsiK_ee_eq_DPC'])
+@pytest.mark.parametrize('component', [
+    Component.data_24_md_c2,
+    Component.bpkpjpsiee])
 @pytest.mark.parametrize('brem_cat', [0, 1, 2])
-def test_brem_cat_data(tmp_path : Path, sample : str, brem_cat : int):
+def test_brem_cat_data(
+    tmp_path : Path, 
+    component: Component, 
+    brem_cat : int):
     '''
     Tests class with toys
     '''
@@ -89,11 +94,11 @@ def test_brem_cat_data(tmp_path : Path, sample : str, brem_cat : int):
         prp = DataPreprocessor(
             obs    = obs,
             out_dir= tmp_path,
-            sample = Component(sample),
+            sample = component, 
             trigger= Trigger.rk_ee_os,
             cut    =  cut, 
             wgt_cfg= None,
-            q2bin  = 'jpsi')
+            q2bin  = Qsq.jpsi)
         dat = prp.get_data()
 
     _validate_data(data=dat, tmp_path = tmp_path)
@@ -129,7 +134,7 @@ def test_with_pid_weights(
             cut    = dict(), 
             wgt_cfg= {Correction.pid : cfg},
             is_sig = kind == 'signal',
-            q2bin  = 'jpsi')
+            q2bin  = Qsq.jpsi)
         dat  = prp.get_data()
 
     _validate_data(data=dat, tmp_path = tmp_path)

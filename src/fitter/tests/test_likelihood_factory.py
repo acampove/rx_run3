@@ -175,7 +175,7 @@ def test_rare_electron(q2bin : Qsq, tmp_path : Path):
     '''
     data = gut.load_data(
         package='fitter_data',
-        fpath  ='rare/rk/electron/data.yaml')
+        fpath  ='rare/rk/ee/data.yaml')
 
     with UnpackerModel.package(name = 'fitter_data'):
         cfg = FitModelConf(**data)
