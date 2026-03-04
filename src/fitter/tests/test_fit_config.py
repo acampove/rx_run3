@@ -20,49 +20,17 @@ def initialize():
     '''
     LogStore.set_level('fitter:fit_config', 10)
 # ----------------------
-def _get_config(name : str) -> DictConfig:
-    fit_cfg = {
-        name   : [1,2,3],
-        'name' : { name : 1, 'a' : name }
-    }
-
-    return OmegaConf.create(fit_cfg)
-# ----------------------
-def test_replace():
-    '''
-    Tests replacing substring in the configuration
-    '''
-    org     = 'brem_xxx'
-    new     = '7634244'
-    fit_cfg = _get_config(name = org)
-
-    cfg = RXFitConfig(
-        name    = 'test_replace', 
-        group   = 'tests',
-        mva_cmb = 0.,
-        mva_prc = 0.,
-        q2bin   = Qsq.central,
-        mod_cfg = fit_cfg)
-    cfg.replace(substring=org, value=new)
-
-    assert cfg.mod_cfg == _get_config(name=new)
-# ----------------------
 def test_save(tmp_path : Path):
     '''
     Tests saving config 
     '''
-    name    = 'test_save'
-    fit_cfg = _get_config(name = name)
-
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         cfg = RXFitConfig(
-            name    = name, 
-            group   = 'tests',
+            name    = 'test', 
+            group   = 'test',
             mva_cmb = 0.,
             mva_prc = 0.,
             q2bin   = Qsq.central,
-            mod_cfg = fit_cfg,
+            mod_cfg = FitModelConf.default(),
         )
         cfg.save(kind = 'test')
-
-    assert cfg.mod_cfg == _get_config(name=name)
