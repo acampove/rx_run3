@@ -78,8 +78,7 @@ class MisIDConstraints(Cache):
         '''
         d_yield   = {}
         for region in Region.hadronic_misid():
-            d_yield[f'yld_{region}_{region}'  ] = self.__get_signal_region_yield(
-                nickname = region, 
+            d_yield[f'yld_{region.signal}_{region}'  ] = self.__get_signal_region_yield(
                 region   = region,
                 pars     = pars) 
 
@@ -87,22 +86,20 @@ class MisIDConstraints(Cache):
     # ----------------------
     def __get_signal_region_yield(
         self, 
-        region   : str,
-        nickname : Region, 
+        region   : Region, 
         pars     : FitResult) -> tuple[float,float]:
         '''
         Parameters
         -------------
         region   : Identifies the control region, e.g. kk or pipi
-        nickname : Nickname of fully hadronic misID sample, e.g. kpipi
         pars     : Dictionary with fitting parameters for fit to control region
 
         Returns
         -------------
         Tuple with expected signal region yield and error
         '''
-        control_yield, control_error = pars[f'yld_{region}_{nickname}']
-        scale = self.__get_transfer_factor(region=nickname)
+        control_yield, control_error = pars[f'yld_{region.signal}_{region}']
+        scale = self.__get_transfer_factor(region=region)
 
         # Use it to scale yield from control region in data
         value = control_yield * scale
