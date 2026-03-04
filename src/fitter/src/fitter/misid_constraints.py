@@ -10,7 +10,6 @@ from rx_selection        import selection as sel
 from dmu.stats           import FitResult, GofCalculator
 from dmu.stats           import ParameterLibrary as PL
 from dmu.stats           import Constraint1D
-from dmu.stats           import zfit
 
 from dmu                 import LogStore
 from dmu.generic         import utilities        as gut
