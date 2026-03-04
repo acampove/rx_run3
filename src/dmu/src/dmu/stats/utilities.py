@@ -449,7 +449,7 @@ def _save_fit_plot(
 
     log.info(f'Saving fit to: {fit_path_log}')
     ptr.axs[0].set_yscale('log')
-    ptr.axs[0].set_ylim(bottom=1.0)
+    ptr.axs[0].set_ylim(bottom=0.01)
     plt.savefig(fit_path_log)
 
     plt.close()
