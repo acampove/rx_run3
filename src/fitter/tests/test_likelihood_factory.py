@@ -173,12 +173,15 @@ def test_rare_electron(q2bin : Qsq, tmp_path : Path):
     '''
     Test fitting rare electron channel
     '''
-    cfg = gut.load_conf(
+    data = gut.load_data(
         package='fitter_data',
         fpath  ='rare/rk/electron/data.yaml')
 
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg = FitModelConf(**data)
+
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with PL.parameter_schema(cfg=cfg.yields),\
          Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={
             'nobr0' : 'nbrem != 0',
@@ -195,13 +198,16 @@ def test_high_q2_track(tmp_path : Path):
     Test fitting rare electron in high q2
     with track based cut and adding brem 0 category
     '''
-    cfg = gut.load_conf(
+    data = gut.load_data(
         package='fitter_data',
         fpath  ='rare/rk/electron/data.yaml')
 
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg = FitModelConf(**data)
+
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
 
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with PL.parameter_schema(cfg=cfg.yields),\
          Cache.cache_root(path = tmp_path),\
          sel.custom_selection(d_sel={
             'q2'    : 'q2_track > 14300000 && q2 < 22000000',
@@ -213,7 +219,6 @@ def test_high_q2_track(tmp_path : Path):
             cfg    = cfg)
         ftr.run()
 # -------------------------------------------
-#@pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
 @pytest.mark.parametrize('q2bin' , ['central'])
 @pytest.mark.parametrize('region, tag_cut', [
     ('hdkk'  , 'PROBNN_K > 0.1'), 
@@ -226,23 +231,22 @@ def test_rare_misid_electron(
     '''
     Test building likelihood in misid control regions
     '''
-    cfg = gut.load_conf(
+    data = gut.load_data(
         package='fitter_data',
         fpath  ='misid/rk/electron/data_misid.yaml')
+
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg = FitModelConf(**data)
 
     l1_in_cr = f'((L1_PROBNN_E < 0.2) || (L1_PID_E < 3.0)) && L1_{tag_cut}'
     l2_in_cr = f'((L2_PROBNN_E < 0.2) || (L2_PID_E < 3.0)) && L2_{tag_cut}'
 
     obs = zfit.Space(f'B_Mass_{region}', limits=(4500, 7000))
 
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with PL.parameter_schema(cfg=cfg.yields),\
          RDFGetter.max_entries(value = -1),\
-         RDFGetter.multithreading(nthreads = 6),\
          Cache.cache_root(path = tmp_path),\
-         sel.custom_selection(d_sel={
-            'nobr0' : 'nbrem != 0',
-            'mass'  : '(1)',
-            'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})'}):
+         sel.custom_selection(d_sel={'pid_l' : f'({l1_in_cr}) && ({l2_in_cr})'}):
         ftr = LikelihoodFactory(
             obs    = obs,
             name   = region,
