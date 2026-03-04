@@ -10,7 +10,7 @@ from dmu.generic   import utilities as gut
 from dmu.stats     import utilities as sut
 from dmu           import LogStore
 from dmu.workflow  import Cache
-from rx_common     import Correction, Qsq, Trigger, Component
+from rx_common     import Correction, Qsq, Region, Trigger, Component
 from rx_data       import RDFGetter
 from rx_misid      import MisIDSampleWeights
 from zfit.data     import Data      as zdata
@@ -107,12 +107,12 @@ def test_brem_cat_data(
 @pytest.mark.parametrize('component', [
     Component.bpkkk,
     Component.bpkpipi])
-@pytest.mark.parametrize('region', ['kpipi' ,     'kkk'])
-@pytest.mark.parametrize('kind'  , ['signal', 'control'])
+@pytest.mark.parametrize('region', [Region.bpkk, Region.bppipi])
+@pytest.mark.parametrize('kind'  , ['signal'   ,     'control'])
 def test_with_pid_weights(
     tmp_path : Path,
     component: Component,
-    region   : str, 
+    region   : Region, 
     kind     : str) -> None:
     '''
     Parameters
@@ -123,7 +123,6 @@ def test_with_pid_weights(
     '''
     data = gut.load_data(package='fitter_data', fpath='model/weights/weights.yaml')
     cfg  = MisIDSampleWeights(**data)
-    obs  = zfit.Space(f'B_Mass_{region}', limits=(4500, 6000))
 
     with Cache.cache_root(path = tmp_path):
         prp  = DataPreprocessor(
