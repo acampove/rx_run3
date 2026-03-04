@@ -8,6 +8,7 @@ from dmu.workflow    import Cache
 from dmu.stats       import FitResult
 from dmu.stats       import zfit
 from dmu.stats       import utilities as sut
+from rx_common       import Qsq
 from zfit.exception  import ParamNameNotUniqueError
 from zfit.result     import FitResult           as zres
 from zfit.loss       import ExtendedUnbinnedNLL as NLL
@@ -28,13 +29,12 @@ class DataFitter(BaseFitter, Cache):
     # ----------------------
     def __init__(
         self,
-        name  : str,
+        q2bin : Qsq,
         d_nll : dict[str,tuple[NLL,dict[str,dict[str,str]]]],
         cfg   : FitModelConf) -> None:
         '''
         Parameters
         -------------
-        name : Identifier for this fit, e.g. q2bin, needed to name outputs
         d_nll: Dictionary with:
             Key  : Name of region where to fig, e.g. signal, control
             Value:
@@ -45,15 +45,17 @@ class DataFitter(BaseFitter, Cache):
             - Fit settings
             - Plotting settings
         '''
-        self._d_nll = d_nll
-        self._cfg   = cfg
+        self._q2bin   = q2bin
+        self._d_nll   = d_nll
+        self._cfg     = cfg
+        self._trigger = cfg.trigger
 
         BaseFitter.__init__(self)
         # TODO: Is the likelihood hashable?
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = Path(self._cfg.output_directory) / name,
+            out_path = self._cfg.output_directory,
             cfg      = cfg)
     # ----------------------
     def _get_full_nll(self) -> NLL:
@@ -121,8 +123,8 @@ class DataFitter(BaseFitter, Cache):
         res.hesse(name='minuit_hesse', method = 'minuit_hesse')
         fres = FitResult.from_zfit(res = res)
 
-        for model, data, cfg, name in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
-            out_path = self._out_path / name
+        for model, data, cfg, category in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
+            out_path = self._cfg.output_directory / f'{category}/{self._trigger}_{self._q2bin}'
 
             log.info(f'Saving fit to: {out_path}')
 
