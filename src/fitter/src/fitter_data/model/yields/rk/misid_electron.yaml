@@ -2,30 +2,29 @@
 # For misid fits, this will be reused by both Kpipi and KKK regions to get
 # the yields
 
+# ------------------
 flt_yields: &flt_yields
   val : 1
   min : 0
   max : 10000
 
-# KK(pipi) yield in pipi (KK) misID control region
-# is negligible and not fittable, set it to zero
 cns_yields: &cns_yields
-  val : 10
-  min :  0
-  max : 20
+  val : 1
+  min : 0
+  max : 1000 
   fix : True
-
-yld_combinatorial_hdkk:
+# ------------------
+yld_comb_bpkk:
   <<: *flt_yields
-yld_combinatorial_hdpipi:
+yld_comb_bppipi:
   <<: *flt_yields
-# Xpipi fit component
-yld_hdpipi_hdpipi:
+# ------------------
+yld_bpkpipi_bppipi:
   <<: *flt_yields
-yld_hdpipi_hdkk:
+yld_bpkkk_bpkk:
+  <<: *flt_yields
+# ------------------
+yld_bpkpipi_bpkk:     # Kpipi yield in KKK region
   <<: *cns_yields
-# XKK fit component
-yld_hdkk_hdkk:
-  <<: *flt_yields
-yld_hdkk_hdpipi:
+yld_bpkkk_bppipi:     # KKK yield in Kpipi region
   <<: *cns_yields
