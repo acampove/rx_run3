@@ -4,7 +4,7 @@ This module has tests for the DataModel class
 import pytest
 
 from pathlib       import Path
-from rx_common     import Mass, Trigger, Qsq
+from rx_common     import Mass, Trigger, Qsq, Region
 from rx_selection  import selection as sel
 from rx_data       import RDFGetter 
 from dmu           import LogStore
@@ -49,7 +49,6 @@ def test_resonant(kind : str, trigger : Trigger, tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
         PL.parameter_schema(cfg=cfg.yields):
         dmd = DataModel(
-            name    = 'brem_000',
             cfg     = cfg,
             obs     = obs,
             trigger = trigger, 
@@ -85,16 +84,16 @@ def test_rare_electron(tmp_path : Path):
     sut.print_pdf(pdf)
 # --------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('mass' , [Mass.bp_pipi, Mass.bp_kk])
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+@pytest.mark.parametrize('region' , Region.hadronic_misid()   )
+@pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
 def test_misid_rare(
-    mass     : Mass, 
+    region   : Region, 
     q2bin    : Qsq, 
     tmp_path : Path):
     '''
     Test getting model for misid control region
     '''
-    obs = zfit.Space(mass, limits=(4500, 7000))
+    obs = zfit.Space(region.mass, limits=region.mass.limits)
     data= gut.load_data(
         package='fitter_data',
         fpath  ='misid/rk/ee/data_misid.yaml')
@@ -109,6 +108,7 @@ def test_misid_rare(
         'mass'  : '(1)',
         'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         dmd = DataModel(
+            name    = region,
             cfg     = cfg,
             obs     = obs,
             trigger = Trigger.rk_ee_nopid,
