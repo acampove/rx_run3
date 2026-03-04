@@ -13,6 +13,7 @@ from dmu.stats       import gof_calculator   as goc
 from dmu.generic     import utilities        as gut
 from dmu.workflow    import Cache
 from dmu.testing     import get_model
+from rx_common       import Qsq
 from fitter          import DataFitter
 from fitter          import ToyMaker
 from fitter          import ToyPlotter
@@ -56,7 +57,7 @@ def test_single_region(tmp_path : Path) -> None:
 
     with Cache.cache_root(path = tmp_path):
         ftr = DataFitter(
-            name = 'single_region',
+            q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg)
         ftr.run(kind='fres')
@@ -86,7 +87,7 @@ def test_two_regions(tmp_path : Path) -> None:
         cfg  = FitModelConf(**data)
 
         ftr = DataFitter(
-            name = 'two_regions',
+            q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg)
         ftr.run(kind='fres')
@@ -120,7 +121,7 @@ def test_two_regions_common_pars(tmp_path : Path) -> None:
         cfg  = FitModelConf(**data)
 
         ftr = DataFitter(
-            name = 'common_pars',
+            q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg)
         ftr.run(kind='fres')
@@ -144,7 +145,7 @@ def test_with_constraints(tmp_path : Path) -> None:
 
     with Cache.cache_root(path = tmp_path):
         ftr = DataFitter(
-            name = 'with_const',
+            q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg)
 
@@ -173,7 +174,7 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
 
     with Cache.cache_root(path = tmp_path):
         ftr = DataFitter(
-            name = 'with_toys',
+            q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg_fit)
         res = ftr.run(kind='fres')
