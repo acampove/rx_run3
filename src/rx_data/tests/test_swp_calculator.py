@@ -101,9 +101,9 @@ def test_jpsi_misid_bplus(prefix : str, kind : str, tmp_path : Path):
     rdf = tst.get_rdf(kind=kind, prefix=prefix)
     name= 'jpsi_misid_bplus'
 
-    if   Trigger(prefix).channel == 'muon':
+    if   Trigger(prefix).is_muon:
         obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
-    elif Trigger(prefix).channel == 'electron':
+    elif Trigger(prefix).is_electron:
         obj = SWPCalculator(rdf, d_lep={'L1' : 11, 'L2' : 11}, d_had={'H' : 11})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')
