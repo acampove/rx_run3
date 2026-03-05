@@ -92,9 +92,10 @@ def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     else:
         raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
+    trigger = get_trigger(kind = kind, prefix = prefix)
+
     with RDFGetter.only_friends(s_friend = set()):
-        trigger = Trigger(prefix)
-        rdf     = rdf_from_sample(sample=Component(sample), trigger=Trigger(trigger))
+        rdf = rdf_from_sample(sample=sample, trigger=trigger)
 
     return rdf
 # ----------------------------------
