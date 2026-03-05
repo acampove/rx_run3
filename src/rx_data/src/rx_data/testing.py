@@ -14,10 +14,10 @@ from dmu          import LogStore
 log=LogStore.add_logger('rx_data:testing')
 
 l_trigger_ee  = [
-    'Hlt2RD_BuToKpEE_MVA',
-    'Hlt2RD_BuToKpEE_MVA_misid',
-    'Hlt2RD_B0ToKpPimEE_MVA',
-    'Hlt2RD_B0ToKpPimEE_MVA_misid']
+    Trigger.rk_ee_os   ,
+    Trigger.rk_ee_misid,
+    Trigger.rkst_ee_os ,
+    Trigger.rkst_ee_misid]
 
 l_prefix_kind = [
     ('Hlt2RD_BuToKpEE_MVA'     , 'mc_ee'),
@@ -133,8 +133,11 @@ def rdf_from_sample(
 
     return rdf
 # ----------------------------------
-def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> tuple[RDF.RNode, dict[str,str]]:
-    d_sel               = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
+def _apply_selection(
+    rdf     : RDF.RNode, 
+    trigger : Trigger, 
+    sample  : Component) -> tuple[RDF.RNode, dict[str,str]]:
+    d_sel               = sel.selection(trigger=trigger, q2bin=Qsq.jpsi, process=sample)
     d_sel['pid_l']      = '(1)'
     d_sel['jpsi_misid'] = '(1)'
     d_sel['cascade']    = '(1)'
@@ -149,7 +152,7 @@ def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> tuple[RDF.
 
     return rdf, d_sel
 # ----------------------
-def get_trigger(kind : str, prefix : str) -> str:
+def get_trigger(kind : str, prefix : str) -> Trigger:
     '''
     Parameters
     -------------
@@ -169,4 +172,5 @@ def get_trigger(kind : str, prefix : str) -> str:
     else:
         raise ValueError(f'Invalid kind: {kind}')
 
-    return f'{prefix}{suffix}'
+    return Trigger(f'{prefix}{suffix}')
+# ----------------------

@@ -33,7 +33,7 @@ def initialize():
     LogStore.set_level('rx_data:path_splitter' , 30)
     LogStore.set_level('rx_data:rdf_getter'    , 30)
 # ----------------------
-@pytest.mark.parametrize('sample, trigger', _UNPATCHED_SAMPLES)
+@pytest.mark.parametrize('component, trigger', _UNPATCHED_SAMPLES)
 def test_unpatched(component : Component, trigger : Trigger) -> None:
     '''
     Tests that patching does not affect samples that are not
@@ -48,7 +48,7 @@ def test_unpatched(component : Component, trigger : Trigger) -> None:
     assert spec_old == spec_new
     assert len(ptr.redefinitions) == 0
 # ----------------------
-@pytest.mark.parametrize('sample, trigger', _PATCHED_SAMPLES)
+@pytest.mark.parametrize('component, trigger', _PATCHED_SAMPLES)
 def test_patched(component : Component, trigger : Trigger) -> None:
     '''
     Tests that patching
