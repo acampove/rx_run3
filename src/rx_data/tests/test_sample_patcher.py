@@ -10,15 +10,15 @@ from rx_data    import SamplePatcher
 from rx_data    import SpecMaker
 
 _UNPATCHED_SAMPLES = [
-    ('DATA_24_MagDown_24c2', Trigger.rk_ee_os),
-    ('DATA_24_MagDown_24c2', Trigger.rk_mm_os),
-    ('DATA_24_MagDown_24c2', Trigger.rkst_ee_os),
-    ('DATA_24_MagDown_24c2', Trigger.rkst_mm_os),
+    (Component.data_24_md_c2, Trigger.rk_ee_os  ),
+    (Component.data_24_md_c2, Trigger.rk_mm_os  ),
+    (Component.data_24_md_c2, Trigger.rkst_ee_os),
+    (Component.data_24_md_c2, Trigger.rkst_mm_os),
 ]
 _PATCHED_SAMPLES = [
-    ('Bs_JpsiX_mm_eq_JpsiInAcc'    , Trigger.rk_mm_os),
-    ('Bu_JpsiX_mm_eq_JpsiInAcc'    , Trigger.rk_mm_os),
-    ('Bu_Kmumu_eq_btosllball05_DPC', Trigger.rk_mm_os),
+    (Component.bsjpsixmm, Trigger.rk_mm_os),
+    (Component.bpjpsixmm, Trigger.rk_mm_os),
+    (Component.bpkpmm   , Trigger.rk_mm_os),
 ]
 
 log=LogStore.add_logger('rx_data:test_sample_patching')
@@ -34,29 +34,29 @@ def initialize():
     LogStore.set_level('rx_data:rdf_getter'    , 30)
 # ----------------------
 @pytest.mark.parametrize('sample, trigger', _UNPATCHED_SAMPLES)
-def test_unpatched(sample : str, trigger : Trigger) -> None:
+def test_unpatched(component : Component, trigger : Trigger) -> None:
     '''
     Tests that patching does not affect samples that are not
     meant to be patched
     '''
-    spk  = SpecMaker(component=sample, trigger=trigger, skip_patch=True)
+    spk  = SpecMaker(component=component, trigger=trigger, skip_patch=True)
     spec_old = spk.spec
 
-    ptr  = SamplePatcher(sample = sample, spec = spec_old)
+    ptr  = SamplePatcher(sample = component, spec = spec_old)
     spec_new = ptr.get_patched_specification()
 
     assert spec_old == spec_new
     assert len(ptr.redefinitions) == 0
 # ----------------------
 @pytest.mark.parametrize('sample, trigger', _PATCHED_SAMPLES)
-def test_patched(sample : str, trigger : Trigger) -> None:
+def test_patched(component : Component, trigger : Trigger) -> None:
     '''
     Tests that patching
     '''
-    spk = SpecMaker(component=sample, trigger=trigger, skip_patch=True)
+    spk = SpecMaker(component=component, trigger=trigger, skip_patch=True)
     spec_old = spk.spec
 
-    ptr = SamplePatcher(sample = sample, spec = spec_old)
+    ptr = SamplePatcher(sample = component, spec = spec_old)
     spec_new = ptr.get_patched_specification()
 
     assert spec_old != spec_new
