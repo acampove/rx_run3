@@ -8,15 +8,16 @@ import math
 import numpy
 import pandas as pnd 
 
-from colorama               import Fore
-from pathlib                import Path
-from ROOT                   import RDF # type: ignore
-from rx_common.types        import Project
-from rx_data                import utilities as dut
-from rx_data.rdf_getter     import RDFGetter
-from dmu.generic            import version_management as vm
-from dmu.logging.log_store  import LogStore
-from dmu.pdataframe         import utilities as put
+from colorama       import Fore
+from pathlib        import Path
+from ROOT           import RDF # type: ignore
+from rx_common      import Project, Component, Trigger
+from dmu            import LogStore
+from dmu.generic    import version_management as vm
+from dmu.pdataframe import utilities as put
+
+from .              import utilities as dut
+from .rdf_getter    import RDFGetter
 
 log=LogStore.add_logger('rx_data:samples')
 # ----------------------

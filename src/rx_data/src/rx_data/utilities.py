@@ -10,8 +10,8 @@ import ap_utilities.decays.utilities as aput
 import pandas                        as pnd
 
 from ROOT                   import RDF # type: ignore
-from dmu.logging.log_store  import LogStore
-from rx_common.types        import Trigger
+from dmu                    import LogStore
+from rx_common              import Trigger
 
 log   = LogStore.add_logger('rx_data:utilities')
 # ---------------------------------
