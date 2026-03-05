@@ -2,7 +2,6 @@
 Module containing classes representing configurations used for fitting
 '''
 import os
-import dataclasses
 
 from functools   import cached_property
 from pydantic    import BaseModel, ConfigDict
@@ -20,7 +19,6 @@ from dmu.stats   import ZFitPlotterConf
 from dmu.stats   import YieldsConf 
 from dmu.stats   import zfit
 from dmu.generic import UnpackerModel
-from dmu.generic import utilities  as gut
 from zfit        import Space      as zobs
 from .types      import CCbarWeight
 from .toy_maker  import ToyConf
@@ -213,8 +211,7 @@ class FitModelConf(ComponentConf):
 # ------------------------------
 # Full config
 # ----------------------
-@dataclasses.dataclass
-class RXFitConfig:
+class RXFitConfig(BaseModel):
     '''
     Class used to store configuration needed for fits
     '''
@@ -299,12 +296,14 @@ class RXFitConfig:
         Saves to JSON fit configuration in directory where data fit will be saved
         '''
         data_fit_directory = self.output_directory / kind / self.q2bin / self.name
+        data_fit_directory.mkdir(parents = True, exist_ok = True)
 
-        data = dataclasses.asdict(self)
         path = data_fit_directory / 'config.json'
         log.info(f'Saving fit configuration to: {path}')
 
-        gut.dump_json(data = data, path = path, exists_ok = True)
+        string = self.model_dump_json(indent = 2)
+
+        path.write_text(string)
     # ----------------------
     # Cached properties
     # ----------------------
