@@ -42,7 +42,7 @@ def test_unpatched(component : Component, trigger : Trigger) -> None:
     spk  = SpecMaker(component=component, trigger=trigger, skip_patch=True)
     spec_old = spk.spec
 
-    ptr  = SamplePatcher(sample = component, spec = spec_old)
+    ptr  = SamplePatcher(sample = component.sample, spec = spec_old)
     spec_new = ptr.get_patched_specification()
 
     assert spec_old == spec_new
@@ -56,7 +56,7 @@ def test_patched(component : Component, trigger : Trigger) -> None:
     spk = SpecMaker(component=component, trigger=trigger, skip_patch=True)
     spec_old = spk.spec
 
-    ptr = SamplePatcher(sample = component, spec = spec_old)
+    ptr = SamplePatcher(sample = component.sample, spec = spec_old)
     spec_new = ptr.get_patched_specification()
 
     assert spec_old != spec_new
