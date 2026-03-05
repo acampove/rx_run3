@@ -20,8 +20,8 @@ class Data:
 
     locations : list[list]
 # -----------------------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
     df = ctran.get_data()
     df = df.drop(columns=['n', 'z'])
     df = df.sort_values(by = ['x', 'y'])

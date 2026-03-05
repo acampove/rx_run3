@@ -109,10 +109,11 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
         plt.close()
 #-----------------------------------------
 def _get_df(nentries : int = 10) -> pnd.DataFrame:
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c4', trigger=Trigger.rk_ee_os)
-    rdf = gtr.get_rdf(per_file=False)
-    rdf = cast(RDataFrame, rdf)
+    gtr = RDFGetter(
+        sample  = Component.data_24, 
+        trigger = Trigger.rk_ee_os)
 
+    rdf = gtr.get_rdf(per_file=False)
     rdf = rdf.Filter('mva_cmb > 0.8 && mva_prc > 0.5')
     rdf = rdf.Filter('Jpsi_M > 2800 && Jpsi_M < 3200')
     rdf = rdf.Filter('B_const_mass_M > 5200')
