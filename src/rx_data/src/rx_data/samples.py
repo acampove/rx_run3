@@ -69,21 +69,25 @@ class SamplesPrinter:
         -------------
         Dictionary mapping sample name to corresponding dataframe built from only main trees
         '''
-        log.info('Collecting dataframes')
+        log.info('Collecting sample names')
         input_samples : list[tuple[Component,Trigger]] = self._get_input_samples()
         d_rdf : dict[str, RDF.RNode]         = dict()
 
+        log.info('Collecting dataframes')
         with RDFGetter.only_friends(s_friend=set()),\
              RDFGetter.project(name = self._project):
             for sample, trigger in tqdm.tqdm(input_samples, ascii=' -'):
                 if sample in self._skipped_samples:
                     continue
 
+                log.debug(f'Making dataframe for: {sample}/{trigger}')
                 gtr = RDFGetter(sample = sample, trigger=trigger)
                 try:
                     d_rdf[sample] = gtr.get_rdf(per_file=False)
                 except ValueError:
                     log.warning(f'Cannot read {sample}, skipping')
+
+        log.info('Collected dataframes')
 
         return d_rdf
     # ----------------------
