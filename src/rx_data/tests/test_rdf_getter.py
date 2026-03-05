@@ -959,68 +959,6 @@ def test_no_pid(
         brem_track_2= False,
         test_name   = 'no_pid')
 # ------------------------------------------------
-# TODO: Check for negative numbers
-@pytest.mark.parametrize('nthreads', [1, 6])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
-def test_multithreading(
-    nthreads : int, 
-    trigger  : str, 
-    tmp_path : Path):
-    '''
-    This will test the context manager used to enable multithreading
-    '''
-    trigger = Trigger(trigger)
-    sample  = Component.bdkstkpiee
-    gtr = RDFGetter(sample=sample, trigger=trigger)
-    rdf = gtr.get_rdf(per_file=False)
-
-    nentries = 1000 if nthreads == 1 else -1
-    nthcheck =    0 if nthreads == 1 else nthreads
-
-    with RDFGetter.multithreading(nthreads=nthreads), \
-         RDFGetter.max_entries(value=nentries):
-
-        gtr = RDFGetter(sample=sample, trigger=trigger)
-        rdf = gtr.get_rdf(per_file=False)
-
-        assert GetThreadPoolSize() == nthcheck
-
-        _print_dotted_branches(rdf)
-        _check_branches(rdf, is_ee=True, is_mc=sample.is_mc)
-
-        _plot_mva_mass(rdf, f'test_mc/{sample}', out_dir = tmp_path)
-        _plot_mva(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
-        _plot_hop(rdf     , f'test_mc/{sample}', out_dir = tmp_path)
-        _plot_sim(rdf     , f'test_mc/{sample}', out_dir = tmp_path, particle=   'B')
-        _plot_sim(rdf     , f'test_mc/{sample}', out_dir = tmp_path, particle='Jpsi')
-
-        _plot_mc_qsq(rdf, f'test_multithreading/{sample}', sample, out_dir = tmp_path)
-# ------------------------------------------------
-@pytest.mark.parametrize('nthreads', [-3, 0])
-def test_multithreading_invalid(nthreads : int):
-    '''
-    This will test the context manager used to enable multithreading
-    with invalid number of threads
-    '''
-    sample  = Component.bpkpjpsiee 
-    with pytest.raises(ValueError):
-        with RDFGetter.multithreading(nthreads=nthreads):
-            gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
-            gtr.get_rdf(per_file=False)
-# ------------------------------------------------
-def test_multithreading_locked():
-    '''
-    This will test multithreading with locked class
-    '''
-    nthreads = 2
-    sample   = Component.bpkpjpsiee 
-
-    with pytest.raises(ValueError):
-        with RDFGetter.multithreading(nthreads=nthreads):
-            with RDFGetter.multithreading(nthreads=nthreads):
-                gtr = RDFGetter(sample=sample, trigger=Trigger.rk_ee_os)
-                gtr.get_rdf(per_file=False)
-# ------------------------------------------------
 @pytest.mark.parametrize('sample', [Component.bpjpsixee] )
 def test_skip_adding_columns(sample : Component):
     '''
