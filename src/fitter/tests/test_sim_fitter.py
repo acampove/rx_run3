@@ -38,7 +38,7 @@ def test_nomc(tmp_path : Path):
     '''
     obs = zfit.Space(obs = 'B_Mass_smr', limits=(4500, 7000), label = 'nomc')
 
-    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/combinatorial.yaml')
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/comb.yaml')
     cfg  = CombinatorialConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -56,7 +56,7 @@ def test_nocat(tmp_path : Path):
     Test for components without categories, e.g. muon
     '''
     obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
-    data  = gut.load_data(package='fitter_data', fpath='rare/rk/mm/signal.yaml')
+    data  = gut.load_data(package='fitter_data', fpath='rare/rk/mm/bpkpmm.yaml')
     cfg   = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
@@ -78,7 +78,7 @@ def test_with_cat(tmp_path : Path):
         obs   = Mass.bp_bcor_smr.latex, 
         label = Mass.bp_bcor_smr,
         limits=(4500, 7000))
-    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/signal.yaml')
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml')
     cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -103,7 +103,7 @@ def test_kde(component : Component, tmp_path : Path):
         obs   = mass.latex,
         label = mass,
         limits= mass.limits)
-    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}_np.yaml')
     cfg  = NonParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -132,7 +132,7 @@ def test_misid(
         label = mass, 
         limits= mass.limits)
 
-    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}_np.yaml')
 
     with UnpackerModel.package('fitter_data'):
         cfg  = MisIDConf(**data)
@@ -215,7 +215,7 @@ def test_reso_rk_ee(
         label = Mass.bp_dtf_jpsi,
         limits= Mass.bp_dtf_jpsi.limits)
 
-    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component.name}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
     cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
