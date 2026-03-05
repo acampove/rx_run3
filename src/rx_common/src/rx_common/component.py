@@ -79,6 +79,8 @@ class Component(StrEnum):
 
     bdkstjpsimm_swp= auto()
     bdkstjpsiee_swp= auto()
+    # -----
+    bpdnuknumm     = auto()
     # --------------------------------------------
     @classmethod
     def from_sample(cls, sample : str) -> 'Component':
@@ -232,6 +234,9 @@ class Component(StrEnum):
           case Component.lbpkjpsiee:
             return 'Lb_JpsipK_ee_eq_phsp_DPC'
           # -----
+          case Component.bpdnuknumm:
+            return 'Bu_D0munu_Kmunu_eq_DPC'
+          # -----
           # Emulated samples
           # -----
           case Component.bskstjpsimm:
@@ -360,7 +365,7 @@ class Component(StrEnum):
                 Component.bsjpsixmm]
 
         raise ValueError(f'Invalid channel: {channel}')
-
+# --------------------------------------------
 CCbarComponent = Literal[
     Component.bpjpsixee,
     Component.bdjpsixee,
