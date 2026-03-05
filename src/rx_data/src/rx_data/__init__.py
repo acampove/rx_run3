@@ -11,6 +11,7 @@ from .ganga_info              import GangaInfo
 from .hop_calculator          import HOPCalculator
 from .mis_calculator          import MisCalculator
 from .mva_calculator          import MVACalculator
+from .brem_bias_corrector     import BremBiasCorrector
 from .mass_bias_corrector     import MassBiasCorrector
 from .mass_calculator         import MassCalculator
 from .path_splitter           import PathSplitter
@@ -26,6 +27,7 @@ __all__ = [
     'SamplePatcher',
     'PathSplitter',
     'MassCalculator',
+    'BremBiasCorrector',
     'MassBiasCorrector',
     'MVACalculator',
     'HOPCalculator',
