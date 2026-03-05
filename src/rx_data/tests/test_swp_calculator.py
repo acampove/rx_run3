@@ -80,11 +80,12 @@ def test_phi_misid(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests phi decay contamination
     '''
-    rdf   = tst.get_rdf(kind=kind, prefix=prefix)
+    rdf     = tst.get_rdf(kind=kind, prefix=prefix)
+    trigger = tst.get_trigger(kind = kind, prefix = prefix)
 
-    if   Trigger(prefix).project == Project.rk: 
+    if   trigger.project == Project.rk: 
         obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
-    elif Trigger(prefix).project == Project.rkst: 
+    elif trigger.project == Project.rkst: 
         obj = SWPCalculator(rdf, d_lep={'H1' : 321}, d_had={'H2' : 321})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')
@@ -98,12 +99,13 @@ def test_jpsi_misid_bplus(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests jpsi misid contamination when the decay is B -> K ell ell
     '''
-    rdf = tst.get_rdf(kind=kind, prefix=prefix)
+    rdf     = tst.get_rdf(kind=kind, prefix=prefix)
+    trigger = tst.get_trigger(kind = kind, prefix = prefix)
     name= 'jpsi_misid_bplus'
 
-    if   Trigger(prefix).is_muon:
+    if   trigger.is_muon:
         obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
-    elif Trigger(prefix).is_electron:
+    elif trigger.is_electron:
         obj = SWPCalculator(rdf, d_lep={'L1' : 11, 'L2' : 11}, d_had={'H' : 11})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')
