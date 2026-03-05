@@ -2,11 +2,10 @@
 Module with MisCalculator class
 '''
 
-import fnmatch
-
-from ROOT import RDF # type: ignore
-from dmu.logging.log_store  import LogStore
-from rx_common              import info
+from typing    import Final
+from ROOT      import RDF # type: ignore
+from dmu       import LogStore
+from rx_common import Channel, Trigger, info
 
 log = LogStore.add_logger('rx_data:mis_calculator')
 # ----------------------------------------------
