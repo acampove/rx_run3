@@ -6,23 +6,22 @@ import os
 os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
 import copy
-from importlib.resources import files
-from pathlib             import Path
-
 import yaml
 import numpy
 import mplhep
 import pytest
 import matplotlib.pyplot as plt
 
-from omegaconf                   import OmegaConf
-from ROOT                        import RDF # type: ignore
-from dmu.logging.log_store       import LogStore
-from dmu.plotting.plotter_1d     import Plotter1D as Plotter
-from rx_data                     import utilities as ut
-from rx_data.rdf_getter          import RDFGetter
-from rx_data.mass_bias_corrector import MassBiasCorrector
-from rx_common.types             import Trigger
+from pathlib             import Path
+from importlib.resources import files
+from omegaconf           import OmegaConf
+from ROOT                import RDF # type: ignore
+from dmu                 import LogStore
+from dmu.plotting        import Plotter1D as Plotter
+from rx_data             import utilities as ut
+from rx_data             import RDFGetter
+from rx_data             import MassBiasCorrector
+from rx_common           import Component, Trigger
 
 log=LogStore.add_logger('rx_data:test_mass_bias_corrector')
 

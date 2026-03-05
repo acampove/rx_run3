@@ -5,8 +5,9 @@ This script tests FilteredStats class
 import os
 import pytest
 import pandas as pnd
-from rx_data.filtered_stats import FilteredStats
-from dmu.logging.log_store  import LogStore
+
+from dmu     import LogStore
+from rx_data import FilteredStats
 
 pytestmark = pytest.mark.skipif(
     not os.environ.get('USER') == 'acampove',

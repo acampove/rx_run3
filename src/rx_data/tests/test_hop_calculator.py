@@ -5,13 +5,13 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 
-from ROOT                   import RDF# type: ignore
-from pathlib                import Path
-from dmu.logging.log_store  import LogStore
-from rx_common              import Trigger
-from rx_data.hop_calculator import HOPCalculator
-from rx_data.mis_calculator import MisCalculator
-from rx_data                import testing as tst
+from ROOT       import RDF# type: ignore
+from pathlib    import Path
+from dmu        import LogStore
+from rx_common  import Component, Trigger
+from rx_data    import HOPCalculator
+from rx_data    import MisCalculator
+from rx_data    import testing as tst
 
 # ----------------------------
 class Data:
