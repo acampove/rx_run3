@@ -38,7 +38,7 @@ def test_nomc(tmp_path : Path):
     '''
     obs = zfit.Space(obs = 'B_Mass_smr', limits=(4500, 7000), label = 'nomc')
 
-    data = gut.load_data(package='fitter_data', fpath='rare/rk/electron/combinatorial.yaml')
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/combinatorial.yaml')
     cfg  = CombinatorialConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -56,7 +56,7 @@ def test_nocat(tmp_path : Path):
     Test for components without categories, e.g. muon
     '''
     obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
-    data  = gut.load_data(package='fitter_data', fpath='rare/rk/muon/signal.yaml')
+    data  = gut.load_data(package='fitter_data', fpath='rare/rk/mm/signal.yaml')
     cfg   = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
@@ -78,7 +78,7 @@ def test_with_cat(tmp_path : Path):
         obs   = Mass.bp_bcor_smr, 
         label = Mass.bp_bcor_smr.latex,
         limits=(4500, 7000))
-    data = gut.load_data(package='fitter_data', fpath='rare/rk/electron/signal.yaml')
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/signal.yaml')
     cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -103,7 +103,7 @@ def test_kde(component : Component, tmp_path : Path):
         obs   = mass.latex,
         label = mass,
         limits= mass.limits)
-    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}.yaml')
     cfg  = NonParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -132,7 +132,7 @@ def test_misid(
         label = mass, 
         limits= mass.limits)
 
-    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}.yaml')
 
     with UnpackerModel.package('fitter_data'):
         cfg  = MisIDConf(**data)
@@ -158,7 +158,7 @@ def test_ccbar_reso(mass : Mass, tmp_path : Path):
         label = mass,
         limits= mass.limits)
 
-    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
     cfg  = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -188,7 +188,7 @@ def test_ccbar_rare(tmp_path : Path):
         obs   = mass.latex,
         limits= mass.limits)
 
-    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/electron/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}.yaml')
     cfg  = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
@@ -215,7 +215,7 @@ def test_reso_rk_ee(
         label = Mass.bp_dtf_jpsi.latex,
         limits= Mass.bp_dtf_jpsi.limits)
 
-    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/electron/{component.name}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component.name}.yaml')
     cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -251,7 +251,7 @@ def test_reso_rkst_mm(
         label = mass.latex,
         limits= mass.limits)
 
-    data = gut.load_data(package='fitter_data', fpath=f'reso/rkst/muon/{component}.yaml')
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rkst/mm/{component}.yaml')
     cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
@@ -277,7 +277,7 @@ def test_name(name : str, tmp_path : Path):
         label = mass,
         limits= mass.limits)
 
-    data      = gut.load_data(package='fitter_data', fpath=f'reso/rk/electron/{component}.yaml')
+    data      = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
     cfg       = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path):
