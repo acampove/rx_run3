@@ -17,7 +17,7 @@ class Data:
     l_must_have_bplus = ['L1_PE', 'L2_PE', 'H_PE']
     l_must_have_bzero = ['L1_PE', 'L2_PE', 'H1_PE', 'H2_PE']
 # ------------------------
-def _check_rdf(rdf : RDataFrame, l_must_have : list[str]) -> None:
+def _check_rdf(rdf : RDF.RNode, l_must_have : list[str]) -> None:
     l_name = [ name.c_str() for name in rdf.GetColumnNames() ]
 
     success = True

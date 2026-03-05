@@ -21,10 +21,10 @@ class Data:
     nentries = 30_000
     version  = 'v8'
     l_mc     = [
-        ('Hlt2RD_BuToKpEE_MVA'  , 'Bu_Kee_eq_btosllball05_DPC'  ),
-        ('Hlt2RD_BuToKpMuMu_MVA', 'Bu_Kmumu_eq_btosllball05_DPC')]
+        (Trigger.rk_ee_os, Component.bpkpee ),
+        (Trigger.rk_mm_os, Component.bpkpmm )]
 
-    l_nopid  = [('Hlt2RD_BuToKpEE_MVA', 'Bu_JpsiK_ee_eq_DPC')]
+    l_nopid  = [(Trigger.rk_ee_nopid, Component.bpkpjpsiee)]
 # ----------------------
 def _validate_rdf(
     rdf     : RDF.RNode,
@@ -59,8 +59,7 @@ def test_data(trigger : Trigger, tmp_path : Path) -> None:
     '''
     Test MVACalculator with data
     '''
-    sample = 'DATA_24*'
-
+    sample = Component.data_24 
     with RDFGetter.max_entries(value=Data.nentries):
         gtr = RDFGetter(sample=sample, trigger=trigger)
         rdf = gtr.get_rdf(per_file=False)
@@ -75,7 +74,7 @@ def test_data(trigger : Trigger, tmp_path : Path) -> None:
     _validate_rdf(rdf=rdf, out_dir=tmp_path, name=f'data_{trigger}')
 # --------------------------------
 @pytest.mark.parametrize('trigger, sample', Data.l_mc)
-def test_mc(trigger : Trigger, sample : str, tmp_path : Path) -> None:
+def test_mc(trigger : Trigger, sample : Component , tmp_path : Path) -> None:
     '''
     Test MVACalculator with simulation
     '''
@@ -93,7 +92,7 @@ def test_mc(trigger : Trigger, sample : str, tmp_path : Path) -> None:
     _validate_rdf(rdf=rdf, out_dir=tmp_path, name=f'{sample}_{trigger}')
 # ----------------------
 @pytest.mark.parametrize('trigger, sample', Data.l_mc)
-def test_mc_noversion(trigger : Trigger, sample : str, tmp_path : Path) -> None:
+def test_mc_noversion(trigger : Trigger, sample : Component, tmp_path : Path) -> None:
     '''
     Test MVACalculator with default (should be lates) version
     '''
@@ -110,7 +109,7 @@ def test_mc_noversion(trigger : Trigger, sample : str, tmp_path : Path) -> None:
     _validate_rdf(rdf=rdf, out_dir=tmp_path, name=f'{sample}_{trigger}')
 # --------------------------------
 @pytest.mark.parametrize('trigger, sample', Data.l_nopid)
-def test_nopid(trigger : Trigger, sample : str, tmp_path : Path) -> None:
+def test_nopid(trigger : Trigger, sample : Component, tmp_path : Path) -> None:
     '''
     Test MVACalculator with default (should be lates) version
     '''
