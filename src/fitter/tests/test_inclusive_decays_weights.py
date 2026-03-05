@@ -18,21 +18,21 @@ from fitter.inclusive_decays_weights import read_weight
 log=LogStore.add_logger('fitter:test_inclusive_decays_weights')
 
 _SAMPLES = [
-    (Component.bdjpsixee, 'Hlt2RD_BuToKpEE_MVA'),
-    (Component.bpjpsixee, 'Hlt2RD_BuToKpEE_MVA'),
-    (Component.bsjpsixee, 'Hlt2RD_BuToKpEE_MVA'),
+    (Component.bdjpsixee, Trigger.rk_ee_os  ),
+    (Component.bpjpsixee, Trigger.rk_ee_os  ),
+    (Component.bsjpsixee, Trigger.rk_ee_os  ),
     # -------------
-    (Component.bdjpsixee, 'Hlt2RD_B0ToKpPimEE_MVA'),
-    (Component.bpjpsixee, 'Hlt2RD_B0ToKpPimEE_MVA'),
-    (Component.bsjpsixee, 'Hlt2RD_B0ToKpPimEE_MVA'),
+    (Component.bdjpsixee, Trigger.rkst_ee_os),
+    (Component.bpjpsixee, Trigger.rkst_ee_os),
+    (Component.bsjpsixee, Trigger.rkst_ee_os),
     # -------------
-    (Component.bdjpsixmm, 'Hlt2RD_BuToKpMuMu_MVA'),
-    (Component.bpjpsixmm, 'Hlt2RD_BuToKpMuMu_MVA'),
-    (Component.bsjpsixmm, 'Hlt2RD_BuToKpMuMu_MVA'),
+    (Component.bdjpsixmm, Trigger.rk_mm_os  ),
+    (Component.bpjpsixmm, Trigger.rk_mm_os  ),
+    (Component.bsjpsixmm, Trigger.rk_mm_os  ),
     # -------------
-    (Component.bdjpsixmm, 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-    (Component.bpjpsixmm, 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-    (Component.bsjpsixmm, 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    (Component.bdjpsixmm, Trigger.rkst_mm_os),
+    (Component.bpjpsixmm, Trigger.rkst_mm_os),
+    (Component.bsjpsixmm, Trigger.rkst_mm_os),
 ]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
