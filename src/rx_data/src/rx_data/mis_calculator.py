@@ -14,25 +14,28 @@ class MisCalculator:
     Class used to add missing variables to ROOT dataframes
     '''
     # -------------
-    def __init__(self, rdf : RDF.RNode, trigger : str):
+    def __init__(
+        self, 
+        rdf     : RDF.RNode, 
+        trigger : Trigger):
         '''
         Initializer taking dataframe and trigger, the latter is needed to know mass hypotheses of leptons
         '''
         self._rdf    = rdf
         self._trigger= trigger
 
-        self._emass = 0.511 # electron mass
-        self._mmass = 105.6 # muon mass
-        self._kmass = 493.6 # mass of kaon
+        self._emass : Final[float] = 0.511 # electron mass
+        self._mmass : Final[float] = 105.6 # muon mass
+        self._kmass : Final[float] = 493.6 # mass of kaon
 
         self._lmass = self._get_lepton_mass(trigger)
     # -------------
-    def _get_lepton_mass(self, trigger : str) -> float:
-        if fnmatch.fnmatch(trigger, 'Hlt2RD_*EE*MVA*'):
+    def _get_lepton_mass(self, trigger : Trigger) -> float:
+        if trigger.channel == Channel.ee: 
             log.debug('Using electron mass hypothesis')
             return self._emass
 
-        if fnmatch.fnmatch(trigger, 'Hlt2RD_*MuMu*MVA*'):
+        if trigger.channel == Channel.mm: 
             log.debug('Using muon mass hypothesis')
             return self._mmass
 
