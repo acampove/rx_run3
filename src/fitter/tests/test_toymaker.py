@@ -66,7 +66,7 @@ def test_simple(tmp_path: Path) -> None:
             res=FitResult.from_zfit(res), 
             cfg=cfg, 
             cns=cns)
-        df    = mkr.get_parameter_information()
+        df    = mkr.get_parameter_information(name = 'test')
 
     l_col = ['Parameter', 'Value', 'Error', 'Gen', 'Toy', 'GOF', 'Valid', 'Hash']
 
