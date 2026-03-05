@@ -76,7 +76,7 @@ class SamplesPrinter:
                 if sample in self._skipped_samples:
                     continue
 
-                gtr = RDFGetter(sample =sample, trigger=trigger)
+                gtr = RDFGetter(sample = sample, trigger=trigger)
                 try:
                     d_rdf[sample] = gtr.get_rdf(per_file=False)
                 except ValueError:
@@ -102,7 +102,7 @@ class SamplesPrinter:
         total          = sum(counts)
         fractions      = [ math.ceil(100 * count / total) for count in counts ]
         values         = [ f'Block {value:.0f}'            for value in values ]
-        d_stats        = dict(zip(values, fractions))
+        d_stats        = dict(zip(values, fractions, strict = True))
         d_stats_sorted = { key : d_stats[key] for key in sorted(d_stats) }
 
         return d_stats_sorted

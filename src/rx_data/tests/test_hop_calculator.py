@@ -119,7 +119,7 @@ def test_compare_bdkstee(tmp_path : Path):
 
     _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bdkstee', tmp_path = tmp_path)
 # ----------------------------
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rkst_ee_os])
 def test_extra_branches(trigger : Trigger):
     '''
     Testing adding extra branches to RDF
