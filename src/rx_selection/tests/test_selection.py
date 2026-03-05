@@ -83,27 +83,6 @@ def test_multiple_custom_selection_override():
     d_cut = sel.selection(process=sample, q2bin=q2bin, trigger=trigger)
     assert 'cut' not in d_cut
 # --------------------------
-@pytest.mark.parametrize('sample', ['Bu_Kee_eq_btosllball05_DPC', 'DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('block' , [1, 2, 3, 4, 5, 6, 7, 8])
-def test_block_overriding(sample : str, block : int):
-    '''
-    Tests overriding of block cut for simulation
-    '''
-    old_cut_block = f'block == {block}'
-    rep_cut_block =  'block == 2'
-    with sel.custom_selection(d_sel={'block' : old_cut_block}):
-        d_sel = sel.selection(q2bin='central', process=sample, trigger='Hlt2RD_BuToKpEE_MVA')
-
-    new_cut_block = d_sel['block']
-    if sample == 'DATA_24_MagDown_24c2':
-        assert old_cut_block == new_cut_block
-        return
-
-    if block in [3, 4]:
-        assert new_cut_block == rep_cut_block
-    else:
-        assert old_cut_block == new_cut_block
-# --------------------------
 def test_custom_selection_nested():
     '''
     Check that nesting of context managers does not break upstream (original) custom selection

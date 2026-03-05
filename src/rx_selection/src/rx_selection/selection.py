@@ -176,13 +176,9 @@ def selection(
         trigger = trigger,
         smeared = smeared)
 
-    d_cut_final = {}
-    for cut_name, cut_expr in d_cut.items():
-        d_cut_final[cut_name] = _override_block(cut_block = cut_expr, process = process)
+    _print_selection(d_cut)
 
-    _print_selection(d_cut_final)
-
-    return d_cut_final
+    return d_cut
 #-----------------------
 def _update_mass_cuts(
         d_cut   : dict[str,str],
@@ -299,43 +295,6 @@ def _get_selection(chan : str, proj: str, q2_bin : str) -> dict[str,str]:
         d_new[cut_name] = cut_val
 
     return d_new
-#-----------------------
-# TODO: This needs to be removed once block 3 and 4 MC be available
-def _override_block(
-    cut_block : str,
-    process   : str) -> str:
-    '''
-    Parameters
-    ---------------
-    cut_block: One of the cuts associated to the selection. 
-               This method targets cuts of the form block == 3
-               which have to be converted into block == 2
-
-    process  : Sample used with this cut, e.g. DATA_24...
-
-    Returns
-    ---------------
-    Either:
-
-    Original cut: If this sample is not a simulated sample from blocks 3 or 4, which are missing
-    Modified cut: Otherwise
-    '''
-
-    if process.startswith('DATA'):
-        log.debug(f'Not redefining block cut for {process}')
-        return cut_block
-
-    if 'block' not in cut_block:
-        log.debug(f'Block not found in: {cut_block}')
-        return cut_block
-
-    new_cut = re.sub(r'block\s*==\s*[34]', 'block == 2', cut_block)
-
-    if new_cut != cut_block:
-        log.warning(f'For sample {process} replacing:')
-        log.warning(f'{cut_block:<20}{"--->":<20}{new_cut:<20}')
-
-    return new_cut
 #-----------------------
 def _save_cutflow(
     path : Path, 
