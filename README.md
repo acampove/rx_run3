@@ -1,7 +1,7 @@
 ![Launch on REANA badge](https://www.reana.io/static/img/badges/launch-with-snakemake-on-reana-at-cern.svg)
 ![Python Version](https://img.shields.io/badge/python-3.13-blue.svg)
 
-# $R_X$ run3
+# $$R_X \text{ With Run 3 Data}$$
 
 This is the repository for the combined measurement of $R_K$ and $R_{K^*}$
 in run 3.
