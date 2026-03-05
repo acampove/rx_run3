@@ -75,8 +75,8 @@ def test_with_cat(tmp_path : Path):
     Test for components with brem categories
     '''
     obs  = zfit.Space(
-        obs   = Mass.bp_bcor_smr, 
-        label = Mass.bp_bcor_smr.latex,
+        obs   = Mass.bp_bcor_smr.latex, 
+        label = Mass.bp_bcor_smr,
         limits=(4500, 7000))
     data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/signal.yaml')
     cfg  = ParametricConf(**data)
@@ -184,8 +184,8 @@ def test_ccbar_rare(tmp_path : Path):
     mass      = Mass.bp_bcor_smr 
     q2bin     = Qsq.high
     obs       = zfit.Space(
-        label = mass,
         obs   = mass.latex,
+        label = mass,
         limits= mass.limits)
 
     data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}.yaml')
@@ -211,8 +211,8 @@ def test_reso_rk_ee(
     Test electron resonant with rk trigger
     '''
     obs  = zfit.Space(
-        obs   = Mass.bp_dtf_jpsi,
-        label = Mass.bp_dtf_jpsi.latex,
+        obs   = Mass.bp_dtf_jpsi.latex,
+        label = Mass.bp_dtf_jpsi,
         limits= Mass.bp_dtf_jpsi.limits)
 
     data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component.name}.yaml')
@@ -247,8 +247,8 @@ def test_reso_rkst_mm(
     }[q2bin]
 
     obs = zfit.Space(
-        obs   = mass, 
-        label = mass.latex,
+        obs   = mass.latex, 
+        label = mass,
         limits= mass.limits)
 
     data = gut.load_data(package='fitter_data', fpath=f'reso/rkst/mm/{component}.yaml')
