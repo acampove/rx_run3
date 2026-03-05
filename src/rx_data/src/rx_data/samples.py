@@ -40,7 +40,7 @@ class SamplesPrinter:
         LogStore.set_level('rx_data:sample_patcher' , 40)
         LogStore.set_level('rx_data:sample_emulator', 40)
     # ----------------------
-    def _get_input_samples(self) -> list[tuple[str,str]]:
+    def _get_input_samples(self) -> list[tuple[Component,Trigger]]:
         '''
         Returns
         -------------
@@ -53,12 +53,13 @@ class SamplesPrinter:
         if not paths:
             raise ValueError(f'No ROOT files found in: {vers_path}')
 
-        s_sample_trigger = { dut.info_from_path(path, sample_lowercase=False) for path in paths }
-        nsamples         = len(s_sample_trigger)
+        s_sample_trigger    = { dut.info_from_path(path, sample_lowercase=False) for path in paths }
+        s_component_trigger = { (Component(sample), trigger) for sample, trigger in s_sample_trigger }
+        nsamples            = len(s_component_trigger)
 
         log.info(f'Found {nsamples} samples')
 
-        return list(s_sample_trigger)
+        return list(s_component_trigger)
     # ----------------------
     def _get_rdf(self) -> dict[str, RDF.RNode]:
         '''
@@ -67,7 +68,7 @@ class SamplesPrinter:
         Dictionary mapping sample name to corresponding dataframe built from only main trees
         '''
         log.info('Collecting dataframes')
-        input_samples : list[tuple[str,str]] = self._get_input_samples()
+        input_samples : list[tuple[Component,Trigger]] = self._get_input_samples()
         d_rdf : dict[str, RDF.RNode]         = dict()
 
         with RDFGetter.only_friends(s_friend=set()),\
