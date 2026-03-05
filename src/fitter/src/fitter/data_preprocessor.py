@@ -160,11 +160,11 @@ class DataPreprocessor(Cache):
             log.debug('No weight configuration found, using only default weights')
             return wgt
 
-        for kind, cfg in self._wgt_cfg.items():
-            new_wgt = self._get_extra_weight(kind=kind, cfg=cfg)
+        for correction, cfg in self._wgt_cfg.items():
+            new_wgt = self._get_extra_weight(kind=correction, cfg=cfg)
             if new_wgt.shape != wgt.shape:
                 raise ValueError(
-                    f'''Shapes of original array and {kind} weights differ:
+                    f'''Shapes of original array and correction {correction} weights differ:
                         {new_wgt.shape} != {wgt.shape}''')
 
             wgt = wgt * new_wgt
