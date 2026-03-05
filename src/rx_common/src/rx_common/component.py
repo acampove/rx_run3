@@ -2,12 +2,23 @@
 Module holding Component and CCbarComponent
 '''
 
-from enum   import StrEnum, auto
-from typing import Literal
+from functools import cache
+from enum      import StrEnum, auto
+from typing    import Literal
 
 from .types              import Channel
 from ap_utilities.decays import utilities as aput
 
+# -------------------------------
+@cache
+def _get_samples() -> dict[str,'Component']:
+    '''
+    Returns
+    ----------------
+    mapping between sample name and component
+    '''
+    return { cmp.sample : cmp for cmp in Component if cmp.has_sample }
+# -------------------------------
 class Component(StrEnum):
     '''
     Class meant to represent decay
@@ -93,14 +104,10 @@ class Component(StrEnum):
         ----------------
         Corresponding component
         '''
-        for cmp in cls:
-            if not cmp.has_sample: 
-                continue
+        samples = _get_samples()
 
-            if cmp.sample != sample:
-                continue
-
-            return cmp
+        if sample in samples:
+            return samples[sample]
 
         raise ValueError(f'Cannot find component for: {sample}')
     # --------------------------------------------
