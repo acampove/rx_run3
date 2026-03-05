@@ -3,13 +3,13 @@ This module contains functions needed by tests
 '''
 import yaml
 
-from rx_common              import Component
-from rx_common              import Trigger
-from rx_selection           import selection as sel
-from rx_data.rdf_getter     import RDFGetter
-from ROOT                   import RDF # type: ignore
-
-from dmu.logging.log_store import LogStore
+from rx_common    import Component
+from rx_common    import Trigger
+from rx_common    import Qsq 
+from rx_selection import selection as sel
+from rx_data      import RDFGetter
+from ROOT         import RDF # type: ignore
+from dmu          import LogStore
 
 log=LogStore.add_logger('rx_data:testing')
 

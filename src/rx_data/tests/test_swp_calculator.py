@@ -17,12 +17,6 @@ from rx_data   import RDFGetter
 
 log = LogStore.add_logger('rx_data:test_swp_calculator')
 # ----------------------------------
-class Data:
-    '''
-    Class used to share attributes
-    '''
-    user    = os.environ['USER']
-# ----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
     '''
