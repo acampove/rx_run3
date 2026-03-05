@@ -3,7 +3,7 @@ Module with functions testing MisCalculator
 '''
 import pytest
 
-from ROOT                   import RDataFrame # type: ignore
+from ROOT                   import RDF # type: ignore
 from dmu.logging.log_store  import LogStore
 from rx_data.mis_calculator import MisCalculator
 from rx_data                import testing       as tst

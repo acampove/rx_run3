@@ -3,12 +3,13 @@ Module containing tests for MVACalculator class
 '''
 import pytest
 import matplotlib.pyplot as plt
-from pathlib                      import Path
-from ROOT                         import RDF # type: ignore
-from dmu.logging.log_store        import LogStore
-from rx_data.rdf_getter           import RDFGetter
-from rx_data.mva_calculator       import MVACalculator
-from rx_common.types              import Trigger
+
+from pathlib   import Path
+from ROOT      import RDF # type: ignore
+from dmu       import LogStore
+from rx_data   import RDFGetter
+from rx_data   import MVACalculator
+from rx_common import Component, Trigger
 
 log=LogStore.add_logger('rx_data:test_mva_calculator')
 # ----------------------

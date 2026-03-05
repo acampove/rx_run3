@@ -6,12 +6,13 @@ import pytest
 import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
-from pathlib import Path
 
-from ROOT                    import RDF # type: ignore
-from dmu.logging.log_store   import LogStore
-from rx_data.rdf_getter      import RDFGetter
-from rx_data.mass_calculator import MassCalculator
+from pathlib   import Path
+from ROOT      import RDF # type: ignore
+from dmu       import LogStore
+from rx_common import Component, Trigger
+from rx_data   import RDFGetter
+from rx_data   import MassCalculator
 
 log=LogStore.add_logger('rx_data:test_mass_calculator')
 
