@@ -54,7 +54,9 @@ class SamplesPrinter:
             raise ValueError(f'No ROOT files found in: {vers_path}')
 
         s_sample_trigger    = { dut.info_from_path(path, sample_lowercase=False) for path in paths }
-        s_component_trigger = { (Component(sample), trigger) for sample, trigger in s_sample_trigger }
+        s_component_trigger = { (Component.from_sample(sample), trigger) 
+            for sample, trigger in s_sample_trigger }
+
         nsamples            = len(s_component_trigger)
 
         log.info(f'Found {nsamples} samples')
