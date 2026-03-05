@@ -42,6 +42,7 @@ class Component(StrEnum):
     data_24_md_c4  = auto()
     # -----
     bpkkk          = auto()
+    bpkpik         = auto()
     bpkpipi        = auto()
     # -----
     bpkpee         = auto()
@@ -91,7 +92,13 @@ class Component(StrEnum):
     bdkstjpsimm_swp= auto()
     bdkstjpsiee_swp= auto()
     # -----
+    # Semileptonic
+    # -----
     bpdnuknumm     = auto()
+    bpdpiknumm     = auto()
+    bpdnukpiee     = auto()
+    bpdpiknuee     = auto()
+    bpdnuknuee     = auto()
     # --------------------------------------------
     @classmethod
     def from_sample(cls, sample : str) -> 'Component':
@@ -172,6 +179,8 @@ class Component(StrEnum):
             return 'Bu_KplKplKmn_eq_sqDalitz_DPC'
           case Component.bpkpipi:
             return 'Bu_piplpimnKpl_eq_sqDalitz_DPC'
+          case Component.bpkpik:
+            return 'Bu_KplpiplKmn_eq_sqDalitz_DPC'
           # -----
           case Component.bpkpee:
             return 'Bu_Kee_eq_btosllball05_DPC'
@@ -243,6 +252,14 @@ class Component(StrEnum):
           # -----
           case Component.bpdnuknumm:
             return 'Bu_D0munu_Kmunu_eq_DPC'
+          case Component.bpdpiknumm:
+            return 'Bu_D0pi_Kmunu_eq_DPC'
+          case Component.bpdnukpiee:
+            return 'Bu_D0enu_Kpi_eq_DPC_TC'
+          case Component.bpdpiknuee:
+            return 'Bu_D0pi_Kenu_eq_DPC_TC'
+          case Component.bpdnuknuee:
+            return 'Bu_D0enu_Kenu_eq_DPC_ptCut200MeV_visMass4G'
           # -----
           # Emulated samples
           # -----
