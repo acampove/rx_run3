@@ -91,9 +91,9 @@ def test_compare_bukee(tmp_path : Path):
     '''
     Compare signal with background for Bu -> K ee decays
     '''
-    trigger = Trigger('Hlt2RD_BuToKpEE_MVA')
-    sig_sam = 'Bu_Kee_eq_btosllball05_DPC'  
-    bkg_sam = 'Bd_Kstee_eq_btosllball05_DPC'
+    trigger = Trigger.rk_ee_os
+    sig_sam = Component.bpkpee  
+    bkg_sam = Component.bdkstkpiee 
 
     rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
     rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
@@ -107,9 +107,9 @@ def test_compare_bdkstee(tmp_path : Path):
     '''
     Compare signal with background for Bd -> Kpi ee decays
     '''
-    trigger = Trigger('Hlt2RD_B0ToKpPimEE_MVA')
-    sig_sam = 'Bd_Kstee_eq_btosllball05_DPC'
-    bkg_sam = 'Bu_K1ee_eq_DPC'
+    trigger = Trigger.rkst_ee_os
+    sig_sam = Component.bdkstkpiee 
+    bkg_sam = Component.bpk1kpipiee 
 
     rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
     rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
@@ -124,7 +124,7 @@ def test_extra_branches(trigger : Trigger):
     '''
     Testing adding extra branches to RDF
     '''
-    sample  = 'Bd_Kstee_eq_btosllball05_DPC'
+    sample  = Component.bdkstkpiee 
     rdf     = tst.rdf_from_sample(sample = sample, trigger=trigger)
 
     obj     = HOPCalculator(rdf=rdf, trigger=trigger)

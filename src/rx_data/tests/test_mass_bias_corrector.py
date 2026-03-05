@@ -26,32 +26,33 @@ from rx_common           import Component, Trigger
 log=LogStore.add_logger('rx_data:test_mass_bias_corrector')
 
 _SAMPLES_MM = [
-    ('Bu_JpsiK_mm_eq_DPC'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
-    ('Bd_JpsiKst_mm_eq_DPC', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    (Component.bpkpjpsimm    , Trigger.rk_mm_os  ),
+    (Component.bdkstkpijpsimm, Trigger.rkst_mm_os),
     #----------------
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    (Component.data_24_mu_c2 , Trigger.rk_mm_os  ),
+    (Component.data_24_mu_c2 , Trigger.rkst_mm_os),
 ]
 
 _SAMPLES_EE = [
-    ('Bu_JpsiK_ee_eq_DPC'  , 'Hlt2RD_BuToKpEE_MVA'     ),
-    ('Bd_JpsiKst_ee_eq_DPC', 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    (Component.bpkpjpsiee    , Trigger.rk_ee_os  ),
+    (Component.bdkstkpijpsiee, Trigger.rkst_ee_os),
     #----------------
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpEE_MVA'     ),
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimEE_MVA'  )
+    (Component.data_24_mu_c2 , Trigger.rk_ee_os  ),
+    (Component.data_24_mu_c2 , Trigger.rkst_ee_os),
 ]
+
 _SAMPLES_DATA = [
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    (Component.data_24_mu_c2, Trigger.rk_mm_os  ),
+    (Component.data_24_mu_c2, Trigger.rkst_mm_os),
     #----------------
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_BuToKpEE_MVA'     ),
-    ('DATA_24_MagUp_24c2'  , 'Hlt2RD_B0ToKpPimEE_MVA'  ),
+    (Component.data_24_mu_c2, Trigger.rk_ee_os  ),
+    (Component.data_24_mu_c2, Trigger.rkst_ee_os),
     #----------------
-    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_BuToKpMuMu_MVA'   ),
-    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    (Component.data_24_mu_c3, Trigger.rk_mm_os  ),
+    (Component.data_24_mu_c3, Trigger.rkst_mm_os),
     #----------------
-    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_BuToKpEE_MVA'     ),
-    ('DATA_24_MagUp_24c3'  , 'Hlt2RD_B0ToKpPimEE_MVA'  )
+    (Component.data_24_mu_c3, Trigger.rk_ee_os  ),
+    (Component.data_24_mu_c3, Trigger.rkst_ee_os),
 ]
 
 _SAMPLES = _SAMPLES_MM + _SAMPLES_EE
@@ -199,7 +200,7 @@ def _check_output_columns(rdf : RDF.RNode) -> None:
 #-----------------------------------------
 def _get_rdf(
     trigger  : Trigger,
-    sample   : str) -> RDF.RNode:
+    sample   : Component) -> RDF.RNode:
     '''
     Return ROOT dataframe needed for test
 
@@ -236,7 +237,7 @@ def _check_size(rdf_org : RDF.RNode, rdf_cor : RDF.RNode) -> None:
     log.info(f'Sizes agree at: {in_size}')
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_EE)
-def test_simple(sample : str, trigger : Trigger, tmp_path : Path):
+def test_simple(sample : Component, trigger : Trigger, tmp_path : Path):
     '''
     Simplest test
     '''
@@ -276,7 +277,7 @@ def test_simple(sample : str, trigger : Trigger, tmp_path : Path):
     _compare_masses(d_rdf, f'simple/{trigger}', kind, out_dir = tmp_path)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES_DATA) 
-def test_medium_input(sample : str, trigger : Trigger, tmp_path : Path):
+def test_medium_input(sample : Component, trigger : Trigger, tmp_path : Path):
     '''
     Medium input
     '''
@@ -316,7 +317,7 @@ def test_medium_input(sample : str, trigger : Trigger, tmp_path : Path):
     _compare_masses(d_rdf, f'medium_{sample}/{trigger}', kind, out_dir = tmp_path)
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
-def test_suffix(sample : str, trigger : Trigger):
+def test_suffix(sample : Component, trigger : Trigger):
     '''
     Tests that output dataframe has columns with suffix added
     '''
@@ -340,7 +341,7 @@ def test_suffix(sample : str, trigger : Trigger):
 #-----------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES) 
 @pytest.mark.parametrize('brem_energy_threshold', [100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 4000])
-def test_brem_threshold(sample:str, trigger : Trigger, brem_energy_threshold: float, tmp_path : Path):
+def test_brem_threshold(sample : Component, trigger : Trigger, brem_energy_threshold: float, tmp_path : Path):
     '''
     Vary energy threhold of brem photon needed to be added
     '''
