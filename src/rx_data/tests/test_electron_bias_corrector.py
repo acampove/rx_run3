@@ -11,12 +11,12 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                            import RDataFrame
-from dmu.logging.log_store           import LogStore
-from rx_data.rdf_getter              import RDFGetter
-from rx_data.utilities               import df_from_rdf
-from rx_data.electron_bias_corrector import ElectronBiasCorrector
-from rx_common.types                 import Trigger
+from ROOT      import RDataFrame
+from dmu       import LogStore
+from rx_data   import RDFGetter
+from rx_data   import df_from_rdf
+from rx_data   import ElectronBiasCorrector
+from rx_common import Component, Trigger
 
 log=LogStore.add_logger('rx_data:test_electron_bias_corrector')
 #-----------------------------------------

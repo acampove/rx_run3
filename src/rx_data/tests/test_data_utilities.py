@@ -6,9 +6,9 @@ import re
 import glob
 import pytest
 
-from dmu.generic           import version_management as vman
-from dmu.logging.log_store import LogStore
-from rx_data               import utilities as ut
+from dmu         import LogStore
+from dmu.generic import version_management as vman
+from rx_data     import utilities as ut
 
 log=LogStore.add_logger('rx_data:test_utilities')
 # -----------------------------------------
