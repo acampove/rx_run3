@@ -5,7 +5,7 @@ Module with tests for SpecMaker class
 import pytest
 
 from dmu       import LogStore
-from rx_common import Component, Project, Trigger, component
+from rx_common import Component, Project, Trigger
 from rx_data   import SpecMaker, Specification
 
 _NOPIDSAMPLES=[

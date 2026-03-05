@@ -7,13 +7,13 @@ import mplhep
 import pytest
 import matplotlib.pyplot as plt
 
-from ROOT                   import RDF # type: ignore
-from pathlib                import Path
-from rx_common              import Project, Component, Trigger
-from rx_data                import SWPCalculator
-from rx_data                import testing  as tst
-from rx_data                import RDFGetter
-from dmu.logging.log_store  import LogStore
+from ROOT      import RDF # type: ignore
+from pathlib   import Path
+from dmu       import LogStore
+from rx_common import Project, Component, Trigger
+from rx_data   import SWPCalculator
+from rx_data   import testing  as tst
+from rx_data   import RDFGetter
 
 log = LogStore.add_logger('rx_data:test_swp_calculator')
 # ----------------------------------

@@ -15,7 +15,6 @@ from rx_data   import RDFGetter
 from rx_data   import MassCalculator
 
 log=LogStore.add_logger('rx_data:test_mass_calculator')
-
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():

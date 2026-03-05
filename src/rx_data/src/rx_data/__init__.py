@@ -14,8 +14,14 @@ from .mva_calculator          import MVACalculator
 from .mass_bias_corrector     import MassBiasCorrector
 from .mass_calculator         import MassCalculator
 from .path_splitter           import PathSplitter
+from .sample_emulator         import SampleEmulator
+from .sample_patcher          import SamplePatcher
+from .specification           import Sample
 
 __all__ = [
+    'Sample',
+    'SampleEmulator',
+    'SamplePatcher',
     'PathSplitter',
     'MassCalculator',
     'MassBiasCorrector',
