@@ -1,7 +1,6 @@
 '''
 Script with functions needed to test functions in selection.py
 '''
-import os
 import pytest
 from pathlib      import Path
 from dmu          import LogStore
@@ -10,13 +9,6 @@ from rx_selection import selection as sel
 from rx_data      import RDFGetter 
 
 log=LogStore.add_logger('rx_selection:test_selection')
-# --------------------------
-class Data:
-    '''
-    data class
-    '''
-    DATADIR = os.environ['ANADIR'] + '/Data'
-    l_q2bin = ['low', 'cen_low', 'central', 'cen_high', 'psi2', 'high']
 # --------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
