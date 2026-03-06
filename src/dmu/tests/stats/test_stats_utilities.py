@@ -20,7 +20,6 @@ from dmu.stats    import ZFitPlotterConf
 from dmu.generic  import rxran
 from zfit.data    import Data     as zdata
 from zfit.pdf     import BasePDF  as zpdf
->>>>>>> master
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
