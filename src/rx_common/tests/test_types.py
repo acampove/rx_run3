@@ -1,21 +1,28 @@
 '''
 Script with functions meant to test Enums
 '''
-import ROOT
 import pytest
 
 from rx_common import Correction
 from rx_common import Component
-from rx_common import Sample 
 from rx_common import Brem 
 from rx_common import Channel 
 from dmu       import LogStore
 
+from rx_common import Component
+from rx_common import Brem 
+from rx_common import Channel 
 from rx_common import Trigger
 from rx_common import Project
 from rx_common import Block 
 
 log=LogStore.add_logger('rx_common::test_types')
+
+_COMPONENTS_WITH_DECAYS : list[Component] = [
+    Component.bdkstkpiee,
+    Component.bdkstkpimm,
+    Component.bpkpjpsiee,
+    Component.bpkpjpsimm]
 # -------------------------------------------
 @pytest.mark.parametrize('corr', Correction)
 def test_correction(corr : Correction):
@@ -29,15 +36,24 @@ def test_component():
     '''
     Test Enum representing fit component 
     '''
-    assert Component.data          == 'data'
-    assert Component.jpsi          == 'jpsi'
-    assert Component.psi2          == 'psi2'
-    assert Component.ccbar         == 'ccbar'
-    assert Component.cabibbo       == 'cabibbo'
-    assert Component.lbjpsipk      == 'lbjpsipk'
-    assert Component.bsjpsiphi     == 'bsjpsiphi'
-    assert Component.bsjpsikst     == 'bsjpsikst'
-    assert Component.bdjpsikst_swp == 'bdjpsikst_swp'
+    assert Component.data_24         == 'DATA_24*'
+    assert Component.ccbar           == 'ccbar'
+
+    assert Component.bpkpjpsiee      == 'Bu_JpsiK_ee_eq_DPC'
+    assert Component.bpkppsi2ee      == 'Bu_psi2SK_ee_eq_DPC'
+    assert Component.bppijpsiee      == 'Bu_JpsiPi_ee_eq_DPC'
+    # ------
+    assert Component.bsphijpsimm     == 'Bs_Jpsiphi_mm_eq_CPV_update2012_DPC'
+    assert Component.bsphijpsiee     == 'Bs_Jpsiphi_ee_eq_CPV_update2012_DPC'
+    # ------
+    assert Component.lbpkjpsimm      == 'Lb_JpsipK_mm_eq_phsp_DPC'
+    assert Component.lbpkjpsiee      == 'Lb_JpsipK_ee_eq_phsp_DPC'
+    # ------
+    assert Component.bskstjpsimm     == 'Bs_JpsiKst_mm_eq_DPC'
+    assert Component.bskstjpsiee     == 'Bs_JpsiKst_ee_eq_DPC'
+
+    assert Component.bdkstjpsimm_swp == 'Bd_JpsiKst_mm_had_swp'
+    assert Component.bdkstjpsiee_swp == 'Bd_JpsiKst_ee_had_swp'
 # -------------------------------------------
 def test_brem():
     '''
@@ -53,8 +69,8 @@ def test_brem():
 
     assert Brem.zero + Brem.one + Brem.two == Brem.br012
 # -------------------------------------------
-@pytest.mark.parametrize('sample', Sample)
-def test_sample_properties(sample : Sample):
+@pytest.mark.parametrize('sample', Component)
+def test_sample_properties(sample : Component):
     '''
     Tests Sample enum properties
     '''
@@ -69,15 +85,15 @@ def test_mc_samples():
     '''
     Tests that one can access list of MC samples
     '''
-    mc_samples = Sample.get_mc_samples()
+    mc_samples = Component.get_mc_samples()
     assert isinstance(mc_samples, list)
     assert mc_samples
 
     for sample in mc_samples:
         log.info(sample)
 # -------------------------------------------
-@pytest.mark.parametrize('sample', Sample)
-def test_channel(sample : Sample):
+@pytest.mark.parametrize('sample', Component)
+def test_channel(sample : Component):
     '''
     Tests channel property of samples
     '''
@@ -115,31 +131,12 @@ def test_trigger(trigger : Trigger):
     with pytest.raises(ValueError):
         trigger.project
 # -------------------------------------------
-@pytest.mark.parametrize('sample', Sample.get_mc_samples())
-def test_subdecays(sample : Sample):
+@pytest.mark.parametrize('sample', _COMPONENTS_WITH_DECAYS)
+def test_subdecays(sample : Component):
     '''
     Tests access to subdecays from sample
     '''
-    samples = [
-        Sample.undefined, 
-        Sample.ccbar, 
-        # --------------
-        Sample.bpjpsixee,
-        Sample.bdjpsixee,
-        Sample.bsjpsixee,
-        # --------------
-        Sample.bpjpsixmm,
-        Sample.bdjpsixmm,
-        Sample.bsjpsixmm,
-        # --------------
-        Sample.bpkkk,
-        Sample.bpkpik,
-        Sample.bpkpipi,
-    ]
-
-    if sample in samples:
-        return
-
+    assert len(sample.subdecays) >= 1
     assert isinstance(sample.subdecays, list)
 # -------------------------------------------
 def test_block():
@@ -165,3 +162,4 @@ def test_block():
     assert '2'       == str(b2)
     assert '12'      == str(b1 + b2)
 # -------------------------------------------
+

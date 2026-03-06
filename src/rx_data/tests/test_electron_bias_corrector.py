@@ -11,12 +11,12 @@ import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from ROOT                            import RDataFrame
-from dmu.logging.log_store           import LogStore
-from rx_data.rdf_getter              import RDFGetter
-from rx_data.utilities               import df_from_rdf
-from rx_data.electron_bias_corrector import ElectronBiasCorrector
-from rx_common.types                 import Trigger
+from ROOT      import RDataFrame
+from dmu       import LogStore
+from rx_data   import RDFGetter
+from rx_data   import df_from_rdf
+from rx_data   import ElectronBiasCorrector
+from rx_common import Component, Trigger
 
 log=LogStore.add_logger('rx_data:test_electron_bias_corrector')
 #-----------------------------------------
@@ -109,10 +109,11 @@ def _plot_correction(org : pnd.DataFrame, cor : pnd.DataFrame, name : str) -> No
         plt.close()
 #-----------------------------------------
 def _get_df(nentries : int = 10) -> pnd.DataFrame:
-    gtr = RDFGetter(sample='DATA_24_Mag*_24c4', trigger=Trigger.rk_ee_os)
-    rdf = gtr.get_rdf(per_file=False)
-    rdf = cast(RDataFrame, rdf)
+    gtr = RDFGetter(
+        sample  = Component.data_24, 
+        trigger = Trigger.rk_ee_os)
 
+    rdf = gtr.get_rdf(per_file=False)
     rdf = rdf.Filter('mva_cmb > 0.8 && mva_prc > 0.5')
     rdf = rdf.Filter('Jpsi_M > 2800 && Jpsi_M < 3200')
     rdf = rdf.Filter('B_const_mass_M > 5200')

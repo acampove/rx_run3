@@ -1,11 +1,11 @@
 # This config file defines the yields and the relationships between them
 # For the fit of the resonant electron channel 
 yields: &yields
-  val : 0
+  val : 10
   min : 0
   max : 1000000
 
-yld_signal:
+yld_bpkpmm:
   <<: *yields
-yld_combinatorial:
+yld_comb:
   <<: *yields

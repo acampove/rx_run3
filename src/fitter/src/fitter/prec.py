@@ -1,89 +1,197 @@
 '''
 Module containing PRec
 '''
-import os
-import copy
-import pprint
 import numpy
 import slugify
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
+from functools             import cached_property
+from ROOT                  import RDF # type: ignore
+from typing                import Final
 from pathlib               import Path
-from dataclasses           import dataclass
+from pydantic              import BaseModel, model_validator, ConfigDict
+
+from dmu                   import LogLevels, LogStore
 from dmu.generic           import hashing
-from dmu                   import LogStore
-from dmu.stats             import ZFitPlotter
+from dmu.stats             import KDEConf
 from dmu.stats             import zfit
+from dmu.stats             import ZFitPlotter 
+from dmu.stats             import is_pdf_usable
 from dmu.stats             import utilities as sut
-from dmu.stats.utilities   import is_pdf_usable
 from dmu.rdataframe        import utilities as rut
 from dmu.generic           import utilities as gut
 from dmu.workflow          import Cache
 
 from zfit                  import Space         as zobs
 from zfit.pdf              import BasePDF       as zpdf
-from rx_selection          import selection     as sel
-from rx_data               import RDFGetter
-from rx_common             import Sample, Trigger
-from rx_common             import info
-from ROOT                  import RDF # type: ignore
+from zfit.pdf              import KDE1DimFFT, KDE1DimISJ, SumPDF
 
+from rx_data               import RDFGetter
+from rx_common             import Component, Project, Qsq, Trigger, Mass, CCbarComponent
+from rx_common             import info
+from rx_selection          import selection     as sel
+
+from .configs                  import CCbarConf, CCbarWeight
 from .inclusive_decays_weights import read_weight 
-from .inclusive_sample_weights import Reader as inclusive_sample_weights
+from .inclusive_sample_weights import Reader as SampleWeightReader
 
 log=LogStore.add_logger('fitter:prec')
+
+KDEPDF                       = KDE1DimFFT | KDE1DimISJ
+MIN_ISJ_ENTRIES : Final[int] = 500 # If Fewer entries than this, switch from ISJ to FFT
+MIN_ENTRIES     : Final[int] =  40 # Will not build KDE if fewer entries than this are found
 #-----------------------------------------------------------
-@dataclass
-class Model:
+class CharmoniumComponent(BaseModel):
     '''
-    Class meant to hold a PDF and the data used to fit it
+    Class meant to represent a single charmonium component
     '''
-    pdf : zpdf | None
+    model_config = ConfigDict(
+        arbitrary_types_allowed = True,
+        frozen                  = True)
+
+    cfg : KDEConf 
+    obs : zobs
     mass: numpy.ndarray
     wgt : numpy.ndarray # Full weight
     sam : numpy.ndarray # Sample weights
     dec : numpy.ndarray # Weights for individual decays in cocktail
     # ------------------------------
-    @staticmethod
-    def add_models(models : list['Model'], fractions : list[float] | None) -> 'Model':
+    @cached_property
+    def pdf(self) -> KDEPDF | None:
         '''
-        Parameters
-        -----------------
-        models   : List of models to be added
-        fractions: Fractions between each component, if None, will skip addition of PDFs
+        Returns
+        ---------------
+        Zfit PDF if there are enough entries to build it, otherwise, None
+        '''
+        if log.getEffectiveLevel() < LogLevels.info:
+            log.debug('Using fitting options:')
+            log.debug(self.cfg)
 
+        if self.nentries < MIN_ENTRIES:
+            return
+
+        if self.nentries > MIN_ISJ_ENTRIES:
+            log.debug('Using ISJ KDE for high statistics sample')
+
+            pdf = zfit.pdf.KDE1DimISJ(
+                obs     = self.obs,
+                data    = self.mass, 
+                weights = self.wgt, 
+                padding = self.cfg.padding.value)
+        else:
+            log.debug('Using FFT KDE for low statistics sample')
+
+            pdf = zfit.pdf.KDE1DimFFT(
+                obs       = self.obs,
+                data      = self.mass,
+                weights   = self.wgt, 
+                padding   = self.cfg.padding.value,
+                bandwidth = self.cfg.bandwidth)
+
+        if not is_pdf_usable(pdf = pdf):
+            raise ValueError('PDF is not usable')
+
+        return pdf
+    # ------------------------------
+    def get_pdf(self) -> KDEPDF:
+        '''
+        Returns PDF or raises if PDF not found
+        '''
+        if self.pdf is None:
+            raise ValueError(f'PDF not made with {self.nentries} entries')
+
+        return self.pdf
+    # ------------------------------
+    @property
+    def nentries(self) -> int:
+        '''
+        Returns 
+        ------------
+        number of entries in dataset
+        '''
+        return len(self.mass)
+# ------------------------------
+class CCbarModel(BaseModel):
+    '''
+    Class meant to represent PDF meant to model all the charmonium components 
+    '''
+    models    : list[CharmoniumComponent] 
+    fractions : list[float]
+    # -------------------------
+    @property
+    def is_empty(self) -> bool:
+        '''
+        True if no component models were created
+        '''
+        return len(self.models) == 0
+    # -------------------------
+    @model_validator(mode = 'after')
+    def check_sizes(self):
+        if len(self.models) != len(self.fractions):
+            raise ValueError('Fractions and models differ in number')
+
+        return self
+    # -------------------------
+    @cached_property
+    def pdf(self) -> SumPDF | KDEPDF | None:
+        '''
         Returns
         -----------------
-        Added model
-        '''
-        if not models:
-            raise ValueError('No models found')
+        Either:
 
-        # Only one component survived
+        - Full PDF
+        - Single component PDF when only one survives
+        - None if no model could be built
+        '''
+        models = [ model for model in self.models if model.pdf is not None ]
+
+        if not models:
+            return
+
         if len(models) == 1:
-            log.debug('Found only one component model, returning it')
-            return models[0]
+            pdf = models[0].get_pdf()
+            return pdf
+
+        fractions = [ 
+            fraction for model, fraction in zip(self.models, self.fractions, strict = True) 
+            if model.pdf is not None ]
 
         arrays = dict()
         for attr_name in ['mass', 'wgt', 'dec', 'sam']:
-            l_value = [ getattr(model, attr_name) for model in models ]
+            l_value = [ getattr(model, attr_name) for model in self.models ]
             arrays[attr_name] = numpy.concatenate(l_value)
 
-        # No components survived
-        if fractions is None:
-            log.debug('No fractions passed, returning model without PDF')
-            return Model(pdf=None, **arrays)
-
         pdfs = [ model.pdf for model in  models if model.pdf is not None ]
-
-        if len(pdfs) != len(fractions):
-            raise ValueError('Number of PDFs and fractions differ')
         
         log.debug('Adding PDFs')
         pdf  = zfit.pdf.SumPDF(pdfs, fractions)
 
-        return Model(pdf=pdf, **arrays)
+        return pdf
+    # -------------------------
+    @cached_property
+    def sam(self) -> numpy.ndarray:
+        arrays = [ model.sam for model in self.models ]
+
+        return numpy.concatenate(arrays)
+    # -------------------------
+    @cached_property
+    def dec(self) -> numpy.ndarray:
+        arrays = [ model.dec for model in self.models ]
+
+        return numpy.concatenate(arrays)
+    # -------------------------
+    @cached_property
+    def wgt(self) -> numpy.ndarray:
+        arrays = [ model.wgt for model in self.models ]
+
+        return numpy.concatenate(arrays)
+    # -------------------------
+    @cached_property
+    def mass(self) -> numpy.ndarray:
+        arrays = [ model.mass for model in self.models ]
+
+        return numpy.concatenate(arrays)
 #-----------------------------------------------------------
 class PRec(Cache):
     '''
@@ -92,47 +200,38 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def __init__(
         self,
-        samples  : list[Sample],
-        trig     : Trigger,
-        q2bin    : str,
-        d_weight : dict[str,int],
-        out_dir  : Path):
+        cfg   : CCbarConf,
+        obs   : zobs,
+        trig  : Trigger,
+        q2bin : Qsq):
         '''
         Parameters:
         -------------------------
-        samples  : MC samples
-        trig     : HLT2 trigger.
-        q2bin    : q2 bin
-        d_weight : Dictionary specifying which weights to use, e.g. {'dec' : 1, 'sam' : 1}
-        out_dir  : Directory where cached outputs will go WRT _cache_root
+        cfg   : Configuration needed to build PDF
+        obs   : Observable
+        trig  : HLT2 trigger.
+        q2bin : q2 bin
         '''
-        self._l_sample = samples
+        self._obs      = obs
+        self._cfg      = cfg
         self._trig     = trig
         self._q2bin    = q2bin
-        self._d_wg     = copy.deepcopy(d_weight)
-
-        self._name     : str
         self._d_fstat  = {}
         self._cut_info : dict[str, tuple[RDF.RCutFlowReport, dict[str,str]]] = {}
         d_rdf, uid     = self.__get_samples_rdf()
         self._d_rdf    = d_rdf
 
-        self._d_match         = self.__get_match_str()
-        self._l_mass          = ['B_M', 'B_Mass', 'B_Mass_smr', 'B_const_mass_M', 'B_const_mass_psi2S_M']
-        self._min_entries     = 100 # Will not build KDE if fewer entries than this are found
-        self._min_isj_entries = 500 #if Fewer entries than this, switch from ISJ to FFT
-
-        self.__check_valid(self._q2bin, ['low', 'central', 'jpsi', 'psi2', 'high'], 'q2bin')
-        self.__check_weights()
+        self._d_match  = self.__get_match_str()
+        self._l_mass   = ['B_M', 'B_Mass', 'B_Mass_smr', 'B_const_mass_M', 'B_const_mass_psi2S_M']
 
         # This should be usable to make hashes
         # backlashes and dollar signs are not hashable in strings
         d_hash_match = { slugify.slugify(ltex) : value for ltex, value in self._d_match.items() }
 
         super().__init__(
-            out_path = out_dir,
+            out_path = cfg.output_directory,
             uid      = uid,
-            d_wg     = d_weight,
+            conf     = cfg.model_dump(),
             d_match  = d_hash_match)
     #-----------------------------------------------------------
     def __get_df(self) -> dict[str,pnd.DataFrame]:
@@ -174,15 +273,15 @@ class PRec(Cache):
     #-----------------------------------------------------------
     def __filter_rdf(
         self,
-        rdf    : RDF.RNode,
-        uid    : str,
-        sample : str) -> tuple[RDF.RNode,str]:
+        rdf       : RDF.RNode,
+        uid       : str,
+        component : Component) -> tuple[RDF.RNode,str]:
         '''
         Parameters
         -----------------
-        rdf    : ROOT dataframe before selection
-        uid    : Unique identifier of dataframe
-        sample : Sample for which selection is done, e.g. Bu_JpsiX...
+        rdf       : ROOT dataframe before selection
+        uid       : Unique identifier of dataframe
+        component : Fit component for which selection is needed 
 
         Returns
         -----------------
@@ -191,13 +290,18 @@ class PRec(Cache):
         - ROOT dataframe after selection
         - Updated Unique identifier that takes into account the selection
         '''
-        d_sel = sel.selection(trigger=self._trig, q2bin=self._q2bin, process=sample)
+        d_sel      = sel.selection(
+            trigger=self._trig, 
+            q2bin  =self._q2bin, 
+            process=component)
+
+        d_sel['mass'] = '(1)'
         for name, expr in d_sel.items():
             rdf = rdf.Filter(expr, name)
 
         rep = rdf.Report()
 
-        self._cut_info[sample] = rep, d_sel
+        self._cut_info[component] = rep, d_sel
 
         uid = hashing.hash_object([uid, d_sel])
 
@@ -222,7 +326,7 @@ class PRec(Cache):
         df.to_markdown(f'{self._out_path}/{sample}.md')
         gut.dump_json(data=selection, path=f'{self._out_path}/{sample}.yaml', exists_ok=True)
     #-----------------------------------------------------------
-    def __get_samples_rdf(self) -> tuple[dict[str,RDF.RNode],str]:
+    def __get_samples_rdf(self) -> tuple[dict[CCbarComponent,RDF.RNode],str]:
         '''
         IMPORTANT: This method has to run dataframe creation lazily
 
@@ -236,15 +340,15 @@ class PRec(Cache):
 
         - Concatenation of unique identifiers
         '''
-        d_rdf    = {}
+        d_rdf : dict[CCbarComponent, RDF.RNode] = {}
         full_uid = ''
-        for sample in self._l_sample:
-            gtr        = RDFGetter(sample=sample, trigger=self._trig)
+        for component in self._cfg.samples:
+            gtr        = RDFGetter(sample=component, trigger=self._trig)
             rdf        = gtr.get_rdf(per_file=False)
             uid        = gtr.get_uid()
-            rdf, uid   = self.__filter_rdf(rdf=rdf, sample=sample, uid=uid)
+            rdf, uid   = self.__filter_rdf(rdf=rdf, component=component, uid=uid)
 
-            d_rdf[sample] = rdf
+            d_rdf[component] = rdf
             full_uid     += uid
 
         return d_rdf, full_uid
@@ -263,7 +367,7 @@ class PRec(Cache):
         for sample, rdf in self._d_rdf.items():
             log.debug(f'    {sample}')
 
-            if log.getEffectiveLevel() < 20:
+            if log.getEffectiveLevel() < LogLevels.info:
                 rep = rdf.Report()
                 rep.Print()
 
@@ -276,22 +380,30 @@ class PRec(Cache):
 
         return d_df
     #-----------------------------------------------------------
-    def __add_dec_weights(self, sample : str, df : pnd.DataFrame) -> pnd.DataFrame:
-        if len(df) == 0:
-            df['wgt_dec'] = 0
-            return df
+    def __add_dec_weights(
+        self, 
+        sample : str, 
+        df     : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Parameters
+        --------------
+        sample: Name of ccbar sample
+        df    : DataFrame with masses
 
-        dec = self._d_wg['dec']
+        Returns
+        --------------
+        DataFrame with dec(ay) weights added
+        '''
+        dec = self._cfg.weights[CCbarWeight.dec]
 
-        if   dec == 1:
+        if  dec:
             log.debug(f'Adding decay weights to: {sample}')
-            project       = info.project_from_trigger(trigger=self._trig, lower_case=True)
-            df['wgt_dec'] = df.apply(read_weight, args=(project,), axis=1)
-        elif dec == 0:
-            log.warning(f'Not using decay weights in: {sample}')
-            df['wgt_dec'] = 1.
+            project          = info.project_from_trigger(trigger=self._trig, lower_case=True)
+            val : pnd.Series = df.apply(read_weight, args=(project,), axis=1)
+            df['wgt_dec']    = 1. if val.empty else val
         else:
-            raise ValueError(f'Invalid value of wgt_dec: {dec}')
+            log.warning(f'Not using decay weights in: {sample}')
+            df['wgt_dec']    = 1.
 
         arr_wgt      = df.wgt_dec.to_numpy()
         arr_wgt      = self.__normalize_weights(arr_wgt)
@@ -299,46 +411,35 @@ class PRec(Cache):
 
         return df
     #-----------------------------------------------------------
-    def __add_sam_weights(self, df : pnd.DataFrame) -> pnd.DataFrame:
-        if len(df) == 0:
-            df['wgt_sam'] = 0
-            return df
+    def __add_sam_weights(
+        self, 
+        df : pnd.DataFrame) -> pnd.DataFrame:
+        '''
+        Parameters
+        --------------
+        df    : DataFrame with masses
 
-        sam = self._d_wg['sam']
+        Returns
+        --------------
+        DataFrame with sam(ple) weights added
+        '''
 
-        if   sam == 1:
+        sam = self._cfg.weights[CCbarWeight.sam]
+
+        if   sam:
             log.debug('Adding sample weights')
-            obj           = inclusive_sample_weights(df)
-            df['wgt_sam'] = obj.get_weights()
-        elif sam == 0:
-            log.warning('Not using sample weights')
-            df['wgt_sam'] = 1.
+            obj              = SampleWeightReader(df = df)
+            val : pnd.Series = obj.get_weights()
+            df['wgt_sam']    = 1. if val.empty else val
         else:
-            raise ValueError(f'Invalid value of wgt_sam: {sam}')
+            log.warning('Not using sample weights')
+            df['wgt_sam']    = 1.
 
         arr_wgt      = df.wgt_sam.to_numpy()
         arr_wgt      = self.__normalize_weights(arr_wgt)
         df['wgt_sam']= arr_wgt
 
         return df
-    #-----------------------------------------------------------
-    def __check_weights(self):
-        try:
-            [(k1, v1), (k2, v2)] = self._d_wg.items()
-        except:
-            log.error(f'Cannot extract two weight flags from: {self._d_wg}')
-            raise
-
-        if ([k1, k2] != ['dec', 'sam'])  and ([k1, k2] != ['sam', 'dec']):
-            raise ValueError(f'Invalid weight keys: {k1}, {k2}')
-
-        if (v1 not in [0, 1]) or (v2 not in [0, 1]):
-            raise ValueError(f'Invalid weight values: {v1}, {v2}')
-    #-----------------------------------------------------------
-    def __check_valid(self, var : str, l_var : list[str], name : str):
-        if var not in l_var:
-            log.error(f'Value for {name}, {var}, is not valid')
-            raise ValueError
     #-----------------------------------------------------------
     def __get_match_str(self) -> dict[str,str]:
         '''
@@ -347,11 +448,11 @@ class PRec(Cache):
         _selection_ needed to split the charmonium sample into components
         for plotting
         '''
-        if   self._q2bin == 'jpsi':
+        if   self._q2bin == Qsq.jpsi:
             d_match = self.__get_match_str_jpsi()
-        elif self._q2bin == 'psi2':
+        elif self._q2bin == Qsq.psi2:
             d_match = self.__get_match_str_psi2()
-        elif self._q2bin in ['low', 'central', 'high']:
+        elif self._q2bin in [Qsq.low, Qsq.central, Qsq.high]:
             d_match = self.__get_match_str_psi2()
         else:
             raise ValueError(f'Invalid q2bin: {self._q2bin}')
@@ -359,6 +460,14 @@ class PRec(Cache):
         return d_match
     #-----------------------------------------------------------
     def __get_match_str_jpsi(self) -> dict[str,str]:
+        '''
+        Returns
+        ------------
+        Dictionary mapping 
+
+        - Latex string describing process
+        - Truth matching string isolating process
+        '''
         bs          = '(abs(B_TRUEID) == 531)'
         bd          = '(abs(B_TRUEID) == 511)'
         bp          = '(abs(B_TRUEID) == 521)'
@@ -376,14 +485,24 @@ class PRec(Cache):
         return d_cut
     #-----------------------------------------------------------
     def __get_match_str_psi2(self) -> dict[str,str]:
+        '''
+        Returns
+        ------------
+        Dictionary mapping 
+
+        - Latex string describing process
+        - Truth matching string isolating process
+        '''
+
         bd = '(abs(B_TRUEID) == 511)'
         bs = '(abs(B_TRUEID) == 531)'
 
         project    = info.project_from_trigger(trigger=self._trig, lower_case=True)
         common_cut = '(abs(B_TRUEID) == 521) & (abs(Jpsi_TRUEID) == 443) & (abs(Jpsi_MC_MOTHER_ID) == 100443) & (abs(Jpsi_MC_GD_MOTHER_ID) == 521)' 
-        if project == 'rk':
+
+        if   project == Project.rk:
             bp_psjp = f'{common_cut} & (abs(H_MC_MOTHER_ID)  == 521)'
-        elif project == 'rkst':
+        elif project == Project.rkst:
             bp_psjp = f'{common_cut} & (abs(H1_MC_MOTHER_ID) == 521)'
         else:
             raise ValueError(f'Invalid project: {project}')
@@ -414,31 +533,22 @@ class PRec(Cache):
 
         return arr_wgt
     #-----------------------------------------------------------
-    def __get_model(
-        self,
-        mass           : str,
-        df             : pnd.DataFrame,
-        component_name : str,
-        **kwargs) -> Model:
+    def __model_from_df(
+        self, 
+        mass : Mass,
+        cfg  : KDEConf,
+        df   : pnd.DataFrame) -> CharmoniumComponent:
         '''
         Parameters
-        ------------------
-        name    : Latex name of PDF component
-        mass    : Mass, with values in:
-            mass     : Non constrained B mass
-            mass_jpsi: Jpsi constrained B mass
-            mass_psi2: Psi2S constrained B mass
-        df      : DataCorresponding to given ccbar component
-        **kwargs: These are all arguments for KDE1DimISJ or KDE1DimFFT
+        --------------
+        mass: Used to read column in dataframe and extract data to be fitted
+        cfg : KDE configuration
+        df  : DataFrame with data to be fitted
 
         Returns
-        ------------------
-        Model object, holding PDF (or None) and arrays used to build it
+        --------------
+        Object holding data to fit with weights
         '''
-        # This kwargs reffers to this particular PDF
-        kwargs         = copy.deepcopy(kwargs)
-        kwargs['name'] = component_name
-
         try:
             arr_mass = df[mass     ].to_numpy()
             arr_wgt  = df['wgt_br' ].to_numpy()
@@ -450,41 +560,44 @@ class PRec(Cache):
 
             log.info(f'Trigger: {self._trig}')
             log.info(f'Q2bin  : {self._q2bin}')
-            log.info(f'Samples: {self._l_sample}')
+            log.info(f'Samples: {self._cfg.samples}')
 
             raise ValueError(f'Cannot access {mass} and wgt_br') from exc
 
-        obs       = kwargs['obs']
-        nentries  = self.__yield_from_arrays(masses=arr_mass, weights=arr_wgt, obs=obs)
+        model = CharmoniumComponent(
+            obs = self._obs,
+            cfg = cfg,
+            mass= arr_mass, 
+            wgt = arr_wgt, 
+            sam = arr_sam, 
+            dec = arr_dec)
+
+        return model
+    #-----------------------------------------------------------
+    def __get_model(
+        self,
+        mass           : Mass,
+        df             : pnd.DataFrame,
+        component_name : str,
+        cfg            : KDEConf) -> CharmoniumComponent:
+        '''
+        Parameters
+        ------------------
+        name    : Latex name of PDF component
+        mass    : Mass to be fitted
+        df      : DataCorresponding to given ccbar component
+        cfg     : Fit configuration object
+
+        Returns
+        ------------------
+        Model object, holding PDF (or None) and arrays used to build it
+        '''
+        model     = self.__model_from_df(
+            df   = df, 
+            cfg  = cfg,
+            mass = mass)
+
         plot_name = slugify.slugify(text=component_name, lowercase=False)
-        if nentries < self._min_entries:
-            log.warning(f'Found fewer than {self._min_entries}: {nentries:.0f}, skipping PDF {component_name}')
-
-            model  = Model(pdf=None, mass=arr_mass, wgt=arr_wgt, sam=arr_sam, dec=arr_dec)
-
-            self._plot_weights(
-                model   = model, 
-                name    = plot_name, 
-                title   = component_name, 
-                out_dir = self._out_path)
-
-            self._plot_pdf(
-                model  = model, 
-                title  = component_name,
-                name   = plot_name,
-                out_dir= self._out_path)
-
-            return model 
-
-        log.debug(f'Building PDF with {nentries:.0f} entries for {component_name}')
-
-        pdf = self.__pdf_from_df(df=df, mass=mass, **kwargs)
-
-        if not is_pdf_usable(pdf):
-            log.warning(f'PDF {component_name} is not usable')
-            return Model(pdf=None, mass=arr_mass, wgt=arr_wgt, sam=arr_sam, dec=arr_dec)
-
-        model = Model(pdf =pdf, mass=arr_mass, wgt =arr_wgt, sam =arr_sam, dec =arr_dec)
 
         self._plot_weights(
             model   = model, 
@@ -493,76 +606,15 @@ class PRec(Cache):
             out_dir = self._out_path)
 
         self._plot_pdf(
-            model  = model,
+            model  = model, 
             title  = component_name,
             name   = plot_name,
             out_dir= self._out_path)
 
         return model 
     #-----------------------------------------------------------
-    def __pdf_from_df(
-        self,
-        df   : pnd.DataFrame,
-        mass : str,
-        **kwargs) -> zpdf:
-        '''
-        Will build KDE from dataframe with information needed
-
-        Parameters
-        ---------------
-        df     : DataFrame with weights and masses, the weight is assumed to be in 'wgt_br'
-        mass   : Name of the column with mass to be fitted
-        kwargs : Keyword arguments meant to be passed to KDE1Dim*
-        '''
-        arr_mass = df[mass    ].to_numpy()
-        arr_wgt  = df['wgt_br'].to_numpy()
-        arr_wgt  = arr_wgt.astype(float)
-
-        try:
-            pdf = self.__build_kde(arr_mass=arr_mass, arr_wgt=arr_wgt, **kwargs)
-        except Exception as exc:
-            for setting, value in kwargs.items():
-                if not isinstance(value, (str,float,int)):
-                    log.info(f'{setting:<30}{"--->"}')
-                    log.info(value)
-                else:
-                    log.info(f'{setting:<30}{value:<30}')
-
-            raise Exception('Failed to build KDE') from exc
-
-        return pdf
     #-----------------------------------------------------------
-    def __build_kde(
-            self,
-            arr_mass : numpy.ndarray,
-            arr_wgt  : numpy.ndarray, **kwargs) -> zpdf:
-        '''
-        Parameters
-        --------------
-        arr_xxx: Contains mass and weights needed for KDE
-
-        Returns
-        --------------
-        Either FFT or ISJ KDE
-        '''
-        if log.getEffectiveLevel() < 20:
-            log.debug('Using fitting options:')
-            pprint.pprint(kwargs)
-
-        nentries = len(arr_mass)
-        if nentries > self._min_isj_entries:
-            log.debug('Using ISJ KDE for high statistics sample')
-            if 'bandwidth' in kwargs: # ISJ does not accept this argument
-                del kwargs['bandwidth']
-
-            pdf = zfit.pdf.KDE1DimISJ(arr_mass, weights=arr_wgt, **kwargs)
-        else:
-            log.debug('Using FFT KDE for low statistics sample')
-            pdf = zfit.pdf.KDE1DimFFT(arr_mass, weights=arr_wgt, **kwargs)
-
-        return pdf
-    #-----------------------------------------------------------
-    def __yield_in_range(self, model : Model) -> float:
+    def __yield_in_range(self, model : CharmoniumComponent) -> float:
         '''
         The mass and weights are defined in the WHOLE range. This method extracts the yields
         in the observable range. Needed to calculate fractions of componets, used to put
@@ -583,9 +635,6 @@ class PRec(Cache):
         arr_weight = model.wgt
         obs        = model.pdf.space
 
-        if not isinstance(obs, zobs):
-            raise ValueError('Observable not an instance of Space')
-
         return self.__yield_from_arrays(masses = arr_mass, weights = arr_weight, obs = obs)
     #-----------------------------------------------------------
     def __yield_from_arrays(self, masses :  numpy.ndarray, weights : numpy.ndarray, obs : zobs) -> float:
@@ -596,15 +645,11 @@ class PRec(Cache):
         return sum(wgt)
     #-----------------------------------------------------------
     def __get_full_model(
-        self,
-        mass : str,
-        d_df : dict[str,pnd.DataFrame],
-        **kwargs) -> Model: 
+        self, 
+        d_df : dict[str,pnd.DataFrame]) -> CCbarModel: 
         '''
         Parameters
         -------------------
-        mass  : Name of the column in the dataframe, which will be used to build KDE
-        kwars : Key word arguments needed to build KDE PDF
         d_df  : Dictionary with:
             Key  : Latex name of component, not necessarily Bu/Bd... This was re-split
             Value: Dataframe with data to fit
@@ -616,42 +661,129 @@ class PRec(Cache):
         if not d_df:
             raise ValueError('No dataframes with components data')
 
-        all_models: list[Model] = [ self.__get_model(mass = mass, component_name = ltex, df = df, **kwargs) for ltex, df in d_df.items() ]
-        models    : list[Model] = [ model for model in all_models if model.pdf is not None ]
+        all_models: list[CharmoniumComponent] = [ 
+            self.__get_model(
+                mass           = self._obs.label, 
+                component_name = ltex, 
+                df             = df, 
+                cfg            = self._cfg.fit) for ltex, df in d_df.items() ]
 
-        if not models:
-            log.warning('No PDFs were found for any component, will return model without PFD')
-            return Model.add_models(models=all_models, fractions=None)
+        models    : list[CharmoniumComponent] = [ model for model in all_models if model.pdf is not None ]
+        yields    : list[float   ] = [ self.__yield_in_range(model=model) for    model in models ]
+        fractions : list[float   ] = [ wgt_yld / sum(yields)              for  wgt_yld in yields ]
 
-        yields    : list[float] = [ self.__yield_in_range(model=model)                                      for    model in models       ]
-        fractions : list[float] = [ wgt_yld / sum(yields)                                                   for  wgt_yld in yields       ]
-
-        model = Model.add_models(models=models, fractions=fractions)
+        model = CCbarModel(models = models, fractions = fractions)
 
         return model
     #-----------------------------------------------------------
-    def get_sum(self, mass : str, name : str = 'unnamed', **kwargs) -> zpdf|None:
-        '''Provides extended PDF that is the sum of multiple KDEs representing PRec background
+    def _plot_pdf(
+        self,
+        model   : CharmoniumComponent | CCbarModel,
+        name    : str,
+        out_dir : Path,
+        title   : str          = '',
+        maxy    : float | None = None) -> None:
+        '''
+        Utility method, meant to plot PDF after it was built
 
-        Parameters:
-        mass (str) : Defines which mass constrain to use, choose between "B_M", "B_const_mass_M", "B_const_mass_psi2S_M"
-        name (str) : PDF name
-        **kwargs   : Arguments meant to be taken by zfit KDE1DimFFT
+        Parameters
+        ------------------
+        model  : Object storing PDF
+        neme   : used to name the PNG file as {name}.png
+        title  : Title for plots, will be appended after number of entries
+        maxy   : Will be used to plot fit properly in case labels overlap
+        out_dir: Directory where plots will go
+        '''
+        if isinstance(model, CCbarModel) and model.is_empty:
+            return
+
+        if model.pdf:
+            obj = ZFitPlotter(data=model.mass, model=model.pdf, weights=model.wgt)
+            obj.plot(stacked=True)
+
+            obj.axs[0].set_title(f'#Entries: {model.mass.size}; {title}')
+
+            if maxy is not None:
+                obj.axs[0].set_ylim(bottom=0, top=maxy)
+
+            obj.axs[0].axvline(x=5080, linestyle=':')
+            obj.axs[0].axvline(x=5680, linestyle=':')
+            obj.axs[0].axvline(x=5280, label=r'$B^+$', color='gray', linestyle='--')
+
+            obj.axs[1].set_ylim(-5, +5)
+            obj.axs[1].axhline(y=-3, color='red')
+            obj.axs[1].axhline(y=+3, color='red')
+            obj.axs[1].set_label('M$(B^+)$[MeV/${}_{c^2}$]')
+        else:
+            log.warning(f'PDF {name} not build, not plotting')
+            nentries = len(model.mass)
+
+            plt.figure(figsize=(15,10))
+            plt.title(f'Entries = {nentries}; {title}')
+            plt.hist(model.mass, weights=model.wgt, bins=100)
+
+        out_dir.mkdir(parents = True, exist_ok = True)
+
+        plot_path = out_dir / f'{name}.png'
+        log.info(f'Saving to: {plot_path}')
+        plt.savefig(plot_path)
+        plt.close('all')
+    #-----------------------------------------------------------
+    def _plot_weights(
+        self, 
+        model   : CCbarModel | CharmoniumComponent,
+        name    : str,
+        title   : str,
+        out_dir : Path) -> None:
+        '''
+        Save plot of weights and PDF as text
+
+        Parameters
+        -------------------
+        model  : Object holding PDF and data used to make it
+        name   : Name of plot and place where PDF will be saved as text, i.e. {name}.png, {name}.txt
+        title  : Plot title
+        out_dir: Directory where files will be saved
+        '''
+        if isinstance(model, CCbarModel) and model.is_empty:
+            return
+
+        plt.hist(model.sam, bins=30, label='sample', histtype='step', linestyle='-' )
+        plt.hist(model.dec, bins=30, label='decay' , histtype='step', linestyle='--')
+        plt.hist(model.wgt, bins=30, label='Total' , histtype='step', linestyle=':' )
+
+        plt.legend()
+        plt.title(title)
+        plt.savefig(out_dir / f'{name}_wgt.png')
+        plt.close('all')
+
+        if model.pdf is None:
+            return
+
+        text_path = f'{out_dir}/{name}.txt' 
+        sut.print_pdf(model.pdf, txt_path=text_path)
+    #-----------------------------------------------------------
+    def get_sum(self, name : str) -> zpdf | None:
+        '''
+        Provides extended PDF that is the sum of multiple KDEs representing PRec background
+
+        Parameters
+        ----------------
+        name: Name of PDF, used for title and PNG name
 
         Returns:
-        zfit.pdf.SumPDF instance
+        ----------------
+        Sum of all charmonium components or None if no PDF could be made
         '''
-        kwargs['name'] = name
-
         l_ltex      = list(self._d_match) # Get component names in latex and map them to parquet files to save
         d_ltex_slug = { ltex : slugify.slugify(ltex, lowercase=False) for ltex       in l_ltex }
-        d_path      = { ltex : f'{self._out_path}/{slug}.parquet'     for ltex, slug in d_ltex_slug.items() }
+        d_path      = { ltex : self._out_path / f'{slug}.parquet'     for ltex, slug in d_ltex_slug.items() }
 
         plot_name   = slugify.slugify(name, lowercase=False)
         if self._copy_from_cache():
             log.info(f'Data found cached, reloading from {self._out_path}')
             d_df = { ltex : pnd.read_parquet(path) for ltex , path in d_path.items() }
-            model= self.__get_full_model(mass=mass, d_df=d_df, **kwargs)
+            model= self.__get_full_model(d_df=d_df)
 
             self._plot_weights(
                 model   = model, 
@@ -670,7 +802,7 @@ class PRec(Cache):
         log.info(f'Recalculating, cached data not found in: {self._out_path}')
 
         d_df = self.__get_df()
-        model= self.__get_full_model(mass=mass, d_df=d_df, **kwargs)
+        model= self.__get_full_model(d_df = d_df)
 
         for sample in self._cut_info:
             rep, d_sel = self._cut_info[sample]
@@ -699,87 +831,4 @@ class PRec(Cache):
         self._cache()
 
         return model.pdf
-    #-----------------------------------------------------------
-    def _plot_pdf(
-        self,
-        model   : Model,
-        name    : str,
-        out_dir : str|Path,
-        title   : str        = '',
-        maxy    : float|None = None) -> None:
-        '''
-        Utility method, meant to plot PDF after it was built
-
-        Parameters
-        ------------------
-        model  : Object storing PDF
-        neme   : used to name the PNG file as {name}.png
-        title  : Title for plots, will be appended after number of entries
-        maxy   : Will be used to plot fit properly in case labels overlap
-        out_dir: Directory where plots will go
-        '''
-
-        if model.pdf:
-            obj = ZFitPlotter(data=model.mass, model=model.pdf, weights=model.wgt)
-            obj.plot(stacked=True)
-
-            obj.axs[0].set_title(f'#Entries: {model.mass.size}; {title}')
-
-            if maxy is not None:
-                obj.axs[0].set_ylim(bottom=0, top=maxy)
-
-            obj.axs[0].axvline(x=5080, linestyle=':')
-            obj.axs[0].axvline(x=5680, linestyle=':')
-            obj.axs[0].axvline(x=5280, label=r'$B^+$', color='gray', linestyle='--')
-
-            obj.axs[1].set_ylim(-5, +5)
-            obj.axs[1].axhline(y=-3, color='red')
-            obj.axs[1].axhline(y=+3, color='red')
-            obj.axs[1].set_label('M$(B^+)$[MeV/${}_{c^2}$]')
-        else:
-            log.warning(f'PDF {name} not build, not plotting')
-            nentries = len(model.mass)
-
-            plt.figure(figsize=(15,10))
-            plt.title(f'Entries = {nentries}; {title}')
-            plt.hist(model.mass, weights=model.wgt, bins=100)
-
-        os.makedirs(out_dir, exist_ok=True)
-
-        plot_path = f'{out_dir}/{name}.png'
-        log.info(f'Saving to: {plot_path}')
-        plt.savefig(plot_path)
-        plt.close('all')
-    #-----------------------------------------------------------
-    def _plot_weights(
-        self, 
-        model   : Model,
-        name    : str,
-        title   : str,
-        out_dir : Path) -> None:
-        '''
-        Save plot of weights and PDF as text
-
-        Parameters
-        -------------------
-        model  : Object holding PDF and data used to make it
-        name   : Name of plot and place where PDF will be saved as text, i.e. {name}.png, {name}.txt
-        title  : Plot title
-        out_dir: Directory where files will be saved
-        '''
-
-        plt.hist(model.sam, bins=30, label='sample', histtype='step', linestyle='-' )
-        plt.hist(model.dec, bins=30, label='decay' , histtype='step', linestyle='--')
-        plt.hist(model.wgt, bins=30, label='Total' , histtype='step', linestyle=':' )
-
-        plt.legend()
-        plt.title(title)
-        plt.savefig(out_dir / f'{name}_wgt.png')
-        plt.close('all')
-
-        if model.pdf is None:
-            return
-
-        text_path = f'{out_dir}/{name}.txt' 
-        sut.print_pdf(model.pdf, txt_path=text_path)
 #-----------------------------------------------------------

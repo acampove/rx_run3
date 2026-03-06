@@ -1,0 +1,22 @@
+output_directory : rare/rk/muon/signal
+component        : bpkpmm
+categories:
+  brem_xx0:
+    selection : {}
+    model:
+      pdfs :
+        - dscb
+      shared        : []
+      floating      :
+        - mu
+        - sg
+      reparametrize : {}
+      fix           : {}
+fit:
+  strategy:
+    ntries : 10
+    pvalue : 0.05
+plots:
+  nbins   : 50
+  stacked : True
+  d_leg   : {}

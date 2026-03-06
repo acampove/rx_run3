@@ -3,68 +3,68 @@ This module contains functions needed by tests
 '''
 import yaml
 
-from rx_common              import Sample
-from rx_common              import Trigger
-from rx_selection           import selection as sel
-from rx_data.rdf_getter     import RDFGetter
-from ROOT                   import RDF # type: ignore
-
-from dmu.logging.log_store import LogStore
+from rx_common    import Component
+from rx_common    import Trigger
+from rx_common    import Qsq 
+from rx_selection import selection as sel
+from rx_data      import RDFGetter
+from ROOT         import RDF # type: ignore
+from dmu          import LogStore
 
 log=LogStore.add_logger('rx_data:testing')
 
 l_trigger_ee  = [
-    'Hlt2RD_BuToKpEE_MVA',
-    'Hlt2RD_BuToKpEE_MVA_misid',
-    'Hlt2RD_B0ToKpPimEE_MVA',
-    'Hlt2RD_B0ToKpPimEE_MVA_misid']
+    Trigger.rk_ee_os   ,
+    Trigger.rk_ee_misid,
+    Trigger.rkst_ee_os ,
+    Trigger.rkst_ee_misid]
 
 l_prefix_kind = [
-    ('Hlt2RD_BuToKpEE_MVA'     , 'mc_ee'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ss'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ee'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_mi'),
+    ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
     # -----------
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'mc_ee'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ss'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ee'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_mi'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
     # -----------
-    ('Hlt2RD_BuToKpMuMu_MVA'   , 'mc_mm'),
-    ('Hlt2RD_BuToKpMuMu_MVA'   , 'dt_mm'),
+    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
     # -----------
-    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'mc_mm'),
-    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'dt_mm')]
+    ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
 
 l_prefix_kind_data = [
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ss'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ee'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_mi'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
     # -----------
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ss'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ee'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_mi'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
     # -----------
-    ('Hlt2RD_BuToKpMuMu_MVA'   , 'dt_mm'),
-    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'dt_mm')]
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
 
 l_prefix_kind_bplus = [
-    ('Hlt2RD_BuToKpEE_MVA'     , 'mc_ee'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ss'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_ee'),
-    ('Hlt2RD_BuToKpEE_MVA'     , 'dt_mi'),
+    ('Hlt2RD_BuToKpEE'     , 'mc_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ss'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_ee'),
+    ('Hlt2RD_BuToKpEE'     , 'dt_mi'),
     # -----------
-    ('Hlt2RD_BuToKpMuMu_MVA'   , 'mc_mm'),
-    ('Hlt2RD_BuToKpMuMu_MVA'   , 'dt_mm')]
+    ('Hlt2RD_BuToKpMuMu'   , 'mc_mm'),
+    ('Hlt2RD_BuToKpMuMu'   , 'dt_mm')]
 
 l_prefix_kind_bzero = [
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'mc_ee'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ss'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_ee'),
-    ('Hlt2RD_B0ToKpPimEE_MVA'  , 'dt_mi'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'mc_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ss'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_ee'),
+    ('Hlt2RD_B0ToKpPimEE'  , 'dt_mi'),
     # -----------
-    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'mc_mm'),
-    ('Hlt2RD_B0ToKpPimMuMu_MVA', 'dt_mm')]
+    ('Hlt2RD_B0ToKpPimMuMu', 'mc_mm'),
+    ('Hlt2RD_B0ToKpPimMuMu', 'dt_mm')]
 # ----------------------------------
 def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     '''
@@ -78,28 +78,29 @@ def get_rdf(kind : str, prefix : str) -> RDF.RNode:
     ROOT dataframe
     '''
     if   kind == 'dt_ss':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'dt_ee':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'dt_mi':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'dt_mm':
-        sample = Sample.data_24 
+        sample = Component.data_24 
     elif kind == 'mc_ee':
-        sample = Sample.bdkstkpiee
+        sample = Component.bdkstkpiee
     elif kind == 'mc_mm':
-        sample = Sample.bdkstkpimm 
+        sample = Component.bdkstkpimm 
     else:
         raise ValueError(f'Invalid dataset of kind/prefix: {kind}/{prefix}')
 
+    trigger = get_trigger(kind = kind, prefix = prefix)
+
     with RDFGetter.only_friends(s_friend = set()):
-        trigger = Trigger(prefix)
-        rdf     = rdf_from_sample(sample=Sample(sample), trigger=Trigger(trigger))
+        rdf = rdf_from_sample(sample=sample, trigger=trigger)
 
     return rdf
 # ----------------------------------
 def rdf_from_sample(
-    sample          : Sample, 
+    sample          : Component, 
     trigger         : Trigger,
     nentries        : int  = 10_000,
     apply_selection : bool =  False) -> RDF.RNode:
@@ -133,8 +134,11 @@ def rdf_from_sample(
 
     return rdf
 # ----------------------------------
-def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> tuple[RDF.RNode, dict[str,str]]:
-    d_sel               = sel.selection(trigger=trigger, q2bin='jpsi', process=sample)
+def _apply_selection(
+    rdf     : RDF.RNode, 
+    trigger : Trigger, 
+    sample  : Component) -> tuple[RDF.RNode, dict[str,str]]:
+    d_sel               = sel.selection(trigger=trigger, q2bin=Qsq.jpsi, process=sample)
     d_sel['pid_l']      = '(1)'
     d_sel['jpsi_misid'] = '(1)'
     d_sel['cascade']    = '(1)'
@@ -149,12 +153,12 @@ def _apply_selection(rdf : RDF.RNode, trigger : str, sample : str) -> tuple[RDF.
 
     return rdf, d_sel
 # ----------------------
-def get_trigger(kind : str, prefix : str) -> str:
+def get_trigger(kind : str, prefix : str) -> Trigger:
     '''
     Parameters
     -------------
     kind: Signals sample type
-    prefis: Start of the trigger name
+    prefix: Start of the trigger name
 
     Returns
     -------------
@@ -169,4 +173,5 @@ def get_trigger(kind : str, prefix : str) -> str:
     else:
         raise ValueError(f'Invalid kind: {kind}')
 
-    return f'{prefix}{suffix}'
+    return Trigger(f'{prefix}{suffix}')
+# ----------------------

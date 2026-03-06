@@ -2,19 +2,16 @@
 Module holding RDFGetter class
 '''
 import copy
-import numpy
 from contextlib   import contextmanager
 from pathlib      import Path
 from typing       import Any, overload, Literal
-from ROOT         import RDF, TFile # type: ignore
+from ROOT         import RDF, GetThreadPoolSize, TFile # type: ignore
 from dmu          import LogStore
 from dmu.generic  import hashing
 from dmu.generic  import utilities as gut
 from omegaconf    import DictConfig, OmegaConf
-from rx_common    import Sample, Trigger
-
+from rx_common    import Component, Trigger
 from .spec_maker  import SpecMaker
-from .rdf_loader  import RDFLoader
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
@@ -39,15 +36,13 @@ class RDFGetter(SpecMaker):
     friends     : List of names of samples, to be treated as friend trees. By default this is None and everything will be processed
     skip_adding_columns : By default false. If true, it will skip defining new columns.
     '''
-
     _max_entries                      = -1
     _skip_adding_columns              = False
     _d_custom_columns : dict[str,str] = {}
-    _nproc : int                      = 1 
     # ---------------------------------------------------
     def __init__(
         self,
-        sample  : Sample,
+        sample  : Component,
         trigger : Trigger,
         tree    : str = 'DecayTree'):
         '''
@@ -57,7 +52,7 @@ class RDFGetter(SpecMaker):
         trigger: HLT2 trigger, e.g. Hlt2RD_BuToKpEE_MVA
         tree   : E.g. DecayTree or MCDecayTree, default DecayTree
         '''
-        super().__init__(sample=sample, trigger=trigger, tree=tree)
+        super().__init__(component=sample, trigger=trigger, tree=tree)
 
         log.debug(f'Process identifier: {RDFGetter._identifier}')
 
@@ -74,14 +69,14 @@ class RDFGetter(SpecMaker):
             'Hlt2RD_BuToKpEE_MVA',
             'Hlt2RD_BuToKpEE_MVA_cal',
             'Hlt2RD_BuToKpEE_MVA_misid',
-            'Hlt2RD_BuToKpEE_MVA_ext',
+            'Hlt2RD_BuToKpEE_MVA_noPID',
             'Hlt2RD_BuToKpEE_SameSign_MVA']
 
         _l_bd_ee_trigger = [
             'Hlt2RD_B0ToKpPimEE_MVA',
             'Hlt2RD_B0ToKpPimEE_MVA_cal',
             'Hlt2RD_B0ToKpPimEE_MVA_misid',
-            'Hlt2RD_B0ToKpPimEE_MVA_ext',
+            'Hlt2RD_B0ToKpPimEE_MVA_noPID',
             'Hlt2RD_B0ToKpPimEE_SameSign_MVA']
 
         self._l_ee_trigger  = _l_bd_ee_trigger + _l_bu_ee_trigger
@@ -105,6 +100,7 @@ class RDFGetter(SpecMaker):
         self._channel                = self._channel_from_trigger()
 
         self._set_logs()
+        self._check_multithreading()
     # ---------------------------------------------------
     def _channel_from_trigger(self) -> str:
         '''
@@ -149,6 +145,16 @@ class RDFGetter(SpecMaker):
         to reduce noise
         '''
         LogStore.set_level('rx_data:path_splitter', 30)
+    # ---------------------------------------------------
+    def _check_multithreading(self) -> None:
+        '''
+        This method will raise if running with mulithreading and if it was not explicitly allowed
+        '''
+        nthreads = GetThreadPoolSize()
+        if nthreads > 1:
+            raise ValueError(f'Cannot run with mulithreading, using {nthreads} threads')
+
+        log.debug('Not using multithreading')
     # ---------------------------------------------------
     # TODO: This class is pretty large, all the lines below
     # have one job, adding columns to dataframe, put them in a class
@@ -300,7 +306,12 @@ class RDFGetter(SpecMaker):
 
         # TODO: The weight (taking into account prescale) should be removed
         # for 2025 data
-        if self._trigger in [Trigger.rk_ee_ext, Trigger.rkst_ee_ext]:
+        
+        # If doing data with noPID trigger, undo prescale
+        # of misID trigger candidates
+        is_no_pid = self._trigger in [Trigger.rk_ee_nopid, Trigger.rkst_ee_nopid]
+
+        if not self._component.is_mc and is_no_pid:
             log.info('Adding weight of 10 to MisID sample')
             rdf = rdf.Define('weight', self._ext_weight)
         else:

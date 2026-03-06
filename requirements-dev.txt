@@ -1,4 +1,5 @@
 pytest-cov
+pytest-mock
 pytest-split
 pytest-xdist
 pre-commit
@@ -20,3 +21,4 @@ pre-commit
 -e src/rx_selection
 -e src/vector_stubs
 -e src/zfit-stubs
+-e src/systematics

@@ -1,23 +1,34 @@
 from .types import Correction
-from .types import Component
+from .types import Parameter
+from .types import Particle 
 from .types import Trigger 
 from .types import Channel 
 from .types import Project 
-from .types import Sample
-from .types import Qsq 
+from .types import MisID
 from .types import Brem 
 from .types import Block
 from .types import MVA 
+from .types import Qsq 
+
+from .component import CCbarComponent
+from .component import Component
+from .region    import Region
+from .mass      import Mass
 
 __all__ = [
+    'CCbarComponent',
     'Correction',
     'Component', 
+    'Parameter',
+    'Particle',
     'Trigger', 
     'Channel', 
     'Project', 
-    'Sample',
-    'Qsq', 
+    'Region',
+    'MisID',
+    'Mass',
     'Brem',
     'Block',
     'MVA',
+    'Qsq', 
 ]

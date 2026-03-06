@@ -3,18 +3,23 @@ This module is meant to test the SimFitter class
 '''
 import pytest
 
-from contextlib             import ExitStack
-from pathlib                import Path
-from dmu                    import LogStore
-from dmu.stats              import ModelFactory
-from dmu.stats              import zfit
-from dmu.generic            import utilities as gut
-from dmu.stats              import utilities as sut
-from dmu.workflow           import Cache
-from rx_common              import Qsq, Sample, Trigger
-from rx_data                import RDFGetter
-from rx_selection           import selection as sel
-from fitter                 import SimFitter
+from pathlib       import Path
+from dmu           import LogStore
+from dmu.stats     import zfit
+from dmu.generic   import UnpackerModel, utilities as gut
+from dmu.stats     import utilities as sut
+from dmu.workflow  import Cache
+
+from rx_common     import Component, Mass, Qsq
+from rx_common     import Trigger
+from rx_data       import RDFGetter
+from rx_selection  import selection as sel
+from fitter        import CombinatorialConf
+from fitter        import SimFitter
+from fitter        import ParametricConf
+from fitter        import CCbarConf
+from fitter        import NonParametricConf
+from fitter        import MisIDConf
 
 log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
@@ -24,160 +29,142 @@ def initialize():
     Runs before any test
     '''
     log.info('Disabling caching')
-    LogStore.set_level('fitter:sim_fitter', 10)
-    with RDFGetter.max_entries(value = 20_000):
+    with RDFGetter.max_entries(value = 100_000):
         yield
 # ---------------------------------------------------
 def test_nomc(tmp_path : Path):
     '''
     Test for components that have no MC associated
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath='rare/rk/electron/combinatorial.yaml')
+    obs = zfit.Space(obs = 'B_Mass_smr', limits=(4500, 7000), label = 'nomc')
+
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/comb.yaml')
+    cfg  = CombinatorialConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name    = 'test_nomc',
-            sample  = Sample.undefined,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
-            q2bin   = Qsq.low)
+            name     = 'test_nomc',
+            component= Component.comb,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.low)
         _ = ftr.get_model()
 # ---------------------------------------------------
 def test_nocat(tmp_path : Path):
     '''
     Test for components without categories, e.g. muon
     '''
-    sample= Sample.bpkpmm
     obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
-    cfg   = gut.load_conf(package='fitter_data', fpath=f'rare/rk/muon/{sample}.yaml')
+    data  = gut.load_data(package='fitter_data', fpath='rare/rk/mm/bpkpmm.yaml')
+    cfg   = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value=30_000):
         ftr = SimFitter(
             name     = 'test_nocat',
-            sample   = Sample.bpkpmm,
+            component= Component.bpkpjpsimm,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_mm_os,
             q2bin    = Qsq.jpsi)
         ftr.get_model()
 # ---------------------------------------------------
-def test_signal(tmp_path : Path):
+def test_with_cat(tmp_path : Path):
     '''
     Test for components with brem categories
     '''
-    obs = zfit.Space('B_Mass', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath='tests/fits/signal_parametric.yaml.j2')
-
-    with ExitStack() as stack:
-        stack.enter_context(ModelFactory.reparametrization_parameters(floating=False))
-        stack.enter_context(RDFGetter.max_entries(value = -1))
-        stack.enter_context(LogStore.level('dmu:stats:fitter', 10))
-        stack.enter_context(Cache.cache_root(path = tmp_path))
-
-        ftr = SimFitter(
-            trigger = Trigger.rk_ee_os,
-            sample  = Sample.bpkpee,
-            q2bin   = Qsq.central,
-            name    = 'signal',
-            obs     = obs,
-            cfg     = cfg,
-        )
-        pdf = ftr.get_model()
-
-        assert pdf is not None
-
-        sut.print_pdf(pdf)
-# ---------------------------------------------------
-@pytest.mark.parametrize('brem', [1, 2])
-def test_with_cat(tmp_path : Path, brem : int):
-    '''
-    Test for components with brem categories
-    '''
-    obs   = zfit.Space('B_Mass', limits=(4800, 7000))
-    cfg   = gut.load_conf(package='fitter_data', fpath='reso/rk/electron/jpsi_non_dtf.yaml')
-
-    cuts  = {
-        'cmb'      : 'mva_cmb > 0.50',
-        'prc'      : 'mva_prc > 0.50',
-        'mass'     : 'B_const_mass_M > 5180',
-        'block'    : 'block == 1 || block == 2',
-        'nobrm0'   : 'nbrem != 0',
-        'brem_cat' : f'nbrem == {brem}',
-    }
-
-    with ExitStack() as stack:
-        stack.enter_context(RDFGetter.max_entries(value = -1))
-        stack.enter_context(LogStore.level('dmu:stats:fitter', 10))
-        stack.enter_context(Cache.cache_root(path = tmp_path))
-        stack.enter_context(sel.custom_selection(d_sel = cuts))
-
-        ftr = SimFitter(
-            name    = 'test_with_cat',
-            sample  = Sample.bpkpjpsiee,
-            trigger = Trigger.rk_ee_os,
-            obs     = obs,
-            cfg     = cfg,
-            q2bin   = Qsq.jpsi)
-        _ = ftr.get_model()
-# ---------------------------------------------------
-@pytest.mark.parametrize('sample', [Sample.bdkstkpiee, Sample.bpkstkpiee, Sample.bsphiee])
-def test_kde(sample : Sample, tmp_path : Path):
-    '''
-    Test fitting with KDE
-    '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{sample}.yaml')
+    obs  = zfit.Space(
+        obs   = Mass.bp_bcor_smr.latex, 
+        label = Mass.bp_bcor_smr,
+        limits=(4500, 7000))
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml')
+    cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name     = 'test_kde',
-            sample   = sample,
+            name     = 'test_with_cat',
+            component= Component.bpkpee,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.jpsi)
+
+        _ = ftr.get_model()
+# ---------------------------------------------------
+@pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bpkstkpiee, Component.bsphiee])
+def test_kde(component : Component, tmp_path : Path):
+    '''
+    Test fitting with KDE
+    '''
+    mass = Mass.bp_bcor_smr
+
+    obs = zfit.Space(
+        obs   = mass.latex,
+        label = mass,
+        limits= mass.limits)
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}_np.yaml')
+    cfg  = NonParametricConf(**data)
+
+    with Cache.cache_root(path = tmp_path):
+        ftr = SimFitter(
+            name     = 'kde',
+            component= component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
             q2bin    = Qsq.central)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('sample', [Sample.bpkkk, Sample.bpkpipi])
-@pytest.mark.parametrize('q2bin' , ['low', 'central', 'high'])
-def test_misid(sample : Sample, q2bin : Qsq, tmp_path : Path):
+@pytest.mark.parametrize('component', [Component.bpkkk, Component.bpkpipi])
+@pytest.mark.parametrize('q2bin'    , [Qsq.low, Qsq.central, Qsq.high])
+def test_misid(
+    component : Component, 
+    q2bin     : Qsq, 
+    tmp_path  : Path):
     '''
     Test fitting misID simulation 
     '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{sample}.yaml')
+
+    mass = Mass.bp_bcor
+    obs  = zfit.Space(
+        obs   = mass.latex,
+        label = mass, 
+        limits= mass.limits)
+
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}_np.yaml')
+
+    with UnpackerModel.package('fitter_data'):
+        cfg  = MisIDConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name     = 'test_misid',
-            sample   = sample,
+            name     = 'misid',
+            component= component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_nopid,
             q2bin    = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('limits', ['wide', 'narrow'])
-def test_ccbar_reso(limits : str, tmp_path : Path):
+@pytest.mark.parametrize('mass', [Mass.bp_dtf_jpsi, Mass.bp_bcor_smr])
+def test_ccbar_reso(mass : Mass, tmp_path : Path):
     '''
     Tests retriveval of PDF associated to ccbar inclusive decays
     '''
-    tp_limits = {'wide' : (4500, 6000), 'narrow' : (5000, 6000)}[limits]
-    sample    = Sample.ccbar
-    obs       = zfit.Space('B_const_mass_M', limits=tp_limits)
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{sample}.yaml')
+    component = Component.ccbar 
+    obs       = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits= mass.limits)
 
-    out_dir   = f'{cfg.output_directory}/{limits}'
-    cfg.output_directory = out_dir
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
+    cfg  = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
             name     = 'test_ccbar_reso',
-            sample   = sample,
+            component= component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
@@ -193,70 +180,88 @@ def test_ccbar_rare(tmp_path : Path):
     Tests retriveval of PDF associated to ccbar inclusive decays
     for rare modes, i.e. without jpsi mass constraint
     '''
-    sample    = Sample.ccbar
-    mass      = 'B_Mass'
+    component = Component.ccbar
+    mass      = Mass.bp_bcor_smr 
     q2bin     = Qsq.high
-    obs       = zfit.Space(mass, limits=(4500, 6000))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'rare/rk/electron/{sample}.yaml')
+    obs       = zfit.Space(
+        obs   = mass.latex,
+        label = mass,
+        limits= mass.limits)
+
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}.yaml')
+    cfg  = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel={
-            'nobr0' : 'nbrem != 0',
-            'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
+        sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
+
         ftr = SimFitter(
-            name    = 'test_ccbar_rare',
-            sample  = sample,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
-            q2bin   = q2bin)
+            name     = 'ccbar_rare',
+            component= component,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('sample', [Sample.bpkpjpsiee, Sample.bppipjpsiee])
-@pytest.mark.parametrize('brem'  , [1, 2])
-def test_reso_rk_ee(sample : Sample, brem : int, tmp_path : Path):
+@pytest.mark.parametrize('component', [Component.bpkpjpsiee, Component.bppijpsiee])
+def test_reso_rk_ee(
+    component : Component, 
+    tmp_path  : Path):
     '''
     Test electron resonant with rk trigger
     '''
-    obs   = zfit.Space('B_const_mass_M', limits=(5000, 6900))
-    cfg   = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{sample}.yaml')
+    obs  = zfit.Space(
+        obs   = Mass.bp_dtf_jpsi.latex,
+        label = Mass.bp_dtf_jpsi,
+        limits= Mass.bp_dtf_jpsi.limits)
 
-    with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel={
-            'mass'  : '(1)',
-            'nbrem' :f'nbrem == {brem}'}):
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
+    cfg  = ParametricConf(**data)
+
+    with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name    = 'test_mc_reso',
-            sample  = sample,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_os,
-            q2bin   = Qsq.jpsi)
+            name     = 'test',
+            component= Component(component),
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.jpsi)
+
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('sample', [Sample.bdkstkpijpsimm, Sample.bdkstkpipsi2mm])
-@pytest.mark.parametrize('q2bin' , ['jpsi', 'psi2'])
+@pytest.mark.parametrize('component', [Component.bdkstkpijpsimm, Component.bdkstkpipsi2mm])
 def test_reso_rkst_mm(
-    sample   : Sample, 
-    q2bin    : Qsq, 
-    tmp_path : Path):
+    component : Component, 
+    tmp_path  : Path):
     '''
     Test resonant jpsi and psi2S in rkst muon channel
     '''
+    q2bin = {
+        Component.bdkstkpijpsimm : Qsq.jpsi,
+        Component.bdkstkpipsi2mm : Qsq.psi2,
+    }[component]
 
-    obs_name = {'jpsi' : 'B_const_mass_M', 'psi2' : 'B_const_mass_psi2S_M'}[q2bin]
-    obs = zfit.Space(obs_name, limits=(5000, 6000))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'reso/rkst/muon/{sample}.yaml')
+    mass = {
+        Qsq.jpsi : Mass.bd_dtf_jpsi, 
+        Qsq.psi2 : Mass.bd_dtf_psi2
+    }[q2bin]
 
-    with Cache.cache_root(path = tmp_path),\
-         sel.custom_selection(d_sel={'mass'  : '(1)'}):
+    obs = zfit.Space(
+        obs   = mass.latex, 
+        label = mass,
+        limits= mass.limits)
+
+    data = gut.load_data(package='fitter_data', fpath=f'reso/rkst/mm/{component}.yaml')
+    cfg  = ParametricConf(**data)
+
+    with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            name    = 'reso_rkst_mm',
-            sample  = sample,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rkst_mm_os,
-            q2bin   = q2bin)
+            name     = 'reso_rkst_mm',
+            component= component,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rkst_mm_os,
+            q2bin    = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
 @pytest.mark.parametrize('name', ['name_001', 'name_002'])
@@ -264,36 +269,24 @@ def test_name(name : str, tmp_path : Path):
     '''
     Will run test and specify the name argument
     '''
-    sample    = Sample.ccbar
-    obs       = zfit.Space('B_const_mass_M', limits=(4500, 6000))
-    cfg       = gut.load_conf(package='fitter_data', fpath=f'reso/rk/electron/{sample}.yaml')
+    component = Component.ccbar
+    mass      = Mass.bp_dtf_jpsi
+
+    obs       = zfit.Space(
+        obs   = mass.latex,
+        label = mass,
+        limits= mass.limits)
+
+    data      = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
+    cfg       = CCbarConf(**data)
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
             name     = name,
-            sample   = sample,
+            component= component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
             q2bin    = Qsq.jpsi)
-        ftr.get_model()
-# ---------------------------------------------------
-@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('sample', [Sample.bpkkk, Sample.bpkpipi]) 
-def test_weights(sample : Sample, tmp_path : Path):
-    '''
-    Test fitting weighted MC sample
-    '''
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(package='fitter_data', fpath=f'misid/rk/electron/{sample}.yaml')
-
-    with Cache.cache_root(path = tmp_path):
-        ftr = SimFitter(
-            name    = 'test_weights',
-            sample  = sample,
-            obs     = obs,
-            cfg     = cfg,
-            trigger = Trigger.rk_ee_nopid,
-            q2bin   = Qsq.central)
         ftr.get_model()
 # ---------------------------------------------------

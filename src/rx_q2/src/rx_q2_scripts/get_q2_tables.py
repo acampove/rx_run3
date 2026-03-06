@@ -4,36 +4,36 @@ Script needed to calculate smearing factors for q2 distribution
 
 import os
 import argparse
-from functools import cache
-from pathlib   import Path
-from typing    import Mapping, Any
-
 import hist
 import numpy
 import mplhep
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
-from omegaconf               import DictConfig
-from ROOT                    import RDF # type: ignore
-from dmu                     import LogStore
-from dmu.stats               import zfit
-from dmu.rdataframe          import utilities        as rut
-from dmu.generic             import utilities        as gut
-from dmu.stats               import utilities        as sut
-from dmu.stats               import Fitter
-from dmu.stats               import ParameterLibrary as PL
-from dmu.stats               import ModelFactory
-from dmu.stats               import ZFitPlotter
+from functools       import cache
+from pathlib         import Path
+from typing          import Mapping, Any
 
-from zfit.pdf                import BasePDF   as zpdf
-from zfit.data               import Data      as zdata
-from zfit.result             import FitResult as zres
+from omegaconf       import DictConfig
+from ROOT            import RDF # type: ignore
+from dmu.stats       import zfit
+from zfit.pdf        import BasePDF   as zpdf
+from zfit.data       import Data      as zdata
+from zfit.result     import FitResult as zres
 
-from rx_selection            import selection as sel
-from rx_common.types         import Trigger
-from rx_data                 import RDFGetter
-from rx_q2.config            import Config
+from dmu             import LogStore
+from dmu.rdataframe  import utilities        as rut
+from dmu.generic     import utilities        as gut
+from dmu.stats       import utilities        as sut
+from dmu.stats       import Fitter
+from dmu.stats       import ParameterLibrary as PL
+from dmu.stats       import ModelFactory
+from dmu.stats       import ZFitPlotter
+
+from rx_selection    import selection as sel
+from rx_common       import Trigger
+from rx_data         import RDFGetter
+from rx_q2.config    import Config
 
 Parameters=dict[str,tuple[float,float]]
 _ARGS : argparse.Namespace | DictConfig | None = None
@@ -88,10 +88,10 @@ def _initialize():
     plt.style.use(mplhep.style.LHCb2)
     cfg = _load_config()
 
-    LogStore.set_level('dmu:stats:fitter', cfg.logl)
-    LogStore.set_level('dmu:stats:utilities'  , cfg.logl)
-    LogStore.set_level('rx_q2:get_q2_tables'  , cfg.logl)
-    LogStore.set_level('rx_data:rdf_getter'   , cfg.logl)
+    LogStore.set_level('dmu:stats:fitter'   , cfg.logl)
+    LogStore.set_level('dmu:stats:utilities', cfg.logl)
+    LogStore.set_level('rx_q2:get_q2_tables', cfg.logl)
+    LogStore.set_level('rx_data:rdf_getter' , cfg.logl)
 #-------------------
 def _get_sig_pdf() -> zpdf:
     cfg = _load_config()

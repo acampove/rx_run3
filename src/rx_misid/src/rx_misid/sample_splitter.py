@@ -5,14 +5,19 @@ Module holding SampleSplitter class
 import numpy
 import pandas as pnd
 
-from pathlib                import Path
-from ROOT                   import RDF # type: ignore
-from omegaconf              import DictConfig, OmegaConf
-from dmu.logging.log_store  import LogStore
-from dmu.rdataframe         import utilities as rut
-from dmu.workflow.cache     import Cache     as Wcache
+from typing          import Final
+from pathlib         import Path
+from ROOT            import RDF # type: ignore
+from dmu             import LogStore
+from dmu.rdataframe  import utilities as rut
+from dmu.workflow    import Cache     as Wcache
+
+from .types          import MisIDSampleSplitting 
 
 log=LogStore.add_logger('rx_misid:sample_splitter')
+
+PION_ID : Final[int] = 211
+KAON_ID : Final[int] = 321
 # --------------------------------
 class SampleSplitter(Wcache):
     '''
@@ -29,22 +34,26 @@ class SampleSplitter(Wcache):
     # --------------------------------
     def __init__(
         self,
-        rdf      : RDF.RNode,
-        cfg      : DictConfig):
+        rdf     : RDF.RNode,
+        out_dir : Path,
+        cfg     : MisIDSampleSplitting):
         '''
         Parameters
         --------------------
-        rdf      : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
-        cfg      : omegaconf dictionary with configuration specifying how to split the samples
+        rdf     : Input dataframe with data to split, It should have attached a `uid` attribute, the unique identifier
+        out_dir : Path (WRT ANADIR) to directory with outputs
+        cfg     : omegaconf dictionary with configuration specifying how to split the samples
         '''
-        cfg_data = OmegaConf.to_container(cfg, resolve=True)
-        rdf_uid  = getattr(rdf, 'uid')
-        super().__init__(
-            out_path = Path('data_sample_splitter'),
-            args     = [rdf_uid, cfg_data])
+        nentries = rdf.Count().GetValue()
+        if nentries == 0:
+            raise ValueError('Got an empty dataframe')
 
-        self._cfg      = cfg
-        self._rdf      = rdf
+        super().__init__(
+            out_path = out_dir,
+            args     = [rdf.uid, cfg.model_dump()])
+
+        self._cfg = cfg
+        self._rdf = rdf
     # --------------------------------
     def _id_from_array(self, array : numpy.ndarray) -> int:
         '''
@@ -90,9 +99,9 @@ class SampleSplitter(Wcache):
         if lep1_id != lep2_id:
             raise ValueError(f'Lepton IDs differ: {lep1_id} != {lep2_id}')
 
-        if   lep1_id == 211:
+        if   lep1_id == PION_ID:
             particle = 'pion'
-        elif lep1_id == 321:
+        elif lep1_id == KAON_ID:
             particle = 'kaon'
         else:
             raise ValueError(f'Unexpected lepton ID: {lep1_id}')
@@ -107,7 +116,7 @@ class SampleSplitter(Wcache):
         the output contains the `hadron` column, signaling if this is
         a kaon (kkk) or pion sample (kpipi)
         '''
-        parquet_path = f'{self._out_path}/sample.parquet'
+        parquet_path = self._out_path / 'sample.parquet'
         if self._copy_from_cache():
             log.warning(f'Cached path found, reusing: {parquet_path}')
             df = pnd.read_parquet(parquet_path, engine='pyarrow')
@@ -115,7 +124,7 @@ class SampleSplitter(Wcache):
             return df
 
         particle     = self._particle_from_simulation()
-        columns      = self._cfg['branches']
+        columns      = self._cfg.branches
         df           = rut.rdf_to_df(rdf=self._rdf, columns=columns)
         df['hadron'] = particle
         df['block']  = df['block'].astype(int)

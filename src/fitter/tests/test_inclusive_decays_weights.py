@@ -12,26 +12,27 @@ from ROOT                            import RDF # type: ignore
 from dmu                             import LogStore
 from rx_data                         import RDFGetter
 from rx_common                       import Trigger, info
+from rx_common                       import Component
 from fitter.inclusive_decays_weights import read_weight 
 
 log=LogStore.add_logger('fitter:test_inclusive_decays_weights')
 
 _SAMPLES = [
-    ('Bu_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
-    ('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
-    ('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_BuToKpEE_MVA'),
+    (Component.bdjpsixee, Trigger.rk_ee_os  ),
+    (Component.bpjpsixee, Trigger.rk_ee_os  ),
+    (Component.bsjpsixee, Trigger.rk_ee_os  ),
     # -------------
-    ('Bu_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
-    ('Bd_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
-    ('Bs_JpsiX_ee_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimEE_MVA'),
+    (Component.bdjpsixee, Trigger.rkst_ee_os),
+    (Component.bpjpsixee, Trigger.rkst_ee_os),
+    (Component.bsjpsixee, Trigger.rkst_ee_os),
     # -------------
-    ('Bu_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_BuToKpMuMu_MVA'),
-    ('Bd_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_BuToKpMuMu_MVA'),
-    ('Bs_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_BuToKpMuMu_MVA'),
+    (Component.bdjpsixmm, Trigger.rk_mm_os  ),
+    (Component.bpjpsixmm, Trigger.rk_mm_os  ),
+    (Component.bsjpsixmm, Trigger.rk_mm_os  ),
     # -------------
-    ('Bu_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-    ('Bd_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
-    ('Bs_JpsiX_mm_eq_JpsiInAcc', 'Hlt2RD_B0ToKpPimMuMu_MVA'),
+    (Component.bdjpsixmm, Trigger.rkst_mm_os),
+    (Component.bpjpsixmm, Trigger.rkst_mm_os),
+    (Component.bsjpsixmm, Trigger.rkst_mm_os),
 ]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
@@ -53,7 +54,9 @@ def _rdf_to_idf(rdf : RDF.RNode) -> pnd.DataFrame:
 
     return df
 #-----------------------------------------------
-def _get_df(sample : str, trigger : Trigger) -> pnd.DataFrame:
+def _get_df(
+    sample  : Component, 
+    trigger : Trigger) -> pnd.DataFrame:
     gtr = RDFGetter(sample = sample, trigger = trigger)
     rdf = gtr.get_rdf(per_file=False)
     df  = _rdf_to_idf(rdf)
@@ -88,12 +91,17 @@ def _plot_mass(
     plt.close()
 #-----------------------------------------------
 @pytest.mark.parametrize('sample, trigger', _SAMPLES)
-def test_simple(sample : str, trigger : Trigger, tmp_path : Path):
+def test_simple(
+    sample   : Component, 
+    trigger  : Trigger, 
+    tmp_path : Path):
     '''
     Simplest test of addition of weights
     '''
     with RDFGetter.max_entries(100_000):
-        df = _get_df(sample, trigger)
+        df = _get_df(
+            sample = sample, 
+            trigger = trigger)
 
     project      = info.project_from_trigger(trigger=trigger, lower_case=True)
     df['weight'] = df.apply(read_weight, args=(project,), axis=1)

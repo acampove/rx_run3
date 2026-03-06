@@ -1,0 +1,13 @@
+output_directory : reso/rk/muon/ccbar/
+samples:
+  - bdjpsixmm 
+  - bpjpsixmm 
+  - bsjpsixmm 
+weights:
+  dec : True
+  sam : True 
+fit:
+  kind      : KDE1DimFFT
+  bandwidth : 20
+  padding   :
+    flag : False

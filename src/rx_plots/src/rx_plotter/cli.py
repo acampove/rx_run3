@@ -13,7 +13,7 @@ import matplotlib.pyplot   as plt
 from pathlib               import Path
 from dmu                   import LogStore
 from rx_data.rdf_getter    import RDFGetter
-from rx_common             import Trigger, Qsq, Sample
+from rx_common             import Trigger, Qsq, Component
 from rx_common             import info
 from rx_plotter.refitting  import plot      as refitting_plot
 from rx_selection          import selection as sel

@@ -4,20 +4,19 @@ Module with CmbConstraints class
 
 from typing       import cast
 from pathlib      import Path
-from omegaconf    import OmegaConf
 from ROOT         import RDF # type: ignore 
 from dmu          import LogStore
-from dmu.workflow import Cache
 from dmu.stats    import zfit
+from dmu.workflow import Cache
 from dmu.stats    import ConstraintND
-from omegaconf    import DictConfig
 from zfit         import Data                as zdat
 from zfit.pdf     import BasePDF             as zpdf
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
-from rx_common    import Qsq, Sample, Trigger
+from rx_common    import Qsq, Component, Trigger
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
 from .base_fitter import BaseFitter
+from .configs     import CombinatorialConf 
 
 log=LogStore.add_logger('fitter:cmb_constraints')
 # ------------------------------------
@@ -31,7 +30,8 @@ class CmbConstraints(BaseFitter, Cache):
         name : str,
         kind : str,
         nll  : zlos,
-        cfg  : DictConfig,
+        cfg  : CombinatorialConf,
+        trig : Trigger,
         q2bin: Qsq) -> None:
         '''
         Parameters
@@ -40,19 +40,19 @@ class CmbConstraints(BaseFitter, Cache):
         kind : String used to classify fit, e.g. brem_001, used to name out put directory
         obs  : Zfit observable
         cfg  : fit configuration
+        trig : E.g. Hlt2RD... used for naming of outputs
         q2bin: E.g. central
         '''
         BaseFitter.__init__(self)
 
-        self._name   = name
-        self._kind   = kind
-        self._q2bin  = q2bin
-        self._cfg    = cfg
-        self._cmb_cfg= cfg.model.components[name]
+        self._name  = name
+        self._q2bin = q2bin
+        self._cfg   = cfg
+        self._kind  = kind
 
-        cons         = self._cmb_cfg[self._q2bin]['constraints']
-        self._sample = Sample(cons.sample)
-        self._trigger= Trigger(cons.trigger)
+        cons            = self._cfg.constraints[q2bin]
+        self._component = cons.component
+        self._trigger   = Trigger(cons.trigger)
 
         model = self._model_from_models(models = nll.model)
         if model is None:
@@ -61,14 +61,14 @@ class CmbConstraints(BaseFitter, Cache):
         self._model = model
         self._obs   = model.space
 
-        self._base_path = Path(f'{self._cmb_cfg.output_directory}/{self._kind}/{self._cfg.trigger}_{self._q2bin}')
+        self._base_path = Path(f'{self._cfg.output_directory}/{self._kind}/{trig}_{self._q2bin}')
         self._rdf, uid, self._cuts = self._get_rdf()
 
         Cache.__init__(
             self,
             rdf_uid  = uid,
             out_path = self._base_path,
-            config   = OmegaConf.to_container(cfg, resolve=True))
+            cfg      = cfg)
     # ----------------------
     def _model_from_models(self, models : list[zpdf]) -> zpdf | None:
         '''
@@ -87,10 +87,10 @@ class CmbConstraints(BaseFitter, Cache):
 
             if isinstance(pdf, zfit.pdf.SumPDF):
                 # TODO: Change this once https://github.com/zfit/zfit/issues/699#issuecomment-3694682177 be fixed
-                pdfs = cast(list[zpdf], pdf.pdfs)
-                pdf  = self._model_from_models(models = pdfs)
-                if pdf is not None:
-                    return pdf
+                pdfs      = cast(list[zpdf], pdf.pdfs)
+                component = self._model_from_models(models = pdfs)
+                if component is not None:
+                    return component 
 
         return None 
     # ----------------------
@@ -104,7 +104,7 @@ class CmbConstraints(BaseFitter, Cache):
         -------------
         Updated version of cuts dictionary, e.g. adding vetoes
         '''
-        selection = self._cmb_cfg[self._q2bin].constraints.get('selection')
+        selection = self._cfg.constraints[self._q2bin].selection
 
         if selection is None: 
             return cuts
@@ -113,7 +113,7 @@ class CmbConstraints(BaseFitter, Cache):
 
         return cuts
     # ---------------------
-    def _get_rdf(self) -> tuple[RDF.RNode, str, DictConfig]:
+    def _get_rdf(self) -> tuple[RDF.RNode, str, dict[str,dict[str,str]]]:
         '''
         Returns
         -------------
@@ -123,7 +123,9 @@ class CmbConstraints(BaseFitter, Cache):
         - Unique identifier for input ntuples and selection
         - Dictionary with selection used
         '''
-        gtr = RDFGetter(sample = self._sample, trigger = self._trigger)
+        gtr = RDFGetter(
+            sample  = self._component, 
+            trigger = self._trigger)
         rdf = gtr.get_rdf(per_file = False)
 
         if Cache._cache_root is None:
@@ -131,36 +133,31 @@ class CmbConstraints(BaseFitter, Cache):
 
         out_path = Cache._cache_root / self._base_path
 
-        cuts = sel.selection(
-            process = self._sample,
+        fit_cuts = sel.selection(
+            process = self._component,
             trigger = self._trigger,
             q2bin   = self._q2bin)
 
         uid  = gtr.get_uid()
-        cuts = self._update_selection(cuts = cuts)
+        fit_cuts = self._update_selection(cuts = fit_cuts)
         rdf  = sel.apply_selection(
             rdf      = rdf, 
-            cuts     = cuts, 
+            cuts     = fit_cuts, 
             uid      = uid,
             out_path = out_path)
 
-        uid  = getattr(rdf, 'uid')
-        log.debug(f'Using UID: {uid}')
+        log.debug(f'Using UID: {rdf.uid}')
 
         with sel.custom_selection(d_sel = {}, force_override = True):
             default_cuts = sel.selection(
                 q2bin    = self._q2bin, 
-                process  = self._sample,
+                process  = self._component,
                 trigger  = self._trigger,
             )
 
-        cuts= {'default' : default_cuts, 'fit' : cuts}
+        all_cuts : dict[str,dict[str,str]] = {'default' : default_cuts, 'fit' : fit_cuts}
 
-        cuts= OmegaConf.create(obj=cuts)
-        if not isinstance(cuts, DictConfig):
-            raise ValueError('Cuts cannot be transformed to DictConfig')
-
-        return rdf, uid, cuts
+        return rdf, uid, all_cuts
     # ---------------------
     def _get_data(self, rdf : RDF.RNode) -> zdat:
         '''
@@ -202,7 +199,7 @@ class CmbConstraints(BaseFitter, Cache):
         -------------
         True if this parameter is meant to be constrained
         '''
-        par_names = self._cmb_cfg[self._q2bin].constraints.parameters
+        par_names = self._cfg.constraints[self._q2bin].parameters
 
         return any( name.startswith(par_name) for par_name in par_names )
     # ----------------------
@@ -214,14 +211,14 @@ class CmbConstraints(BaseFitter, Cache):
         '''
         log.info('Constraints not found, calculating them')
         data    = self._get_data(rdf = self._rdf)
-        cfg_fit = self._cmb_cfg[self._q2bin].constraints.fit
+        cfg_fit = self._cfg.constraints[self._q2bin].fit
         res     = self._fit(data=data, model=self._model, cfg = cfg_fit)
 
         self._save_fit(
             data    = data, 
             res     = res, 
             out_path= self._out_path,
-            plt_cfg = self._cmb_cfg[self._q2bin].constraints.plots,
+            plt_cfg = self._cfg.constraints[self._q2bin].plots,
             cut_cfg = self._cuts,
             model   = self._model)
 
@@ -231,13 +228,15 @@ class CmbConstraints(BaseFitter, Cache):
 
         values = [ float(par.value().numpy()) for par in params ]
         names  = [ par.name                   for par in params ]
-        cov    = res.covariance(params = names)
+
+        pars   = self._cfg.constraints[self._q2bin].parameters
+        cov    = res.pars_covariance(pars = pars)
 
         cns = ConstraintND(
             kind       = 'GaussianConstraint',
             parameters = names, 
             values     = values, 
-            cov        = cov.tolist(),
+            cov        = cov,
         )
 
         constraints_path = self._out_path / 'constraints.json'

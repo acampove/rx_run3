@@ -4,22 +4,25 @@ Module holding DataPreprocessor class
 import numpy
 import pandas   as pnd
 
-from pathlib                  import Path
-from omegaconf                import DictConfig, OmegaConf
-from ROOT                     import RDF # type: ignore
-from dmu.workflow             import Cache
-from dmu.stats                import utilities  as sut
-from dmu.generic              import utilities  as gut
-from dmu.rdataframe           import utilities  as rut
-from dmu.pdataframe           import utilities  as put
-from dmu                      import LogStore
-from zfit.data                import Data
-from zfit.interface           import ZfitSpace  as zobs
-from rx_common                import Sample, Trigger
-from rx_data                  import RDFGetter
-from rx_selection             import selection  as sel
-from rx_misid.sample_splitter import SampleSplitter
-from rx_misid.sample_weighter import SampleWeighter
+from pathlib         import Path
+from ROOT            import RDF # type: ignore
+
+from dmu             import LogLevels, LogStore
+from dmu.workflow    import Cache
+from dmu.stats       import utilities  as sut
+from dmu.generic     import utilities  as gut
+from dmu.rdataframe  import utilities  as rut
+from dmu.pdataframe  import utilities  as put
+
+from zfit            import Space      as zobs
+from zfit.data       import Data
+
+from rx_data         import RDFGetter
+from rx_common       import Component, Qsq, Trigger, Correction
+from rx_selection    import selection  as sel
+from rx_misid        import SampleSplitter
+from rx_misid        import SampleWeighter
+from rx_misid        import MisIDSampleWeights
 
 log=LogStore.add_logger('fitter:data_preprocessor')
 # ------------------------
@@ -36,14 +39,14 @@ class DataPreprocessor(Cache):
     # ------------------------
     def __init__(
         self,
-        out_dir : Path,
-        obs     : zobs,
-        sample  : Sample,
-        trigger : Trigger,
-        q2bin   : str,
-        wgt_cfg : DictConfig|None,
-        is_sig  : bool               = True,
-        cut     : dict[str,str]|None = None):
+        out_dir   : Path,
+        obs       : zobs,
+        sample    : Component,
+        trigger   : Trigger,
+        q2bin     : Qsq,
+        wgt_cfg   : dict[Correction,MisIDSampleWeights] | None,
+        is_sig    : bool                        = True,
+        selection : dict[str,str] | None = None):
         '''
         Parameters
         --------------------
@@ -55,11 +58,11 @@ class DataPreprocessor(Cache):
         max_entries: If used (default None), limit number of entries to this value
         wgt_cfg: Dictionary with:
                  key: Representing kind of weight, e.g. pid
-                 value: Actual configuration for kind of weight
+                 value: Actual configuration for kind of weight, in a pydantic model
 
         is_sig : If true (default) it will pick PID weights for signal region.
                  Otherwise it will use misID control region weights.
-        cut    : Selection defining this component category, represented by dictionary where the key are labels
+        selection : Selection defining this component category, represented by dictionary where the key are labels
                  and the values are the expressions of the cut
         '''
         self._obs    = obs
@@ -67,86 +70,86 @@ class DataPreprocessor(Cache):
         self._trigger= trigger
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
-        self._cut    = cut
+        self._out_dir= out_dir
 
-        self._rdf    = self._get_rdf()
-        self._d_sel  = self._get_selection() 
+        rdf , d_sel, df_ctf  = self._get_rdf(selection = selection, out_dir = out_dir)
+
+        self._rdf    = rdf 
+        self._d_sel  = d_sel
+        self._df_ctf = df_ctf
+
         self._is_sig = is_sig
-        
+
         super().__init__(
             out_path = out_dir,
             obs_name = sut.name_from_obs(obs=obs),
             obs_range= sut.range_from_obs(obs=obs),
-            d_sel    = self._d_sel,
+            d_sel    = d_sel,
             is_sig   = is_sig,
-            wgt_cfg  = {} if self._wgt_cfg is None else OmegaConf.to_container(self._wgt_cfg, resolve=True),
-            rdf_uid  = getattr(self._rdf, 'uid') )
+            wgt_cfg  = '' if self._wgt_cfg is None else {key : val.model_dump() for key, val in self._wgt_cfg.items()}, 
+            rdf_uid  = self._rdf.uid)
     # ------------------------
-    def _get_selection(self) -> dict[str,str]:
+    def _get_rdf(
+        self, 
+        out_dir   : Path,
+        selection : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
+        Parameters
+        -------------------
+        out_dir  : Directory where cutflow information will go
+        selection: Selection to be added on top, used for categories.
+
         Returns
         -------------------
-        Dictionary with full selection
-        '''
-        with sel.custom_selection(d_sel=self._cut, force_override=True):
-            return sel.selection(process=self._sample, trigger=self._trigger, q2bin=self._q2bin)
-    # ------------------------
-    def _get_rdf(self) -> RDF.RNode:
-        '''
-        Returns
-        -------------------
-        ROOT dataframe before selection and with unique identifier string attached as 'uid'
+        Tuple with:
+           - ROOT dataframe after selection and with Unique identifier attached as uid
+           - Dictionary storing selection
+           - Pandas dataframe with cutflow
         '''
         log.debug(f'Retrieving dataframe for {self._sample}/{self._trigger}')
         gtr = RDFGetter(
             sample  =self._sample,
             trigger =self._trigger)
 
-        rdf = gtr.get_rdf(per_file=False)
-        uid = gtr.get_uid()
+        rdf_raw = gtr.get_rdf(per_file=False)
+        uid     = gtr.get_uid()
 
-        setattr(rdf, 'uid', uid)
+        log.debug(f'Applying selection to {self._sample}/{self._trigger}')
 
-        return rdf
-    # ------------------------
-    def _get_selected_dataframe(self) -> tuple[RDF.RNode, pnd.DataFrame]:
-        '''
-        Returns
-        -----------------
-        Tuple with:
+        if Cache._cache_root is None:
+            raise ValueError('Cache root directory not defined')
 
-        -ROOT dataframe with data
-        -Pandas dataframe with cutflow
-        '''
+        out_path = Path(Cache._cache_root) / out_dir
+
         # overriding only happens for simulation samples
-        log.info(f'Applying selection to {self._sample}/{self._trigger}')
-        with sel.custom_selection(d_sel=self._cut, force_override=True):
-            rdf = sel.apply_full_selection(
-                rdf     = self._rdf,
-                uid     = getattr(self._rdf, 'uid'),
+        with sel.custom_selection(d_sel=selection, force_override=True):
+            rdf_sel = sel.apply_full_selection(
+                rdf     = rdf_raw,
+                uid     = uid,
                 q2bin   = self._q2bin,
                 trigger = self._trigger,
                 process = self._sample,
-                out_path= self._out_path)
+                out_path= out_path)
 
-            rep = rdf.Report()
+            cfg_sel = sel.selection(
+                process = self._sample, 
+                trigger = self._trigger, 
+                q2bin   = self._q2bin)
+
+            rep = rdf_sel.Report()
             df  = rut.rdf_report_to_df(rep=rep)
 
-        log.info('Applied selection')
-        if log.getEffectiveLevel() < 20:
-            rep = rdf.Report()
+        if log.getEffectiveLevel() < LogLevels.info:
             rep.Print()
+            for name, val in cfg_sel.items():
+                log.info(f'{name:<15}{val}')
 
-        return rdf, df
+        return rdf_sel, cfg_sel, df
     # ------------------------
-    def _add_extra_weights(
-        self, 
-        rdf : RDF.RNode,
-        wgt : numpy.ndarray) -> numpy.ndarray:
+    def _add_extra_weights(self, wgt : numpy.ndarray) -> numpy.ndarray:
         '''
         Parameters
         -------------
-        rdf: Dataframe with data after selection
         wgt: Array of weights already held in ROOT dataframe
 
         Returns
@@ -157,12 +160,11 @@ class DataPreprocessor(Cache):
             log.debug('No weight configuration found, using only default weights')
             return wgt
 
-        for kind, cfg in self._wgt_cfg.items():
-            kind    = str(kind)
-            new_wgt = self._get_extra_weight(kind=kind, cfg=cfg, rdf = rdf)
+        for correction, cfg in self._wgt_cfg.items():
+            new_wgt = self._get_extra_weight(kind=correction, cfg=cfg)
             if new_wgt.shape != wgt.shape:
                 raise ValueError(
-                    f'''Shapes of original array and {kind} weights differ:
+                    f'''Shapes of original array and correction {correction} weights differ:
                         {new_wgt.shape} != {wgt.shape}''')
 
             wgt = wgt * new_wgt
@@ -171,35 +173,27 @@ class DataPreprocessor(Cache):
     # ----------------------
     def _get_extra_weight(
         self, 
-        kind : str, 
-        rdf  : RDF.RNode,
-        cfg  : DictConfig) -> numpy.ndarray:
+        kind : Correction, 
+        cfg  : MisIDSampleWeights) -> numpy.ndarray:
         '''
         Parameters
         -------------
         kind: E.g. PID, Dalitz
         cfg : Configuration needed to extract weights
-        rdf : DataFrame after selection
 
         Returns
         -------------
         Array of weights
         '''
-        if kind == 'PID':
-            arr_wgt = self._get_pid_weights(cfg=cfg, rdf=rdf)
-        else:
-            raise ValueError(f'Invalid type of weight {kind}')
-
-        return arr_wgt
+        match kind:
+            case Correction.pid:
+                log.debug('Adding PID weights')
+                return self._get_pid_weights(cfg=cfg)
     # ----------------------
-    def _get_pid_weights(
-        self, 
-        cfg : DictConfig,
-        rdf : RDF.RNode) -> numpy.ndarray:
+    def _get_pid_weights(self, cfg : MisIDSampleWeights) -> numpy.ndarray:
         '''
         Parameters
         -------------
-        rdf : DataFrame after selection
         cfg : Dictionary containing configuration for PID, i.e. it should have keys
               `splitting` and `weights` as used in the rx_misid project
 
@@ -208,37 +202,35 @@ class DataPreprocessor(Cache):
         Array with PID weights
         '''
         log.info(f'Splitting sample: {self._sample}/{self._q2bin}')
-        spl   = SampleSplitter(rdf = rdf, cfg = cfg.splitting)
+        spl   = SampleSplitter(
+            rdf     = self._rdf, 
+            out_dir = self._out_dir,
+            cfg     = cfg.splitting)
         df    = spl.get_sample()
 
         log.info(f'Getting PID weights for: {self._sample}/{self._q2bin}')
         wgt   = SampleWeighter(
             df    = df,
-            cfg   = cfg.weights,
+            cfg   = cfg,
             sample= self._sample,
             is_sig= self._is_sig) # We want weights for the control region
         df  = wgt.get_weighted_data()
 
         return df['pid_weights'].to_numpy()
     # ------------------------
-    def _get_array(self, rdf : RDF.RNode) -> tuple[numpy.ndarray,numpy.ndarray]:
+    def _get_array(self) -> tuple[numpy.ndarray,numpy.ndarray]:
         '''
-        Parameters
-        ------------------
-        rdf: ROOT dataframe after selection
-
-        Returns
-        ------------------
-        Tuple of numpy arrays with the observable and weights
+        Return a tuple of numpy arrays with the observable and weight
+        for the sample requested, this array is fully selected
         '''
         log.debug(f'Extracting data through RDFGetter for sample {self._sample}')
-        name = sut.name_from_obs(obs=self._obs)
 
+        rdf  = self._rdf
         log.debug('Retrieving data')
-        arr  = rdf.AsNumpy([name])[name]
+        arr  = rdf.AsNumpy([self._obs.label])[self._obs.label]
         wgt  = rdf.AsNumpy(['weight'])['weight']
         wgt  = wgt.astype(float)
-        wgt  = self._add_extra_weights(wgt=wgt, rdf = rdf)
+        wgt  = self._add_extra_weights(wgt=wgt)
 
         nevt = len(arr)
         log.debug(f'Found {nevt} entries')
@@ -246,14 +238,11 @@ class DataPreprocessor(Cache):
         return arr, wgt
     # ------------------------
     @property
-    def uid(self) -> str:
+    def rdf_uid(self) -> str|None:
         '''
-        Unique identifier of current dataset 
+        Unique identifier of ROOT dataframe after selection
         '''
-        if not isinstance(self._hsh, str):
-            raise ValueError('UID for dataset not found')
-
-        return self._hsh
+        return self._rdf.uid
     # ------------------------
     def _data_from_numpy(
         self,
@@ -303,16 +292,14 @@ class DataPreprocessor(Cache):
             data    = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
             return data
 
-        log.info(f'Data not found cached, loading {self._sample}/{self._trigger}')
+        arr, wgt = self._get_array()
+        data     = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
 
-        rdf, df_ctf = self._get_selected_dataframe()
-        arr, wgt    = self._get_array(rdf = rdf)
-        data        = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
-        cuts_path   = data_path.replace('.npz' , '.yaml')
+        cuts_path = data_path.replace('.npz' , '.yaml')
         gut.dump_json(data=self._d_sel , path=cuts_path)
 
         ctfl_path = cuts_path.replace('.yaml',   '.md')
-        put.to_markdown(df=df_ctf, path=ctfl_path)
+        put.to_markdown(df=self._df_ctf, path=ctfl_path)
 
         numpy.savez_compressed(data_path, values=arr, weights=wgt)
         self._cache()

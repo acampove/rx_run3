@@ -3,8 +3,7 @@ Module with functions intended to interface with the PDG API
 '''
 import pdg
 from pdg.particle import PdgParticle
-
-from dmu.logging.log_store import LogStore
+from dmu          import LogStore
 
 log=LogStore.add_logger('fitter:pdg_utils')
 

@@ -1,0 +1,13 @@
+output_directory : rare/rk/electron/ccbar
+samples:
+  - bdjpsixee 
+  - bpjpsixee 
+  - bsjpsixee 
+weights:
+  dec : True 
+  sam : True 
+fit:
+  kind      : KDE1DimFFT
+  bandwidth : 40
+  padding   :
+    flag : False 

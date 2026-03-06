@@ -5,24 +5,48 @@ Module containing plot class, used to plot fits
 import math
 import warnings
 import pprint
-
 import hist
 import mplhep
 import tensorflow            as tf
 import pandas                as pd
 import numpy                 as np
 import matplotlib.pyplot     as plt
-import dmu.generic.utilities as gut
-import dmu.stats.utilities   as sut
 
+from typing                 import Self
+from pydantic               import BaseModel, ConfigDict, Field
 from matplotlib.axes        import Axes
 from zfit.pdf               import BasePDF    as zpdf
 from zfit.data              import Data       as zdat
 from zfit.result            import FitResult  as zres
 from dmu                    import LogStore
+from dmu.generic            import utilities  as gut
+from dmu.stats              import utilities  as sut
+
 from .imports               import zfit
 
 log = LogStore.add_logger('dmu:zfit_plotter')
+#----------------------------------------
+class ZFitPlotterConf(BaseModel):
+    '''
+    Class meant to hold configuration for ZFitPlotter
+    '''
+    # This cannot be frozen because title will change
+    # based on result of fits, e.g. sensitivity of fit
+    model_config = ConfigDict(frozen=False)
+
+    nbins      : int
+    stacked    : bool
+    ext_text   : str                       = ''
+    title      : str | None                = None
+    d_leg      : dict[str,str]             = Field(default_factory=dict)
+    plot_range : tuple[float,float] | None = None
+    # ---------------------------
+    @classmethod
+    def default(cls) -> Self:
+        '''
+        Returns default instance of current class
+        '''
+        return cls(nbins = 50, stacked = False)
 #----------------------------------------
 class ZFitPlotter:
     '''

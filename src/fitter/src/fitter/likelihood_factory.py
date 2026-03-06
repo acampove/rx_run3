@@ -2,21 +2,20 @@
 Module containing DataFitter class
 '''
 from pathlib            import Path
-from omegaconf          import DictConfig, OmegaConf
 
 from dmu                import LogStore
 from dmu.stats          import zfit
-from rx_common          import Qsq, Sample
-from rx_common          import Trigger
+from rx_common          import Qsq, Component
 from rx_selection       import selection  as sel
 
-from zfit               import Space  as zobs
 from zfit.loss          import ExtendedUnbinnedNLL
+from zfit               import Space  as zobs
 
+from .configs           import FitModelConf
 from .data_preprocessor import DataPreprocessor
 from .data_model        import DataModel
 
-log=LogStore.add_logger('fitter:LikelihoodFactory')
+log=LogStore.add_logger('fitter:likelihood_factory')
 # ------------------------
 class LikelihoodFactory:
     '''
@@ -29,10 +28,10 @@ class LikelihoodFactory:
     def __init__(
         self,
         obs     : zobs,
-        sample  : Sample,
+        sample  : Component,
         q2bin   : Qsq,
-        cfg     : DictConfig,
-        name    : str|None = None):
+        cfg     : FitModelConf,
+        name    : str | None = None):
         '''
         name   : Identifier for fit, e.g. block. This is optional
         cfg    : configuration for the fit as a DictConfig object
@@ -53,33 +52,10 @@ class LikelihoodFactory:
         '''
         Returns directory where outputs will go
         '''
-        sample = self._sample.replace('*', 'p')
-        if self._name is not None:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._name}/{self._trigger}_{self._q2bin}'
-        else:
-            sample = f'{self._cfg.output_directory}/{sample}/{self._trigger}_{self._q2bin}'
+        if self._name is None:
+            return self._cfg.output_directory / f'{self._trigger}_{self._q2bin}'
 
-        return Path(sample)
-    # ------------------------
-    def _update_mc_trigger(self) -> Trigger:
-        '''
-        Returns
-        -------------
-        Trigger that will be used for simulation components
-
-        If trigger does not end with ext return _trigger
-        If trigger ends with ext, switch to noPID trigger. Because we are working with PID control region with simulation.
-        '''
-        if self._trigger not in [Trigger.rk_ee_ext, Trigger.rkst_ee_ext]:
-            log.debug(f'Found non-Extended trigger {self._trigger}, using default project')
-            return self._trigger 
-
-        value   = self._trigger.replace('_ext', '_noPID')
-        trigger = Trigger(value)
-
-        log.info(f'Found ext trigger, overriding with: {trigger}')
-
-        return trigger
+        return self._cfg.output_directory / f'{self._name}/{self._trigger}_{self._q2bin}'
     # ------------------------
     def run(self) -> ExtendedUnbinnedNLL:
         '''
@@ -99,17 +75,15 @@ class LikelihoodFactory:
             wgt_cfg= None) # Do not need weights for data
         data = dpr.get_data()
 
-        trigger = self._update_mc_trigger()
-
         log.info('Getting full data model using fits to simulation')
-        log.debug(f'{"Trigger":<20}{trigger}')
+        log.debug(f'{"Trigger":<20}{self._trigger}')
         log.debug(f'{"q2bin  ":<20}{self._q2bin}')
         mod  = DataModel(
             name   = self._name,
             cfg    = self._cfg,
             obs    = self._obs,
             q2bin  = self._q2bin,
-            trigger= trigger)
+            trigger= self._trigger)
         model= mod.get_model()
 
         log.info(50 * '-')
@@ -120,7 +94,7 @@ class LikelihoodFactory:
 
         return nll
     # ----------------------
-    def get_config(self) -> DictConfig:
+    def get_config(self) -> dict[str,dict[str,str]]:
         '''
         Returns
         -------------
@@ -141,12 +115,7 @@ class LikelihoodFactory:
                 trigger=self._trigger,
                 q2bin  =self._q2bin)
 
-        cfg = {
-            'selection' :
-            {
-                'default' : cuts_def,
-                'fit'     : cuts_fit}
-        }
-
-        return OmegaConf.create(obj=cfg)
+        return {
+            'default' : cuts_def,
+            'fit'     : cuts_fit}
 # ------------------------

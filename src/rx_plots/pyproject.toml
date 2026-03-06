@@ -39,3 +39,5 @@ run123              = "rx_plotter_scripts.run123:main"
 [tool.setuptools.package-data]
 'rx_plotter_data' = ['**/*.yaml']
 
+[tool.ruff]
+select = ["F", "PL", "B"]

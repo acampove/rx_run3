@@ -5,10 +5,10 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 
-from vector                      import MomentumObject4D as v4d
-from dmu.logging.log_store       import LogStore
-from ecal_calibration            import calo_translator as ctran
-from rx_data.brem_bias_corrector import BremBiasCorrector
+from vector           import MomentumObject4D as v4d
+from dmu              import LogStore
+from ecal_calibration import calo_translator as ctran
+from rx_data          import BremBiasCorrector
 
 log=LogStore.add_logger('rx_data:test_brem_bias_corrector')
 # -----------------------------------------------
@@ -20,8 +20,8 @@ class Data:
 
     locations : list[list]
 # -----------------------------------------------
-@pytest.fixture(scope='session', autouse=True)
-def _initialize():
+@pytest.fixture(scope='module', autouse=True)
+def initialize():
     df = ctran.get_data()
     df = df.drop(columns=['n', 'z'])
     df = df.sort_values(by = ['x', 'y'])

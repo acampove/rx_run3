@@ -10,11 +10,11 @@ import pickle
 import numpy
 import pandas as pnd
 
-from omegaconf              import DictConfig
-from numpy                  import typing       as numpy_typing
-from boost_histogram        import Histogram    as bh
-from boost_histogram        import accumulators as acc
-from dmu.logging.log_store  import LogStore
+from dmu                import LogStore
+from numpy              import typing       as numpy_typing
+from boost_histogram    import Histogram    as bh
+from boost_histogram    import accumulators as acc
+from .types             import MisIDSampleWeights
 
 log=LogStore.add_logger('rx_misid:sample_weighter')
 
@@ -37,8 +37,10 @@ class SampleWeighter:
         df     : pnd.DataFrame,
         is_sig : bool,
         sample : str,
-        cfg    : DictConfig):
+        cfg    : MisIDSampleWeights):
         '''
+        Parameters
+        -----------------
         df    : Pandas dataframe with columns including 'hadron' and 'kind'. Used to assign weights
         is_sig: If true, the weights will provide signal region sample, otherwise control region
         sample: E.g. DATA_24_... Needed to pick maps based on actual particle identity
@@ -96,8 +98,8 @@ class SampleWeighter:
         Dataframe with columns for X and Y axes added. These axes are the ones
         in function of which PIDCalib maps are parametrized
         '''
-        for var in [self._varx, self._vary]:
-            var = var.replace('PARTICLE', particle)
+        for template in [self._varx, self._vary]:
+            var = template.replace('PARTICLE', particle)
             if var in df.columns:
                 log.debug(f'Variable {var} already found, not adding it')
                 continue
@@ -108,7 +110,7 @@ class SampleWeighter:
         return df
     # ------------------------------
     @staticmethod
-    def _key_from_path(path : str, cfg : DictConfig) -> str:
+    def _key_from_path(path : str, cfg : MisIDSampleWeights) -> str:
         '''
         Parameters
         ---------------
@@ -128,9 +130,9 @@ class SampleWeighter:
 
         part = {'K': 'kaon', 'Pi' : 'pion'}[part]
 
-        if   cfg['regions']['signal']  in file_name:
+        if   cfg.regions['signal']  in file_name:
             region = 'signal'
-        elif cfg['regions']['control'] in file_name:
+        elif cfg.regions['control'] in file_name:
             region = 'control'
         else:
             raise ValueError(f'Cannot determine region from: {file_name}')
@@ -139,8 +141,8 @@ class SampleWeighter:
     # ------------------------------
     @staticmethod
     def get_maps(
-        cfg       : DictConfig,
-        kind      : str) -> dict[str, bh]:
+        cfg  : MisIDSampleWeights,
+        kind : str) -> dict[str, bh]:
         '''
         Loads pickle files with PIDCalib2 efficiencies for
         kaons or pions and returns them
@@ -179,7 +181,7 @@ class SampleWeighter:
         return d_map
     # ------------------------------
     def _set_variables(self) -> None:
-        l_var = self._cfg['pars']
+        l_var = self._cfg.pars
         if len(l_var) != 2:
             raise NotImplementedError(f'Only 2D reweighing suppored, requested: {l_var}')
 
@@ -250,8 +252,8 @@ class SampleWeighter:
         except KeyError as exc:
             for key, d_map in sorted(self._d_map.items()):
                 log.info(key)
-                for key in sorted(d_map):
-                    log.info(f'   {key}')
+                for val in sorted(d_map):
+                    log.info(f'   {val}')
 
             raise KeyError(f'Cannot pick up PID map: {key_map}') from exc
 

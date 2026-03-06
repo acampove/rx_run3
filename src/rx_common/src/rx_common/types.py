@@ -1,10 +1,35 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum        import StrEnum, Enum
-from pydantic    import BaseModel, field_validator, ConfigDict
+from enum      import StrEnum, Enum
+from .mass     import Mass
+from pydantic  import BaseModel, field_validator, ConfigDict
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
+# ------------------------------
+class Particle(StrEnum):
+    '''
+    Model meant to store particle properties
+    '''
+    kaon = 'kaon'
+    pion = 'pion'
+# ------------------------------
+class Parameter(StrEnum):
+    '''
+    Class meant to store parameters of interest
+
+    Attributes:
+
+    rpk   : RpK
+    irjpsi: Inverse of rjpsi
+    '''
+    rk     = 'rk'
+    rx     = 'rx'
+    rpk    = 'rpk'
+    rkst   = 'rkst'
+
+    rjpsi  = 'rjpsi'
+    irjpsi = 'rjpsi_inv'
 # ---------------------------------------
 class Block(BaseModel):
     r'''
@@ -70,6 +95,7 @@ class Correction(StrEnum):
     measured in control regions, which can be used to correct MC
     e.g. DeltaMu = Mu(data) - Mu(simulation)
     '''
+    pid             = 'PID'
     mass_scale      = 'smu'
     mass_resolution = 'rsg'
     brem_fraction   = 'rfr'
@@ -106,6 +132,8 @@ class Correction(StrEnum):
                 return r'$\frac{BFr^{Data}}{BFr^{MC}}$'
             case Correction.blok_fraction:
                 return r'$\frac{Block^{Data}}{Block^{MC}}$'
+            case Correction.pid:
+                return 'PID'
     # ------------------------
     @property
     def nickname(self) -> str:
@@ -121,6 +149,8 @@ class Correction(StrEnum):
                 return 'brem' 
             case Correction.blok_fraction:
                 return 'block' 
+            case Correction.pid:
+                return 'weight'
 # ---------------------------------------
 class MVA(StrEnum):
     r'''
@@ -237,100 +267,6 @@ class Brem(Enum):
     def __hash__(self) -> int:
         return super().__hash__()
 # ---------------------------------------
-class Component(StrEnum):
-    r'''
-    This class is meant to hold elements representing fitting components 
-
-    data          : Real data
-    jpsi          : E.g. B^+ -> J/psi K^+, B^0 J/psi K^*
-    psi2          : E.g. B^+ -> psi(2s) K^+, B^0 psi(2S) K^*
-    ccbar         : Charmonium inclusive samples
-    cabibbo       : B^+ \to \pi^+ J/\psi
-    lbjpsipk      : Lb -> p K J/psi
-    bsjpsiphi     : B_s \to J/\psi \phi
-    bsjpsikst     : B_s \to J/\psi K^* 
-    bdjpsikst_swp : B_d \to J/\psi K^* with K -> pi and pi -> K
-    '''
-    data          = 'data'
-    jpsi          = 'jpsi'
-    psi2          = 'psi2'
-    ccbar         = 'ccbar'
-    cabibbo       = 'cabibbo'
-    lbjpsipk      = 'lbjpsipk'
-    bsjpsiphi     = 'bsjpsiphi'
-    bsjpsikst     = 'bsjpsikst'
-    bdjpsikst_swp = 'bdjpsikst_swp'
-# ---------------------------------------
-class Trigger(StrEnum):
-    '''
-    Class meant to represent MVA HLT2 triggers
-    '''
-    rk_ee_os     = 'Hlt2RD_BuToKpEE_MVA'
-    rk_ee_ext    = 'Hlt2RD_BuToKpEE_MVA_ext'
-    rk_ee_ss     = 'Hlt2RD_BuToKpEE_SameSign_MVA'
-    rk_ee_nopid  = 'Hlt2RD_BuToKpEE_MVA_noPID'
-    rk_ee_cal    = 'Hlt2RD_BuToKpEE_MVA_cal'
-    rk_ee_misid  = 'Hlt2RD_BuToKpEE_MVA_misid'
-    rk_mm_os     = 'Hlt2RD_BuToKpMuMu_MVA'
-    rk_mm_nopid  = 'Hlt2RD_BuToKpMuMu_MVA_noPID'
-    rk_mm_ss     = 'Hlt2RD_BuToKpMuMu_SameSign_MVA'
-    # -----------
-    rkst_ee_os   = 'Hlt2RD_B0ToKpPimEE_MVA'
-    rkst_ee_ext  = 'Hlt2RD_B0ToKpPimEE_MVA_ext'
-    rkst_ee_ss   = 'Hlt2RD_B0ToKpPimEE_SameSign_MVA'
-    rkst_ee_nopid= 'Hlt2RD_B0ToKpPimEE_MVA_noPID'
-    rkst_ee_cal  = 'Hlt2RD_B0ToKpPimEE_MVA_cal'
-    rkst_ee_misid= 'Hlt2RD_B0ToKpPimEE_MVA_misid'
-    rkst_mm_os   = 'Hlt2RD_B0ToKpPimMuMu_MVA'
-    rkst_mm_nopid= 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'
-    rkst_mm_ss   = 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA'
-    # -----------
-    uninitialized= 'uninitialized'
-
-    def __str__(self):
-        return self.value
-    # -----------
-    @property
-    def channel(self) -> str:
-        '''
-        Either 'muon' or 'electron'
-        '''
-        if 'EE_MVA'            in self.value:
-            return 'electron'
-
-        if 'EE_SameSign_MVA'   in self.value:
-            return 'electron'
-
-        if 'MuMu_MVA'          in self.value:
-            return 'muon'
-        
-        if 'MuMu_SameSign_MVA' in self.value:
-            return 'muon'
-
-        raise ValueError(f'Cannot determine channel for trigger: {self}')
-    # -----------
-    @property
-    def is_ss(self) -> bool:
-        '''
-        True if it is a same sign trigger
-        '''
-        return 'SameSign' in self.value
-    # -----------
-    @property
-    def project(self) -> 'Project':
-        '''
-        Returns
-        -----------------
-        Project for which this trigger is meant to be used, e.g. rk, rkst etc
-        '''
-        if self.name.startswith('rk_'):
-            return Project.rk
-
-        if self.name.startswith('rkst_'):
-            return Project.rkst
-
-        raise ValueError(f'Cannot assign trigger {self} to any project')
-# ---------------------------------------
 class Channel(StrEnum):
     '''
     This class repsesents the electron, muon or emu channel types
@@ -356,8 +292,145 @@ class Project(StrEnum):
     rkst_no_refit = 'rkst_no_refit'
     rkst_sim10d   = 'rkst_sim10d'
 
+    @property
+    def with_pid(self) -> 'Project':
+        '''
+        Return PID version of project
+        Only makes sense for noPID projects
+        '''
+        match self:
+            case Project.rk_no_pid:
+                return Project.rk
+            case Project.rkst_no_pid:
+                return Project.rkst
+            case _:
+                return self
+
     def __str__(self):
         return self.value
+# ---------------------------------------
+class Trigger(StrEnum):
+    '''
+    Class meant to represent MVA HLT2 triggers
+    '''
+    rk_ee_os     = 'Hlt2RD_BuToKpEE_MVA'
+    rk_ee_ss     = 'Hlt2RD_BuToKpEE_SameSign_MVA'
+    rk_ee_nopid  = 'Hlt2RD_BuToKpEE_MVA_noPID'
+    rk_ee_cal    = 'Hlt2RD_BuToKpEE_MVA_cal'
+    rk_ee_misid  = 'Hlt2RD_BuToKpEE_MVA_misid'
+    rk_mm_os     = 'Hlt2RD_BuToKpMuMu_MVA'
+    rk_mm_nopid  = 'Hlt2RD_BuToKpMuMu_MVA_noPID'
+    rk_mm_ss     = 'Hlt2RD_BuToKpMuMu_SameSign_MVA'
+    # -----------
+    rkst_ee_os   = 'Hlt2RD_B0ToKpPimEE_MVA'
+    rkst_ee_ss   = 'Hlt2RD_B0ToKpPimEE_SameSign_MVA'
+    rkst_ee_nopid= 'Hlt2RD_B0ToKpPimEE_MVA_noPID'
+    rkst_ee_cal  = 'Hlt2RD_B0ToKpPimEE_MVA_cal'
+    rkst_ee_misid= 'Hlt2RD_B0ToKpPimEE_MVA_misid'
+    rkst_mm_os   = 'Hlt2RD_B0ToKpPimMuMu_MVA'
+    rkst_mm_nopid= 'Hlt2RD_B0ToKpPimMuMu_MVA_noPID'
+    rkst_mm_ss   = 'Hlt2RD_B0ToKpPimMuMu_SameSign_MVA'
+    # -----------
+    uninitialized= 'uninitialized'
+    # -----------
+    @property
+    def has_pid(self) -> bool:
+        '''
+        False for triggers associated to PID removed samples
+        '''
+        if self in {Trigger.rk_ee_nopid, Trigger.rkst_ee_nopid}:
+            return False
+
+        return True
+    # -----------
+    def __str__(self):
+        return self.value
+    # -----------
+    @property
+    def is_electron(self) -> bool:
+        return self.channel == Channel.ee
+    # -----------
+    @property
+    def is_muon(self) -> bool:
+        return self.channel == Channel.mm
+    # -----------
+    @property
+    def channel(self) -> Channel:
+        '''
+        Either 'muon' or 'electron'
+        '''
+        if 'EE_MVA'            in self.value:
+            return Channel.ee
+
+        if 'EE_SameSign_MVA'   in self.value:
+            return Channel.ee
+
+        if 'MuMu_MVA'          in self.value:
+            return Channel.mm
+        
+        if 'MuMu_SameSign_MVA' in self.value:
+            return Channel.mm
+
+        raise ValueError(f'Cannot determine channel for trigger: {self}')
+    # -----------
+    @property
+    def is_ss(self) -> bool:
+        '''
+        True if it is a same sign trigger
+        '''
+        return 'SameSign' in self.value
+    # -----------
+    @property
+    def project(self) -> Project:
+        '''
+        Returns
+        -----------------
+        Project for which this trigger is meant to be used, e.g. rk, rkst etc
+        '''
+        if self == Trigger.uninitialized:
+            raise ValueError('Trigger is not initialized')
+
+        match self:
+            # --------------
+            # rk
+            # --------------
+            case Trigger.rk_ee_os:
+                return Project.rk
+            case Trigger.rk_ee_ss:
+                return Project.rk
+            case Trigger.rk_ee_cal:
+                return Project.rk
+            case Trigger.rk_ee_misid:
+                return Project.rk
+            case Trigger.rk_ee_nopid:
+                return Project.rk_no_pid
+            # --------------
+            case Trigger.rk_mm_os:
+                return Project.rk
+            case Trigger.rk_mm_ss:
+                return Project.rk
+            case Trigger.rk_mm_nopid:
+                return Project.rk_no_pid
+            # --------------
+            # rkst
+            # --------------
+            case Trigger.rkst_ee_os:
+                return Project.rkst
+            case Trigger.rkst_ee_ss:
+                return Project.rkst
+            case Trigger.rkst_ee_cal:
+                return Project.rkst
+            case Trigger.rkst_ee_misid:
+                return Project.rkst
+            case Trigger.rkst_ee_nopid:
+                return Project.rkst_no_pid
+            # --------------
+            case Trigger.rkst_mm_os:
+                return Project.rkst
+            case Trigger.rkst_mm_ss:
+                return Project.rkst
+            case Trigger.rkst_mm_nopid:
+                return Project.rkst_no_pid
 # ---------------------------------------
 class Qsq(StrEnum):
     '''
@@ -395,145 +468,33 @@ class Qsq(StrEnum):
     def __str__(self):
         return self.value
 # ---------------------------------------
-class Sample(StrEnum):
+class MisID(StrEnum):
     '''
-    Class meant to represent MC or data sample
-
-    Naming constraints:
-
-    - Except for data, all samples meant to be used with the electron/muon channel should end with ee/mm
+    Class meant to represent different
+    misID control regions
     '''
-    undefined      = 'undefined'
-    # -----
-    ccbar          = 'ccbar' # Only needed as placeholder for inclusive charmonium mix
-    # -----
-    data_24        = 'DATA_24*'
-    # -----
-    bpkpee         = 'Bu_Kee_eq_btosllball05_DPC'
-    bpkpjpsiee     = 'Bu_JpsiK_ee_eq_DPC'
-    bpkppsi2ee     = 'Bu_psi2SK_ee_eq_DPC'
-    # -----
-    bpkpmm         = 'Bu_Kmumu_eq_btosllball05_DPC'
-    bpkpjpsimm     = 'Bu_JpsiK_mm_eq_DPC'
-    bpkppsi2mm     = 'Bu_psi2SK_mm_eq_DPC'
-    # -----
-    bppipjpsiee    = 'Bu_JpsiPi_ee_eq_DPC'
-    bppipjpsimm    = 'Bu_JpsiPi_mm_eq_DPC'
-    # -----
-    bdkstkpiee     = 'Bd_Kstee_eq_btosllball05_DPC'
-    bdkstkpijpsiee = 'Bd_JpsiKst_ee_eq_DPC'
-    bdkstkpipsi2ee = 'Bd_psi2SKst_ee_eq_DPC'
-    # -----
-    bdkstkpimm     = 'Bd_Kstmumu_eq_btosllball05_DPC'
-    bdkstkpijpsimm = 'Bd_JpsiKst_mm_eq_DPC'
-    bdkstkpipsi2mm = 'Bd_psi2SKst_mm_eq_DPC'
-    # -----
-    bpk1kpipiee    = 'Bu_K1ee_eq_DPC'
-    bpk2kpipiee    = 'Bu_K2stee_Kpipi_eq_mK1430_DPC'
-    bpkstkpiee     = 'Bu_Kstee_Kpi0_eq_btosllball05_DPC'
-    bsphiee        = 'Bs_phiee_eq_Ball_DPC'
-    # -----
-    bpjpsixee      = 'Bu_JpsiX_ee_eq_JpsiInAcc'
-    bdjpsixee      = 'Bd_JpsiX_ee_eq_JpsiInAcc'
-    bsjpsixee      = 'Bs_JpsiX_ee_eq_JpsiInAcc'
-    # -----
-    bpjpsixmm      = 'Bu_JpsiX_mm_eq_JpsiInAcc'
-    bdjpsixmm      = 'Bd_JpsiX_mm_eq_JpsiInAcc'
-    bsjpsixmm      = 'Bs_JpsiX_mm_eq_JpsiInAcc'
-    # -----
-    # Hadronic misid
-    # -----
-    bpkkk          = 'Bu_KplKplKmn_eq_sqDalitz_DPC'
-    bpkpik         = 'Bu_KplpiplKmn_eq_sqDalitz_DPC'
-    bpkpipi        = 'Bu_piplpimnKpl_eq_sqDalitz_DPC' 
-    # --------------------------------------------
-    @property
-    def subdecays(self) -> list[str]:
-        '''
-        Returns list of subdecays
-        '''
-        match self.name:
-            case 'bpkpee':
-                return ['bpkp']
-            case 'bpkpmm':
-                return ['bpkp']
-            case 'bdkstkpiee':
-                return ['bdks', 'k+kp']
-            case 'bdkstkpimm':
-                return ['bdks', 'k+kp']
-            # ------
-            case 'bpkpjpsiee':
-                return ['bpjk', 'jpee']
-            case 'bppipjpsiee':
-                return ['bpjpi', 'jpee']
-            case 'bpkpjpsimm':
-                return ['bpjk', 'jpmm']
-            case 'bppipjpsimm':
-                return ['bpjpi', 'jpmm']
-            case 'bpkppsi2ee':
-                return ['bppsk', 'psee']
-            case 'bpkppsi2mm':
-                return ['bppsk', 'psmm']
-            # ------
-            case 'bdkstkpijpsiee':
-                return ['bdjkst' , 'jpee', 'kstkpi']
-            case 'bdkstkpijpsimm':
-                return ['bdjkst' , 'jpmm', 'kstkpi']
-            case 'bdkstkpipsi2ee':
-                return ['bdpskst', 'psee', 'kstkpi']
-            case 'bdkstkpipsi2mm':
-                return ['bdpskst', 'psmm', 'kstkpi']
-            # ------
-            case 'bsphiee':
-                return ['bsph', 'phkk']
-            case 'bpk1kpipiee':
-                return ['bpk1', 'k13h']
-            case 'bpk2kpipiee':
-                return ['bpk2', 'k23h']
-            case 'bpkstkpiee':
-                return ['bpks', 'kokp']
-            case _:
-                raise NotImplementedError(f'Cannot find subdecays for: {self.name}') 
-    # --------------------------------------------
-    @classmethod
-    def get_mc_samples(cls) -> list['Sample']:
-        '''
-        Returns
-        ---------------
-        List of MC samples known to analysis
-        '''
+    bp_kk   = 'bp_kk'
+    bp_pipi = 'bp_pipi'
 
-        return [ sample for sample in cls if not sample.name.startswith('data') ] 
-    # --------------------------------------------
+    bd_kk   = 'bd_kk'
+    bd_pipi = 'bd_pipi'
+    # ----------------------------
     def __str__(self):
-        '''
-        Returns
-        ----------------
-        String representing sample name, e.g. Bu_JpsiK_ee_eq_DPC
-        '''
         return self.value
-    # --------------------------------------------
+    # ----------------------------
     @property
-    def latex(self) -> str:
+    def mass(self) -> Mass:
         '''
-        Returns
-        ----------------
-        Latex string for decay associated to sample
+        Mass meant to be fitted in this region
         '''
-        return self.name
-    # --------------------------------------------
-    @property
-    def channel(self) -> Channel:
-        '''
-        Returns
-        ----------------
-        Channel to which current sample belongs
-        '''
-        if self.name.endswith('ee'):
-            return Channel.ee
-
-        if self.name.endswith('mm'):
-            return Channel.mm
-
-        raise ValueError(f'Sample {self} does not belong to electron or muon Channel')
+        match self:
+            case MisID.bp_kk:
+                return Mass.bp_kk
+            case MisID.bp_pipi:
+                return Mass.bp_pipi
+            case MisID.bd_kk:
+                return Mass.bd_kk
+            case MisID.bd_pipi:
+                return Mass.bd_pipi
 # ---------------------------------------
+

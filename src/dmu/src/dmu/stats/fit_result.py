@@ -1,0 +1,458 @@
+'''
+Module containing FitResult class
+'''
+import re
+import math
+import numpy
+import pprint
+
+from typing      import Self
+from contextvars import ContextVar
+from contextlib  import contextmanager
+from typing      import Final
+from scipy.stats import chi2 as chi2_dist
+from pathlib     import Path
+from pydantic    import BaseModel, ConfigDict, model_validator
+from dmu         import LogStore
+from .imports    import zfit
+
+zres = zfit.result.FitResult
+zpar = zfit.param.Parameter
+log  = LogStore.add_logger('rx_stats:fit_result')
+
+# Relative tolerance used to validate chi2
+RTOL     : Final[float] = 1e-7
+MIN_NDOF : Final[int  ] =  9
+MAX_NDOF : Final[int  ] = 41
+PAR_REGX : Final[str  ] = r'\w+_\w+_\w+_\d+'
+
+_VALIDATE_PAR_NAME : ContextVar[bool] = ContextVar('_validate_par_name', default = False)
+# -------------------------------------
+class GoodnessOfFit(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    chi2: float = math.nan 
+    pval: float = math.nan 
+    ndof: int
+    # --------------------------
+    @model_validator(mode='before')
+    @classmethod
+    def compute_or_validate(cls, data):
+        chi2 = data.get('chi2', math.nan) 
+        pval = data.get('pval', math.nan) 
+        ndof = data['ndof']
+
+        if not (MIN_NDOF < ndof < MAX_NDOF):
+            raise ValueError(f'Invalid Ndof: {ndof}')
+
+        if math.isnan(chi2) and math.isnan(pval):
+            raise ValueError('Either pvalue or chi2 are needed')
+
+        computed_pval = float(1 - chi2_dist.cdf(chi2, ndof))
+        computed_chi2 = float(chi2_dist.isf(pval, ndof))
+        # ----------------
+        # Got pvalue, not chi2, assign chi2
+        # ----------------
+        if   math.isnan(chi2) and not math.isnan(computed_chi2):
+            data['chi2'] = computed_chi2
+            return data 
+        elif math.isnan(chi2) and     math.isnan(computed_chi2):
+            raise ValueError('Cannot compute chi2')
+        # ----------------
+        # Got chi2, not pvalue, assign pvalue 
+        # ----------------
+        if   math.isnan(pval) and not math.isnan(computed_pval):
+            data['pval'] = computed_pval
+            return data 
+        elif math.isnan(pval) and     math.isnan(computed_pval):
+            raise ValueError('Cannot compute pvalue')
+        # ----------------
+        # Got chi2 and pvalue, validate
+        # ----------------
+        if not math.isnan(chi2) and not numpy.isclose(chi2, computed_chi2, rtol = RTOL):
+            raise ValueError(f'Inconsistent input values: {data}')
+
+        if not math.isnan(pval) and not numpy.isclose(pval, computed_pval, rtol = RTOL):
+            raise ValueError(f'Inconsistent input values: {data}')
+        # ----------------
+
+        return data 
+    # --------------------------
+    def __str__(self) -> str:
+        fchi2 = -1 if self.chi2 is None else self.chi2
+        fpval = -1 if self.pval is None else self.pval
+        indof = self.ndof
+
+        msg = f'chi2: {fchi2:.0f}\n'
+        msg+= f'pval: {fpval:.3f}\n'
+        msg+= f'Ndof: {indof:}\n'
+
+        return msg 
+    # --------------------------
+    def __lt__(self, other : 'GoodnessOfFit') -> bool:
+        '''
+        Higher chi2 means worse goodness of fit
+        '''
+        return self.chi2 > other.chi2
+# -------------------------------------
+class FitParameter(BaseModel):
+    '''
+    Class meant to represent fitting parameter
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    name : str
+    value: float 
+    error: float
+    # ----------------------
+    def model_post_init(self, _) -> None:
+        if not _VALIDATE_PAR_NAME.get():
+            return
+
+        mtch = re.match(PAR_REGX, self.name)
+
+        if not mtch:
+            log.error(f'Parameters should follow naming: {PAR_REGX}')
+            raise ValueError(f'Invalid parameter name: {self.name}')
+    # ----------------------
+    @property
+    def prefix(self) -> str:
+        '''
+        Parameters are meant to be called as
+
+        {PREFIX}_{MODEL}_{COMPONENT}_{INDEX}
+
+        e.g. mu_suj_combinatorial_1
+
+        This will return PREFIX
+        '''
+        parts = self.name.split('_')
+
+        return parts[0]
+    # ----------------------
+    def __str__(self) -> str:
+        '''
+        Returns
+        -------------
+        String representation
+        '''
+        msg = f'{self.name:<30}{self.value:<30}{"±":<10}{self.error:<30}'
+
+        return msg
+    # ----------------------
+    @classmethod
+    def enforce_naming_convention(cls, value : bool):
+        '''
+        Parameters
+        --------------
+        value: If True (default) will enforce naming convention of fitting parameters
+        '''
+
+        @contextmanager
+        def _context():
+            token = _VALIDATE_PAR_NAME.set(value)
+
+            try:
+                yield
+            finally:
+                _VALIDATE_PAR_NAME.reset(token)
+
+        return _context()
+# -------------------------------------
+class FitResult(BaseModel):
+    '''
+    Class meant to represent fit result
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    valid      : bool
+    status     : int
+    covariance : list[list[float]] 
+    parameters : tuple[FitParameter,...]
+    gof        : GoodnessOfFit | None = None
+    # ----------------------
+    @classmethod
+    def merge(cls, results : list[Self]) -> Self:
+        '''
+        Parameters
+        --------------
+        results: List of fit results
+
+        Returns
+        --------------
+        Fit result object, resulting from adding up all the parameters
+        only parameters are kept, everything else is set to a default
+        '''
+        pars : tuple[FitParameter,...] = tuple(par for result in results for par in result.parameters)
+
+        return cls(
+            valid      = True,
+            status     = 0,
+            covariance = [],
+            parameters = pars,
+            gof        = None)
+    # ----------------------
+    def __hash__(self) -> int:
+        cov  = tuple( tuple(row) for row in self.covariance )
+        data = cov, self.valid, self.status, self.parameters, self.gof
+
+        return hash(data)
+    # ----------------------
+    def _get_parameter_indexes(self, pars : list[str]) -> list[int]:
+        '''
+        Parameters
+        -------------
+        pars: List of prefixes of names of parmeters
+
+        Returns
+        -------------
+        List of indices of corresponding parameters
+        '''
+        prefixes : set[str] = { par.prefix for par in self.parameters }
+        if len(prefixes) != len(self.parameters):
+            for par in self.parameters:
+                log.error(par.name)
+
+            raise ValueError('Repeated prefixes found, cannot retrieve parameter indexes safely')
+
+        indexes : list[int] = []
+        for index, par in enumerate(self.parameters):
+            if par.prefix not in pars:
+                continue
+
+            indexes.append(index)
+
+        return indexes
+    # ----------------------
+    def pars_covariance(self, pars : list[str]) -> list[list[float]]:
+        '''
+        Parameters
+        -------------
+        pars: List of prefixes of names of parameters
+
+        Returns
+        -------------
+        Covariance matrix among parameters 
+        '''
+        indexes : list[int] = self._get_parameter_indexes(pars = pars)
+
+        reduced_cov : list[list[float]] = []
+        for irow, row in enumerate(self.covariance):
+            if irow not in indexes:
+                continue
+
+            this_row : list[float] = []
+            for icol, val in enumerate(row):
+                if icol not in indexes:
+                    continue
+
+                this_row.append(val)
+
+            reduced_cov.append(this_row)
+
+        return reduced_cov
+    # ----------------------
+    def __lt__(self, other : 'FitResult') -> bool:
+        '''
+        Better fit is greater
+        '''
+        if self.gof is None:
+            raise ValueError('No GOF defined for this instance')
+
+        if other.gof is None:
+            raise ValueError('No GOF defined for other instance')
+
+        return self.gof < other.gof
+    # ----------------------
+    def __getitem__(self, name : str) -> tuple[float,float]:
+        '''
+        Parameters
+        -------------
+        name: Name of parameter
+
+        Returns
+        -------------
+        Tuple with fit value and error
+        '''
+        for par in self.parameters:
+            if par.name != name:
+                continue
+
+            return par.value, par.error
+
+        raise ValueError(f'Parameter {name} not found in:\n {self}')
+    # ----------------------
+    def __contains__(self, name : str) -> bool:
+        '''
+        Parameters
+        -------------
+        name: Parameter name
+
+        Returns
+        -------------
+        True if parameter exists in fit result
+        '''
+        return any(par.name == name for par in self.parameters)
+    # ----------------------
+    def get(self, name : str, fall_back : float) -> tuple[float,float]:
+        '''
+        Parameters
+        ----------------
+        name     : Name of parameter
+        fall_back: Replacement for value and error if parameter not found
+
+        Returns
+        ----------------
+        Tuple with value and error
+        '''
+        for par in self.parameters:
+            if par.name != name:
+                continue
+
+            return par.value, par.error
+
+        return fall_back, fall_back
+    # ----------------------
+    def __str__(self) -> str:
+        '''
+        Returns
+        -------------
+        String representation
+        '''
+
+        msg  = '\n'
+        msg += 100 * '-' + '\n'
+        msg += f'{"Name":<30}{"Value":<30}{"":<10}{"Error":<30}\n'
+        msg += 100 * '-' + '\n'
+        for par in self.parameters:
+            msg += str(par) + '\n' 
+
+        return msg
+    # ----------------------
+    def to_json(
+        self, 
+        path : Path) -> None:
+        '''
+        Parameters
+        --------------
+        path: Path to JSON file
+        '''
+        data = self.model_dump_json(indent = 2)
+
+        log.info(f'Saving to: {path}')
+
+        path.write_text(data = data)
+    # ----------------------
+    def set_pars(self, pars : set[zpar]) -> set[zpar]:
+        '''
+        Parameters
+        -------------
+        pars: Set of parameters
+
+        Returns
+        -------------
+        Set of parameters with values set as in current object 
+        '''
+        fail = False
+        for par in pars:
+            value, _ = self.get(par.name, fall_back=math.nan)
+            if math.isnan(value):
+                fail = True
+                log.error(par.name)
+            else:
+                par.set_value(value)
+
+        if fail:
+            raise ValueError('At least one parameter not found in result')
+
+        return pars
+    # ----------------------
+    @classmethod
+    def _par_from_zfit(
+        cls, 
+        name        : str,
+        no_errors_ok: bool,
+        data        : dict) -> 'FitParameter':
+        '''
+        Parameters
+        -------------
+        name        : Parameter name
+        data        : Dictionary holding data from parameter fit
+        no_errors_ok: If true, it will return nan when errors are missing
+
+        Returns
+        -------------
+        FitParameter
+        '''
+        if 'minuit_hesse' in data:
+            error = data['minuit_hesse']['error']
+        elif no_errors_ok:
+            error = math.nan
+        else:
+            pprint.pprint(data)
+            raise KeyError(f'Cannot extract error from parameter: {name}')
+
+        try:
+            value = data['value']
+        except KeyError as exc:
+            pprint.pprint(data)
+            raise KeyError(f'Cannot extract value from parameter: {name}') from exc
+
+        return FitParameter(
+            name = name,
+            value= float(value),
+            error= float(error))
+    # ----------------------
+    @classmethod
+    def from_zfit(
+        cls, 
+        res          : zres,
+        gof          : GoodnessOfFit | None = None,
+        no_errors_ok : bool                 = False) -> 'FitResult':
+        '''
+        Parameters
+        ---------------
+        res         : Zfit fitting result
+        gof         : Optional goodness of fit object
+        no_errors_ok: If true, it won't raise exception if error not found
+
+        Returns
+        ---------------
+        Fitting result
+        '''
+        l_par : list[FitParameter] = [] 
+        for par, data in res.params.items():
+            param = cls._par_from_zfit(
+                no_errors_ok = no_errors_ok,
+                name         = par.name, 
+                data         = data) # type: ignore
+
+            l_par.append(param)
+
+        pars = tuple(l_par)
+
+        covariance = res.covariance().tolist()
+
+        return cls(
+            covariance = covariance,
+            status     = res.status,
+            valid      = res.valid,
+            gof        = gof,
+            parameters = pars)
+    # ----------------------
+    @classmethod
+    def from_json(
+        cls,
+        path : Path) -> 'FitResult':
+        '''
+        Parameters
+        --------------
+        path: Path to JSON file
+        '''
+        if not path.exists():
+            raise FileNotFoundError(f'File not found: {path}')
+
+        data = path.read_text()
+
+        return cls.model_validate_json(json_data = data)
+# -------------------------------------

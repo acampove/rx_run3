@@ -2,25 +2,25 @@
 Module containing the MisIDConstraints class
 '''
 
-from typing         import Final
-from rx_selection   import selection as sel
+from pathlib             import Path
+from typing              import Final
+from rx_common           import Component, Correction, Qsq, Region
+from rx_selection        import selection as sel
 
-from dmu.stats      import GofCalculator
-from dmu.stats      import ParameterLibrary as PL
-from dmu.stats      import Constraint1D
-from dmu.stats      import zfit
+from dmu.stats           import FitResult, GofCalculator
+from dmu.stats           import ParameterLibrary as PL
+from dmu.stats           import Constraint1D
 
-from dmu.generic    import utilities        as gut
-from dmu.workflow   import Cache
-from dmu            import LogStore
+from dmu                 import LogStore
+from dmu.generic         import utilities        as gut
+from dmu.workflow        import Cache
 
-from omegaconf      import DictConfig, OmegaConf
-from zfit           import Space               as zobs
-from zfit.loss      import ExtendedUnbinnedNLL as zlos
+from zfit.loss           import ExtendedUnbinnedNLL as zlos
 
-from fitter         import DataFitter
-from fitter         import LikelihoodFactory
-from fitter         import DataPreprocessor
+from .configs            import FitModelConf, MisIDConf
+from .data_fitter        import DataFitter
+from .likelihood_factory import LikelihoodFactory
+from .data_preprocessor  import DataPreprocessor
 
 log=LogStore.add_logger('fitter:misid_constraints')
 # -------------------------        
@@ -39,21 +39,16 @@ class MisIDConstraints(Cache):
     # ----------------------
     def __init__(
         self, 
-        obs       : zobs,
-        cfg       : DictConfig, 
-        q2bin     : str):
+        cfg   : FitModelConf, 
+        q2bin : Qsq):
         '''
         Parameters
         -------------
-        obs      : zfit observable
         cfg      : configuration needed to build PDF
         q2bin    : E.g. central
         '''
-        self._name        : Final[str]       = 'misid_constraints'
-        self._regions     : Final[list[str]] = ['hdpipi', 'hdkk']
-        self._data_sample : Final[str]       = 'DATA_24_*'
+        self._data_sample : Final[Component] = Component.data_24 
 
-        self._obs   = obs
         self._cfg   = cfg
         self._q2bin = q2bin
 
@@ -64,13 +59,13 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = f'{self._cfg.output_directory}/{q2bin}',
+            out_path = self._cfg.output_directory,
             q2bin    = self._q2bin,
             d_sel    = d_sel, 
-            config   = OmegaConf.to_container(cfg, resolve=True),
+            config   = cfg.model_dump(),
         )
     # ----------------------
-    def __get_constraints(self, pars : DictConfig) -> dict[str,tuple[float,float]]:
+    def __get_constraints(self, pars : FitResult) -> dict[str,tuple[float,float]]:
         '''
         Parameters
         -------------
@@ -81,9 +76,8 @@ class MisIDConstraints(Cache):
         Dictionary with yields in signal region
         '''
         d_yield   = {}
-        for region in self._regions:
-            d_yield[f'yld_{region}_{region}'  ] = self.__get_signal_region_yield(
-                nickname = region, 
+        for region in Region.hadronic_misid():
+            d_yield[f'yld_{region.signal}_{region}'  ] = self.__get_signal_region_yield(
                 region   = region,
                 pars     = pars) 
 
@@ -91,23 +85,20 @@ class MisIDConstraints(Cache):
     # ----------------------
     def __get_signal_region_yield(
         self, 
-        region   : str,
-        nickname : str, 
-        pars     : DictConfig) -> tuple[float,float]:
+        region   : Region, 
+        pars     : FitResult) -> tuple[float,float]:
         '''
         Parameters
         -------------
         region   : Identifies the control region, e.g. kk or pipi
-        nickname : Nickname of fully hadronic misID sample, e.g. kpipi
         pars     : Dictionary with fitting parameters for fit to control region
 
         Returns
         -------------
         Tuple with expected signal region yield and error
         '''
-        control_yield = pars[f'yld_{region}_{nickname}'].value
-        control_error = pars[f'yld_{region}_{nickname}'].error
-        scale         = self.__get_transfer_factor(nickname=nickname)
+        control_yield, control_error = pars[f'yld_{region.signal}_{region}']
+        scale = self.__get_transfer_factor(region=region)
 
         # Use it to scale yield from control region in data
         value = control_yield * scale
@@ -119,11 +110,11 @@ class MisIDConstraints(Cache):
 
         return value, error
     # ----------------------
-    def __get_transfer_factor(self, nickname : str) -> float:
+    def __get_transfer_factor(self, region : Region) -> float:
         '''
         Parameters
         -------------
-        nickname: Sample nickname, e.g. kkk, kpipi        
+        nickname: Sample nickname, e.g. hdkk, hdpipi        
 
         Returns
         -------------
@@ -131,26 +122,29 @@ class MisIDConstraints(Cache):
         Needed to translate MisID yields in control region to expectation
         in signal region
         '''
-        cfg     = self._cfg.model.components[nickname]
-        sample  = cfg.sample
-        wgt_cfg = cfg.categories.main.weights
-        trigger = cfg.trigger
+        match region:
+            case Region.bpkk:
+                cfg = self._cfg.components[Component.bpkkk  ]
+            case Region.bppipi:
+                cfg = self._cfg.components[Component.bpkpipi]
+
+        if not isinstance(cfg, MisIDConf):
+            cfg_type = type(cfg)
+            raise ValueError(f'Config for hadronic misID components of type: {cfg_type}')
 
         sig_yld, ctr_yld = 0, 0 
-        pid_sel          = {'pid_l' : '(1)'}
-
         # Extract yields from weighted (PID) no PID misID MC
         log.info(20 * '-')
         for is_sig in [True, False]:
             prp = DataPreprocessor(
-                obs    = self._obs,
-                out_dir= nickname,
-                sample = sample,
-                trigger= trigger,
-                wgt_cfg= wgt_cfg,
-                is_sig = is_sig,
-                cut    = pid_sel,
-                q2bin  = self._q2bin)
+                obs       = region.obs,
+                out_dir   = Path(region),
+                sample    = cfg.component,
+                trigger   = self._cfg.trigger,
+                is_sig    = is_sig,
+                wgt_cfg   = {Correction.pid : cfg.weights},
+                selection = {'pid_l' : '(1)'},
+                q2bin     = self._q2bin)
             dat = prp.get_data()
             yld = dat.weights.numpy().sum()
             yld = float(yld)
@@ -164,37 +158,36 @@ class MisIDConstraints(Cache):
 
         return sig_yld / ctr_yld
     # ----------------------
-    def __get_pid_cut(self, cfg : DictConfig, kind : str) -> str:
+    def __get_pid_cut(self, region : Region) -> str:
         '''
         Parameters
         -------------
-        cfg : Config taken from YAML file for data, e.g. data.yaml
-        kind: Type of control region, e.g. kkk or kpipi
+        region: Type of control region, e.g. kkk or kpipi
 
         Returns
         -------------
         PID cut needed to build control region
         '''
-        cut = cfg.selection[kind]
+        cut = self._cfg.selection[region]
 
         cut_l1 = cut.replace('LEP_', 'L1_')
         cut_l2 = cut.replace('LEP_', 'L2_')
 
-        # This is the FF region
+        # This is the FailFail region in data
         cut = f'({cut_l1}) && ({cut_l2})'
 
         log.info('')
-        log.info(f'Building {kind} PID control region with:')
+        log.info(f'Building {region} PID control region with:')
         log.info(cut)
         log.info('')
 
         return cut
     # ----------------------
-    def __get_control_nll(self, kind : str) -> tuple[zlos,DictConfig]:
+    def __get_control_nll(self, region : Region) -> tuple[zlos,dict]:
         '''
         Parameters
         -------------
-        kind: Control region type, e.g. kkk, kpipi
+        region: Control region type, e.g. kkk, kpipi
 
         Returns
         -------------
@@ -202,16 +195,14 @@ class MisIDConstraints(Cache):
             - Likelihood build for requested control region
             - Configuration used to build that likelihood
         '''
+        pid_cut = self.__get_pid_cut(region=region)
 
-        obs     = zfit.Space(f'B_Mass_{kind}', limits=(4500, 7000))
-        pid_cut = self.__get_pid_cut(cfg=self._cfg, kind=kind)
-
-        with PL.parameter_schema(cfg=self._cfg.model.yields),\
+        with PL.parameter_schema(cfg=self._cfg.yields),\
              sel.update_selection(d_sel={'pid_l' : pid_cut}):
 
             ftr = LikelihoodFactory(
-                obs    = obs,
-                name   = kind,
+                obs    = region.obs,
+                name   = region,
                 sample = self._data_sample, 
                 q2bin  = self._q2bin,
                 cfg    = self._cfg)
@@ -239,12 +230,16 @@ class MisIDConstraints(Cache):
 
         log.info(f'Running full calculation, nothing cached in: {cons_path}')
         d_nll   = {}
-        for region in self._regions:
-            d_nll[region] = self.__get_control_nll(kind=region)
+        for region in Region.hadronic_misid():
+            d_nll[region] = self.__get_control_nll(region=region)
 
         with GofCalculator.disabled(value=True):
-            ftr  = DataFitter(name=self._q2bin, d_nll=d_nll, cfg=self._cfg)
-            pars = ftr.run(kind='conf')
+            ftr      = DataFitter(
+                q2bin= self._q2bin, 
+                d_nll= d_nll, 
+                cfg  = self._cfg)
+
+            pars = ftr.run(kind='fres')
 
         d_cns = self.__get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)

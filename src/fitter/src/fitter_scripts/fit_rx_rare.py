@@ -24,9 +24,9 @@ from dmu           import LogStore
 from zfit.loss     import ExtendedUnbinnedNLL
 from rx_data       import RDFLoader
 from rx_selection  import selection as sel
-from rx_common     import Sample, info
+from rx_common     import Component, info
 
-from fitter        import FitConfig
+from fitter        import RXFitConfig
 from fitter        import ConstraintReader
 from fitter        import DataFitter
 from fitter        import LikelihoodFactory
@@ -34,7 +34,7 @@ from fitter        import ToyMaker
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 
-DATA_SAMPLE : Final[Sample] = Sample.data_24 
+DATA_SAMPLE : Final[Component] = Component.data_24 
 # ----------------------
 def _get_client(cfg : FitConfig) -> Client | None:
     '''
@@ -57,7 +57,7 @@ def _get_client(cfg : FitConfig) -> Client | None:
 
     return Client(cluster)
 # ----------------------
-def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConfig:
+def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> RXFitConfig:
     '''
     Returns
     --------------
@@ -79,7 +79,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> FitConf
 
     return _cfg_from_args(args = args)
 # ----------------------
-def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
+def _cfg_from_args(args : DictConfig | argparse.Namespace) -> RXFitConfig:
     '''
     Parameters
     -------------
@@ -101,9 +101,9 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
     else:
         raise NotImplementedError(f'Invalid channel: {channel}')
 
-    cfg = FitConfig(
+    cfg = RXFitConfig(
         name    = name,
-        fit_cfg = fit_cfg, 
+        mod_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
         group   = args.group,
         block   = args.block,
@@ -118,7 +118,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> FitConfig:
 # ----------------------
 def _add_constraints(
     nll : ExtendedUnbinnedNLL,
-    cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
+    cfg : RXFitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
     '''
     Parameters
     -------------
@@ -145,14 +145,14 @@ def _add_constraints(
     cons_str    = [ str(constraint) for constraint in cons ]
     constraints = '\n\n'.join(cons_str)
 
-    cfg.fit_cfg['used_constraints'] = constraints
+    cfg.mod_cfg['used_constraints'] = constraints
 
     cad  = ConstraintAdder(nll=nll, constraints=cons)
     nll  = cad.get_nll()
 
     return nll, cons
 # ----------------------
-def _fit(cfg : FitConfig) -> None:
+def _fit(cfg : RXFitConfig) -> None:
     '''
     This is where DataFitter is used
     '''
@@ -160,7 +160,7 @@ def _fit(cfg : FitConfig) -> None:
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = DATA_SAMPLE,
-        cfg    = cfg.fit_cfg)
+        cfg    = cfg.mod_cfg)
     nll     = ftr.run()
     cfg_mod = ftr.get_config()
 
@@ -169,7 +169,7 @@ def _fit(cfg : FitConfig) -> None:
     ftr = DataFitter(
         name = cfg.q2bin,
         d_nll= {cfg.name : (nll, cfg_mod)}, 
-        cfg  = cfg.fit_cfg)
+        cfg  = cfg.mod_cfg)
     res = ftr.run(kind='zfit')
 
     if cfg.toy_cfg is None:
@@ -197,7 +197,7 @@ def main(args : DictConfig | None = None):
             stack.enter_context(RDFLoader.client(client = client))
 
         stack.enter_context(Cache.cache_root(path=cfg.output_directory))
-        stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
+        stack.enter_context(PL.parameter_schema(cfg=cfg.mod_cfg.model.yields))
         stack.enter_context(sel.custom_selection(d_sel=cfg.overriding_selection))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
 

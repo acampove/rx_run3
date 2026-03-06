@@ -1,0 +1,30 @@
+output_directory : reso/rkst/muon/jpsi
+component        : bdkstkpijpsimm
+categories:
+  brem_xx0:
+    selection : {}
+    model:
+      pdfs:
+        - dscb
+        - gauss
+      shared        : 
+        - mu
+        - sg
+      floating      :
+        - mu
+        - sg
+      reparametrize : {}
+      fix           : {}
+fit:
+  strategy :
+    ntries : 10
+    pvalue : 0.05
+plots:
+  nbins   : 50
+  stacked : True
+  plot_range:
+    - 5180
+    - 5700
+  d_leg :
+    gauss_1 : Gauss 
+    dscb_1  : DSCB 

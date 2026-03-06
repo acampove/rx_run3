@@ -4,22 +4,19 @@ Module with utility functions related to the dmu.stats project
 
 import os
 import re
-import pickle
-
 import yaml
 import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
 import tensorflow        as tf
 
-import dmu.pdataframe.utilities as put
-import dmu.generic.utilities    as gut
+import dmu.pdataframe.utilities  as put
 
-from dmu                    import LogStore
-from .imports               import zfit
-from typing                 import Union, Any, Literal, overload
-from pathlib                import Path
-from contextlib             import contextmanager
+from dmu              import LogStore, LogLevels
+from .imports         import zfit
+from typing           import Union, Any, Literal, overload
+from pathlib          import Path
+from contextlib       import contextmanager
 
 from omegaconf        import OmegaConf, DictConfig
 from zfit.data        import Data          as zdata
@@ -29,12 +26,17 @@ from zfit.pdf         import BasePDF       as zpdf
 from zfit.result      import FitResult     as zres
 from zfit.loss        import ExtendedUnbinnedNLL, UnbinnedNLL
 
-from .fitter          import Fitter
+from .fit_result      import FitResult
 from .measurement     import Measurement
-from .zfit_plotter    import ZFitPlotter
+from .zfit_plotter    import ZFitPlotter, ZFitPlotterConf
 
-log = LogStore.add_logger('dmu:stats:utilities')
-Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+log           = LogStore.add_logger('dmu:stats:utilities')
+Loss          = Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+SumPDF        = zfit.pdf.SumPDF
+
+SingleLiteral = Literal['signal', 'signal_alt', 'bkg']
+SumLiteral    = Literal['s+b', 's_alt+b']
+AllLiteral    = Literal['signal', 'signal_alt', 'bkg', 's+b', 's_alt+b']
 #-------------------------------------------------------
 class Data:
     '''
@@ -311,48 +313,14 @@ def print_pdf(
         return l_msg
 
     for msg in l_msg:
-        if   level == 20:
+        if   level == LogLevels.info:
             log.info(msg)
-        elif level == 10:
+        elif level == LogLevels.debug:
             log.debug(msg)
         else:
             raise ValueError(f'Invalid level: {level}')
 
     return l_msg
-#---------------------------------------------
-def _parameters_from_result(result : zres) -> dict[str,tuple[float,float]]:
-    d_par = {}
-    log.debug('Reading parameters from:')
-    if log.getEffectiveLevel() < 20:
-        print(result)
-
-    log.debug(60 * '-')
-    log.debug('Reading parameters')
-    log.debug(60 * '-')
-    for name, d_val in result.params.items():
-        name = str(name) # Result object is frozen already, name should be a string
-        if _is_par_blinded(name=name, l_blind=Data.l_blind_vars):
-            continue
-
-        value = d_val['value']
-        error = None
-        if 'hesse'         in d_val:
-            error = d_val['hesse']['error']
-
-        if 'minuit_hesse'  in d_val:
-            error = d_val['minuit_hesse']['error']
-
-        log.debug(f'{name:<20}{value:<20.3f}{error}')
-
-        if not isinstance(value, (float, numpy.floating)):
-            raise ValueError(f'No value found for parameter {name}')
-
-        if not isinstance(value, (float, numpy.floating)):
-            raise ValueError(f'No value found for parameter {name}')
-
-        d_par[name] = value, error
-
-    return d_par
 #---------------------------------------------
 @overload
 def save_fit(
@@ -360,33 +328,33 @@ def save_fit(
     model   : None,
     res     : None,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> None: ...
 #---------------------------------------------
 @overload
 def save_fit(
     data    : zdata,
     model   : zpdf,
-    res     : zres,
+    res     : FitResult,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> Measurement: ...
 #---------------------------------------------
 @overload
 def save_fit(
     data    : zdata,
     model   : zpdf | None,
-    res     : zres | None,
+    res     : FitResult | None,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> Measurement | None: ...
 #---------------------------------------------
 def save_fit(
     data    : zdata,
     model   : zpdf|None,
-    res     : zres|None,
+    res     : FitResult | None,
     fit_dir : str|Path,
-    plt_cfg : DictConfig|dict|None,
+    plt_cfg : ZFitPlotterConf | None,
     d_const : dict[str,tuple[float,float]]|None = None) -> Measurement | None:
     '''
     Parameters
@@ -405,15 +373,14 @@ def save_fit(
     if plt_cfg is None:
         return None
 
-    if isinstance(plt_cfg, dict):
-        plt_cfg = OmegaConf.create(plt_cfg)
+    if isinstance(fit_dir, str):
+        fit_dir = Path(fit_dir)
 
-    # TODO: This needs to work the other way around
-    # the whole code dowstream needs to use Path
-    if isinstance(fit_dir, Path):
-        fit_dir = str(fit_dir)
-
-    _save_fit_plot(data=data, model=model, cfg=plt_cfg, fit_dir=fit_dir)
+    _save_fit_plot(
+        data   =data, 
+        model  =model, 
+        cfg    =plt_cfg, 
+        fit_dir=fit_dir)
 
     if model and not model.extended:
         # TODO: Update this when the issue with this property be fixed in zfit
@@ -421,7 +388,11 @@ def save_fit(
     else:
         nentries = None
 
-    pars  = _save_result(fit_dir=fit_dir, res=res, nentries = nentries)
+    pars  = _save_result(
+        res      = res, 
+        fit_dir  = fit_dir, 
+        nentries = nentries)
+
     df    = data.to_pandas(weightsname=Data.weight_name)
     opath = f'{fit_dir}/data.json'
     log.debug(f'Saving data to: {opath}')
@@ -442,8 +413,8 @@ def save_fit(
 def _save_fit_plot(
     data   : zdata, 
     model  : zpdf|None, 
-    fit_dir: str,
-    cfg    : DictConfig) -> None:
+    fit_dir: Path,
+    cfg    : ZFitPlotterConf) -> None:
     '''
     Parameters
     -------------
@@ -452,10 +423,10 @@ def _save_fit_plot(
     fit_dir: Directory where plot will go
     cfg    : Config used for plotting
     '''
-    os.makedirs(fit_dir, exist_ok=True)
+    fit_dir.mkdir(parents = True, exist_ok = True)
+
     fit_path_lin = f'{fit_dir}/fit_linear.png'
     fit_path_log = f'{fit_dir}/fit_log.png'
-    log.info(f'Saving fit to: {fit_dir}')
 
     if model is None:
         log.warning('Model not found, saving dummy plot')
@@ -465,47 +436,28 @@ def _save_fit_plot(
         plt.yscale('log')
         plt.savefig(fit_path_log)
         plt.close('all')
+
         return
 
-    # Here we know the config is a dictionary with a string as a key
-    # so we ignore the error. Need pydantic for configs...
-    pyconf : dict[str,Any] = OmegaConf.to_container(cfg, resolve=True) # type: ignore
-    if 'yrange' in pyconf:
-        yrange_log = pyconf['yrange']['log'   ]
-        yrange_lin = pyconf['yrange']['linear']
-
-        del pyconf['yrange']
-    else:
-        yrange_log = None
-        yrange_lin = None
-
     ptr = ZFitPlotter(data=data, model=model)
-    ptr.plot(**pyconf)
+    ptr.plot(**cfg.model_dump())
 
     log.info(f'Saving fit to: {fit_path_lin}')
-    if yrange_lin:
-        log.debug(f'Using linear yrange: {yrange_lin}')
-        ptr.axs[0].set_ylim(yrange_lin)
-    else:
-        ptr.axs[0].set_ylim(bottom=0.0)
-
+    ptr.axs[0].set_yscale('linear')
+    ptr.axs[0].set_ylim(bottom=0.0)
     plt.savefig(fit_path_lin)
 
-    ptr.axs[0].set_yscale('log')
-    if yrange_log:
-        log.debug(f'Using log yrange: {yrange_log}')
-        ptr.axs[0].set_ylim(yrange_log)
-    else:
-        ptr.axs[0].set_ylim(bottom=1.0)
-
     log.info(f'Saving fit to: {fit_path_log}')
+    ptr.axs[0].set_yscale('log')
+    ptr.axs[0].set_ylim(bottom=0.01)
     plt.savefig(fit_path_log)
+
     plt.close()
 #-------------------------------------------------------
 def _save_result(
     nentries: float | None,
-    fit_dir : str, 
-    res     : zres  | None) -> Measurement | None:
+    fit_dir : Path, 
+    res     : FitResult | None) -> None:
     '''
     Saves result as yaml, JSON, pkl
 
@@ -513,49 +465,18 @@ def _save_result(
     ---------------
     nentries: Number of entries or sum of weights, if not None 
     fit_dir : Directory where fit result will go
-    res     : Zfit result object
-
-    Returns
-    ---------------
-    Object holding values and errors of fitting parameters or None if result not found
-    because fit did not run
+    res     : Fit result object
     '''
     if res is None:
         log.info('No result object found, not saving parameters in pkl or JSON')
         return None
 
-    # TODO: Needs to be removed once
-    # https://github.com/zfit/zfit/issues/702
-    # be sorted out
-    try:
-        res.covariance()
-    except Exception as exc:
-        raise ValueError('Cannot calculate covariance matrix, result was likely already frozen') from exc
-
-    res.freeze()
-    with open(f'{fit_dir}/fit.pkl', 'wb') as ofile:
-        pickle.dump(res, ofile)
-
-    d_par  = _parameters_from_result(result=res)
-    d_par  = dict(sorted(d_par.items()))
-
-    if nentries:
-        d_par['nentries'] = nentries, 0
-
-    opath  = f'{fit_dir}/parameters.json'
-    log.debug(f'Saving parameters to: {opath}')
-    gut.dump_json(data = d_par, path = opath, exists_ok = True)
-
-    opath  = f'{fit_dir}/parameters.yaml'
-    log.debug(f'Saving parameters to: {opath}')
-    gut.dump_json(data = d_par, path = opath, exists_ok = True)
-
-    return Measurement(data = d_par)
+    res.to_json(path = fit_dir / 'parameters.json')
 #-------------------------------------------------------
 # Make latex table from text file
 #-------------------------------------------------------
 def _reformat_expo(val : str) -> str:
-    regex = r'([\d\.]+)e([-,\d]+)'
+    regex = r'([\d\.]+)e([+,-,\d]+)'
     mtch  = re.match(regex, val)
     if not mtch:
         raise ValueError(f'Cannot extract value and exponent from: {val}')
@@ -659,151 +580,7 @@ def pdf_to_tex(
 
     put.df_to_tex(df, out_dir / out_name)
 #---------------------------------------------
-# Fake/Placeholder fit
-#---------------------------------------------
-def get_model(
-    kind   : str,
-    nsample: int       = 1000,
-    obs    : zobs|None = None,
-    suffix : str|None  = None,
-    lam    : float     = -0.0001) -> zpdf:
-    '''
-    Returns zfit PDF for tests
-
-    Parameters:
-
-    kind   : 'signal' for Gaussian, 's+b' for Gaussian plus exponential
-    nsample: Number of entries for normalization of each component, default 1000
-    obs    : If provided, will use it, by default None and will be built in function
-    suffix : Optional, can be used in case multiple models are needed
-    lam    : Decay constant of exponential component, set to -0.0001 by default
-    '''
-    if suffix is not None:
-        suffix = f'_{suffix}'
-    else:
-        suffix = ''
-
-    if obs is None:
-        obs  = zfit.Space(f'mass{suffix}', limits=(4500, 7000))
-
-    mu   = zfit.Parameter(f'mu{suffix}', 5200, 4500, 6000)
-    sg   = zfit.Parameter(f'sg{suffix}',  150,   10, 200)
-    gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
-
-    if kind == 'signal':
-        return gaus
-
-    c   = zfit.Parameter(f'c{suffix}', lam, -0.01, 0)
-    expo= zfit.pdf.Exponential(obs=obs, lam=c)
-
-    if kind == 's+b':
-        nexpo = zfit.param.Parameter(f'nbkg{suffix}', nsample, 0, 1000_000)
-        ngaus = zfit.param.Parameter(f'nsig{suffix}', nsample, 0, 1000_000)
-
-        bkg   = expo.create_extended(nexpo)
-        sig   = gaus.create_extended(ngaus)
-        pdf   = zfit.pdf.SumPDF([bkg, sig])
-
-        return pdf
-
-    raise NotImplementedError(f'Invalid kind of fit: {kind}')
-# ----------------------
-@overload
-def get_nll(kind : Literal['s+b']   , nentries : int = 1000) -> ExtendedUnbinnedNLL:...
-@overload
-def get_nll(kind : Literal['signal'], nentries : int = 1000) -> UnbinnedNLL:...
-def get_nll(kind : str, nentries : int = 1000) -> Loss:
-    '''
-    Parameters
-    -------------
-    kind    : Type of model, e.g. s+b, signal
-    nentries: Dataset size
-
-    Returns
-    -------------
-    Extended NLL from a gaussian plus exponential model
-    '''
-    pdf = get_model(kind=kind)
-
-    if kind == 's+b':
-        dat = pdf.create_sampler()
-        return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
-
-    if kind == 'signal':
-        dat = pdf.create_sampler(n=nentries)
-        return zfit.loss.UnbinnedNLL(model=pdf, data=dat)
-
-    raise NotImplementedError(f'Invalid kind: {kind}')
-#---------------------------------------------
-def _pdf_to_data(pdf : zpdf, add_weights : bool) -> zdata:
-    numpy.random.seed(42)
-    zfit.settings.set_seed(seed=42)
-
-    nentries = 10_000
-    data     = pdf.create_sampler(n=nentries)
-    if not add_weights:
-        return data
-
-    arr_wgt  = numpy.random.normal(loc=1, scale=0.1, size=nentries)
-    data     = data.with_weights(arr_wgt)
-
-    return data
-#---------------------------------------------
-def placeholder_fit(
-    kind     : str,
-    fit_dir  : Path|None,
-    df       : pnd.DataFrame|None = None,
-    plot_fit : bool               = True) -> zres:
-    '''
-    Function meant to run toy fits that produce output needed as an input
-    to develop tools on top of them
-
-    Parameters
-    --------------
-    kind    : Kind of fit, e.g. s+b for the simples signal plus background fit
-    fit_dir : Directory where the output of the fit will go, if None, it won't save anything
-    df      : pandas dataframe if passed, will reuse that data, needed to test data caching
-    plot_fit: Will plot the fit or not, by default True
-
-    Returns
-    --------------
-    FitResult object
-    '''
-    pdf  = get_model(kind)
-    if fit_dir is not None:
-        print_pdf(pdf, txt_path=f'{fit_dir}/pre_fit.txt')
-
-    if df is None:
-        log.warning('Using user provided data')
-        data = _pdf_to_data(pdf=pdf, add_weights=True)
-    else:
-        data = zfit.Data.from_pandas(df, obs=pdf.space, weights=Data.weight_name)
-
-    d_const = {'sg' : (50., 3.)}
-    if not isinstance(data, zdata):
-        raise TypeError('Data is not a zfit Data object')
-
-    obj = Fitter(pdf, data)
-    res = obj.fit(cfg={'constraints' : d_const})
-
-    if fit_dir is None:
-        log.debug('Not saving placeholder fit')
-        return res
-
-    log.debug('Saving placeholder fit')
-    if plot_fit:
-        obj   = ZFitPlotter(data=data, model=pdf)
-        obj.plot(nbins=50, stacked=True)
-
-    save_fit(
-        data   =data, 
-        model  =pdf, 
-        res    =res, 
-        fit_dir=fit_dir, 
-        plt_cfg={'nbins' : 50, 'stacked' : True},
-        d_const=d_const)
-
-    return res
+# Zfit utilities 
 #---------------------------------------------
 def _reformat_values(d_par : dict, fall_back_error : float|None = None) -> dict:
     '''
@@ -842,10 +619,10 @@ def _reformat_values(d_par : dict, fall_back_error : float|None = None) -> dict:
     value = d_par['value']
 
     return {'value' : value, 'error' : error}
-#---------------------------------------------
-# Zfit utilities 
-#---------------------------------------------
-def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
+#-------------------------------------------------------
+def zres_to_cres(
+    res             : zres, 
+    fall_back_error : float|None = None) -> DictConfig:
     '''
     Parameters
     --------------
@@ -864,12 +641,10 @@ def zres_to_cres(res : zres, fall_back_error : float|None = None) -> DictConfig:
     except Exception as exc:
         raise ValueError('Cannot calculate covariance matrix, result was likely already frozen') from exc
 
-    res.freeze()
-
-    par   = res.params
+    par = res.params
     try:
         # TODO: Remove ignore once we figure out how to deal properly with typing issues in zfit
-        d_par = { name : _reformat_values(d_par=d_par, fall_back_error=fall_back_error) for name, d_par in par.items()} # type: ignore
+        d_par = { par.name : _reformat_values(d_par=d_par, fall_back_error=fall_back_error) for par, d_par in par.items()} # type: ignore
     except KeyError as exc:
         print(res)
         raise KeyError('Fit parameters cannot be used') from exc
@@ -893,12 +668,16 @@ def to_float(val : Any) -> float:
 
     return float(val)
 # ----------------------
-def val_from_zres(res : zres, name : str) -> float:
+def val_from_zres(
+    res  : zres, 
+    name : str,
+    fall_back : float | None = None) -> float:
     '''
     Parameters
     -------------
-    res: Zfit result, before freezing
-    name: Name of fitting parameter
+    res      : Zfit result, before freezing
+    name     : Name of fitting parameter
+    fall_back: If parameter not found will raise an error, unless fall back specified
 
     Returns
     -------------
@@ -919,6 +698,9 @@ def val_from_zres(res : zres, name : str) -> float:
         if isinstance(par,  str):
             val = data['value'] 
             return float(val) # type:ignore
+
+    if fall_back is not None:
+        return fall_back
 
     log.error(res)
 

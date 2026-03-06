@@ -1,7 +1,7 @@
 # This config file defines the yields and the relationships between them
 # For the fit of the resonant electron channel 
 yields: &yields
-  val : 0
+  val : 10
   min : 0
   max : 1000000
 jpsi_fraction:
@@ -13,51 +13,41 @@ psi2_fraction:
   min : 0.0
   max : 1.0 
 # -------------------------
-yld_combinatorial_brem_001:
+yld_bdkstjpsiee_swp:
   <<: *yields
-yld_ccbar_brem_001:
+yld_lbpkjpsiee:
   <<: *yields
-yld_lbjpsipk_brem_001:
+yld_bsphijpsiee:
   <<: *yields
-yld_bsjpsiphi_brem_001:
+yld_bskstjpsiee:
   <<: *yields
-yld_bsjpsikst_brem_001:
+yld_comb:
   <<: *yields
-yld_bdjpsikst_swp_brem_001:
+yld_bdkstkpijpsiee:
   <<: *yields
-# -----
-yld_combinatorial_brem_002:
+yld_bdkstkpipsi2ee:
   <<: *yields
-yld_ccbar_brem_002:
-  <<: *yields
-yld_lbjpsipk_brem_002:
-  <<: *yields
-yld_bsjpsiphi_brem_002:
-  <<: *yields
-yld_bsjpsikst_brem_002:
-  <<: *yields
-yld_bdjpsikst_swp_brem_002:
-  <<: *yields
-# -----
-yld_jpsi:
-  <<: *yields
-yld_psi2:
+yld_ccbar:
   <<: *yields
 # -------------------------
-yld_jpsi_brem_001:
-  mul: 
-    - yld_jpsi
+yld_bdkstkpijpsiee_brem_001:
+  kind: mul
+  pars: 
+    - yld_bdkstkpijpsiee
     - jpsi_fraction
-yld_jpsi_brem_002:
-  dif: 
-    - yld_jpsi
-    - yld_jpsi_brem_001 
+yld_bdkstkpijpsiee_brem_002:
+  kind: dif 
+  pars:
+    - yld_bdkstkpijpsiee
+    - yld_bdkstkpijpsiee_brem_001
 # -------------------------
-yld_psi2_brem_001:
-  mul: 
-    - yld_psi2
+yld_bdkstkpipsi2ee_brem_001:
+  kind: mul
+  pars: 
+    - yld_bdkstkpipsi2ee
     - psi2_fraction
-yld_psi2_brem_002:
-  dif: 
-    - yld_psi2
-    - yld_psi2_brem_001 
+yld_bdkstkpipsi2ee_brem_002:
+  kind: dif 
+  pars:
+    - yld_bdkstkpipsi2ee
+    - yld_bdkstkpipsi2ee_brem_001 

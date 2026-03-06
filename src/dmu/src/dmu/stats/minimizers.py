@@ -1,76 +1,87 @@
 '''
 Module containing derived classes from ZFit minimizer
 '''
+import math
 import numpy
-
+import tempfile
 import matplotlib.pyplot as plt
 
-from typing                        import Union
-from zfit.result                   import FitResult
+from typing                        import Final
+from pathlib                       import Path
+from multiprocessing               import get_context
+from zfit                          import dill                     
+from zfit.loss                     import ExtendedUnbinnedNLL
+from zfit.loss                     import UnbinnedNLL
+from zfit.result                   import FitResult as zres
+from zfit.util                     import ztyping
 from zfit.pdf                      import BasePDF           as zpdf
-from zfit.minimizers.baseminimizer import FailMinimizeNaN
-from dmu                           import LogStore
-from .imports                      import zfit
-from .utilities                    import print_pdf
-from .gof_calculator               import GofCalculator
+from zfit.minimizers.strategy      import FailMinimizeNaN
 
-log = LogStore.add_logger('dmu:ml:minimizers')
+from dmu                           import LogStore, LogLevels
+from dmu.logging                   import messages  as mes
+
+from .gof_calculator import GofCalculator
+from .fit_result     import FitResult, GoodnessOfFit
+from .utilities      import print_pdf
+from .fit_conf       import Context, Retries, FitConf
+from .imports        import zfit
+
+log = LogStore.add_logger('dmu:stats:minimizers')
+zlos= ExtendedUnbinnedNLL | UnbinnedNLL
+zpar= zfit.param.Parameter
+zmin= zfit.minimize.Minuit
+
+# Should always be these values
+_HIDDEN_TF_LINES          : Final[list[str]] = [
+        'Loaded cuDNN version',
+        'abnormal_detected_host @',
+        'Skipping loop optimization for Merge',
+        'Creating GpuSolver handles for stream',
+        'Loaded cuDNN version',
+        'All log messages before absl::InitializeLog()']
+
+# Configurations
+_NDOF : Final[int] = 10
+
+Loss= ExtendedUnbinnedNLL | UnbinnedNLL
+#------------------------------
+class MinimizerFailError(Exception):
+    '''
+    Exception used when fit fails in error calculation 
+    '''
 # ------------------------
-class AnealingMinimizer(zfit.minimize.Minuit):
+class AnealingMinimizer:
     '''
     Class meant to minimizer zfit likelihoods by using multiple retries,
     each retry is preceeded by the randomization of the fitting parameters
     '''
     # ------------------------
-    def __init__(self, ntries : int, pvalue : float = -1, chi2ndof : float = -1):
+    def __init__(self, cfg : FitConf | None = None):
         '''
-        ntries  : Try this number of times
-        pvalue  : Stop tries when this threshold is reached
-        chi2ndof: Use this value as a threshold to stop fits
+        Parameters
+        ----------------
+        cfg: Object storing configuration
         '''
-        self._ntries   = ntries
-        self._pvalue   = pvalue
-        self._chi2ndof = chi2ndof
+        if cfg is None:
+            stt = Retries.default()
+            cfg = FitConf.default()
+            cfg = cfg.model_copy(update = {'strategy' : stt})
 
-        self._check_thresholds()
-        self._l_bad_fit_res : list[FitResult] = []
+        if not isinstance(cfg.strategy, Retries):
+            raise ValueError(f'Using AnealingMinimizer with strategy: {cfg.strategy}')
 
-        super().__init__()
+        self._strategy   = cfg.strategy
+        self._cfg        = cfg
+        self._target_gof = GoodnessOfFit(
+            pval = self._strategy.pvalue, 
+            ndof = _NDOF)
+
+        self._l_bad_fit_res : list[zres] = []
+
+        min_conf  = cfg.minimization.model_dump()
+        self._min = zfit.minimize.Minuit(**min_conf)
     # ------------------------
-    def _check_thresholds(self) -> None:
-        good_pvalue  = 0 <= self._pvalue < 1
-        good_chi2dof = self._chi2ndof > 0
-
-        if good_pvalue and good_chi2dof:
-            raise ValueError('Threshold for both chi2 and pvalue were specified')
-
-        if good_pvalue:
-            log.debug(f'Will use threshold on pvalue with value: {self._pvalue}')
-            return
-
-        if good_chi2dof:
-            log.debug(f'Will use threshold on chi2ndof with value: {self._chi2ndof}')
-            return
-
-        raise ValueError('Neither pvalue nor chi2 thresholds are valid')
-    # ------------------------
-    def _is_good_gof(self, ch2 : float, pvl : float) -> bool:
-        is_good_pval = pvl > self._pvalue   and self._pvalue   > 0
-        is_good_chi2 = ch2 < self._chi2ndof and self._chi2ndof > 0
-        is_good      = is_good_pval or is_good_chi2
-
-        if is_good_pval:
-            log.info(f'Stopping fit, found p-value: {pvl:.3f} > {self._pvalue:.3f}')
-
-        if is_good_chi2:
-            log.info(f'Stopping fit, found chi2/ndof: {ch2:.3f} > {self._chi2ndof:.3f}')
-
-        if not is_good:
-            log.debug(f'Could not read threshold, pvalue/chi2: {pvl:.3f}/{ch2:.3f}')
-
-        return is_good
-    # ------------------------
-    def _is_good_fit(self, res : FitResult) -> bool:
+    def _is_good_fit(self, res : zres) -> bool:
         good_fit = True
 
         if not res.valid:
@@ -90,16 +101,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         return good_fit
     # ------------------------
-    def _get_gof(self, nll) -> tuple[float, float]:
-        log.debug('Checking GOF')
-
-        gcl = GofCalculator(nll)
-        pvl = gcl.get_gof(kind='pvalue')
-        ch2 = gcl.get_gof(kind='chi2/ndof')
-
-        return ch2, pvl
-    # ------------------------
-    def _randomize_parameters(self, nll):
+    def _randomize_parameters(self, nll : Loss):
         '''
         Will move floating parameters of PDF according
         to uniform PDF
@@ -113,12 +115,39 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         model = l_model[0]
         s_par = model.get_params(floating=True)
         for par in s_par:
-            ival = par.value()
-            fval = numpy.random.uniform(par.lower, par.upper)
+            ival = par.value().numpy()
+
+            lower, upper = self._param_bounds(par = par)
+            fval = numpy.random.uniform(lower, upper)
             par.set_value(fval)
             log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
+    # ----------------------
+    def _param_bounds(
+        self, 
+        par            : zpar, 
+        must_be_finite : bool = True) -> tuple[float,float]:
+        '''
+        Parameters
+        -------------
+        par: Zfit parameter
+        must_be_finite: If true, will raise an exception if a bound is None.
+
+        Returns
+        -------------
+        Tuple with bounds
+        '''
+        lower : float = math.inf if par.lower is None else float(par.lower.numpy())
+        upper : float = math.inf if par.upper is None else float(par.upper.numpy())
+
+        fail_lower = lower == math.inf and must_be_finite
+        fail_upper = upper == math.inf and must_be_finite
+
+        if fail_upper or fail_lower:
+            raise ValueError(f'Either bound is not finite for {par.name}: [{lower}, {upper}]')
+
+        return lower, upper
     # ------------------------
-    def _pick_best_fit(self, d_chi2_res : dict) -> Union[FitResult,None]:
+    def _pick_best_fit(self, d_chi2_res : dict) -> zres | None:
         nres = len(d_chi2_res)
         if nres == 0:
             log.error('No fits found')
@@ -132,7 +161,7 @@ class AnealingMinimizer(zfit.minimize.Minuit):
 
         return res
     #------------------------------
-    def _set_pdf_pars(self, res : FitResult, pdf : zpdf) -> None:
+    def _set_pdf_pars(self, res : zres, pdf : zpdf) -> None:
         '''
         Will set the PDF floating parameter values as the result instance
         '''
@@ -169,47 +198,216 @@ class AnealingMinimizer(zfit.minimize.Minuit):
         plt.hist(arr_mass, bins=60)
         plt.show()
     # ------------------------
-    def minimize(
+    def get_result( # type: ignore
         self, 
-        nll, 
-        **kwargs) -> FitResult:
+        loss  : Loss, 
+        params: ztyping.ParamsTypeOpt | None = None,
+        init  : zres | None = None) -> FitResult:
         '''
-        Will run minimization and return FitResult object
+        Returns
+        -----------------
+        Object holding fit result
         '''
+        results : list[FitResult] = []
+        for i_try in range(1, self._strategy.ntries + 1):
+            if i_try > 1:
+                self._randomize_parameters(loss)
 
-        d_chi2_res : dict[float,FitResult] = {}
-        for i_try in range(self._ntries):
             try:
-                res = super().minimize(nll, **kwargs)
+                obj = self._min.minimize(loss, params = params, init = init)
             except (FailMinimizeNaN, ValueError, RuntimeError) as exc:
-                log.error(f'{i_try:02}/{self._ntries:02}{"Failed":>20}')
-                log.debug(exc)
-                self._randomize_parameters(nll)
+                log.warning(f'Failed minimization: {exc}')
                 continue
 
-            if not self._is_good_fit(res):
-                log.warning(f'{i_try:02}/{self._ntries:02}{"Bad fit":>20}')
+            try:
+                obj = _calculate_errors(res = obj)
+            except MinimizerFailError as exc:
+                log.warning(f'Could not calculate error: {exc}')
                 continue
 
-            chi2, pvl = self._get_gof(nll)
-            log.info(f'{i_try:02}/{self._ntries:02}{chi2:>20.3f}')
-            d_chi2_res[chi2] = res
+            gcl = GofCalculator(nll = loss)
+            gof = gcl.get_gof()
+            res = FitResult.from_zfit(res = obj, gof = gof)
 
-            if self._is_good_gof(chi2, pvl):
+            log.info(f'{i_try:02}/{self._strategy.ntries:02}{gof.chi2:>20.3f}')
+            if gof < self._target_gof: 
+                results.append(res)
+                continue
+
+            if gof > self._target_gof:
+                log.info('Found fit statisfying target GOF:')
+                log.info(gof)
                 return res
 
-            self._randomize_parameters(nll)
+        if not results:
+            raise ValueError('No valid results found')
 
-        res = self._pick_best_fit(d_chi2_res)
-        if res is None:
-            self._print_failed_fit_diagnostics(nll)
-            pdf = nll.model[0]
-            print_pdf(pdf)
+        results     = sorted(results)
+        best_result = results[-1]
 
-            raise ValueError('Fit failed')
+        pdf  = self._pdf_from_nll(loss)
+        pars = pdf.get_params()
+        best_result.set_pars(pars = pars)
 
-        pdf = self._pdf_from_nll(nll)
-        self._set_pdf_pars(res, pdf)
+        return results[-1]
+# ------------------------
+class ContextMinimizer:
+    '''
+    Class meant to run minimization in a separate process
+    This is needed to deal with the memory leak described here:
 
+    https://github.com/zfit/zfit/issues/665
+
+    And could be removed once issue is fixed
+    '''
+    # ----------------------
+    def __init__(
+        self, 
+        min : zmin):
+        '''
+        Parameters
+        ---------------
+        min: Minimizer
+        '''
+        self._ctx = get_context(method = 'spawn')
+        self._min = dill.dumps(min)
+    # ----------------------
+    @staticmethod
+    def _proc_minimize(
+        onll: bytes, 
+        omin: bytes,
+        path: Path):
+        '''
+        This method is meant to run the minimization in a separate python
+        process. Thus when the process ends, memory is released. It is meant
+        to prevent memory leak in zfit minimization step
+
+        Parameters
+        ----------------
+        onll: Bytes representation of likelihood
+        omin: Bytes representation of minimizer 
+        path: Path where the result object will be saved
+        '''
+        from zfit import dill
+        from .fit_result import FitResult
+
+        nll = dill.loads(onll)
+        min = dill.loads(omin) 
+
+        res = min.minimize(loss = nll)
+        res.hesse(name = 'minuit_hesse')
+
+        frs = FitResult.from_zfit(res = res)
+        frs.to_json(path= path)
+    # ----------------------
+    def minimize(self, loss : zlos) -> FitResult:
+        '''
+        Parameters
+        -------------
+        loss: zfit Negative log likelihood
+
+        Returns
+        -------------
+        FitResult object
+        '''
+        nll_byt = dill.dumps(loss)
+
+        with tempfile.NamedTemporaryFile(mode='w+b', delete=True) as temp:
+            path = Path(temp.name)
+
+            args = nll_byt, self._min, path
+            proc = self._ctx.Process(target = self._proc_minimize, args = args)
+            proc.start()
+            proc.join()
+
+            frs = FitResult.from_json(path = path)
+
+        return frs
+# ------------------------
+def _calculate_errors(res : zres) -> zres:
+    '''
+    Parameters
+    -------------
+    res: Result of fit, before error calculation
+
+    Returns
+    -------------
+    Result of fit after error calculation
+    None if error could not be calculated after 10 attempts
+    '''
+    log.debug('Calculating errors')
+
+    for method in ['minuit_hesse', 'approx']:
+        res.hesse(name='minuit_hesse', method = method)
+
+        if not res.valid:
+            log.warning('Result invalid after error calculation')
+            log.debug(res)
+            continue
+
+        try:
+            # If result is not readable, raise
+            FitResult.from_zfit(res = res)
+            return res
+        except Exception as exc:
+            log.warning(f'Failed error calculation with: {method}')
+            log.warning(exc)
+            log.debug(res)
+
+    raise MinimizerFailError('Fit error could not be found')
+# ------------------------
+def minimize(
+    nll : zlos,
+    cfg : FitConf | None = None)-> FitResult:
+    '''
+    Parameters
+    --------------
+    nll : Negative log likelihood
+    cfg : Fit configuration object 
+
+    Returns
+    --------------
+    Object storing fit results
+
+    Raises
+    --------------
+    RuntimeError: If the errors could not be calculated
+    '''
+    if cfg is None:
+        cfg = FitConf.default()
+
+    mnm = zfit.minimize.Minuit(**cfg.minimization.model_dump())
+
+    if isinstance(cfg.strategy, Context):
+        log.info('Using context minimizer')
+        mnm = ContextMinimizer(min = mnm)
+
+    with mes.filter_stderr(banned_substrings=_HIDDEN_TF_LINES):
+        try:
+            obj = mnm.minimize(loss = nll)
+        except (FailMinimizeNaN, RuntimeError):
+            raise MinimizerFailError('Minimization failed')
+
+    gcl = GofCalculator(nll = nll)
+    gof = gcl.get_gof()
+
+    if isinstance(obj, zres):
+        obj = _calculate_errors(res = obj)
+        res = FitResult.from_zfit(res = obj, gof = gof)
+    else:
+        res = obj
+
+    if res.valid:
         return res
+
+    log.debug('Found bad fit')
+    log.debug(f'{gof.chi2:<10.3f}{gof.pval:<10.3e}{res.status:<10}')
+
+    if log.getEffectiveLevel() < 20:
+        log.info(res)
+        pdf = nll.model[0] # This class is not meant for simultaneous fits
+                         # There should only be one PDF
+        print_pdf(pdf)
+
+    return res
 # ------------------------

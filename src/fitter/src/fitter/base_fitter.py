@@ -4,17 +4,14 @@ This module contains BaseFitter
 import yaml
 import textwrap
 
-from pathlib                  import Path
-from typing                   import cast
-from omegaconf                import OmegaConf, DictConfig
-from dmu                      import LogStore
-from dmu.stats                import Fitter
-from dmu.stats                import utilities  as sut
-from zfit.result              import FitResult  as zres
-from zfit.data                import Data       as zdata
-from zfit.pdf                 import BasePDF    as zpdf
-from rx_common                import Sample
-from rx_common                import Trigger
+from pathlib     import Path
+from dmu         import LogStore
+from dmu.stats   import FitConf, FitResult, Fitter, ZFitPlotterConf
+from dmu.stats   import utilities  as sut
+from zfit.data   import Data       as zdata
+from zfit.pdf    import BasePDF    as zpdf
+from rx_common   import Component, Qsq
+from rx_common   import Trigger
 
 log=LogStore.add_logger('fitter:base_fitter')
 # ------------------------
@@ -30,43 +27,34 @@ class BaseFitter:
         '''
         Used to hold attributes passed from derived classes
         '''
-        self._project : str     = ''
-        self._q2bin   : str     = ''
-        self._sig_yld : str     = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
-        self._trigger : Trigger = Trigger.uninitialized
-        self._sample  : Sample  = Sample.undefined
+        self._q2bin     : Qsq
+        self._trigger   : Trigger
+        self._project   : str        = ''
+        self._sig_yld   : str        = 'yld_signal' # Used to locate signal yield in order to calculate sensitivity
+        self._component : Component  = Component.undefined
     # ------------------------
     def _fit(
         self,
-        cfg   : DictConfig,
+        cfg   : FitConf,
         data  : zdata,
-        model : zpdf,
-        d_cns : dict[str,tuple[float,float]]|None = None) -> zres:
+        model : zpdf) -> FitResult:
         '''
         Parameters
         --------------------
         cfg  : Fitting configuration
         data : Zfit data object
         model: Zfit PDF
-        d_cns: Dictionary mapping parameter names to tuples of value and error
-               This is needed to apply constraints to fit
 
         Returns
         --------------------
-        DictConfig object with parameters names, values and errors
+        Fit result object
         '''
-        fit_cfg = OmegaConf.to_container(cfg, resolve=True)
-        fit_cfg = cast(dict, fit_cfg)
-
-        if d_cns is not None:
-            fit_cfg['constraints'] = d_cns
-
         ftr = Fitter(pdf=model, data=data)
-        res = ftr.fit(cfg=fit_cfg)
+        res = ftr.fit(cfg=cfg)
 
         return res
     # ------------------------
-    def _get_sensitivity(self, res : zres|None) -> float:
+    def _get_sensitivity(self, res : FitResult | None) -> float:
         '''
         Parameters
         --------------
@@ -80,14 +68,11 @@ class BaseFitter:
             log.debug('Missing result object, cannot get sensitivity')
             return -1
 
-        cres = sut.zres_to_cres(res=res)
-
-        if self._sig_yld not in cres:
+        if self._sig_yld not in res:
             log.info('Missing nsig entry, cannot get sensitivity')
             return -1
 
-        value = cres[self._sig_yld]['value']
-        error = cres[self._sig_yld]['error']
+        value, error = res[self._sig_yld]
 
         return 100 * error / value
     # --------------------------
@@ -146,7 +131,7 @@ class BaseFitter:
 
         return '; '.join(diff)
     # --------------------------
-    def _get_selection_text(self, selection : DictConfig) -> tuple[str,str,str]:
+    def _get_selection_text(self, selection : dict[str,dict[str,str]]) -> tuple[str,str,str]:
         '''
         Parameters
         --------------
@@ -164,21 +149,20 @@ class BaseFitter:
         '''
         # For components like combinatorial, there is no MC sample
         # Therefore the selection or brem category does not make sense
-        if self._sample == Sample.undefined:
-            log.info('Undefined sample, not saving sample text')
+        if self._component == Component.undefined:
             return '', '', ''
 
-        cuts_ini : dict[str,str] = OmegaConf.to_container(selection.default) # type: ignore
-        cuts_fit : dict[str,str] = OmegaConf.to_container(selection.fit)     # type: ignore
+        cuts_ini : dict[str,str] = selection['default']
+        cuts_fit : dict[str,str] = selection['fit'    ]
 
         sel_dif  = self._get_selection_diff(ini = cuts_ini, fit = cuts_fit)
 
         try:
             brem_cuts = self._brem_cuts_from_cuts(cuts=cuts_fit)
-        except Exception:
-            raise ValueError('Cannot retrieve brem cut string from cuts dictionary')
+        except Exception as exc:
+            raise ValueError('Cannot retrieve brem cut string from cuts dictionary') from exc
 
-        sel_fit = yaml.dump(cuts_fit, sort_keys=False)
+        sel_fit = yaml.dump(cuts_fit, indent = 2)
 
         return sel_fit, sel_dif, brem_cuts
     # --------------------------
@@ -206,13 +190,13 @@ class BaseFitter:
     def _get_text(
         self,
         data      : zdata,
-        res       : zres|None,
-        selection : DictConfig) -> tuple[str,str,str]:
+        res       : FitResult | None,
+        selection : dict[str,dict[str,str]]) -> tuple[str,str,str]:
         '''
         Parameters
         --------------
-        data: Zfit data used for fit
-        res : zfit result object
+        data     : Zfit data used for fit
+        res      : Fit result object
         Selection: Object storing selections for `fit` and `default` keys
 
         Returns
@@ -233,11 +217,11 @@ class BaseFitter:
     # ------------------------
     def _save_fit(
         self,
-        cut_cfg  : DictConfig,
-        plt_cfg  : DictConfig,
+        cut_cfg  : dict[str,dict[str,str]],
+        plt_cfg  : ZFitPlotterConf,
         out_path : Path,
-        model    : zpdf | None,
-        res      : zres | None,
+        model    : zpdf      | None,
+        res      : FitResult | None,
         data     : zdata,
         d_cns    : dict[str,tuple[float,float]]|None=None) -> None:
         '''
@@ -249,7 +233,7 @@ class BaseFitter:
         plt_cfg  : Plotting configuration
         out_path : Directory where fit will be saved
         model    : PDF from fit, can be None if dataset was empty
-        res      : Zfit result object, can be None if fit was to get a KDE
+        res      : Fit result object, can be None if fit was to get a KDE
         data     : data from fit
         d_cns    : Dictionary mapping parameter name to value error tuple.
                    Used for constraining that parameter
@@ -258,13 +242,12 @@ class BaseFitter:
         # There will not be PDF
         title, sel_fit, sel_dif = self._get_text(data=data, res=res, selection=cut_cfg)
         text                    = '\n'.join(textwrap.wrap(sel_dif, width=40))
-        plt_cfg['title'   ]     = title
-        plt_cfg['ext_text']     = text
+        plt_cfg.title    = title
+        plt_cfg.ext_text = text
 
         sel_path = out_path / 'selection.yaml'
         out_path.mkdir(parents = True, exist_ok = True)
-        with open(sel_path, 'w') as ofile:
-            ofile.write(sel_fit)
+        sel_path.write_text(sel_fit)
 
         sut.save_fit(
             data   = data,

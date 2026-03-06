@@ -1,246 +1,246 @@
 exp:
   c:
     val : -0.010
-    low : -0.020
-    high: -0.0001
+    min : -0.020
+    max : -0.0001
 hypexp:
   mu:
     val : 5000
-    low : 4000
-    high: 6000
+    min : 4000
+    max : 6000
   ap:
     val : 0.020
-    low : 0
-    high: 0.30
+    min : 0
+    max : 0.50
   bt:
     val : 0.002
-    low : 0.0001
-    high: 0.009
+    min : 0.0001
+    max : 0.009
 modexp:
   mu:
     val : 4300
-    low : 4250
-    high: 4500
+    min : 4250
+    max : 4500
   ap:
     val : 0.010
-    low : 0.002
-    high: 0.026
+    min : 0.002
+    max : 0.026
   bt:
     val : 0.010
-    low : 0.002
-    high: 0.020
+    min : 0.002
+    max : 0.020
 pol1:
   a:
     val : -0.005
-    low : -0.950
-    high: +0.000
+    min : -0.950
+    max : +0.000
 pol2:
   a:
     val : -0.005
-    low : -0.95
-    high: +0.00
+    min : -0.95
+    max : +0.00
   b:
     val : 0.000
-    low : -0.95
-    high: +0.95
+    min : -0.95
+    max : +0.95
 pol3:
   a:
     val : -0.005
-    low : -0.95
-    high: -0.00
+    min : -0.95
+    max : -0.00
   b:
     val : 0.000
-    low : -0.95
-    high: +0.95
+    min : -0.95
+    max : +0.95
   c:
     val : 0.000
-    low : -0.95
-    high: +0.95
+    min : -0.95
+    max : +0.95
 suj:
   mu:
     val : 4000
-    low : 3000
-    high: 5000
+    min : 3000
+    max : 5000
   sg:
     val : 10
-    low : 2
-    high: 5000
+    min : 2
+    max : 5000
   gm:
     val : 1
-    low : -10
-    high: 10
+    min : -10
+    max : 10
   dl:
     val : 1
-    low : 0.1
-    high: 40
+    min : 0.1
+    max : 40
 cbr:
   mu:
     val : 5300
-    low : 5100
-    high: 6000
+    min : 5100
+    max: 6000
   sg:
     val : 50
-    low : 2
-    high: 300
+    min : 2
+    max: 300
   ar:
     val : -2
-    low : -14.
-    high: -0.1
+    min : -14.
+    max: -0.1
   nr:
     val : 1
-    low : 0.5
-    high: 150
+    min : 0.5
+    max: 150
 cbl:
   mu:
     val : 5300
-    low : 5100
-    high: 6000
+    min : 5100
+    max : 6000
   sg:
     val : 50
-    low : 2
-    high: 300
+    min : 2
+    max : 300
   al:
     val : 2
-    low : 0.0
-    high: 14.
+    min : 0.0
+    max : 14.
   nl:
     val : 1
-    low : 0.5
-    high: 150
+    min : 0.5
+    max : 150
 cbg:
   mu:
     val : 5300
-    low : 5100
-    high: 6000
+    min : 5100
+    max: 6000
   sl:
     val : 50
-    low : 2
-    high: 300
+    min : 2
+    max: 300
   al:
     val : 2
-    low : 0.0
-    high: 14.
+    min : 0.0
+    max: 14.
   nl:
     val : 1
-    low : 0.5
-    high: 150
+    min : 0.5
+    max: 150
   sr:
     val : 50
-    low : 2
-    high: 300
+    min : 2
+    max: 300
   ar:
     val : 2
-    low : 0.0
-    high: 14.
+    min : 0.0
+    max: 14.
   nr:
     val : 1
-    low : 0.5
-    high: 150
+    min : 0.5
+    max: 150
 gauss:
   mu:
     val : 5300
-    low : 5100
-    high: 5500
+    min : 5100
+    max : 5500
   sg:
     val : 50
-    low : 2
-    high: 300
+    min : 2
+    max : 300
 dscb:
   mu:
-    val : 5250
-    low : 4500
-    high: 6000
+    val : 5300
+    min : 5000
+    max : 6000
   sg:
     val : 50
-    low :  5 
-    high: 500
+    min :  2 
+    max : 500
   ar:
     val : 1
-    low : 0
-    high: 5
+    min : 0
+    max : 5
   al:
     val : 1
-    low : 0
-    high: 5
+    min : 0
+    max : 5
   nr:
     val : 2
-    low : 1
-    high: 150
+    min : 1
+    max : 150
   nl:
     val : 2
-    low : 0
-    high: 150
+    min : 0
+    max : 150
 voigt:
   mu:
     val : 5280
-    low : 5040
-    high: 5500
+    min : 5040
+    max : 5500
   sg:
     val : 20
-    low : 10
-    high: 400
+    min : 10
+    max : 400
   gm:
     val : 4
-    low : 0.1
-    high: 100
+    min : 0.1
+    max : 100
 qgauss:
   mu:
     val : 5280
-    low : 5040
-    high: 5500
+    min : 5040
+    max : 5500
   sg:
     val : 20
-    low : 10
-    high: 400
+    min : 10
+    max : 400
   q:
     val : 2
-    low : 1
-    high: 3
+    min : 1
+    max : 3
 ggauss:
   mu:
     val : 5280
-    low : 5040
-    high: 5500
+    min : 5040
+    max: 5500
   sg:
     val : 20
-    low : 10
-    high: 400
+    min : 10
+    max: 400
   bt:
     val : 2
-    low : 1
-    high: 10 
+    min : 1
+    max: 10 
 egauss:
   mu:
     val : 5280
-    low : 5040
-    high: 5500
+    min : 5040
+    max: 5500
   sg:
     val : 20
-    low : 10
-    high: 400
+    min : 10
+    max: 400
   lm:
     val : 1
-    low : 0
-    high: 10 
+    min : 0
+    max: 10 
 bgauss:
   mu:
     val : 5280
-    low : 5040
-    high: 5500
+    min : 5040
+    max: 5500
   sr:
     val : 20
-    low : 10
-    high: 400
+    min : 10
+    max: 400
   sl:
     val : 20
-    low : 10
-    high: 400
+    min : 10
+    max: 400
 cauchy:
   mu:
     val : 5280
-    low : 5040
-    high: 5500
+    min : 5040
+    max : 5500
   gm:
     val : 150
-    low : 50
-    high: 500
+    min : 50
+    max : 500

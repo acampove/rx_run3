@@ -1,22 +1,57 @@
 '''
 Module storing ZModel class
 '''
+from pydantic        import BaseModel, ConfigDict, Field
+from typing          import Callable, Union, Literal
+from zfit.interface  import ZfitSpace     as zobs
+from zfit.pdf        import BasePDF       as zpdf
+from zfit.param      import Parameter     as zpar
 
-from contextlib     import contextmanager
-from contextlib     import ExitStack
-from typing         import Callable, Union
+from dmu             import LogStore
+from dmu.stats       import ParameterLibrary as PL
 
-from dmu            import LogStore
-from zfit.interface import ZfitSpace     as zobs
-from zfit.pdf       import BasePDF       as zpdf
-from zfit.param     import Parameter     as zpar
-
-from .imports       import zfit
-from .parameters    import ParameterLibrary as PL
-from .zfit_models   import HypExp
-from .zfit_models   import ModExp
+from .imports        import zfit
+from .types          import Model
+from .zfit_models    import HypExp
+from .zfit_models    import ModExp
 
 log=LogStore.add_logger('dmu:stats:model_factory')
+
+Reparametrization = Literal['scale', 'reso']
+# ------------------------------
+class ModelFactoryConf(BaseModel):
+    '''
+    Class meant to configure the fitter
+    '''
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True, # Due to reuse field that uses zpar
+        frozen                 =True)
+
+    pdfs          : list[Model]
+    shared        : list[str]
+    reparametrize : dict[str,Reparametrization]
+    fix           : dict[str,float]
+    floating      : list[str]
+    reuse         : list[zpar] = Field(default_factory=list) 
+    # ------------------------------
+    @classmethod
+    def default(cls, pdfs : list[Model]) -> 'ModelFactoryConf':
+        '''
+        Parameters
+        ------------
+        pdfs: List of nicknames to PDFs 
+
+        Returns
+        ------------
+        Default configuration for ModelFactory
+        '''
+        return cls(
+            pdfs          = pdfs,
+            shared        = [],
+            floating      = [],
+            reparametrize = dict(),
+            fix           = dict(),
+            reuse         = [])
 #-----------------------------------------
 class MethodRegistry:
     '''
@@ -61,27 +96,21 @@ class MethodRegistry:
         return list(cls._d_method)
 #-----------------------------------------
 class ModelFactory:
-    # When reparametrizing, if True, it will float the reparametrizing
-    # parameter and fix the original one.
-    _float_reparametrized = True
     '''
     Class used to create Zfit PDFs by passing only the nicknames, e.g.:
 
     ```python
     from dmu.stats.model_factory import ModelFactory
 
-    ranges= {'mu' : [5000, 5500, 6000]}
     l_pdf = ['dscb', 'gauss']
     l_shr = ['mu']
     l_flt = ['mu', 'sg']
     d_rep = {'mu' : 'scale', 'sg' : 'reso'}
-
     mod   = ModelFactory(
         preffix = 'signal', 
         obs     = obs, 
         l_pdf   = l_pdf, 
         l_shared= l_shr, 
-        ranges  = ranges,
         d_rep   = d_rep)
     pdf   = mod.get_pdf()
     ```
@@ -96,19 +125,17 @@ class ModelFactory:
     def __init__(self,
         preffix  : str,
         obs      : zobs,
-        l_pdf    : list[str],
+        l_pdf    : list[Model],
         l_shared : list[str],
         l_float  : list[str],
-        ranges   : None | dict[str, list[float]] = None,
-        l_reuse  : None | list[zpar]             = None,
-        d_fix    : None | dict[str,float]        = None,
-        d_rep    : None | dict[str,str]          = None):
+        l_reuse  : None | list[zpar]                  = None,
+        d_fix    : None | dict[str,float]             = None,
+        d_rep    : None | dict[str,Reparametrization] = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
         l_pdf:    List of PDF nicknames which are registered below
         l_shared: List of parameter names that are shared
-        ranges :  Dictionary used to override ranges for different parameters, e.g. {'mu' : [val, low, high]}
         l_float:  List of parameter names to allow to float
         l_reuse:  Optional. List of parameters that if given will be used instead of built by factory
         d_fix:    Dictionary with keys as the beginning of the name of a parameter and value as the number
@@ -117,7 +144,6 @@ class ModelFactory:
         '''
         l_reuse = [] if l_reuse is None else l_reuse
 
-        self._ranges          = ranges
         self._preffix         = preffix
         self._l_pdf           = l_pdf
         self._l_shr           = l_shared
@@ -254,7 +280,7 @@ class ModelFactory:
 
         if rep_kind is not None:
             log.info(f'Reparametrizing {par_name}')
-            par  = self.get_reparametrization(
+            par  = self._get_reparametrization(
                 par_name = par_name, 
                 kind     = rep_kind, 
                 value    = val, 
@@ -289,72 +315,36 @@ class ModelFactory:
 
         return self._d_rep.get(name)
     #-----------------------------------------
-    @classmethod
-    def get_reparametrization(
-        cls, 
+    def _get_reparametrization(
+        self, 
         par_name  : str, 
         kind      : str, 
         value     : float, 
         low       : float, 
         high      : float) -> zpar:
-        '''
-        Parameters
-        ------------------
-        par_name: Name of original (before reparametrization) parameter
-        kind    : E.g. reso, scale
-        value   : Default value of original parameter
-        low/high: Bounds for original parameter
-
-        Returns
-        ------------------
-        zfit parameter after reprametrization, e.g. mu_reparametrized = scale * mu_original
-        '''
         log.debug(f'Reparametrizing {par_name}')
-        par_orig = zfit.Parameter(par_name, value, low, high)
+        par_const = zfit.Parameter(par_name, value, low, high)
+        par_const.floating = False
 
         if   kind == 'reso':
-            par_repr = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
-            def func(d_par) : return d_par['orig'] * d_par['repr' ]
+            par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
+            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
         elif kind == 'scale':
-            par_repr = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
-            def func(d_par) : return d_par['orig'] + d_par['repr']
+            par_scale = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
+            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] + d_par['scale'], params={'par_const' : par_const, 'scale' : par_scale} )
         else:
             raise ValueError(f'Invalid kind: {kind}')
 
-        par       = zfit.ComposedParameter(
-            name  = f'{par_name}_cmp', 
-            func  = func, 
-            params= {'orig' : par_orig, 'repr' : par_repr} )
-
-        cls._float_fix_reparametrized(orig = par_orig, repr = par_repr)
-
         return par
-    # ----------------------
-    @classmethod
-    def _float_fix_reparametrized(cls, orig : zpar, repr : zpar) -> None:
-        '''
-        This method uses the _float_reparametrized class attribute to either
-        float the reparametrizing parameter (e.g. scale, resolution) or the original one, mu, sg.
-        Parameters
-        -------------
-        orig: Parameter before reparametrization
-        repr: Parameter after reparametrization
-        '''
-        if cls._float_reparametrized:
-            orig.floating = False
-            repr.floating = True 
-        else:
-            orig.floating = True 
-            repr.floating = False 
     #-----------------------------------------
-    @MethodRegistry.register('exp')
+    @MethodRegistry.register(Model.exp)
     def _get_exponential(self, suffix : str = '') -> zpdf:
         c   = self._get_parameter(kind = 'exp', name = 'c', suffix = suffix)
         pdf = zfit.pdf.Exponential(c, self._obs, name=f'exp_{self._preffix}{suffix}')
 
         return pdf
     # ---------------------------------------------
-    @MethodRegistry.register('hypexp')
+    @MethodRegistry.register(Model.hypexp)
     def _get_hypexp(self, suffix : str = '') -> zpdf:
         mu = self._get_parameter(kind = 'hypexp', name = 'mu', suffix = suffix)
         ap = self._get_parameter(kind = 'hypexp', name = 'ap', suffix = suffix)
@@ -364,7 +354,7 @@ class ModelFactory:
 
         return pdf
     # ---------------------------------------------
-    @MethodRegistry.register('modexp')
+    @MethodRegistry.register(Model.modexp)
     def _get_modexp(self, suffix : str = '') -> zpdf:
         mu = self._get_parameter(kind = 'modexp', name = 'mu', suffix = suffix)
         ap = self._get_parameter(kind = 'modexp', name = 'ap', suffix = suffix)
@@ -374,14 +364,14 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('pol1')
+    @MethodRegistry.register(Model.pol1)
     def _get_pol1(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol1', name = 'a', suffix = suffix)
         pdf = zfit.pdf.Chebyshev(obs=self._obs, coeffs=[a], name=f'pol1_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('pol2')
+    @MethodRegistry.register(Model.pol2)
     def _get_pol2(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol2', name = 'a', suffix = suffix)
         b   = self._get_parameter(kind = 'pol2', name = 'b', suffix = suffix)
@@ -389,7 +379,7 @@ class ModelFactory:
 
         return pdf
     # ---------------------------------------------
-    @MethodRegistry.register('pol3')
+    @MethodRegistry.register(Model.pol3)
     def _get_pol3(self, suffix : str = '') -> zpdf:
         a   = self._get_parameter(kind = 'pol3', name = 'a', suffix = suffix)
         b   = self._get_parameter(kind = 'pol3', name = 'b', suffix = suffix)
@@ -399,7 +389,18 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('suj')
+    @MethodRegistry.register(Model.cbr)
+    def _get_cbr(self, suffix : str = '') -> zpdf:
+        mu  = self._get_parameter(kind = 'cbr', name = 'mu', suffix = suffix)
+        sg  = self._get_parameter(kind = 'cbr', name = 'sg', suffix = suffix)
+        ar  = self._get_parameter(kind = 'cbr', name = 'ac', suffix = suffix)
+        nr  = self._get_parameter(kind = 'cbr', name = 'nc', suffix = suffix)
+
+        pdf = zfit.pdf.CrystalBall(mu, sg, ar, nr, self._obs, name=f'cbr_{self._preffix}{suffix}')
+
+        return pdf
+    #-----------------------------------------
+    @MethodRegistry.register(Model.suj)
     def _get_suj(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'suj', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'suj', name = 'sg', suffix = suffix)
@@ -410,52 +411,18 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('cbr')
-    def _get_cbr(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter(kind = 'cbr', name = 'mu', suffix = suffix)
-        sr  = self._get_parameter(kind = 'cbr', name = 'sg', suffix = suffix)
-        ar  = self._get_parameter(kind = 'cbr', name = 'ar', suffix = suffix)
-        nr  = self._get_parameter(kind = 'cbr', name = 'nr', suffix = suffix)
-
-        pdf = zfit.pdf.CrystalBall(mu, sr, ar, nr, self._obs, name=f'cbr_{self._preffix}{suffix}')
-
-        return pdf
-    #-----------------------------------------
-    @MethodRegistry.register('cbl')
+    @MethodRegistry.register(Model.cbl)
     def _get_cbl(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cbl', name = 'mu', suffix = suffix)
-        sl  = self._get_parameter(kind = 'cbl', name = 'sg', suffix = suffix)
-        al  = self._get_parameter(kind = 'cbl', name = 'al', suffix = suffix)
-        nl  = self._get_parameter(kind = 'cbl', name = 'nl', suffix = suffix)
+        sg  = self._get_parameter(kind = 'cbl', name = 'sg', suffix = suffix)
+        al  = self._get_parameter(kind = 'cbl', name = 'ac', suffix = suffix)
+        nl  = self._get_parameter(kind = 'cbl', name = 'nc', suffix = suffix)
 
-        pdf = zfit.pdf.CrystalBall(mu, sl, al, nl, self._obs, name=f'cbl_{self._preffix}{suffix}')
-
-        return pdf
-    #-----------------------------------------
-    @MethodRegistry.register('cbg')
-    def _get_cbg(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter(kind = 'cbg', name = 'mu', suffix = suffix)
-        sr  = self._get_parameter(kind = 'cbg', name = 'sr', suffix = suffix)
-        ar  = self._get_parameter(kind = 'cbg', name = 'ar', suffix = suffix)
-        nr  = self._get_parameter(kind = 'cbg', name = 'nr', suffix = suffix)
-        sl  = self._get_parameter(kind = 'cbg', name = 'sl', suffix = suffix)
-        al  = self._get_parameter(kind = 'cbg', name = 'al', suffix = suffix)
-        nl  = self._get_parameter(kind = 'cbg', name = 'nl', suffix = suffix)
-
-        pdf = zfit.pdf.GeneralizedCB(
-            mu     = mu, 
-            sigmar = sr, 
-            alphar = ar, 
-            nr     = nr, 
-            sigmal = sl, 
-            alphal = al, 
-            nl     = nl, 
-            obs    = self._obs, 
-            name   = f'cbg_{self._preffix}{suffix}')
+        pdf = zfit.pdf.CrystalBall(mu, sg, al, nl, self._obs, name=f'cbl_{self._preffix}{suffix}')
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('gauss')
+    @MethodRegistry.register(Model.gauss)
     def _get_gauss(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'gauss', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'gauss', name = 'sg', suffix = suffix)
@@ -464,7 +431,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('dscb')
+    @MethodRegistry.register(Model.dscb)
     def _get_dscb(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'dscb', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'dscb', name = 'sg', suffix = suffix)
@@ -477,7 +444,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('voigt')
+    @MethodRegistry.register(Model.voigt)
     def _get_voigt(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'voigt', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'voigt', name = 'sg', suffix = suffix)
@@ -487,7 +454,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('qgauss')
+    @MethodRegistry.register(Model.qgauss)
     def _get_qgauss(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'qgauss', name = 'mu', suffix = suffix)
         sg  = self._get_parameter(kind = 'qgauss', name = 'sg', suffix = suffix)
@@ -497,52 +464,7 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    @MethodRegistry.register('ggauss')
-    def _get_ggauss(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter(kind = 'ggauss', name = 'mu', suffix = suffix)
-        sg  = self._get_parameter(kind = 'ggauss', name = 'sg', suffix = suffix)
-        bt  = self._get_parameter(kind = 'ggauss', name = 'bt', suffix = suffix)
-
-        pdf = zfit.pdf.GeneralizedGauss(
-            beta =bt, 
-            mu   =mu, 
-            sigma=sg, 
-            obs  =self._obs, 
-            name =f'ggauss_{self._preffix}{suffix}')
-
-        return pdf
-    #-----------------------------------------
-    @MethodRegistry.register('egauss')
-    def _get_egauss(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter(kind = 'egauss', name = 'mu', suffix = suffix)
-        sg  = self._get_parameter(kind = 'egauss', name = 'sg', suffix = suffix)
-        lm  = self._get_parameter(kind = 'egauss', name = 'lm', suffix = suffix)
-
-        pdf = zfit.pdf.ExpModGauss( # type: ignore
-            mu   =mu, 
-            sigma=sg, 
-            lambd=lm, 
-            obs  =self._obs, 
-            name =f'egauss_{self._preffix}{suffix}')
-
-        return pdf
-    #-----------------------------------------
-    @MethodRegistry.register('bgauss')
-    def _get_bgauss(self, suffix : str = '') -> zpdf:
-        mu  = self._get_parameter(kind = 'bgauss', name = 'mu', suffix = suffix)
-        sr  = self._get_parameter(kind = 'bgauss', name = 'sr', suffix = suffix)
-        sl  = self._get_parameter(kind = 'bgauss', name = 'sl', suffix = suffix)
-
-        pdf = zfit.pdf.BifurGauss(
-            mu    =mu, 
-            sigmar=sr, 
-            sigmal=sl, 
-            obs   =self._obs, 
-            name  =f'bgauss_{self._preffix}{suffix}')
-
-        return pdf
-    #-----------------------------------------
-    @MethodRegistry.register('cauchy')
+    @MethodRegistry.register(Model.cauchy)
     def _get_cauchy(self, suffix : str = '') -> zpdf:
         mu  = self._get_parameter(kind = 'cauchy', name = 'mu', suffix = suffix)
         gm  = self._get_parameter(kind = 'cauchy', name = 'gm', suffix = suffix)
@@ -568,43 +490,12 @@ class ModelFactory:
 
         return l_type
     #-----------------------------------------
-    def _get_pdf(
-        self, 
-        kind    : str, 
-        preffix : str) -> zpdf:
-        '''
-        Parameters
-        --------------------
-        kind   : Type of PDF, e.g. gauss, cbl
-        preffix: Prefix for parameters and PDF
-
-        Returns
-        --------------------
-        zfit PDF
-        '''
+    def _get_pdf(self, kind : str, preffix : str) -> zpdf:
         fun = MethodRegistry.get_method(kind)
         if fun is None:
             raise NotImplementedError(f'PDF of type \"{kind}\" with preffix \"{preffix}\" is not implemented')
 
-        if self._ranges is None:
-            log.debug(f'Not changing ranges of PDF parameters for {kind}')
-            return fun(self, suffix = preffix)
-
-        log.info(f'Changing ranges of PDF parameters for {kind}')
-        with ExitStack() as stack:
-            for parameter, [val, low, high] in self._ranges.items():
-                context = PL.values(
-                    parameter = parameter, 
-                    kind      = kind,
-                    val       = val, 
-                    low       = low,
-                    high      = high)
-
-                stack.enter_context(context)
-
-            pdf = fun(self, suffix = preffix)
-
-        return pdf
+        return fun(self, suffix = preffix)
     #-----------------------------------------
     def _add_pdf(self, l_pdf : list[zpdf]) -> zpdf:
         nfrc = len(l_pdf)
@@ -648,25 +539,6 @@ class ModelFactory:
             par.floating = False
 
         return pdf
-    #-----------------------------------------
-    @classmethod
-    def reparametrization_parameters(cls, floating : bool):
-        '''
-        Parameters
-        ------------------
-        floating: If True, it will let the scales, resolutions, etc float and the original parameters fixed
-        '''
-        @contextmanager
-        def _context():
-            old_val = cls._float_reparametrized
-
-            cls._float_reparametrized = floating 
-            try:
-                yield
-            finally:
-                cls._float_reparametrized = old_val
-
-        return _context()
     #-----------------------------------------
     def get_pdf(self) -> zpdf:
         '''

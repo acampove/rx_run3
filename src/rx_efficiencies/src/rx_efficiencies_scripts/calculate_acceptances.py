@@ -14,7 +14,7 @@ from pathlib        import Path
 from ROOT           import RDataFrame # type: ignore
 from dmu.pdataframe import utilities as put
 from dmu            import LogStore
-from rx_common      import Project, Sample
+from rx_common      import Project, Component
 
 from rx_efficiencies.acceptance_calculator import AcceptanceCalculator
 from rx_efficiencies.utilities             import is_acceptance_defined
@@ -47,7 +47,7 @@ def _get_args():
     Data.out_dir  = Data.ana_dir / f'efficiencies/acceptances/{Data.version}/{Data.project}'
     Data.out_dir.mkdir(parents = True, exist_ok=True)
 #---------------------------------
-def _sample_from_path(path : Path) -> Sample:
+def _sample_from_path(path : Path) -> Component:
     '''
     Parameters
     ------------------
@@ -61,7 +61,7 @@ def _sample_from_path(path : Path) -> Sample:
     identifier = filename.replace('_tree.root', '')
 
     value = None
-    for sample in Sample:
+    for sample in Component:
         if identifier == sample.name:
             value = sample
             break
@@ -71,7 +71,7 @@ def _sample_from_path(path : Path) -> Sample:
 
     return value 
 #----------------------------------
-def _get_ntuple_paths(energy : str) -> dict[Sample,Path]:
+def _get_ntuple_paths(energy : str) -> dict[Component,Path]:
     '''
     Parameters
     --------------------
@@ -96,7 +96,7 @@ def _get_ntuple_paths(energy : str) -> dict[Sample,Path]:
     return d_path
 #----------------------------------
 def _get_acceptances(
-    sample : Sample, 
+    sample : Component, 
     path   : Path, 
     energy : str) -> tuple[float,float]:
     '''

@@ -13,7 +13,7 @@ from dmu.logging.log_store import LogStore
 from dmu.generic           import hashing
 from rx_data.rdf_getter    import RDFGetter
 from rx_selection          import selection as sel
-from rx_common             import Sample, Trigger
+from rx_common             import Component, Trigger
 from rx_efficiencies       import EfficiencyCalculator
 
 log = LogStore.add_logger('rx_efficiencies:efficiency_scanner')
@@ -155,9 +155,8 @@ class EfficiencyScanner(Cache):
 
         obj         = EfficiencyCalculator(
             q2bin   = q2bin, 
-            sample  = Sample(sample), 
+            sample  = Component(sample), 
             trigger = Trigger(trigger))
-
         eff, _ = obj.get_efficiency()
 
         # eff = self._yld_default / yld_total

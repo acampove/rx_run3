@@ -1,31 +1,29 @@
 '''
 Module meant to hold tests for the DataPreprocessor class
 '''
-import os
 import pytest
 import matplotlib.pyplot as plt
 
-from contextlib               import ExitStack
-from pathlib                  import Path
-from dmu                      import LogStore
-from dmu.stats                import zfit
-from dmu.generic              import utilities as gut
-from dmu.stats                import utilities as sut
-from dmu.workflow             import Cache
-from omegaconf                import OmegaConf
-from rx_selection             import selection as sel
-from rx_common                import Trigger, Sample
-from rx_data                  import RDFGetter
-from zfit.data                import Data      as zdata
-from fitter                   import DataPreprocessor
+from pathlib       import Path
+from dmu.stats     import zfit
+from dmu.generic   import utilities as gut
+from dmu.stats     import utilities as sut
+from dmu           import LogStore
+from dmu.workflow  import Cache
+from rx_common     import Correction, Qsq, Region, Trigger, Component
+from rx_data       import RDFGetter
+from rx_misid      import MisIDSampleWeights
+from zfit.data     import Data      as zdata
+from fitter        import DataPreprocessor
 
 log=LogStore.add_logger('fitter:test_data_preprocessor')
-# -------------------------------------------------
-class Data:
+# ----------------------
+@pytest.fixture(scope='session', autouse=True)
+def initialize():
     '''
-    Meant to hold shared attributes
+    This will run before any test
     '''
-    user    = os.environ['USER']
+    LogStore.set_level('fitter:data_preprocessor', 10)
 # -------------------------------------------------
 @pytest.mark.fixture(autouse=True)
 def max_entries():
@@ -37,12 +35,11 @@ def max_entries():
 # -------------------------------------------------
 def _validate_data(
     data     : zdata, 
-    name     : Path,
     tmp_path : Path) -> None:
     '''
     Makes validation plots from zfit data
     '''
-    plt_path = tmp_path / f'{name}.png'
+    plt_path = tmp_path / 'plot.png'
 
     arr_data = data.numpy()
     rng      = sut.range_from_obs(obs=data.space)
@@ -56,98 +53,66 @@ def _validate_data(
     plt.savefig(plt_path)
     plt.close()
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', [Sample.bpkpee])
-def test_mc(tmp_path : Path, sample : Sample):
+@pytest.mark.parametrize('component', [
+    Component.data_24_md_c2,
+    Component.bpkpjpsimm])
+def test_muon_data(
+    tmp_path : Path, 
+    component: Component):
     '''
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(5180, 6000))
-    cuts= {
-        'q2' : '(1)',
-        'cmb': 'mva_cmb > 0.85',
-        'prc': 'mva_prc > 0.50',
-        'mass': 'B_Mass > 4500 && B_Mass < 6000',
-        'nobrm0': 'nbrem != 0',
-        'brem_cat': 'nbrem == 2',
-        'block': 'block == 1',
-    }
-
-    out_dir = Path(sample)
-    with ExitStack() as stack:
-        stack.enter_context(Cache.cache_root(path = tmp_path))
-        stack.enter_context(sel.custom_selection(d_sel = cuts))
-
-        prp = DataPreprocessor(
-            obs    = obs,
-            out_dir= out_dir,
-            sample = sample,
-            trigger= Trigger.rk_ee_os,
-            wgt_cfg= None,
-            q2bin  = 'jpsi')
-        dat = prp.get_data()
-
-    _validate_data(data=dat, name=out_dir, tmp_path = tmp_path)
-# -------------------------------------------------
-@pytest.mark.parametrize('sample', [
-    Sample.data_24,
-    Sample.bpkpjpsimm])
-def test_muon_data(tmp_path : Path, sample : Sample):
-    '''
-    Tests class with toys
-    '''
-    obs = zfit.Space('B_Mass', limits=(5180, 6000))
-    name= Path(f'data_preprocessor/{sample}_muon_data')
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
             obs    = obs,
-            out_dir= name,
-            sample = sample,
+            out_dir= tmp_path,
+            sample = component,
             trigger= Trigger.rk_mm_os,
             wgt_cfg= None,
-            q2bin  = 'jpsi')
+            q2bin  = Qsq.jpsi)
         dat = prp.get_data()
 
-    _validate_data(data=dat, name=name, tmp_path = tmp_path)
+    _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------
-@pytest.mark.parametrize('sample', [
-    Sample.data_24,
-    Sample.bpkpjpsiee])
+@pytest.mark.parametrize('component', [
+    Component.data_24_md_c2,
+    Component.bpkpjpsiee])
 @pytest.mark.parametrize('brem_cat', [0, 1, 2])
 def test_brem_cat_data(
     tmp_path : Path, 
-    sample   : Sample, 
+    component: Component, 
     brem_cat : int):
     '''
     Tests class with toys
     '''
     obs = zfit.Space('B_Mass', limits=(4500, 6000))
-    name= Path(f'data_preprocessor/{sample}_brem_{brem_cat:03}')
     cut = {'brem' : f'nbrem == {brem_cat}'}
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
-            obs    = obs,
-            out_dir= name,
-            sample = sample,
-            trigger= Trigger.rk_ee_os,
-            cut    =  cut, 
-            wgt_cfg= None,
-            q2bin  = 'jpsi')
+            obs       = obs,
+            out_dir   = tmp_path,
+            sample    = component, 
+            trigger   = Trigger.rk_ee_os,
+            wgt_cfg   = None,
+            selection = cut, 
+            q2bin     = Qsq.jpsi)
         dat = prp.get_data()
 
-    _validate_data(data=dat, name=name, tmp_path = tmp_path)
+    _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------
-@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('sample', [
-    Sample.bpkkk,
-    Sample.bpkpipi])
-@pytest.mark.parametrize('region', ['kpipi' ,     'kkk'])
-@pytest.mark.parametrize('kind'  , ['signal', 'control'])
+#@pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
+@pytest.mark.parametrize('component', [
+    Component.bpkkk,
+    Component.bpkpipi])
+@pytest.mark.parametrize('region', [Region.bpkk, Region.bppipi])
+@pytest.mark.parametrize('kind'  , ['signal'   ,     'control'])
 def test_with_pid_weights(
     tmp_path : Path,
-    sample   : Sample,
-    region   : str, 
+    component: Component,
+    region   : Region, 
     kind     : str) -> None:
     '''
     Parameters
@@ -156,32 +121,20 @@ def test_with_pid_weights(
     region: Kind of control region
     kind  : Either 'signal' or 'control'
     '''
-    cfg_spl = gut.load_conf(package='fitter_data', fpath='model/weights/splitting.yaml')
-    cfg_wgt = gut.load_conf(package='fitter_data', fpath='model/weights/weights.yaml')
-
-    wgt_cfg = {'PID' : {
-           'splitting' : cfg_spl,
-           'weights'   : cfg_wgt}}
-
-    obs     = zfit.Space(f'B_Mass_{region}', limits=(4500, 6000))
-    wgt_cfg = OmegaConf.create(wgt_cfg)
-    cut     = {
-        'brem' : 'nbrem == 1',
-        'pid_l': '(1)'}
-
-    name = Path(f'data_preprocessor/with_pid_weights_{sample}_{region}_{kind}')
+    data = gut.load_data(package='fitter_data', fpath='model/weights/weights.yaml')
+    cfg  = MisIDSampleWeights(**data)
 
     with Cache.cache_root(path = tmp_path):
         prp  = DataPreprocessor(
-            obs    = obs,
-            out_dir= name,
-            sample = sample,
-            trigger= Trigger.rk_ee_nopid,
-            cut    = cut, 
-            wgt_cfg= wgt_cfg,
-            is_sig = kind == 'signal',
-            q2bin  = 'jpsi')
+            obs       = region.obs,
+            out_dir   = tmp_path,
+            sample    = component,
+            trigger   = Trigger.rk_ee_nopid,
+            wgt_cfg   = {Correction.pid : cfg},
+            selection = {'pid_l' : '(1)'}, 
+            is_sig    = kind == 'signal',
+            q2bin     = Qsq.jpsi)
         dat  = prp.get_data()
 
-    _validate_data(data=dat, name=name, tmp_path = tmp_path)
+    _validate_data(data=dat, tmp_path = tmp_path)
 # -------------------------------------------------

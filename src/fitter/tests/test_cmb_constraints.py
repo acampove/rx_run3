@@ -1,24 +1,24 @@
 '''
 Module used to test CmbConstraints class
 '''
+
 import pytest 
 
-from contextlib   import ExitStack
-from omegaconf    import DictConfig
-from typing       import Final
 from pathlib      import Path
-from dmu          import LogStore
-from dmu.generic  import utilities           as gut
-from dmu.stats    import ModelFactory
-from dmu.workflow import Cache
-from dmu.stats    import zfit
-from dmu.stats    import ConstraintND
-from rx_common    import Qsq
-from fitter       import CmbConstraints
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
+
+from dmu          import LogStore
+from dmu.workflow import Cache
+from dmu.generic  import utilities           as gut
+from dmu.stats    import ConstraintND
+from dmu.stats    import ModelFactory
+from dmu.stats    import zfit
+
+from rx_common    import Component, Qsq, Trigger
 from rx_selection import selection           as sel
 
-_COMBINATORIAL_NAME : Final[str] = 'combinatorial'
+from fitter       import CmbConstraints
+from fitter       import CombinatorialConf
 
 log=LogStore.add_logger('test_cmb_constraints')
 # ----------------------
@@ -29,29 +29,24 @@ def initialize():
     '''
     LogStore.set_level('fitter:cmb_constraints', 10)
     LogStore.set_level('dmu:stats:fitter'      , 10)
+    LogStore.set_level('dmu:stats:minimizers'  , 10)
 # ----------------------
 def _get_nll(
-    cfg   : DictConfig,
+    cfg   : CombinatorialConf,
     q2bin : Qsq) -> zlos:
     '''
     Returns
     -------------
     Likelihood with a combinatorial PDF
     '''
-    pdfs    = cfg.model.components['combinatorial'].categories.main.models[q2bin]
-    cmb_cfg = cfg.model.components['combinatorial'][q2bin]
-    obs_cfg = cfg.model.observable[q2bin]
-
-    obs = zfit.Space(obs_cfg.name, limits=obs_cfg.range)
+    pdfs= cfg.models[q2bin].pdfs
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     mod = ModelFactory(
         preffix = 'combinatorial',
         obs     = obs,
         l_pdf   = pdfs,
-        l_shared= cmb_cfg.shared,
-        l_float = cmb_cfg.float,
-        d_rep   = cmb_cfg.reparametrize,
-        d_fix   = cmb_cfg.fix,
-    )
+        l_shared= [],
+        l_float = [])
 
     pdf   = mod.get_pdf()
     data  = pdf.create_sampler(1000)
@@ -59,61 +54,27 @@ def _get_nll(
     return zlos(model = pdf, data = data)
 # ----------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_simple_rare(q2bin : Qsq, tmp_path : Path):
+def test_simple(q2bin : Qsq, tmp_path : Path):
     '''
     Simplest test of CmbConstraints
     '''
-    fit_cfg  = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
-    nll      = _get_nll(cfg = fit_cfg, q2bin = q2bin)
-    cuts     = {
-    'cmb'   : 'mva_cmb > 0.3',
-    'prc'   : 'mva_prc > 0.4',
-    'brem'  : 'nbrem != 0'}
+    data = gut.load_data(
+        package= 'fitter_data', 
+        fpath  = 'rare/rkst/ee/comb.yaml')
 
-    with ExitStack() as stack:
-        stack.enter_context(Cache.cache_root(path = tmp_path))
-        stack.enter_context(sel.custom_selection(d_sel = cuts))
+    cfg  = CombinatorialConf(**data)
+    nll  = _get_nll(cfg = cfg, q2bin = q2bin)
 
+    with Cache.cache_root(path = tmp_path),\
+        sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.8'}):
         calc      = CmbConstraints(
-            name  = _COMBINATORIAL_NAME,
-            kind  = '',
+            name  = Component.comb,
             nll   = nll,
-            cfg   = fit_cfg,
+            cfg   = cfg,
+            trig  = Trigger.rkst_ee_os,
             q2bin = q2bin)
 
     constraint = calc.get_constraint()
-
-    assert isinstance(constraint, ConstraintND)
-
-    print(constraint)
-# ----------------------
-@pytest.mark.parametrize('q2bin', ['jpsi'])
-def test_simple_reso(q2bin : Qsq, tmp_path : Path):
-    '''
-    Simplest test of CmbConstraints
-    '''
-    fit_cfg   = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader_reso.yaml')
-    nll       = _get_nll(cfg = fit_cfg, q2bin = q2bin)
-    cuts      = {
-        'block'   : 'block == 1',
-        'cmb'     : 'mva_cmb > 0.2 && mva_cmb < 0.7',
-        'prc'     : 'mva_prc > 0.5',
-        'nobrm0'  : 'nbrem != 0',
-        'brem_cat': 'nbrem == 1',
-    }
-
-    with ExitStack() as stack:
-        stack.enter_context(Cache.cache_root(path = tmp_path))
-        stack.enter_context(sel.custom_selection(d_sel = cuts))
-
-        calc      = CmbConstraints(
-            name  = _COMBINATORIAL_NAME,
-            kind  = '',
-            nll   = nll,
-            cfg   = fit_cfg,
-            q2bin = q2bin)
-
-        constraint = calc.get_constraint()
 
     assert isinstance(constraint, ConstraintND)
 

@@ -3,22 +3,21 @@ Module containing EfficiencyCalculator class
 '''
 import os
 import math
-from typing import cast
-
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
 
-from pathlib                           import Path
-from ROOT                              import RDF # type: ignore
-from dmu                               import LogStore
-from dmu.workflow                      import Cache
-from dmu.generic                       import hashing
+from typing             import cast
+from pathlib            import Path
+from ROOT               import RDF # type: ignore
+from dmu                import LogStore
+from dmu.workflow       import Cache
+from dmu.generic        import hashing
 
-from rx_common                         import Sample, Trigger
-from rx_data                           import RDFGetter
-from rx_selection                      import selection as sel
-from rx_efficiencies.acceptance_reader import AcceptanceReader
+from rx_common          import Component, Qsq, Trigger
+from rx_data            import RDFGetter
+from rx_selection       import selection as sel
+from .acceptance_reader import AcceptanceReader
 
 log=LogStore.add_logger('rx_efficiencies:efficiency_calculator')
 #------------------------------------------
@@ -32,9 +31,9 @@ class EfficiencyCalculator(Cache):
     #------------------------------------------
     def __init__(
         self, 
-        q2bin   : str, 
+        q2bin   : Qsq, 
         trigger : Trigger,
-        sample  : Sample):
+        sample  : Component):
         '''
         Parameters
         -----------------
@@ -91,12 +90,12 @@ class EfficiencyCalculator(Cache):
 
         self._out_dir = value
     #------------------------------------------
-    def _get_geo_eff(self, sample : Sample) -> float:
+    def _get_geo_eff(self, sample : Component) -> float:
         '''
         Takes sample and returns geometric acceptance
         '''
         obj = AcceptanceReader(
-            sample =sample, 
+            sample =sample.sample, 
             year   =self._year, 
             project=self._trigger.project)
 
@@ -108,7 +107,7 @@ class EfficiencyCalculator(Cache):
             self,
             passed : int,
             total  : int,
-            sample : Sample) -> None:
+            sample : Component) -> None:
         eff = passed / total
         err = math.sqrt(eff * (1 - eff) / total)
 
@@ -117,7 +116,7 @@ class EfficiencyCalculator(Cache):
         self._d_sel['Value' ].append(eff)
         self._d_sel['Error' ].append(err)
     #------------------------------------------
-    def _get_yields(self, sample : Sample) -> tuple[int,int]:
+    def _get_yields(self, sample : Component) -> tuple[int,int]:
         sel_yld = self._get_sel_yld(sample)
         gen_yld = self._get_gen_yld(sample)
         geo_acc = self._get_geo_eff(sample)
@@ -127,7 +126,7 @@ class EfficiencyCalculator(Cache):
 
         return sel_yld, tot_yld
     #------------------------------------------
-    def _get_sel_yld(self, sample : Sample) -> int:
+    def _get_sel_yld(self, sample : Component) -> int:
         rdf      = self._get_rdf(sample=sample, tree_name='DecayTree')
         d_sel    = sel.selection(trigger=self._trigger, q2bin=self._q2bin, process=sample)
 
@@ -144,7 +143,7 @@ class EfficiencyCalculator(Cache):
 
         return nsel
     #------------------------------------------
-    def _get_rdf(self, sample : Sample, tree_name : str) -> RDF.RNode:
+    def _get_rdf(self, sample : Component, tree_name : str) -> RDF.RNode:
         gtr = RDFGetter(
             sample  = sample, 
             trigger = self._trigger, 
@@ -153,7 +152,7 @@ class EfficiencyCalculator(Cache):
 
         return rdf
     #------------------------------------------
-    def _get_gen_yld(self, sample : Sample) -> int:
+    def _get_gen_yld(self, sample : Component) -> int:
         rdf      = self._get_rdf(sample=sample, tree_name='MCDecayTree')
         nentries = rdf.Count().GetValue()
 

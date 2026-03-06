@@ -2,9 +2,9 @@
 Module with tests for classes in specification.py module
 '''
 
-from pathlib               import Path
-from ROOT                  import RDataFrame
-from rx_data.specification import Sample
+from pathlib import Path
+from ROOT    import RDataFrame
+from rx_data import Sample
 
 # ----------------------
 def _make_file(index : int, tmp_path : Path) -> Path:

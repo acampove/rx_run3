@@ -5,17 +5,16 @@ Script holding ConstraintReader class
 from typing              import Final
 from dmu                 import LogStore
 from dmu.stats           import Constraint, Constraint1D
-from rx_common           import Sample
+from rx_common           import Component
 from zfit.loss           import ExtendedUnbinnedNLL
-from .fit_config         import FitConfig
+
+from .configs            import CombinatorialConf, RXFitConfig
 from .prec_scales        import PrecScales
 from .misid_constraints  import MisIDConstraints 
 from .cmb_constraints    import CmbConstraints
 from .signal_constraints import SignalConstraints
 
-_MISID_COMPONENTS   : Final[set[str]] = {'kkk', 'kpipi'}
-_COMBINATORIAL_NAME : Final[str]      = 'combinatorial'
-
+_MISID_COMPONENTS   : Final[set[Component]] = {Component.bpkkk, Component.bpkpipi}
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
 class ConstraintReader:
@@ -26,8 +25,8 @@ class ConstraintReader:
     def __init__(
         self, 
         nll   : ExtendedUnbinnedNLL, 
-        cfg   : FitConfig,
-        signal: str = 'bpkpee',
+        cfg   : RXFitConfig,
+        signal: Component = Component.bpkpee,
         pprefx: str = 'pscale'):
         '''
         Parameters
@@ -51,11 +50,11 @@ class ConstraintReader:
 
         self._constraints : list[Constraint] = []
     # ----------------------
-    def _proc_from_par(self, par_name : str) -> str:
+    def _proc_from_par(self, par_name : str) -> Component:
         '''
         Parameters
         ------------------
-        par_name : Name of part reco scale parameter to constrain, e.g. pscale_yld_Bp_KpEE_DT...
+        par_name : Name of part reco scale parameter to constrain, e.g. pscale_yld_bpkpee_...
 
         Returns
         ------------------
@@ -66,9 +65,9 @@ class ConstraintReader:
             raise ValueError(f'Prec scale parameter does not start with {prefix} but {par_name}')
 
         name   = par_name.removeprefix(prefix)
-        sample = Sample(name)
+        sample = Component(name)
 
-        return sample.name 
+        return sample
     # ----------------------
     def _add_prec_constraints(self) -> None:
         '''
@@ -82,7 +81,7 @@ class ConstraintReader:
             log.info(f'Adding part reco constraint for: {par}')
 
             process  = self._proc_from_par(par_name = par)
-            obj      = PrecScales(proc=process, q2bin=self._cfg.q2bin)
+            obj      = PrecScales(comp=process, q2bin=self._cfg.q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
             cns = Constraint1D(
@@ -97,7 +96,7 @@ class ConstraintReader:
         '''
         Adds constraints for fully hadronic MisID components
         '''
-        components= self._cfg.fit_cfg.model.components
+        components= self._cfg.mod_cfg.components
         all_found = all(component in components for component in _MISID_COMPONENTS)
         any_found = any(component in components for component in _MISID_COMPONENTS)
         if not all_found and     any_found:
@@ -109,9 +108,14 @@ class ConstraintReader:
 
         log.info('Adding MisID constraints')
         
+        cfg = self._cfg.mod_cfg.constraints.misid
+        if cfg is None:
+            log.debug('No MisID constraints config found, not adding constraints')
+            return
+
         mrd       = MisIDConstraints(
+            cfg   = cfg,
             obs   = self._cfg.observable,
-            cfg   = self._cfg.fit_cfg.model.constraints.misid,
             q2bin = self._cfg.q2bin)
 
         self._constraints += mrd.get_constraints()
@@ -120,22 +124,21 @@ class ConstraintReader:
         '''
         Adds combinatorial constraints
         '''
-        components = self._cfg.fit_cfg.model.components
-        if _COMBINATORIAL_NAME not in components:
-            log.warning(f'Combinatorial {_COMBINATORIAL_NAME} component not found, not calculating constraints')
+        components= self._cfg.mod_cfg.components
+        if Component.comb not in components:
+            log.warning(f'Combinatorial {Component.comb} component not found, not calculating constraints')
             return
 
-        q2bin = self._cfg.q2bin
-        if 'constraints' not in components[_COMBINATORIAL_NAME][q2bin]:
-            log.info(f'No combinatorial constraints section found for {q2bin}')
-            return
+        cmb_cfg = self._cfg.mod_cfg.components[Component.comb]
+        if not isinstance(cmb_cfg, CombinatorialConf):
+            raise ValueError(f'Expected combinatorial config, got: {cmb_cfg}')
 
         calc      = CmbConstraints(
-            name  = _COMBINATORIAL_NAME,
-            kind  = self._cfg.name,
+            name  = Component.comb,
+            trig  = self._cfg.mod_cfg.trigger,
             nll   = self._nll,
-            cfg   = self._cfg.fit_cfg,
-            q2bin = q2bin)
+            cfg   = cmb_cfg,
+            q2bin = self._cfg.q2bin)
 
         self._constraints.append( calc.get_constraint() )
     # ----------------------

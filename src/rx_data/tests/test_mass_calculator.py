@@ -6,15 +6,15 @@ import pytest
 import numpy
 import pandas            as pnd
 import matplotlib.pyplot as plt
-from pathlib import Path
 
-from ROOT                    import RDF # type: ignore
-from dmu.logging.log_store   import LogStore
-from rx_data.rdf_getter      import RDFGetter
-from rx_data.mass_calculator import MassCalculator
+from pathlib   import Path
+from ROOT      import RDF # type: ignore
+from dmu       import LogStore
+from rx_common import Component, Trigger
+from rx_data   import RDFGetter
+from rx_data   import MassCalculator
 
 log=LogStore.add_logger('rx_data:test_mass_calculator')
-
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -95,10 +95,10 @@ def _validate_rdf(
     plt.close()
 # ----------------------
 @pytest.mark.parametrize('sample', [
-    'Bu_Kee_eq_btosllball05_DPC',
-    'Bu_piplpimnKpl_eq_sqDalitz_DPC',
-    'Bu_KplKplKmn_eq_sqDalitz_DPC'])
-def test_hadronic_mc(sample : str):
+    Component.bpkpee,
+    Component.bpkpipi,
+    Component.bpkkk])
+def test_hadronic_mc(sample : Component):
     '''
     Will run test where
     Kee -> KKK   in B_Mass_kkk
@@ -109,7 +109,7 @@ def test_hadronic_mc(sample : str):
     with RDFGetter.max_entries(value=10_000):
         gtr = RDFGetter(
             sample  = sample,
-            trigger = 'Hlt2RD_BuToKpEE_MVA_noPID')
+            trigger = Trigger.rk_ee_nopid)
         rdf_in = gtr.get_rdf(per_file=False)
 
     cal    = MassCalculator(rdf=rdf_in, with_validation=True)
@@ -117,10 +117,9 @@ def test_hadronic_mc(sample : str):
 
     _validate_rdf(rdf_in=rdf_in, rdf_ot=rdf_ot, test='hadronic_mc', name=sample)
 # ----------------------
-@pytest.mark.parametrize('sample' , ['DATA_24_MagDown_24c2'])
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_BuToKpEE_MVA_misid'])
-# ----------------------
-def test_hadronic_data(sample : str, trigger : str):
+@pytest.mark.parametrize('sample' , [Component.data_24_md_c2])
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rk_ee_misid])
+def test_hadronic_data(sample : Component, trigger : Trigger):
     '''
     Will run test where
     Kee -> KKK   in B_Mass_kkk

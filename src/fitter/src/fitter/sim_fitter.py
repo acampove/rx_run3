@@ -1,32 +1,40 @@
 '''
 Module with SimFitter class
 '''
+from pathlib             import Path
+from typing              import overload, Literal, Final
 
-import yaml
+from dmu                 import LogStore
+from dmu.stats           import FitResult, ModelFactoryConf
+from dmu.stats           import ModelFactory
+from dmu.stats           import zfit
+from dmu.stats           import utilities        as sut
+from dmu.workflow        import Cache
 
-from pathlib            import Path
-from typing             import cast
-from omegaconf          import DictConfig, OmegaConf
-from dmu                import LogStore
-from dmu.stats          import utilities    as sut
-from dmu.stats          import ModelFactory
-from dmu.stats          import zfit
-from dmu.workflow       import Cache
+from rx_common           import Correction, Qsq, Trigger, Component
+from rx_selection        import selection        as sel
 
-from rx_common          import Qsq, Trigger, Sample
-from rx_selection       import selection        as sel
-from zfit.data          import Data             as zdata
-from zfit.pdf           import BasePDF          as zpdf
-from zfit.interface     import ZfitSpace        as zobs
-from zfit.result        import FitResult        as zres
-from zfit.param         import Parameter
-from .base_fitter       import BaseFitter
-from .data_preprocessor import DataPreprocessor
-from .prec              import PRec
-from .category          import Category
-from .category_merger   import CategoryMerger
+from zfit.data           import Data             as zdata
+from zfit.pdf            import BasePDF          as zpdf
+from zfit                import Space            as zobs
+from zfit.param          import Parameter
+
+from .base_fitter        import BaseFitter
+from .configs            import CombinatorialConf, MisIDConf, NonParametricConf, ParametricConf, CCbarConf 
+from .data_preprocessor  import DataPreprocessor
+from .prec               import PRec
 
 log=LogStore.add_logger('fitter:sim_fitter')
+
+ModelConf = CombinatorialConf | ParametricConf | NonParametricConf | CCbarConf | MisIDConf
+MAIN_CATEGORY   : Final[str] = 'main'
+
+# Will not build (fit) a parametric PDF if fewer than these entries
+# will return None
+MIN_FIT_ENTRIES : Final[int] = 50
+
+# Will not build KDE if fewer than these entries in dataset
+MIN_KDE_ENTRIES : Final[int] = 50
 # ------------------------
 class SimFitter(BaseFitter, Cache):
     '''
@@ -35,12 +43,12 @@ class SimFitter(BaseFitter, Cache):
     # ------------------------
     def __init__(
         self,
-        sample    : Sample,
+        component : Component,
         trigger   : Trigger,
         q2bin     : Qsq,
-        cfg       : DictConfig,
+        cfg       : ModelConf,
         obs       : zobs,
-        name      : str):
+        name      : str | None = None):
         '''
         Parameters
         --------------------
@@ -53,30 +61,21 @@ class SimFitter(BaseFitter, Cache):
         '''
         BaseFitter.__init__(self)
         log.info(20 * '-')
-        log.info(f'Fitting {sample}/{name}')
+        log.info(f'Fitting {component}/{name}')
         log.info(20 * '-')
 
-        self._sample    = sample
-        self._name      = name
-        self._component = sample
+        self._component = component
         self._trigger   = trigger
         self._q2bin     = q2bin
+        self._name      = name
         self._cfg       = cfg
         self._obs       = obs
-        self._base_path = Path(f'{cfg.output_directory}/{name}/{trigger}_{q2bin}')
+        self._base_path = self._get_base_path() 
 
         log.debug(f'For component {self._component} using output: {self._base_path}')
 
-        self._category : None | str  = self._get_category(cfg=cfg)
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
-
-        # Will not build KDE if fewer than these entries in dataset
-        self._min_kde_entries = 50
-
-        # Will not build (fit) a parametric PDF if fewer than these entries
-        # will return None
-        self._min_fit_entries = 50
 
         # All the PDFs will share the mu and sigma below and these will float
         self._mu_par = Parameter('mu_flt', 5280, 5000, 5500)
@@ -86,32 +85,18 @@ class SimFitter(BaseFitter, Cache):
             self,
             out_path = self._base_path,
             l_rdf_uid= self._l_rdf_uid,
-            config   = OmegaConf.to_container(cfg, resolve=True))
-    # ----------------------
-    def _get_category(self, cfg : DictConfig) -> str | None:
+            config   = self._cfg.model_dump())
+    # ------------------------
+    def _get_base_path(self) -> Path:
         '''
-        Parameters
-        -------------
-        cfg: Config used for fit
-
-        Returns
-        -------------
-        Either:
-
-        - Category name if there is one category (neded for backwards compatibility)
-        - None, if there are multiple categories or no categories (e.g. ccbar)
+        Returns directory where outputs will go
         '''
-        if 'categories' not in cfg:
-            return None
+        if self._name is None:
+            return self._cfg.output_directory / f'{self._trigger}_{self._q2bin}'
 
-        names = list(cfg.categories)
-        if len(names) > 1:
-            return None
-
-        if len(names) == 0:
-            raise ValueError('No categories found')
-
-        return names[0]
+        return self._cfg.output_directory / f'{self._name}/{self._trigger}_{self._q2bin}'
+    # ------------------------
+    # Data getting section
     # ------------------------
     def _get_data(self) -> dict[str,zdata]:
         '''
@@ -122,69 +107,132 @@ class SimFitter(BaseFitter, Cache):
         Key  : Name of MC category, e.g. brem category
         Value: Zfit dataset
         '''
-        d_data = {}
-        # For components without an MC associated e.g. combinatorial
-        # return empty dataset
-        if 'sample' not in self._cfg:
-            return d_data
+        # Combinatorial does not have MC to fix tails
+        # CCbar will be fitted using PRec class, which will pick data
+        SkipDataConf = CombinatorialConf | CCbarConf
 
-        for cat_name, cat_cfg in self._cfg.categories.items():
-            prp   = DataPreprocessor(
-                obs    = self._obs,
-                cut    = cat_cfg.get('selection'),
-                wgt_cfg= cat_cfg.get('weights'),
-                trigger= self._trigger,
-                q2bin  = self._q2bin,
-                out_dir= self._base_path,
-                sample = self._cfg.sample)
+        if isinstance(self._cfg, SkipDataConf):
+            return dict() 
+
+        if isinstance(self._cfg, ParametricConf):
+            return self._get_category_data(cfg = self._cfg)
+
+        if isinstance(self._cfg, NonParametricConf):
+            return self._get_nonparametric_data(cfg = self._cfg)
+
+        raise ValueError(f'Cannot get data for: {type(self._cfg)}')
+    # ------------------------
+    def _get_category_data(self, cfg : ParametricConf) -> dict[str,zdata]:
+        '''
+        Parameters
+        --------------
+        cfg: Object storing configuration
+        '''
+        d_data = {}
+        for cat_name, cat_cfg in cfg.categories.items():
+            prp = DataPreprocessor(
+                wgt_cfg   = dict(),
+                obs       = self._obs,
+                trigger   = self._trigger,
+                q2bin     = self._q2bin,
+                out_dir   = self._base_path,
+                selection = cat_cfg.selection,
+                sample    = cfg.component)
+
             d_data[cat_name] = prp.get_data()
 
-            self._l_rdf_uid.append(prp.uid)
+            self._l_rdf_uid.append(prp.rdf_uid)
 
         return d_data
     # ------------------------
+    def _get_nonparametric_data(self, cfg : NonParametricConf) -> dict[str,zdata]:
+        '''
+        Parameters
+        --------------
+        cfg: Object storing configuration
+        '''
+        if isinstance(cfg, MisIDConf):
+            wgt_cfg = {Correction.pid : cfg.weights}
+            cut     = cfg.selection
+            log.debug(f'Overriding cuts {cut} and using weights')
+        else:
+            wgt_cfg = None
+            cut     = None
+            log.debug('Not overriding cuts or using weights')
+
+        d_data = {}
+        prp   = DataPreprocessor(
+            wgt_cfg   = wgt_cfg,
+            obs       = self._obs,
+            trigger   = self._trigger,
+            q2bin     = self._q2bin,
+            out_dir   = self._base_path,
+            selection = cut,
+            sample    = cfg.component)
+
+        d_data[MAIN_CATEGORY] = prp.get_data()
+
+        self._l_rdf_uid.append(prp.rdf_uid)
+
+        return d_data
+    # ------------------------
+    # PDF getting section
+    # ------------------------
     def _get_pdf(
         self,
-        cfg     : DictConfig,
-        category: str,
-        l_model : list[str]) -> zpdf:
+        cfg     : ModelFactoryConf,
+        category: str) -> zpdf:
         '''
         Parameters
         ------------
         category: If the MC is meant to be split (e.g. by brem) this should the the label of the category
-        cfg     : DictConfig with model configuration, stores parameters that are floating, fixed, etc
-        l_model : List of model names, e.g. [cbl, cbr]
+        cfg     : Configuration needed to build model
 
         Returns
         ------------
         Fitting PDF built from the sum of those models
         '''
-        log.info(f'Building {self._component} for category {category} with: {l_model}')
+        log.info(f'Building {self._component} for category {category} with: {cfg.pdfs}')
 
         mod         = ModelFactory(
-            preffix = f'{self._name}_{category}',
+            preffix = self._get_suffix(category=category),
             obs     = self._obs,
-            l_pdf   = l_model,
-            l_reuse = [self._mu_par, self._sg_par],
+            l_pdf   = cfg.pdfs,
+            l_reuse = cfg.reuse,
             l_shared= cfg.shared,
-            l_float = cfg.float ,
-            ranges  = cfg.get('ranges'),
+            l_float = cfg.floating ,
             d_rep   = cfg.reparametrize,
             d_fix   = cfg.fix)
 
         pdf = mod.get_pdf()
 
         return pdf
+    # ----------------------
+    def _get_suffix(self, category : str) -> str:
+        '''
+        Parameters
+        -------------
+        category: Name of model category 
+
+        Returns
+        -------------
+        Name of suffix for naming parameters
+        '''
+        if self._name is None:
+            return f'{self._component}_{category}'
+
+        return f'{self._component}_{category}_{self._name}'
     # ------------------------
-    def _fix_tails(
-        self, 
-        pdf  : zpdf, 
-        pars : DictConfig) -> zpdf:
+    def _fix_tails(self, pdf : zpdf, res : FitResult) -> zpdf:
         '''
         Parameters
         --------------
         pdf : PDF after fit
-        pars:
+        res : Fit result object, used to fix tails
+
+        Returns
+        --------------
+        PDF with tails fixed
         '''
         s_par = pdf.get_params()
         npar  = len(s_par)
@@ -197,42 +245,43 @@ class SimFitter(BaseFitter, Cache):
                 log.debug(f'Not fixing: {par.name}')
                 continue
 
-            if par.name in pars:
-                par.set_value(pars[par.name].value)
-                log.debug(f'{par.name:<40}{"--->"}{pars[par.name].value:>20.3f}')
+            if par.name in res:
+                val, _ = res[par.name]
+
+                par.set_value(val)
+                log.debug(f'{par.name:<20}{"--->"}{val:>20.3f}')
                 par.floating = False
 
         return pdf
     # ------------------------
-    def _get_nomc_component(self) -> zpdf:
+    def _get_nomc_pdf(
+        self,
+        cfg : CombinatorialConf) -> zpdf:
         '''
-        This method will return a PDF when there is no simulation
-        associated to it, e.g. Combinatorial
+        Returns
+        -------------
+        PDF for component that does not require MC, e.g. combinatorial
         '''
-        if self._category is None:
-            raise ValueError('Not one and only one category found')
 
-        l_model = self._cfg.categories[self._category].models[self._q2bin]
-        cfg     = self._cfg[self._q2bin]
-
-        model   = self._get_pdf(
-            l_model = l_model,
-            cfg     = cfg,
-            category= self._category)
+        model_cfg = cfg.models[self._q2bin]
+        model     = self._get_pdf(
+            cfg     = model_cfg,
+            category= 'main')
 
         return model
     # ------------------------
-    def _get_component(
+    # Fitting section
+    # ------------------------
+    def _fit_category(
         self,
-        skip_fit     : bool,
-        category     : str,
-        l_model_name : list[str]) -> tuple[zpdf|None,float|None,zres|None]:
+        cfg      : ParametricConf,
+        skip_fit : bool,
+        category : str) -> tuple[zpdf|None,float|None,FitResult|None]:
         '''
         Parameters
         ----------------
         skip_fit     : If true, it will only return model, used if fit parameters were already found
         category     : Name of fitting category
-        l_model_name : List of fitting models,  e.g. [cbr, cbl]
 
         Returns
         ----------------
@@ -241,14 +290,14 @@ class SimFitter(BaseFitter, Cache):
             - Size (sum of weights) of dataset in given category.
               If fit is skipped, returns None, because this is used to set
               the value of the fit fraction, which should already be in the cached data.
-            - zfit result object, if fit is skipped, returns None
+            - Fit result object, if fit is skipped, returns None
         '''
         log.info(f'Fitting category {category}')
 
-        model       = self._get_pdf(
-            cfg     = self._cfg,
+        cat_cfg = cfg.categories[category]
+        model = self._get_pdf(
             category= category,
-            l_model = l_model_name)
+            cfg     = cat_cfg.model)
 
         data  = self._d_data[category]
 
@@ -256,41 +305,45 @@ class SimFitter(BaseFitter, Cache):
         if skip_fit:
             return model, sumw, None
 
-        if sumw < self._min_fit_entries:
-            model = None
-            res   = None
+        cut_cfg = self._get_cut_config(cfg = cfg, category = category)
 
-            log.warning(f'Found to few entries {sumw:.1f} < {self._min_fit_entries}, skipping {self._component} component')
+        if sumw < MIN_FIT_ENTRIES:
+            log.warning(f'Found to few entries {sumw:.1f} < {MIN_FIT_ENTRIES}, skipping {self._component} component')
             self._save_fit(
-                cut_cfg  = self._get_cut_config(category = category),
-                plt_cfg  = self._cfg.plots,
+                cut_cfg  = cut_cfg,
+                plt_cfg  = cfg.plots,
                 data     = data,
-                model    = model,
-                res      = res,
-                out_path = self._out_path / category)
+                model    = None,
+                res      = None,
+                out_path = self._out_path / category )
 
-            return model, sumw, res 
+            return None, 0, None
 
-        res   = self._fit(data=data, model=model, cfg=self._cfg.fit)
+        res = self._fit(
+            data = data, 
+            model= model, 
+            cfg  = cfg.fit)
 
         self._save_fit(
-            cut_cfg  = self._get_cut_config(category = category),
-            plt_cfg  = self._cfg.plots,
+            cut_cfg  = cut_cfg,
+            plt_cfg  = cfg.plots,
             data     = data,
             model    = model,
             res      = res,
             out_path = self._out_path / category)
 
-        cres  = sut.zres_to_cres(res=res)
-        model = self._fix_tails(pdf=model, pars=cres)
+        model = self._fix_tails(pdf=model, res=res)
 
         return model, sumw, res
     # ----------------------
-    def _get_cut_config(self, category : str) -> DictConfig:
+    def _get_cut_config(
+        self, 
+        category : str | None,
+        cfg      : ParametricConf | NonParametricConf) -> dict[str,dict[str,str]]:
         '''
         Parameters
         -------------
-        category: Category for which this cuts are used, e.g. brem_xx1_b1
+        category: Fit category, e.g. brem_xx1 or None, if it does not make sense, e.g. KDE fits
 
         Returns
         -------------
@@ -298,43 +351,26 @@ class SimFitter(BaseFitter, Cache):
             Keys  : `fit`, `default`
             Values: Selection for data that was fitted and default
         '''
+        cuts_current= sel.selection(
+            process = cfg.component, 
+            trigger = self._trigger, 
+            q2bin   = self._q2bin)
 
-        cfg        = {}
-        cfg['fit'] = sel.selection(
-            process=self._cfg.sample, 
-            trigger=self._trigger, 
-            q2bin  =self._q2bin)
+        if isinstance(cfg, ParametricConf) and category is not None:
+            fit_cuts = cfg.categories[category].selection
+            cuts_current.update(fit_cuts)
 
-        category_selection = self._get_category_selection(category = category)
-        cfg['fit'].update(category_selection)
+        cuts = {'fit' : cuts_current}
 
         with sel.custom_selection(d_sel={}, force_override=True):
-            cfg['default'] = sel.selection(
-                process=self._cfg.sample, 
-                trigger=self._trigger, 
-                q2bin  =self._q2bin)
+            cuts['default'] = sel.selection(
+                process = cfg.component, 
+                trigger = self._trigger, 
+                q2bin   = self._q2bin)
 
-        return OmegaConf.create(cfg)
-    # ----------------------
-    def _get_category_selection(self, category : str) -> dict[str,str]:
-        '''
-        Parameters
-        -------------
-        category: Name of category, e.g. brem_001_b1
-
-        Returns
-        -------------
-        Selection used, e.g. key is brem value is brem == 1
-        '''
-        if 'categories' not in self._cfg:
-            return {}
-
-        cat = self._cfg.categories[category]
-        if 'selection' not in cat:
-            return {}
-
-        return cat.selection
+        return cuts
     # ------------------------
+    # TODO: Fractions need to be parameters to be constrained
     def _get_fraction(
         self,
         sumw     : float,
@@ -351,7 +387,7 @@ class SimFitter(BaseFitter, Cache):
         -------------
         Fitting fraction parameter fixed
         '''
-        frac_name = f'fr_{self._name}_{category}'
+        frac_name = f'frac_{self._component}_{category}'
         value     = sumw / total
         par       = Parameter(frac_name, value, 0, 1)
 
@@ -359,10 +395,15 @@ class SimFitter(BaseFitter, Cache):
 
         return par
     # ------------------------
-    def _get_full_model(self, skip_fit : bool) -> tuple[zpdf, DictConfig] | None:
+    @overload
+    def _get_full_model(self, cfg : ParametricConf, skip_fit : Literal[True]) -> zpdf: ...
+    @overload
+    def _get_full_model(self, cfg : ParametricConf, skip_fit : Literal[False]) -> tuple[zpdf,FitResult] | None: ...
+    def _get_full_model(self, cfg : ParametricConf, skip_fit : bool) -> tuple[zpdf,FitResult] | zpdf | None:
         '''
         Parameters
         ---------------
+        cfg     : Configuration for fits to parametric PDFs
         skip_fit: If true, it will rturn the model without fitting
 
         Returns
@@ -371,66 +412,46 @@ class SimFitter(BaseFitter, Cache):
 
         - PDF for the combined categories with the parameters set
         to the fitted values
-        - Instance of DictConfig storing all the fitting parameters
+        - Instance of FitResult
         '''
-        categories : list[Category] = [] 
-
-        for category, data in self._cfg.categories.items():
-            log.debug( 30 * '-' )
-            log.debug(f'Building category: {category}')
-            log.debug( 30 * '-' )
-
-            l_model_name     = data['model']
-            model, sumw, res = self._get_component(
+        l_pdf   : list[zpdf      ] = []
+        l_yield : list[float     ] = []
+        l_res   : list[FitResult ] = []
+        for category in cfg.categories:
+            model, sumw, res = self._fit_category(
+                cfg          = cfg,
                 skip_fit     = skip_fit,
-                category     = category,
-                l_model_name = l_model_name)
+                category     = category)
 
-            if model is None:
+            if model is None or res is None or sumw is None:
                 log.warning(f'Skipping category {category}')
                 continue
 
-            if sumw is None:
-                raise ValueError(f'Yield in MC for category {category} is None')
+            l_pdf.append(model)
+            l_yield.append(sumw)
+            l_res.append(res)
 
-            # Will be None if fit is cached
-            # and this is only returning model
-            cres = OmegaConf.create({})
-            if res is not None:
-                cres = sut.zres_to_cres(res)
-
-            cat = Category(
-                name  = category,
-                pdf   = model, 
-                sumw  = sumw, 
-                cres  = cres,
-                **data)
-
-            categories.append(cat)
-
-        if not categories: 
+        if len(l_pdf) == 0:
             return None
 
-        log.debug( 30 * '-' )
-        log.debug('Merging categories')
-        log.debug( 30 * '-' )
-
-        mgr = CategoryMerger(categories = categories)
-        cat = mgr.get_category()
-
-        return cat.pdf, cat.cres
+        return self._merge_categories(
+            cfg    = cfg,
+            l_pdf  = l_pdf,
+            l_yield= l_yield,
+            l_res  = l_res)
     # ------------------------
     def _merge_categories(
         self,
+        cfg     : ParametricConf,
         l_pdf   : list[zpdf],
         l_yield : list[float],
-        l_cres  : list[DictConfig]) -> tuple[zpdf,DictConfig]:
+        l_res   : list[FitResult]) -> tuple[zpdf,FitResult]:
         '''
         Parameters
         -----------------
         l_pdf  : List of zfit PDFs from fit, one per category
         l_yield: List of yields from MC sample, not the fitted one
-        l_cres : List of result objects holding parameter values from fits
+        l_res  : List of fit result objects holding parameter values from fits
 
         Returns
         -----------------
@@ -439,13 +460,8 @@ class SimFitter(BaseFitter, Cache):
         - Full PDF, i.e. sum of components
         - Merged dictionary of parameters
         '''
-
         if len(l_pdf) == 1:
-            cres  = OmegaConf.merge(l_cres[0])
-            if not isinstance(cres, DictConfig):
-                raise TypeError('Merged parameters are not a DictConfig')
-
-            return l_pdf[0], cres
+            return l_pdf[0], l_res[0]
 
         log.debug(60 * '-')
         log.debug(f'{"Fraction":<50}{"Value":<10}')
@@ -455,71 +471,65 @@ class SimFitter(BaseFitter, Cache):
                 sumw,
                 total   = sum(l_yield),
                 category= category)
-            for sumw, category in zip(l_yield, self._cfg.categories) ]
+            for sumw, category in zip(l_yield, cfg.categories, strict=True) ]
         log.debug(60 * '-')
 
-        full_model = zfit.pdf.SumPDF(l_pdf, l_frac[:-1]) # Remove last fraction, need N-1
-        full_cres  = OmegaConf.merge(*l_cres)
-        if not isinstance(full_cres, DictConfig):
-            raise TypeError('Merged dictionary not a DictConfig')
+        full_model = zfit.pdf.SumPDF(l_pdf, l_frac)
+        full_res   = FitResult.merge(results = l_res)
 
-        return full_model, full_cres
+        return full_model, full_res
     # ------------------------
-    def _is_kde(self) -> bool:
+    def _get_kde(self, cfg : NonParametricConf) -> zpdf | None:
         '''
-        Returns true if the PDF is meant to be a single KDE
-        False if it is meant to be a parametric PDF
-        '''
-        yaml_str = OmegaConf.to_yaml(self._cfg.categories)
+        KDE is not fit in categories, there is just a MAIN_CATEGORY
 
-        return 'KDE1Dim' in yaml_str
-    # ------------------------
-    def _get_kde(self) -> zpdf | None:
-        '''
         - Makes KDE PDF
         - Saves fit (plot, list of parameters, etc)
+
+        Parameters
+        ------------------
+        cfg: Configuration for KDE
 
         Returns
         ------------------
         - KDE PDF after fit
         - None if there are fewer than _min_kde_entries
         '''
-        if not isinstance(self._category, str):
-            raise ValueError(f'Category not valid: {self._category}')
+        data = self._d_data[MAIN_CATEGORY]
 
-        model_name  = self._cfg.categories[self._category].model
-        data        = self._d_data[self._category]
+        if data.nevents < MIN_KDE_ENTRIES:
+            log.info(f'Not bulding KDE, found too few entries: {data.nevents} < {MIN_KDE_ENTRIES}')
+            return 
 
-        kde_builder = getattr(zfit.pdf, model_name)
-        if data.nevents < self._min_kde_entries:
-            pdf = None
-        else:
-            if 'options' in self._cfg.fit:
-                cfg    = self._cfg.fit.get('options')
-                kwargs = OmegaConf.to_container(cfg, resolve=True)
-                kwargs = cast(dict, kwargs)
-            else:
-                kwargs = {}
+        kde_builder = getattr(zfit.pdf, cfg.fit.kind)
 
-            log.debug('KDE options:')
-            log.debug(yaml.dump(kwargs))
-
-            pdf = kde_builder(obs=self._obs, data=data, name=self._component, **kwargs)
+        pdf = kde_builder(
+            obs       = self._obs, 
+            data      = data, 
+            name      = self._component, 
+            bandwidth = cfg.fit.bandwidth,
+            padding   = cfg.fit.padding.value)
 
         self._save_fit(
-            cut_cfg  = self._get_cut_config(category = self._category),
-            plt_cfg  = self._cfg.plots,
+            cut_cfg  = self._get_cut_config(cfg = cfg, category = None),
+            plt_cfg  = cfg.plots,
             data     = data,
             model    = pdf,
             res      = None,
-            out_path = self._out_path / self._category)
+            out_path = self._out_path)
 
         return pdf
     # ------------------------
-    def _get_ccbar_component(self) -> zpdf | None:
+    def _get_ccbar_component(
+        self,
+        cfg : CCbarConf) -> zpdf | None:
         '''
         This is an interace to the PRec class, which is in
         charge of building the KDE for ccbar sample
+
+        Parameters
+        -------------------
+        cfg: Configuration
 
         Returns
         ----------------
@@ -529,45 +539,12 @@ class SimFitter(BaseFitter, Cache):
         - None, if no data was found
         '''
         ftr=PRec(
+            obs     = self._obs,
             trig    = self._trigger,
             q2bin   = self._q2bin  ,
-            d_weight= self._cfg.weights,
-            out_dir = self._base_path,
-            samples = self._cfg.ccbar_samples)
+            cfg     = cfg)
 
-        obs_name = sut.name_from_obs(self._obs)
-
-        kwargs   = OmegaConf.to_container(self._cfg.fitting, resolve=True)
-        kwargs   = cast(dict, kwargs)
-
-        pdf =ftr.get_sum(
-            mass   = obs_name,
-            name   = r'$c\bar{c}+X$',
-            obs    = self._obs,
-            **kwargs)
-
-        return pdf
-    # ----------------------
-    def _float_pdf_parameters(self, pdf : zpdf) -> zpdf:
-        '''
-        Parameters
-        -------------
-        pdf: zfit PDF
-
-        Returns
-        -------------
-        PDF where the right parameters are floating, right parameters are:
-
-        - Parameters whose names end in `_flt`
-        '''
-        pars = pdf.get_params(floating = False)
-
-        for par in pars:
-            if not par.name.endswith('_flt'):
-                continue
-
-            log.debug(f'Floating: {par.name}')
-            par.floating = True
+        pdf =ftr.get_sum(name = r'$c\bar{c}+X$')
 
         return pdf
     # ------------------------
@@ -580,44 +557,39 @@ class SimFitter(BaseFitter, Cache):
         - zfit PDF, not extended yet
         - None, if statistics are too low to build PDF
         '''
-        if 'ccbar_samples' in self._cfg:
-            return self._get_ccbar_component()
+        if isinstance(self._cfg, CCbarConf):
+            return self._get_ccbar_component(cfg = self._cfg)
 
-        if 'sample' not in self._cfg:
-            return self._get_nomc_component()
+        if isinstance(self._cfg, CombinatorialConf):
+            return self._get_nomc_pdf(cfg = self._cfg)
+
+        if isinstance(self._cfg, NonParametricConf):
+            return self._get_kde(cfg = self._cfg)
+
+        if not isinstance(self._cfg, ParametricConf):
+            raise ValueError(f'Config not a parametric one: {type(self._cfg)}')
 
         result_path = self._out_path / 'parameters.yaml'
         if self._copy_from_cache():
-            res      = OmegaConf.load(result_path)
-            res      = cast(DictConfig, res)
-            # If caching, need only model, second return value
-            # Is an empty DictConfig, because no fit happened
-            val      = self._get_full_model(skip_fit=True)
-            if val is None:
-                return None
+            res = FitResult.from_json(path = result_path)
 
-            model, _ = val 
-            model    = self._fix_tails(pdf=model, pars=res)
-            model    = self._float_pdf_parameters(pdf = model)
+            # If caching, need only model, second return value
+            # Is None because no fit happened 
+            model = self._get_full_model(skip_fit=True, cfg = self._cfg)
+            model = self._fix_tails(pdf=model, res=res)
 
             return model
 
         log.info(f'Fitting, could not find cached parameters in {result_path}')
 
-        if self._is_kde():
-            return self._get_kde()
-
-        val = self._get_full_model(skip_fit=False)
+        val = self._get_full_model(skip_fit=False, cfg = self._cfg)
         if val is None:
             return None
 
-        full_model, cres = val
+        full_model, fres = val
 
-        OmegaConf.save(cres, result_path)
+        fres.to_json(path = result_path)
 
         self._cache()
-
-        full_model = self._float_pdf_parameters(pdf = full_model)
-
         return full_model
 # ------------------------

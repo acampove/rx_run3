@@ -5,10 +5,10 @@ Module holding AcceptanceReader class
 import os
 import pandas as pnd
 
-from pathlib                        import Path
-from dmu.generic.version_management import get_last_version
-from dmu                            import LogStore
-from rx_common                      import Project, Sample
+from pathlib     import Path
+from dmu         import LogStore
+from dmu.generic import get_last_version
+from rx_common   import Project
 
 log=LogStore.add_logger('rx_efficiencies:acceptance_reader')
 #----------------------------------
@@ -21,13 +21,13 @@ class AcceptanceReader:
         self, 
         year   : str, 
         project: Project,
-        sample : Sample):
+        sample : str):
         '''
         Parameters
         ---------------
         year   : E.g. 2024, needed to pick correct file
         project: E.g. rk, rkst
-        sample : E.g. bpkpee
+        sample : E.g. Bd_psi2SKst_mm_eq_DPC 
         '''
         self._year    = year
         self._sample  = sample

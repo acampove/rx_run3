@@ -6,22 +6,22 @@ import json
 import math
 import numpy
 
-from pathlib               import Path
-from typing                import Self, Sequence
-from tabulate              import tabulate
-from functools             import cached_property
-from zfit.constraint       import GaussianConstraint as GConstraint
-from zfit.constraint       import PoissonConstraint  as PConstraint
-from zfit.param            import Parameter as zpar
-from zfit.result           import FitResult
-from pydantic              import BaseModel, model_validator, TypeAdapter
+from pathlib         import Path
+from typing          import Self, Sequence, Literal
+from tabulate        import tabulate
+from functools       import cached_property
+from zfit.constraint import GaussianConstraint as GConstraint
+from zfit.constraint import PoissonConstraint  as PConstraint
+from zfit.param      import Parameter as zpar
+from pydantic        import BaseModel, model_validator, TypeAdapter
 
-from dmu          import LogStore
-from .            import utilities as sut
-from .imports     import zfit
-from .protocols   import ParsHolder
+from dmu             import LogStore
+from .fit_result     import FitResult
+from .protocols      import ParsHolder
+from .imports        import zfit
 
-log=LogStore.add_logger('dmu:stats:constraint')
+log   = LogStore.add_logger('dmu:stats:constraint')
+CKind = Literal['GaussianConstraint', 'PoissonConstraint'] 
 # ----------------------------------------
 class Constraint(BaseModel):
     '''
@@ -95,9 +95,10 @@ class ConstraintND(Constraint):
         -------------
         Copy of this constraint with means calibrated
         '''
-        new_values = []
+        new_values : list[float] = []
+
         for name, old_value in zip(self.parameters, self.values):
-            new_value = sut.val_from_zres(name = name, res = result )
+            new_value, _ = result[name]
             new_values.append(new_value)
 
             log.info(f'{name:<20}{old_value:<20.3f}{"--->":<20}{new_value:<20.3f}')
@@ -168,6 +169,9 @@ class ConstraintND(Constraint):
                 obs.append(par)
 
         if not obs:
+            for par in s_par:
+                log.error(par.name)
+
             raise ValueError('No observable found')
 
         ninit = len(self.parameters)
@@ -252,7 +256,7 @@ class Constraint1D(Constraint):
     '''
     Class representing Gaussian 1D constrain
     '''
-    kind: str
+    kind: CKind 
     name: str
     mu  : float
     sg  : float
@@ -261,7 +265,7 @@ class Constraint1D(Constraint):
     def from_dict(
         cls,
         data : dict[str,tuple[float,float]],
-        kind : str) -> list['Constraint1D']:
+        kind : CKind) -> list['Constraint1D']:
         '''
         Parameters
         -----------------
@@ -299,7 +303,7 @@ class Constraint1D(Constraint):
         -------------
         Copy of this constraint with means calibrated
         '''
-        new_value = sut.val_from_zres(name = self.name, res = result )
+        new_value, _ = result[self.name] 
 
         log.info(f'{self.name:<20}{self.mu:<20.3f}{"--->":<20}{new_value:<20.3f}')
 
@@ -346,6 +350,9 @@ class Constraint1D(Constraint):
             if par.name == self.name and isinstance(par, zpar):
                 return par
 
+        for par in s_par:
+            log.error(par.name)
+
         raise ValueError(f'Cannot find {self.name} in NLL')
     # ----------------------
     def zfit_cons(self, holder : ParsHolder) -> GConstraint | PConstraint:
@@ -364,8 +371,6 @@ class Constraint1D(Constraint):
                 cons = PConstraint(
                     params      = obs, 
                     observation = self.observation)
-            case _:
-                raise ValueError(f'Invalid constraint kind: {self.kind}')
 
         return cons
     # ----------------------

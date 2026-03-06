@@ -9,19 +9,18 @@ from dmu.workflow   import Cache
 from dmu            import LogStore
 from dmu.stats      import ModelFactory, print_constraints
 from dmu.stats      import zfit
-from dmu.generic    import utilities           as gut
-from rx_common      import Qsq
-from fitter         import FitConfig
+from dmu.generic    import UnpackerModel, utilities           as gut
+from rx_common      import Qsq, Component
+from fitter         import RXFitConfig
 from zfit.loss      import ExtendedUnbinnedNLL
 from zfit.param     import Parameter           as zpar
-from zfit.pdf       import BasePDF             as zpdf
 from zfit           import Space               as zobs
 from fitter         import ConstraintReader
+from fitter.configs import CombinatorialConf, FitModelConf
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
-_COMBINATORIAL_NAME : Final[str]       = 'combinatorial'
-_CONSTRAINTS        : Final[list[str]] = [
+_CONSTRAINTS : Final[list[str]] = [
     'sig_par', 
     'rare_prec_rk', 
     'invalid', 
@@ -36,6 +35,9 @@ def initialize():
     LogStore.set_level('fitter:signal_constraints', 10)
     LogStore.set_level('fitter:scale_reader'      , 10)
     LogStore.set_level('fitter:cmb_constraints'   , 10)
+
+    with UnpackerModel.package(name = 'fitter_data'):
+        yield
 # ----------------------
 class Parameters:
     '''
@@ -76,9 +78,9 @@ class Parameters:
             return set()
         elif kind == 'rare_prec_rk':
             l_par_name = [
-                'pscale_yld_Bd_Kstee_eq_btosllball05_DPC',
-                'pscale_yld_Bu_Kstee_Kpi0_eq_btosllball05_DPC',
-                'pscale_yld_Bs_phiee_eq_Ball_DPC']
+                'pscale_yld_bdkstkpiee',
+                'pscale_yld_bpkstkpiee',
+                'pscale_yld_bsphiee']
         elif kind == 'rare_prec_rkst':
             l_par_name = []
         elif kind == 'rare_misid':
@@ -114,7 +116,7 @@ class Parameters:
 
         return { zfit.Parameter(name, 0, 0, 1) for name in l_par_name }
     # ----------------------
-    def get_params(self, floating : bool) -> set[zpar] | set[zpar]:
+    def get_params(self, floating : bool) -> set[zpar]:
         '''
         Parameters
         -------------
@@ -128,43 +130,10 @@ class Parameters:
 
         return self._s_par 
 # ----------------------
-def _get_signal(obs : zobs) -> zpdf:
-    '''
-    Parameters
-    -------------
-    obs: Observable
-
-    Returns
-    -------------
-    Signal model
-    '''
-    fct  = ModelFactory(
-        obs     = obs,
-        l_pdf   = ['dscb'],
-        l_shared= [],
-        l_float = [],
-        d_rep   = {'mu' : 'scale', 'sg' : 'reso'},
-        preffix = 'signal_brem_001_b1')
-    gaus_001 = fct.get_pdf()
-
-    fct  = ModelFactory(
-        obs     = obs,
-        l_pdf   = ['dscb'],
-        l_shared= [],
-        l_float = [],
-        d_rep   = {'mu' : 'scale', 'sg' : 'reso'},
-        preffix = 'signal_brem_002_b1')
-    gaus_002 = fct.get_pdf()
-
-    frac = zfit.param.Parameter('frac_signal_b1', 0.3, 0.0, 1.0)
-    pdf  = zfit.pdf.SumPDF(pdfs = [gaus_001, gaus_002], fracs = frac)
-
-    return pdf
-# ----------------------
 def _get_nll(
     obs  : zobs, 
     q2bin: Qsq,
-    cfg  : FitConfig) -> ExtendedUnbinnedNLL:
+    cfg  : RXFitConfig) -> ExtendedUnbinnedNLL:
     '''
     Parameters
     -------------
@@ -179,9 +148,16 @@ def _get_nll(
     - PDF used to fit combinatorial
     - Parameters needed for misID
     '''
-    pdf_names = cfg.fit_cfg.model.components.combinatorial.categories.main.models[q2bin]
+    cfg_cmb = cfg.mod_cfg.components[Component.comb]
+    if not isinstance(cfg_cmb, CombinatorialConf):
+        raise ValueError(f'Expected combinatorial config, found: {cfg_cmb}')
 
-    gaus = _get_signal(obs = obs)
+    pdf_names = cfg_cmb.models[q2bin].pdfs
+
+    mu   = zfit.Parameter('mu', 5200, 4500, 6000)
+    sg   = zfit.Parameter('sg',  150,   10, 200)
+    gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+
     fct  = ModelFactory(
         obs     = obs,
         l_pdf   = pdf_names,
@@ -200,7 +176,7 @@ def _get_nll(
 
     return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
 # --------------------------------------------------------------
-def _get_fit_config(q2bin : Qsq) -> FitConfig:
+def _get_fit_config(q2bin : Qsq) -> RXFitConfig:
     '''
     Parameters
     -------------
@@ -210,14 +186,15 @@ def _get_fit_config(q2bin : Qsq) -> FitConfig:
     -------------
     Object storing fit configuration
     '''
-    fit_cfg = gut.load_conf(package='fitter_data', fpath = 'tests/fits/constraint_reader.yaml')
+    data    = gut.load_data(package='fitter_data', fpath = 'rare/rk/ee/data.yaml')
+    mod_cfg = FitModelConf(**data)
 
-    return FitConfig(
+    return RXFitConfig(
         name    = 'test',
         group   = 'test',
-        mva_cmb = ['000'],
-        mva_prc = ['000'],
-        fit_cfg = fit_cfg, 
+        mod_cfg = mod_cfg, 
+        mva_cmb = 0.0,
+        mva_prc = 0.0,
         q2bin   = q2bin,
     )
 # --------------------------------------------------------------
@@ -242,12 +219,12 @@ def test_all_but_cmb(
     nll = cast(ExtendedUnbinnedNLL, nll) # Tests will only need get_params
 
     cfg = _get_fit_config(q2bin = q2bin)
-    del cfg.fit_cfg.model.components[_COMBINATORIAL_NAME]
+    del cfg.mod_cfg.components[Component.comb]
 
     if not slow_mode:
         log.info('Skipping misid constraints')
-        del cfg.fit_cfg.model.components['kkk']
-        del cfg.fit_cfg.model.components['kpipi']
+        del cfg.mod_cfg.components[Component.bpkkk  ]
+        del cfg.mod_cfg.components[Component.bpkpipi]
     else:
         log.info('Running full test')
 
@@ -264,11 +241,11 @@ def test_all_but_cmb(
     assert len(constraints) > 0 
 # --------------------------------------------------------------
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_all_but_misid(
+def test_only_cmb(
     tmp_path : Path, 
     q2bin    : Qsq):
     '''
-    Tests all the constraints but the misID ones 
+    Tests all the constraints but the combinatorial shape
 
     Parameters
     -------------
@@ -278,35 +255,8 @@ def test_all_but_misid(
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = _get_fit_config(q2bin = q2bin)
     nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
-    del cfg.fit_cfg.model.components['kkk']
-    del cfg.fit_cfg.model.components['kpipi']
-
-    with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(nll=nll, cfg=cfg)
-        constraints = obj.get_constraints()
-
-    print_constraints(constraints = constraints)
-
-    assert len(constraints) > 0 
-# --------------------------------------------------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
-def test_only_signal(
-    tmp_path : Path, 
-    q2bin    : Qsq):
-    '''
-    Tests only signal constraints 
-
-    Parameters
-    -------------
-    q2bin: q2 bin
-    '''
-
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = _get_fit_config(q2bin = q2bin)
-    nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
-    del cfg.fit_cfg.model.components['kkk']
-    del cfg.fit_cfg.model.components['kpipi']
-    del cfg.fit_cfg.model.components[_COMBINATORIAL_NAME]
+    del cfg.mod_cfg.components[Component.bpkkk  ]
+    del cfg.mod_cfg.components[Component.bpkpipi]
 
     with Cache.cache_root(path = tmp_path):
         obj         = ConstraintReader(nll=nll, cfg=cfg)

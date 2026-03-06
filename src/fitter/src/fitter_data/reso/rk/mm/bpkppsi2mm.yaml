@@ -1,0 +1,27 @@
+output_directory : reso/rk/muon/psi2
+component        : bpkppsi2mm
+categories:
+  brem_xx0:
+    selection : {}
+    model :
+      pdfs :
+        - dscb 
+        - cbl
+      shared        :
+        - mu
+        - sg
+      floating      :
+        - mu 
+        - sg
+      reparametrize : {}
+      fix           : {}
+fit:
+  strategy  :
+    ntries : 15
+    pvalue : 0.05
+plots:
+  nbins     : 50
+  stacked   : True
+  d_leg :
+    cbl_1   : Crystal Ball 
+    dscb_1  : DSCB

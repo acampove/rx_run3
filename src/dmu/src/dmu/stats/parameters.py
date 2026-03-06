@@ -2,15 +2,22 @@
 Module with ParameterLibrary class
 '''
 import math
+import yaml
 
+from pathlib               import Path
+from contextvars           import ContextVar
 from contextlib            import contextmanager
 from importlib.resources   import files
-from dmu                   import LogStore
 from zfit.param            import Parameter as zpar
-from omegaconf             import DictConfig, OmegaConf
+
+from dmu                   import LogStore
+from .configs              import YieldsConf
+from .configs              import SimpleYieldConf
+from .configs              import CompositeYieldConf
 from .imports              import zfit
 
-log=LogStore.add_logger('dmu:stats:parameters')
+log      = LogStore.add_logger('dmu:parameters')
+_YLD_CFG : ContextVar[YieldsConf | None] = ContextVar('_YLD_CFG', default = None)
 # --------------------------------
 class ParameterLibrary:
     '''
@@ -19,23 +26,26 @@ class ParameterLibrary:
     - Connect to database (YAML file) with parameter values and make them available
     - Allow parameter values to be overriden
     '''
-    _values : DictConfig
-    _yld_cfg: DictConfig|None = None # Configuration used for yields
-    _d_par  : dict[str,zpar]  = {}   # When building parameters, they will be stored here, such that they can be reused, for simultaneous fits
+    _d_par  : dict[str,zpar      ] = {}   # When building parameters, they will be stored here, such that they can be reused, for simultaneous fits
+    _values : dict[str,YieldsConf] = {}   # Values of parameters for all PDFs are in YAML file, they will be loaded here
     # --------------------------------
     @classmethod
     def _load_data(cls) -> None:
-        if hasattr(cls, '_values'):
+        if len(cls._values) > 0:
             return
 
         data_path = files('dmu_data').joinpath('stats/parameters/data.yaml')
-        data_path = str(data_path)
+        data_path = Path(str(data_path))
+        data      = yaml.safe_load(data_path.read_text())
 
-        values = OmegaConf.load(data_path)
-        if not isinstance(values, DictConfig):
-            raise TypeError(f'Wrong (not dictionary) data loaded from: {data_path}')
+        cls._values = { pdf_name : YieldsConf(**pdf_data) 
+            for pdf_name, pdf_data in data.items()} 
 
-        cls._values = values
+        npdf = len(cls._values)
+        if npdf == 0:
+            raise ValueError(f'Could not load any value from: {data_path}')
+
+        log.debug(f'Found {npdf} PDFs')
     # --------------------------------
     @classmethod
     def print_parameters(cls, kind : str) -> None:
@@ -45,9 +55,14 @@ class ParameterLibrary:
         '''
         cfg = cls._values
         if kind not in cfg:
+            for val in cfg:
+                log.error(val)
             raise ValueError(f'Cannot find parameters for PDF of kind: {kind}')
 
-        log.info(cfg[kind])
+        pdf_pars = cfg[kind]
+        data     = pdf_pars.model_dump()
+
+        log.info(yaml.safe_dump(data, indent=2))
     # --------------------------------
     @classmethod
     def get_values(cls, kind : str, parameter : str) -> tuple[float,float,float]:
@@ -67,11 +82,11 @@ class ParameterLibrary:
         if parameter not in cls._values[kind]:
             raise ValueError(f'For PDF {kind}, cannot find parameter: {parameter}')
 
-        val = cls._values[kind][parameter]['val' ]
-        low = cls._values[kind][parameter]['low' ]
-        hig = cls._values[kind][parameter]['high']
+        par = cls._values[kind][parameter].root
+        if not isinstance(par, SimpleYieldConf):
+            raise ValueError(f'Parameter {parameter} is not elementary: {par}')
 
-        return val, low, hig
+        return par.val, par.min, par.max 
     # --------------------------------
     @classmethod
     def values(
@@ -85,27 +100,26 @@ class ParameterLibrary:
         This function will override the value and range for the given parameter
         It should be typically used before using the ModelFactory class
         '''
-        if not low <= val <= high:
-            raise ValueError(f'Invalid values for {parameter} in {kind}: {low} < {val} < {high}')
+        old_par = cls._values[kind][parameter].root
 
-        log.info(f'{parameter:<30}{val:<20.3f}{low:<20.3f}{high:<20.3f}')
-
-        old_val, old_low, old_high   = cls.get_values(kind=kind, parameter=parameter)
-        cls._values[kind][parameter] = {'val' : val, 'low' : low, 'high' : high}
+        cls._values[kind][parameter].root = SimpleYieldConf(
+            val = val, 
+            min = low, 
+            max = high)
 
         @contextmanager
         def _context():
             try:
                 yield
             finally:
-                cls._values[kind][parameter] = {'val' : old_val, 'low' : old_low, 'high' : old_high}
+                cls._values[kind][parameter].root = old_par 
 
         return _context()
     # ----------------------
     @classmethod
-    def parameter_schema(cls, cfg : DictConfig):
+    def parameter_schema(cls, cfg : YieldsConf):
         '''
-        This context manager sets `_yld_cfg`, which defines
+        This context manager sets `_YLD_CFG`, which defines
 
         - How parameters are related. I.e. if they are multiplied
         - What their values are
@@ -114,15 +128,14 @@ class ParameterLibrary:
         -------------
         cfg: DictConfig representing the values and relationships between paramaters
         '''
-        old_val      = cls._yld_cfg
-        cls._yld_cfg = cfg
+        token = _YLD_CFG.set(cfg)
 
         @contextmanager
         def _context():
             try:
                 yield
             finally:
-                cls._yld_cfg = old_val
+                _YLD_CFG.reset(token)
 
         return _context()
     # ----------------------
@@ -141,42 +154,52 @@ class ParameterLibrary:
         if name in cls._d_par:
             return cls._d_par[name]
 
-        if cls._yld_cfg is None:
+        cfg = _YLD_CFG.get()
+        if cfg is None:
             raise ValueError('Parameter schema not set')
 
-        yld_cfg = cls._yld_cfg
-        if name not in yld_cfg:
-            log.error(OmegaConf.to_yaml(yld_cfg))
+        if name not in cfg:
+            log.error(cfg)
             raise ValueError(f'Parameter {name} not found in configuration')
 
-        this_yld = yld_cfg[name]
+        cfg_yld = cfg[name]
 
-        if 'mul' in this_yld:
-            l_par    = [ cls.get_yield(name=comp_name) for comp_name in this_yld.mul ]
-            comp_par = cls._multiply_pars(name=name, pars=l_par)
-            cls._d_par[name] = comp_par
+        match cfg_yld.root:
+            case CompositeYieldConf() as cfg:
+                par = cls._get_composite_yield(name = name, cfg = cfg)
+                cls._d_par[name] = par
+            case SimpleYieldConf()    as cfg:
+                par = cls._get_simple_yield(name = name, cfg = cfg)
+                cls._d_par[name] = par
 
-            return comp_par
+        return par
+    # ----------------------
+    @classmethod
+    def _get_composite_yield(
+        cls, 
+        name: str,
+        cfg : CompositeYieldConf) -> zpar:
+        '''
+        Parameters
+        -------------
+        name: Parameter name
+        cfg : Configuration needed to make composite yield
 
-        if 'dif' in this_yld:
-            par_1 = cls.get_yield(name=this_yld.dif[0])
-            par_2 = cls.get_yield(name=this_yld.dif[1])
-            comp_par = cls._subtract_pars(name = name, par_1=par_1, par_2=par_2)
-            cls._d_par[name] = comp_par
+        Returns
+        -------------
+        Composite zfit parameter
+        '''
+        log.debug(f'Building {name} with:')
+        log.debug(cfg)
 
-            return comp_par
-
-        # This is a non-alias, non-scl parameter, e.g. simple one
-        if 'scl' not in yld_cfg[name]:
-            par = cls._parameter_from_conf(name=name, cfg=yld_cfg)
-            cls._d_par[name] = par
-            return par
-
-        # scl and non alias
-        l_par    = [ cls.get_yield(name=comp_name) for comp_name in yld_cfg[name]['scl'] ]
-        par      = cls._parameter_from_conf(name=name, cfg=yld_cfg, is_scale=True)
-        l_par.append(par)
-        comp_par = cls._multiply_pars(name=name, pars=l_par)
+        match cfg.kind:
+            case 'mul':
+                l_par    = [ cls.get_yield(name=comp_name) for comp_name in cfg.pars ]
+                comp_par = cls._multiply_pars(name=name, pars=l_par)
+            case 'dif':
+                par_1    = cls.get_yield(name=cfg.pars[0])
+                par_2    = cls.get_yield(name=cfg.pars[1])
+                comp_par = cls._subtract_pars(name = name, par_1=par_1, par_2=par_2)
 
         return comp_par
     # ----------------------
@@ -216,32 +239,25 @@ class ParameterLibrary:
         return comp_par
     # ----------------------
     @classmethod
-    def _parameter_from_conf(cls, name : str, cfg : DictConfig, is_scale : bool = False) -> zpar:
+    def _get_simple_yield(
+        cls, 
+        name : str, 
+        cfg  : SimpleYieldConf) -> zpar:
         '''
         Parameters
         -------------
         name    : Name of parameter to be returned
         cfg     : Config defining values of parameter bounds and default value of parameter
-        is_scale: If True, this parameter is a scale, not an actual yield. Scales on yield nPar is called s_nPar
 
         Returns
         -------------
         A zfit parameter
         '''
-        val = cfg[name]['val']
-        minv= cfg[name]['min']
-        maxv= cfg[name]['max']
+        log.debug(f'Building {name} with:')
+        log.debug(cfg)
 
-        preffix  = cfg[name].get('preffix', 's')
-        par_name = f'{preffix}_{name}' if is_scale else name
-
-        if minv > maxv:
-            raise ValueError(f'For parameter {name}, minimum edge is larger: {minv:.3e} > {maxv:.3e}')
-
-        if math.isclose(minv, maxv, rel_tol=1e-5):
-            par = zfit.Parameter(par_name, val, minv, maxv + 1, floating=False)
-        else:
-            par = zfit.Parameter(par_name, val, minv, maxv + 0, floating= True)
+        par = zfit.Parameter(name, cfg.val, cfg.min, cfg.max,)
+        par.floating = not cfg.fix
 
         return par
 # --------------------------------

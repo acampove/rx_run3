@@ -7,21 +7,15 @@ import mplhep
 import pytest
 import matplotlib.pyplot as plt
 
-from ROOT                   import RDF # type: ignore
-from pathlib                import Path
-from rx_common              import Project, Sample, Trigger
-from rx_data                import SWPCalculator
-from rx_data                import testing  as tst
-from rx_data                import RDFGetter
-from dmu.logging.log_store  import LogStore
+from ROOT      import RDF # type: ignore
+from pathlib   import Path
+from dmu       import LogStore
+from rx_common import Project, Component, Trigger
+from rx_data   import SWPCalculator
+from rx_data   import testing  as tst
+from rx_data   import RDFGetter
 
 log = LogStore.add_logger('rx_data:test_swp_calculator')
-# ----------------------------------
-class Data:
-    '''
-    Class used to share attributes
-    '''
-    user    = os.environ['USER']
 # ----------------------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -53,10 +47,10 @@ def _get_hadron_mapping(trigger : Trigger) -> dict[str,int]:
     raise ValueError(f'Invalid trigger: {trigger}')
 # ----------------------------------
 @pytest.mark.parametrize('trigger', [Trigger.rk_ee_ss])
-@pytest.mark.parametrize('sample' , [Sample.data_24])
+@pytest.mark.parametrize('sample' , [Component.data_24])
 def test_dzero_misid(
     trigger  : Trigger, 
-    sample   : Sample, 
+    sample   : Component, 
     tmp_path : Path):
     '''
     Tests dzero decay contamination
@@ -86,11 +80,12 @@ def test_phi_misid(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests phi decay contamination
     '''
-    rdf   = tst.get_rdf(kind=kind, prefix=prefix)
+    rdf     = tst.get_rdf(kind=kind, prefix=prefix)
+    trigger = tst.get_trigger(kind = kind, prefix = prefix)
 
-    if   Trigger(prefix).project == Project.rk: 
+    if   trigger.project == Project.rk: 
         obj = SWPCalculator(rdf, d_lep={'L1' : 321, 'L2' : 321}, d_had={'H' : 321})
-    elif Trigger(prefix).project == Project.rkst: 
+    elif trigger.project == Project.rkst: 
         obj = SWPCalculator(rdf, d_lep={'H1' : 321}, d_had={'H2' : 321})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')
@@ -104,12 +99,13 @@ def test_jpsi_misid_bplus(prefix : str, kind : str, tmp_path : Path):
     '''
     Tests jpsi misid contamination when the decay is B -> K ell ell
     '''
-    rdf = tst.get_rdf(kind=kind, prefix=prefix)
+    rdf     = tst.get_rdf(kind=kind, prefix=prefix)
+    trigger = tst.get_trigger(kind = kind, prefix = prefix)
     name= 'jpsi_misid_bplus'
 
-    if   Trigger(prefix).channel == 'muon':
+    if   trigger.is_muon:
         obj = SWPCalculator(rdf, d_lep={'L1' : 13, 'L2' : 13}, d_had={'H' : 13})
-    elif Trigger(prefix).channel == 'electron':
+    elif trigger.is_electron:
         obj = SWPCalculator(rdf, d_lep={'L1' : 11, 'L2' : 11}, d_had={'H' : 11})
     else:
         raise ValueError(f'Invalid prefix: {prefix}')

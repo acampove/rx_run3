@@ -3,26 +3,24 @@ Module with unit tests for functions in dmu.stat.utilities
 '''
 import os
 import re
-import math
 import pytest
 import numpy
-import pandas as pnd
 
 from importlib.resources    import files
 from pathlib                import Path
-from omegaconf              import OmegaConf
 
-from dmu                    import LogStore
-from dmu.stats              import utilities as sut
-from dmu.stats              import zfit
-from dmu.stats              import Fitter
-from dmu.stats.utilities    import print_pdf
-from dmu.stats.utilities    import pdf_to_tex
-from dmu.stats.utilities    import placeholder_fit
-from dmu.stats.utilities    import is_pdf_usable
-from dmu.generic            import rxran
-from zfit.data              import Data     as zdata
-from zfit.pdf               import BasePDF  as zpdf
+from dmu          import LogStore
+from dmu.stats    import utilities as sut
+from dmu.stats    import zfit
+from dmu.stats    import Fitter
+from dmu.stats    import print_pdf
+from dmu.stats    import pdf_to_tex
+from dmu.stats    import is_pdf_usable
+from dmu.stats    import ZFitPlotterConf
+from dmu.generic  import rxran
+from zfit.data    import Data     as zdata
+from zfit.pdf     import BasePDF  as zpdf
+>>>>>>> master
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
@@ -44,9 +42,9 @@ def initialize():
 #----------------------------------
 def _get_pdf_simple(is_extended : bool = True) -> zpdf:
     obs = zfit.Space('m',    limits=(-10, 10))
-    mu  = zfit.Parameter("mu", 0.4,   -5,     5)
-    sg  = zfit.Parameter("sg", 1.3,  0.5,     2)
-    ne  = zfit.Parameter('ne',  10,    1, 10000)
+    mu  = zfit.Parameter("mu_gaus_test_1", 0.4,   -5,     5)
+    sg  = zfit.Parameter("sg_gaus_test_1", 1.3,  0.5,     2)
+    ne  = zfit.Parameter('ne_gaus_test_1',  10,    1, 10000)
 
     sg.floating = False
 
@@ -165,45 +163,6 @@ def test_pdf_to_tex(tmp_path : Path):
         out_dir = tmp_path, 
         d_par   = d_par)
 #----------------------------------
-@pytest.mark.parametrize('make_plot', [True, False])
-def test_placeholder_fit(make_plot : bool, tmp_path : Path) -> None:
-    '''
-    Runs a placeholder fit needed to produce outputs useful
-    to develop tools
-    '''
-    placeholder_fit(
-        kind     = 's+b',
-        fit_dir  = tmp_path,
-        plot_fit = make_plot)
-# ----------------------
-@pytest.mark.parametrize('suffix', [None ,   'suff'])
-@pytest.mark.parametrize('kind'  , ['s+b', 'signal'])
-def test_get_placeholder_model(
-    kind   : str,
-    suffix : str|None) -> None:
-    '''
-    Test of get_model
-    '''
-    pdf = sut.get_model(kind=kind, suffix=suffix)
-    sut.is_pdf_usable(pdf=pdf)
-# ----------------------
-@pytest.mark.parametrize('kind'  , ['s+b', 'signal'])
-def test_get_placeholder_nll(kind : str) -> None:
-    '''
-    Test of get_nll
-    '''
-    _ = sut.get_nll(kind=kind)
-#----------------------------------
-def test_reuse_data(tmp_path : Path) -> None:
-    '''
-    Tests running fit on cached data
-    '''
-    placeholder_fit(kind='s+b', fit_dir=tmp_path, plot_fit=False)
-
-    df   = pnd.read_json(f'{tmp_path}/data.json')
-
-    placeholder_fit(kind='s+b', fit_dir=tmp_path, plot_fit=True, df=df)
-#----------------------------------
 def test_is_pdf_usable():
     '''
     Tests for PDF printer
@@ -223,26 +182,18 @@ def test_save_fit_simple(tmp_path : Path, is_extended : bool):
     obj = Fitter(pdf, dat)
     res = obj.fit()
 
-    cfg = {
-        'nbins'      : 50, 
-        'stacked'    : True, 
-        'plot_range' : [-5, +6],
-        'yrange'     : {
-            'log'    : [1.0, 1e3],
-            'linear' : [0.0, 1e2]}
-    }
+    cfg = ZFitPlotterConf(
+        nbins      = 50,
+        stacked    = True,
+        plot_range = (-5, +6),
+    )
 
-    measurement = sut.save_fit(
+    sut.save_fit(
         data   =dat,
         model  =pdf,
         res    =res,
         plt_cfg=cfg,
-        fit_dir=tmp_path / 'save_fit/simple')
-
-    if not is_extended:
-        assert 'nentries' in measurement
-    else:
-        assert 'nentries' not in measurement
+        fit_dir=tmp_path)
 #----------------------------------
 def test_save_fit_param(tmp_path : Path):
     '''
@@ -254,12 +205,16 @@ def test_save_fit_param(tmp_path : Path):
     obj = Fitter(pdf, dat)
     res = obj.fit()
 
+    cfg = ZFitPlotterConf(
+        nbins   = 50,
+        stacked = True)
+
     sut.save_fit(
-        data   =dat,
-        model  =pdf,
-        res    =res,
-        plt_cfg={'nbins' : 50, 'stacked' : True},
-        fit_dir=tmp_path)
+        data   = dat,
+        model  = pdf,
+        res    = res,
+        plt_cfg= cfg,
+        fit_dir= tmp_path)
 #----------------------------------
 def test_save_fit_nomodel(tmp_path : Path):
     '''
@@ -268,11 +223,15 @@ def test_save_fit_nomodel(tmp_path : Path):
     pdf = _get_pdf(kind='simple')
     dat = pdf.create_sampler(n=1000)
 
+    cfg = ZFitPlotterConf(
+        nbins   = 50,
+        stacked = True)
+
     sut.save_fit(
         data   =dat,
         model  =None,
         res    =None,
-        plt_cfg={'nbins' : 50, 'stacked' : True},
+        plt_cfg=cfg,
         fit_dir=tmp_path)
 #----------------------------------
 def test_name_from_obs():
@@ -283,40 +242,6 @@ def test_name_from_obs():
     name = sut.name_from_obs(obs=obs)
 
     assert name == 'xyz'
-#----------------------------------
-def test_zres_to_cres(tmp_path : Path):
-    '''
-    Tests conversion of zfit result object to
-    DictConfig
-    '''
-    pdf = _get_pdf(kind='simple')
-    dat = pdf.create_sampler(n=1000)
-
-    obj = Fitter(pdf, dat)
-    res = obj.fit()
-
-    cres = sut.zres_to_cres(res=res)
-
-    OmegaConf.save(config=cres, f= tmp_path / 'results.yaml')
-#----------------------------------
-def test_zres_to_cres_fallback():
-    '''
-    Tests conversion of zfit result object to
-    DictConfig when errors are missing
-    '''
-    pdf = _get_pdf(kind='simple')
-    dat = pdf.create_sampler(n=1000)
-
-    with Fitter.errors_disabled(value=True):
-        obj = Fitter(pdf, dat)
-        res = obj.fit()
-
-    with pytest.raises(KeyError):
-        sut.zres_to_cres(res=res)
-
-    cres = sut.zres_to_cres(res=res, fall_back_error=-1)
-    for data in cres.values():
-        assert math.isclose(data.error, -1.0, rel_tol=1e-5)
 #----------------------------------
 def test_range_from_obs():
     '''
@@ -338,26 +263,4 @@ def test_yield_from_zdata(weighted : bool):
     val = sut.yield_from_zdata(data=data)
 
     assert abs(val - target) < 1e-5
-#----------------------------------
-@pytest.mark.parametrize('frozen', [True, False])
-def test_val_from_zres(frozen : bool) -> None:
-    '''
-    Tests `val_from_zres`
-    '''
-    expected = 5199.536378229733 
-
-    res = placeholder_fit(kind='s+b', fit_dir=None)
-    log.info(res)
-
-    if frozen:
-        res.freeze()
-
-    val = sut.val_from_zres(res=res, name='mu')
-    assert math.isclose(val, expected, rel_tol=1e-5)
-
-    val = sut.val_from_zres(res=res, name='mu')
-    assert math.isclose(val, expected, rel_tol=1e-5)
-
-    with pytest.raises(ValueError):
-        sut.val_from_zres(res=res, name='fake')
 #----------------------------------

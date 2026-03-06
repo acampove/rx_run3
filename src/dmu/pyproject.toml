@@ -33,6 +33,9 @@ dependencies = [
     'memory-profiler',
 ]
 
+[tool.ruff]
+select = ["F", "PL", "B"]
+
 [project.scripts]
 check_truth         = 'dmu_scripts.physics.check_truth:main'
 print_trees         = 'dmu_scripts.rfile.print_trees:main'
@@ -43,4 +46,3 @@ dmu                 = 'dmu_scripts.cli:app'
 
 [tool.setuptools.package-data]
 dmu_data = ['**/*.json', '**/*.toml', '**/*.yaml', '**/*.txt']
-

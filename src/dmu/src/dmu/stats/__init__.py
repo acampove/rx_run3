@@ -1,31 +1,68 @@
-from .constraint       import Constraint1D 
-from .constraint       import ConstraintND
-from .constraint       import Constraint
-from .constraint       import build_constraint 
-from .constraint       import print_constraints 
-from .constraint_adder import ConstraintAdder
-from .parameters       import ParameterLibrary
-from .measurement      import Measurement
-from .gof_calculator   import GofCalculator
-from .model_factory    import ModelFactory, MethodRegistry
-from .fitter           import Fitter
-from .protocols        import ParsHolder
-from .utilities        import print_pdf
-from .zfit_plotter     import ZFitPlotter
-from .zfit_models      import ModExp
-from .zfit_models      import HypExp
-from .imports          import zfit
-from .minimizers       import AnealingMinimizer
+from .constraint          import Constraint1D 
+from .constraint          import ConstraintND
+from .constraint          import Constraint
+from .constraint          import build_constraint 
+from .constraint          import print_constraints 
+from .constraint_adder    import ConstraintAdder
+from .parameters          import ParameterLibrary
+from .measurement         import Measurement
+from .gof_calculator      import GofCalculator
+from .model_factory       import ModelFactory, MethodRegistry, ModelFactoryConf
+from .fitter              import Fitter
+from .protocols           import ParsHolder
+from .utilities           import print_pdf
+from .utilities           import save_fit 
+from .utilities           import pdf_to_tex 
+from .utilities           import is_pdf_usable 
+from .zfit_plotter        import ZFitPlotter, ZFitPlotterConf
+from .zfit_models         import ModExp
+from .zfit_models         import HypExp
+from .fit_conf            import FitConf, KDEConf, PaddingConf
+from .imports             import zfit
+from .imports             import tensorflow 
+from .minimizers          import AnealingMinimizer
+from .minimizers          import ContextMinimizer
+from .minimizers          import MinimizerFailError 
+from .minimizers          import Retries
+from .fit_result          import FitResult
+from .fit_result          import FitParameter
+from .fit_result          import GoodnessOfFit
+from .types               import Model, KDEModel
+from .configs             import SimpleYieldConf
+from .configs             import CompositeYieldConf
+from .configs             import YieldConf
+from .configs             import YieldsConf
 
 __all__ = [
+    'SimpleYieldConf',
+    'CompositeYieldConf',
+    'YieldConf',
+    'YieldsConf',
+    'pdf_to_tex',
+    'is_pdf_usable',
+    'ZFitPlotterConf',
+    'GoodnessOfFit',
+    'Model',
+    'KDEModel',
+    'Retries',
+    'FitConf',
+    'PaddingConf',
+    'KDEConf',
+    'tensorflow',
+    'save_fit',
+    'ContextMinimizer',
+    'FitResult',
+    'FitParameter',
     'AnealingMinimizer',
     'ZFitPlotter',
     'zfit',
     'print_pdf',
     'Fitter',
+    'MinimizerFailError',
     'build_constraint',
     'Constraint',
     'ModelFactory',
+    'ModelFactoryConf',
     'ModExp',
     'HypExp',
     'MethodRegistry',

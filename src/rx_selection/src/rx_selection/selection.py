@@ -16,10 +16,9 @@ from dmu                    import LogStore
 from dmu.generic            import hashing
 from dmu.rdataframe         import utilities          as rut
 from dmu.generic            import utilities          as gut
-from ap_utilities.decays    import utilities          as aput
 from rx_selection           import truth_matching     as tm
 from rx_selection           import version_management as vman
-from rx_common              import Qsq, info
+from rx_common              import Component, Qsq, Trigger, info
 
 log=LogStore.add_logger('rx_selection:selection')
 #-----------------------
@@ -124,9 +123,9 @@ def _get_truth(event_type : int|str, trigger : str) -> str:
     raise ValueError(f'Invalid project {project} for trigger: {trigger}')
 #-----------------------
 def selection(
-    q2bin     : str,
-    process   : str,
-    trigger   : str,
+    q2bin     : Qsq,
+    process   : Component,
+    trigger   : Trigger,
     skip_truth: bool = False,
     smeared   : bool = True) -> dict[str,str]:
     '''
@@ -147,10 +146,10 @@ def selection(
 
     d_cut : dict[str,str] = {}
 
-    event_type     = process if process.startswith('DATA') else aput.read_event_type(nickname=process)
+    event_type = process if not process.is_mc else process.event_type 
     log.info(f'{process:<40}{"->":20}{event_type:<20}')
 
-    if process.startswith('DATA'):
+    if not process.is_mc:
         log.debug('Adding cleaning requirement for data')
         d_cut['clean'] = 'dataq == 1'
         d_cut['block'] = 'block >= 1'
@@ -178,13 +177,9 @@ def selection(
         trigger = trigger,
         smeared = smeared)
 
-    d_cut_final = {}
-    for cut_name, cut_expr in d_cut.items():
-        d_cut_final[cut_name] = _override_block(cut_block = cut_expr, process = process)
+    _print_selection(d_cut)
 
-    _print_selection(d_cut_final)
-
-    return d_cut_final
+    return d_cut
 # ----------------------
 def get_q2_cut(q2bin : Qsq) -> str:
     '''
@@ -277,6 +272,7 @@ def _load_selection_config() -> dict:
 
     return d_sel
 #-----------------------
+# TODO: Add types
 def _get_selection(
     chan   : str, 
     proj   : str, 
@@ -321,43 +317,6 @@ def _get_selection(
 
     return d_new
 #-----------------------
-# TODO: This needs to be removed once block 3 and 4 MC be available
-def _override_block(
-    cut_block : str,
-    process   : str) -> str:
-    '''
-    Parameters
-    ---------------
-    cut_block: One of the cuts associated to the selection. 
-               This method targets cuts of the form block == 3
-               which have to be converted into block == 2
-
-    process  : Sample used with this cut, e.g. DATA_24...
-
-    Returns
-    ---------------
-    Either:
-
-    Original cut: If this sample is not a simulated sample from blocks 3 or 4, which are missing
-    Modified cut: Otherwise
-    '''
-
-    if process.startswith('DATA'):
-        log.debug(f'Not redefining block cut for {process}')
-        return cut_block
-
-    if 'block' not in cut_block:
-        log.debug(f'Block not found in: {cut_block}')
-        return cut_block
-
-    new_cut = re.sub(r'block\s*==\s*[34]', 'block == 2', cut_block)
-
-    if new_cut != cut_block:
-        log.warning(f'For sample {process} replacing:')
-        log.warning(f'{cut_block:<20}{"--->":<20}{new_cut:<20}')
-
-    return new_cut
-#-----------------------
 def _save_cutflow(
     path : Path, 
     rdf  : RDF.RNode, 
@@ -384,9 +343,9 @@ def _save_cutflow(
 #-----------------------
 def apply_full_selection(
     rdf      : RDF.RNode,
-    q2bin    : str,
-    process  : str,
-    trigger  : str,
+    q2bin    : Qsq,
+    process  : Component,
+    trigger  : Trigger,
     ext_cut  : str|None = None,
     uid      : str|None = None,
     out_path : Path|None= None) -> RDF.RNode:
@@ -406,7 +365,11 @@ def apply_full_selection(
     If uid was passed, the uid will be recalculated and attached to the dataframe.
     '''
 
-    d_sel = selection(q2bin=q2bin, process=process, trigger=trigger)
+    d_sel = selection(
+        q2bin  =q2bin, 
+        process=process, 
+        trigger=trigger)
+
     if ext_cut is not None:
         d_sel['extra'] = ext_cut
 

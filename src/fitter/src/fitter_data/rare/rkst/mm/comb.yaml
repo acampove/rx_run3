@@ -1,0 +1,24 @@
+output_directory : rare/rkst/muon/combinatorial
+# -----------------
+constraints: {}
+# -----------------
+models:
+  low:
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+  central:
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+  high:
+    pdfs          : [exp]
+    shared        : []
+    floating      : []
+    reparametrize : {}
+    fix           : {}
+# -----------------

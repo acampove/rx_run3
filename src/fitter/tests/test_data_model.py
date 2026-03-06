@@ -3,17 +3,18 @@ This module has tests for the DataModel class
 '''
 import pytest
 
-from pathlib               import Path
-from rx_common.types       import Trigger
-from rx_selection          import selection as sel
-from rx_data.rdf_getter    import RDFGetter 
-from dmu.stats             import ParameterLibrary as PL
-from dmu.stats             import zfit
-from dmu.generic           import utilities as gut
-from dmu.stats             import utilities as sut
-from dmu.workflow          import Cache
-from dmu.logging.log_store import LogStore
-from fitter.data_model     import DataModel
+from pathlib       import Path
+from rx_common     import Mass, Trigger, Qsq, Region
+from rx_selection  import selection as sel
+from rx_data       import RDFGetter 
+from dmu           import LogStore
+from dmu.stats     import ParameterLibrary as PL
+from dmu.stats     import zfit
+from dmu.generic   import UnpackerModel, utilities as gut
+from dmu.stats     import utilities as sut
+from dmu.workflow  import Cache
+from fitter        import DataModel
+from fitter        import FitModelConf
 
 log=LogStore.add_logger('fitter:test_data_model')
 # ----------------------
@@ -30,27 +31,28 @@ def initialize():
         yield
 # --------------------------
 @pytest.mark.parametrize('kind, trigger', [
-    ('reso/rk/muon'  , Trigger.rk_mm_os  ), 
-    ('reso/rkst/muon', Trigger.rkst_mm_os),
+    ('reso/rk/mm'  , Trigger.rk_mm_os  ), 
+    ('reso/rkst/mm', Trigger.rkst_mm_os),
 ])
 def test_resonant(kind : str, trigger : Trigger, tmp_path : Path):
     '''
     Simplest test
     '''
-
     obs = zfit.Space('B_const_mass_M', limits=(5000, 6000))
-    cfg = gut.load_conf(
+    data= gut.load_data(
         package='fitter_data',
         fpath  =f'{kind}/data.yaml')
 
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg = FitModelConf(**data)
+
     with Cache.cache_root(path = tmp_path),\
-        PL.parameter_schema(cfg=cfg.model.yields):
+        PL.parameter_schema(cfg=cfg.yields):
         dmd = DataModel(
-            name    = 'brem_000',
             cfg     = cfg,
             obs     = obs,
             trigger = trigger, 
-            q2bin   = 'jpsi')
+            q2bin   = Qsq.jpsi)
         pdf = dmd.get_model()
 
     sut.print_pdf(pdf)
@@ -59,14 +61,17 @@ def test_rare_electron(tmp_path : Path):
     '''
     Simplest test for rare electron mode
     '''
-    q2bin = 'central'
+    q2bin = Qsq.central
 
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
-    cfg = gut.load_conf(
+    data= gut.load_data(
         package='fitter_data',
-        fpath  ='rare/rk/electron/data.yaml')
+        fpath  ='rare/rk/ee/data.yaml')
 
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg = FitModelConf(**data)
+
+    with PL.parameter_schema(cfg=cfg.yields),\
         Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
         dmd = DataModel(
@@ -79,28 +84,31 @@ def test_rare_electron(tmp_path : Path):
     sut.print_pdf(pdf)
 # --------------------------
 @pytest.mark.skip(reason='These tests require smear friend trees for noPID samples')
-@pytest.mark.parametrize('observable', ['hdpipi', 'hdkk'])
-@pytest.mark.parametrize('q2bin'     , ['low', 'central', 'high'])
-def test_misid_rare(observable : str, q2bin : str, tmp_path : Path):
+@pytest.mark.parametrize('region' , Region.hadronic_misid()   )
+@pytest.mark.parametrize('q2bin'  , ['low', 'central', 'high'])
+def test_misid_rare(
+    region   : Region, 
+    q2bin    : Qsq, 
+    tmp_path : Path):
     '''
     Test getting model for misid control region
     '''
-    obs = zfit.Space(f'B_Mass_{observable}', limits=(4500, 7000))
-    cfg = gut.load_conf(
+    obs = zfit.Space(region.mass, limits=region.mass.limits)
+    data= gut.load_data(
         package='fitter_data',
-        fpath  ='misid/rk/electron/data_misid.yaml')
+        fpath  ='misid/rk/ee/data_misid.yaml')
 
-    out_dir  = f'{cfg.output_directory}/{observable}'
-    cfg.output_directory = out_dir
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg = FitModelConf(**data)
 
-    with PL.parameter_schema(cfg=cfg.model.yields),\
+    with PL.parameter_schema(cfg=cfg.yields),\
         Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {
         'nobr0' : 'nbrem != 0',
         'mass'  : '(1)',
         'bdt'   : 'mva_cmb > 0.80 && mva_prc > 0.60'}):
         dmd = DataModel(
-            name    = observable,
+            name    = region,
             cfg     = cfg,
             obs     = obs,
             trigger = Trigger.rk_ee_nopid,

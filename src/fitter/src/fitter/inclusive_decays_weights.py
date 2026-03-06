@@ -4,8 +4,9 @@ Module with Reader class
 # pylint: disable=too-many-instance-attributes, invalid-name
 
 import pandas as pnd
+
+from dmu                   import LogStore
 from fitter.pchain         import PChain
-from dmu.logging.log_store import LogStore
 from fitter.decay_reader   import KLLDecayReader, KPiLLDecayReader
 
 log = LogStore.add_logger('rx_fitter:inclusive_decays_weights')

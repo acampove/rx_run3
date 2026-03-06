@@ -1,0 +1,34 @@
+sig:
+  nominal  : dscb
+  variation: 2cb
+  suffix   : alt_sig
+cmb:
+  nominal  : expo
+  variation: pol1
+  suffix   : alt_cmb
+# ---------------------
+jpsi_ee:
+  component : jpsi_ee
+  delta_norm: null
+  bootstrap : 50
+  skip      : False
+pKstee:
+  component : pKst_ee
+  delta_norm: null
+  bootstrap : 50
+  skip      : False
+pKKK:
+  component : pKKK
+  delta_norm: 20 
+  bootstrap : null
+  skip      : False
+pKKpi:
+  component : pKKpi
+  delta_norm: 20 
+  bootstrap : null
+  skip      : False
+pKpipi:
+  component : pKpipi
+  delta_norm: 20
+  bootstrap : null
+  skip      : False

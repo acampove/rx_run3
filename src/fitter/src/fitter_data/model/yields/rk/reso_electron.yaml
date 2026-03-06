@@ -1,49 +1,62 @@
 # This config file defines the yields and the relationships between them
 # For the fit of the resonant electron channel 
 yields: &yields
-  val : 0
+  val : 10
   min : 0
   max : 1000000
-jpsik_fraction:
+jpsi_fraction:
   val : 0.5
   min : 0.0
   max : 1.0 
-psi2k_fraction:
+psi2_fraction:
+  val : 0.5
+  min : 0.0
+  max : 1.0 
+cabibbo_fraction:
   val : 0.5
   min : 0.0
   max : 1.0 
 # -------------------------
-yld_cabibbo_brem_001:
+yld_ccbar:
   <<: *yields
-yld_ccbar_brem_001:
+yld_comb:
   <<: *yields
-yld_combinatorial_brem_001:
+yld_bpkpjpsiee:
   <<: *yields
-yld_cabibbo_brem_002:
+yld_bppijpsiee:
   <<: *yields
-yld_ccbar_brem_002:
-  <<: *yields
-yld_combinatorial_brem_002:
-  <<: *yields
-yld_jpsik:
-  <<: *yields
-yld_psi2k:
+yld_bpkppsi2ee:
   <<: *yields
 # -------------------------
-yld_jpsik_brem_001:
-  mul: 
-    - yld_jpsik
-    - jpsik_fraction
-yld_jpsik_brem_002:
-  dif: 
-    - yld_jpsik
-    - yld_jpsik_brem_001 
+yld_bppijpsiee_brem_xx1:
+  kind : mul
+  pars : 
+    - yld_bppijpsiee
+    - cabibbo_fraction
+yld_bppijpsiee_brem_xx2:
+  kind : dif 
+  pars :
+    - yld_bppijpsiee
+    - yld_bppijpsiee_brem_xx1
 # -------------------------
-yld_psi2k_brem_001:
-  mul: 
-    - yld_psi2k
-    - psi2k_fraction
-yld_psi2k_brem_002:
-  dif: 
-    - yld_psi2k
-    - yld_psi2k_brem_001 
+yld_bpkpjpsiee_brem_xx1:
+  kind : mul
+  pars : 
+    - yld_bpkpjpsiee
+    - jpsi_fraction
+yld_bpkpjpsiee_brem_xx2:
+  kind : dif 
+  pars :
+    - yld_bpkpjpsiee
+    - yld_bpkpjpsiee_brem_xx1
+# -------------------------
+yld_bpkppsi2ee_brem_xx1:
+  kind : mul
+  pars : 
+    - yld_bpkppsi2ee
+    - psi2_fraction
+yld_bpkppsi2ee_brem_xx2:
+  kind : dif 
+  pars :
+    - yld_bpkppsi2ee
+    - yld_bpkppsi2ee_brem_xx1

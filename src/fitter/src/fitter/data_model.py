@@ -2,17 +2,17 @@
 Module containing DataModel class
 '''
 
-from contextlib       import contextmanager
-from omegaconf        import DictConfig
-from dmu              import LogStore
-from dmu.stats        import zfit
-from dmu.stats        import ParameterLibrary as PL
-from rx_common        import Qsq, Trigger
-from rx_common        import info
-from rx_data          import SpecMaker
-from zfit             import Space         as zobs
-from zfit.pdf         import BasePDF       as zpdf
-from .sim_fitter      import SimFitter
+from contextlib   import contextmanager
+from dmu          import LogStore
+from dmu.stats    import zfit
+from dmu.stats    import ParameterLibrary as PL
+from rx_common    import Component, Qsq, Trigger
+from rx_data      import SpecMaker
+from zfit         import Space         as zobs
+from zfit.pdf     import BasePDF       as zpdf
+
+from .configs     import FitModelConf
+from .sim_fitter  import SimFitter
 
 log = LogStore.add_logger('fitter:data_model')
 # ------------------------
@@ -24,11 +24,11 @@ class DataModel:
     # ------------------------
     def __init__(
         self,
-        cfg     : DictConfig,
+        cfg     : FitModelConf,
         obs     : zobs,
         trigger : Trigger,
         q2bin   : Qsq,
-        name    : str|None=None):
+        name    : str | None=None):
         '''
         Parameters
         ------------------
@@ -46,18 +46,21 @@ class DataModel:
         self._q2bin  = q2bin
         self._name   = name
     # ------------------------
-    def _extend(self, pdf : zpdf, name : str) -> zpdf:
+    def _extend(
+        self, 
+        pdf       : zpdf, 
+        component : Component) -> zpdf:
         '''
         Parameters
         -------------------
-        name: Name of component
-        pdf : zfit pdf
+        component: Fit component
+        pdf      : zfit pdf
 
         Returns
         -------------------
         PDF with yield
         '''
-        yield_name = f'yld_{name}' if self._name is None else f'yld_{name}_{self._name}'
+        yield_name = f'yld_{component}' if self._name is None else f'yld_{component}_{self._name}'
 
         nevt = PL.get_yield(name=yield_name)
         kdes = zfit.pdf.KDE1DimFFT, zfit.pdf.KDE1DimExact, zfit.pdf.KDE1DimISJ
@@ -65,7 +68,7 @@ class DataModel:
             pdf.set_yield(nevt)
             return pdf
 
-        pdf = pdf.create_extended(nevt, name=name)
+        pdf = pdf.create_extended(nevt, name=component)
 
         return pdf
     # ------------------------
@@ -76,24 +79,25 @@ class DataModel:
         Fitting model for data fit
         '''
         l_pdf = []
-        npdf  = len(self._cfg.model)
+        npdf  = len(self._cfg.components)
         if npdf == 0:
-            log.info(self._cfg.model)
             raise ValueError('Found zero components in model')
 
         log.debug(f'Found {npdf} components')
-        for component, cfg in self._cfg.model.components.items():
+
+        for component, cfg in self._cfg.components.items():
+            # If component has its own trigger (e.g. MisID with its noPID) pick that
+            # otherwise pick full model trigger
+            trigger = self._cfg.trigger if cfg.component_trigger is None else cfg.component_trigger 
+
             if component in self._skipped_components:
                 log.warning(f'Skipping {component} component')
                 continue
 
-            name    = '' if self._name is None else self._name
-            trigger = cfg.get('trigger', self._trigger)
-            project = info.project_from_trigger(trigger = trigger, lower_case=True)
-            with SpecMaker.project(name = project):
+            with SpecMaker.project(name = trigger.project):
                 ftr  = SimFitter(
-                    name     = name,
-                    sample   = component,
+                    name     = self._name,
+                    component= component,
                     trigger  = trigger,
                     q2bin    = self._q2bin,
                     cfg      = cfg,
@@ -104,7 +108,7 @@ class DataModel:
                 log.warning(f'Skipping component: {component}')
                 continue
 
-            pdf = self._extend(pdf=pdf, name=component)
+            pdf = self._extend(pdf=pdf, component=component)
             l_pdf.append(pdf)
 
         if len(l_pdf) == 1:

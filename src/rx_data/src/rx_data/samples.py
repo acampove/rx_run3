@@ -8,15 +8,16 @@ import math
 import numpy
 import pandas as pnd 
 
-from colorama               import Fore
-from pathlib                import Path
-from ROOT                   import RDF # type: ignore
-from rx_common.types        import Project
-from rx_data                import utilities as dut
-from rx_data.rdf_getter     import RDFGetter
-from dmu.generic            import version_management as vm
-from dmu.logging.log_store  import LogStore
-from dmu.pdataframe         import utilities as put
+from colorama       import Fore
+from pathlib        import Path
+from ROOT           import RDF # type: ignore
+from rx_common      import Project, Component, Trigger
+from dmu            import LogStore
+from dmu.generic    import version_management as vm
+from dmu.pdataframe import utilities as put
+
+from .              import utilities as dut
+from .rdf_getter    import RDFGetter
 
 log=LogStore.add_logger('rx_data:samples')
 # ----------------------
@@ -39,7 +40,7 @@ class SamplesPrinter:
         LogStore.set_level('rx_data:sample_patcher' , 40)
         LogStore.set_level('rx_data:sample_emulator', 40)
     # ----------------------
-    def _get_input_samples(self) -> list[tuple[str,str]]:
+    def _get_input_samples(self) -> list[tuple[Component,Trigger]]:
         '''
         Returns
         -------------
@@ -52,12 +53,15 @@ class SamplesPrinter:
         if not paths:
             raise ValueError(f'No ROOT files found in: {vers_path}')
 
-        s_sample_trigger = { dut.info_from_path(path, sample_lowercase=False) for path in paths }
-        nsamples         = len(s_sample_trigger)
+        s_sample_trigger    = { dut.info_from_path(path, sample_lowercase=False) for path in paths }
+        s_component_trigger = { (Component.from_sample(sample), trigger) 
+            for sample, trigger in s_sample_trigger }
+
+        nsamples            = len(s_component_trigger)
 
         log.info(f'Found {nsamples} samples')
 
-        return list(s_sample_trigger)
+        return list(s_component_trigger)
     # ----------------------
     def _get_rdf(self) -> dict[str, RDF.RNode]:
         '''
@@ -65,21 +69,25 @@ class SamplesPrinter:
         -------------
         Dictionary mapping sample name to corresponding dataframe built from only main trees
         '''
-        log.info('Collecting dataframes')
-        input_samples : list[tuple[str,str]] = self._get_input_samples()
+        log.info('Collecting sample names')
+        input_samples : list[tuple[Component,Trigger]] = self._get_input_samples()
         d_rdf : dict[str, RDF.RNode]         = dict()
 
+        log.info('Collecting dataframes')
         with RDFGetter.only_friends(s_friend=set()),\
              RDFGetter.project(name = self._project):
             for sample, trigger in tqdm.tqdm(input_samples, ascii=' -'):
                 if sample in self._skipped_samples:
                     continue
 
-                gtr = RDFGetter(sample =sample, trigger=trigger)
+                log.debug(f'Making dataframe for: {sample}/{trigger}')
+                gtr = RDFGetter(sample = sample, trigger=trigger)
                 try:
                     d_rdf[sample] = gtr.get_rdf(per_file=False)
                 except ValueError:
                     log.warning(f'Cannot read {sample}, skipping')
+
+        log.info('Collected dataframes')
 
         return d_rdf
     # ----------------------
@@ -101,7 +109,7 @@ class SamplesPrinter:
         total          = sum(counts)
         fractions      = [ math.ceil(100 * count / total) for count in counts ]
         values         = [ f'Block {value:.0f}'            for value in values ]
-        d_stats        = dict(zip(values, fractions))
+        d_stats        = dict(zip(values, fractions, strict = True))
         d_stats_sorted = { key : d_stats[key] for key in sorted(d_stats) }
 
         return d_stats_sorted

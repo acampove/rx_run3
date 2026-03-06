@@ -3,13 +3,22 @@ Module with Reader class used to read weights to normalize between inclusive sam
 '''
 
 import os
-from functools import lru_cache
-
 import pandas    as pnd
-from dmu.logging.log_store import LogStore
-from fitter                import pdg_utils as pu
+
+from typing    import Final
+from functools import lru_cache
+from dmu       import LogStore
+from rx_common import Component
+from .         import pdg_utils as pu
 
 log = LogStore.add_logger('rx_fitter:inclusive_sample_weights')
+
+_FU      : Final[float] = 0.408
+_FS      : Final[float] = 0.100
+
+_BD_PROC : Final[set[Component]]= {Component.bdjpsixee, Component.bdjpsixmm}
+_BU_PROC : Final[set[Component]]= {Component.bpjpsixee, Component.bpjpsixmm}
+_BS_PROC : Final[set[Component]]= {Component.bsjpsixee, Component.bsjpsixmm}
 #---------------------------
 class Reader:
     '''
@@ -17,16 +26,11 @@ class Reader:
     '''
     #---------------------------
     def __init__(self, df : pnd.DataFrame):
-        self._df      = df
-        self._fu      = 0.408
-        self._fs      = 0.100
-
-        self._bu_proc = ['Bu_JpsiX_ee_eq_JpsiInAcc', 'Bu_JpsiX_mm_eq_JpsiInAcc']
-        self._bd_proc = ['Bd_JpsiX_ee_eq_JpsiInAcc', 'Bd_JpsiX_mm_eq_JpsiInAcc']
-        self._bs_proc = ['Bs_JpsiX_ee_eq_JpsiInAcc', 'Bs_JpsiX_mm_eq_JpsiInAcc']
+        self._df = df
     #---------------------------
     @lru_cache(maxsize=10)
-    def _get_br_wgt(self, proc : str) -> float:
+    @staticmethod
+    def _get_br_wgt(proc : Component) -> float:
         '''
         Will return ratio:
 
@@ -44,29 +48,30 @@ class Reader:
         #0.1077  MyJ/psi    Myphi        PVV_CPLH 0.02 1 Hp pHp Hz pHz Hm pHm;
         #--------------------------------------------
 
-        if proc in self._bu_proc:
+        if proc in _BU_PROC:
             return pu.get_bf('B+ --> J/psi(1S) K+') / 0.1596
 
-        if proc in self._bd_proc:
+        if proc in _BD_PROC:
             return pu.get_bf('B0 --> J/psi(1S) K*(892)0') / 0.1920
 
-        if proc in self._bs_proc:
+        if proc in _BS_PROC:
             return pu.get_bf('B_s()0 --> J/psi(1S) phi') / 0.1077
 
         raise ValueError(f'Invalid process {proc}')
     #---------------------------
-    @lru_cache(maxsize=10)
-    def _get_hd_wgt(self, proc : str) -> float:
+    @lru_cache(maxsize = 10)
+    @staticmethod
+    def _get_hd_wgt(proc : Component) -> float:
         '''
         Will return hadronization fractions used as weights
         '''
         log.info(f'Getting hadronization weights for sample {proc}')
 
-        if proc in self._bu_proc + self._bd_proc:
-            return self._fu
+        if proc in _BS_PROC:
+            return _FS
 
-        if proc in self._bs_proc:
-            return self._fs
+        if proc in _BU_PROC | _BD_PROC:
+            return _FU
 
         raise ValueError(f'Invalid process: {proc}')
     #---------------------------
@@ -88,7 +93,8 @@ class Reader:
         return True
     #---------------------------
     @lru_cache(maxsize=10)
-    def _get_st_wgt(self, proc : str) -> float:
+    @staticmethod
+    def _get_st_wgt(proc : Component) -> float:
         '''
         Parameters
         ---------------
@@ -113,9 +119,9 @@ class Reader:
         --------------
         Product of statistics, hadronization fraction and branching fraction weights
         '''
-        w1 = self._get_st_wgt(row.proc)
-        w2 = self._get_hd_wgt(row.proc)
-        w3 = self._get_br_wgt(row.proc)
+        w1 = Reader._get_st_wgt(row.proc)
+        w2 = Reader._get_hd_wgt(row.proc)
+        w3 = Reader._get_br_wgt(row.proc)
 
         return w1 * w2 * w3
     #---------------------------

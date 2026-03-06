@@ -1,0 +1,34 @@
+# This is a config file used for tests
+# It illustrates how a fit would run for data
+
+trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
+output_directory : rare/rkst/muon/data
+yields           : model/yields/rkst/rare_muon.yaml
+selection        : {}
+observable:
+  low:
+    name : B_Mass
+    range:
+      - 5150
+      - 5850
+  central:
+    name : B_Mass
+    range:
+      - 5150
+      - 5850
+  high:
+    name : B_Mass
+    range:
+      - 5150
+      - 5850
+components:
+  comb       : rare/rkst/mm/comb.yaml
+  bdkstkpimm : rare/rkst/mm/bdkstkpimm.yaml
+constraints: {}
+fit: {}
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True
+  d_leg :
+    Bd_Kstmumu_eq_btosllball05_DPC : $B^0\to K^0(\to K^+\pi^-)\mu^+\mu^-$ 
+    combinatorial                  : Combinatorial

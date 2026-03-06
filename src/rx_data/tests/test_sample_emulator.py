@@ -4,10 +4,10 @@ Module holding tests for SampleEmulator class
 
 import numpy
 import pytest
-from ROOT                    import RDataFrame, RDF # type: ignore
-from rx_data.sample_emulator import SampleEmulator
 
-from dmu.logging.log_store import LogStore
+from ROOT    import RDataFrame, RDF # type: ignore
+from dmu     import LogStore
+from rx_data import SampleEmulator
 
 log=LogStore.add_logger('rx_data:test_sample_emulator')
 

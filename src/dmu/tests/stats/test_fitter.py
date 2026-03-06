@@ -1,23 +1,25 @@
 '''
 Module containing unit tests for Fitter class
 '''
+
+import os
 import tqdm
 import numpy
 import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
-from pathlib                import Path
-from functools              import cache
-from omegaconf              import OmegaConf
-from dmu                    import LogStore
-from dmu.stats              import GofCalculator
-from dmu.stats              import utilities as sut
-from dmu.stats              import zfit
-from dmu.stats              import Fitter
-from dmu.stats              import ZFitPlotter
-from dmu.generic            import rxran, utilities as gut
-from ROOT                   import RDF, gInterpreter # type: ignore
+from functools   import cache
+from dmu         import LogStore
+from dmu.stats   import Constraint1D
+from dmu.stats   import Retries
+from dmu.testing import get_model, get_nll
+from dmu.stats   import FitConf, minimizers
+from dmu.stats   import GofCalculator
+from dmu.stats   import zfit
+from dmu.stats   import Fitter
+from dmu.stats   import ZFitPlotter
+from ROOT        import RDF, gInterpreter # type: ignore
 
 _NSAMPLE : int = 10_000
 
@@ -104,15 +106,9 @@ def test_simple(dat):
     '''
     Simples fitting test
     '''
-    obj = gut.load_conf(package='dmu_data', fpath='stats/fitter/test_simple.yaml')
-    cfg = OmegaConf.to_container(obj, resolve=True)
-
-    if not isinstance(cfg, dict):
-        raise ValueError('Cannot load config')
-
     pdf = _get_pdf()
     obj = Fitter(pdf, dat)
-    res = obj.fit(cfg=cfg)
+    res = obj.fit()
 
     assert res.valid
 #-------------------------------------
@@ -120,15 +116,9 @@ def test_retry():
     '''
     Test fitting with multiple tries
     '''
-    cfg = {'strategy' :
-           {'retry' :
-            {
-                'ntries'        : 10,
-                'pvalue_thresh' : 0.05,
-                'ignore_status' : False
-            }
-            }
-           }
+    fcf = FitConf.default()
+    rtr = Retries.default()
+    cfg = fcf.model_copy(update = {'strategy' : rtr})
 
     pdf = _get_pdf()
     arr = _get_data()
@@ -141,12 +131,11 @@ def test_constrain():
     '''
     Fits with constraints to parameters
     '''
-    cfg = {
-            'constraints'   : {
-                'mu' : [5.0, 1.0],
-                'sg' : [1.0, 0.1],
-                }
-            }
+    mu  = Constraint1D(kind = 'GaussianConstraint', name = 'mu', mu = 5.0, sg = 1.0)
+    sg  = Constraint1D(kind = 'GaussianConstraint', name = 'sg', mu = 1.0, sg = 0.1)
+
+    fcf = FitConf.default()
+    cfg = fcf.model_copy(update = {'constraints' : [mu, sg]})
 
     pdf = _get_pdf()
     arr = _get_data()
@@ -159,16 +148,17 @@ def test_ranges(tmp_path : Path):
     '''
     Fit data in disjoint ranges
     '''
-    pdf   = sut.get_model('s+b')
+    pdf   = get_model('s+b')
     sam   = pdf.create_sampler(n=50_000)
-    pdf   = sut.get_model('s+b', lam = -0.0003)
+    pdf   = get_model('s+b', lam = -0.0003)
 
-    rng   = [[4500, 5100], [5300, 6000]]
-    cfg   = {'ranges': rng}
+    rng   = [(4500, 5100), (5300, 6000)]
+    ftc   = FitConf.default()
+    cfg   = ftc.model_copy(update = {'ranges' : rng})
 
     with GofCalculator.disabled(value=True):
-        obj = Fitter(pdf, sam)
-        res = obj.fit(cfg)
+        obj   = Fitter(pdf, sam)
+        res   = obj.fit(cfg = cfg)
 
     print(res)
     assert res.valid
@@ -236,15 +226,9 @@ def test_minimizer() -> None:
     '''
     Simplest test of minimizer static method
     '''
-    nll = sut.get_nll(kind='s+b')
-    cfg = {
-        'minimization' : 
-        {'mode'     : 0,
-         'gradient' : 'zfit'} 
-    }
-
+    nll = get_nll(kind='s+b')
     with GofCalculator.disabled(value=True):
-        Fitter.minimize(nll=nll, cfg=cfg)
+        minimizers.minimize(nll=nll)
 # ----------------------
 @pytest.mark.timeout(100)
 def test_profiling_minimizer() -> None:
@@ -252,9 +236,9 @@ def test_profiling_minimizer() -> None:
     Simplest test of minimizer static method
     '''
     ntoys = 30
-    nll   = sut.get_nll(kind='s+b')
+    nll   = get_nll(kind='s+b')
     sam   = nll.data[0]
     for _ in tqdm.trange(ntoys, ascii=' -'):
         sam.resample()
-        Fitter.minimize(nll=nll, cfg={})
-
+        minimizers.minimize(nll=nll)
+# ----------------------

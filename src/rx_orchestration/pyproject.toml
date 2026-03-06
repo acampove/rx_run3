@@ -13,6 +13,9 @@ dependencies = [
   "law",
 ]
 
+[tool.ruff]
+select = ["F", "PL", "B"]
+
 [project.scripts]
 # ----------------
 # Plotting

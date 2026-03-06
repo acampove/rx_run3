@@ -3,15 +3,17 @@ Module with tests for ParameterLibrary class
 '''
 
 import pytest
-from dmu          import LogStore
-from dmu.generic  import utilities        as gut
-from dmu.stats    import zfit
-from dmu.stats    import ParameterLibrary as PL
-from zfit.param   import Parameter        as zpar
+
+from dmu            import LogStore
+from dmu.stats      import zfit
+from dmu.stats      import YieldsConf
+from dmu.stats      import ParameterLibrary as PL
+from dmu.generic    import utilities        as gut
+from zfit.param     import Parameter        as zpar
 
 log=LogStore.add_logger('dmu:test_parameter_library')
 # ----------------------
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def initialize():
     '''
     This runs before the tests
@@ -34,10 +36,10 @@ def _check_parameter(par : zpar) -> None:
     assert isinstance(val, float)
 
     if 'BdKstee' in par.name:
-        assert _composed_has_par(name='s_BdKstee'         , par=par)
+        assert _composed_has_par(name='s_BdKstee', par=par)
 
     if 'BuKstee' in par.name:
-        assert _composed_has_par(name='my_preffix_BuKstee', par=par)
+        assert _composed_has_par(name='s_BuKstee', par=par)
 # ----------------------
 def _composed_has_par(name : str, par : zpar) -> bool:
     '''
@@ -85,9 +87,9 @@ def test_values(parameter : str):
     Will test retrieving values for different parameters of cbl
     '''
     kind = 'cbl'
-    l_in = 11111 
-    v_in = 22222 
-    h_in = 33333
+    x_in = 22222
+    y_in = 11111
+    z_in = 33333
 
     with PL.values(kind=kind, parameter=parameter, val=v_in, low=l_in, high=h_in):
         v_out, l_out, h_out = PL.get_values(kind=kind, parameter=parameter)
@@ -107,9 +109,10 @@ def test_get_yield(config : str) -> None:
     '''
     Tests get_yield method
     '''
-    cfg = gut.load_conf(package='dmu_data', fpath=f'tests/stats/parameters/{config}.yaml')
+    data = gut.load_data(package='dmu_data', fpath=f'tests/stats/parameters/{config}.yaml')
+    cfg  = YieldsConf(**data)
     with PL.parameter_schema(cfg=cfg):
-        for parname in cfg:
-            parname = str(parname)
+        for parname, _ in cfg:
             par = PL.get_yield(name=parname)
             _check_parameter(par=par)
+# ------------------------------------

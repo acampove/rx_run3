@@ -1,0 +1,11 @@
+output_directory : rare/rkst/electron/psi2_leakage
+component : bdkstkpipsi2ee 
+fit:
+  kind     : KDE1DimFFT
+  bandwidth: 20
+  padding:
+    lowermirror : 0.3
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 30
+  stacked : True
+  d_leg   : {}

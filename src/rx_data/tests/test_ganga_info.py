@@ -3,9 +3,9 @@ This module has tests for the GangaInfo class
 '''
 import pytest
 
-from pathlib               import Path
-from dmu.generic.utilities import LogStore
-from rx_data.ganga_info    import GangaInfo
+from pathlib    import Path
+from dmu        import LogStore
+from rx_data    import GangaInfo
 
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)

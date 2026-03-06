@@ -8,10 +8,12 @@ fraction:
   max : 1.0 
 
 yield_001:
-  mul:
+  kind : mul
+  pars :
     - yield
     - fraction
 yield_002:
-  dif:
+  kind : dif
+  pars :
     - yield
     - yield_001 

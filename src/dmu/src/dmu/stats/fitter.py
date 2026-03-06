@@ -3,32 +3,28 @@ Module holding zfitter class
 '''
 
 import contextlib
-import pprint
 import numpy
-import tempfile
 import pandas            as pd
 import matplotlib.pyplot as plt
 
-from asdf                     import AsdfFile
-from typing                   import Protocol, Union
-from functools                import lru_cache
-from dmu                      import LogStore
-from dmu.logging              import messages  as mes
+from typing          import Protocol
+from dmu             import LogStore
+from zfit.loss       import ExtendedUnbinnedNLL, UnbinnedNLL
+from zfit.pdf        import BasePDF       as zpdf
+from zfit.param      import Parameter     as zpar
+from zfit.data       import Data          as zdat
+from zfit            import Space         as zobs
 
-from zfit.loss                import ExtendedUnbinnedNLL, UnbinnedNLL
-from zfit.minimizers.strategy import FailMinimizeNaN
-from zfit.result              import FitResult     as zres
-from zfit.pdf                 import BasePDF       as zpdf
-from zfit.param               import Parameter     as zpar
-from zfit.data                import Data          as zdat
-from zfit                     import Space         as zobs
-
-from .gof_calculator          import GofCalculator
-from .zfit_plotter            import ZFitPlotter
-from .imports                 import zfit
+from .               import minimizers
+from .imports        import zfit
+from .fit_conf       import FitConf, Retries
+from .fit_result     import FitResult
+from .zfit_plotter   import ZFitPlotter
+from .minimizers     import AnealingMinimizer
 
 log = LogStore.add_logger('dmu:stats:fitter')
-Loss= Union[ExtendedUnbinnedNLL, UnbinnedNLL]
+Loss= ExtendedUnbinnedNLL | UnbinnedNLL
+zcns= zfit.constraint.GaussianConstraint
 #------------------------------
 class ParameterHolder(Protocol):
     '''
@@ -37,11 +33,6 @@ class ParameterHolder(Protocol):
     # ----------------------
     def get_params(self, floating : bool) -> set[zpar]:
         ...
-#------------------------------
-class FitterGofError(Exception):
-    '''
-    Exception used when GoF cannot be calculated
-    '''
 #------------------------------
 class FitterFailedFit(Exception):
     '''
@@ -52,26 +43,10 @@ class Fitter:
     '''
     Class meant to be an interface to underlying fitters
     '''
-    _status = True # Enforce status == 0 when declaring fits as good
-    _valid  = True # Enforce validity when declaring fits as good
-
-    # This is meant to be used through a context manager
-    # To allow the errors to be calculated or not
-    _turn_off_errors  = False
-
-    # These are substrings found in tensorflow messages
-    # that are pretty useless and need to be hidden
-    _l_hidden_tf_lines= [
-        'Loaded cuDNN version',
-        'abnormal_detected_host @',
-        'Skipping loop optimization for Merge',
-        'Creating GpuSolver handles for stream',
-        'Loaded cuDNN version',
-        'All log messages before absl::InitializeLog()']
     #------------------------------
     def __init__(
-        self, 
-        pdf  : zpdf, 
+        self,
+        pdf  : zpdf,
         data : zdat | numpy.ndarray):
         '''
         Parameters
@@ -81,14 +56,13 @@ class Fitter:
         '''
         self._data_in = data
         self._pdf     = pdf
+        self._nll     : Loss | None = None
 
-        self._data_zf : zdat 
+        self._data_zf : zdat
         self._data_np : numpy.ndarray
         self._obs     : zfit.Space
 
-        self._ndof           = 10
-        self._pval_threshold = 0.01
-        self._initialized    = False
+        self._initialized = False
     #------------------------------
     def _initialize(self):
         if self._initialized:
@@ -145,64 +119,6 @@ class Fitter:
 
         return data
     #------------------------------
-    def _bin_pdf(self):
-        nbins, min_x, max_x = self._get_binning()
-        _, arr_edg = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
-
-        size = arr_edg.size
-
-        l_bc = []
-        for i_edg in range(size - 1):
-            low = arr_edg[i_edg + 0]
-            hig = arr_edg[i_edg + 1]
-
-            var = self._pdf.integrate(limits = [low, hig])
-            val = var.numpy()[0]
-            l_bc.append(val * self._data_np.size)
-
-        return numpy.array(l_bc)
-    #------------------------------
-    def _bin_data(self):
-        nbins, min_x, max_x = self._get_binning()
-        arr_data, _ = numpy.histogram(self._data_np, bins = nbins, range=(min_x, max_x))
-        arr_data    = arr_data.astype(float)
-
-        return arr_data
-    #------------------------------
-    @lru_cache(maxsize=10)
-    def _get_binning(self):
-        min_x = numpy.min(self._data_np)
-        max_x = numpy.max(self._data_np)
-        d_par = self.get_float_pars(pdf=self._pdf)
-        nbins = self._ndof + len(d_par)
-
-        log.debug(f'Nbins: {nbins}')
-        log.debug(f'Range: [{min_x:.3f}, {max_x:.3f}]')
-
-        return nbins, min_x, max_x
-    #------------------------------
-    @staticmethod
-    def get_float_pars(pdf : zpdf) -> dict[str,zpar]:
-        '''
-        Parameters
-        ---------------
-        pdf: Zfit PDF
-
-        Returns
-        ---------------
-        Dictionary with keys as parameter names 
-        and values as floating parameters
-        '''
-        npar     = 0
-        s_par    = pdf.get_params()
-        for par in s_par:
-            if par.floating:
-                npar+=1
-
-        d_par = {par.name : par for par in s_par}
-
-        return d_par
-    #------------------------------
     def _reshuffle_pdf_pars(self):
         '''
         Will move floating parameters of PDF according
@@ -218,9 +134,9 @@ class Fitter:
 
             fval = numpy.random.uniform(par.lower.numpy(), par.upper.numpy())
             par.set_value(fval)
-            log.debug(f'{par.name:<20}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
+            log.debug(f'{par.name:<40}{ival:<15.3f}{"->":<10}{fval:<15.3f}{"in":<5}{par.lower:<15.3e}{par.upper:<15.3e}')
     #------------------------------
-    def _set_pdf_pars(self, res):
+    def _set_pdf_pars(self, res : FitResult) -> None:
         '''
         Will set the PDF floating parameter values as the result instance
         '''
@@ -228,25 +144,23 @@ class Fitter:
         l_par_fix = list(self._pdf.get_params(floating=False))
         l_par     = l_par_flt + l_par_fix
 
-        d_val = { par.name : dc['value'] for par, dc in res.params.items()}
-
         log.debug('Setting PDF parameters to best result')
         for par in l_par:
-            if par.name not in d_val:
+            if par.name not in res:
                 log.debug(f'Skipping {par.name} = {par.value().numpy():.3e}')
                 continue
 
-            val = d_val[par.name]
+            val, _ = res[par.name]
             log.debug(f'{"":<4}{par.name:<20}{"->":<10}{val:<20.3e}')
             par.set_value(val)
     #------------------------------
-    def _get_ranges(self, cfg : dict) -> list:
-        if 'ranges' not in cfg:
+    def _get_ranges(self, cfg : FitConf) -> list:
+        if cfg.ranges is None:
             return [None]
 
-        ranges_any = cfg['ranges']
+        ranges_any = cfg.ranges
 
-        ranges = [ tuple(elm) for elm in ranges_any ]
+        ranges = [ elm for elm in ranges_any ]
         log.info('-' * 30)
         log.info(f'{"Low edge":>15}{"High edge":>15}')
         log.info('-' * 30)
@@ -255,11 +169,16 @@ class Fitter:
 
         return ranges
     #------------------------------
-    def _get_subdataset(self, cfg : dict) -> zdat:
-        if 'nentries' not in cfg:
+    def _get_subdataset(self, cfg : FitConf) -> zdat:
+        '''
+        Returns
+        --------------
+        Random subset of data in _data_zf with at most cfg['nentries']
+        '''
+        if cfg.nentries == -1:
             return self._data_zf
 
-        nentries_out = cfg['nentries']
+        nentries_out = cfg.nentries
         arr_inp      = self._data_zf.to_numpy().flatten()
         nentries_inp = len(arr_inp)
         if nentries_inp <= nentries_out:
@@ -295,304 +214,37 @@ class Fitter:
 
         return obs_bin
     #------------------------------
-    def _get_nbins(self, cfg : dict) -> Union[None, int]:
-        if 'likelihood' not in cfg:
-            return None
+    def _get_nll(
+        self, 
+        data   : zdat, 
+        frange : tuple[float,float] | None) -> Loss:
 
-        if 'nbins' not in cfg['likelihood']:
-            return None
-
-        return cfg['likelihood']['nbins']
-    #------------------------------
-    def _get_nll(self, data_zf, constraints, frange, cfg):
-        nbins     = self._get_nbins(cfg)
-        if nbins is None:
-            log.info('No binning was specified, will do unbinned fit')
-            pdf = self._pdf
-        else:
-            log.info(f'Using {nbins} bins for fit')
-            obs     = self._get_binned_observable(nbins)
-            pdf     = zfit.pdf.BinnedFromUnbinnedPDF(self._pdf, obs)
-            data_zf = data_zf.to_binned(obs)
-
-        if not self._pdf.is_extended and nbins is None:
-            nll = zfit.loss.UnbinnedNLL(        model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
-            return nll
-
-        if     self._pdf.is_extended and nbins is None:
-            nll = zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=data_zf, constraints=constraints, fit_range=frange)
-            return nll
-
-        if frange is not None:
-            raise ValueError('Fit range cannot be defined for binned likelihoods')
-
-        if not self._pdf.is_extended:
-            nll = zfit.loss.BinnedNLL(          model=pdf, data=data_zf, constraints=constraints)
-            return nll
-
-        if     self._pdf.is_extended:
-            nll = zfit.loss.ExtendedBinnedNLL(  model=pdf, data=data_zf, constraints=constraints)
-            return nll
-
-        raise ValueError('Likelihood was neither Binned nor Unbinned nor Extended nor non-extended')
-    #------------------------------
-    def _get_full_nll(self, cfg : dict):
-        constraints = Fitter.get_gaussian_constraints(
-            obj = self._pdf,
-            cfg = cfg.get('constraints'))
-
-        ranges      = self._get_ranges(cfg)
-        data_zf     = self._get_subdataset(cfg)
-        l_nll       = [ self._get_nll(data_zf, constraints, frange, cfg) for frange in ranges ]
-        nll         = sum(l_nll[1:], l_nll[0])
+        NLL = zfit.loss.ExtendedUnbinnedNLL if self._pdf.is_extended else zfit.loss.UnbinnedNLL
+        nll = NLL(
+            model      = self._pdf, 
+            data       = data, 
+            fit_range  = frange)
 
         return nll
     #------------------------------
-    @staticmethod
-    def print_pars(cfg : dict, d_par : dict[str,zpar]) -> None:
-        '''
-        Will print current values parameters in cfg['print_pars'] list, if present
-        '''
+    def _get_full_nll(self, cfg : FitConf) -> Loss:
+        ranges  = self._get_ranges(cfg = cfg)
+        data    = self._get_subdataset(cfg = cfg)
+        l_nll   = [ self._get_nll(data = data, frange = frange) for frange in ranges ]
 
-        if 'print_pars' not in cfg:
-            return
+        nnll    = len(l_nll)
+        log.info(f'Using {nnll} likelihoods')
+        nll     = sum(l_nll[1:], l_nll[0])
 
-        l_par_name = cfg['print_pars']
-        d_par_val  = { name : par.value().numpy() for name, par in d_par.items() if name in l_par_name}
+        if cfg.constraints is None:
+            log.debug('Not using any constraint')
+            return nll
 
-        l_name = list(d_par_val.keys())
-        l_value= list(d_par_val.values())
+        log.info('Adding constraints')
+        zconstraints= [ const.zfit_cons(holder = nll) for const in cfg.constraints ]
+        nll         = nll.create_new(constraints = zconstraints)
 
-        l_form = [   f'{var:<10}' for var in l_name]
-        header = ''.join(l_form)
-
-        l_form = [f'{val:<10.3f}' for val in l_value]
-        parval = ''.join(l_form)
-
-        log.info(header)
-        log.info(parval)
-    #------------------------------
-    @staticmethod
-    def minimize(
-        nll, 
-        cfg  : dict, 
-        ndof : int = 10) -> tuple[zres, tuple | None ]:
-        '''
-        Parameters
-        --------------
-        nll : Negative log likelihood
-        cfg : Configuration dictionary used for minimization, it should look like:
-              print_pars: # Optional, if not passed, will not print parameter values
-                - par 1
-                - par 2
-                ...
-              minimization: # Optional, if used, will pass these settings to zfit.minimizers.Minuit()
-                setting : value
-                setting : value
-                ...
-        ndof: Number of degrees of freedom needed for goodness of fit calculation through chi2
-              by default 10 as recommended by statistics experts
-
-        Returns
-        --------------
-        - Zfit result object
-        - Tuple with goodness of fit (pvalue, ndof, chi2) or None when minimization fails
-
-        Raises
-        --------------
-        RuntimeError: If the errors could not be calculated
-        '''
-        min_cfg = {} if 'minimization' not in cfg else cfg['minimization']
-
-        if not min_cfg:
-            log.debug('Using default zfit minimization options')
-        else:
-            log.debug('Overriding default zfit minimization config with')
-            for key, val in min_cfg.items():
-                log.debug(f'{key:<30}{val:<30}')
-
-        mnm = zfit.minimize.Minuit(**min_cfg)
-        with mes.filter_stderr(banned_substrings=Fitter._l_hidden_tf_lines):
-            res = mnm.minimize(nll)
-
-        if not Fitter.good_fit(res = res):
-            log.debug('Found bad fit')
-            if log.getEffectiveLevel() < 20:
-                log.info(res)
-
-            return res, None
-
-        if not Fitter._turn_off_errors:
-            log.debug('Calculating errors')
-            res = Fitter._calculate_errors(res=res)
-        else:
-            log.warning('Not calculating errors')
-
-        # TODO: Add a check to make sure the errors are added here
-        # if not, raise
-
-        gcl = GofCalculator(nll, ndof=ndof)
-        try:
-            pval = gcl.get_gof(kind='pvalue')
-            chi2 = gcl.get_gof(kind='chi2')
-        except FitterGofError as exc:
-            raise FitterGofError('Cannot calculate GOF') from exc
-
-        stat = res.status
-
-        log.debug(f'{chi2:<10.3f}{pval:<10.3e}{stat:<10}')
-        pdf   = nll.model[0] # This class is not meant for simultaneous fits
-                             # There should only be one PDF
-        d_par = Fitter.get_float_pars(pdf=pdf)
-        Fitter.print_pars(cfg, d_par=d_par)
-
-        return res, (chi2, ndof, pval)
-    # ----------------------
-    @staticmethod
-    def _calculate_errors(res : zres) -> zres:
-        '''
-        Parameters
-        -------------
-        res: Result of fit, before error calculation
-
-        Returns
-        -------------
-        Result of fit after error calculation
-        None if error could not be calculated after 10 attempts
-        '''
-        found_error = False
-        counter     = 0
-        while not found_error and counter < 10:
-            res.hesse(name='minuit_hesse')
-            counter += 1
-            d_val = list(res.params.values())[0]
-
-            if 'minuit_hesse' in d_val:
-                found_error = True
-                break
-
-            # Good fit, and cannot get error => Keep trying
-            if res.converged:
-                if log.getEffectiveLevel() < 20:
-                    print(res)
-                log.debug(f'Error not calculated, retrying: {counter}/10')
-            # Bad fit and cannot get error => Forget about fit
-            else:
-                raise RuntimeError('Fit error could not be found')
-
-        # Good fit and could not find error
-        if not found_error:
-            raise RuntimeError('Fit error could not be found')
-
-        return res
-    #------------------------------
-    def _gof_is_bad(self, gof : tuple[float, int, float]) -> bool:
-        chi2, ndof, pval = gof
-
-        good_ndof = 0 <= ndof < numpy.inf
-        good_chi2 = 0 <= chi2 < numpy.inf
-        good_pval = 0 <= pval < numpy.inf
-
-        return not (good_chi2 and good_pval and good_ndof)
-    #------------------------------
-    @staticmethod
-    def good_fit(res : zres) -> bool:
-        '''
-        Parameters
-        -----------
-        res: Fit result
-
-        Returns
-        -----------
-        True if fit is good
-        '''
-        if Fitter._status and res.status != 0:
-            return False
-
-        if Fitter._valid  and not res.valid:
-            return False
-
-        return True 
-    #------------------------------
-    def _fit_retries(self, cfg : dict) -> dict[tuple[float, int, float],zres]:
-        ntries       = cfg['strategy']['retry']['ntries']
-        pvalue_thresh= cfg['strategy']['retry']['pvalue_thresh']
-        ignore_status= cfg['strategy']['retry']['ignore_status']
-
-        nll = self._get_full_nll(cfg = cfg)
-        if not isinstance(nll, Loss):
-            raise ValueError('NLL is not an allowed likelihood')
-
-        d_pval_res = {}
-        last_res   = None
-        for i_try in range(ntries):
-            try:
-                res, gof = self.minimize(nll, cfg, ndof=self._ndof)
-                if log.getEffectiveLevel() < 20:
-                    log.debug(res)
-
-                last_res = res
-                if gof is None:
-                    self._reshuffle_pdf_pars()
-                    continue
-            except (FailMinimizeNaN, FitterGofError, RuntimeError):
-                self._reshuffle_pdf_pars()
-                log.warning(f'{i_try:03}/{ntries:03} failed due to exception')
-                continue
-
-            if not ignore_status and not self.good_fit(res = res):
-                self._reshuffle_pdf_pars()
-                log.info(f'{i_try:03}/{ntries:03} failed, status/validity: {res.status}/{res.valid}')
-                continue
-
-            if self._gof_is_bad(gof=gof):
-                log.debug('Reshufling and skipping, found bad gof')
-                self._reshuffle_pdf_pars()
-                continue
-
-            _, _, pval   = gof
-            if pval > pvalue_thresh:
-                log.info(f'Reached {pval:.3f} (> {pvalue_thresh:.3f}) threshold after {i_try + 1} attempts')
-                return {gof : res}
-
-            log.info(f'Picking: {res}')
-            d_pval_res[gof]=res
-
-            log.info(f'{i_try:03}/{ntries:03} good fit: {res.status}/{res.valid}')
-            self._reshuffle_pdf_pars()
-        # Loop ends here
-
-        if last_res is None:
-            self._plot_fit(nll=nll)
-            self._save_nll(nll=nll)
-
-            raise FitterFailedFit('Could not fit even once')
-
-        nres = len(d_pval_res)
-        if nres == 0:
-            raise FitterFailedFit('Could not find any valid fit')
-
-        log.info(f'Found {nres} results')
-
-        return d_pval_res
-    #------------------------------
-    def _save_nll(self, nll : Loss) -> None:
-        '''
-        Parameters
-        ---------------
-        nll: Negative log likelihood with model and data from fit
-        '''
-        out_path = tempfile.mkdtemp()
-        fpath    = f'{out_path}/nll.asdf'
-
-        obj : AsdfFile = nll.to_asdf()
-        try:
-            obj.write_to(fd = fpath)
-        except Exception:
-            log.error('Could not serialize NLL')
-            return
-
-        log.error(f'Saved NLL to: {fpath}')
+        return nll
     #------------------------------
     def _plot_fit(self, nll : Loss) -> None:
         '''
@@ -607,194 +259,80 @@ class Fitter:
         obj.plot(nbins=50)
         plt.show()
     #------------------------------
-    def _pick_best_fit(
+    def _update_par_bounds(
         self, 
-        d_pval_res : dict[tuple[float,int,float], zres]) -> zres:
-        l_pval_res= list(d_pval_res.items())
-        l_pval_res.sort()
-        (chi2, ndof, pval), res = l_pval_res[0]
-        rchi2 = chi2 / ndof
+        res    : FitResult, 
+        nsigma : float, 
+        yields : list[str]) -> None:
 
-        nfits = len(d_pval_res)
-        log.info(f'Picking out best fit from {nfits} fits reduced chi2/pvalue: {rchi2:.3f}/{pval:.3f}')
-        for (chi2, ndof, pval), _ in l_pval_res:
-            log.debug(f'{chi2:<20.3f}{ndof:<20}{pval:<20.3f}')
-
-        self._set_pdf_pars(res)
-
-        return res
-    #------------------------------
-    def _fit_in_steps(self, cfg : dict) -> zres:
-        l_nsample = cfg['strategy']['steps']['nsteps']
-        l_nsigma  = cfg['strategy']['steps']['nsigma']
-        l_yield   = cfg['strategy']['steps']['yields']
-
-        res = None
-        for nsample, nsigma in zip(l_nsample, l_nsigma):
-            log.info(f'Fitting with {nsample} samples')
-            cfg_step             = dict(cfg)
-            cfg_step['nentries'] = nsample
-
-            nll      = self._get_full_nll(cfg = cfg_step)
-            res, gof = self.minimize(nll, cfg_step, ndof=self._ndof)
-            if gof is None:
-                raise ValueError('Minimization failed')
-
-            res.hesse(method='minuit_hesse')
-            self._update_par_bounds(res, nsigma=nsigma, yields=l_yield)
-
-        log.info('Fitting full sample')
-        nll      = self._get_full_nll(cfg = cfg)
-        res, gof = self.minimize(nll, cfg, ndof=self._ndof)
-        if gof is None:
-            raise ValueError('Minimization failed')
-
-        if res is None:
-            nsteps = len(l_nsample)
-            raise ValueError(f'No fit out of {nsteps} was done')
-
-        return res
-    #------------------------------
-    def _result_to_value_error(self, res : zres) -> dict[str, list[float]]:
-        d_par = {}
-        for par, d_val in res.params.items():
-            try:
-                val = d_val['value']
-                err = d_val['hesse']['error']
-            except KeyError as exc:
-                pprint.pprint(d_val)
-                raise KeyError('Cannot extract value, hesse or error from dictionary above') from exc
-
-            d_par[par.name] = [val, err]
-
-        return d_par
-    #------------------------------
-    def _update_par_bounds(self, res : zres, nsigma : float, yields : list[str]) -> None:
         s_shape_par = self._pdf.get_params(is_yield=False, floating=True)
         d_shp_par   = { par.name : par for par in s_shape_par if par.name not in yields}
-        d_fit_par   = self._result_to_value_error(res)
 
         log.info(60 * '-')
         log.info(f'{"Parameter":<20}{"Low bound":<20}{"High bound":<20}')
         log.info(60 * '-')
-        for name, [val, err] in d_fit_par.items():
-            if name not in d_shp_par:
-                log.debug(f'Skipping {name} parameter')
-                continue
+        for shape_par_name, shape_par in d_shp_par.items():
+            val, err        = res[shape_par_name]
+            shape_par.lower = val - nsigma * err
+            shape_par.upper = val + nsigma * err
 
-            shape       = d_shp_par[name]
-            shape.lower = val - nsigma * err
-            shape.upper = val + nsigma * err
-
-            log.info(f'{name:<20}{val - err:<20.3e}{val + err:<20.3e}')
+            log.info(f'{shape_par_name:<20}{val - err:<20.3e}{val + err:<20.3e}')
     #------------------------------
-    @staticmethod
-    def get_gaussian_constraints(
-        obj : ParameterHolder,
-        cfg : dict[str,tuple[float,float]]|None) -> list[zfit.constraint.GaussianConstraint]:
+    @property
+    def nll(self) -> Loss:
         '''
-        Parameters
-        --------------
-        obj: Object from which `get_params` can be called, such that its parameters will be constrained
-        cfg: Dictionary specifying what variables to constrain and values of constraints, e.g.
-             mu : (5, 1.0)
-             sg : (0, 0.1)
-
-        e.g. dictionary with parameter name and tuple. Latter holds mean value and width
-
-        Returns
-        --------------
-        List of Gaussian constraints
+        Negative log likelihood, raises if NLL missing
         '''
-        if cfg is None:
-            log.debug('Not using any constraint')
-            return []
+        if self._nll is None:
+            raise ValueError('Missing NLL, fit was not ran?')
 
-        s_par   = obj.get_params(floating=True)
-        d_par   = { par.name : par for par in s_par}
-
-        log.info('Adding constraints:')
-        l_const = []
-        for par_name, (par_mu, par_sg) in cfg.items():
-            if par_name not in d_par:
-                log.error(s_par)
-                raise ValueError(f'Parameter {par_name} not found among floating parameters of model, above')
-
-            par = d_par[par_name]
-
-            if par_sg == 0:
-                par.floating = False
-                log.info(f'{"":<4}{par_name:<15}{par_mu:<15.3e}{par_sg:<15.3e}')
-                continue
-
-            const = zfit.constraint.GaussianConstraint(params=par, observation=float(par_mu), uncertainty=float(par_sg))
-            log.info(f'{"":<4}{par_name:<45}{par_mu:<15.3e}{par_sg:<15.3e}')
-            l_const.append(const)
-
-        return l_const
+        return self._nll
     #------------------------------
-    def fit(self, cfg : dict|None = None) -> zres:
+    def fit(
+        self, 
+        cfg : FitConf | None = None) -> FitResult:
         '''
         Runs the fit using the configuration specified by the cfg dictionary
         Parameters
         ----------------------
-        cfg : Fit configuration
+        cfg : Minimization configuration
 
         Returns
         ----------------------
-        zres: Fit result
+        Fit result object
         '''
         self._initialize()
 
-        cfg = {} if cfg is None else cfg
-
-        if 'strategy' not in cfg:
+        cfg = FitConf.default() if cfg is None else cfg
+        if cfg.strategy is None:
             log.info('Not using any strategy, simple fit')
-            nll      = self._get_full_nll(cfg = cfg)
-            res, gof = self.minimize(nll, cfg, ndof=self._ndof)
-            if gof is None:
-                raise ValueError('Minimization failed')
+            nll = self._get_full_nll(cfg = cfg)
+            res = minimizers.minimize(nll, cfg)
+
+            self._nll = nll
 
             return res
 
         log.info(30 * '-')
         log.info(f'{"chi2":<10}{"pval":<10}{"stat":<10}')
         log.info(30 * '-')
-        if   'retry' in cfg['strategy']:
+
+        nll = self._get_full_nll(cfg = cfg)
+        if isinstance(cfg.strategy, Retries):
             log.info('Using retry strategy')
-            d_pval_res = self._fit_retries(cfg)
-            res = self._pick_best_fit(d_pval_res)
-        elif 'steps' in cfg['strategy']:
-            log.info('Using steps strategy')
-            res = self._fit_in_steps(cfg)
+            obj = AnealingMinimizer(cfg = cfg)
+            res = obj.get_result(loss = nll)
         else:
-            raise ValueError('Unsupported fitting strategy')
+            raise ValueError(f'Unsupported fitting strategy: {cfg.strategy}')
+
+        self._set_pdf_pars(res)
 
         return res
     # ----------------------
     @classmethod
-    def errors_disabled(cls, value : bool):
-        '''
-        Parameters
-        -------------
-        value: If true, will not run error calculation
-        '''
-        old_val = Fitter._turn_off_errors
-        Fitter._turn_off_errors = value
-
-        @contextlib.contextmanager
-        def _context():
-            try:
-                yield
-            finally:
-                Fitter._turn_off_errors = old_val
-
-        return _context()
-    # ----------------------
-    @classmethod
     def criterion(
-        cls, 
-        status : bool = True, 
+        cls,
+        status : bool = True,
         valid  : bool = True):
         '''
         Parameters
@@ -805,16 +343,16 @@ class Fitter:
         old_status = Fitter._status
         old_valid  = Fitter._valid
 
-        Fitter._status = status 
-        Fitter._valid  = valid 
+        Fitter._status = status
+        Fitter._valid  = valid
 
         @contextlib.contextmanager
         def _context():
             try:
                 yield
             finally:
-                Fitter._valid  = old_valid 
-                Fitter._status = old_status 
+                Fitter._valid  = old_valid
+                Fitter._status = old_status
 
         return _context()
 #------------------------------

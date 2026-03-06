@@ -9,14 +9,16 @@ import pandas            as pnd
 import seaborn           as sns
 import matplotlib.pyplot as plt
 
-from pathlib                 import Path
-from scipy.stats             import norm
-from ROOT                    import RDF # type: ignore
-from omegaconf               import DictConfig, OmegaConf
-from dmu.logging.log_store   import LogStore
-from dmu.plotting.plotter_1d import Plotter1D
+from dmu          import LogStore
+from typing       import Final
+from pathlib      import Path
+from scipy.stats  import norm
+from ROOT         import RDF # type: ignore
+from omegaconf    import DictConfig, OmegaConf
+from dmu.plotting import Plotter1D
 
 log=LogStore.add_logger('fitter:toy_plotter')
+TOY_INDEX : Final[str] = 'Toy' # Name of column identifying different fits
 # ----------------------
 class MissingVariableConfiguration(Exception):
     '''
@@ -43,13 +45,18 @@ class ToyPlotter:
         '''
         Parameters
         -------------
-        df : Pandas dataframe with information from toy fits
-        cfg: Configuration specifying how to plot
+        cfg    : Configuration specifying how to plot
+        df     : Pandas dataframe with information from toy fits
+        Columns:
+
+        Parameter, Value, Error, Gen, Toy, GOF, Valid
         '''
+        self._validate_input(df = df)
+
         # WARNING: Update this when a new toy-wise quantity added
         # These columns have the same values for all the fitting parameters
         # belonging to a given fit
-        self._columns = ['Toy', 'GOF', 'Valid']
+        self._toywise_columns = ['GOF', 'Valid', 'Hash']
 
         self._l_par = df['Parameter'].unique().tolist()
         self._df    = self._preprocess_df(df=df)
@@ -62,6 +69,19 @@ class ToyPlotter:
         self._ana_dir      = Path(os.environ['ANADIR'])
         cfg.saving.plt_dir = self._ana_dir / cfg.saving.plt_dir
         self._cfg   = cfg
+    # ----------------------
+    def _validate_input(self, df : pnd.DataFrame) -> None:
+        '''
+        Parameters
+        -------------
+        df : DataFrame with fitting parameters
+        '''
+        if len(df) == 0:
+            raise ValueError('Empty dataframe')
+
+        for _, df_par in df.groupby('Parameter'):
+            if df_par['Toy'].duplicated().any():
+                raise ValueError('DataFrame has duplicated values in Toy column')
     # ----------------------
     def _get_latex_names(
         self, 
@@ -100,13 +120,19 @@ class ToyPlotter:
         fail = False
         d_gen= {}
         for par_name, df_par in df.groupby('Parameter'):
-            l_gen_val = df_par['Gen'].unique().tolist()
-            if len(l_gen_val) != 1:
+            gen_vals = df_par['Gen'].unique().tolist()
+            ngen     = len(gen_vals)
+
+            if ngen != 1:
                 fail = True
-                log.error(f'Not one and only one Gen value for: {par_name}')
+                for val in gen_vals:
+                    log.info(f'{val:.4e}')
+                log.error(f'Found {ngen} Gen values for: {par_name}')
+                log.info(df_par['Gen'].value_counts())
+                log.info(20 * '-')
                 continue
 
-            d_gen[par_name] = l_gen_val[0]
+            d_gen[par_name] = gen_vals[0]
 
         if fail:
             raise ValueError('Multiple generating values')
@@ -162,32 +188,42 @@ class ToyPlotter:
         '''
         Parameters
         -------------
-        df: Pandas dataframe from user
+        df: Pandas dataframe with rows as parameters and columns as fit information
 
         Returns
         -------------
-        Dataframe with columns added, renamed, etc
+        Dataframe with columns corresponding to parameters, e.g:
+
+        a_val  a_err  a_gen  ...
+
+        each row corresponds to a fit
         '''
+        df   = df.sort_values(by = 'Parameter').reset_index(drop = True)
         l_df = []
         for name, df in df.groupby('Parameter'):
-            name = str(name)
+            name   = str(name)
             df_ref = self._reformat_df(df=df, name=name)
-            df_ref = df_ref.reset_index(drop=True)
+            df_ref = df_ref.set_index(TOY_INDEX, drop=True)
             l_df.append(df_ref)
 
-        # Use the last dataframe from the past loop
-        # To extract toy-wise columns
-        d_col : dict[str,pnd.Series] = {}
-        for column in self._columns: 
-            d_col[column] = df[column].reset_index(drop=True)
+        # Extract toy-wise columns from any of the dataframes
+        d_toy_col : dict[str,pnd.Series] = {}
+        for column in self._toywise_columns: 
+            df                = l_df[-1]
+            d_toy_col[column] = df[column]
 
-        # Remove toy-wise columns
-        l_df_strip = [ df.drop(columns=self._columns) for df in l_df ]
+        # Remove toy-wise columns from all dataframes
+        l_df_strip : list[pnd.DataFrame] = [ 
+            df.drop(columns=self._toywise_columns) for df in l_df ]
 
-        # Concatenate and add them back. 
-        # Prevents these columns from been added once per parameter
-        df = pnd.concat(objs=l_df_strip, axis=1, ignore_index=False)
-        for name, series in d_col.items():
+        # Concatenate horizontally 
+        df = pnd.concat(
+            objs         = l_df_strip, 
+            axis         = 1, 
+            ignore_index = False)
+
+        # Add back toy wise columns, once
+        for name, series in d_toy_col.items():
             df[name] = series
 
         return df
@@ -206,13 +242,17 @@ class ToyPlotter:
             except Exception as exc:
                 raise ValueError(f'Cannot convert column \"{name}\" into array of floats') from exc
 
+            log.debug(f'Column {name}, shape {array.shape}')
             data[name] = array
 
         rdf = RDF.FromNumpy(data)
 
         return rdf
     # ----------------------
-    def _reformat_df(self, df : pnd.DataFrame, name : str) -> pnd.DataFrame:
+    def _reformat_df(
+        self, 
+        df   : pnd.DataFrame, 
+        name : str) -> pnd.DataFrame:
         '''
         Parameters
         -------------
@@ -221,12 +261,13 @@ class ToyPlotter:
 
         Returns
         -------------
-        Dataframe with columns as quantities associated to one parameter (`a_val`, `a_err`, `a_pul`...)
+        - Add pull and uncertainty columns
+        - Rename columns using {name}_xxx
         '''
         df['Pull'] = (df['Value'] - df['Gen']) / df['Error']
         df['Unc' ] = 100 * df['Error'] / df['Value'].abs()
 
-        d_name = {
+        d_name     = {
             'Gen'   : f'{name}_gen',
             'Pull'  : f'{name}_pul',
             'Unc'   : f'{name}_unc',

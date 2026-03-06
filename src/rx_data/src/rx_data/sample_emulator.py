@@ -2,11 +2,11 @@
 Module holding SampleEmulator class
 '''
 
-from ROOT                  import RDF # type: ignore
-from omegaconf             import DictConfig
+from ROOT        import RDF # type: ignore
+from omegaconf   import DictConfig
 
-from dmu.generic.utilities import load_conf
-from dmu.logging.log_store import LogStore
+from dmu         import LogStore
+from dmu.generic import utilities as gut 
 
 log=LogStore.add_logger('rx_data:sample_emulator')
 # ----------------------
@@ -26,7 +26,7 @@ class SampleEmulator:
         sample: Name of sample to emulate, e.g. Bs_JpsiKst_ee_eq_DPC
         '''
         self._sample  = sample
-        cfg       : DictConfig = load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
+        cfg       : DictConfig = gut.load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
         self._cfg : DictConfig = cfg.get(sample, DictConfig({}))
     # ---------------------
     def get_sample_name(self) -> str:

@@ -9,19 +9,20 @@ import fnmatch
 import pprint
 import tempfile
 
-from contextlib              import contextmanager
-from pathlib                 import Path
-from typing                  import overload, Literal, Final
-from rx_common.types         import Trigger
-from rx_common               import info
-from rx_data.path_splitter   import PathSplitter, NestedSamples
-from rx_data.sample_patcher  import SamplePatcher
-from rx_data.specification   import Sample, Specification
-from rx_data.sample_emulator import SampleEmulator
-from dmu.logging.log_store   import LogStore
-from dmu.generic             import hashing
-from dmu.generic             import version_management as vmn
-from dmu.generic             import utilities          as gut
+from contextlib       import contextmanager
+from pathlib          import Path
+from typing           import overload, Literal, Final
+from rx_common        import Project, Trigger
+from rx_common        import Component
+from dmu              import LogStore
+from dmu.generic      import hashing
+from dmu.generic      import version_management as vmn
+from dmu.generic      import utilities          as gut
+
+from .path_splitter   import PathSplitter, NestedSamples
+from .sample_patcher  import SamplePatcher
+from .specification   import Sample, Specification
+from .sample_emulator import SampleEmulator
 
 log=LogStore.add_logger('rx_data:spec_maker')
 
@@ -36,7 +37,7 @@ class SpecMaker:
     - Save file and make path available to user
     '''
     _custom_versions : dict[str,str] = {}
-    _custom_project  : str | None    = None        # If set, will use this project instead of the one deduced from trigger
+    _custom_project  : Project | None= None        # If set, will use this project instead of the one deduced from trigger
     _default_excluded: list[str]     = []          # These friend trees will always be excluded, unless explicitly changed
     _excluded_friends: list[str]     = []          # Will not pick up any of the friend trees in this list
     _only_friends    : set[str]|None = None        # Will only pick up the friend trees in this list, if the list is not None
@@ -46,7 +47,7 @@ class SpecMaker:
     # ----------------------
     def __init__(
         self, 
-        sample     : str, 
+        component  : Component, 
         trigger    : Trigger,
         skip_patch : bool = False,
         tree       : str  = 'DecayTree') -> None:
@@ -57,10 +58,11 @@ class SpecMaker:
         trigger   : Hlt2RD_BuToKpEE_MVA
         skip_patch: If true, it will not patch for missing samples, false by default
         '''
-        self._emulator  = SampleEmulator(sample=sample)
+        self._component = component
+        self._emulator  = SampleEmulator(sample=component.sample)
         self._sample    = self._emulator.get_sample_name()
 
-        cache_dir       = tempfile.mkdtemp(prefix=f'{sample}_{trigger}_{tree}')
+        cache_dir       = tempfile.mkdtemp(prefix=f'{component}_{trigger}_{tree}')
         self._cache_dir = Path(cache_dir)
 
         self._trigger   = trigger
@@ -71,15 +73,15 @@ class SpecMaker:
         self._l_path : list[Path] = [] # list of paths to all the ROOT files
 
         if skip_patch:
-            log.warning(f'Skipping patching of {sample}')
+            log.warning(f'Skipping patching of {component}')
             self._spec    = self._get_specification()
         else:
             spec          = self._get_specification()
-            self._patcher = SamplePatcher(sample = sample, spec = spec)
+            self._patcher = SamplePatcher(sample = component, spec = spec)
             self._spec    = self._patcher.get_patched_specification()
             self._emulator.extend_redefinitions(redefinitions = self._patcher.redefinitions)
     # ----------------------
-    def _set_project(self, trigger : Trigger) -> str:
+    def _set_project(self, trigger : Trigger) -> Project:
         '''
         Parameters
         -------------
@@ -89,14 +91,19 @@ class SpecMaker:
         -------------
         E.g. rk, rkst
         '''
-        default_project = info.project_from_trigger(trigger=trigger, lower_case=True) 
-        if not self._custom_project or self._custom_project == default_project:
-            log.debug(f'Using project {default_project} for trigger {trigger}')
-            return default_project
+        if self._custom_project:
+            log.warning(f'Using custom project: {self._custom_project}')
+            return self._custom_project
 
-        log.warning(f'Using custom project: {self._custom_project}')
+        if self._component.is_mc:
+            log.debug(f'Using project: {trigger.project}')
+            return trigger.project
 
-        return self._custom_project
+        # If this is Data, use the PID project, even if noPID was requested
+        # Data has no noPID version, only MC does, can't remove PID to data
+        # No PID is achieved by merging, misID trigger with main trigger
+
+        return trigger.project.with_pid
     # ---------------------------------------------------
     def _skip_ftree(self, ftree : str) -> bool:
         '''
@@ -121,7 +128,7 @@ class SpecMaker:
             log.debug(f'Default excluding {ftree}')
             return True
 
-        if ftree in _ELECTRON_ONLY_TREES and info.is_mm(trigger = self._trigger):
+        if ftree in _ELECTRON_ONLY_TREES and self._trigger.is_muon:
             log.info(f'Excluding friend tree {ftree} for muon trigger {self._trigger}')
             return True
 
@@ -176,26 +183,23 @@ class SpecMaker:
         ----------------
         Gets list of paths to ROOT files for a given HLT2 trigger
         '''
-        if self._trigger in d_trigger:
+        component = Component.from_sample(sample = sample)
+
+        if component.is_mc and self._trigger in d_trigger:
             log.debug(f'Found paths for ROOT files associated to: {self._trigger}/{sample}/{ftree}')
             return d_trigger[self._trigger]
 
-        if not self._trigger.endswith('_ext'):
+        if component.is_mc:
             raise ValueError(f'Invalid trigger {self._trigger} for sample {sample}, project {self._project} and friend tree {ftree}')
 
-        # TODO: When misid trigger be processed also for MC, this has to be updated
-        if self._sample.startswith('mc_'):
-            trigger = self._trigger.replace('_ext', '')
-            log.warning(f'For sample {self._sample} will use {trigger} instead of {self._trigger}')
-            return d_trigger[trigger]
+        if self._trigger.has_pid:
+            log.debug(f'Found paths for ROOT files associated to: {self._trigger}/{sample}/{ftree}')
+            return d_trigger[self._trigger]
 
         # NOTE: If it was not explicitly stated that this is 2024 data, ext trigger does not make sense
-        if not self._sample.startswith('DATA_24'):
-            raise ValueError(f'Requested EXT trigger for non-2024 data sample: {self._sample}')
-
         log.debug(f'Found extended trigger: {self._trigger}')
-        trig_misid   = self._trigger.replace('_ext', '_misid')
-        trig_default = self._trigger.replace('_ext',       '')
+        trig_misid   = self._trigger.replace('_noPID', '_misid')
+        trig_default = self._trigger.replace('_noPID',       '')
 
         l_path = []
         l_path+= d_trigger[trig_default]
@@ -225,14 +229,15 @@ class SpecMaker:
         nosamp = True
         for sample in d_data:
             if not fnmatch.fnmatch(sample, self._sample):
+                log.debug(f'For target {self._sample} skipping {sample}')
                 continue
 
             nosamp = False
             try:
                 d_trigger = d_data[sample]
             except KeyError as exc:
-                for sample in d_data:
-                    log.info(sample)
+                for val in d_data:
+                    log.info(val)
                 raise KeyError(f'Sample {sample} not found') from exc
 
             l_path_sample = self._get_trigger_paths(
@@ -242,10 +247,10 @@ class SpecMaker:
 
             nsamp = len(l_path_sample)
             if nsamp == 0:
-                log.error(f'No paths found for {sample} in {json_path} and friend tree {ftree}')
+                log.error(f'No paths found for {sample}/{self._trigger} in {json_path} and friend tree {ftree}')
                 nopath = True
             else:
-                log.debug(f'Found {nsamp} paths for {sample} in {json_path}')
+                log.debug(f'Found {nsamp} paths for {sample}/{self._trigger} in {json_path}')
 
             l_path += l_path_sample
 
@@ -261,7 +266,7 @@ class SpecMaker:
 
         return Sample(trees = [self._tree_name], files = l_path, metadata = {'kind' : ftree})
     # ---------------------------------------------------
-    def _filter_samples(
+    def _filter_friends(
         self, 
         d_ftree_dir : dict[str,Path]) -> dict[str,Path]:
         '''
@@ -302,7 +307,7 @@ class SpecMaker:
             raise ValueError(f'No directories with samples found in: {ftree_wc}')
 
         d_ftree_dir  = { os.path.basename(ftree_dir) : ftree_dir for ftree_dir in l_ftree_dir }
-        d_ftree_dir  = self._filter_samples(d_ftree_dir=d_ftree_dir)
+        d_ftree_dir  = self._filter_friends(d_ftree_dir=d_ftree_dir)
         self._s_ftree= { ftree for ftree in d_ftree_dir if ftree != _MAIN_TREE } # These friend trees both exist and are picked up
 
         log.info(40 * '-')
@@ -606,7 +611,7 @@ class SpecMaker:
         return _context()
     # ---------------------------------------------------
     @classmethod
-    def project(cls, name : str):
+    def project(cls, name : Project):
         '''
         Parameters
         --------------

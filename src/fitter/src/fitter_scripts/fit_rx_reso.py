@@ -5,51 +5,26 @@ and run fits to the resonant mode
 
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 import argparse
 
-from dask.distributed import Client, LocalCluster
-from rx_common     import Sample
-from omegaconf     import DictConfig
-from contextlib    import ExitStack
-from dmu.generic   import utilities as gut
-from dmu.stats     import GofCalculator
-from dmu.stats     import ParameterLibrary as PL
-from dmu.stats     import Fitter, utilities as sut
-from dmu.stats     import ConstraintAdder
-from dmu.stats     import Constraint
-from dmu.workflow  import Cache
-from dmu           import LogStore
-from zfit.loss     import ExtendedUnbinnedNLL
+from contextlib                import ExitStack
+from dmu.stats.gof_calculator  import GofCalculator
+from omegaconf                 import DictConfig
+from dmu.stats.parameters      import ParameterLibrary as PL
+from dmu.generic               import utilities as gut
+from dmu.stats                 import utilities as sut
+from dmu.workflow.cache        import Cache
+from dmu.logging.log_store     import LogStore
+from zfit.loss                 import ExtendedUnbinnedNLL
 
-from fitter        import ConstraintReader
-from fitter        import FitConfig
-from fitter        import DataFitter
-from fitter        import LikelihoodFactory
-from rx_data       import RDFLoader
-from rx_selection  import selection as sel
+from fitter.fit_config         import RXFitConfig
+from fitter.data_fitter        import DataFitter
+from fitter.likelihood_factory import LikelihoodFactory
+from rx_data.rdf_getter        import RDFGetter
+from rx_selection              import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_reso')
-# ----------------------
-def _get_client(cfg : FitConfig) -> Client | None:
-    '''
-    Parameters
-    -------------
-    cfg: Configuration object
-
-    Returns
-    -------------
-    Client if using multiple processes, or None
-    '''
-    if cfg.nthread == 1:
-        return None
-
-    cluster = LocalCluster(
-       n_workers         =cfg.nthread, 
-       threads_per_worker=1, 
-       processes         =True, 
-       memory_limit      ='4GiB')
-
-    return Client(cluster)
 # ----------------------
 def _set_logs() -> None:
     '''
@@ -68,7 +43,7 @@ def _set_logs() -> None:
     LogStore.set_level('fitter:sim_fitter'        , 30)
     LogStore.set_level('fitter:likelihood_factory', 30)
 # ----------------------
-def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
+def _parse_args(args : DictConfig | argparse.Namespace | None) -> RXFitConfig:
     '''
     Returns
     --------------
@@ -76,25 +51,22 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
     '''
     if args is None:
         parser = argparse.ArgumentParser(description='Script used to fit RX data')
-        parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'            , choices =[1,2,3,4,5,6,7,8], default=-1)
-        parser.add_argument('-g', '--group'  , type=str  , help='Name of group to which fit belongs, e.g. toys'           , required= True)
-        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. reso/rkst/electron/data.yaml', required=True)
-        parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'                , default =  '')
-        parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config'        , default =0)
-        parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                                       , default =1)
-        parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30]                  , default =20)
-        parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin'      , choices=['jpsi', 'psi2']                  , required=True)
-        parser.add_argument('-C', '--mva_cmb', nargs='+' , help='Combinatorial MVA bounds'                                , required=True)
-        parser.add_argument('-P', '--mva_prc', nargs='+' , help='Part reco MVA bounds'                                    , required=True)
+        parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[1,2,3,4,5,6,7,8], default=-1)
+        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. reso/rkst/electron'  , required=True)
+        parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =  '')
+        parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
+        parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                               , default =1)
+        parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30]          , default =20)
+        parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin'      , choices=['jpsi', 'psi2']          , required=True)
+        parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'          , required=True)
+        parser.add_argument('-P', '--mva_prc', type=float, help='Cut on part reco MVA working point'              , required=True)
         args = parser.parse_args()
 
-    fit_cfg = gut.load_conf(package='fitter_data', fpath=args.fit_cfg)
+    fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
     toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
 
-    cfg         = FitConfig(
-        name    = 'reso',
-        group   = args.group,
-        fit_cfg = fit_cfg, 
+    cfg         = RXFitConfig(
+        mod_cfg = fit_cfg, 
         toy_cfg = toy_cfg,
         block   = args.block,
         q2bin   = args.q2bin,
@@ -106,43 +78,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None) -> FitConfig:
 
     return cfg
 # ----------------------
-def _add_constraints(
-    nll : ExtendedUnbinnedNLL,
-    cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, list[Constraint]]:
-    '''
-    Parameters
-    -------------
-    nll: Likelihood
-    cfg: Object holding configuration for fit 
-
-    Returns
-    -------------
-    Tuple with:
-
-    - Constrained likelihood
-    - List of constraints
-    '''
-    crd  = ConstraintReader(nll=nll, cfg=cfg)
-    cons = crd.get_constraints()
-
-    if cons is None:
-        log.warning('Not using any constraints')
-
-    log.info('Constraints:')
-    for constraint in cons:
-        log.info(constraint)
-
-    cons_str    = [ str(constraint) for constraint in cons ]
-    constraints = '\n\n'.join(cons_str)
-
-    cfg.fit_cfg['used_constraints'] = constraints
-
-    cad  = ConstraintAdder(nll=nll, constraints=cons)
-    nll  = cad.get_nll()
-
-    return nll, cons
-# ----------------------
-def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
+def _get_nll(cfg : RXFitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
     '''
     Parameters
     -------------
@@ -158,38 +94,40 @@ def _get_nll(cfg : FitConfig) -> tuple[ExtendedUnbinnedNLL, DictConfig]:
         name   = cfg.name,
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
-        sample = Sample.data_24, 
-        cfg    = cfg.fit_cfg)
+        sample = 'DATA_24_*',
+        trigger= cfg.mod_cfg.trigger,
+        cfg    = cfg.mod_cfg)
     nll = ftr.run()
     cfg_mod = ftr.get_config()
 
-    nll, _ = _add_constraints(nll=nll, cfg=cfg)
+    if not isinstance(nll, ExtendedUnbinnedNLL):
+        raise TypeError('Likelihood object is not an ExtendedUnbinnedNLL')
 
     return nll, cfg_mod
 # ----------------------
-def _fit_electron(cfg : FitConfig) -> None:
+def _fit_electron(cfg : RXFitConfig) -> None:
     '''
     This is where DataFitter is used
     '''
-    d_nll : dict[str, tuple[ExtendedUnbinnedNLL, DictConfig]] = {}
+    d_nll = {}
     with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 1'}):
         cfg.name = 'brem_001'
+        cfg.replace(substring='brem_xxx', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
     with sel.update_selection(d_sel = {'brem_cat' : 'nbrem == 2'}):
         cfg.name = 'brem_002'
+        cfg.replace(substring='brem_001', value=cfg.name)
         d_nll[cfg.name] = _get_nll(cfg=cfg)
 
-    with ExitStack() as stack:
-        stack.enter_context(GofCalculator.disabled(value=True))
-        stack.enter_context(Fitter.criterion(status=False, valid=False))
+    with GofCalculator.disabled(value=True):
         ftr = DataFitter(
             name = cfg.q2bin,
             d_nll= d_nll, 
-            cfg  = cfg.fit_cfg)
+            cfg  = cfg.mod_cfg)
         ftr.run(kind='zfit')
 # ----------------------
-def _fit_muon(cfg : FitConfig) -> None:
+def _fit_muon(cfg : RXFitConfig) -> None:
     '''
     This is where DataFitter is used
     '''
@@ -202,7 +140,7 @@ def _fit_muon(cfg : FitConfig) -> None:
         ftr = DataFitter(
             name = cfg.q2bin,
             d_nll= d_nll, 
-            cfg  = cfg.fit_cfg)
+            cfg  = cfg.mod_cfg)
         ftr.run(kind='zfit')
 # ----------------------
 def main(args : DictConfig | None = None):
@@ -214,22 +152,15 @@ def main(args : DictConfig | None = None):
     cfg = _parse_args(args=args) 
 
     overriding_selection = {
+        'mass'  : '(1)',
         'block' : cfg.block_cut,
         'nobrm0': cfg.brem_cut,
-        'cmb'   : cfg.cmb_cut,
-        'prc'   : cfg.prc_cut}
-
-    if 'selection' in cfg.fit_cfg:
-        log.debug('Custom selection found in fit config')
-        overriding_selection.update(cfg.fit_cfg.selection)
+        'bdt'   : cfg.mva_cut}
 
     Cache.set_cache_root(root=cfg.output_directory)
-    client = _get_client(cfg = cfg)
     with ExitStack() as stack:
-        if client is not None:
-            stack.enter_context(RDFLoader.client(client = client))
-
-        stack.enter_context(PL.parameter_schema(cfg=cfg.fit_cfg.model.yields))
+        stack.enter_context(PL.parameter_schema(cfg=cfg.mod_cfg.model.yields))
+        stack.enter_context(RDFGetter.multithreading(nthreads=cfg.nthread))
         stack.enter_context(Cache.turn_off_cache(val=[]))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
         stack.enter_context(sel.custom_selection(d_sel=overriding_selection))

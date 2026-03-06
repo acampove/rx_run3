@@ -3,18 +3,16 @@ Module with tests for PFNSplitter class
 '''
 import os
 import json
+import yaml
+import pytest
 
 from typing                import Final
 from pathlib               import Path
 from importlib.resources   import files
 from functools             import cache
-
-import yaml
-import pytest
-
-from dmu.logging.log_store import LogStore
+from dmu                   import LogStore
 from dmu.generic           import version_management as vmn
-from rx_data.path_splitter import PathSplitter
+from rx_data               import PathSplitter
 
 # TODO: Add rkst_nopid project
 _PROJECTS : Final[list[str]] = ['rx', 'nopid']

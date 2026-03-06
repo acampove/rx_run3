@@ -5,13 +5,13 @@ import os
 import pytest
 import matplotlib.pyplot as plt
 
-from ROOT                   import RDF# type: ignore
-from pathlib                import Path
-from dmu.logging.log_store  import LogStore
-from rx_common              import Sample, Trigger
-from rx_data.hop_calculator import HOPCalculator
-from rx_data.mis_calculator import MisCalculator
-from rx_data                import testing as tst
+from ROOT       import RDF# type: ignore
+from pathlib    import Path
+from dmu        import LogStore
+from rx_common  import Component, Trigger
+from rx_data    import HOPCalculator
+from rx_data    import MisCalculator
+from rx_data    import testing as tst
 
 # ----------------------------
 class Data:
@@ -91,9 +91,8 @@ def test_compare_bukee(tmp_path : Path):
     Compare signal with background for Bu -> K ee decays
     '''
     trigger = Trigger.rk_ee_os
-    sig_sam = Sample.bpkpee
-    bkg_sam = Sample.bdkstkpiee
-
+    sig_sam = Component.bpkpee  
+    bkg_sam = Component.bdkstkpiee 
     rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
     rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
 
@@ -107,9 +106,8 @@ def test_compare_bdkstee(tmp_path : Path):
     Compare signal with background for Bd -> Kpi ee decays
     '''
     trigger = Trigger.rkst_ee_os
-    sig_sam = Sample.bdkstkpiee
-    bkg_sam = Sample.bpk1kpipiee 
-
+    sig_sam = Component.bdkstkpiee 
+    bkg_sam = Component.bpk1kpipiee 
     rdf_sig = tst.rdf_from_sample(sample=sig_sam, trigger=trigger)
     rdf_bkg = tst.rdf_from_sample(sample=bkg_sam, trigger=trigger)
 
@@ -118,12 +116,12 @@ def test_compare_bdkstee(tmp_path : Path):
 
     _compare_sig_bkg(rdf_sig, rdf_bkg, 'compare_bdkstee', tmp_path = tmp_path)
 # ----------------------------
-@pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
+@pytest.mark.parametrize('trigger', [Trigger.rk_ee_os, Trigger.rkst_ee_os])
 def test_extra_branches(trigger : Trigger):
     '''
     Testing adding extra branches to RDF
     '''
-    sample  = Sample.bdkstkpiee 
+    sample  = Component.bdkstkpiee
     rdf     = tst.rdf_from_sample(sample = sample, trigger=trigger)
 
     obj     = HOPCalculator(rdf=rdf, trigger=trigger)

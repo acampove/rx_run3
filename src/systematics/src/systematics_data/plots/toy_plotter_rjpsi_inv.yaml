@@ -1,0 +1,144 @@
+# This config is meant to specify how plotting of toys should be done
+# when running the test for ToyPlotter
+
+general:
+  size: [15, 10]
+saving:
+  plt_dir: null 
+correlation:
+  size     : [20, 15]
+  title    : Correlation matrix 
+  annot    : true
+  fmt      : '.3f'
+  vmin     : -1.0
+  vmax     : +1.0
+  cmap     : Spectral 
+  linewidth: 0.5
+  annot_kws:
+    size : 12 
+  rotation :
+    x    : 45
+    y    : 45
+generated:
+  x     : -1 
+  label : Generated
+  ls    : --
+  c     : red
+  lw    : 1
+pulls:
+  binning   : [-4, +4, 60]
+  yscale    : 'linear'
+  labels    : ['VAR Pull', 'Entries']
+  normalized: true
+plots:
+  Valid:
+    binning: [-1, 3, 4]
+    yscale: 'linear'
+    labels: ['Validity', 'Entries']
+    styling:
+      Toys:
+        histtype : step
+        linestyle: '-'
+  # ----
+  ee_dt_cmb_N_val:
+    binning: [1200, 1600, 60]
+    yscale: 'linear'
+    labels: ['$N_{comb}^{ee}$', 'Entries']
+  mm_dt_cmb_N_val:
+    binning: [4000, 6000, 60]
+    yscale: 'linear'
+    labels: ['$N_{comb}^{\mu\mu}$', 'Entries']
+  # ----
+  ee_KKjpsi_ee_N_val:
+    binning: [1800, 2200, 60]
+    yscale: 'linear'
+    labels: ['$N_{KK J/\psi(\to ee)}$', 'Entries']
+  mm_KKjpsi_mm_N_val:
+    binning: [4, 800, 60]
+    yscale: 'linear'
+    labels: ['$N_{KK J/\psi(\to \mu\mu)}$', 'Entries']
+  # ----
+  ee_Kstjpsi_ee_N_val:
+    binning: [0, 10, 60]
+    yscale: 'linear'
+    labels: ['$N_{K^* J/\psi(\to ee)}$', 'Entries']
+  mm_Kstjpsi_mm_N_val:
+    binning: [8000, 16000, 60]
+    yscale: 'linear'
+    labels: ['$N_{K^* J/\psi(\to \mu\mu)}$', 'Entries']
+  # ----
+  ee_jpsi_ee_swap_N_val:
+    binning: [0, 500, 60]
+    yscale: 'linear'
+    labels: ['$N_{swap}^{ee}$', 'Entries']
+  mm_jpsi_mm_swap_N_val:
+    binning: [0, 300, 60]
+    yscale: 'linear'
+    labels: ['$N_{swap}^{\mu\mu}$', 'Entries']
+  # ----
+  ee_dt_sig_mu_val:
+    binning: [5600, 5650, 60]
+    yscale: 'linear'
+    labels: ['$\mu_{signal}^{ee}$', 'Entries']
+  mm_dt_sig_mu_val:
+    binning: [5600, 5650, 60]
+    yscale: 'linear'
+    labels: ['$\mu_{signal}^{\mu\mu}$', 'Entries']
+  # ----
+  ee_dt_sig_sg_val:
+    binning: [0, 20, 60]
+    yscale: 'linear'
+    labels: ['$\sigma_{signal}^{ee}$', 'Entries']
+  mm_dt_sig_sg_val:
+    binning: [0, 20, 60]
+    yscale: 'linear'
+    labels: ['$\sigma_{signal}^{\mu\mu}$', 'Entries']
+  # ----
+  mm_cmb_c_val:
+    binning: [-0.003, -0.002, 60]
+    yscale: 'linear'
+    labels: ['$c_{comb}^{\mu\mu}$', 'Entries']
+  ee_cmb_c_val:
+    binning: [-0.003, -0.002, 60]
+    yscale: 'linear'
+    labels: ['$c_{comb}^{ee}$', 'Entries']
+  # ----
+  mm_dt_sig_N_val:
+    binning: [74000, 79000, 60]
+    yscale: 'linear'
+    labels: ['$N_{signal}^{\mu\mu}$', 'Entries']
+  # ----
+  rjpsi_inv_unc:
+    binning: [0, 3.0, 60]
+    yscale: 'linear'
+    labels: ['$\delta(r_{J/\psi}^{-1})[\%]$', 'Entries']
+  rjpsi_inv_val:
+    binning: [0.075, 0.125, 60]
+    yscale: 'linear'
+    labels: ['$r_{J/\psi}^{-1} \times RDM$', 'Entries']
+  rjpsi_inv_err:
+    binning: [0.0, 0.003, 60]
+    yscale: 'linear'
+    labels: ['$\varepsilon(r_{J/\psi}^{-1})$', 'Entries']
+# ----------------------------
+plugin:
+  pulls: 
+    rjpsi_inv_pul : {}
+  errors:
+    rjpsi_inv_val :
+      color  : green 
+      format : '{:.2f}'
+      symbol : '\delta'
+    rjpsi_inv_unc :
+      color  : green 
+      format : '{:.2f}'
+      symbol : '\delta'
+  stats:
+    Valid:
+      mean : validity rate={:.1%}
+# ----------------------------
+summary: 
+  median : [] 
+  mean   : []
+  pulls  : []
+# ----------------------------

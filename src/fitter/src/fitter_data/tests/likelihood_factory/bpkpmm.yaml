@@ -1,0 +1,21 @@
+output_directory : rare/rkst/muon/signal
+component        : bdkstkpimm
+categories:
+  brem_xx0:
+    selection : {}
+    model :
+      pdfs:
+        - dscb
+      shared        : []
+      floating      :
+        - mu
+        - sg
+      reparametrize : {}
+      fix           : {}
+fit:
+  strategy  :
+    ntries : 10
+    pvalue : 0.05
+plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
+  nbins   : 50
+  stacked : True

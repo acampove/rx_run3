@@ -1,0 +1,25 @@
+nominal  : nominal
+systematics:
+  2CB signal ($ee$)            : ee_alt_sig
+  Pol1 combinatorial ($ee$)    : ee_alt_cmb
+  2CB signal ($\mu\mu$)        : mm_alt_sig
+  Pol4 combinatorial ($\mu\mu$): mm_alt_cmb
+  $p^+K^- J/\psi(\to ee)$      : bts_jpsi_ee
+  $p^+K^* J/\psi(\to ee)$      : bts_pKst_ee
+  $p^+K^-K^+K^-$               : delta_pKKK
+  $p^+K^-K^+\pi^-$             : delta_pKKpi
+  $p^+K^-\pi^+\pi^-$           : delta_pKpipi
+axes:
+  x:
+    label : $\Delta R_{pK}/R_{pK}$[%]
+    limits: [0, 3]
+    bins  : 50
+  y:
+    label : Entries 
+    limits: null 
+    bins  : 0
+vline:
+  style : '-'
+  width : 2
+  color : gray
+  skip  : true
