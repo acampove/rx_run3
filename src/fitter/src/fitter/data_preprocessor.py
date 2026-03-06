@@ -9,7 +9,7 @@ from ROOT            import RDF # type: ignore
 
 from dmu             import LogLevels, LogStore
 from dmu.workflow    import Cache
-from dmu.stats       import utilities  as sut
+from dmu.stats       import CorrectionImplementation, utilities  as sut
 from dmu.generic     import utilities  as gut
 from dmu.rdataframe  import utilities  as rut
 from dmu.pdataframe  import utilities  as put
@@ -189,6 +189,8 @@ class DataPreprocessor(Cache):
             case Correction.pid:
                 log.debug('Adding PID weights')
                 return self._get_pid_weights(cfg=cfg)
+            case _:
+                raise ValueError(f'Invalid correction {kind}')
     # ----------------------
     def _get_pid_weights(self, cfg : MisIDSampleWeights) -> numpy.ndarray:
         '''
