@@ -345,15 +345,15 @@ class ModelFactory:
         match kind:
             case CorrectionImplementation.reso:
                 par_corr  = zfit.Parameter(f'{name}_reso_flt' , 1.0, 0.20, 5.0)
-                func      = lambda d_par : d_par['orig'] * d_par['corr'], 
+                func      = lambda d_par : d_par['orig'] * d_par['corr']
             case CorrectionImplementation.scale:
                 par_corr  = zfit.Parameter(f'{name}_scale_flt', 0.0, -100, 100)
-                func      = lambda d_par : d_par['orig'] + d_par['corr'], 
+                func      = lambda d_par : d_par['orig'] + d_par['corr']
             case _:
                 raise ValueError(f'Invalid correction: {kind}')
 
         par_comp  = zfit.ComposedParameter(
-            name  = name, 
+            name  = f'{name}_cmp', 
             func  = func, 
             params={'orig' : par_orig, 'corr' : par_corr} )
 
