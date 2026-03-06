@@ -5,7 +5,7 @@ import re
 
 from typing        import Final
 from dmu           import LogStore
-from dmu.stats     import Constraint, Constraint1D
+from dmu.stats     import Constraint, Constraint1D, ConstraintType
 from rx_common     import Block, Brem, Correction
 from zfit.loss     import ExtendedUnbinnedNLL
 from zfit.param    import Parameter as zpar
@@ -37,8 +37,8 @@ class SignalConstraints:
         self._nll   = nll
         self._srd   = ScaleReader()
 
-        self._regex           : Final[str] = r'.*signal_brem_00(\d)_b(\d)_\d+_(scale|reso)_flt'
-        self._constraint_kind : Final[str] = 'GaussianConstraint'
+        self._regex           : Final[str]     = r'.*signal_brem_00(\d)_b(\d)_\d+_(scale|reso)_flt'
+        self._constraint_kind : ConstraintType = ConstraintType.gauss
     # ----------------------
     def _get_constraint(
         self, 
@@ -87,8 +87,8 @@ class SignalConstraints:
         if not mtch:
             return
 
-        brem = Brem(mtch.group(1)) 
-        block= Block(mtch.group(2)) 
+        brem = Brem(value = mtch.group(1)) 
+        block= Block(value = mtch.group(2)) 
         kind = mtch.group(3)
 
         if   kind == 'scale' and name.startswith('mu_'):
