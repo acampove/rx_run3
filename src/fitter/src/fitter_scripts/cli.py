@@ -10,7 +10,7 @@ from dmu       import LogStore
 from pathlib   import Path
 from fitter    import FitSummary
 from rx_common import MVA
-from fitter    import FitConfig
+from fitter    import MVAConf 
 
 app = typer.Typer(help=__doc__)
 log = LogStore.add_logger('rx_fitter:cli')
@@ -18,11 +18,14 @@ log = LogStore.add_logger('rx_fitter:cli')
 @app.command()
 def fit_summary(
     name    : str = typer.Option(..., '--name'   , '-n', help='Name of fits, e.g. mid_window'),
+    signal  : str = typer.Option(..., '--signal' , '-s', help='Name of signal, e.g. bpkpee'),
     log_lvl : int = typer.Option(20 , '--log_lvl', '-l', help='Logging level'))-> None:
     '''
     This will create a fit summary for a given fit
     '''
-    smr = FitSummary(name = name)
+    smr = FitSummary(
+        signal = signal,
+        name   = name)
     smr.get_df()
 
     LogStore.set_level('rx_fitter:fit_summary', log_lvl)
