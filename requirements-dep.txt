@@ -240,6 +240,8 @@ idna==3.11
     # via
     #   jsonschema
     #   requests
+ihep-utilities==0.0.1
+    # via -r requirements-dep.in
 iminuit==2.32.0
     # via zfit
 importlib-resources==6.5.2
