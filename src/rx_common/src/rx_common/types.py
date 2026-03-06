@@ -3,6 +3,7 @@ This module contains classes derived from Enum
 '''
 from enum      import StrEnum, Enum
 from .mass     import Mass
+from dmu.stats import CorrectionImplementation
 from pydantic  import BaseModel, field_validator, ConfigDict
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
@@ -102,17 +103,17 @@ class Correction(StrEnum):
     blok_fraction   = 'rbk'
     # ------------------------
     @property
-    def kind(self) -> str:
+    def kind(self) -> CorrectionImplementation:
         '''
         Returns
         --------------
         reso or scale
         '''
         if self in [Correction.mass_scale]:
-            return 'scale'
+            return CorrectionImplementation.scale 
 
         if self in [Correction.mass_resolution, Correction.brem_fraction, Correction.blok_fraction]:
-            return 'reso'
+            return CorrectionImplementation.reso
 
         raise ValueError(f'Cannot retrieve kind for correction: {self}')
     # ------------------------
