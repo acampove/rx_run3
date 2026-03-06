@@ -42,3 +42,7 @@ rx_data_lfns = ['**/*.json']
 
 [tool.ruff]
 select = ["F", "PL", "B"]
+
+[tool.pyright]
+include = ["src"]
+exclude = ["build", "dist", "*.egg-info", "**/__pycache__"]

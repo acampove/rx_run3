@@ -37,3 +37,7 @@ dev = ["pytest"]
 
 [tool.ruff]
 select = ["F", "PL", "B"]
+
+[tool.pyright]
+include = ["src"]
+exclude = ["build", "dist", "*.egg-info", "**/__pycache__"]
