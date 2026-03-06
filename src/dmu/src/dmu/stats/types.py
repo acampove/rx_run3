@@ -2,8 +2,17 @@
 Module meant to store types relevant for statistical analysis
 '''
 
-from enum import StrEnum
+from enum import StrEnum, auto
 
+# ---------------------------------------
+class CorrectionImplementation(StrEnum):
+    '''
+    Enum meant to symbolize how a correction is
+    implemented, e.g. as a weight, resolution, scale, etc
+    '''
+    scale = auto()
+    reso  = auto()
+    weight= auto()
 # --------------------------
 class Model(StrEnum):
     '''
