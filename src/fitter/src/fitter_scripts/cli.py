@@ -63,19 +63,13 @@ def wp_translator(
     '''
     This will print the signal probability (i.e. MVA working point) given a string
     '''
-    values = FitConfig.str_to_wp(wp = wp, kind = kind)
+    min, max = MVAConf.str_to_wp(value = wp, kind = kind)
 
-    if len(values) == 1:
-        value  = values[0] 
-        print(f'{value:.3f}')
+    if max is None:
+        print(f'{min:.3f}')
         return
 
-    if len(values) == 2:
-        [low, high] = values 
-        print(f'{low:.3f} {high:.3f}')
-        return
-
-    raise ValueError(f'Invalid values: {values}')
+    print(f'{min:.3f} {max:.3f}')
 # ----------------------
 if __name__ == '__main__':
     app()
