@@ -1,8 +1,11 @@
 '''
 Module storing ZModel class
 '''
+
+from contextlib      import contextmanager
+from contextvars     import ContextVar
 from pydantic        import BaseModel, ConfigDict, Field
-from typing          import Callable, Union, Literal
+from typing          import Callable, Union
 from zfit.interface  import ZfitSpace     as zobs
 from zfit.pdf        import BasePDF       as zpdf
 from zfit.param      import Parameter     as zpar
@@ -11,13 +14,13 @@ from dmu             import LogStore
 from dmu.stats       import ParameterLibrary as PL
 
 from .imports        import zfit
-from .types          import Model
+from .types          import CorrectionImplementation, Model
 from .zfit_models    import HypExp
 from .zfit_models    import ModExp
 
 log=LogStore.add_logger('dmu:stats:model_factory')
 
-Reparametrization = Literal['scale', 'reso']
+_FIX_CORRECTION : ContextVar[bool] = ContextVar('_FIX_CORRECTION', default = True)
 # ------------------------------
 class ModelFactoryConf(BaseModel):
     '''
