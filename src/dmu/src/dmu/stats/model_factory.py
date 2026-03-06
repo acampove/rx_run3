@@ -32,7 +32,7 @@ class ModelFactoryConf(BaseModel):
 
     pdfs          : list[Model]
     shared        : list[str]
-    reparametrize : dict[str,Reparametrization]
+    reparametrize : dict[str,CorrectionImplementation]
     fix           : dict[str,float]
     floating      : list[str]
     reuse         : list[zpar] = Field(default_factory=list) 
@@ -131,9 +131,9 @@ class ModelFactory:
         l_pdf    : list[Model],
         l_shared : list[str],
         l_float  : list[str],
-        l_reuse  : None | list[zpar]                  = None,
-        d_fix    : None | dict[str,float]             = None,
-        d_rep    : None | dict[str,Reparametrization] = None):
+        l_reuse  : None | list[zpar]                         = None,
+        d_fix    : None | dict[str,float]                    = None,
+        d_rep    : None | dict[str,CorrectionImplementation] = None):
         '''
         preffix:  used to identify PDF, will be used to name every parameter
         obs:      zfit obserbable
@@ -283,20 +283,19 @@ class ModelFactory:
 
         if rep_kind is not None:
             log.info(f'Reparametrizing {par_name}')
-            par  = self._get_reparametrization(
-                par_name = par_name, 
+            par  = self.get_reparametrization(
+                name     = par_name, 
                 kind     = rep_kind, 
                 value    = val, 
                 low      = low, 
                 high     = high)
+        elif val == low == high:
+            log.info(f'Upper and lower edges agree, fixing parameter to: {low}')
+            par  = zfit.param.Parameter(par_name, val, low - 1 , high + 1)
+            par.floating = False
         else:
-            if val == low == high:
-                log.warning(f'Upper and lower edges agree, fixing parameter to: {low}')
-                par  = zfit.param.Parameter(par_name, val, low - 1 , high + 1)
-                par.floating = False
-            else:
-                log.debug(f'Creating new parameter {par_name}')
-                par  = zfit.param.Parameter(par_name, val, low, high)
+            log.debug(f'Creating new parameter {par_name}')
+            par  = zfit.param.Parameter(par_name, val, low, high)
 
         self._d_par[par_name] = par
 
