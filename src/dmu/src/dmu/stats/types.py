@@ -5,6 +5,13 @@ Module meant to store types relevant for statistical analysis
 from enum import StrEnum, auto
 
 # ---------------------------------------
+class ConstraintType(StrEnum):
+    '''
+    Used to label constraints
+    '''
+    gauss   = 'GaussianConstraint'
+    poisson = 'PoissonConstraint'
+# ---------------------------------------
 class CorrectionImplementation(StrEnum):
     '''
     Enum meant to symbolize how a correction is
