@@ -97,7 +97,7 @@ class ConstraintND(Constraint):
         '''
         new_values : list[float] = []
 
-        for name, old_value in zip(self.parameters, self.values):
+        for name, old_value in zip(self.parameters, self.values, strict = True):
             new_value, _ = result[name]
             new_values.append(new_value)
 
@@ -116,7 +116,7 @@ class ConstraintND(Constraint):
         -------------
         String representation of constrint
         '''
-        parameters = [ f'{name:<50}{value:<20.3f}' for name, value in zip(self.parameters, self.values) ]
+        parameters = [ f'{name:<50}{value:<20.3f}' for name, value in zip(self.parameters, self.values, strict = True) ]
 
         msg  = '\n'
         msg += '\n'
@@ -249,7 +249,7 @@ class ConstraintND(Constraint):
         Sets the value of the constrained parameter to
         '''
         new_values = numpy.random.multivariate_normal(self.values, self.cov, size=1)
-        for new_value, observation in zip(new_values[0], self.observations.values()):
+        for new_value, observation in zip(new_values[0], self.observations.values(), strict = True):
             observation.set_value(new_value)
 # ----------------------------------------
 class Constraint1D(Constraint):
