@@ -16,7 +16,7 @@ from dmu.ml.cv_predict     import CVClassifier, CVPredict
 from dmu.logging.log_store import LogStore
 from dmu.generic           import version_management as vman
 from rx_selection          import selection          as sel
-from rx_common             import info
+from rx_common             import Component, Qsq, Trigger, info
 
 log = LogStore.add_logger('rx_data:mva_calculator')
 #---------------------------------
@@ -29,8 +29,8 @@ class MVACalculator:
     def __init__(
         self,
         rdf     : RDF.RNode,
-        sample  : str,
-        trigger : str,
+        sample  : Component,
+        trigger : Trigger,
         version : str  = 'latest',
         nfold   : int  = 10,
         dry_run : bool = False) -> None:
@@ -55,13 +55,13 @@ class MVACalculator:
         # TODO: Update this.
         # Jpsi and Psi2 should use central MVA
         # Above high data should use high MVA
-        self._default_q2  = 'central' # Any entry not in [low, central, high] bins will go to this bin for prediction
+        self._default_q2  = Qsq.central # Any entry not in [low, central, high] bins will go to this bin for prediction
         self._version     = version
         self._project     = info.project_from_trigger(trigger=trigger, lower_case=True)
         self._l_model     : list[CVClassifier]
         self._dry_run     = dry_run
     #---------------------------------
-    def _get_q2_selection(self, q2bin : str) -> str:
+    def _get_q2_selection(self, q2bin : Qsq) -> str:
         '''
         Parameters
         ---------------
@@ -84,7 +84,7 @@ class MVACalculator:
     def _apply_q2_cut(
         self,
         rdf   : RDF.RNode,
-        q2bin : str) -> RDF.RNode:
+        q2bin : Qsq) -> RDF.RNode:
         '''
         Parameters
         --------------
@@ -95,10 +95,10 @@ class MVACalculator:
         --------------
         Dataframe after q2 selection
         '''
-        if q2bin == 'rest':
-            low     = self._get_q2_selection(q2bin='low')
-            central = self._get_q2_selection(q2bin='central')
-            high    = self._get_q2_selection(q2bin='high')
+        if q2bin == Qsq.none:
+            low     = self._get_q2_selection(q2bin=Qsq.low)
+            central = self._get_q2_selection(q2bin=Qsq.central)
+            high    = self._get_q2_selection(q2bin=Qsq.high)
             q2_cut  = f'!({low}) && !({central}) && !({high})'
         else:
             q2_cut  = self._get_q2_selection(q2bin=q2bin)
@@ -118,7 +118,7 @@ class MVACalculator:
     def _q2_scores(
         self,
         d_path : dict[str,str],
-        q2bin  : str) -> numpy.ndarray:
+        q2bin  : Qsq) -> numpy.ndarray:
         '''
         Parameters
         -----------
@@ -138,7 +138,7 @@ class MVACalculator:
         # The dataframe has the correct cut applied
         # From here onwards, if the q2bin is non-rare (rest)
         # Will use default_q2 model
-        if q2bin == 'rest':
+        if q2bin == Qsq.none:
             q2bin = self._default_q2
 
         path   = d_path[q2bin]
@@ -181,10 +181,10 @@ class MVACalculator:
         ------------------
         Array of signal probabilities
         '''
-        arr_low     = self._q2_scores(d_path=d_path, q2bin='low'    )
-        arr_central = self._q2_scores(d_path=d_path, q2bin='central')
-        arr_high    = self._q2_scores(d_path=d_path, q2bin='high'   )
-        arr_rest    = self._q2_scores(d_path=d_path, q2bin='rest'   )
+        arr_low     = self._q2_scores(d_path=d_path, q2bin=Qsq.low    )
+        arr_central = self._q2_scores(d_path=d_path, q2bin=Qsq.central)
+        arr_high    = self._q2_scores(d_path=d_path, q2bin=Qsq.high   )
+        arr_rest    = self._q2_scores(d_path=d_path, q2bin=Qsq.none   )
         arr_all     = numpy.concatenate((arr_low, arr_central, arr_high, arr_rest))
 
         arr_ind = arr_all.T[0]
