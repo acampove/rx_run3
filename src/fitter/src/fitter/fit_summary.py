@@ -34,7 +34,7 @@ class FitSummary:
         '''
         Parameters
         -------------
-        signal: Name of signal component, e.g. jpsi
+        signal: Name of signal component, e.g. jpsi, needed to find JSON files
         name  : Name of directory in {ANADIR}/fits/data/{name}
         '''
         self._fit_dir = self._get_fit_dir(name=name)
