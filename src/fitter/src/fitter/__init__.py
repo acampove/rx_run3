@@ -24,15 +24,17 @@ from .prec_scales        import PrecScales
 # ----------
 # Configs
 # ----------
-from .configs import FitModelConf
-from .configs import MisIDConf 
-from .configs import CombinatorialConf 
-from .configs import CCbarConf 
-from .configs import NonParametricConf 
-from .configs import ParametricConf 
-from .configs import RXFitConfig
+from .mva_conf import MVAConf
+from .configs  import FitModelConf
+from .configs  import MisIDConf 
+from .configs  import CombinatorialConf 
+from .configs  import CCbarConf 
+from .configs  import NonParametricConf 
+from .configs  import ParametricConf 
+from .configs  import RXFitConfig
 
 __all__ = [
+    'MVAConf',
     'SignalConstraints',
     'ScaleReader',
     'Category',
