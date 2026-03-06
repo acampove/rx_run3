@@ -115,6 +115,9 @@ class Correction(StrEnum):
         if self in [Correction.mass_resolution, Correction.brem_fraction, Correction.blok_fraction]:
             return CorrectionImplementation.reso
 
+        if self in [Correction.pid]:
+            return CorrectionImplementation.weight
+
         raise ValueError(f'Cannot retrieve kind for correction: {self}')
     # ------------------------
     @property
