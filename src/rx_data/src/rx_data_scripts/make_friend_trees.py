@@ -5,11 +5,11 @@ based on config file
 
 import os
 import argparse
-from omegaconf import DictConfig
 
-from ihep_utilities        import JobSubmitter
-from dmu.generic           import utilities as gut
-from dmu.logging.log_store import LogStore
+from omegaconf      import DictConfig
+from ihep_utilities import JobSubmitter
+from dmu            import LogStore
+from dmu.generic    import utilities as gut
 
 log=LogStore.add_logger('rx_data:make_friend_trees')
 # ----------------------

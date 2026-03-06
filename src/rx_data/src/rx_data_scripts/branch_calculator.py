@@ -5,26 +5,26 @@ Script used to create small trees with extra branches from input trees
 import os
 import glob
 import argparse
-
 import tqdm
-import dmu.generic.utilities as gut
-from pathlib                     import Path
-from ROOT                        import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
-from dmu.logging.log_store       import LogStore
-from omegaconf                   import DictConfig
 
-from rx_q2.q2smear_corrector     import Q2SmearCorrector
-from rx_common                   import Project, info
-from rx_data                     import utilities
-from rx_data                     import NtuplePartitioner
-from rx_data.mva_calculator      import MVACalculator
-from rx_data.rdf_getter          import RDFGetter
-from rx_data.mis_calculator      import MisCalculator
-from rx_data.hop_calculator      import HOPCalculator
-from rx_data.spec_maker          import SpecMaker
-from rx_data.swp_calculator      import SWPCalculator
-from rx_data.mass_calculator     import MassCalculator
-from rx_data.mass_bias_corrector import MassBiasCorrector
+from pathlib      import Path
+from ROOT         import RDataFrame, TFileMerger, TFile, TTree, RDF # type: ignore
+from dmu          import LogLevels, LogStore
+from omegaconf    import DictConfig
+
+from rx_q2        import Q2SmearCorrector
+from rx_common    import Component, Project, info
+from rx_data      import utilities
+from rx_data      import NtuplePartitioner
+from rx_data      import MVACalculator
+from rx_data      import RDFGetter
+from rx_data      import MisCalculator
+from rx_data      import HOPCalculator
+from rx_data      import SpecMaker
+from rx_data      import SWPCalculator
+from rx_data      import MassCalculator
+from rx_data      import MassBiasCorrector
+from dmu.generic  import utilities as gut
 
 log = LogStore.add_logger('rx_data:branch_calculator')
 # ---------------------------------
@@ -120,7 +120,7 @@ def _set_logs():
     LogStore.set_level('rx_data:sample_patcher'     ,       30)
     LogStore.set_level('rx_data:spec_maker'         ,       30)
 
-    if Data.lvl < 10:
+    if Data.lvl < LogLevels.info:
         LogStore.set_level('rx_data:spec_maker', Data.lvl)
         LogStore.set_level('rx_data:rdf_getter', Data.lvl)
 # ---------------------------------
@@ -159,7 +159,9 @@ def _process_rdf(
     - Dataframe with columns needed
     - None, in case it does not make sense to add the columns to this type of file
     '''
-    sample, trigger = utilities.info_from_path(path=path, sample_lowercase=False)
+    mc_sample, trigger = utilities.info_from_path(path=path, sample_lowercase=False)
+    sample = Component(mc_sample)
+
     nentries = rdf.Count().GetValue()
     if nentries == 0:
         log.warning(f'Found empty input file: {path}/{Data.tree_name}')
@@ -279,7 +281,8 @@ def _get_input_rdf(path : Path) -> RDF.RNode:
     -------------
     ROOT dataframe associated
     '''
-    sample, trigger = utilities.info_from_path(path=path, sample_lowercase=False)
+    mc_sample, trigger = utilities.info_from_path(path=path, sample_lowercase=False)
+    sample = Component(mc_sample)
 
     s_friend : set[str] = set()
     if Data.kind == 'mva':

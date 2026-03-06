@@ -3,15 +3,14 @@ Script used to merge ROOT files
 '''
 
 import os
-import glob
 import argparse
 import subprocess
-from pathlib import Path
 
-from ROOT                  import TFileMerger # type: ignore
-from dmu.logging.log_store import LogStore
-from dmu.generic           import version_management as vmn
-from rx_data.path_splitter import PathSplitter
+from pathlib     import Path
+from ROOT        import TFileMerger # type: ignore
+from dmu         import LogStore
+from dmu.generic import version_management as vmn
+from rx_data     import PathSplitter
 
 log = LogStore.add_logger('rx_data:merge_samples')
 # --------------------------------------
@@ -20,7 +19,7 @@ class Data:
     Class used to share attributes
     '''
     dry_run      : bool
-    samples_path : str|Path
+    samples_path : Path
     proj         : str
     vers         : str|None
     sample_name  : str
@@ -35,7 +34,7 @@ def _initialize():
     else:
         sam_dir = f'{sam_dir}/{Data.vers}'
 
-    Data.samples_path = sam_dir
+    Data.samples_path = Path(sam_dir)
     Data.out_dir      = _get_out_dir()
 # --------------------------------------
 def _parse_args():
@@ -65,18 +64,17 @@ def _get_out_dir() -> str:
 
     return out_dir
 # --------------------------------------
-def _get_paths() -> list[str]:
+def _get_paths() -> list[Path]:
     '''
     Returns paths to ROOT files for a given sampe
     '''
-    path_wc= f'{Data.samples_path}/*.root'
-    l_path = glob.glob(path_wc)
+    l_path = list(Data.samples_path.glob('*.root'))
     npath  = len(l_path)
     if npath == 0:
-        raise ValueError(f'Found no files in {path_wc}')
+        raise ValueError(f'Found no files in {Data.samples_path}')
 
     if not l_path:
-        raise ValueError(f'No paths found to split in: {path_wc}')
+        raise ValueError(f'No paths found to split in: {Data.samples_path}')
 
     return l_path
 # --------------------------------------

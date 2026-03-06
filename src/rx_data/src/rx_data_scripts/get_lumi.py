@@ -5,7 +5,8 @@ Script used to plot luminosity
 import mplhep
 import pandas            as pnd
 import matplotlib.pyplot as plt
-from ROOT import RDataFrame
+from typing import cast
+from ROOT   import RDataFrame
 
 plt.style.use(mplhep.style.LHCb2)
 # ---------------------------------
@@ -49,7 +50,13 @@ def _attach_dq(df : pnd.DataFrame) -> pnd.DataFrame:
     df_dt   = df_dt.set_index('RUNNUMBER')
     d_dq    = df_dt.dataq.to_dict()
 
-    Data.d_dq   = d_dq
+    if not all(isinstance(key, int) for key in d_dq):
+        raise ValueError('Keys are not integers')
+
+    if not all(isinstance(val, int) for val in d_dq.values()):
+        raise ValueError('Values are not integers')
+
+    Data.d_dq   = cast(dict[int, int], d_dq)
     df['dataq'] = df.runNumber.apply(_get_dataq)
 
     return df

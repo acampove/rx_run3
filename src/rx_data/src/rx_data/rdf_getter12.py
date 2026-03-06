@@ -5,9 +5,9 @@ import os
 import glob
 from contextlib import contextmanager
 
-from ROOT                  import RDataFrame, RDF
-from dmu.logging.log_store import LogStore
-from dmu.generic           import utilities as gut
+from ROOT        import RDataFrame, RDF # type: ignore
+from dmu         import LogLevels, LogStore
+from dmu.generic import utilities as gut
 
 log=LogStore.add_logger('rx_data:rdf_getter12')
 # --------------------------
@@ -103,7 +103,7 @@ class RDFGetter12:
             log.debug(f'{name:<30}{expr}')
             rdf = rdf.Filter(expr, name)
 
-        if log.getEffectiveLevel() < 20:
+        if log.getEffectiveLevel() < LogLevels.info:
             rep = rdf.Report()
             rep.Print()
 

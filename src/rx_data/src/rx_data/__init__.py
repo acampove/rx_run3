@@ -19,6 +19,7 @@ from .sample_emulator         import SampleEmulator
 from .sample_patcher          import SamplePatcher
 from .specification           import Sample
 from .samples                 import SamplesPrinter
+from .rdf_loader              import RDFLoader
 
 __all__ = [
     'Sample',

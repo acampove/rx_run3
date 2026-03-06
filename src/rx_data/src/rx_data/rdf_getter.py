@@ -2,6 +2,8 @@
 Module holding RDFGetter class
 '''
 import copy
+import numpy
+
 from contextlib   import contextmanager
 from pathlib      import Path
 from typing       import Any, overload, Literal
@@ -12,6 +14,7 @@ from dmu.generic  import utilities as gut
 from omegaconf    import DictConfig, OmegaConf
 from rx_common    import Component, Trigger
 from .spec_maker  import SpecMaker
+from .rdf_loader  import RDFLoader
 
 log=LogStore.add_logger('rx_data:rdf_getter')
 # ---------------------------------------------------
