@@ -7,7 +7,7 @@ import math
 import numpy
 
 from pathlib         import Path
-from typing          import Self, Sequence, Literal
+from typing          import Self, Sequence
 from tabulate        import tabulate
 from functools       import cached_property
 from zfit.constraint import GaussianConstraint as GConstraint
@@ -18,10 +18,10 @@ from pydantic        import BaseModel, model_validator, TypeAdapter
 from dmu             import LogStore
 from .fit_result     import FitResult
 from .protocols      import ParsHolder
+from .types          import ConstraintType
 from .imports        import zfit
 
 log   = LogStore.add_logger('dmu:stats:constraint')
-CKind = Literal['GaussianConstraint', 'PoissonConstraint'] 
 # ----------------------------------------
 class Constraint(BaseModel):
     '''
@@ -256,7 +256,7 @@ class Constraint1D(Constraint):
     '''
     Class representing Gaussian 1D constrain
     '''
-    kind: CKind 
+    kind: ConstraintType 
     name: str
     mu  : float
     sg  : float
@@ -265,7 +265,7 @@ class Constraint1D(Constraint):
     def from_dict(
         cls,
         data : dict[str,tuple[float,float]],
-        kind : CKind) -> list['Constraint1D']:
+        kind : ConstraintType) -> list['Constraint1D']:
         '''
         Parameters
         -----------------
@@ -362,12 +362,12 @@ class Constraint1D(Constraint):
         obs = self._obs_from_holder(holder = holder)
 
         match self.kind:
-            case 'GaussianConstraint': 
+            case ConstraintType.gauss: 
                 cons = GConstraint(
                     params      = obs, 
                     observation = self.observation, 
                     uncertainty = self.sg)
-            case 'PoissonConstraint':
+            case ConstraintType.poisson:
                 cons = PConstraint(
                     params      = obs, 
                     observation = self.observation)
