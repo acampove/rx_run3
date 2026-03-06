@@ -12,7 +12,7 @@ from dmu.stats    import ConstraintND
 from zfit         import Data                as zdat
 from zfit.pdf     import BasePDF             as zpdf
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
-from rx_common    import Qsq, Component, Trigger
+from rx_common    import Qsq, Trigger
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
 from .base_fitter import BaseFitter
