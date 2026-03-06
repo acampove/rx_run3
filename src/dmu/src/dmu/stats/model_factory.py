@@ -301,7 +301,7 @@ class ModelFactory:
 
         return par
     #-----------------------------------------
-    def _get_reparametrization_type(self, name : str) -> str | None:
+    def _get_reparametrization_type(self, name : str) -> CorrectionImplementation | None:
         '''
         Parameters
         -------------------
@@ -317,27 +317,54 @@ class ModelFactory:
 
         return self._d_rep.get(name)
     #-----------------------------------------
-    def _get_reparametrization(
-        self, 
-        par_name  : str, 
-        kind      : str, 
-        value     : float, 
-        low       : float, 
-        high      : float) -> zpar:
-        log.debug(f'Reparametrizing {par_name}')
-        par_const = zfit.Parameter(par_name, value, low, high)
-        par_const.floating = False
+    @staticmethod
+    def get_reparametrization(
+        name  : str, 
+        kind  : CorrectionImplementation, 
+        value : float, 
+        low   : float, 
+        high  : float) -> zpar:
+        '''
+        Parameters
+        ---------------
+        name    : Name of returned parameter
+        kind    : Type of reparametrization
+        value   : Initial value
+        low/high: Bounds of original parameter as defined below
 
-        if   kind == 'reso':
-            par_reso  = zfit.Parameter(f'{par_name}_reso_flt' , 1.0, 0.20, 5.0)
-            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] * d_par['reso' ], params={'par_const' : par_const, 'reso'  : par_reso } )
-        elif kind == 'scale':
-            par_scale = zfit.Parameter(f'{par_name}_scale_flt', 0.0, -100, 100)
-            par       = zfit.ComposedParameter(f'{par_name}_cmp', lambda d_par : d_par['par_const'] + d_par['scale'], params={'par_const' : par_const, 'scale' : par_scale} )
+        Returns
+        ---------------
+        Parameter meant to be fitted and parametrized either as:
+
+        composed = original * resolution 
+        composed = original + scale 
+        '''
+        log.debug(f'Reparametrizing {name}')
+        par_orig = zfit.Parameter(name, value, low, high)
+
+        match kind:
+            case CorrectionImplementation.reso:
+                par_corr  = zfit.Parameter(f'{name}_reso_flt' , 1.0, 0.20, 5.0)
+                func      = lambda d_par : d_par['orig'] * d_par['corr'], 
+            case CorrectionImplementation.scale:
+                par_corr  = zfit.Parameter(f'{name}_scale_flt', 0.0, -100, 100)
+                func      = lambda d_par : d_par['orig'] + d_par['corr'], 
+            case _:
+                raise ValueError(f'Invalid correction: {kind}')
+
+        par_comp  = zfit.ComposedParameter(
+            name  = name, 
+            func  = func, 
+            params={'orig' : par_orig, 'corr' : par_corr} )
+
+        if _FIX_CORRECTION.get():
+            par_corr.floating = False
+            par_orig.floating = True
         else:
-            raise ValueError(f'Invalid kind: {kind}')
+            par_corr.floating = True 
+            par_orig.floating = False 
 
-        return par
+        return par_comp
     #-----------------------------------------
     @MethodRegistry.register(Model.exp)
     def _get_exponential(self, suffix : str = '') -> zpdf:
@@ -553,4 +580,24 @@ class ModelFactory:
         pdf   =   self._fix_parameters(pdf)
 
         return pdf
+    #-----------------------------------------
+    @classmethod
+    def correction(cls, fixed : bool):
+        '''
+        Parameters
+        --------------
+        fixed : If True, wil fix correction and float original parameter
+                for reparametrized parameters
+        '''
+
+        @contextmanager
+        def _context():
+            token = _FIX_CORRECTION.set(fixed)
+
+            try:
+                yield
+            finally:
+                _FIX_CORRECTION.reset(token)
+
+        return _context()
 #-----------------------------------------
