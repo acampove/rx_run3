@@ -28,7 +28,6 @@ class CmbConstraints(BaseFitter, Cache):
     def __init__(
         self, 
         name : str,
-        kind : str,
         nll  : zlos,
         cfg  : CombinatorialConf,
         trig : Trigger,
@@ -37,7 +36,6 @@ class CmbConstraints(BaseFitter, Cache):
         Parameters
         -------------
         name : Name of component, i.e. 'combinatorial'. Used to finc component PDF in NLL
-        kind : String used to classify fit, e.g. brem_001, used to name out put directory
         obs  : Zfit observable
         cfg  : fit configuration
         trig : E.g. Hlt2RD... used for naming of outputs
@@ -48,7 +46,6 @@ class CmbConstraints(BaseFitter, Cache):
         self._name  = name
         self._q2bin = q2bin
         self._cfg   = cfg
-        self._kind  = kind
 
         cons            = self._cfg.constraints[q2bin]
         self._component = cons.component
@@ -61,7 +58,7 @@ class CmbConstraints(BaseFitter, Cache):
         self._model = model
         self._obs   = model.space
 
-        self._base_path = Path(f'{self._cfg.output_directory}/{self._kind}/{trig}_{self._q2bin}')
+        self._base_path = Path(f'{self._cfg.output_directory}/{trig}_{self._q2bin}')
         self._rdf, uid, self._cuts = self._get_rdf()
 
         Cache.__init__(
