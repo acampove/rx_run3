@@ -238,13 +238,13 @@ class CategoryMerger:
         suffix = f'{corr.nickname}_{category.brem}_b{category.block}'
         value  = category.sumw / totalw
 
-        with ModelFactory.reparametrization_parameters(floating = True):
-            frac         = ModelFactory.get_reparametrization(
-                kind     = corr.kind,
-                par_name = f'fr_{suffix}',
-                value    = value,
-                low      = 0.0,
-                high     = 1.0)
+        with ModelFactory.correction(floating = True):
+            frac      = ModelFactory.get_reparametrization(
+                name  = f'fr_{suffix}',
+                kind  = corr.kind,
+                value = value,
+                low   = 0.0,
+                high  = 1.0)
 
         return frac 
     # ----------------------
