@@ -115,7 +115,6 @@ class ConstraintReader:
 
         mrd       = MisIDConstraints(
             cfg   = cfg,
-            obs   = self._cfg.observable,
             q2bin = self._cfg.q2bin)
 
         self._constraints += mrd.get_constraints()
