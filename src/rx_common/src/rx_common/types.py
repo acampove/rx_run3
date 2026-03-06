@@ -436,6 +436,7 @@ class Qsq(StrEnum):
     '''
     This class represents different q2 bins
     '''
+    none    = 'none'
     all     = 'all'
     low     = 'low'
     central = 'central'
@@ -464,6 +465,8 @@ class Qsq(StrEnum):
                 return 'High' 
             case Qsq.all:
                 return 'All'
+            case Qsq.none:
+                return 'None'
     # --------------------------
     def __str__(self):
         return self.value
