@@ -3,13 +3,13 @@ Module used to test CategoryMerger class
 '''
 import pytest
 
-from dmu       import LogStore
-from dmu.stats import zfit
-from dmu.stats import utilities as sut
-from omegaconf import OmegaConf
-from fitter    import CategoryMerger
-from fitter    import Category
-from rx_common import Brem, Block
+from dmu         import LogStore
+from dmu.stats   import zfit
+from dmu.testing import get_model 
+from omegaconf   import OmegaConf
+from fitter      import CategoryMerger
+from fitter      import Category
+from rx_common   import Brem, Block
 
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:test_category_merger')
@@ -38,7 +38,7 @@ def _get_category(name : str) -> Category:
     Category object
     '''
     obs = zfit.Space('mass', limits = (0, 10))
-    pdf = sut.get_model(
+    pdf = get_model(
         obs    = obs,
         kind   = 'signal', 
         suffix = name)
