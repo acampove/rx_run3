@@ -28,7 +28,10 @@ class ScaleReader:
         if not data_path.exists():
             raise FileNotFoundError(f'Cannot find scales file: {data_path}')
 
-        self._df  = pnd.read_json(data_path)
+        df         = pnd.read_json(data_path)
+        df['brem'] = df['brem'].apply(lambda x : str(Brem.from_int(value = x)))
+
+        self._df = df
     # ----------------------
     def get_scale(
         self,
@@ -47,8 +50,12 @@ class ScaleReader:
         Tuple with value and error of scale
         '''
         df = self._df
-        df = df.query(f'block == {block}')
-        df = df.query(f'brem  == {brem}')
+        try:
+            df = df.query(f'block == {block}')
+            df = df.query(f'brem  == \"{str(brem)}\"')
+        except Exception as exc:
+            log.error(df)
+            raise ValueError(f'Cannot filter by block/brem: {block}/{brem}') from exc
 
         if len(df) != 1:
             log.error(df)
