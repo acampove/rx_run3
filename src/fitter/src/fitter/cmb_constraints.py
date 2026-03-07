@@ -65,7 +65,7 @@ class CmbConstraints(BaseFitter, Cache):
             self,
             rdf_uid  = uid,
             out_path = self._base_path,
-            cfg      = cfg)
+            cfg      = cfg.model_dump())
     # ----------------------
     def _model_from_models(self, models : list[zpdf]) -> zpdf | None:
         '''
