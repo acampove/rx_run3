@@ -78,6 +78,9 @@ class CategoryMerger:
         -------------
         Single category, resulting from adding all blocks
         '''
+        if len(categories) == 1:
+            return categories[0]
+
         self._enforce(
             categories = categories,
             kind       = Block, 
@@ -281,8 +284,13 @@ class CategoryMerger:
         -------------
         Category object resulting from merging input categories
         '''
+        log.debug(f'Merging {len(self._categories)} categories by brem')
         cat_1 = self._group_brems(categories  = self._categories) 
+
+        log.debug(f'Merging {len(cat_1)} categories by block')
         cat_2 = self._merge_blocks(categories = cat_1)
+
+        log.debug('Merged categories')
 
         return cat_2
 # ----------------------

@@ -59,6 +59,7 @@ def test_add_brem(brems : list[Brem]):
     '''
     Add only brems for given block 
     '''
+    log.info(f'Adding: {brems}')
     names      = [ f'brem_{brem:03}_b1' for brem in brems ]
     categories = [ _get_category(name = name) for name in names ]
 
