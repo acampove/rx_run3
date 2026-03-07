@@ -4,7 +4,7 @@ This module has tests for the DataModel class
 import pytest
 
 from pathlib       import Path
-from rx_common     import Mass, Trigger, Qsq, Region
+from rx_common     import Trigger, Qsq, Region
 from rx_selection  import selection as sel
 from rx_data       import RDFGetter 
 from dmu           import LogStore
