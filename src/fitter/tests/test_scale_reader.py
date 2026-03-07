@@ -10,8 +10,13 @@ from rx_common import Brem
 from rx_common import Block 
 
 log=LogStore.add_logger('fitter:test_scale_reader')
+
+CORRS = [
+    Correction.mass_scale,
+    Correction.mass_resolution,
+]
 # ----------------------
-@pytest.mark.parametrize('kind' , Correction)
+@pytest.mark.parametrize('kind' , CORRS)
 @pytest.mark.parametrize('block', Block.blocks())
 @pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
 def test_simple(
