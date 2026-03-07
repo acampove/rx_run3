@@ -13,7 +13,7 @@ import numpy
 
 from typing         import cast, Final
 from pathlib        import Path
-from ROOT           import RDataFrame, GetThreadPoolSize, RDF # type: ignore
+from ROOT           import RDataFrame, RDF # type: ignore
 from dmu            import LogStore
 from dmu.plotting   import Plotter2D
 from dmu.generic    import utilities as gut
