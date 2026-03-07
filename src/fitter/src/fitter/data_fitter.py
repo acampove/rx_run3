@@ -56,7 +56,7 @@ class DataFitter(BaseFitter, Cache):
         Cache.__init__(
             self,
             out_path = self._cfg.output_directory,
-            cfg      = cfg)
+            cfg      = cfg.model_dump())
     # ----------------------
     def _get_full_nll(self) -> NLL:
         '''
