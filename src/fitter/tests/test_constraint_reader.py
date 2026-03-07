@@ -116,7 +116,7 @@ class Parameters:
 
         return { zfit.Parameter(name, 0, 0, 1) for name in l_par_name }
     # ----------------------
-    def get_params(self, floating : bool) -> set[zpar]:
+    def get_params(self, floating : bool, is_yield : bool = False) -> set[zpar]:
         '''
         Parameters
         -------------
@@ -126,6 +126,7 @@ class Parameters:
         -------------
         Set of zfit parameters
         '''
+        _ = is_yield
         _ = floating
 
         return self._s_par 
