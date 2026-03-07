@@ -4,7 +4,7 @@ This module contains tests for the RDFLoader class
 import pytest
 
 from dask.distributed import Client, LocalCluster
-from rx_common        import Qsq, Sample, Trigger
+from rx_common        import Qsq, Component, Trigger
 from rx_data          import RDFLoader
 from rx_data          import SpecMaker
 from rx_selection     import selection as sel
@@ -23,10 +23,10 @@ def test_from_conf():
     '''
     Test loading dataframe from JSON config file
     '''
-    sample = Sample.data_24
+    sample = Component.data_24
     trigger= Trigger.rk_mm_os
 
-    mkr    = SpecMaker(sample=sample, trigger=trigger)
+    mkr    = SpecMaker(component=sample, trigger=trigger)
     path   = mkr.get_spec_path(per_file=False)
 
     rdf    = RDFLoader.from_conf(
@@ -46,10 +46,10 @@ def test_dask():
     '''
     Load using dask client 
     '''
-    sample = Sample.data_24
+    sample = Component.data_24
     trigger= Trigger.rk_mm_os
 
-    mkr    = SpecMaker(sample=sample, trigger=trigger)
+    mkr    = SpecMaker(component=sample, trigger=trigger)
     path   = mkr.get_spec_path(per_file=False)
 
     cluster = LocalCluster(
