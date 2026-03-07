@@ -29,7 +29,7 @@ def initialize():
     LogStore.set_level('rx_data:hop_calculator', 10)
 # ----------------------------
 def _get_rdf(kind : str, prefix : str) -> RDF.RNode:
-    trigger = Trigger(prefix) 
+    trigger = tst.get_trigger(kind = kind, prefix = prefix)
 
     rdf = tst.get_rdf(kind=kind, prefix=prefix)
     mcl = MisCalculator(rdf=rdf, trigger=trigger)
@@ -80,7 +80,7 @@ def test_mc(prefix : str, kind : str, tmp_path : Path):
     '''
     Test on MC
     '''
-    trigger          = Trigger(prefix) 
+    trigger          = tst.get_trigger(kind = kind, prefix = prefix)
     rdf              = _get_rdf(kind=kind, prefix=prefix)
     rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)
 
@@ -136,7 +136,7 @@ def test_data(kind : str, prefix : str, tmp_path : Path):
     '''
     Test with data
     '''
-    trigger = Trigger(prefix) 
+    trigger = tst.get_trigger(kind = kind, prefix = prefix)
     rdf     = _get_rdf(kind=kind, prefix=prefix)
 
     rdf_hop, rdf_org = _get_hop(rdf=rdf, trigger=trigger)

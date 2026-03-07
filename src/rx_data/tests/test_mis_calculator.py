@@ -3,11 +3,10 @@ Module with functions testing MisCalculator
 '''
 import pytest
 
-from ROOT                   import RDF # type: ignore
-from dmu.logging.log_store  import LogStore
-from rx_common              import Trigger
-from rx_data                import MisCalculator
-from rx_data                import testing       as tst
+from ROOT        import RDF # type: ignore
+from dmu         import LogStore
+from rx_data     import MisCalculator
+from rx_data     import testing       as tst
 
 log=LogStore.add_logger('rx_data:test_mis_calculator')
 # ------------------------
@@ -34,7 +33,7 @@ def test_simple(kind : str, prefix : str):
     '''
     Simplest test of class
     '''
-    trigger = Trigger(prefix) 
+    trigger = tst.get_trigger(kind = kind, prefix = prefix)
     rdf = tst.get_rdf(kind=kind, prefix=prefix)
     cal = MisCalculator(rdf=rdf, trigger=trigger)
     rdf = cal.get_rdf()
