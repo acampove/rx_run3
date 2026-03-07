@@ -995,7 +995,7 @@ def test_only_friends(sample : Component, trigger : Trigger):
 @pytest.mark.parametrize('trigger', ['Hlt2RD_BuToKpEE_MVA', 'Hlt2RD_B0ToKpPimEE_MVA'])
 @pytest.mark.parametrize('sample' , [Component.bdkstkpiee, Component.data_24])
 @pytest.mark.parametrize('smeared', [True, False])
-@pytest.mark.parametrize('q2bin'  , Qsq)
+@pytest.mark.parametrize('q2bin'  , [Qsq.low, Qsq.central, Qsq.jpsi, Qsq.psi2, Qsq.high])
 def test_selection(
     sample  : Component, 
     trigger : Trigger,
