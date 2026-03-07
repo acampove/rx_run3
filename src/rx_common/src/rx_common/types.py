@@ -182,6 +182,28 @@ class Brem(Enum):
     br012   = 1110 
     # ----------------------
     @classmethod
+    def from_int(cls, value : int) -> 'Brem':
+        '''
+        Parameters
+        ---------------
+        value: Integer representing brem category
+               in old representation, i.e. 0, 1, 2
+
+        Returns
+        ---------------
+        Corresponding brem object
+        '''
+        match value:
+            case 0:
+                return cls.zero
+            case 1:
+                return cls.one
+            case 2:
+                return cls.two
+            case _:
+                raise ValueError(f'Invalid brem: {value}')
+    # ----------------------
+    @classmethod
     def brems(cls) -> list['Brem']:
         '''
         Returns
