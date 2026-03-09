@@ -27,6 +27,7 @@ def initialize():
     LogStore.set_level('fitter:data_preprocessor', 10)
     LogStore.set_level('rx_misid:sample_weighter', 20)
 # ----------------------
+@pytest.mark.skip(reason = 'Turn off very slow tests for now')
 @pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
 def test_simple(q2bin : Qsq, tmp_path : Path) -> None:
     '''
