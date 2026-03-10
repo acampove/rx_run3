@@ -282,7 +282,7 @@ class ModelFactory:
         val, low, high = PL.get_values(kind=kind, parameter=name)
 
         if rep_kind is not None:
-            log.info(f'Reparametrizing {par_name}')
+            log.debug(f'Reparametrizing {par_name}')
             par  = self.get_reparametrization(
                 name     = par_name, 
                 kind     = rep_kind, 
