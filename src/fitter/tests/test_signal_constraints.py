@@ -192,7 +192,7 @@ def test_simple(block : Block, brem : Brem) -> None:
     assert len(constraints) == len(_BREM_CATS)
     assert isinstance(constraints, list)
 # ----------------------
-def test_add_brem_block():
+def test_full_model():
     '''
     Add brems and then blocks
     '''
