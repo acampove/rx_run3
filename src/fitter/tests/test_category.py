@@ -15,13 +15,10 @@ def test_simple():
     Simplest test
     '''
     pdf = get_model(kind = 'signal')
-    cres= {'mu' : (10., 1.)}
-
     cat = Category(
         name      = 'category',
         pdf       = pdf,
         sumw      = 1000.,
-        cres      = cres,
         model     = ['gauss'],
         selection = {'mass' : '(1)'})
 
@@ -36,13 +33,10 @@ def test_properties(brem : Brem, block : Block):
     Tests that properties are calculated correctly
     '''
     pdf = get_model(kind = 'signal')
-    cres= {'mu' : (10., 1.)}
-
     cat = Category(
         name      = f'brem_{brem}_b{block}',
         pdf       = pdf,
         sumw      = 1000.,
-        cres      = cres,
         model     = ['gauss'],
         selection = {'mass' : '(1)'})
 

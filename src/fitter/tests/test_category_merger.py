@@ -42,13 +42,11 @@ def _get_category(name : str) -> Category:
         obs    = obs,
         kind   = 'signal', 
         suffix = name)
-    cres = OmegaConf.create({'mu' : [10., 1.]})
 
     cat  = Category(
         name      = name, 
         pdf       = pdf, 
         sumw      = 1000., 
-        cres      = cres,
         selection = {'mass' : '(1)'},
         model     = ['gauss'])
 

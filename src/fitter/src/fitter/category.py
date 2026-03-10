@@ -30,14 +30,12 @@ class Category:
     name     : Name of component, e.g. brem_001_b1
     pdf      : Zfit PDF associated to category
     sumw     : Yield in MC sample associated to category
-    cres     : Dictionary mapping name of variable to value and error
     model    : List of model names used for category
     selection: Selection that was used to get category, on top of nominal
     '''
     name      : str 
     pdf       : zpdf 
     sumw      : float
-    cres      : dict[str,tuple[float,float]] 
     model     : list[str]
     selection : dict[str,str]
     # ----------------------

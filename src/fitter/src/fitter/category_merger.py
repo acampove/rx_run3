@@ -109,7 +109,6 @@ class CategoryMerger:
             name      = f'brem_{brem}_b{block}',
             pdf       = pdf,
             sumw      = totalw,
-            cres      = OmegaConf.create({}),
             model     = model, 
             selection = {'merged' : ''})
 
@@ -191,7 +190,6 @@ class CategoryMerger:
             name      = f'brem_{brem}_b{blok}',
             pdf       = pdf,
             sumw      = sumw,
-            cres      = OmegaConf.create({}),
             model     = model, 
             selection = {'merged' : ''})
 
