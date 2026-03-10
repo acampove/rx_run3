@@ -13,6 +13,8 @@ from zfit.param    import Parameter as zpar
 from .scale_reader import ScaleReader
 
 log=LogStore.add_logger('fitter:signal_constraints')
+
+_REGEX : Final[str] = r'.*signal_brem_(xx\d)_b(\d)_\d+_(scale|reso)_flt'
 # ------------------------------------------
 class SignalConstraints:
     '''
@@ -37,7 +39,6 @@ class SignalConstraints:
         self._nll   = nll
         self._srd   = ScaleReader()
 
-        self._regex           : Final[str]     = r'.*signal_brem_00(\d)_b(\d)_\d+_(scale|reso)_flt'
         self._constraint_kind : ConstraintType = ConstraintType.gauss
     # ----------------------
     def _get_constraint(
