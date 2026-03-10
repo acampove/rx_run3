@@ -65,8 +65,8 @@ class SignalConstraints:
             brem  = brem)
 
         log.info(f'Constraining: {par.name}')
-        log.debug(f'{"Value":<20}{val:20.3f}')
-        log.debug(f'{"Error":<20}{err:20.3f}')
+        log.info(f'{"Value":<20}{val:20.3f}')
+        log.info(f'{"Error":<20}{err:20.3f}')
 
         return Constraint1D(
             name = par.name,
@@ -95,8 +95,6 @@ class SignalConstraints:
         brem = Brem.from_str(value = mtch.group(1)) 
         block= Block(value = mtch.group(2)) 
         kind = mtch.group(3)
-
-        log.debug(f'Constraining: {name}')
 
         if   kind == 'scale' and name.startswith('mu_'):
             corr = Correction.mass_scale
