@@ -30,9 +30,10 @@ from fitter          import FitSummary
 from rx_q2           import ScalesConf
 from rx_q2           import ParameterReader 
 from fitter          import ParameterReader as FitParameterReader
-from rx_common       import Correction, Project
+from rx_common       import Block, Correction, Project
 from rx_common       import Trigger 
 from rx_common       import Qsq 
+from rx_common       import Brem 
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
 
@@ -100,8 +101,8 @@ def _get_Bx_df() -> pnd.DataFrame:
     signal = 'jpsi'
     cmb    = '070'
     prc    = '060'
-    brems  = [1, 2]
-    blocks = range(1, 9)
+    brems  = [Brem.one, Brem.two] 
+    blocks = Block.blocks()
     kinds  = ['dat', 'sim']
 
     smr = FitSummary(name = name, signal = signal)
