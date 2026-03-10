@@ -256,11 +256,11 @@ class Brem(Enum):
                 return '012'
     # ----------------------
     @staticmethod
-    def from_str(string : str) -> 'Brem':
+    def from_str(value : str) -> 'Brem':
         '''
         Returns string representation
         '''
-        match string:
+        match value:
             case 'xx0':
                 return Brem.zero
             case 'xx1':
@@ -276,7 +276,7 @@ class Brem(Enum):
             case '012':
                 return Brem.br012
             case _:
-                raise ValueError(f'Invalid brem string: {string}')
+                raise ValueError(f'Invalid brem string: {value}')
     # ----------------------
     def __eq__(self, other) -> bool:
         if isinstance(other, str):
