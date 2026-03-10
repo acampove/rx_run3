@@ -12,6 +12,7 @@ from .types import Qsq
 
 from .component import CCbarComponent
 from .component import Component
+from .process   import set_nproc, get_nproc 
 from .region    import Region
 from .mass      import Mass
 
@@ -31,4 +32,7 @@ __all__ = [
     'Block',
     'MVA',
     'Qsq', 
+    # --------------------
+    'set_nproc',
+    'get_nproc',
 ]
