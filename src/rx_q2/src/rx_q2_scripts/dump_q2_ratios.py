@@ -338,9 +338,10 @@ def _plot_corrections(
     log.info(f'Plotting correction: {correction}')
 
     _, ax = plt.subplots(figsize=(15, 10))
-    for brem, df_brem in df.groupby('brem'):
-        df_brem = _reorder_blocks(df=df_brem)
-        brem    = str(brem)
+    for val, df_brem_unordered in df.groupby('brem'):
+        df_brem = _reorder_blocks(df=df_brem_unordered)
+        sval    = str(val)
+        brem    = Brem.from_str(value = sval)
         ax      = _plot_df(df=df_brem, variable=correction, brem=brem, ax=ax)
 
     ax.legend()
