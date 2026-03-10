@@ -5,7 +5,7 @@ import re
 
 from typing        import Final
 from dmu           import LogStore
-from dmu.stats     import Constraint, Constraint1D, ConstraintType
+from dmu.stats     import Constraint, Constraint1D, ConstraintType, ParsHolder
 from rx_common     import Block, Brem, Correction
 from zfit.loss     import ExtendedUnbinnedNLL
 from zfit.param    import Parameter as zpar
@@ -30,11 +30,11 @@ class SignalConstraints:
       as part of the model name, to indicate the brem category and the block.
     '''
     # ----------------------
-    def __init__(self, nll  : ExtendedUnbinnedNLL):
+    def __init__(self, nll  : ParsHolder):
         '''
         Parameters
         -------------
-        nll : Likelihood
+        nll : Likelihood or any object with get_params implemented
         '''
         self._nll   = nll
         self._srd   = ScaleReader()
