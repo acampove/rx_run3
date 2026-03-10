@@ -3,20 +3,24 @@ import pytest
 
 from pathlib   import Path
 from fitter    import ParameterReader
-from rx_common import Project
+from rx_common import Brem, Project
 from rx_common import Trigger 
 from rx_common import Qsq 
 from dmu       import LogStore
 
 log=LogStore.add_logger('fitter:test_parameter_reader')
+
+_BREMS = [Brem.zero, Brem.one]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize() -> None:
     LogStore.set_level('fitter:parameter_reader', 10)
 # -----------------------
 @pytest.mark.parametrize('kind', ['dat', 'sim'])
-@pytest.mark.parametrize('brem', [1, 2])
-def test_simple(kind : str, brem : int):
+@pytest.mark.parametrize('brem', _BREMS)
+def test_simple(
+    kind : str, 
+    brem : Brem):
     '''
     Test simplest use of reader
     '''
@@ -54,3 +58,4 @@ def test_pars_path():
             q2bin    = Qsq.jpsi)
 
         print(ms_sim)
+# -----------------------
