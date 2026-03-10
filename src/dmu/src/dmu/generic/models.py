@@ -77,16 +77,16 @@ class UnpackerModel(BaseModel):
             loaded_data = cls._data_from_path(path = path)
             return loaded_data
         else:
-            log.info(f'Not unpacking directly: {data}')
+            log.debug(f'Not unpacking directly: {data}')
 
         for field_name in cls.model_fields:
             val = data.get(field_name)
 
             if not cls._is_unpackable(val):
-                log.info(f'Not unpacking {field_name} = {val}')
+                log.debug(f'Not unpacking {field_name} = {val}')
                 continue
                 
-            log.info(f'Unpacking field {field_name}')
+            log.debug(f'Unpacking field {field_name}')
             path             = Path(val)
             data[field_name] = cls._data_from_path(path = path)
 
