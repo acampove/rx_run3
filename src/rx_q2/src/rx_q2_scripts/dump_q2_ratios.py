@@ -138,8 +138,8 @@ def _get_Bx_df() -> pnd.DataFrame:
                     'fr_val' : fr_val,
                     'fr_err' : fr_err,
                     # ---
-                    'block'  : block,
-                    'brem'   : brem,
+                    'block'  : block.value,
+                    'brem'   : brem.to_int(),
                     'sample' : kind,
                 }
 
