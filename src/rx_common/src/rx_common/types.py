@@ -526,4 +526,3 @@ class MisID(StrEnum):
             case MisID.bd_pipi:
                 return Mass.bd_pipi
 # ---------------------------------------
-
