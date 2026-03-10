@@ -322,7 +322,7 @@ def _plot_df(
             df[val] - df[err],
             df[val] + df[err],
             color= brem.color,
-            label= brem.label,
+            label= brem.latex,
             alpha= 0.5)
     except TypeError as exc:
         log.error(df)
