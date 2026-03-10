@@ -4,7 +4,8 @@ Module holding functions needed to test SignalConstraints class
 import pytest
 from dmu       import LogStore
 from dmu.stats import CorrectionImplementation, Model, zfit
-from dmu.stats import ModelFactory 
+from dmu.stats import ModelFactory
+from rx_common import Block, Brem
 from fitter    import SignalConstraints
 
 Loss = zfit.loss.ExtendedUnbinnedNLL
@@ -18,7 +19,10 @@ def initialize():
     '''
     LogStore.set_level('fitter:signal_constraints', 10)
 # ----------------------
-def _get_nll(obs : zobs) -> Loss:
+def _get_nll(
+    obs   : zobs,
+    brem  : Brem,
+    block : Block) -> Loss:
     '''
     Parameters
     -------------
@@ -28,20 +32,21 @@ def _get_nll(obs : zobs) -> Loss:
     -------------
     Likelihood with:
 
-    - PDF used to fit signal 
+    - PDF used to fit signal
     '''
-    signal_name = 'signal_brem_001_b1'
+    signal_name = f'signal_brem_{brem}_b{block}'
     scale       = CorrectionImplementation.scale
     reso        = CorrectionImplementation.reso
 
-    fct = ModelFactory(
-        obs     = obs,
-        l_pdf   = [Model.dscb],
-        l_shared= [],
-        l_float = [],
-        d_rep   = {'mu' : scale, 'sg' : reso},
-        preffix = signal_name)
-    dscb = fct.get_pdf()
+    with ModelFactory.correction(fixed = False):
+        fct = ModelFactory(
+            obs     = obs,
+            l_pdf   = [Model.dscb],
+            l_shared= [],
+            l_float = [],
+            d_rep   = {'mu' : scale, 'sg' : reso},
+            preffix = signal_name)
+        dscb = fct.get_pdf()
 
     fct  = ModelFactory(
         obs     = obs,
@@ -61,14 +66,24 @@ def _get_nll(obs : zobs) -> Loss:
 
     return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
 # ----------------------
-def test_simple() -> None:
+@pytest.mark.parametrize('block', Block.blocks())
+@pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
+def test_simple(block : Block, brem : Brem) -> None:
     '''
     Simplest test
     '''
     obs = zfit.Space('dummy', limits=(4500, 6000))
-    nll = _get_nll(obs = obs)    
+    nll = _get_nll(
+        obs   = obs,
+        block = block,
+        brem  = brem)
 
     calc= SignalConstraints(nll = nll)
     constraints = calc.get_constraints()
 
+    for cns in constraints:
+        log.info(cns)
+
+    assert len(constraints) == 2
     assert isinstance(constraints, list)
+# ----------------------
