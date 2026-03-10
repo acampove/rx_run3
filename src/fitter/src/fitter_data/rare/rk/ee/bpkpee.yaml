@@ -1,34 +1,30 @@
+model: &model
+  pdfs :
+    - dscb
+  fix           : {}
+  reparametrize : {}
+  shared        :
+    - mu
+    - sg
+  floating      :
+    - mu
+    - sg
+
 output_directory : rare/rk/electron/signal 
 component        : bpkpee
 categories:
-  brem_xx1: 
+  brem_xx1_b1: 
     selection : 
       brem : nbrem == 1
+      block: block == 1
     model:
-      pdfs :
-        - dscb
-      fix           : {}
-      reparametrize : {}
-      shared        :
-        - mu
-        - sg
-      floating      :
-        - mu
-        - sg
-  brem_xx2: 
+      <<: *model
+  brem_xx2_b1: 
     selection :
       brem : nbrem == 2
+      block: block == 1
     model:
-      pdfs :
-        - dscb
-      fix           : {}
-      reparametrize : {}
-      shared        :
-        - mu
-        - sg
-      floating      :
-        - mu
-        - sg
+      <<: *model
 fit:
   strategy  :
     pvalue : 0.05
