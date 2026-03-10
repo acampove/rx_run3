@@ -59,7 +59,10 @@ class SignalConstraints:
         -------------
         Constraint object
         '''
-        val, err = self._srd.get_scale(corr = kind, block = block, brem = brem)
+        val, err = self._srd.get_scale(
+            corr  = kind, 
+            block = block, 
+            brem  = brem)
 
         log.info(f'Constraining: {par.name}')
         log.debug(f'{"Value":<20}{val:20.3f}')
@@ -86,11 +89,14 @@ class SignalConstraints:
 
         mtch = re.match(self._regex, name)
         if not mtch:
+            log.debug(f'Cannot extract, brem, block and kind from: {name}')
             return
 
         brem = Brem(value = mtch.group(1)) 
         block= Block(value = mtch.group(2)) 
         kind = mtch.group(3)
+
+        log.debug(f'Constraining: {name}')
 
         if   kind == 'scale' and name.startswith('mu_'):
             corr = Correction.mass_scale
