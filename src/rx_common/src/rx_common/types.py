@@ -260,6 +260,12 @@ class Brem(Enum):
         '''
         Returns string representation
         '''
+        if value == '001':
+            value = 'xx1'
+
+        if value == '002':
+            value = 'xx2'
+
         match value:
             case 'xx0':
                 return Brem.zero
