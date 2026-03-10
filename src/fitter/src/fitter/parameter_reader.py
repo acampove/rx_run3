@@ -196,7 +196,7 @@ class ParameterReader:
         channel = info.channel_from_trigger(trigger=trigger, lower_case = True)
         df      = self._df
 
-        df      = self._query(df = df, cut = f'brem    ==   {brem}'     )
+        df      = self._query(df = df, cut = f'brem    == \"{brem}\"'   )
         df      = self._query(df = df, cut = f'block   ==   {block}'    )
         df      = self._query(df = df, cut = f'kind    == \"{kind}\"'   )
         df      = self._query(df = df, cut = f'mva_cmb == \"{cmb}\"'    )
@@ -217,7 +217,7 @@ class ParameterReader:
 
         # for simultaneous fits, this removes brem_002 parameters when one needs brem_001
         # and viceversa
-        data     = { key : value for key, value in data.items() if f'brem_{brem:03d}' in key }
+        data     = { key : value for key, value in data.items() if f'brem_{brem}' in key }
 
         return FitMeasurement(data = data)
     # ----------------------
