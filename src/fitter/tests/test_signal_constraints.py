@@ -3,9 +3,10 @@ Module holding functions needed to test SignalConstraints class
 '''
 import pytest
 from dmu       import LogStore
-from dmu.stats import CorrectionImplementation, Model, print_pdf, zfit
+from dmu.stats import CorrectionImplementation, Model, zfit
 from dmu.stats import ModelFactory
 from rx_common import Block, Brem
+from zfit.loss import ExtendedUnbinnedNLL
 from fitter    import SignalConstraints
 from fitter    import Category 
 from fitter    import CategoryMerger
@@ -13,9 +14,46 @@ from fitter    import CategoryMerger
 Loss = zfit.loss.ExtendedUnbinnedNLL
 zobs = zfit.Space
 zpdf = zfit.pdf.BasePDF
+zpar = zfit.param.Parameter
 log  = LogStore.add_logger('fitter:test_signal_constraints')
 
 _BREM_CATS = [Brem.one, Brem.two]
+_FRACTIONS = [
+    'fr_block_x12_b1_flt',
+    'fr_block_x12_b2_flt',
+    'fr_block_x12_b3_flt',
+    'fr_block_x12_b4_flt',
+    'fr_block_x12_b5_flt',
+    'fr_block_x12_b6_flt',
+    'fr_block_x12_b7_flt',
+    'fr_brem_xx1_b1_reso_flt',
+    'fr_brem_xx1_b2_reso_flt',
+    'fr_brem_xx1_b3_reso_flt',
+    'fr_brem_xx1_b4_reso_flt',
+    'fr_brem_xx1_b5_reso_flt',
+    'fr_brem_xx1_b6_reso_flt',
+    'fr_brem_xx1_b7_reso_flt',
+    'fr_brem_xx1_b8_reso_flt',
+]
+# ----------------------
+class ParsHolder:
+    def __init__(self, pars : list[str]):
+        self._pars = pars
+    # -------------------------
+    def _make_param(self, name : str) -> zpar:
+        return zfit.Parameter(
+            name = name,
+            value= 0.5,
+            lower= 0.0,
+            upper= 1.0)
+    # -------------------------
+    def get_params(self, *args, **kwargs)-> set[zpar]:
+        _    = kwargs
+        _    = args
+
+        pars = { self._make_param(name = name) for name in self._pars }
+
+        return pars
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -163,6 +201,26 @@ def test_add_brem_block():
 
     mgr = CategoryMerger(categories = categories)
     cat = mgr.get_category()
+    nsg = zfit.Parameter('nsig', 1000, 0, 10_000)
+    pdf = cat.pdf.create_extended(nsg)
 
-    print_pdf(cat.pdf)
+    dat = pdf.create_sampler()
+    nll = ExtendedUnbinnedNLL(model = pdf, data = dat)
+
+    calc= SignalConstraints(nll = nll)
+    constraints = calc.get_constraints()
+
+    ncons = len(constraints)
+
+    log.info(f'Found {ncons} constraints')
 # ----------------------
+def test_fractions():
+    '''
+    Test that we can retrieve constraints
+    for all fractions
+    '''
+    nll = ParsHolder(pars = _FRACTIONS)
+    calc= SignalConstraints(nll = nll)
+    constraints = calc.get_constraints()
+
+    print(constraints)
