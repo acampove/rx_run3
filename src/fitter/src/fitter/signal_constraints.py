@@ -87,12 +87,12 @@ class SignalConstraints:
         '''
         name = par.name
 
-        mtch = re.match(self._regex, name)
+        mtch = re.match(_REGEX, name)
         if not mtch:
             log.debug(f'Cannot extract, brem, block and kind from: {name}')
             return
 
-        brem = Brem(value = mtch.group(1)) 
+        brem = Brem.from_str(value = mtch.group(1)) 
         block= Block(value = mtch.group(2)) 
         kind = mtch.group(3)
 
