@@ -122,7 +122,7 @@ class FitSummary:
         data['project'] = groups[3]
         data['channel'] = channel
 
-        if kind == 'dat':
+        if   kind == 'dat':
             data['q2bin'  ] = groups[5]
             data['brem'   ] = str(Brem.from_str(value = groups[6]))
         elif kind == 'sim':
