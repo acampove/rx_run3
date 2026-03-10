@@ -181,6 +181,37 @@ class Brem(Enum):
     brx12   = 1100 
     br012   = 1110 
     # ----------------------
+    @property
+    def color(self) -> str:
+        '''
+        Color associated to category
+        '''
+        match self:
+            case Brem.zero:
+                return '#1f77b4'
+            case Brem.one:
+                return '#ff7f0e'
+            case Brem.two:
+                return '#2ca02c'
+            case _:
+                raise ValueError(f'No color assciated to {self}')
+    # ----------------------
+    @property
+    def latex(self) -> str:
+        '''
+        latex associated to category
+        '''
+        match self:
+            case Brem.zero:
+                return r'$0\gamma$'
+            case Brem.one:
+                return r'$1\gamma$'
+            case Brem.two:
+                return r'$2\gamma$'
+            case _:
+                raise ValueError(f'No color assciated to {self}')
+
+    # ----------------------
     @classmethod
     def from_int(cls, value : int) -> 'Brem':
         '''
