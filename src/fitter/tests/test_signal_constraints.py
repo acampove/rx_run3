@@ -11,6 +11,8 @@ from fitter    import SignalConstraints
 Loss = zfit.loss.ExtendedUnbinnedNLL
 zobs = zfit.Space
 log  = LogStore.add_logger('fitter:test_signal_constraints')
+
+brem_cats = [Brem.one, Brem.two]
 # ----------------------
 @pytest.fixture(scope='session', autouse=True)
 def initialize():
@@ -67,7 +69,7 @@ def _get_nll(
     return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
 # ----------------------
 @pytest.mark.parametrize('block', Block.blocks())
-@pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
+@pytest.mark.parametrize('brem' , brem_cats)
 def test_simple(block : Block, brem : Brem) -> None:
     '''
     Simplest test
@@ -84,6 +86,6 @@ def test_simple(block : Block, brem : Brem) -> None:
     for cns in constraints:
         log.info(cns)
 
-    assert len(constraints) == 2
+    assert len(constraints) == len(brem_cats)
     assert isinstance(constraints, list)
 # ----------------------
