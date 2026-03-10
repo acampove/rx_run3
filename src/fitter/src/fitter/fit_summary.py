@@ -124,10 +124,10 @@ class FitSummary:
 
         if kind == 'dat':
             data['q2bin'  ] = groups[5]
-            data['brem'   ] = Brem.from_str(value = groups[6])
+            data['brem'   ] = str(Brem.from_str(value = groups[6]))
         elif kind == 'sim':
             data['q2bin'  ] = groups[6]
-            data['brem'   ] = Brem.from_str(value = groups[5])
+            data['brem'   ] = str(Brem.from_str(value = groups[5]))
         else:
             raise ValueError(f'Invalid kind: {kind}')
 
@@ -198,7 +198,7 @@ class FitSummary:
 
         df     = pnd.concat([df_dat, df_sim], axis=0)
         df     = df.reset_index(drop=True)
-        df     = df.astype(dtype = {'block' : int, 'brem' : int})
+        df     = df.astype(dtype = {'block' : int})
 
         self._save_df(df=df, path = output_path)
 
