@@ -341,7 +341,7 @@ def _plot_corrections(
     for val, df_brem_unordered in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem_unordered)
         sval    = str(val)
-        brem    = Brem.from_str(value = sval)
+        brem    = Brem.from_str(value = f'xx{sval}')
         ax      = _plot_df(df=df_brem, variable=correction, brem=brem, ax=ax)
 
     ax.legend()
@@ -363,9 +363,10 @@ def _plot_variables(
     log.info(f'Plotting {variable} for {kind}')
 
     _, ax = plt.subplots(figsize=(15, 10))
-    for brem, df_brem in df.groupby('brem'):
-        brem    = str(brem)
-        df_brem = _reorder_blocks(df = df_brem)
+    for val, df_brem_unordered in df.groupby('brem'):
+        sval    = str(val)
+        brem    = Brem.from_str(value = f'xx{sval}')
+        df_brem = _reorder_blocks(df = df_brem_unordered)
         ax      = _plot_df(df=df_brem, variable=variable, brem=brem, ax=ax)
 
     ax.legend()
@@ -397,11 +398,11 @@ def _plot(df : pnd.DataFrame) -> None:
     df: Pandas dataframe with fitting parameters, e.g. mu, sg.
     '''
     for kind, df_kind in df.groupby('sample'):
-        kind = str(kind)
+        skind = str(kind)
 
-        _plot_variables(df=df_kind, variable='mu', kind = kind)
-        _plot_variables(df=df_kind, variable='sg', kind = kind)
-        _plot_variables(df=df_kind, variable='fr', kind = kind)
+        _plot_variables(df=df_kind, variable='mu', kind = skind)
+        _plot_variables(df=df_kind, variable='sg', kind = skind)
+        _plot_variables(df=df_kind, variable='fr', kind = skind)
 
     df_scale = _get_scales(df)
     _plot_corrections(df=df_scale, correction=Correction.mass_resolution)
