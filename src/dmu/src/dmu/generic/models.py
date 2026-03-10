@@ -55,11 +55,9 @@ class UnpackerModel(BaseModel):
         if not path.exists():
             raise ValueError(f'File not found: {path}')
 
-        with open(path) as f:
-            log.info(f'Loading from: {path}')
-            loaded_data = yaml.safe_load(stream = f)
+        data = UnpackerModel._load_from_path(path = path)
 
-        return loaded_data
+        return data
     # --------------
     @model_validator(mode='before')
     @classmethod
@@ -130,8 +128,7 @@ class UnpackerModel(BaseModel):
         if not path.exists():
             raise ValueError(f'Cannot find: {path}')
 
-        with open(path) as ifile:
-            data = yaml.safe_load(ifile)
+        data = UnpackerModel._load_from_path(path = path)
 
         if package is None:
             return cls(**data)
