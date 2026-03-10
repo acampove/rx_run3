@@ -3,7 +3,7 @@ Module holding functions needed to test SignalConstraints class
 '''
 import pytest
 from dmu       import LogStore
-from dmu.stats import zfit
+from dmu.stats import CorrectionImplementation, Model, zfit
 from dmu.stats import ModelFactory 
 from fitter    import SignalConstraints
 
@@ -31,19 +31,21 @@ def _get_nll(obs : zobs) -> Loss:
     - PDF used to fit signal 
     '''
     signal_name = 'signal_brem_001_b1'
+    scale       = CorrectionImplementation.scale
+    reso        = CorrectionImplementation.reso
 
     fct = ModelFactory(
         obs     = obs,
-        l_pdf   = ['dscb'],
+        l_pdf   = [Model.dscb],
         l_shared= [],
         l_float = [],
-        d_rep   = {'mu' : 'scale', 'sg' : 'reso'},
+        d_rep   = {'mu' : scale, 'sg' : reso},
         preffix = signal_name)
     dscb = fct.get_pdf()
 
     fct  = ModelFactory(
         obs     = obs,
-        l_pdf   = ['exp'],
+        l_pdf   = [Model.exp],
         l_shared= [],
         l_float = [],
         preffix = 'bkg')
