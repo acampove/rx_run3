@@ -8,7 +8,6 @@ import yaml
 from typing      import Final
 from functools   import cached_property
 from dataclasses import dataclass
-from omegaconf   import DictConfig
 from dmu         import LogStore
 from dmu.stats   import zfit
 from dmu.stats   import utilities as sut
@@ -38,7 +37,7 @@ class Category:
     name      : str 
     pdf       : zpdf 
     sumw      : float
-    cres      : DictConfig
+    cres      : dict[str,tuple[float,float]] 
     model     : list[str]
     selection : dict[str,str]
     # ----------------------
@@ -87,7 +86,7 @@ class Category:
 
         brem_str = mtch.group(1)
 
-        return Brem.from_str(brem_str)
+        return Brem.from_str(value = brem_str)
     # ----------------------
     def __str__(self) -> str:
         pdfs  = sut.print_pdf(pdf = self.pdf, level = 10)
