@@ -193,11 +193,11 @@ def _get_scales(df : pnd.DataFrame) -> pnd.DataFrame:
     '''
     l_df_scale : list[pnd.DataFrame] = []
     for (block, brem), df_group in df.groupby(['block', 'brem']):
-        try:
-            iblock = int(block) # type: ignore[arg-type]
-            ibrem  = int(brem)  # type: ignore[arg-type]
-        except Exception as exc:
-            raise ValueError('Cannot cast block and brem as int') from exc
+        sblock = str(block)
+        iblock = int(sblock)
+
+        sbrem  = str(brem)
+        ibrem  = int(sbrem) 
 
         df_scale          = _scales_from_df(df=df_group)
         df_scale['block'] = iblock
