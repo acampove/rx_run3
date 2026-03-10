@@ -9,7 +9,7 @@ from contextlib import contextmanager
 from pathlib    import Path
 from dmu        import LogStore
 from dmu.stats  import Measurement
-from rx_common  import Project, Trigger 
+from rx_common  import Block, Brem, Project, Trigger 
 from rx_common  import Qsq 
 from rx_common  import info
 
@@ -96,7 +96,7 @@ class ParameterReader:
     # ----------------------
     def _format_data(
         self, 
-        brem : int,
+        brem : Brem,
         data : dict[str, float]) -> dict[str,tuple[float,float]]:
         '''
         Parameters
@@ -132,7 +132,10 @@ class ParameterReader:
 
         return res
     # ----------------------
-    def _extract_brem(self, brem : int, data : dict[str, float]) -> tuple[str,float,float]:
+    def _extract_brem(
+        self, 
+        brem : Brem, 
+        data : dict[str, float]) -> tuple[str,float,float]:
         '''
         Parameters
         -------------
@@ -164,12 +167,12 @@ class ParameterReader:
 
         signal = mtch.group(1) 
 
-        return f'fr_{signal}_brem_{brem:03d}', val, err
+        return f'fr_{signal}_brem_{brem}', val, err
     # ----------------------
     def __call__(
         self, 
-        brem      : int,
-        block     : int,
+        brem      : Brem,
+        block     : Block,
         cmb       : str,
         prc       : str,
         kind      : str,
