@@ -81,7 +81,8 @@ def test_with_cat(tmp_path : Path):
     data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml')
     cfg  = ParametricConf(**data)
 
-    with Cache.cache_root(path = tmp_path):
+    with Cache.cache_root(path = tmp_path),\
+         RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
             name     = 'test_with_cat',
             component= Component.bpkpee,
