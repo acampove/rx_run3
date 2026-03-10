@@ -210,7 +210,6 @@ class Brem(Enum):
                 return r'$2\gamma$'
             case _:
                 raise ValueError(f'No color assciated to {self}')
-
     # ----------------------
     @classmethod
     def from_int(cls, value : int) -> 'Brem':
@@ -233,6 +232,22 @@ class Brem(Enum):
                 return cls.two
             case _:
                 raise ValueError(f'Invalid brem: {value}')
+    # ----------------------
+    def to_int(self) -> int:
+        '''
+        Returns
+        ---------------
+        Int version of brem
+        '''
+        match self:
+            case self.zero:
+                return 0 
+            case self.one:
+                return 1 
+            case self.two:
+                return 2 
+            case _:
+                raise ValueError(f'Invalid brem: {self}')
     # ----------------------
     @classmethod
     def brems(cls) -> list['Brem']:
