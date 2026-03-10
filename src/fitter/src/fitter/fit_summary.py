@@ -151,8 +151,11 @@ class FitSummary:
         data : dict[str,float] = dict()
 
         for name, [value, error] in unformatted.items():
-            data[f'{name}_value'] = value
-            data[f'{name}_error'] = error 
+            refr = name.replace('brem_001', 'brem_xx1')
+            refr = refr.replace('brem_002', 'brem_xx2')
+
+            data[f'{refr}_value'] = value
+            data[f'{refr}_error'] = error 
 
         meta = self._extra_information(path=path, kind=kind)
 
