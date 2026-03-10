@@ -4,7 +4,6 @@ Module holding CategoryMerger class
 import zfit
 
 from typing      import Literal
-from omegaconf   import OmegaConf
 from dmu         import LogStore
 from rx_common   import Brem, Block, Correction
 from dmu.stats   import ModelFactory
@@ -237,10 +236,18 @@ class CategoryMerger:
         Fraction used to form model
         '''
         suffix = f'{corr.nickname}_{category.brem}_b{category.block}'
-        value  = category.sumw / totalw
 
-        # Let correction float for fit to real data
-        with ModelFactory.correction(fixed = False):
+        # Won't constrain ratio of block fractions between data and MC
+        # Will constrain block fractions themselves
+        if corr == Correction.blok_fraction:
+            return zfit.param.Parameter(
+                name  = f'fr_{suffix}_flt',
+                value = 0.5,
+                lower = 0.0,
+                upper = 1.0)
+
+        value  = category.sumw / totalw
+        with ModelFactory.correction(fixed = False): # Let correction float for fit to real data
             frac      = ModelFactory.get_reparametrization(
                 name  = f'fr_{suffix}',
                 kind  = corr.kind,
