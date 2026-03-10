@@ -139,6 +139,25 @@ class UnpackerModel(BaseModel):
         
         with cls.package(name = package):
             return cls(**data)
+    # ----------------------
+    @staticmethod
+    def _load_from_path(path : Path):
+        '''
+        Parameters
+        -------------
+        path: Path to file with config, e.g. yaml
+
+        Returns
+        -------------
+        Data from safe loading
+        '''
+        text = path.read_text()
+
+        if path.name.endswith('.j2'):
+            template = Template(text)
+            text     = template.render()
+
+        return yaml.safe_load(text)
     # --------------
     def to_yaml(self, path : Path) -> None:
         '''
