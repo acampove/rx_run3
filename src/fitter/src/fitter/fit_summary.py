@@ -7,11 +7,12 @@ import tqdm
 import math
 import pandas as pnd
 
-from pathlib import Path
-from typing  import Final
+from dmu         import LogStore
+from dmu.generic import utilities as gut
 
-from dmu.logging.log_store import LogStore
-from dmu.generic           import utilities as gut
+from pathlib     import Path
+from typing      import Final
+from rx_common   import Brem
 
 log=LogStore.add_logger('fitter:fit_summary')
 # TODO: Generalize tool to deal with any sample, i.e.
