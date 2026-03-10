@@ -92,21 +92,19 @@ class FitSummary:
 
         return files
     # ----------------------
-    def _attach_information(
+    def _extra_information(
         self, 
         kind : str,
-        data : dict[str, float | str], 
-        path : Path) -> dict[str, float | str]:
+        path : Path) -> dict[str, str | Brem]:
         '''
         Parameters
         -------------
         kind : dat or sim 
-        data : Dictionary with fitting parameter information
         path : Path to JSON file with this information
 
         Returns
         -------------
-        Input dictionary with extra information added, taken from path
+        Dictionary with non-numerical data 
         '''
         regex = self._regexes[kind]
         mtch  = re.match(f'.*/{regex}', str(path))
@@ -117,6 +115,7 @@ class FitSummary:
         channel            = groups[4]
         channel            = {'electron' : 'ee', 'muon' : 'mm'}[channel]
 
+        data : dict[str, str | Brem] = dict()
         data['mva_cmb'] = groups[0]
         data['mva_prc'] = groups[1]
         data['block'  ] = groups[2]
@@ -125,10 +124,10 @@ class FitSummary:
 
         if kind == 'dat':
             data['q2bin'  ] = groups[5]
-            data['brem'   ] = groups[6]
+            data['brem'   ] = Brem.from_str(value = groups[6])
         elif kind == 'sim':
             data['q2bin'  ] = groups[6]
-            data['brem'   ] = groups[5]
+            data['brem'   ] = Brem.from_str(value = groups[5])
         else:
             raise ValueError(f'Invalid kind: {kind}')
 
@@ -137,7 +136,7 @@ class FitSummary:
     def _get_data(
         self, 
         kind : str,
-        path : Path) -> dict[str, float | str]:
+        path : Path) -> tuple[dict[str, float], dict[str, str | Brem]]:
         '''
         Parameters
         -------------
@@ -148,17 +147,16 @@ class FitSummary:
         -------------
         Dictionary mapping quantity and value, error or name for e.g. channel.
         '''
-        data       = gut.load_json(path=path)
-        parameters = dict()
+        unformatted = gut.load_json(path=path)
+        data : dict[str,float] = dict()
 
-        for name, [value, error] in data.items():
-            parameters[f'{name}_value'] = value
-            parameters[f'{name}_error'] = error 
+        for name, [value, error] in unformatted.items():
+            data[f'{name}_value'] = value
+            data[f'{name}_error'] = error 
 
-        parameters = self._attach_information(data=parameters, path=path, kind=kind)
-        values     = { key : value for key, value in parameters.items() }
+        meta = self._extra_information(path=path, kind=kind)
 
-        return values 
+        return data, meta
     # ----------------------
     def _get_mc_nentries(self, path : Path) -> float:
         '''
@@ -218,23 +216,26 @@ class FitSummary:
         '''
         paths = self._get_parameter_paths(kind = kind)
 
-        l_data : list[dict[str, float | str]] = []
-        for path in tqdm.tqdm(paths, ascii=' -'):
-            if 'brem_002' in str(path):
+        l_data : list[dict[str, float | str | Brem ]] = []
+        for path_brem_1 in tqdm.tqdm(paths, ascii=' -'):
+            if 'brem_002' in str(path_brem_1):
                 continue
 
-            val_1  = self._get_data(path=path, kind = kind)
-            path   = str(path).replace('brem_001', 'brem_002')
-            path   = Path(path)
-            val_2  = self._get_data(path=path, kind = kind)
+            data_1, meta_1 = self._get_data(path=path_brem_1, kind = kind)
+            path_brem_2    = str(path_brem_1).replace('brem_001', 'brem_002')
+            path_brem_2    = Path(path_brem_2)
+            data_2, meta_2 = self._get_data(path=path_brem_2, kind = kind)
 
             if kind == 'sim':
-                val_1, val_2 = self._post_process_mc(
-                    val_1 = val_1,
-                    val_2 = val_2)
+                data_1, data_2 = self._post_process_mc(
+                    val_1 = data_1,
+                    val_2 = data_2)
 
-            l_data.append(val_1)
-            l_data.append(val_2)
+            info_1 = dict(**data_1, **meta_1)
+            info_2 = dict(**data_2, **meta_2)
+
+            l_data.append(info_1)
+            l_data.append(info_2)
 
         df         = pnd.DataFrame(l_data)
         df['kind'] = kind
@@ -273,8 +274,8 @@ class FitSummary:
     # ----------------------
     def _post_process_mc(
         self, 
-        val_1 : dict[str, float | str],
-        val_2 : dict[str, float | str]) -> tuple[dict[str,float | str], dict[str, float | str]]:
+        val_1 : dict[str, float ],
+        val_2 : dict[str, float ]) -> tuple[dict[str,float], dict[str, float]]:
         '''
         Parameters
         -------------
@@ -284,8 +285,8 @@ class FitSummary:
         -------------
         Same as input, but with nentries_value/error keys replaced with fraction_value/error
         '''
-        nentries_001 = float(val_1['nentries_value'])
-        nentries_002 = float(val_2['nentries_value'])
+        nentries_001 = val_1['nentries_value']
+        nentries_002 = val_2['nentries_value']
 
         ntotal   = nentries_001 + nentries_002
         fraction = nentries_001 / ntotal 
