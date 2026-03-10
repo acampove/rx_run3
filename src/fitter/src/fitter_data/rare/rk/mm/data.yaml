@@ -23,7 +23,7 @@ observable:
       - 5850
 components:
   comb   : rare/rk/mm/comb.yaml
-  bpkpmm : rare/rk/mm/bpkpmm.yaml
+  bpkpmm : rare/rk/mm/bpkpmm.yaml.j2
 constraints:
   yields : []
 fit: {}
