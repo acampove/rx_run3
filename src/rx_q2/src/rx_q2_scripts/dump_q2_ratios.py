@@ -307,13 +307,12 @@ def _get_entry(name : str, df : pnd.DataFrame) -> tuple[float,float]:
 def _plot_df(
     df       : pnd.DataFrame,
     variable : str,
-    brem     : str,
+    brem     : Brem,
     ax       : Axes) -> Axes:
 
     if brem == 0 and variable == Correction.mass_resolution:
         return ax
 
-    color = {'0' : '#1f77b4', '1' : '#ff7f0e', '2' : '#2ca02c'}[brem]
     val   = f'{variable}_val'
     err   = f'{variable}_err'
 
@@ -322,9 +321,9 @@ def _plot_df(
             df['block'],
             df[val] - df[err],
             df[val] + df[err],
-            color=color,
-            label=f'Brem {brem}',
-            alpha=0.5)
+            color= brem.color,
+            label= brem.label,
+            alpha= 0.5)
     except TypeError as exc:
         log.error(df)
         log.error(df.dtypes)
