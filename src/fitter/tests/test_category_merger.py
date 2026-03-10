@@ -6,7 +6,6 @@ import pytest
 from dmu         import LogStore
 from dmu.stats   import zfit
 from dmu.testing import get_model 
-from omegaconf   import OmegaConf
 from fitter      import CategoryMerger
 from fitter      import Category
 from rx_common   import Brem, Block
