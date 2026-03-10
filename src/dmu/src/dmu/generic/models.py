@@ -6,6 +6,7 @@ pydantic models
 import yaml
 import contextlib
 
+from jinja2              import Template
 from contextvars         import ContextVar
 from importlib.resources import files
 from dmu                 import LogStore
@@ -99,10 +100,13 @@ class UnpackerModel(BaseModel):
         if not isinstance(val, (str, Path)):
             return False
 
-        if not str(val).endswith('.yaml'):
-            return False
+        if str(val).endswith('.yaml'):
+            return True
 
-        return True
+        if str(val).endswith('.yaml.j2'):
+            return True
+
+        return False
     # --------------
     @classmethod
     def from_yaml(
