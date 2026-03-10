@@ -196,8 +196,8 @@ def _get_scales(df : pnd.DataFrame) -> pnd.DataFrame:
         try:
             iblock = int(block) # type: ignore[arg-type]
             ibrem  = int(brem)  # type: ignore[arg-type]
-        except Exception:
-            raise ValueError('Cannot cast block and brem as int')
+        except Exception as exc:
+            raise ValueError('Cannot cast block and brem as int') from exc
 
         df_scale          = _scales_from_df(df=df_group)
         df_scale['block'] = iblock
