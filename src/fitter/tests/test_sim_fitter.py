@@ -78,7 +78,7 @@ def test_with_cat(tmp_path : Path):
         obs   = Mass.bp_bcor_smr.latex, 
         label = Mass.bp_bcor_smr,
         limits=(4500, 7000))
-    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml')
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml.j2')
     cfg  = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
