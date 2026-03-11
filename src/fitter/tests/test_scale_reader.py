@@ -1,6 +1,7 @@
 '''
 Module with tests for ScaleReader class
 '''
+import math
 import pytest
 
 from dmu       import LogStore
@@ -19,12 +20,12 @@ CORRS = [
 @pytest.mark.parametrize('kind' , CORRS)
 @pytest.mark.parametrize('block', Block.blocks())
 @pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
-def test_simple(
+def test_all(
     brem : Brem,
     block: Block,
     kind : Correction):
     '''
-    Simplest test
+    Test all corrections
     '''
     srd      = ScaleReader()
     val, err = srd.get_scale(
@@ -32,5 +33,41 @@ def test_simple(
         block = block, 
         brem  = brem)
 
+    print(val)
+    print(err)
+    print(block)
+    print(brem)
+    print('')
+
     assert isinstance(val, float)
     assert isinstance(err, float)
+
+    assert not math.isnan(val)
+    assert not math.isnan(err)
+# ----------------------
+@pytest.mark.parametrize('block', Block.blocks())
+@pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
+def test_block(
+    brem : Brem,
+    block: Block):
+    '''
+    Test block fraction correction
+    '''
+    srd      = ScaleReader()
+    val, err = srd.get_scale(
+        corr  = Correction.blok_fraction, 
+        block = block, 
+        brem  = brem)
+
+    print(val)
+    print(err)
+    print(block)
+    print(brem)
+    print('')
+
+    assert isinstance(val, float)
+    assert isinstance(err, float)
+
+    assert not math.isnan(val)
+    assert not math.isnan(err)
+# ----------------------
