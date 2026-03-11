@@ -5,7 +5,7 @@ Module storing ZModel class
 from contextlib      import contextmanager
 from contextvars     import ContextVar
 from pydantic        import BaseModel, ConfigDict, Field
-from typing          import Callable, Union
+from typing          import Callable
 from zfit.interface  import ZfitSpace     as zobs
 from zfit.pdf        import BasePDF       as zpdf
 from zfit.param      import Parameter     as zpar
@@ -67,10 +67,10 @@ class MethodRegistry:
     which is defined in this same module
     '''
     # Registry dictionary to hold methods
-    _d_method = {}
+    _d_method : dict[Model,Callable] = {}
 
     @classmethod
-    def register(cls, nickname : str):
+    def register(cls, nickname : Model):
         '''
         Decorator in charge of registering method for given nickname
         '''
@@ -81,7 +81,7 @@ class MethodRegistry:
         return decorator
 
     @classmethod
-    def get_method(cls, nickname : str) -> Union[Callable,None]:
+    def get_method(cls, nickname : Model) -> Callable | None:
         '''
         Will return method in charge of building PDF, for an input nickname
         '''
@@ -97,7 +97,7 @@ class MethodRegistry:
         return method
 
     @classmethod
-    def get_pdf_names(cls) -> list[str]:
+    def get_pdf_names(cls) -> list[Model]:
         '''
         Returns list of PDFs that are registered/supported
         '''
@@ -529,7 +529,15 @@ class ModelFactory:
 
         return pdf
     #-----------------------------------------
-    def _get_pdf_types(self) -> list[tuple[str,str]]:
+    def _get_pdf_types(self) -> list[tuple[Model,str]]:
+        '''
+        Returns
+        -----------------------
+        list of tuples, one for each model, each tuple has:
+
+        - Model name
+        - Model suffix representing index of PDF, e.g. _1
+        '''
         d_name_freq = {}
 
         l_type = []
@@ -546,7 +554,7 @@ class ModelFactory:
 
         return l_type
     #-----------------------------------------
-    def _get_pdf(self, kind : str, preffix : str) -> zpdf:
+    def _get_pdf(self, kind : Model, preffix : str) -> zpdf:
         fun = MethodRegistry.get_method(kind)
         if fun is None:
             raise NotImplementedError(f'PDF of type \"{kind}\" with preffix \"{preffix}\" is not implemented')
