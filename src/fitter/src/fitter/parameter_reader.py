@@ -228,6 +228,7 @@ class ParameterReader:
         data[f'bk_{signame}'] = (math.nan, math.nan) if kind == 'sim' else self._get_block_fraction(
             signame = signame,
             df      = df_all, 
+            brem    = brem,
             block   = block) 
 
         return FitMeasurement(data = data)
@@ -236,6 +237,7 @@ class ParameterReader:
         self,
         signame: str,
         df     : pnd.DataFrame,
+        brem   : Brem,
         block  : Block) -> tuple[float,float]:
         '''
         Block fraction is the fraction of signal in a block, WRT the full year
@@ -246,14 +248,17 @@ class ParameterReader:
         signame : Name of signal parameter, needed to extract yield, e.g. yld_{signame}_value
         df      : DataFrame for real data with all blocks, but all cuts applied otherwise
         block   : Block number within dataset
+        brem    : Brem category
 
         Returns
         -------------
         Value and error of block fraction for real data
         '''
-        arr_val  = df[f'yld_{signame}_value'].to_numpy()
-        arr_err  = df[f'yld_{signame}_error'].to_numpy()
-        arr_blk  = df['block'               ].to_numpy()
+        arr_blk          = df['block'].to_numpy()
+        arr_val, arr_err = self._get_brem_yields(
+            df      = df, 
+            brem    = brem,
+            signame = signame)
 
         iblock   = numpy.argmax(arr_blk == block.to_int())
         def fun(vals):
