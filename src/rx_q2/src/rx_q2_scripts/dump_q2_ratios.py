@@ -422,9 +422,9 @@ def _plot_variables(
     elif variable == 'sg':
         plt.ylabel(rf'$\sigma^{{{kind.latex}}}$[MeV]')
     elif variable == 'fr':
-        plt.ylabel(rf'$fr^{{{kind.latex}}}$[MeV]')
+        plt.ylabel(rf'$fr_{{Brem}}^{{{kind.latex}}}$[MeV]')
     elif variable == 'bk':
-        plt.ylabel(rf'$fr^{{{kind.latex}}}$[MeV]')
+        plt.ylabel(rf'$fr_{{Block}}^{{{kind.latex}}}$[MeV]')
     else:
         raise ValueError(f'Invalid variable: {variable}')
 
