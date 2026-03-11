@@ -4,11 +4,13 @@ Module containing tests for ZModel class
 
 import pytest
 
-from dmu.stats   import zfit
 from dmu         import LogStore
+from dmu.stats   import zfit
 from dmu.stats   import print_pdf
 from dmu.stats   import ModelFactory, MethodRegistry
 from dmu.stats   import ParameterLibrary
+from dmu.stats   import Model
+from dmu.stats   import CorrectionImplementation
 from zfit.pdf    import BasePDF    as zpdf
 
 log=LogStore.add_logger('dmu:stats:test_model_factory')
@@ -115,7 +117,7 @@ def test_fix_params():
     '''
     Will test fixing subset of parameters
     '''
-    l_pdf = ['cbr', 'cbl', 'dscb']
+    l_pdf = [Model.cbr, Model.cbl, Model.dscb]
     l_shr = ['mu', 'sg']
     l_flt = ['mu', 'sg']
 
@@ -135,7 +137,7 @@ def test_unique_pdf():
     '''
     Will test only signal builder
     '''
-    l_pdf = ['cbr', 'cbl', 'dscb']
+    l_pdf = [Model.cbr, Model.cbl, Model.dscb]
     l_shr = ['mu', 'sg']
     l_flt = ['mu', 'sg']
     mod   = ModelFactory(preffix = 'unique',
@@ -154,7 +156,7 @@ def test_repeated_pdf():
     '''
     log.info('Testing for repeated PDFs')
 
-    l_pdf = ['cbr'] + 2 * ['cbl']
+    l_pdf = [Model.cbr] + 2 * [Model.cbl]
     l_shr = ['mu', 'sg']
     l_flt = ['mu']
     mod   = ModelFactory(
@@ -168,7 +170,7 @@ def test_repeated_pdf():
     print_pdf(pdf)
 #--------------------------
 @pytest.mark.parametrize('name', MethodRegistry.get_pdf_names())
-def test_all_pdf(name : str):
+def test_all_pdf(name : Model):
     '''
     Will create a PDF for each of the models supported
     '''
@@ -189,21 +191,20 @@ def test_all_pdf(name : str):
 #--------------------------
 @pytest.mark.parametrize(
     'pdfs', [
-    ['ggauss'],
-    ['egauss'],
-    ['qgauss'],
-    ['gauss'],
-    ['cbl'],
-    ['cbr'],
-    ['dscb'],
-    ['cbl', 'cbl'],
-    ['cbl', 'cbr']])
+    [Model.qgauss],
+    [Model.gauss],
+    [Model.cbl],
+    [Model.cbr],
+    [Model.dscb],
+    [Model.cbl, Model.cbl],
+    [Model.cbl, Model.cbr],
+])
 @pytest.mark.parametrize(
-    'scales_must_float', 
+    'fix_scales', 
     [True, False])
 def test_rep_signal(
-    scales_must_float : bool,
-    pdfs              : list[str]):
+    fix_scales : bool,
+    pdfs       : list[Model]):
     '''
     Test reparametrized signal PDFs, i.e.:
     - Use mass scales and resolutions
@@ -221,9 +222,10 @@ def test_rep_signal(
 
     l_shr = ['mu', 'sg']
     l_flt = []
-    d_rep = {'mu' : 'scale', 'sg' : 'reso'}
+    d_rep = {'mu' : CorrectionImplementation.scale, 
+             'sg' : CorrectionImplementation.reso}
 
-    with ModelFactory.reparametrization_parameters(floating = scales_must_float):
+    with ModelFactory.correction(fixed = fix_scales):
         mod = ModelFactory(
             preffix = name,
             obs     = Data.obs,
@@ -234,11 +236,11 @@ def test_rep_signal(
         pdf = mod.get_pdf()
 
     _check_reparametrized_pdf(
-        pdf               = pdf, 
-        scales_must_float = scales_must_float)
+        pdf        = pdf, 
+        fix_scales = fix_scales )
 #--------------------------
-@pytest.mark.parametrize('kind', ['cbr', 'cbl', 'dscb', 'gauss'])
-def test_override_parameter(kind: str):
+@pytest.mark.parametrize('kind', [Model.cbr, Model.cbl, Model.dscb, Model.gauss])
+def test_override_parameter(kind: Model):
     '''
     Will create a PDF by overriding parameters
     '''
@@ -247,10 +249,12 @@ def test_override_parameter(kind: str):
     l_shr = ['mu', 'sg']
     l_flt = ['mu']
 
-    ParameterLibrary.print_parameters(kind=kind)
+    MU = 3100
+    SG = 20
 
-    with ParameterLibrary.values(parameter='mu', kind=kind, val=3100, low=2200, high=3500),\
-         ParameterLibrary.values(parameter='sg', kind=kind, val=  30, low=  30, high=  30):
+    ParameterLibrary.print_parameters(kind=kind)
+    with ParameterLibrary.values(parameter='mu', kind=kind, val=MU, low=2200, high=3500),\
+         ParameterLibrary.values(parameter='sg', kind=kind, val=SG, low=  10, high=  30):
 
         mod   = ModelFactory(
             preffix = kind,
@@ -260,10 +264,12 @@ def test_override_parameter(kind: str):
             l_float = l_flt)
         pdf   = mod.get_pdf()
 
-    s_par = pdf.get_params(floating=False)
-    [sg]  = [ par for par in s_par if par.name == f'sg_{kind}' ]
+    s_par = pdf.get_params()
+    [mu]  = [ par for par in s_par if par.name == f'mu_{kind}_flt' ]
+    [sg]  = [ par for par in s_par if par.name == f'sg_{kind}'     ]
 
-    assert sg.floating is False
+    assert sg.value().numpy() == SG
+    assert mu.value().numpy() == MU 
 
     print_pdf(pdf)
 #--------------------------
@@ -281,7 +287,7 @@ def test_shared_parameters():
     mod_1 = ModelFactory(
         preffix = 'cbl',
         obs     = Data.obs,
-        l_pdf   = ['cbl'],
+        l_pdf   = [Model.cbl],
         l_shared= l_shr,
         l_reuse = [mu, sg],
         l_float = l_flt)
@@ -290,7 +296,7 @@ def test_shared_parameters():
     mod_2 = ModelFactory(
         preffix = 'cbr',
         obs     = Data.obs,
-        l_pdf   = ['cbr'],
+        l_pdf   = [Model.cbr],
         l_shared= l_shr,
         l_reuse = [mu, sg],
         l_float = l_flt)
