@@ -351,10 +351,15 @@ def _plot_corrections(
     for val, df_brem_unordered in df.groupby('brem'):
         df_brem = _reorder_blocks(df=df_brem_unordered)
         sval    = str(val)
+
+        if sval != '2' and correction == Correction.brem_fraction:
+            continue
+
         brem    = Brem.from_str(value = f'xx{sval}')
         ax      = _plot_df(df=df_brem, variable=correction, brem=brem, ax=ax)
 
-    ax.legend()
+    if correction != Correction.brem_fraction:
+        ax.legend()
 
     cfg = _load_config()
     rng = cfg.get_range(var=correction)
@@ -379,9 +384,14 @@ def _plot_variables(
         df_brem = _reorder_blocks(df = df_brem_unordered)
         ax      = _plot_df(df=df_brem, variable=variable, brem=brem, ax=ax)
 
-    ax.legend()
-
     name = {'dat' : 'Data', 'sim' : 'MC'}[kind]
+    # Fractions only make sense for either
+    # one brem category or both combined
+    # label makes no sense
+    if variable not in _FRACTIONS:
+        plt.legend()
+    else:
+        plt.legend(labels = [])
 
     cfg = _load_config()
     if   variable == 'mu':
@@ -397,7 +407,6 @@ def _plot_variables(
     rng = cfg.get_range(var=variable)
     plt.ylim(rng)
     plt.grid()
-    plt.legend()
     plt.savefig(cfg.out_dir / f'{variable}_{kind}.png')
     plt.close()
 #-------------------------------------
