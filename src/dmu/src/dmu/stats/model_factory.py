@@ -25,6 +25,10 @@ _FIX_CORRECTION : ContextVar[bool] = ContextVar('_FIX_CORRECTION', default = Tru
 class ModelFactoryConf(BaseModel):
     '''
     Class meant to configure the fitter
+
+    Attributes
+    ----------------
+    values: Dictionary mapping parameter name (e.g. mu) to tuple with default, low and high bound
     '''
     model_config = ConfigDict(
         arbitrary_types_allowed=True, # Due to reuse field that uses zpar
@@ -35,7 +39,8 @@ class ModelFactoryConf(BaseModel):
     reparametrize : dict[str,CorrectionImplementation]
     fix           : dict[str,float]
     floating      : list[str]
-    reuse         : list[zpar] = Field(default_factory=list) 
+    values        : dict[str,tuple[float,float,float]] = Field(default_factory=dict)
+    reuse         : list[zpar]                         = Field(default_factory=list)
     # ------------------------------
     @classmethod
     def default(cls, pdfs : list[Model]) -> 'ModelFactoryConf':
@@ -131,6 +136,7 @@ class ModelFactory:
         l_pdf    : list[Model],
         l_shared : list[str],
         l_float  : list[str],
+        values   : None | dict[str,tuple[float,float,float]] = None,
         l_reuse  : None | list[zpar]                         = None,
         d_fix    : None | dict[str,float]                    = None,
         d_rep    : None | dict[str,CorrectionImplementation] = None):
@@ -145,16 +151,18 @@ class ModelFactory:
                   to which it has to be fixed. If not one and only one parameter is found, ValueError is raised
         d_rep:    Dictionary with keys as variables that will be reparametrized
         '''
-        l_reuse = [] if l_reuse is None else l_reuse
+        l_reuse = []     if l_reuse is None else l_reuse
+        values  = dict() if values  is None else values
 
-        self._preffix         = preffix
-        self._l_pdf           = l_pdf
-        self._l_shr           = l_shared
-        self._l_flt           = l_float
-        self._d_fix           = d_fix
-        self._d_rep           = d_rep
-        self._d_reuse         = { par.name : par for par in l_reuse }
-        self._obs             = obs
+        self._values  = values
+        self._preffix = preffix
+        self._l_pdf   = l_pdf
+        self._l_shr   = l_shared
+        self._l_flt   = l_float
+        self._d_fix   = d_fix
+        self._d_rep   = d_rep
+        self._d_reuse = { par.name : par for par in l_reuse }
+        self._obs     = obs
 
         self._d_par : dict[str,zpar] = {}
 
@@ -279,7 +287,7 @@ class ModelFactory:
 
         rep_kind = self._get_reparametrization_type(name = name)
 
-        val, low, high = PL.get_values(kind=kind, parameter=name)
+        val, low, high = self._get_parameter_values(model = kind, name = name)
 
         if rep_kind is not None:
             log.debug(f'Reparametrizing {par_name}')
@@ -300,6 +308,25 @@ class ModelFactory:
         self._d_par[par_name] = par
 
         return par
+    # ----------------------
+    def _get_parameter_values(
+        self, 
+        model : Model,
+        name  : str) -> tuple[float,float,float]:
+        '''
+        Parameters
+        -------------
+        name : Parameter name, e.g. mu
+        model: PDF, e.g. gauss
+
+        Returns
+        -------------
+        Tuple with initial, low and high value for parameter
+        '''
+        
+        val, low, high = PL.get_values(kind=model, parameter=name)
+
+        return val, low, high
     #-----------------------------------------
     def _get_reparametrization_type(self, name : str) -> CorrectionImplementation | None:
         '''
