@@ -21,7 +21,7 @@ import pandas                as pnd
 
 from dmu             import LogStore
 from dmu.generic     import utilities        as gut
-from typing          import Callable
+from typing          import Callable, Final
 from pathlib         import Path
 from omegaconf       import DictConfig
 from functools       import cache
@@ -34,11 +34,13 @@ from rx_common       import Block, Correction, Project
 from rx_common       import Trigger 
 from rx_common       import Qsq 
 from rx_common       import Brem 
+from rx_common       import DataSet 
 
 log=LogStore.add_logger('rx_q2:dump_q2_ratios')
 
-ARGS     : DictConfig | argparse.Namespace | None = None
-PROJECTS : list[str] = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
+ARGS       : DictConfig | argparse.Namespace | None = None
+PROJECTS   : list[str]        = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
+_FRACTIONS : Final[list[str]] = ['bk', 'fr']
 #-------------------------------------
 @cache
 def _load_config() -> ScalesConf:
