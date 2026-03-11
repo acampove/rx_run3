@@ -17,11 +17,11 @@ class MVAWp(RootModel):
     # -------------    
     @model_validator(mode = 'after')
     def validate_value(self) -> 'MVAWp':
-        if isinstance(self.root, float):
+        if isinstance(self.root, (float, int)):
             self._validate_prob(prob = self.root)
             return self
 
-        low, high = self.root # type: ignore[misc]
+        low, high = self.root
 
         if low >= high:
             raise ValueError(f'Invalid working point: {self}')
