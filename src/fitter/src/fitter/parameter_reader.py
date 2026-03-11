@@ -174,6 +174,7 @@ class ParameterReader:
     # ----------------------
     def __call__(
         self, 
+        signame   : str,
         brem      : Brem,
         block     : Block,
         cmb       : str,
@@ -185,11 +186,13 @@ class ParameterReader:
         '''
         Parameters
         -------------
-        cmb/prc  : String specifying working point, e.g. 050
-        kind     : Either dat or sim
+        signame  : Identifier for signal parameter, e.g. jpsi 
         brem     : Brem category, e.g. 0, 1, 2
         block    : Block number in 2024, e.g. 1, 2, 3...8
-        component: Name of fitting component
+        cmb/prc  : String specifying working point, e.g. 050
+        kind     : Either dat or sim
+        project  : E.g. rk, rkst 
+        q2bin    : E.g. jpsi
         trigger  : HLT2 trigger, used to pick channel, etc
 
         Returns
@@ -222,30 +225,35 @@ class ParameterReader:
         # and viceversa
         data     = { key : value for key, value in data.items() if f'brem_{brem}' in key }
 
-        data['bk'] = (math.nan, math.nan) if kind == 'sim' else self._get_block_fraction(df = df_all, block = block) 
+        data[f'bk_{signame}'] = (math.nan, math.nan) if kind == 'sim' else self._get_block_fraction(
+            signame = signame,
+            df      = df_all, 
+            block   = block) 
 
         return FitMeasurement(data = data)
     # ----------------------
     def _get_block_fraction(
         self,
-        df   : pnd.DataFrame,
-        block: Block) -> tuple[float,float]:
+        signame: str,
+        df     : pnd.DataFrame,
+        block  : Block) -> tuple[float,float]:
         '''
         Block fraction is the fraction of signal in a block, WRT the full year
         these are the sums over the brem categories
 
         Parameters
         -------------
-        df   : DataFrame for real data with all blocks, but all cuts applied otherwise
-        block: Block number within dataset
+        signame : Name of signal parameter, needed to extract yield, e.g. yld_{signame}_value
+        df      : DataFrame for real data with all blocks, but all cuts applied otherwise
+        block   : Block number within dataset
 
         Returns
         -------------
         Value and error of block fraction for real data
         '''
-        arr_val  = df['yld_jpsik_value'].to_numpy()
-        arr_err  = df['yld_jpsik_error'].to_numpy()
-        arr_blk  = df['block'          ].to_numpy()
+        arr_val  = df[f'yld_{signame}_value'].to_numpy()
+        arr_err  = df[f'yld_{signame}_error'].to_numpy()
+        arr_blk  = df['block'               ].to_numpy()
 
         iblock   = numpy.argmax(arr_blk == block.to_int())
         def fun(vals):
