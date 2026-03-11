@@ -18,7 +18,7 @@ def initialize() -> None:
     LogStore.set_level('fitter:parameter_reader', 10)
 # -----------------------
 @pytest.mark.parametrize('kind' , ['dat', 'sim'])
-@pytest.mark.parametrize('brem' , _BREMS)
+@pytest.mark.parametrize('brem' ,         _BREMS)
 @pytest.mark.parametrize('block', Block.blocks())
 def test_simple(
     kind : str, 
