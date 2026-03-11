@@ -5,6 +5,7 @@ import pytest
 
 from fitter      import Category
 from dmu         import LogStore
+from dmu.stats   import Model
 from dmu.testing import get_model
 from rx_common   import Block, Brem
 
@@ -19,7 +20,7 @@ def test_simple():
         name      = 'category',
         pdf       = pdf,
         sumw      = 1000.,
-        model     = ['gauss'],
+        model     = [Model.gauss],
         selection = {'mass' : '(1)'})
 
     assert cat.pdf == pdf
@@ -37,7 +38,7 @@ def test_properties(brem : Brem, block : Block):
         name      = f'brem_{brem}_b{block}',
         pdf       = pdf,
         sumw      = 1000.,
-        model     = ['gauss'],
+        model     = [Model.gauss],
         selection = {'mass' : '(1)'})
 
     assert cat.brem == brem
