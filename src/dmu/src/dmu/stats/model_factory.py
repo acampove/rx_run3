@@ -24,7 +24,7 @@ _FIX_CORRECTION : ContextVar[bool] = ContextVar('_FIX_CORRECTION', default = Tru
 # ------------------------------
 class ModelFactoryConf(BaseModel):
     '''
-    Class meant to configure the fitter
+    Class meant to configure the builder of PDFs 
 
     Attributes
     ----------------
