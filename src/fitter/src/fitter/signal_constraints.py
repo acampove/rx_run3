@@ -6,7 +6,7 @@ import re
 from typing        import Final
 from dmu           import LogStore
 from dmu.stats     import Constraint, Constraint1D, ConstraintType, ParsHolder
-from rx_common     import Block, Brem, Correction
+from rx_common     import Block, Brem, Correction, Component
 from zfit.param    import Parameter as zpar
 
 from .scale_reader import ScaleReader
@@ -14,9 +14,9 @@ from .scale_reader import ScaleReader
 log=LogStore.add_logger('fitter:signal_constraints')
 
 # Regex for non-fractions
-_RGXPR : Final[str] = r'.*signal_brem_(xx\d)_b(\d)_\d+_(scale|reso)_flt'
+_RGXPR : Final[str] = r'brem_(xx\d)_b(\d)_(scale|reso)_flt'
 # Regex for fractions
-_RGXFR : Final[str] = r'fr_(brem|block)_([x12]{3})_b(\d)(_reso)?_flt'
+_RGXFR : Final[str] = r'(brem|block)_([x12]{3})_b(\d)(_reso)?_flt'
 # ------------------------------------------
 class SignalConstraints:
     '''
@@ -32,13 +32,17 @@ class SignalConstraints:
       as part of the model name, to indicate the brem category and the block.
     '''
     # ----------------------
-    def __init__(self, nll  : ParsHolder):
+    def __init__(
+        self, 
+        nll  : ParsHolder,
+        comp : Component):
         '''
         Parameters
         -------------
         nll : Likelihood or any object with get_params implemented
         '''
         self._nll   = nll
+        self._comp  = comp
         self._srd   = ScaleReader()
 
         self._constraint_kind : ConstraintType = ConstraintType.gauss
@@ -88,11 +92,12 @@ class SignalConstraints:
         or None, if no correction (through constraint) is possible for parameter
         '''
         name  = par.name
-        REGEX = _RGXFR if name.startswith('fr_') else _RGXPR
+        REGEX = f'.*_{self._comp}_{_RGXFR}' if name.startswith('fr') else f'.*{self._comp}_{_RGXPR}'
 
         mtch = re.match(REGEX, name)
         if not mtch:
             log.debug(f'Cannot extract, brem, block and kind from: {name}')
+            log.debug(f'Using regex: {REGEX}')
             return
 
         if name.startswith('fr_'):
