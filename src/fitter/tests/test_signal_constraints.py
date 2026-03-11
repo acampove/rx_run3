@@ -224,3 +224,25 @@ def test_fractions():
     constraints = calc.get_constraints()
 
     print(constraints)
+# ----------------------
+def test_shape():
+    '''
+    Test constraints to mu and sg
+    '''
+    NCONS    = 2
+    obs      = zfit.Space('dummy', limits=(4500, 6000))
+    category = _get_category(
+        block = Block(value='1'), 
+        brem  = Brem.one, 
+        obs   = obs)
+
+    pdf = category.pdf
+    calc= SignalConstraints(nll = pdf)
+    constraints = calc.get_constraints()
+
+    ncons = len(constraints)
+
+    log.info(f'Found {ncons} constraints')
+
+    assert ncons == NCONS
+# ----------------------
