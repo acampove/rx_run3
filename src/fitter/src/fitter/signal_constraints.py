@@ -87,21 +87,31 @@ class SignalConstraints:
         Tuple with settings to find correction
         or None, if no correction (through constraint) is possible for parameter
         '''
-        name = par.name
+        name  = par.name
+        REGEX = _RGXFR if name.startswith('fr_') else _RGXPR
 
-        mtch = re.match(_REGEX, name)
+        mtch = re.match(REGEX, name)
         if not mtch:
             log.debug(f'Cannot extract, brem, block and kind from: {name}')
             return
 
-        brem = Brem.from_str(value = mtch.group(1)) 
-        block= Block(value = mtch.group(2)) 
-        kind = mtch.group(3)
+        if name.startswith('fr_'):
+            brem = Brem.from_str(value = mtch.group(2)) 
+            block= Block(value = mtch.group(3)) 
+            kind = mtch.group(1) 
+        else:
+            brem = Brem.from_str(value = mtch.group(1)) 
+            block= Block(value = mtch.group(2)) 
+            kind = mtch.group(3)
 
-        if   kind == 'scale' and name.startswith('mu_'):
+        if   kind == 'scale':
             corr = Correction.mass_scale
-        elif kind == 'reso'  and name.startswith('sg_'):
+        elif kind == 'reso':
             corr = Correction.mass_resolution
+        elif kind == 'brem':
+            corr = Correction.brem_fraction
+        elif kind == 'block':
+            corr = Correction.blok_fraction
         else:
             raise ValueError(f'Cannot determine correction for parameter: {name}')
 
