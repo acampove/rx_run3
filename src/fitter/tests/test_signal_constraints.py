@@ -143,7 +143,7 @@ def test_full_model():
     dat = pdf.create_sampler()
     nll = ExtendedUnbinnedNLL(model = pdf, data = dat)
 
-    calc= SignalConstraints(nll = nll)
+    calc= SignalConstraints(nll = nll, comp = Component.bpkpee)
     constraints = calc.get_constraints()
 
     for cons in sorted(constraints):
@@ -152,13 +152,14 @@ def test_full_model():
     ncons = len(constraints)
     log.info(f'Found {ncons} constraints')
 # ----------------------
-def test_fractions():
+@pytest.mark.parametrize('fractions', [_FRACTIONS])
+def test_fractions(fractions :  list[str]):
     '''
     Test that we can retrieve constraints
     for all fractions
     '''
-    nll = ParsHolder(pars = _FRACTIONS)
-    calc= SignalConstraints(nll = nll)
+    nll = ParsHolder(pars = fractions)
+    calc= SignalConstraints(nll = nll, comp = Component.bpkpee)
     constraints = calc.get_constraints()
 
     for cons in sorted(constraints):
@@ -166,24 +167,19 @@ def test_fractions():
 
     assert len(constraints) == len(_FRACTIONS)
 # ----------------------
-def test_shape():
+@pytest.mark.parametrize('shapes', [_SHAPES])
+def test_shape(shapes : list[str]):
     '''
     Test constraints to mu and sg
     '''
-    NCONS    = 2
-    obs      = zfit.Space('dummy', limits=(4500, 6000))
-    category = _get_category(
-        block = Block(value='1'), 
-        brem  = Brem.one, 
-        obs   = obs)
+    nll   = ParsHolder(pars = shapes)
 
-    pdf = category.pdf
-    calc= SignalConstraints(nll = pdf)
+    calc  = SignalConstraints(nll = nll, comp = Component.bpkpee)
     constraints = calc.get_constraints()
 
     ncons = len(constraints)
 
     log.info(f'Found {ncons} constraints')
 
-    assert ncons == NCONS
+    assert ncons == len(shapes) 
 # ----------------------
