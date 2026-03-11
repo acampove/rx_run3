@@ -109,6 +109,23 @@ class Correction(StrEnum):
     blok_fraction   = 'rbk'
     # ------------------------
     @property
+    def var(self) -> str:
+        '''
+        Variable associated to this correction
+        '''
+        match self:
+            case Correction.mass_scale:
+                return 'mu'
+            case Correction.mass_resolution:
+                return 'sg'
+            case Correction.brem_fraction:
+                return 'fr'
+            case Correction.blok_fraction:
+                return 'bk'
+            case _:
+                raise ValueError(f'Invalid correction: {self}')
+    # ------------------------
+    @property
     def kind(self) -> CorrectionImplementation:
         '''
         Returns
