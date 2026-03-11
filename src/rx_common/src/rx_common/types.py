@@ -40,6 +40,12 @@ class Block(BaseModel):
 
     value : str 
     # ----------------
+    def to_int(self) -> int:
+        '''
+        Integer version of block, e.g. b1 -> 1
+        '''
+        return int(self.value)
+    # ----------------
     @field_validator('value')
     @classmethod
     def validate_value(cls, value) -> str:
