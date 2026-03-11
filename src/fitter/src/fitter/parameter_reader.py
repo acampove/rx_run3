@@ -198,15 +198,15 @@ class ParameterReader:
         '''
         channel = info.channel_from_trigger(trigger=trigger, lower_case = True)
         df      = self._df
-
-        df      = self._query(df = df, cut = f'brem    == \"{brem}\"'   )
-        df      = self._query(df = df, cut = f'block   ==   {block}'    )
         df      = self._query(df = df, cut = f'kind    == \"{kind}\"'   )
         df      = self._query(df = df, cut = f'mva_cmb == \"{cmb}\"'    )
         df      = self._query(df = df, cut = f'mva_prc == \"{prc}\"'    )
         df      = self._query(df = df, cut = f'q2bin   == \"{q2bin}\"'  )
         df      = self._query(df = df, cut = f'channel == \"{channel}\"')
         df      = self._query(df = df, cut = f'project == \"{project}\"')
+        df      = self._query(df = df, cut = f'brem    == \"{brem}\"'   )
+        df_all  = df.copy() # Data after all requirements, but with all blocks 
+        df      = self._query(df = df, cut = f'block   ==   {block}'    )
 
         if len(df) != 1:
             self._print_info(df=df)
