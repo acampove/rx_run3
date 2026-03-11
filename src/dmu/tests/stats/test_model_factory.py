@@ -95,9 +95,18 @@ def test_values():
     l_pdf = [Model.cbr, Model.cbl, Model.dscb]
     l_shr = ['mu', 'sg']
     l_flt = ['mu', 'sg']
+
+    MU_VAL = 5522
+    MU_LOW = 5511
+    MU_HIG = 6033
+
+    SG_VAL = 11.1 
+    SG_LOW =  3.3 
+    SG_HIG = 20.2 
+
     values= {
-        'mu' : (5500., 5000., 6000.),
-        'sg' : (  10.,    5.,   20.),
+        'mu' : (MU_VAL, MU_LOW, MU_HIG),
+        'sg' : (SG_VAL, SG_LOW, SG_HIG),
     }
 
     mod   = ModelFactory(
@@ -109,7 +118,18 @@ def test_values():
         l_shared= l_shr,
         l_float = l_flt)
 
-    pdf   = mod.get_pdf()
+    pdf = mod.get_pdf()
+
+    [mu] = [ par for par in pdf.get_params() if par.name.startswith('mu_') ]
+    [sg] = [ par for par in pdf.get_params() if par.name.startswith('sg_') ]
+
+    assert mu.value().numpy() == MU_VAL
+    assert mu.lower.numpy()   == MU_LOW # type: ignore
+    assert mu.upper.numpy()   == MU_HIG # type: ignore
+
+    assert sg.value().numpy() == SG_VAL
+    assert sg.lower.numpy()   == SG_LOW # type: ignore
+    assert sg.upper.numpy()   == SG_HIG # type: ignore
 
     print_pdf(pdf)
 #--------------------------

@@ -323,10 +323,13 @@ class ModelFactory:
         -------------
         Tuple with initial, low and high value for parameter
         '''
-        
-        val, low, high = PL.get_values(kind=model, parameter=name)
+        if name not in self._values:
+            log.debug(f'Using default parameters for model/parameter: {model}/{name}')
+            return PL.get_values(kind=model, parameter=name)
 
-        return val, low, high
+        log.info(f'Using custom parameters for model/name: {model}/{name}')
+
+        return self._values[name] 
     #-----------------------------------------
     def _get_reparametrization_type(self, name : str) -> CorrectionImplementation | None:
         '''
