@@ -380,6 +380,13 @@ def _plot_variables(
     _, ax = plt.subplots(figsize=(15, 10))
     for val, df_brem_unordered in df.groupby('brem'):
         sval    = str(val)
+
+        # Block and brem fractions only make sense for brem one
+        # and are the same for both brems
+        if variable in _FRACTIONS and sval != '2':
+            log.debug(f'Skipping {sval}/{variable}')
+            continue
+
         brem    = Brem.from_str(value = f'xx{sval}')
         df_brem = _reorder_blocks(df = df_brem_unordered)
         ax      = _plot_df(df=df_brem, variable=variable, brem=brem, ax=ax)
