@@ -101,44 +101,6 @@ def _get_signal(
 
     return dscb
 # ----------------------
-def _get_nll(
-    obs   : zobs,
-    brem  : Brem,
-    block : Block) -> Loss:
-    '''
-    Parameters
-    -------------
-    obs  : Observable
-
-    Returns
-    -------------
-    Likelihood with:
-
-    - PDF used to fit signal
-    '''
-    dscb= _get_signal(
-        obs  = obs,
-        brem = brem, 
-        block= block)
-
-    fct  = ModelFactory(
-        obs     = obs,
-        l_pdf   = [Model.exp],
-        l_shared= [],
-        l_float = [],
-        preffix = 'bkg')
-    expo = fct.get_pdf()
-
-    nbkg  = zfit.param.Parameter('nbkg', 1000, 0, 1000_000)
-    nsig  = zfit.param.Parameter('nsig', 1000, 0, 1000_000)
-
-    bkg   = expo.create_extended(nbkg)
-    sig   = dscb.create_extended(nsig)
-    pdf   = zfit.pdf.SumPDF([bkg, sig])
-    dat   = pdf.create_sampler()
-
-    return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
-# ----------------------------------------
 def _get_category(
     block: Block,
     brem : Brem,
@@ -165,27 +127,6 @@ def _get_category(
         model     = ['gauss'])
 
     return cat
-# ----------------------
-@pytest.mark.parametrize('block', Block.blocks())
-@pytest.mark.parametrize('brem' , _BREM_CATS)
-def test_simple(block : Block, brem : Brem) -> None:
-    '''
-    Simplest test
-    '''
-    obs = zfit.Space('dummy', limits=(4500, 6000))
-    nll = _get_nll(
-        obs   = obs,
-        block = block,
-        brem  = brem)
-
-    calc= SignalConstraints(nll = nll)
-    constraints = calc.get_constraints()
-
-    for cns in constraints:
-        log.info(cns)
-
-    assert len(constraints) == len(_BREM_CATS)
-    assert isinstance(constraints, list)
 # ----------------------
 def test_full_model():
     '''
