@@ -238,7 +238,7 @@ def _scales_from_df(df : pnd.DataFrame) -> pnd.DataFrame:
     d_mu = _get_scale(df=df, corr= Correction.mass_scale     , fun=lambda x : x[0] - x[1])
     d_sg = _get_scale(df=df, corr= Correction.mass_resolution, fun=lambda x : x[0] / x[1])
     d_fr = _get_scale(df=df, corr= Correction.brem_fraction  , fun=lambda x : x[0] / x[1])
-    d_bk = _get_scale(df=df, corr= Correction.blok_fraction  , fun=lambda x : x[0] / x[1])
+    d_bk = _get_scale(df=df, corr= Correction.blok_fraction  , fun=lambda x : x[0]       ) # For block correction, correct actual value, not Data/MC value
 
     df   = pnd.DataFrame({**d_mu, **d_sg, **d_fr, **d_bk})
 
