@@ -131,6 +131,7 @@ def _get_Bx_df() -> pnd.DataFrame:
                 mu_val, mu_err = msr.get_values(prefix = f'mu_{signal}')
                 sg_val, sg_err = msr.get_values(prefix = f'sg_{signal}')
                 fr_val, fr_err = msr.get_values(prefix = f'fr_{signal}')
+                bk_val, bk_err = msr.get_values(prefix = f'bk_{signal}')
 
                 data = {
                     'mu_val' : mu_val,
@@ -141,6 +142,9 @@ def _get_Bx_df() -> pnd.DataFrame:
                     # ---
                     'fr_val' : fr_val,
                     'fr_err' : fr_err,
+                    # ---
+                    'bk_val' : bk_val,
+                    'bk_err' : bk_err,
                     # ---
                     'block'  : block.value,
                     'brem'   : brem.to_int(),
