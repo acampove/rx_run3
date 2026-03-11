@@ -7,14 +7,16 @@ from typing        import Final
 from dmu           import LogStore
 from dmu.stats     import Constraint, Constraint1D, ConstraintType, ParsHolder
 from rx_common     import Block, Brem, Correction
-from zfit.loss     import ExtendedUnbinnedNLL
 from zfit.param    import Parameter as zpar
 
 from .scale_reader import ScaleReader
 
 log=LogStore.add_logger('fitter:signal_constraints')
 
-_REGEX : Final[str] = r'.*signal_brem_(xx\d)_b(\d)_\d+_(scale|reso)_flt'
+# Regex for non-fractions
+_RGXPR : Final[str] = r'.*signal_brem_(xx\d)_b(\d)_\d+_(scale|reso)_flt'
+# Regex for fractions
+_RGXFR : Final[str] = r'fr_(brem|block)_([x12]{3})_b(\d)(_reso)?_flt'
 # ------------------------------------------
 class SignalConstraints:
     '''
