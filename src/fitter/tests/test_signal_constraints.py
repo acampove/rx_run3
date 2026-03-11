@@ -210,8 +210,10 @@ def test_full_model():
     calc= SignalConstraints(nll = nll)
     constraints = calc.get_constraints()
 
-    ncons = len(constraints)
+    for cons in sorted(constraints):
+        print(cons)
 
+    ncons = len(constraints)
     log.info(f'Found {ncons} constraints')
 # ----------------------
 def test_fractions():
@@ -223,7 +225,10 @@ def test_fractions():
     calc= SignalConstraints(nll = nll)
     constraints = calc.get_constraints()
 
-    print(constraints)
+    for cons in sorted(constraints):
+        print(cons)
+
+    assert len(constraints) == len(_FRACTIONS)
 # ----------------------
 def test_shape():
     '''
