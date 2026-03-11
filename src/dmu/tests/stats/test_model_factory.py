@@ -57,8 +57,8 @@ def initialize():
     LogStore.set_level('dmu:stats:model_factory', 10)
 # ----------------------
 def _check_reparametrized_pdf(
-    pdf               : zpdf,
-    scales_must_float : bool) -> None:
+    pdf        : zpdf,
+    fix_scales : bool) -> None:
     '''
     Parameters
     -------------
@@ -76,12 +76,12 @@ def _check_reparametrized_pdf(
     assert 'scale_flt' in par_scale.name
     assert  'reso_flt' in par_reso.name
 
-    if scales_must_float:
-        assert par_scale.floating
-        assert par_reso.floating
-    else:
+    if fix_scales:
         assert not par_scale.floating
         assert not par_reso.floating
+    else:
+        assert par_scale.floating
+        assert par_reso.floating
 #--------------------------
 def _add_pdfs(l_pdf : list[zpdf]) -> None:
     l_par = [ zfit.param.Parameter(f'p{pdf.name}', 500, 0, 1000) for pdf in l_pdf ]
