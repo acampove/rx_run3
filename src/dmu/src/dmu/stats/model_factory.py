@@ -42,7 +42,7 @@ class ModelFactoryConf(BaseModel):
         '''
         Parameters
         ------------
-        pdfs: List of nicknames to PDFs 
+        pdfs: List of nicknames to PDFs
 
         Returns
         ------------
@@ -110,10 +110,10 @@ class ModelFactory:
     l_flt = ['mu', 'sg']
     d_rep = {'mu' : 'scale', 'sg' : 'reso'}
     mod   = ModelFactory(
-        preffix = 'signal', 
-        obs     = obs, 
-        l_pdf   = l_pdf, 
-        l_shared= l_shr, 
+        preffix = 'signal',
+        obs     = obs,
+        l_pdf   = l_pdf,
+        l_shared= l_shr,
         d_rep   = d_rep)
     pdf   = mod.get_pdf()
     ```
@@ -263,7 +263,7 @@ class ModelFactory:
 
         - Provided as part of l_reuse (e.g. mu), it will pick it up instead of building it
         - Specified as shared, it will build it once and then reuse that one.
-        - Otherwise, it will make a new one, with a suffix to diferentiate it from whatever was already created 
+        - Otherwise, it will make a new one, with a suffix to diferentiate it from whatever was already created
         '''
 
         par_name = self._get_parameter_name(f'{name}_{kind}', suffix)
@@ -284,10 +284,10 @@ class ModelFactory:
         if rep_kind is not None:
             log.debug(f'Reparametrizing {par_name}')
             par  = self.get_reparametrization(
-                name     = par_name, 
-                kind     = rep_kind, 
-                value    = val, 
-                low      = low, 
+                name     = par_name,
+                kind     = rep_kind,
+                value    = val,
+                low      = low,
                 high     = high)
         elif val == low == high:
             log.info(f'Upper and lower edges agree, fixing parameter to: {low}')
@@ -309,20 +309,20 @@ class ModelFactory:
 
         Returns
         -------------------
-        Type of reparametrization (e.g. scale, resolution...) 
+        Type of reparametrization (e.g. scale, resolution...)
         or None, if no reparametrization is needed
         '''
         if self._d_rep is None:
-            return None 
+            return None
 
         return self._d_rep.get(name)
     #-----------------------------------------
     @staticmethod
     def get_reparametrization(
-        name  : str, 
-        kind  : CorrectionImplementation, 
-        value : float, 
-        low   : float, 
+        name  : str,
+        kind  : CorrectionImplementation,
+        value : float,
+        low   : float,
         high  : float) -> zpar:
         '''
         Parameters
@@ -336,8 +336,8 @@ class ModelFactory:
         ---------------
         Parameter meant to be fitted and parametrized either as:
 
-        composed = original * resolution 
-        composed = original + scale 
+        composed = original * resolution
+        composed = original + scale
         '''
         log.debug(f'Reparametrizing {name}')
         par_orig = zfit.Parameter(name, value, low, high)
@@ -353,16 +353,16 @@ class ModelFactory:
                 raise ValueError(f'Invalid correction: {kind}')
 
         par_comp  = zfit.ComposedParameter(
-            name  = f'{name}_cmp', 
-            func  = func, 
+            name  = f'{name}_cmp',
+            func  = func,
             params={'orig' : par_orig, 'corr' : par_corr} )
 
         if _FIX_CORRECTION.get():
             par_corr.floating = False
             par_orig.floating = True
         else:
-            par_corr.floating = True 
-            par_orig.floating = False 
+            par_corr.floating = True
+            par_orig.floating = False
 
         return par_comp
     #-----------------------------------------
