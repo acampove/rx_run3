@@ -4,7 +4,10 @@ This module contains the ParameterReader class
 import os
 import re
 import math
+import numpy
+import jacobi
 import pandas as pnd
+
 from contextlib import contextmanager
 from pathlib    import Path
 from dmu        import LogStore
@@ -219,7 +222,46 @@ class ParameterReader:
         # and viceversa
         data     = { key : value for key, value in data.items() if f'brem_{brem}' in key }
 
+        data['bk'] = (math.nan, math.nan) if kind == 'sim' else self._get_block_fraction(df = df_all, block = block) 
+
         return FitMeasurement(data = data)
+    # ----------------------
+    def _get_block_fraction(
+        self,
+        df   : pnd.DataFrame,
+        block: Block) -> tuple[float,float]:
+        '''
+        Block fraction is the fraction of signal in a block, WRT the full year
+        these are the sums over the brem categories
+
+        Parameters
+        -------------
+        df   : DataFrame for real data with all blocks, but all cuts applied otherwise
+        block: Block number within dataset
+
+        Returns
+        -------------
+        Value and error of block fraction for real data
+        '''
+        arr_val  = df['yld_jpsik_value'].to_numpy()
+        arr_err  = df['yld_jpsik_error'].to_numpy()
+        arr_blk  = df['block'          ].to_numpy()
+
+        iblock   = numpy.argmax(arr_blk == block.to_int())
+        def fun(vals):
+            val = vals[iblock]
+
+            return val / sum(vals)
+
+        cov      = numpy.diag(arr_err ** 2)
+        val, var = jacobi.propagate(fun, arr_val, cov) # type: ignore
+
+        val      = float(val)
+        err      = math.sqrt(var)
+
+        log.debug(f'Block {block}, fraction {val:.3f}+/-{err:.3f}')
+
+        return val, err 
     # ----------------------
     @classmethod
     def inputs_from(cls, pars_path : Path):
