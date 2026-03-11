@@ -11,6 +11,14 @@ ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
 class DataSet(StrEnum):
     dat = auto()
     sim = auto()
+    # ---------------------
+    @property
+    def latex(self) -> str:
+        match self:
+            case DataSet.dat:
+                return 'Data'
+            case DataSet.sim:
+                return 'MC'
 # ------------------------------
 class Particle(StrEnum):
     '''
