@@ -201,6 +201,7 @@ class SimFitter(BaseFitter, Cache):
             l_reuse = cfg.reuse,
             l_shared= cfg.shared,
             l_float = cfg.floating ,
+            values  = cfg.values,
             d_rep   = cfg.reparametrize,
             d_fix   = cfg.fix)
 
