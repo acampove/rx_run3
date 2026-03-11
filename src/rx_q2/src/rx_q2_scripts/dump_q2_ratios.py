@@ -40,7 +40,7 @@ log=LogStore.add_logger('rx_q2:dump_q2_ratios')
 
 ARGS       : DictConfig | argparse.Namespace | None = None
 PROJECTS   : list[str]        = ['rk_ee', 'rk_mm', 'rkst_ee', 'rkst_mm']
-_FRACTIONS : Final[list[str]] = ['bk', 'fr']
+_FRACTIONS : Final[list[str]] = ['fr']
 #-------------------------------------
 @cache
 def _load_config() -> ScalesConf:
@@ -235,10 +235,23 @@ def _reorder_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
     return df
 #-------------------------------------
 def _scales_from_df(df : pnd.DataFrame) -> pnd.DataFrame:
+    '''
+    Parameters
+    ------------------
+    df: Dataframe with fit parameters
+
+    Returns
+    ------------------
+    Dataframe with corrections
+    '''
     d_mu = _get_scale(df=df, corr= Correction.mass_scale     , fun=lambda x : x[0] - x[1])
     d_sg = _get_scale(df=df, corr= Correction.mass_resolution, fun=lambda x : x[0] / x[1])
     d_fr = _get_scale(df=df, corr= Correction.brem_fraction  , fun=lambda x : x[0] / x[1])
-    d_bk = _get_scale(df=df, corr= Correction.blok_fraction  , fun=lambda x : x[0]       ) # For block correction, correct actual value, not Data/MC value
+
+    corr     = Correction.blok_fraction
+    df_dat   = df.query('sample == "dat"')
+    val, err = _get_entry(corr=corr, df=df_dat)
+    d_bk     = {f'{corr}_val' : [val], f'{corr}_err' : [err]}
 
     df   = pnd.DataFrame({**d_mu, **d_sg, **d_fr, **d_bk})
 
@@ -272,7 +285,8 @@ def _get_scale(
         [dat_err ** 2,            0],
         [0           , sim_err ** 2]]
 
-    val, var = jacobi.propagate(fun, [dat_val, sim_val], cov) # type: ignore
+    vals     = [dat_val, sim_val]
+    val, var = jacobi.propagate(fun, vals, cov) # type: ignore
     val      = float(val)
     err      = math.sqrt(var)
 
@@ -282,8 +296,6 @@ def _get_scale(
         case Correction.mass_resolution:
             return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
         case Correction.brem_fraction:
-            return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
-        case Correction.blok_fraction:
             return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
         case _:
             raise ValueError(f'Invalid correction: {corr}')
