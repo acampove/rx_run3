@@ -373,8 +373,12 @@ def _plot_corrections(
 def _plot_variables(
     df       : pnd.DataFrame, 
     variable : str, 
-    kind     : str) -> None:
-
+    kind     : DataSet) -> None:
+    '''
+    Parameters
+    -----------------
+    kind: dat or sim
+    '''
     log.info(f'Plotting {variable} for {kind}')
 
     _, ax = plt.subplots(figsize=(15, 10))
@@ -391,7 +395,6 @@ def _plot_variables(
         df_brem = _reorder_blocks(df = df_brem_unordered)
         ax      = _plot_df(df=df_brem, variable=variable, brem=brem, ax=ax)
 
-    name = {'dat' : 'Data', 'sim' : 'MC'}[kind]
     # Fractions only make sense for either
     # one brem category or both combined
     # label makes no sense
@@ -402,14 +405,16 @@ def _plot_variables(
 
     cfg = _load_config()
     if   variable == 'mu':
-        plt.ylabel(f'$\\mu^{{{name}}}$[MeV]')
+        plt.ylabel(rf'$\mu^{{{kind.latex}}}$[MeV]')
         ax.axhline(y=cfg.jpsi_mass, color='black', linestyle=':', label='PDG')
     elif variable == 'sg':
-        plt.ylabel(f'$\\sigma^{{{name}}}$[MeV]')
+        plt.ylabel(rf'$\sigma^{{{kind.latex}}}$[MeV]')
     elif variable == 'fr':
-        plt.ylabel(f'$fr^{{{name}}}$[MeV]')
+        plt.ylabel(rf'$fr^{{{kind.latex}}}$[MeV]')
+    elif variable == 'bk':
+        plt.ylabel(rf'$fr^{{{kind.latex}}}$[MeV]')
     else:
-        raise ValueError(f'Invalid varible: {variable}')
+        raise ValueError(f'Invalid variable: {variable}')
 
     rng = cfg.get_range(var=variable)
     plt.ylim(rng)
@@ -424,11 +429,14 @@ def _plot(df : pnd.DataFrame) -> None:
     df: Pandas dataframe with fitting parameters, e.g. mu, sg.
     '''
     for kind, df_kind in df.groupby('sample'):
-        skind = str(kind)
+        skind = DataSet(kind)
 
         _plot_variables(df=df_kind, variable='mu', kind = skind)
         _plot_variables(df=df_kind, variable='sg', kind = skind)
         _plot_variables(df=df_kind, variable='fr', kind = skind)
+
+        if kind == DataSet.dat:
+            _plot_variables(df=df_kind, variable='bk', kind = skind)
 
     df_scale = _get_scales(df)
     _plot_corrections(df=df_scale, correction=Correction.mass_resolution)
