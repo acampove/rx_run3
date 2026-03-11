@@ -72,12 +72,18 @@ class Constraint(BaseModel):
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, 'w') as ofile:
             ofile.write(data)
+    # ----------------------
+    def __lt__(self, other : 'Constraint1D') -> bool:
+        '''
+        Sort constraints by name
+        '''
+        return self.name < other.name
 # ----------------------------------------
 class ConstraintND(Constraint):
     '''
     Class meant to symbolize NDimensional Gaussian constraint
     '''
-    kind       : str
+    kind       : ConstraintType 
     parameters : list[str]
     values     : list[float]
     cov        : list[list[float]]
