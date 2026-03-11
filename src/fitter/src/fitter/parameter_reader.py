@@ -276,6 +276,41 @@ class ParameterReader:
 
         return val, err 
     # ----------------------
+    def _get_brem_yields(
+        self, 
+        df      : pnd.DataFrame, 
+        brem    : Brem, 
+        signame : str) -> tuple[numpy.ndarray, numpy.ndarray]:
+        '''
+        Parameters
+        -------------
+        df     : DataFrame with yields and fractions information
+        brem   : Brem category
+        signame: Name of signal, e.g. jpsik
+
+        Returns
+        -------------
+        Tuple with yields and yield errors for given brem category
+        '''
+
+        # NOTE: Uncertainties are very small, might not matter if we use
+        # covariance between fraction and yield or assume zero correlation
+        arr_yld_val = df[f'yld_{signame}_value'     ].to_numpy()
+        arr_yld_err = df[f'yld_{signame}_error'     ].to_numpy()
+        arr_frc_val = df[f'{signame}_fraction_value'].to_numpy()
+        arr_frc_err = df[f'{signame}_fraction_error'].to_numpy()
+
+        # Fits are parametrized with total yield and brem 1 fractions 
+        # NOTE: Uncertainty on ERR is uncertainty on 1 - ERR
+        if brem == Brem.two:
+            arr_frc_val = 1 - arr_frc_val
+
+        val =  arr_yld_val * arr_frc_val
+        var = (arr_yld_val * arr_frc_err) ** 2 + (arr_frc_val * arr_yld_err) ** 2
+        err = numpy.sqrt(var)
+
+        return val, err
+    # ----------------------
     @classmethod
     def inputs_from(cls, pars_path : Path):
         '''
