@@ -1,12 +1,16 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum      import StrEnum, Enum
-from .mass     import Mass
+from enum      import StrEnum, Enum, auto
 from dmu.stats import CorrectionImplementation
 from pydantic  import BaseModel, field_validator, ConfigDict
+from .mass     import Mass
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
+# ------------------------------
+class DataSet(StrEnum):
+    dat = auto()
+    sim = auto()
 # ------------------------------
 class Particle(StrEnum):
     '''
