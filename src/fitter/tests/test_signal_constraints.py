@@ -5,7 +5,7 @@ import pytest
 from dmu       import LogStore
 from dmu.stats import CorrectionImplementation, Model, zfit
 from dmu.stats import ModelFactory
-from rx_common import Block, Brem
+from rx_common import Block, Brem, Component
 from zfit.loss import ExtendedUnbinnedNLL
 from fitter    import SignalConstraints
 from fitter    import Category 
@@ -17,24 +17,19 @@ zpdf = zfit.pdf.BasePDF
 zpar = zfit.param.Parameter
 log  = LogStore.add_logger('fitter:test_signal_constraints')
 
-_BREM_CATS = [Brem.one, Brem.two]
 _FRACTIONS = [
-    'fr_block_x12_b1_flt',
-    'fr_block_x12_b2_flt',
-    'fr_block_x12_b3_flt',
-    'fr_block_x12_b4_flt',
-    'fr_block_x12_b5_flt',
-    'fr_block_x12_b6_flt',
-    'fr_block_x12_b7_flt',
-    'fr_brem_xx1_b1_reso_flt',
-    'fr_brem_xx1_b2_reso_flt',
-    'fr_brem_xx1_b3_reso_flt',
-    'fr_brem_xx1_b4_reso_flt',
-    'fr_brem_xx1_b5_reso_flt',
-    'fr_brem_xx1_b6_reso_flt',
-    'fr_brem_xx1_b7_reso_flt',
-    'fr_brem_xx1_b8_reso_flt',
+    'fr_bpkpee_brem_xx1_b1',
+    'fr_bpkpee_brem_xx2_b1',
 ]
+
+_SHAPES = [
+    'mu_bpkpee_brem_xx1_b1_scale_flt',
+    'sg_bpkpee_brem_xx1_b1_reso_flt',
+    'mu_bpkpee_brem_xx2_b1_scale_flt',
+    'sg_bpkpee_brem_xx2_b1_reso_flt',
+]
+
+_BREM_CATS = [Brem.one, Brem.two]
 # ----------------------
 class ParsHolder:
     def __init__(self, pars : list[str]):
