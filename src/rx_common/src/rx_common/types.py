@@ -106,7 +106,7 @@ class Correction(StrEnum):
     mass_scale      = 'smu'
     mass_resolution = 'rsg'
     brem_fraction   = 'rfr'
-    blok_fraction   = 'rbk'
+    blok_fraction   =  'bk'
     # ------------------------
     @property
     def var(self) -> str:
