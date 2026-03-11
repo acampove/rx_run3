@@ -101,6 +101,7 @@ def _add_paths(data : dict) -> None:
 def _get_Bx_df() -> pnd.DataFrame:
     name   = 'reso_non_dtf'
     signal = 'jpsi'
+    signame= 'jpsik'
     cmb    = '070'
     prc    = '060'
     brems  = [Brem.one, Brem.two] 
@@ -117,6 +118,7 @@ def _get_Bx_df() -> pnd.DataFrame:
         for block in blocks:
             for kind in kinds:
                 msr = rdr(
+                    signame  = signame,
                     brem     = brem, 
                     block    = block, 
                     cmb      = cmb,
