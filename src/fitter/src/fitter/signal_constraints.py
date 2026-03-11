@@ -66,9 +66,9 @@ class SignalConstraints:
             block = block, 
             brem  = brem)
 
-        log.info(f'Constraining: {par.name}')
-        log.info(f'{"Value":<20}{val:20.3f}')
-        log.info(f'{"Error":<20}{err:20.3f}')
+        log.debug(f'Constraining: {par.name}')
+        log.debug(f'{"Value":<20}{val:20.3f}')
+        log.debug(f'{"Error":<20}{err:20.3f}')
 
         return Constraint1D(
             name = par.name,
