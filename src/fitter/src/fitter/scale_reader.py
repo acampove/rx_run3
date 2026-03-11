@@ -2,7 +2,10 @@
 Module holding ScaleReader class
 '''
 import os
+import math
 import pandas as pnd
+import jacobi
+
 from dmu       import LogStore
 from pathlib   import Path
 from rx_common import Block, Brem, Correction
@@ -49,6 +52,26 @@ class ScaleReader:
         -------------
         Tuple with value and error of scale
         '''
+        if brem == Brem.brx12:
+            val_1, err_1 = self.get_scale(
+                corr  = corr, 
+                block = block, 
+                brem  = Brem.one)
+
+            val_2, err_2 = self.get_scale(
+                corr  = corr, 
+                block = block, 
+                brem  = Brem.two)
+
+            val, var = jacobi.propagate(
+                lambda x : (x[0] + x[1]) / 2,  
+                [val_1, val_2],                     # type: ignore
+                [[err_1 ** 2, 0], [0, err_2 ** 2]]) # type: ignore
+            val = float(val)
+            err = math.sqrt(var)
+
+            return val, err
+
         df = self._df
         try:
             df = df.query(f'block == {block}')

@@ -12,14 +12,16 @@ from rx_common import Block
 
 log=LogStore.add_logger('fitter:test_scale_reader')
 
-CORRS = [
+_CORRS = [
     Correction.mass_scale,
     Correction.mass_resolution,
 ]
+
+_BLOCKS = Block.blocks()
 # ----------------------
-@pytest.mark.parametrize('kind' , CORRS)
-@pytest.mark.parametrize('block', Block.blocks())
-@pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
+@pytest.mark.parametrize('kind' , _CORRS)
+@pytest.mark.parametrize('block', _BLOCKS)
+@pytest.mark.parametrize('brem' , [Brem.one, Brem.two, Brem.brx12])
 def test_all(
     brem : Brem,
     block: Block,
@@ -45,9 +47,9 @@ def test_all(
     assert not math.isnan(val)
     assert not math.isnan(err)
 # ----------------------
-@pytest.mark.parametrize('block', Block.blocks())
-@pytest.mark.parametrize('brem' , [Brem.one, Brem.two])
-def test_block(
+@pytest.mark.parametrize('block', _BLOCKS)
+@pytest.mark.parametrize('brem' , [Brem.one, Brem.two, Brem.brx12])
+def test_single_block(
     brem : Brem,
     block: Block):
     '''
