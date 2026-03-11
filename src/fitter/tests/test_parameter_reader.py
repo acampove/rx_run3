@@ -29,6 +29,7 @@ def test_simple(
     '''
     rdr    = ParameterReader(name = 'reso_non_dtf')
     ms_sim = rdr(
+        signame  = 'jpsik',
         block    = block, 
         brem     = brem, 
         cmb      = '050',
@@ -53,6 +54,7 @@ def test_pars_path(block : Block, brem : Brem):
     with ParameterReader.inputs_from(pars_path = pars_path):
         rdr = ParameterReader(name = name)
         ms_sim = rdr(
+            signame  = 'jpsik',
             kind     = 'dat',
             brem     = brem, 
             block    = block, 
