@@ -27,6 +27,7 @@ class Constraint(BaseModel):
     '''
     Class with common code to 1D and ND constraints
     '''
+    name : str
     # ----------------------
     def calibrate(self, result : FitResult) -> 'Constraint':
         _ = result
@@ -104,6 +105,7 @@ class ConstraintND(Constraint):
             log.info(f'{name:<20}{old_value:<20.3f}{"--->":<20}{new_value:<20.3f}')
 
         return ConstraintND(
+            name       = self.name,
             kind       = self.kind,
             parameters = self.parameters,
             values     = new_values, 
@@ -257,7 +259,6 @@ class Constraint1D(Constraint):
     Class representing Gaussian 1D constrain
     '''
     kind: ConstraintType 
-    name: str
     mu  : float
     sg  : float
     # ----------------------
