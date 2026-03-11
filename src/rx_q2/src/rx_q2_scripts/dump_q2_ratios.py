@@ -235,22 +235,24 @@ def _reorder_blocks(df : pnd.DataFrame) -> pnd.DataFrame:
     return df
 #-------------------------------------
 def _scales_from_df(df : pnd.DataFrame) -> pnd.DataFrame:
-    d_mu = _get_scale(df=df, name='mu', fun=lambda x : x[0] - x[1])
-    d_sg = _get_scale(df=df, name='sg', fun=lambda x : x[0] / x[1])
-    d_fr = _get_scale(df=df, name='fr', fun=lambda x : x[0] / x[1])
-    df   = pnd.DataFrame({**d_mu, **d_sg, **d_fr})
+    d_mu = _get_scale(df=df, corr= Correction.mass_scale     , fun=lambda x : x[0] - x[1])
+    d_sg = _get_scale(df=df, corr= Correction.mass_resolution, fun=lambda x : x[0] / x[1])
+    d_fr = _get_scale(df=df, corr= Correction.brem_fraction  , fun=lambda x : x[0] / x[1])
+    d_bk = _get_scale(df=df, corr= Correction.blok_fraction  , fun=lambda x : x[0] / x[1])
+
+    df   = pnd.DataFrame({**d_mu, **d_sg, **d_fr, **d_bk})
 
     return df
 #-------------------------------------
 def _get_scale(
     df   : pnd.DataFrame, 
-    name : str, 
+    corr : Correction, 
     fun  : Callable) -> dict[str,list[float]]:
     '''
     Parameters
     ------------------
     df  : Dataframe with mass scales and resolutions
-    name: Variable whose scale or resolution will be calculated
+    corr: Variable whose scale or resolution will be calculated
     fun : Function used to calculate scale or resolution
 
     Returns
@@ -263,8 +265,8 @@ def _get_scale(
     df_dat  = df.query('sample == "dat"')
     df_sim  = df.query('sample == "sim"') 
 
-    dat_val, dat_err = _get_entry(name=name, df=df_dat)
-    sim_val, sim_err = _get_entry(name=name, df=df_sim)
+    dat_val, dat_err = _get_entry(corr=corr, df=df_dat)
+    sim_val, sim_err = _get_entry(corr=corr, df=df_sim)
 
     cov : list[list[float]] = [
         [dat_err ** 2,            0],
@@ -274,25 +276,25 @@ def _get_scale(
     val      = float(val)
     err      = math.sqrt(var)
 
-    if name == 'mu':
-        corr = Correction.mass_scale
-        return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
-
-    if name == 'sg':
-        corr = Correction.mass_resolution
-        return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
-
-    if name == 'fr':
-        corr = Correction.brem_fraction
-        return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
-
-    raise ValueError(f'Invalid parameter name: {name}')
+    match corr:
+        case Correction.mass_scale:
+            return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
+        case Correction.mass_resolution:
+            return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
+        case Correction.brem_fraction:
+            return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
+        case Correction.blok_fraction:
+            return {f'{corr}_val' : [val], f'{corr}_err' : [err]}
+        case _:
+            raise ValueError(f'Invalid correction: {corr}')
 # ----------------------
-def _get_entry(name : str, df : pnd.DataFrame) -> tuple[float,float]:
+def _get_entry(
+    corr : Correction, 
+    df   : pnd.DataFrame) -> tuple[float,float]:
     '''
     Parameters
     -------------
-    name: Quantity associated to column, e.g. mu, sg
+    corr: Correction used 
     df  : DataFrame with scales and resolutions
 
     Returns
@@ -304,11 +306,11 @@ def _get_entry(name : str, df : pnd.DataFrame) -> tuple[float,float]:
         raise ValueError('Expected one and only one row')
 
     try:
-        val = df[f'{name}_val'].iloc[0]
-        err = df[f'{name}_err'].iloc[0]
+        val = df[f'{corr.var}_val'].iloc[0]
+        err = df[f'{corr.var}_err'].iloc[0]
     except Exception as exc:
-        log.error(df)
-        raise ValueError(f'Cannot find value or error of {name}') from exc
+        log.error('\n' + str(df))
+        raise ValueError(f'Cannot find value or error of {corr}') from exc
 
     return val, err
 #-------------------------------------
