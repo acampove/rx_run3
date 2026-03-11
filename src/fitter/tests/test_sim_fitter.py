@@ -29,6 +29,10 @@ def initialize():
     Runs before any test
     '''
     log.info('Disabling caching')
+
+    LogStore.set_level('fitter:signal_constraints', 10)
+    LogStore.set_level('fitter:sim_fitter'        , 10)
+
     with RDFGetter.max_entries(value = 100_000):
         yield
 # ---------------------------------------------------
