@@ -5,7 +5,7 @@ import pytest
 
 from pathlib       import Path
 from dmu           import LogStore
-from dmu.stats     import zfit
+from dmu.stats     import ParsHolder, zfit
 from dmu.generic   import UnpackerModel, utilities as gut
 from dmu.stats     import utilities as sut
 from dmu.workflow  import Cache
@@ -20,6 +20,7 @@ from fitter        import ParametricConf
 from fitter        import CCbarConf
 from fitter        import NonParametricConf
 from fitter        import MisIDConf
+from fitter        import SignalConstraints
 
 log=LogStore.add_logger('fitter:test_sim_fitter')
 # ---------------------------------------------------
