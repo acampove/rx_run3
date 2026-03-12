@@ -7,7 +7,7 @@ from typing              import Final
 from rx_common           import Component, Correction, Qsq, Region
 from rx_selection        import selection as sel
 
-from dmu.stats           import FitResult, GofCalculator
+from dmu.stats           import ConstraintType, FitResult, GofCalculator
 from dmu.stats           import ParameterLibrary as PL
 from dmu.stats           import Constraint1D
 
@@ -225,8 +225,11 @@ class MisIDConstraints(Cache):
             log.info(f'Found cached: {cons_path}')
 
             d_cns = gut.load_json(cons_path)
+            cons  = Constraint1D.from_dict(
+                data = d_cns, 
+                kind = ConstraintType.gauss)
 
-            return Constraint1D.from_dict(data = d_cns, kind='GaussianConstraint')
+            return cons
 
         log.info(f'Running full calculation, nothing cached in: {cons_path}')
         d_nll   = {}
@@ -246,5 +249,9 @@ class MisIDConstraints(Cache):
 
         self._cache()
 
-        return Constraint1D.from_dict(data = d_cns, kind = 'GaussianConstraint')
+        const    = Constraint1D.from_dict(
+            data = d_cns, 
+            kind = ConstraintType.gauss)
+
+        return const
 # -------------------------
