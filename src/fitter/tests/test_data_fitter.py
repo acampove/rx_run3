@@ -60,7 +60,7 @@ def test_single_region(tmp_path : Path) -> None:
             q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg)
-        ftr.run(kind='fres')
+        ftr.run()
 # ----------------------
 def test_two_regions(tmp_path : Path) -> None:
     '''
@@ -90,7 +90,7 @@ def test_two_regions(tmp_path : Path) -> None:
             q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg)
-        ftr.run(kind='fres')
+        ftr.run()
 # ----------------------
 def test_two_regions_common_pars(tmp_path : Path) -> None:
     '''
@@ -124,7 +124,7 @@ def test_two_regions_common_pars(tmp_path : Path) -> None:
             q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg)
-        ftr.run(kind='fres')
+        ftr.run()
 # ----------------------
 def test_with_constraints(tmp_path : Path) -> None:
     '''
@@ -149,7 +149,7 @@ def test_with_constraints(tmp_path : Path) -> None:
             d_nll= d_nll, 
             cfg  = cfg)
 
-        ftr.run(kind='fres')
+        ftr.run()
 # ----------------------
 @pytest.mark.parametrize('ntoys', [20])
 def test_with_toys(ntoys : int, tmp_path : Path) -> None:
@@ -177,7 +177,7 @@ def test_with_toys(ntoys : int, tmp_path : Path) -> None:
             q2bin= Qsq.jpsi,
             d_nll= d_nll, 
             cfg  = cfg_fit)
-        res = ftr.run(kind='fres')
+        res = ftr.run()
 
     with gut.environment(mapping = {'ANADIR' : str(tmp_path)}):
         cfg_toy = cfg_toy.model_copy(update = {'ntoys' : ntoys, 'output' : tmp_path / 'toys.parquet'})
