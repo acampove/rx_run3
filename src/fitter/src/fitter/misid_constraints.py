@@ -242,7 +242,7 @@ class MisIDConstraints(Cache):
                 d_nll= d_nll, 
                 cfg  = self._cfg)
 
-            pars = ftr.run(kind='fres')
+            pars = ftr.run()
 
         d_cns = self.__get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)

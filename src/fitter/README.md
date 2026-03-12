@@ -89,7 +89,7 @@ ftr = DataFitter(
     name = 'data_fit',
     d_nll= {'' : (nll, cfg)},  # If doing simultaneous fits, this dictionary
     cfg  = fit_cfg)            # will hold each signal region
-obj = ftr.run(kind='conf')
+obj = ftr.run()
 ```
 
 where `obj` is a `DictConf` (from the `omegaconf` project) dictionary where the
