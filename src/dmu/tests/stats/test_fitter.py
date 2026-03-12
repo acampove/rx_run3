@@ -2,23 +2,25 @@
 Module containing unit tests for Fitter class
 '''
 
-import os
 import tqdm
 import numpy
 import pytest
 import pandas              as pnd
 import matplotlib.pyplot   as plt
 
+from pathlib     import Path
 from functools   import cache
 from dmu         import LogStore
 from dmu.stats   import Constraint1D
 from dmu.stats   import Retries
+from dmu.stats   import ConstraintType
 from dmu.testing import get_model, get_nll
 from dmu.stats   import FitConf, minimizers
 from dmu.stats   import GofCalculator
 from dmu.stats   import zfit
 from dmu.stats   import Fitter
 from dmu.stats   import ZFitPlotter
+from dmu.generic import rxran
 from ROOT        import RDF, gInterpreter # type: ignore
 
 _NSAMPLE : int = 10_000
@@ -131,8 +133,17 @@ def test_constrain():
     '''
     Fits with constraints to parameters
     '''
-    mu  = Constraint1D(kind = 'GaussianConstraint', name = 'mu', mu = 5.0, sg = 1.0)
-    sg  = Constraint1D(kind = 'GaussianConstraint', name = 'sg', mu = 1.0, sg = 0.1)
+    mu  = Constraint1D(
+        kind = ConstraintType.gauss, 
+        name = 'mu', 
+        mu   = 5.0, 
+        sg   = 1.0)
+
+    sg  = Constraint1D(
+        kind = ConstraintType.gauss,
+        name = 'sg', 
+        mu   = 1.0, 
+        sg   = 0.1)
 
     fcf = FitConf.default()
     cfg = fcf.model_copy(update = {'constraints' : [mu, sg]})
@@ -183,45 +194,6 @@ def test_wgt():
     obj=Fitter(pdf, dat)
     obj.fit()
 #-------------------------------------
-def test_steps():
-    '''
-    Tests the steps fitting strategy
-    '''
-    cfg = {
-            'strategy' : {
-                'steps' : {
-                    'nsteps' : [ 1000,  5000],
-                    'nsigma' : [  5.0,   2.0],
-                    'yields' : ['nsg', 'nbk'],
-                    }
-                }
-            }
-
-    pdf = _get_pdf()
-    arr = _get_data()
-    obj = Fitter(pdf, arr)
-    res = obj.fit(cfg)
-    print(res)
-
-    assert res.valid
-#-------------------------------------
-@pytest.mark.skip(reason='GofCalculator does not support binned data')
-@pytest.mark.parametrize('nbins', [None, 100])
-def test_binning(nbins : int):
-    '''
-    Test fitting with binning specified
-    '''
-    cfg = {'likelihood' : {'nbins' : nbins}}
-
-    arr = _get_data()
-    pdf = _get_pdf()
-    obj = Fitter(pdf, arr)
-    res = obj.fit(cfg)
-
-    log.info(res)
-
-    assert res.valid
-# ----------------------
 def test_minimizer() -> None:
     '''
     Simplest test of minimizer static method
