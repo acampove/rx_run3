@@ -6,7 +6,7 @@ import zfit
 from typing      import Literal
 from dmu         import LogStore
 from rx_common   import Brem, Block, Correction
-from dmu.stats   import ModelFactory
+from dmu.stats   import Model, ModelFactory
 from .category   import Category
 
 log=LogStore.add_logger('fitter:category_merger')
@@ -197,7 +197,7 @@ class CategoryMerger:
     def _model_from_categories(
         self, 
         single_model : bool,
-        categories   : list[Category]) -> list[str]:
+        categories   : list[Category]) -> list[Model]:
         '''
         Parameters
         -------------
@@ -208,7 +208,7 @@ class CategoryMerger:
         -------------
         List of strings, when each represents a model, e.g. [cbl, cbr]
         '''
-        models : list[str] = []
+        models : list[Model] = []
 
         first = categories[0].model
         for cat in categories:
