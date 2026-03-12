@@ -37,6 +37,34 @@ class MVAWp(RootModel[float|tuple[float,float]]):
             return
         
         raise ValueError(f'Invalid probability: {prob}')
+    # ----------------------
+    def get_cut(self, name : str) -> str:
+        '''
+        Parameters
+        --------------
+        name: Name of branch on which the cut is applied, e.g. mva_cmb
+        '''
+        if isinstance(self.root, (float, int)):
+            return f'{name} > {self.root}'
+
+        min, max = self.root
+
+        return f'({self.root} < {max}) && ({self.root} > {min})'
+    # -------------    
+    @property
+    def name(self):
+        '''
+        Frientlier name for working point
+        Needed to name directories, etc
+        '''
+        if isinstance(self.root, (float, int)):
+            val = int(1000 * self.root)
+            return str(val)
+
+        low = int(1000 * self.root[0])
+        hig = int(1000 * self.root[1])
+
+        return f'{low}-{hig}'
     # -------------    
     def __str__(self):
         if isinstance(self.root, float):
