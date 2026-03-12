@@ -33,7 +33,7 @@ class Category(BaseModel):
     model    : List of model names used for category
     selection: Selection that was used to get category, on top of nominal
     '''
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
 
     name      : str 
     pdf       : zpdf 
