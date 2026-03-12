@@ -151,7 +151,7 @@ def test_with_cat_constrained(tmp_path : Path):
         log.info(par.name)
 
     log.info('Printing constraints:')
-    for cons in constraints:
+    for cons in sorted(constraints):
         print(cons)
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bpkstkpiee, Component.bsphiee])
