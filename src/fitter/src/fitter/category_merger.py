@@ -299,3 +299,36 @@ class CategoryMerger:
 
         return cat_2
 # ----------------------
+class FitCategoryMerger(CategoryMerger):
+    '''
+    Class meant to merge FitCategoryMerger instances
+    '''
+    # ----------------------
+    def __init__(self, categories : list[FitCategory]):
+        '''
+        Parameters
+        -------------
+        categories: List of Category objects, representing fits to MC datasets 
+        '''
+        self._categories = categories
+    # ----------------------
+    def get_category(self) -> FitCategory:
+        '''
+        Returns
+        -------------
+        Category object resulting from merging input categories
+        '''
+        log.debug(f'Merging {len(self._categories)} categories by brem')
+        cat_1 = self._group_brems(categories  = self._categories) 
+
+        log.debug(f'Merging {len(cat_1)} categories by block')
+        cat_2 = self._merge_blocks(categories = cat_1)
+
+        log.debug('Merged categories')
+
+        l_res       = [ cat.res for cat in self._categories ]
+        data        = cat_2.model_dump()
+        data['res'] = FitResult.merge(results = l_res)
+
+        return FitCategory(**data) 
+# ----------------------
