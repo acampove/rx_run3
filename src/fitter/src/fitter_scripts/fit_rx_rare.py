@@ -2,13 +2,9 @@
 Script used to interact with DataFitter tool
 and run fits
 '''
-# To prevent crash
-import ROOT
-
+import argparse
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-
-import argparse
 
 from dask.distributed import Client, LocalCluster
 from typing        import Final
@@ -24,13 +20,15 @@ from dmu           import LogStore
 from zfit.loss     import ExtendedUnbinnedNLL
 from rx_data       import RDFLoader
 from rx_selection  import selection as sel
-from rx_common     import Component, info
+from rx_common     import Component
 
 from fitter        import RXFitConfig
 from fitter        import ConstraintReader
 from fitter        import DataFitter
 from fitter        import LikelihoodFactory
 from fitter        import ToyMaker
+from fitter        import FitModelConf
+from fitter        import ToyConf
 
 log=LogStore.add_logger('fitter:fit_rx_rare')
 
