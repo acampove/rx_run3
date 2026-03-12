@@ -15,7 +15,7 @@ from typing        import Final
 from contextlib    import ExitStack
 from omegaconf     import DictConfig
 from dmu.stats     import ParameterLibrary as PL
-from dmu.generic   import utilities as gut
+from dmu.generic   import UnpackerModel, utilities as gut
 from dmu.stats     import utilities as sut
 from dmu.stats     import ConstraintAdder
 from dmu.stats     import Constraint
@@ -36,7 +36,7 @@ log=LogStore.add_logger('fitter:fit_rx_rare')
 
 DATA_SAMPLE : Final[Component] = Component.data_24 
 # ----------------------
-def _get_client(cfg : FitConfig) -> Client | None:
+def _get_client(cfg : RXFitConfig) -> Client | None:
     '''
     Parameters
     -------------
@@ -189,15 +189,16 @@ def main(args : DictConfig | None = None):
     '''
     Entry point
     '''
-    cfg    = _parse_args(args = args)
-    client = _get_client(cfg = cfg)
+    with UnpackerModel.package(name = 'fitter_data'):
+        cfg = _parse_args(args = args)
 
+    client = _get_client(cfg = cfg)
     with ExitStack() as stack:
         if client is not None:
             stack.enter_context(RDFLoader.client(client = client))
 
         stack.enter_context(Cache.cache_root(path=cfg.output_directory))
-        stack.enter_context(PL.parameter_schema(cfg=cfg.mod_cfg.model.yields))
+        stack.enter_context(PL.parameter_schema(cfg=cfg.mod_cfg.yields))
         stack.enter_context(sel.custom_selection(d_sel=cfg.overriding_selection))
         stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
 
