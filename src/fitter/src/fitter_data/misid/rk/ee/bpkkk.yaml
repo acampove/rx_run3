@@ -15,5 +15,6 @@ plots:
   stacked : True
   d_leg   : {}
 data_fit:
-  ntries :   10
-  pvalue : 0.05
+  strategy:
+    ntries :   10
+    pvalue : 0.05
