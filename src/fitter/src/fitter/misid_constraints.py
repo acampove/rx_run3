@@ -227,18 +227,27 @@ class MisIDConstraints(Cache):
             return cons
 
         log.info(f'Running full calculation, nothing cached in: {cons_path}')
-        d_nll   = {}
+
+        l_res : list[FitResult] = []
         for region in Region.hadronic_misid():
-            d_nll[region] = self.__get_control_nll(region=region)
+            nll = self.__get_control_nll(region=region)
 
-        with GofCalculator.disabled(value=True):
-            ftr      = DataFitter(
-                q2bin= self._q2bin, 
-                d_nll= d_nll, 
-                cfg  = self._cfg)
+            with GofCalculator.disabled(value=True):
+                ftr      = DataFitter(
+                    q2bin= self._q2bin, 
+                    d_nll= { region : nll }, 
+                    cfg  = self._cfg)
 
-            pars = ftr.run()
+                cfg = self._cfg.components[region.signal]
 
+                if not isinstance(cfg, MisIDConf):
+                    tconf = type(cfg)
+                    raise ValueError(f'Config for {region} is of the wrong type: {tconf}')
+
+                res = ftr.run(fit_cfg = cfg.data_fit)
+                l_res.append(res)
+
+        pars = FitResult.merge(results = l_res)
         d_cns = self.__get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)
 
