@@ -223,7 +223,7 @@ class RXFitConfig(BaseModel):
 
     mod_cfg : FitModelConf 
     block   : int             = -1 
-    nthread : int             = 1
+    nproc   : int             = 1
     log_lvl : int             = 20
     ntoys   : int             = 0
     toy_cfg : ToyConf |  None = None

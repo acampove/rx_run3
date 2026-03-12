@@ -44,11 +44,11 @@ def _get_client(cfg : RXFitConfig) -> Client | None:
     -------------
     Client if using multiple processes, or None
     '''
-    if cfg.nthread == 1:
+    if cfg.nproc == 1:
         return None
 
     cluster = LocalCluster(
-       n_workers         =cfg.nthread, 
+       n_workers         =cfg.nproc, 
        threads_per_worker=1, 
        processes         =True, 
        memory_limit      ='4GiB')
@@ -68,7 +68,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> RXFitCo
         parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/rk/ee'          , required= True)
         parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =   '')
         parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
-        parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                               , default =1)
+        parser.add_argument('-n', '--nproc'  , type=int  , help='Number of processes'                             , default =1)
         parser.add_argument('-l', '--log_lvl', type=int  , help='Logging level', choices=[5, 10, 20, 30]          , default =20)
         parser.add_argument('-q', '--q2bin'  , type=str  , help='q2 bin'      , choices=['low', 'central', 'high'], required=True)
         parser.add_argument('-C', '--mva_cmb', type=float, help='Cut on combinatorial MVA working point'          , required=True)
@@ -107,7 +107,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> RXFitConfig:
         group   = args.group,
         block   = args.block,
         q2bin   = args.q2bin,
-        nthread = args.nthread,
+        nproc   = args.nthread,
         mva_cmb = args.mva_cmb / 100.,
         mva_prc = args.mva_prc / 100.,
         log_lvl = args.log_lvl,
