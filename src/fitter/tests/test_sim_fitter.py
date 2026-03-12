@@ -36,6 +36,26 @@ def initialize():
 
     with RDFGetter.max_entries(value = 100_000):
         yield
+# ----------------------
+def _float_fix_pars(pdf : ParsHolder) -> ParsHolder:
+    '''
+    Parameters
+    -------------
+    pdf: Holder of parameters    
+
+    Returns
+    -------------
+    PDF with parameters ending in _flt floating and everything else fixed 
+    '''
+    par_flt = pdf.get_params(floating =  True)
+    par_fix = pdf.get_params(floating = False)
+
+    log.info('Fixing/Floating parameters:')
+    for par in par_fix | par_flt:
+        log.info(par.name)
+        par.floating = par.name.endswith('_flt')
+
+    return pdf
 # ---------------------------------------------------
 def test_nomc(tmp_path : Path):
     '''
@@ -97,6 +117,42 @@ def test_with_cat(tmp_path : Path):
             q2bin    = Qsq.jpsi)
 
         _ = ftr.get_model()
+# ---------------------------------------------------
+def test_with_cat_constrained(tmp_path : Path):
+    '''
+    Test for signal and add constraints
+    '''
+    obs  = zfit.Space(
+        obs   = Mass.bp_bcor_smr.latex, 
+        label = Mass.bp_bcor_smr,
+        limits=(4500, 7000))
+    data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml.j2')
+    cfg  = ParametricConf(**data)
+
+    with Cache.cache_root(path = tmp_path),\
+         RDFGetter.max_entries(value = -1):
+        ftr = SimFitter(
+            component= Component.bpkpee,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.central)
+
+        pdf = ftr.get_model()
+
+    assert pdf is not None
+
+    pdf = _float_fix_pars(pdf = pdf)
+    calc= SignalConstraints(nll = pdf, comp = Component.bpkpee)
+    constraints = calc.get_constraints()
+
+    log.info('Found parameters:')
+    for par in pdf.get_params():
+        log.info(par.name)
+
+    log.info('Printing constraints:')
+    for cons in constraints:
+        print(cons)
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bpkstkpiee, Component.bsphiee])
 def test_kde(component : Component, tmp_path : Path):
