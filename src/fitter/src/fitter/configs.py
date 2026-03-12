@@ -20,6 +20,8 @@ from dmu.stats   import YieldsConf
 from dmu.stats   import zfit
 from dmu.generic import UnpackerModel
 from zfit        import Space      as zobs
+
+from .mva_conf   import MVAWp
 from .types      import CCbarWeight
 from .toy_maker  import ToyConf
 
@@ -217,8 +219,8 @@ class RXFitConfig(BaseModel):
     '''
     name    : str
     group   : str        # E.g. toys, needed to name directory where fit outputs will go
-    mva_cmb : float
-    mva_prc : float
+    mva_cmb : MVAWp 
+    mva_prc : MVAWp 
     q2bin   : Qsq
 
     mod_cfg : FitModelConf 
@@ -239,12 +241,6 @@ class RXFitConfig(BaseModel):
             self.block = int(self.block)
         except Exception as exc:
             raise TypeError(f'Cannot cast block {self.block} as int') from exc
-
-        if not (0 <= self.mva_cmb < 1):
-            raise ValueError(f'Invalid value for combinatorial MVA WP: {self.mva_cmb}')
-
-        if not (0 <= self.mva_prc < 1):
-            raise ValueError(f'Invalid value for part reco MVA WP: {self.mva_prc}')
     # ----------------------
     def _initialize_toy_config(self) -> None:
         if self.toy_cfg is None:
@@ -314,7 +310,10 @@ class RXFitConfig(BaseModel):
         -------------
         Cut used for MVA
         '''
-        return f'(mva_cmb > {self.mva_cmb}) && (mva_prc > {self.mva_prc})'
+        cmb_cut = self.mva_cmb.get_cut(name = 'mva_cmb')
+        prc_cut = self.mva_prc.get_cut(name = 'mva_prc')
+
+        return f'({cmb_cut}) && ({prc_cut})' 
     # ----------------------
     @cached_property
     def block_cut(self) -> str:
@@ -380,9 +379,7 @@ class RXFitConfig(BaseModel):
         '''
         Builds fit identifier from MVA working points
         '''
-        cmb  = int(100 * self.mva_cmb)
-        prc  = int(100 * self.mva_prc)
-        name = f'{cmb:03d}_{prc:03d}'
+        name = f'{self.mva_cmb.name}_{self.mva_prc.name}'
     
         return name
     # ----------------------
