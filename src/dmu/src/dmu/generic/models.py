@@ -67,11 +67,11 @@ class UnpackerModel(BaseModel):
         This method will update data by unpacking yaml file paths
         and inserting the python data in the `data` variable
         '''
-        log.info(20 * '-')
-        log.info(f'At {cls}')
-        log.info(20 * '-')
+        log.debug(20 * '-')
+        log.debug(f'At {cls}')
+        log.debug(20 * '-')
         if cls._is_unpackable(data):
-            log.info(f'Unpacking directly: {data}')
+            log.debug(f'Unpacking directly: {data}')
             path        = Path(data)
             loaded_data = cls._data_from_path(path = path)
             return loaded_data
