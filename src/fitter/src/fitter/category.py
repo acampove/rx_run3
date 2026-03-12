@@ -5,11 +5,12 @@ Module holding the Category class
 import re
 import yaml
 
+from pydantic    import BaseModel
 from typing      import Final
 from functools   import cached_property
-from dataclasses import dataclass
+from pydantic    import ConfigDict
 from dmu         import LogStore
-from dmu.stats   import zfit
+from dmu.stats   import FitResult, Model, zfit
 from dmu.stats   import utilities as sut
 from rx_common   import Block, Brem
 
