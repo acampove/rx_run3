@@ -8,21 +8,21 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 import argparse
 
-from contextlib                import ExitStack
-from dmu.stats.gof_calculator  import GofCalculator
-from omegaconf                 import DictConfig
-from dmu.stats.parameters      import ParameterLibrary as PL
-from dmu.generic               import utilities as gut
-from dmu.stats                 import utilities as sut
-from dmu.workflow.cache        import Cache
-from dmu.logging.log_store     import LogStore
-from zfit.loss                 import ExtendedUnbinnedNLL
+from contextlib    import ExitStack
+from dmu.stats     import GofCalculator
+from omegaconf     import DictConfig
+from dmu.stats     import ParameterLibrary as PL
+from dmu.generic   import utilities as gut
+from dmu.stats     import utilities as sut
+from dmu.workflow  import Cache
+from dmu           import LogStore
+from zfit.loss     import ExtendedUnbinnedNLL
 
-from fitter.fit_config         import RXFitConfig
-from fitter.data_fitter        import DataFitter
-from fitter.likelihood_factory import LikelihoodFactory
-from rx_data.rdf_getter        import RDFGetter
-from rx_selection              import selection as sel
+from fitter        import RXFitConfig
+from fitter        import DataFitter
+from fitter        import LikelihoodFactory
+from rx_data       import RDFGetter
+from rx_selection  import selection as sel
 
 log=LogStore.add_logger('fitter:fit_rx_reso')
 # ----------------------
@@ -125,7 +125,7 @@ def _fit_electron(cfg : RXFitConfig) -> None:
             name = cfg.q2bin,
             d_nll= d_nll, 
             cfg  = cfg.mod_cfg)
-        ftr.run(kind='zfit')
+        ftr.run()
 # ----------------------
 def _fit_muon(cfg : RXFitConfig) -> None:
     '''
@@ -141,7 +141,7 @@ def _fit_muon(cfg : RXFitConfig) -> None:
             name = cfg.q2bin,
             d_nll= d_nll, 
             cfg  = cfg.mod_cfg)
-        ftr.run(kind='zfit')
+        ftr.run()
 # ----------------------
 def main(args : DictConfig | None = None):
     '''
