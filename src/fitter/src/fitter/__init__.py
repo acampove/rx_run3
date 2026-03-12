@@ -24,7 +24,7 @@ from .prec_scales        import PrecScales
 # ----------
 # Configs
 # ----------
-from .mva_conf import MVAConf
+from .mva_conf import MVAConf, MVAWp
 from .configs  import FitModelConf
 from .configs  import MisIDConf 
 from .configs  import CombinatorialConf 
@@ -35,6 +35,7 @@ from .configs  import RXFitConfig
 
 __all__ = [
     'MVAConf',
+    'MVAWp',
     'SignalConstraints',
     'ScaleReader',
     'Category',
