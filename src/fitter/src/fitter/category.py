@@ -101,3 +101,16 @@ class Category(BaseModel):
 
         return value
 # -----------------------------------
+class FitCategory(Category):
+    '''
+    Same as Category but with fitting specific
+    attributes added
+
+    Attributes
+    ----------------
+    res: Result of fit, optional
+    '''
+    model_config = ConfigDict(frozen=True)
+
+    res : FitResult
+# -----------------------------------
