@@ -9,12 +9,13 @@ from rx_common import MVA
 
 _MVA_REGEX : Final[str] = r'(\d{3})(-\d{3})?_(\d{3})(-\d{3})?'
 # ---------------------
-class MVAWp(RootModel):
+class MVAWp(RootModel[float|tuple[float,float]]):
     '''
     Class meant to represent an MVA working point
+
+    The value of the config is meant to represent a probability
+    i.e. val in [0, 1]
     '''
-    root : float | tuple[float,float]
-    # -------------    
     @model_validator(mode = 'after')
     def validate_value(self) -> 'MVAWp':
         if isinstance(self.root, (float, int)):
