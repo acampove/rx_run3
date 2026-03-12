@@ -17,7 +17,7 @@ from zfit.util                     import ztyping
 from zfit.pdf                      import BasePDF           as zpdf
 from zfit.minimizers.strategy      import FailMinimizeNaN
 
-from dmu                           import LogStore, LogLevels
+from dmu                           import LogStore
 from dmu.logging                   import messages  as mes
 
 from .gof_calculator import GofCalculator
