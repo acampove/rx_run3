@@ -65,7 +65,7 @@ def _parse_args(args : DictConfig | argparse.Namespace | None = None) -> RXFitCo
         parser = argparse.ArgumentParser(description='Script used to fit RX data')
         parser.add_argument('-b', '--block'  , type=int  , help='Block number, if not passed will do all data'    , choices =[-1,1,2,3,4,5,6,7,8], default=-1)
         parser.add_argument('-g', '--group'  , type=str  , help='Name of group to which fit belongs, e.g. toys'   , required= True)
-        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/rk/electron'    , required= True)
+        parser.add_argument('-c', '--fit_cfg', type=str  , help='Name of configuration, e.g. rare/rk/ee'          , required= True)
         parser.add_argument('-t', '--toy_cfg', type=str  , help='Name of toy config, e.g. toys/maker.yaml'        , default =   '')
         parser.add_argument('-N', '--ntoys'  , type=int  , help='If specified, this will override ntoys in config', default =0)
         parser.add_argument('-n', '--nthread', type=int  , help='Number of threads'                               , default =1)
@@ -87,21 +87,22 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> RXFitConfig:
     -------------
     Object storing full fit configuration
     '''
-    fit_cfg = gut.load_conf(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
-    toy_cfg = gut.load_conf(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
+    data_mod= gut.load_data(package='fitter_data', fpath=f'{args.fit_cfg}/data.yaml')
+    mod_cfg = FitModelConf(**data_mod)
 
-    channel = info.channel_from_trigger(trigger = fit_cfg.trigger, lower_case=True)
+    data_toy= gut.load_data(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
+    toy_cfg = ToyConf(**data_toy) if data_toy else None
 
-    if channel   == 'ee':
+    if   mod_cfg.trigger.is_electron: 
         name     = 'brem_x12'
-    elif channel == 'mm':
+    elif mod_cfg.trigger.is_muon:
         name     = 'brem_0xx'
     else:
-        raise NotImplementedError(f'Invalid channel: {channel}')
+        raise NotImplementedError(f'Invalid trigger: {mod_cfg.trigger}')
 
     cfg = RXFitConfig(
         name    = name,
-        mod_cfg = fit_cfg, 
+        mod_cfg = mod_cfg,
         toy_cfg = toy_cfg,
         group   = args.group,
         block   = args.block,
@@ -133,17 +134,12 @@ def _add_constraints(
     crd  = ConstraintReader(nll=nll, cfg=cfg)
     cons = crd.get_constraints()
 
-    if cons is None:
+    if not cons:
         log.warning('Not using any constraints')
 
     log.info('Constraints:')
     for constraint in cons:
         log.info(constraint)
-
-    cons_str    = [ str(constraint) for constraint in cons ]
-    constraints = '\n\n'.join(cons_str)
-
-    cfg.mod_cfg['used_constraints'] = constraints
 
     cad  = ConstraintAdder(nll=nll, constraints=cons)
     nll  = cad.get_nll()
@@ -165,10 +161,10 @@ def _fit(cfg : RXFitConfig) -> None:
     nll, cons = _add_constraints(nll=nll, cfg=cfg)
 
     ftr = DataFitter(
-        name = cfg.q2bin,
-        d_nll= {cfg.name : (nll, cfg_mod)}, 
-        cfg  = cfg.mod_cfg)
-    res = ftr.run(kind='zfit')
+        q2bin = cfg.q2bin,
+        d_nll = {cfg.name : (nll, cfg_mod)}, 
+        cfg   = cfg.mod_cfg)
+    res = ftr.run(kind='fres')
 
     if cfg.toy_cfg is None:
         log.info('Not making toys')
@@ -181,7 +177,7 @@ def _fit(cfg : RXFitConfig) -> None:
         res= res, 
         cfg= cfg.toy_cfg, 
         cns= cons)
-    mkr.get_parameter_information()
+    mkr.get_parameter_information(name = 'rare_ee')
 # ----------------------
 def main(args : DictConfig | None = None):
     '''
