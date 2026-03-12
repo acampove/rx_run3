@@ -32,7 +32,7 @@ class CategoryMerger:
     # ----------------------
     def _enforce(
         self, 
-        categories : list[Category], 
+        categories : Sequence[Category], 
         kind       : type, 
         condition  : Condition) -> None:
         '''
@@ -67,7 +67,7 @@ class CategoryMerger:
     # ----------------------
     def _merge_blocks(
         self, 
-        categories : list[Category]) -> Category:
+        categories : Sequence[Category]) -> Category:
         '''
         Parameters
         -------------
@@ -115,7 +115,7 @@ class CategoryMerger:
     # ----------------------
     def _group_brems(
         self, 
-        categories : list[Category]) -> list[Category]:
+        categories : Sequence[Category]) -> Sequence[Category]:
         '''
         Parameters
         -------------
