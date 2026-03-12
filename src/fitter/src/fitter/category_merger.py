@@ -3,11 +3,11 @@ Module holding CategoryMerger class
 '''
 import zfit
 
-from typing      import Literal
+from typing      import Literal, Sequence
 from dmu         import LogStore
 from rx_common   import Brem, Block, Correction
-from dmu.stats   import Model, ModelFactory
-from .category   import Category
+from dmu.stats   import FitResult, Model, ModelFactory
+from .category   import Category, FitCategory
 
 log=LogStore.add_logger('fitter:category_merger')
 
