@@ -344,10 +344,10 @@ class RXFitConfig(BaseModel):
         -------------
         Cut on nbrem, normally exclude brem 0 for electron and do nothing for muon
         '''
-        if self.mod_cfg.trigger.channel == 'electron':
+        if self.mod_cfg.trigger.channel == Channel.ee:
             return 'nbrem != 0'
 
-        if self.mod_cfg.trigger.channel == 'muon':
+        if self.mod_cfg.trigger.channel == Channel.mm:
             return 'nbrem == 0'
 
         raise ValueError(f'Invalid trigger: {self.mod_cfg.trigger}')
