@@ -2,16 +2,16 @@
 Module containing DataFitter class
 '''
 from pathlib         import Path
-from typing          import Literal, overload
 from dmu             import LogStore
 from dmu.workflow    import Cache
-from dmu.stats       import FitResult
+from dmu.stats       import AnealingMinimizer, FitConf, FitResult
 from dmu.stats       import zfit
 from dmu.stats       import utilities as sut
 from rx_common       import Qsq
 from zfit.exception  import ParamNameNotUniqueError
 from zfit.result     import FitResult           as zres
 from zfit.loss       import ExtendedUnbinnedNLL as NLL
+
 from .base_fitter    import BaseFitter
 from .configs        import FitModelConf
 
@@ -91,25 +91,34 @@ class DataFitter(BaseFitter, Cache):
 
         self._cfg.to_yaml(path = out_path)
     # ----------------------
-    @overload
-    def run(self, kind : Literal['fres']) -> FitResult:...
-    @overload
-    def run(self, kind : Literal['zfit']) -> zres:...
+    def _simple_fit(self, nll : NLL) -> zres:
+        '''
+        Parameters
+        -------------
+        nll: Likelihood
+
+        Returns
+        -------------
+        Fit result
+        '''
+        min = zfit.minimize.Minuit()
+        res = min.minimize(loss = nll)
+        res.hesse(name='minuit_hesse', method = 'minuit_hesse')
+
+        return res
     # ----------------------
-    def run(self, kind : Literal['zfit', 'fres']) -> zres | FitResult:
+    def run(self, fit_cfg : FitConf | None = None) -> FitResult:
         '''
         Entry point for fitter
 
         Parameters
         -------------
-        kind: Type of return value, zfit or conf
+        kind   : Type of return value, zfit or conf
+        fit_cfg: Fit configuration. If used will not do simple fit, which is done by default
 
         Returns
         -------------
-        Either:
-
-        - OmegaConf DictConfig with fitting parameters
-        - Zfit result object after freezing
+        Fit result
         '''
         nll    = self._get_full_nll()
         l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
@@ -118,10 +127,12 @@ class DataFitter(BaseFitter, Cache):
         if nll is None:
             raise ValueError('Likelihood is missing')
 
-        min = zfit.minimize.Minuit()
-        res = min.minimize(loss = nll)
-        res.hesse(name='minuit_hesse', method = 'minuit_hesse')
-        fres = FitResult.from_zfit(res = res)
+        if fit_cfg is None:
+            res  = self._simple_fit(nll = nll)
+            fres = FitResult.from_zfit(res = res)
+        else:
+            min  = AnealingMinimizer(cfg = fit_cfg)
+            fres = min.get_result(loss = nll)
 
         for model, data, cfg, category in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
             out_path = self._out_path / f'{category}/{self._trigger}_{self._q2bin}'
@@ -138,9 +149,5 @@ class DataFitter(BaseFitter, Cache):
 
             self._save_constraints(out_dir=out_path)
 
-        if kind == 'zfit':
-            return res
-
-        if kind == 'fres':
-            return fres 
+        return fres 
 # ----------------------
