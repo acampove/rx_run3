@@ -151,6 +151,7 @@ def test_misid_constraint():
 @pytest.mark.parametrize('project', [Project.rk, Project.rkst])
 @pytest.mark.parametrize('kind'   , ['reso'    , 'rare'      ])
 def test_full_model(
+    tmp_path: Path,
     kind    : str,
     channel : Channel, 
     project : Project):
@@ -160,5 +161,7 @@ def test_full_model(
 
     path = f'{kind}/{project}/{channel}/data.yaml'
 
-    FitModelConf.from_yaml(path = path, package = 'fitter_data')
+    cfg = FitModelConf.from_yaml(path = path, package = 'fitter_data')
+
+    cfg.to_yaml(path = tmp_path / 'config.yaml')
 # ----------------------
