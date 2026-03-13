@@ -132,23 +132,16 @@ class Cache:
             else:
                 shutil.copy2(source, self._hash_dir)
 
-        self._delete_from_output(only_links=False)
+        self._delete_from_output()
         self._copy_from_hashdir()
     # ---------------------------
-    def _delete_from_output(self, only_links : bool) -> None:
+    def _delete_from_output(self) -> None:
         '''
-        Delete all objects from _out_path directory, except for `.cache`
-
-        only_links: If true will only delete links
+        Deletes all objects from _out_path directory, except for `.cache`
         '''
         for path in self._out_path.iterdir():
             if path == self._cache_dir:
                 log.debug(f'Skipping cache dir: {self._cache_dir}')
-                continue
-
-            # These will always be symbolic links
-            if only_links and not path.is_symlink():
-                log.warning(f'Found a non-symlink not deleting: {path}')
                 continue
 
             log.debug(f'Deleting {path}')
@@ -212,20 +205,20 @@ class Cache:
             # If not copying from cache, will need to remove what is
             # in the output directory, so that it gets replaced with
             # new outputs
-            self._delete_from_output(only_links=False)
+            self._delete_from_output()
             log.info('Not picking already cached outputs, remaking them')
             return False
 
         hash_dir = self._get_dir(kind='hash', make=False)
         if not os.path.isdir(hash_dir):
             log.debug(f'Hash directory {hash_dir} not found, not caching')
-            self._delete_from_output(only_links=False)
+            self._delete_from_output()
             return False
 
         self._hash_dir = hash_dir
         log.debug(f'Data found in hash directory: {self._hash_dir}')
 
-        self._delete_from_output(only_links=False)
+        self._delete_from_output()
         self._copy_from_hashdir()
 
         return True
