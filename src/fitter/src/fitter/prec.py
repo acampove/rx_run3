@@ -108,9 +108,13 @@ class CharmoniumComponent(BaseModel):
         '''
         Returns 
         ------------
-        number of entries in dataset
+        Number of entries in observable range
         '''
-        return len(self.mass)
+        min, max = sut.range_from_obs(obs = self.obs)
+
+        nentries = numpy.sum((self.mass > min) & (self.mass < max))
+
+        return int(nentries)
 # ------------------------------
 class CCbarModel(BaseModel):
     '''
