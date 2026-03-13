@@ -3,21 +3,20 @@ Module containing generic utility functions
 '''
 import os
 import glob
-from pathlib import Path
 import time
 import json
 import pickle
 import inspect
+import importlib.util
+import yaml
 
+from pathlib               import Path
 from jinja2                import Template
 from importlib.resources   import files
 from importlib.util        import find_spec
-from typing                import Callable, Any, cast
+from typing                import Callable, Any
 from functools             import wraps
 from contextlib            import contextmanager
-
-import importlib.util
-import yaml
 from yaml.constructor      import ConstructorError
 from omegaconf.errors      import ConfigKeyError
 from omegaconf             import ListConfig, OmegaConf, DictConfig, ValidationError
