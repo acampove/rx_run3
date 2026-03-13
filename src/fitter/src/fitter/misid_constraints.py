@@ -216,7 +216,7 @@ class MisIDConstraints(Cache):
         kkk   : (yield, error)
         kpipi : (yield, error)
         '''
-        cons_path = self._out_path / 'constraints.yaml'
+        cons_path = self._out_path / f'{self._cfg.trigger}_{self._q2bin}/constraints.yaml'
         if self._copy_from_cache():
             log.info(f'Found cached: {cons_path}')
 
