@@ -141,8 +141,8 @@ class Cache:
 
         only_links: If true will only delete links
         '''
-        for path in Path(self._out_path).iterdir():
-            if str(path) == self._cache_dir:
+        for path in self._out_path.iterdir():
+            if path == self._cache_dir:
                 log.debug(f'Skipping cache dir: {self._cache_dir}')
                 continue
 
