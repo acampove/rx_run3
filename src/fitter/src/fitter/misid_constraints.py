@@ -77,8 +77,9 @@ class MisIDConstraints(Cache):
         '''
         d_yield   = {}
         for region in Region.hadronic_misid():
-            d_yield[f'yld_{region.signal}_{region}'  ] = self.__get_signal_region_yield(
-                region   = region,
+            # Use constraint for signal region
+            d_yield[f'yld_{region.signal}'] = self.__get_signal_region_yield(
+                region   = region, # Pick it from control region
                 pars     = pars) 
 
         return d_yield 
