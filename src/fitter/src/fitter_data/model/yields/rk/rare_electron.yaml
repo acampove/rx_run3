@@ -46,7 +46,7 @@ yld_bpkpjpsiee:
   <<      : *yields
 yld_bpkppsi2ee: 
   <<      : *yields
-yld_bpkpipi_bppipi:
+yld_bpkpipi:
   <<      : *yields
-yld_bpkkk_bpkk:
+yld_bpkkk:
   <<      : *yields
