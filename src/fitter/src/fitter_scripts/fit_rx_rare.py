@@ -51,8 +51,10 @@ def _set_logs() -> None:
     LogStore.set_level('dmu:stats:utilities'    , 30)
     LogStore.set_level('dmu:stats:model_factory', 30)
     LogStore.set_level('dmu:stats:fitter'       , 30)
+    LogStore.set_level('dmu:stats:minimizers'   , 30)
 
     LogStore.set_level('fitter:data_preprocessor', 30)
+    LogStore.set_level('fitter:base_fitter'      , 30)
 # ----------------------
 def _get_client(cfg : RXFitConfig) -> Client | None:
     '''
