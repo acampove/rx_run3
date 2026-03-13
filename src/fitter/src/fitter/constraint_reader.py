@@ -4,7 +4,7 @@ Script holding ConstraintReader class
 
 from typing              import Final
 from dmu                 import LogStore
-from dmu.stats           import Constraint, Constraint1D
+from dmu.stats           import Constraint, Constraint1D, ConstraintType
 from rx_common           import Component
 from zfit.loss           import ExtendedUnbinnedNLL
 
@@ -86,7 +86,7 @@ class ConstraintReader:
 
             cns = Constraint1D(
                 name = par,
-                kind = 'GaussianConstraint',
+                kind = ConstraintType.gauss,
                 mu   = val,
                 sg   = err)
 
@@ -145,7 +145,9 @@ class ConstraintReader:
         '''
         Update _constraints with constraints to the mass scale, resolution
         '''
-        calc = SignalConstraints(nll = self._nll)
+        calc = SignalConstraints(
+            comp= self._signal,
+            nll = self._nll)
 
         self._constraints += calc.get_constraints()
     # ----------------------
