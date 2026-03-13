@@ -165,7 +165,7 @@ class UnpackerModel(BaseModel):
         ----------------
         path: Path to YAML file where current object will be saved
         '''
-        py_data = self.model_dump()
+        py_data = self.model_dump(mode = 'json')
         ym_data = yaml.safe_dump(data = py_data, indent = 2)
         path.write_text(ym_data)
     # --------------
