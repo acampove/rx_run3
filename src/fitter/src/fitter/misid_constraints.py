@@ -248,7 +248,7 @@ class MisIDConstraints(Cache):
                 res = ftr.run(fit_cfg = cfg.data_fit)
                 l_res.append(res)
 
-        pars = FitResult.merge(results = l_res)
+        pars  = FitResult.merge(results = l_res)
         d_cns = self.__get_constraints(pars=pars)
         gut.dump_json(data=d_cns, path=cons_path)
 
