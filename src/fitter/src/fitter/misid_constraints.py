@@ -216,7 +216,7 @@ class MisIDConstraints(Cache):
         kkk   : (yield, error)
         kpipi : (yield, error)
         '''
-        cons_path = f'{self._out_path}/constraints.yaml'
+        cons_path = self._out_path / 'constraints.yaml'
         if self._copy_from_cache():
             log.info(f'Found cached: {cons_path}')
 
@@ -227,7 +227,7 @@ class MisIDConstraints(Cache):
 
             return cons
 
-        log.info(f'Running full calculation, nothing cached in: {cons_path}')
+        log.info(f'Running full calculation, nothing cached for hash {self._hsh} in: {cons_path}')
 
         l_res : list[FitResult] = []
         for region in Region.hadronic_misid():
