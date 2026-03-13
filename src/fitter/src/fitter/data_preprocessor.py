@@ -6,6 +6,7 @@ import pandas   as pnd
 
 from pathlib         import Path
 from ROOT            import RDF # type: ignore
+from typing          import Final
 
 from dmu             import LogLevels, LogStore
 from dmu.workflow    import Cache
@@ -25,6 +26,8 @@ from rx_misid        import SampleWeighter
 from rx_misid        import MisIDSampleWeights
 
 log=LogStore.add_logger('fitter:data_preprocessor')
+
+_WEIGHT_BRANCH : Final[str] = 'weight'
 # ------------------------
 # TODO: Shold this class take a dictionary of cuts? 
 # Should this be made into a context manager?
@@ -230,7 +233,7 @@ class DataPreprocessor(Cache):
         rdf  = self._rdf
         log.debug('Retrieving data')
         arr  = rdf.AsNumpy([self._obs.label])[self._obs.label]
-        wgt  = rdf.AsNumpy(['weight'])['weight']
+        wgt  = rdf.AsNumpy([_WEIGHT_BRANCH])[_WEIGHT_BRANCH]
         wgt  = wgt.astype(float)
         wgt  = self._add_extra_weights(wgt=wgt)
 
