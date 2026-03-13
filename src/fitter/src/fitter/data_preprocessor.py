@@ -294,10 +294,10 @@ class DataPreprocessor(Cache):
         arr, wgt = self._get_array()
         data     = self._data_from_numpy(arr_value=arr, arr_weight=wgt)
 
-        cuts_path = data_path.replace('.npz' , '.yaml')
+        cuts_path = data_path.with_suffix('.yaml')
         gut.dump_json(data=self._d_sel , path=cuts_path)
 
-        ctfl_path = cuts_path.replace('.yaml',   '.md')
+        ctfl_path = cuts_path.with_suffix('.md')
         put.to_markdown(df=self._df_ctf, path=ctfl_path)
 
         numpy.savez_compressed(data_path, values=arr, weights=wgt)
