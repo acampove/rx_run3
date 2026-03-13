@@ -53,20 +53,19 @@ class DataPreprocessor(Cache):
         '''
         Parameters
         --------------------
-        out_dir: Directory where caching will happen, with respect to the _cache_root directory
-        obs    : zfit observable
-        sample : e.g. DATA_24_MagUp...
-        trigger: e.g. Hlt2RD...
-        q2bin  : e.g. central
+        out_dir    : Directory where caching will happen, with respect to the _cache_root directory
+        obs        : zfit observable
+        sample     : e.g. DATA_24_MagUp...
+        trigger    : e.g. Hlt2RD...
+        q2bin      : e.g. central
         max_entries: If used (default None), limit number of entries to this value
-        wgt_cfg: Dictionary with:
-                 key: Representing kind of weight, e.g. pid
-                 value: Actual configuration for kind of weight, in a pydantic model
-
-        is_sig : If true (default) it will pick PID weights for signal region.
+        is_sig     : If true (default) it will pick PID weights for signal region.
                  Otherwise it will use misID control region weights.
-        selection : Selection defining this component category, represented by dictionary where the key are labels
+        selection  : Selection defining this component category, represented by dictionary where the key are labels
                  and the values are the expressions of the cut
+        wgt_cfg    : Dictionary with:
+            key: Representing kind of weight, e.g. pid
+            value: Actual configuration for kind of weight, in a pydantic model
         '''
         self._obs    = obs
         self._sample = sample
@@ -218,7 +217,7 @@ class DataPreprocessor(Cache):
             df    = df,
             cfg   = cfg,
             sample= self._sample,
-            is_sig= self._is_sig) # We want weights for the control region
+            is_sig= self._is_sig)
         df  = wgt.get_weighted_data()
 
         return df['pid_weights'].to_numpy()
