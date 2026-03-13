@@ -9,7 +9,7 @@ from ROOT            import RDF # type: ignore
 
 from dmu             import LogLevels, LogStore
 from dmu.workflow    import Cache
-from dmu.stats       import CorrectionImplementation, utilities  as sut
+from dmu.stats       import utilities  as sut
 from dmu.generic     import utilities  as gut
 from dmu.rdataframe  import utilities  as rut
 from dmu.pdataframe  import utilities  as put
@@ -284,7 +284,7 @@ class DataPreprocessor(Cache):
         ---------------------
         zfit data, should be ready to be used in fit
         '''
-        data_path = f'{self._out_path}/data.npz'
+        data_path = self._out_path / 'data.npz'
         if self._copy_from_cache():
             log.info(f'Data found cached, loading: {data_path}')
             with numpy.load(data_path) as ifile:
