@@ -1,12 +1,13 @@
 '''
 Module containing SamplePatcher
 '''
-from ROOT        import RDataFrame # type: ignore
-from pathlib     import Path
-from dmu         import LogStore
-from dmu.generic import utilities as gut
-from rx_common   import Component 
-from rx_data     import Specification, Sample
+from ROOT           import RDataFrame # type: ignore
+from pathlib        import Path
+from dmu            import LogStore
+from dmu.generic    import utilities as gut
+from rx_common      import Component 
+
+from .specification import Specification, Sample
 
 log=LogStore.add_logger('rx_data:sample_patcher')
 # ------------------------------------
