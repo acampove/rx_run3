@@ -68,6 +68,7 @@ class DataModel:
             pdf.set_yield(nevt)
             return pdf
 
+        log.info(f'Extending {component} with {yield_name}')
         pdf = pdf.create_extended(nevt, name=component)
 
         return pdf
