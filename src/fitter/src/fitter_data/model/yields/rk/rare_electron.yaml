@@ -20,9 +20,9 @@ s_bpkstkpiee:
   min : 0.0
   max : 1.0 
 # --------------------
-yld_bpkpipi:
+yld_bpkpipi_bppipi:
   <<      : *yields
-yld_bpkkk:
+yld_bpkkk_bpkk:
   <<      : *yields
 yld_bpkpee:
   <<      : *yields
