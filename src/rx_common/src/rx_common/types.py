@@ -5,6 +5,7 @@ from enum      import StrEnum, Enum, auto
 from dmu.stats import CorrectionImplementation
 from pydantic  import BaseModel, field_validator, ConfigDict
 from .mass     import Mass
+from .project  import Project
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
 # ------------------------------
@@ -387,37 +388,6 @@ class Channel(StrEnum):
     ee = 'ee'
     mm = 'mm'
     em = 'em'
-
-    def __str__(self):
-        return self.value
-# ---------------------------------------
-class Project(StrEnum):
-    '''
-    This class represents the projects
-    '''
-    rk            = 'rk'
-    rk_no_pid     = 'rk_nopid'
-    rk_no_refit   = 'rk_no_refit'
-    rk_sim10d     = 'rk_sim10d'
-    # ---------------
-    rkst          = 'rkst'
-    rkst_no_pid   = 'rkst_nopid'
-    rkst_no_refit = 'rkst_no_refit'
-    rkst_sim10d   = 'rkst_sim10d'
-
-    @property
-    def with_pid(self) -> 'Project':
-        '''
-        Return PID version of project
-        Only makes sense for noPID projects
-        '''
-        match self:
-            case Project.rk_no_pid:
-                return Project.rk
-            case Project.rkst_no_pid:
-                return Project.rkst
-            case _:
-                return self
 
     def __str__(self):
         return self.value
