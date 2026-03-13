@@ -24,7 +24,8 @@ log=LogStore.add_logger('fitter:test_constraint_reader')
 _CONSTRAINTS : Final[list[str]] = [
     'sig_par', 
     'rare_prec_rk', 
-    'invalid', 
+    'rare_misid',
+    'combinatorial', 
     'brem_frac']
 # ----------------------
 @pytest.fixture(scope='module', autouse=True)
@@ -86,30 +87,33 @@ class Parameters:
             l_par_name = []
         elif kind == 'rare_misid':
             l_par_name = [
-                'yld_kpipi',
-                'yld_kkk']
+                'yld_bpkpipi',
+                'yld_bpkkk']
         elif kind == 'brem_frac':
             l_par_name = [
-                'frac_brem_000',
-                'frac_brem_001',
-                'frac_brem_002']
+                'fr_brem_xx1_b1_reso_flt',
+                'fr_brem_xx1_b2_reso_flt',
+                'fr_brem_xx1_b3_reso_flt',
+                'fr_brem_xx1_b4_reso_flt',
+                'fr_brem_xx1_b5_reso_flt',
+                'fr_brem_xx1_b6_reso_flt',
+                'fr_brem_xx1_b7_reso_flt',
+                'fr_brem_xx1_b8_reso_flt']
         elif kind == 'sig_par':
             l_par_name = [
-                'ar_dscb_Signal_002_1_reso_flt',
-                'mu_Signal_000_scale_flt',
-                'mu_Signal_001_scale_flt',
-                'mu_Signal_002_scale_flt',
-                'nl_dscb_Signal_001_1_reso_flt',
-                'nr_dscb_Signal_002_1_reso_flt',
-                'sg_Signal_000_reso_flt',
-                'sg_Signal_001_reso_flt',
-                'sg_Signal_002_reso_flt',
-            ]
-        elif kind == 'invalid':
+                'mu_bpkpee_brem_xx1_b1_scale_flt',
+                'sg_bpkpee_brem_xx1_b1_reso_flt',
+                'mu_bpkpee_brem_xx2_b1_scale_flt',
+                'sg_bpkpee_brem_xx2_b1_reso_flt',
+                'al_dscb_Signal_xx2_1_reso_flt',
+                'ar_dscb_Signal_xx2_1_reso_flt',
+                'nl_dscb_Signal_xx1_1_reso_flt',
+                'nr_dscb_Signal_xx2_1_reso_flt']
+        elif kind == 'combinatorial':
             l_par_name = [
-                'ap_hypexp',
-                'bt_hypexp',
-                'mu_hypexp',
+                'mu_hypexp_comb_main_1',
+                'ap_hypexp_comb_main_1',
+                'bt_hypexp_comb_main_1',
                 'ncmb',
                 'nsig']
         else:
