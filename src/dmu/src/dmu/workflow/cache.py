@@ -4,7 +4,7 @@ This module contains
 import os
 import sys
 import shutil
-from types      import NoneType
+
 from pathlib    import Path
 from contextlib import contextmanager
 

@@ -47,6 +47,7 @@ def _set_logs() -> None:
     LogStore.set_level('rx_data:sample_emulator', 30)
     LogStore.set_level('rx_selection:selection' , 30)
 
+    LogStore.set_level('dmu:workflow:cache'     , 30)
     LogStore.set_level('dmu:stats:utilities'    , 30)
     LogStore.set_level('dmu:stats:model_factory', 30)
     LogStore.set_level('dmu:stats:fitter'       , 30)
