@@ -204,6 +204,7 @@ def _get_fit_config(q2bin : Qsq) -> RXFitConfig:
         q2bin   = q2bin,
     )
 # --------------------------------------------------------------
+@pytest.mark.skip(reason = 'Includes misID, too slow')
 @pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
 @pytest.mark.parametrize('kind' , _CONSTRAINTS)
 def test_all_but_cmb(
@@ -271,4 +272,29 @@ def test_only_cmb(
     print_constraints(constraints = constraints)
 
     assert len(constraints) > 0 
+# --------------------------------------------------------------
+@pytest.mark.skip(reason = 'Includes misID, too slow')
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_only_misid(
+    tmp_path : Path, 
+    q2bin    : Qsq):
+    '''
+    Tests all the constraints but the combinatorial shape
+
+    Parameters
+    -------------
+    q2bin: q2 bin
+    '''
+    obs = zfit.Space('dummy', limits=(4500, 6000))
+    nll = Parameters(kind = 'rare_misid', obs = obs) 
+    nll = cast(ExtendedUnbinnedNLL, nll) # Tests will only need get_params
+
+    cfg = _get_fit_config(q2bin = q2bin)
+    del cfg.mod_cfg.components[Component.comb]
+
+    with Cache.cache_root(path = tmp_path):
+        obj         = ConstraintReader(nll=nll, cfg=cfg)
+        constraints = obj.get_constraints()
+
+    print_constraints(constraints = constraints)
 # --------------------------------------------------------------
