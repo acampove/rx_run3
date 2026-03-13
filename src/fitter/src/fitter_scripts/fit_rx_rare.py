@@ -41,6 +41,7 @@ def _set_logs() -> None:
     Silence loggers
     '''
     LogStore.set_level('rx_data:path_splitter'  , 30)
+    LogStore.set_level('rx_data:data_model'     , 30)
     LogStore.set_level('rx_data:rdf_getter'     , 30)
     LogStore.set_level('rx_data:spec_maker'     , 30)
     LogStore.set_level('rx_data:sample_patcher' , 30)
