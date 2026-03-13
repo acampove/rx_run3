@@ -47,7 +47,7 @@ class SamplePatcher:
         cfg = gut.load_conf(package='rx_data_data', fpath='emulated_trees/config.yaml')
 
         associations : dict[int,int] = dict()
-        if not self._sample.startswith('DATA_') and 'simulation' in cfg:
+        if 'simulation' in cfg:
             log.debug('Found patching section for simulation')
             associations.update(cfg.simulation.patching)
 
@@ -247,6 +247,12 @@ class SamplePatcher:
         -------------
         Patched version, which takes into account block patching
         '''
+        # We expect to always have the full dataset
+        # Only MC can be missing
+        if not self._sample.is_mc:
+            log.info(f'Not patching real data: {self._sample}')
+            return self._spec
+
         if not self._associations:
             log.debug('Returning unpatched specification')
             return self._spec
