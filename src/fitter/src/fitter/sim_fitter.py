@@ -79,10 +79,6 @@ class SimFitter(BaseFitter, Cache):
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
 
-        # All the PDFs will share the mu and sigma below and these will float
-        self._mu_par = Parameter('mu_flt', 5280, 5000, 5500)
-        self._sg_par = Parameter('sg_flt',   15,    5,  300)
-
         Cache.__init__(
             self,
             out_path = self._base_path,
