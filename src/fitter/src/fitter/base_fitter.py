@@ -29,7 +29,7 @@ class BaseFitter:
         '''
         self._q2bin     : Qsq
         self._trigger   : Trigger
-        self._component : Component
+        self._component : Component = Component.undefined
     # ------------------------
     def _fit(
         self,
