@@ -10,7 +10,7 @@ from dmu.stats   import FitConf, FitResult, Fitter, ZFitPlotterConf
 from dmu.stats   import utilities  as sut
 from zfit.data   import Data       as zdata
 from zfit.pdf    import BasePDF    as zpdf
-from rx_common   import Component, Project, Qsq
+from rx_common   import Component, Qsq
 from rx_common   import Trigger
 
 log=LogStore.add_logger('fitter:base_fitter')
@@ -29,7 +29,6 @@ class BaseFitter:
         '''
         self._q2bin     : Qsq
         self._trigger   : Trigger
-        self._project   : Project 
         self._component : Component
     # ------------------------
     def _fit(
@@ -67,7 +66,7 @@ class BaseFitter:
             log.debug('Missing result object, cannot get sensitivity')
             return -1
 
-        sig_name = self._project.signal_name
+        sig_name = self._trigger.project.signal_name
         if sig_name not in res:
             log.info('Missing nsig entry, cannot get sensitivity')
             return -1
