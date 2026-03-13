@@ -3,7 +3,6 @@ Module containing the selection function, which returns a dictionary of cuts
 '''
 
 import os
-import re
 import copy
 import yaml
 
