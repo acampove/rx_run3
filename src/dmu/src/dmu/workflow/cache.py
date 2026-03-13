@@ -224,7 +224,7 @@ class Cache:
         return True
     # ---------------------------
     @classmethod
-    def turn_off_cache(cls, val : list[str]|None):
+    def turn_off_cache(cls, val : list[str] | None):
         '''
         Parameters
         ------------------
@@ -232,10 +232,6 @@ class Cache:
         If None, will not cache for any class.
         By default this is an empty list and it will cache for every class
         '''
-        if not isinstance(val, (NoneType, list)):
-            log.error('This manager expects: list[str]|None')
-            raise ValueError(f'Invalid value: {val}')
-
         old_val = cls._l_skip_class
         @contextmanager
         def _context():
