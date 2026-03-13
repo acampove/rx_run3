@@ -74,12 +74,14 @@ class DataPreprocessor(Cache):
         self._wgt_cfg= wgt_cfg
         self._out_dir= out_dir
 
-        rdf , d_sel, df_ctf  = self._get_rdf(selection = selection, out_dir = out_dir)
+        # Caching will remove all files
+        # Need to keep around selection
+        # To save it at the end
+        rdf , d_sel, df_ctf  = self._get_rdf(selection = selection)
 
         self._rdf    = rdf 
         self._d_sel  = d_sel
         self._df_ctf = df_ctf
-
         self._is_sig = is_sig
 
         super().__init__(
@@ -91,14 +93,10 @@ class DataPreprocessor(Cache):
             wgt_cfg  = '' if self._wgt_cfg is None else {key : val.model_dump() for key, val in self._wgt_cfg.items()}, 
             rdf_uid  = self._rdf.uid)
     # ------------------------
-    def _get_rdf(
-        self, 
-        out_dir   : Path,
-        selection : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
+    def _get_rdf(self, selection : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
         -------------------
-        out_dir  : Directory where cutflow information will go
         selection: Selection to be added on top, used for categories.
 
         Returns
@@ -121,8 +119,6 @@ class DataPreprocessor(Cache):
         if Cache._cache_root is None:
             raise ValueError('Cache root directory not defined')
 
-        out_path = Cache._cache_root / out_dir
-
         # overriding only happens for simulation samples
         with sel.custom_selection(d_sel=selection, force_override=True):
             rdf_sel = sel.apply_full_selection(
@@ -130,8 +126,7 @@ class DataPreprocessor(Cache):
                 uid     = uid,
                 q2bin   = self._q2bin,
                 trigger = self._trigger,
-                process = self._sample,
-                out_path= out_path)
+                process = self._sample)
 
             cfg_sel = sel.selection(
                 process = self._sample, 
