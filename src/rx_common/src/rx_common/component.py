@@ -6,7 +6,7 @@ from functools import cache
 from enum      import StrEnum, auto
 from typing    import Literal
 
-from .types              import Channel
+from .channel            import Channel
 from ap_utilities.decays import utilities as aput
 
 # -------------------------------
