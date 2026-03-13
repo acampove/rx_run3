@@ -36,6 +36,19 @@ log=LogStore.add_logger('fitter:fit_rx_rare')
 
 DATA_SAMPLE : Final[Component] = Component.data_24 
 # ----------------------
+def _set_logs() -> None:
+    '''
+    Silence loggers
+    '''
+    LogStore.set_level('rx_data:spec_maker'     , 10)
+    LogStore.set_level('rx_data:sample_patcher' , 10)
+    LogStore.set_level('rx_data:sample_emulator', 10)
+    LogStore.set_level('rx_selection:selection' , 10)
+
+    LogStore.set_level('dmu:stats:utilities'    , 10)
+    LogStore.set_level('dmu:stats:model_factory', 10)
+    LogStore.set_level('dmu:stats:fitter'       , 10)
+# ----------------------
 def _get_client(cfg : RXFitConfig) -> Client | None:
     '''
     Parameters
@@ -199,6 +212,8 @@ def main(args : DictConfig | None = None):
     '''
     with UnpackerModel.package(name = 'fitter_data'):
         cfg = _parse_args(args = args)
+
+    _set_logs()
 
     client = _get_client(cfg = cfg)
     with ExitStack() as stack:
