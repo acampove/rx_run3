@@ -6,6 +6,7 @@ from dmu.stats import CorrectionImplementation
 from pydantic  import BaseModel, field_validator, ConfigDict
 from .mass     import Mass
 from .project  import Project
+from .channel  import Channel
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
 # ------------------------------
@@ -380,17 +381,6 @@ class Brem(Enum):
     # ----------------------
     def __hash__(self) -> int:
         return super().__hash__()
-# ---------------------------------------
-class Channel(StrEnum):
-    '''
-    This class repsesents the electron, muon or emu channel types
-    '''
-    ee = 'ee'
-    mm = 'mm'
-    em = 'em'
-
-    def __str__(self):
-        return self.value
 # ---------------------------------------
 class Trigger(StrEnum):
     '''
