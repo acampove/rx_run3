@@ -121,7 +121,7 @@ class DataPreprocessor(Cache):
         if Cache._cache_root is None:
             raise ValueError('Cache root directory not defined')
 
-        out_path = Path(Cache._cache_root) / out_dir
+        out_path = Cache._cache_root / out_dir
 
         # overriding only happens for simulation samples
         with sel.custom_selection(d_sel=selection, force_override=True):

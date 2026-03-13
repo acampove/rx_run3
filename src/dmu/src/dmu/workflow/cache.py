@@ -63,7 +63,7 @@ class Cache:
 
         self._hsh       = hashing.hash_object(kwargs)
         self._cache_dir = self._get_dir(kind='cache')
-        self._hash_dir  : str
+        self._hash_dir  : Path
     # ---------------------------
     def _get_code_hash(self) -> str:
         '''
@@ -89,7 +89,7 @@ class Cache:
     def _get_dir(
         self,
         kind : str,
-        make : bool = True) -> str:
+        make : bool = True) -> Path:
         '''
         Parameters
         --------------
@@ -97,15 +97,15 @@ class Cache:
         make : If True (default) will try to make directory
         '''
         if   kind == 'cache':
-            dir_path  = f'{self._out_path}/.cache'
+            dir_path  = self._out_path / '.cache'
         elif kind == 'hash':
             cache_dir = self._get_dir(kind='cache')
-            dir_path  = f'{cache_dir}/{self._hsh}'
+            dir_path  = cache_dir / self._hsh
         else:
             raise ValueError(f'Invalid directory kind: {kind}')
 
         if make:
-            os.makedirs(dir_path, exist_ok=True)
+            dir_path.mkdir(parents=True, exist_ok=True)
 
         return dir_path
     # ---------------------------
@@ -118,8 +118,8 @@ class Cache:
         self._hash_dir  = self._get_dir(kind= 'hash')
         log.info(f'Caching outputs to: {self._hash_dir}')
 
-        for source in Path(self._out_path).glob('*'):
-            if str(source) == self._cache_dir:
+        for source in self._out_path.glob('*'):
+            if source == self._cache_dir:
                 continue
 
             log.debug(str(source))
@@ -128,7 +128,7 @@ class Cache:
             log.debug('')
 
             if source.is_dir():
-                shutil.copytree(source, self._hash_dir+'/'+source.name, dirs_exist_ok=True)
+                shutil.copytree(source, self._hash_dir / source.name, dirs_exist_ok=True)
             else:
                 shutil.copy2(source, self._hash_dir)
 
@@ -161,8 +161,8 @@ class Cache:
         '''
         Copies all the objects from _hash_dir to _out_path
         '''
-        for source in Path(self._hash_dir).iterdir():
-            target = f'{self._out_path}/{source.name}'
+        for source in self._hash_dir.iterdir():
+            target = self._out_path / source.name
             log.debug(f'{str(source):<50}{"-->"}{target}')
 
             os.symlink(source, target)
