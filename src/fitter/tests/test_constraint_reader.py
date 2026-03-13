@@ -16,7 +16,8 @@ from zfit.loss      import ExtendedUnbinnedNLL
 from zfit.param     import Parameter           as zpar
 from zfit           import Space               as zobs
 from fitter         import ConstraintReader
-from fitter.configs import CombinatorialConf, FitModelConf
+from fitter         import CombinatorialConf, FitModelConf
+from fitter         import MVAWp
 
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
@@ -194,8 +195,8 @@ def _get_fit_config(q2bin : Qsq) -> RXFitConfig:
         name    = 'test',
         group   = 'test',
         mod_cfg = mod_cfg, 
-        mva_cmb = 0.0,
-        mva_prc = 0.0,
+        mva_cmb = MVAWp(0.0),
+        mva_prc = MVAWp(0.0),
         q2bin   = q2bin,
     )
 # --------------------------------------------------------------
