@@ -6,7 +6,7 @@ from typing       import cast
 from pathlib      import Path
 from ROOT         import RDF # type: ignore 
 from dmu          import LogStore
-from dmu.stats    import zfit
+from dmu.stats    import ConstraintType, zfit
 from dmu.workflow import Cache
 from dmu.stats    import ConstraintND
 from zfit         import Data                as zdat
@@ -230,7 +230,8 @@ class CmbConstraints(BaseFitter, Cache):
         cov    = res.pars_covariance(pars = pars)
 
         cns = ConstraintND(
-            kind       = 'GaussianConstraint',
+            name       = self._name, 
+            kind       = ConstraintType.gauss,
             parameters = names, 
             values     = values, 
             cov        = cov,
