@@ -17,14 +17,17 @@ class SamplePatcher:
     blocks in simulated samples
     '''
     # ----------------------
-    def __init__(self, sample : str, spec : Specification) -> None:
+    def __init__(
+        self, 
+        sample : Component, 
+        spec   : Specification) -> None:
         '''
         Parameters
         -------------
         sample : Name of sample, e.g. Bs_JpsiX_ee_eq_JpsiInAcc
         '''
-        self._sample = sample
-        self._spec   = spec.model_copy(deep=True)
+        self._sample                                = sample
+        self._spec                                  = spec.model_copy(deep=True)
         self._associations   : dict[int,int]        = self._get_patching_dictionary()
         self._conditions     : dict[int,str]        = dict() 
         self._patching_files : dict[int,list[Path]] = dict()
@@ -98,7 +101,10 @@ class SamplePatcher:
 
         return {'block' : condition} 
     # ----------------------
-    def _get_patching_files(self, block : int, main_sample : Sample) -> list[Path]:
+    def _get_patching_files(
+        self, 
+        block       : int, 
+        main_sample : Sample) -> list[Path]:
         '''
         Parameters
         -------------
@@ -137,7 +143,10 @@ class SamplePatcher:
 
         return patching_paths
     # ----------------------
-    def _patch_sample(self, sample : Sample, patching_files : dict[int,list[Path]]) -> Sample:
+    def _patch_sample(
+        self, 
+        sample         : Sample, 
+        patching_files : dict[int,list[Path]]) -> Sample:
         '''
         Parameters
         -------------
@@ -154,7 +163,10 @@ class SamplePatcher:
         '''
         for block_needed, file_paths in patching_files.items():
             file_names = [ file_path.name for file_path in file_paths ] 
-            sample     = self._patch_sample_for_block(block_needed = block_needed, file_names = file_names, sample = sample)
+            sample     = self._patch_sample_for_block(
+                block_needed = block_needed, 
+                file_names   = file_names, 
+                sample       = sample)
 
         return sample
     # ----------------------
