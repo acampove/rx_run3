@@ -40,14 +40,18 @@ def _set_logs() -> None:
     '''
     Silence loggers
     '''
-    LogStore.set_level('rx_data:spec_maker'     , 10)
-    LogStore.set_level('rx_data:sample_patcher' , 10)
-    LogStore.set_level('rx_data:sample_emulator', 10)
-    LogStore.set_level('rx_selection:selection' , 10)
+    LogStore.set_level('rx_data:path_splitter'  , 30)
+    LogStore.set_level('rx_data:rdf_getter'     , 30)
+    LogStore.set_level('rx_data:spec_maker'     , 30)
+    LogStore.set_level('rx_data:sample_patcher' , 30)
+    LogStore.set_level('rx_data:sample_emulator', 30)
+    LogStore.set_level('rx_selection:selection' , 30)
 
-    LogStore.set_level('dmu:stats:utilities'    , 10)
-    LogStore.set_level('dmu:stats:model_factory', 10)
-    LogStore.set_level('dmu:stats:fitter'       , 10)
+    LogStore.set_level('dmu:stats:utilities'    , 30)
+    LogStore.set_level('dmu:stats:model_factory', 30)
+    LogStore.set_level('dmu:stats:fitter'       , 30)
+
+    LogStore.set_level('fitter:data_preprocessor', 30)
 # ----------------------
 def _get_client(cfg : RXFitConfig) -> Client | None:
     '''
