@@ -352,12 +352,18 @@ class Constraint1D(Constraint):
         ------------------
         Observable of constraint, i.e. parameter to constrain
         '''
-        s_par = holder.get_params()
-        for par in s_par:
+        s_par_flt = holder.get_params(floating = True)
+        s_par_fix = holder.get_params(floating = False)
+        for par in s_par_flt:
             if par.name == self.name and isinstance(par, zpar):
                 return par
 
-        for par in s_par:
+        log.error('Floating parameters')
+        for par in s_par_flt:
+            log.error(par.name)
+
+        log.error('Fixed parameters')
+        for par in s_par_fix:
             log.error(par.name)
 
         raise ValueError(f'Cannot find {self.name} in NLL')
