@@ -55,7 +55,7 @@ class LikelihoodFactory:
         if self._name is None:
             return self._cfg.output_directory / f'{self._trigger}_{self._q2bin}'
 
-        return self._cfg.output_directory / f'{self._name}/{self._trigger}_{self._q2bin}'
+        return self._cfg.output_directory / f'{self._trigger}_{self._q2bin}/{self._name}'
     # ------------------------
     def run(self) -> ExtendedUnbinnedNLL:
         '''
