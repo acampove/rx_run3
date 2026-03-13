@@ -719,7 +719,7 @@ class PRec(Cache):
             obj.axs[1].axhline(y=+3, color='red')
             obj.axs[1].set_label('M$(B^+)$[MeV/${}_{c^2}$]')
         else:
-            log.warning(f'PDF {name} not build, not plotting')
+            log.warning(f'PDF {name} not built')
             nentries = len(model.mass)
 
             plt.figure(figsize=(15,10))
