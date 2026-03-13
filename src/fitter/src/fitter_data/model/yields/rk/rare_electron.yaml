@@ -20,13 +20,6 @@ s_bpkstkpiee:
   min : 0.0
   max : 1.0 
 # --------------------
-yld_bpkpipi_bppipi:
-  <<      : *yields
-yld_bpkkk_bpkk:
-  <<      : *yields
-yld_bpkpee:
-  <<      : *yields
-# --------------------
 yld_bdkstkpiee:
   kind : mul
   pars :
@@ -52,4 +45,8 @@ yld_comb:
 yld_bpkpjpsiee:
   <<      : *yields
 yld_bpkppsi2ee: 
+  <<      : *yields
+yld_bpkpipi_bppipi:
+  <<      : *yields
+yld_bpkkk_bpkk:
   <<      : *yields
