@@ -45,36 +45,30 @@ def df_to_tex(
 
     return buf
 # -------------------------------------
-def to_yaml(df : pnd.DataFrame, path : str):
+def to_yaml(df : pnd.DataFrame, path : Path):
     '''
     Takes a dataframe and the path to a yaml file
     Makes the directory path if not found and saves data in YAML file
     '''
-    dir_path = os.path.dirname(path)
-    if dir_path != '':
-        os.makedirs(dir_path, exist_ok=True)
-
+    path.parent.mkdir(parents=True, exist_ok=True)
     data = df.to_dict()
 
     with open(path, 'w', encoding='utf-8') as ofile:
         yaml.dump(data, ofile, Dumper=yaml.CDumper)
 # ----------------------
-def to_markdown(df : pnd.DataFrame, path : str) -> None:
+def to_markdown(df : pnd.DataFrame, path : Path) -> None:
     '''
     Parameters
     -------------
     df  : Pandas dataframe
     path: Path to markdown file
     '''
-    dir_path = os.path.dirname(path)
-    if dir_path != '':
-        os.makedirs(dir_path, exist_ok=True)
-
+    path.parent.mkdir(parents=True, exist_ok=True)
     text = df.to_markdown()
     with open(path, 'w', encoding='utf-8') as ofile:
         ofile.write(text)
 # -------------------------------------
-def from_yaml(path : str) -> pnd.DataFrame:
+def from_yaml(path : Path) -> pnd.DataFrame:
     '''
     Takes path to a yaml file
     Makes dataframe from it and returns it
@@ -146,3 +140,4 @@ def colorize_row(
         row[col] = f'{color}{val}{Style.RESET_ALL}'
 
     return row
+# -------------------------------------
