@@ -95,6 +95,7 @@ class DataModel:
                 log.warning(f'Skipping {component} component')
                 continue
 
+            log.info(f'Building: {component}')
             with SpecMaker.project(name = trigger.project):
                 ftr  = SimFitter(
                     name     = self._name,
@@ -106,7 +107,7 @@ class DataModel:
                 pdf = ftr.get_model()
 
             if pdf is None:
-                log.warning(f'Skipping component: {component}')
+                log.warning(f'Cannot build component: {component}')
                 continue
 
             pdf = self._extend(pdf=pdf, component=component)
