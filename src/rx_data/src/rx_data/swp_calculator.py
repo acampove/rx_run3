@@ -5,14 +5,14 @@ import pandas as pnd
 import random
 import vector
 
-from ROOT                  import RDF # type: ignore
-from tqdm                  import tqdm
-from particle              import Particle         as part
-from vector                import MomentumObject3D as v3d
-from vector                import MomentumObject4D as v4d
+from ROOT        import RDF # type: ignore
+from tqdm        import tqdm
+from particle    import Particle         as part
+from vector      import MomentumObject3D as v3d
+from vector      import MomentumObject4D as v4d
 
-from dmu.generic.typing_utilities import numeric_from_series
-from dmu.logging.log_store        import LogStore
+from dmu         import LogStore
+from dmu.generic import typing_utilities as tut 
 
 log = LogStore.add_logger('rx_data:swp_calculator')
 #---------------------------------
