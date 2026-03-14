@@ -94,12 +94,12 @@ class SWPCalculator:
         This function is needed because the PE (energy) of the particle was not stored
         in the ntuples
         '''
-        px     = numeric_from_series(row, f'{name}_PX', float)
-        py     = numeric_from_series(row, f'{name}_PY', float)
-        pz     = numeric_from_series(row, f'{name}_PZ', float)
+        px     = tut.numeric_from_series(row, f'{name}_PX', float)
+        py     = tut.numeric_from_series(row, f'{name}_PY', float)
+        pz     = tut.numeric_from_series(row, f'{name}_PZ', float)
         par_3d = v3d(px=px, py=py, pz=pz)
 
-        par_id = numeric_from_series(row, f'{name}_ID', int)
+        par_id = tut.numeric_from_series(row, f'{name}_ID', int)
         par    = part.from_pdgid(par_id)
         ms     = par.mass
         if ms is None:
@@ -162,11 +162,11 @@ class SWPCalculator:
         ----------------------
         Mass of the combination of particles
         '''
-        old_had_id           = numeric_from_series(row, f'{had_name}_ID', int)
+        old_had_id           = tut.numeric_from_series(row, f'{had_name}_ID', int)
         had                  = part.from_pdgid(old_had_id)
         masses : list[float] = []
         for lep_name, new_lep_id in self._d_lep.items():
-            old_lep_id = numeric_from_series(row, f'{lep_name}_ID', int)
+            old_lep_id = tut.numeric_from_series(row, f'{lep_name}_ID', int)
             lep        = part.from_pdgid(old_lep_id)
 
             # For OS candidates H - Lep combination have to be of opposite charge tracks
