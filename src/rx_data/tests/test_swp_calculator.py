@@ -1,8 +1,6 @@
 '''
 Module with tests for swap calculator class
 '''
-import os
-
 import mplhep
 import pytest
 import matplotlib.pyplot as plt
