@@ -12,7 +12,8 @@ components:
   comb   : misid/rk/ee/comb.yaml
   bpkpipi: misid/rk/ee/bpkpipi.yaml
   bpkkk  : misid/rk/ee/bpkkk.yaml
-constraints: {}
+constraints:
+  pre_rare : []
 fit:
   strategy :
     retry :
