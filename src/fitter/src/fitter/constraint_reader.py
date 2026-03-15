@@ -15,6 +15,14 @@ from .cmb_constraints    import CmbConstraints
 from .signal_constraints import SignalConstraints
 
 _MISID_COMPONENTS   : Final[set[Component]] = {Component.bpkkk, Component.bpkpipi}
+
+# Components considered part reco and 
+# whose scale should be constrained
+_PRC_COMPONENTS     : Final[set[Component]] = {
+    Component.bsphiee, 
+    Component.bdkstkpiee, 
+    Component.bpkstkpiee}
+
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
 class ConstraintReader:
@@ -26,8 +34,7 @@ class ConstraintReader:
         self, 
         nll   : ExtendedUnbinnedNLL, 
         cfg   : RXFitConfig,
-        signal: Component = Component.bpkpee,
-        pprefx: str = 'pscale'):
+        signal: Component = Component.bpkpee):
         '''
         Parameters
         -------------------
@@ -35,8 +42,6 @@ class ConstraintReader:
         cfg   : Object storing fit configuration
         signal: Process considered as the signal when calculating denominator of rare Partially
                 reconstructed scale constraints
-        pprefx: Preffix of rare partially reconstructed parameters, to tell the code
-                to read their constraints, if found
         '''
         s_par         = nll.get_params(floating=True) 
         if not s_par:
@@ -46,42 +51,23 @@ class ConstraintReader:
         self._l_par   = [ par.name for par in s_par ] 
         self._cfg     = cfg
         self._signal  = signal 
-        self._prc_pref= pprefx 
 
         self._constraints : list[Constraint] = []
-    # ----------------------
-    def _proc_from_par(self, par_name : str) -> Component:
-        '''
-        Parameters
-        ------------------
-        par_name : Name of part reco scale parameter to constrain, e.g. pscale_yld_bpkpee_...
-
-        Returns
-        ------------------
-        MC sample nickname for part reco sample, e.g. bdkstkpee
-        '''
-        prefix = f'{self._prc_pref}_yld_'
-        if not par_name.startswith(prefix):
-            raise ValueError(f'Prec scale parameter does not start with {prefix} but {par_name}')
-
-        name   = par_name.removeprefix(prefix)
-        sample = Component(name)
-
-        return sample
     # ----------------------
     def _add_prec_constraints(self) -> None:
         '''
         Appends constraints to _constraints list for parameters in parameter holder
         whose names start with `pscale`
         '''
+
+        scales : dict[str,Component] = { comp.scale : comp for comp in _PRC_COMPONENTS }
         for par in self._l_par:
-            if not par.startswith(self._prc_pref): # PRec constraints are scales, starting with "s"
+            if par not in scales:
                 continue
 
             log.info(f'Adding part reco constraint for: {par}')
 
-            process  = self._proc_from_par(par_name = par)
-            obj      = PrecScales(comp=process, q2bin=self._cfg.q2bin)
+            obj      = PrecScales(comp=scales[par], q2bin=self._cfg.q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
             cns = Constraint1D(
