@@ -19,6 +19,8 @@ from fitter         import ConstraintReader
 from fitter         import CombinatorialConf, FitModelConf
 from fitter         import MVAWp
 
+from fitter.constraint_reader import _PRC_COMPONENTS
+
 log=LogStore.add_logger('fitter:test_constraint_reader')
 
 _CONSTRAINTS : Final[list[str]] = [
@@ -79,10 +81,7 @@ class Parameters:
         if   kind == 'dummy':
             return set()
         elif kind == 'rare_prec_rk':
-            l_par_name = [
-                'pscale_yld_bdkstkpiee',
-                'pscale_yld_bpkstkpiee',
-                'pscale_yld_bsphiee']
+            l_par_name = [ f's_{comp}' for comp in _PRC_COMPONENTS ]
         elif kind == 'rare_prec_rkst':
             l_par_name = []
         elif kind == 'rare_misid':
