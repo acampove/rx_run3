@@ -16,13 +16,6 @@ from .signal_constraints import SignalConstraints
 
 _MISID_COMPONENTS   : Final[set[Component]] = {Component.bpkkk, Component.bpkpipi}
 
-# Components considered part reco and 
-# whose scale should be constrained
-_PRC_COMPONENTS     : Final[set[Component]] = {
-    Component.bsphiee, 
-    Component.bdkstkpiee, 
-    Component.bpkstkpiee}
-
 log=LogStore.add_logger('fitter:constraint_reader')
 # -------------------------------------------------------------
 class ConstraintReader:
@@ -60,7 +53,7 @@ class ConstraintReader:
         whose names start with `pscale`
         '''
 
-        scales : dict[str,Component] = { comp.scale : comp for comp in _PRC_COMPONENTS }
+        scales : dict[str,Component] = { comp.scale : comp for comp in self._cfg.mod_cfg.constraints.pre_rare}
         for par in self._l_par:
             if par not in scales:
                 continue
