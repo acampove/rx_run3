@@ -100,6 +100,15 @@ class Component(StrEnum):
     bpdpiknuee     = auto()
     bpdnuknuee     = auto()
     # --------------------------------------------
+    @property
+    def scale(self) -> str:
+        '''
+        Name of scale parameter for this component's yield
+        This makes sense when the component is constrained
+        with respect to the signal
+        '''
+        return f's_{self.value}'
+    # --------------------------------------------
     @classmethod
     def from_sample(cls, sample : str) -> 'Component':
         '''
