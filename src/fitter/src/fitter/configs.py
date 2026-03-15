@@ -44,8 +44,17 @@ class ConstraintsCfg(UnpackerModel):
     '''
     model_config = ConfigDict(frozen=True)
 
-    misid   : 'FitModelConf   | None' = None
-    pre_rare: list[Component] | None  = None
+    pre_rare: list[Component]
+    misid   : 'FitModelConf | None' = None
+    # ---------------------
+    @classmethod
+    def default(cls) -> 'ConstraintsCfg':
+        '''
+        Returns
+        -------------
+        Default configuration, mostly needed for tests 
+        '''
+        return cls(pre_rare = [])
     # ---------------------
     @property
     def is_empty(self) -> bool:
@@ -208,7 +217,7 @@ class FitModelConf(ComponentConf):
             yields           = YieldsConf(root = {}),
             observable       = {},
             components       = {},
-            constraints      = ConstraintsCfg(),
+            constraints      = ConstraintsCfg.default(),
             plots            = ZFitPlotterConf.default(),
             fit              = FitConf.default())
 # ------------------------------
