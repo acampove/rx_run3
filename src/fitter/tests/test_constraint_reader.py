@@ -297,3 +297,32 @@ def test_only_misid(
 
     print_constraints(constraints = constraints)
 # --------------------------------------------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_only_prec(
+    tmp_path : Path, 
+    q2bin    : Qsq):
+    '''
+    Tests all the constraints but the combinatorial shape
+
+    Parameters
+    -------------
+    q2bin: q2 bin
+    '''
+    obs = zfit.Space('dummy', limits=(4500, 6000))
+    nll = Parameters(kind = 'rare_prec_rk', obs = obs) 
+    nll = cast(ExtendedUnbinnedNLL, nll) # Tests will only need get_params
+    cfg = _get_fit_config(q2bin = q2bin)
+    del cfg.mod_cfg.components[Component.bpkkk  ]
+    del cfg.mod_cfg.components[Component.bpkpipi]
+    del cfg.mod_cfg.components[Component.comb]
+
+    with Cache.cache_root(path = tmp_path):
+        obj         = ConstraintReader(nll=nll, cfg=cfg)
+        constraints = obj.get_constraints()
+
+    log.error('-------------------------------')
+    print_constraints(constraints = constraints)
+    log.error('-------------------------------')
+
+    assert len(constraints) > 0 
+# --------------------------------------------------------------
