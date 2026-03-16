@@ -159,6 +159,7 @@ class NonParametricConf(ComponentConf): # Tested
     component : Component
     fit       : KDEConf
     plots     : ZFitPlotterConf 
+    selection : dict[str,str]
 # ------------------------------
 class CombinatorialConf(ComponentConf): # Tested
     '''
@@ -176,7 +177,6 @@ class MisIDConf(NonParametricConf): # Tested
     output_directory : Path
     trigger          : Trigger
     project          : Project
-    selection        : dict[str,str]
     weights          : MisIDSampleWeights 
     data_fit         : FitConf
 # ------------------------------

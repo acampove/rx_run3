@@ -1,5 +1,7 @@
 output_directory : rare/rkst/electron/signal 
 component : bdkstkpiee
+selection :
+  mass : (1)
 fit:
   kind      : KDE1DimFFT
   bandwidth : 20
