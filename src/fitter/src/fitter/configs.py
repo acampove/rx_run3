@@ -314,16 +314,22 @@ class RXFitConfig(BaseModel):
     # Cached properties
     # ----------------------
     @cached_property
-    def mva_cut(self) -> str:
+    def cmb_cut(self) -> str:
         '''
         Returns
         -------------
-        Cut used for MVA
+        Cut used for combinatorial MVA
         '''
-        cmb_cut = self.mva_cmb.get_cut(name = 'mva_cmb')
-        prc_cut = self.mva_prc.get_cut(name = 'mva_prc')
-
-        return f'({cmb_cut}) && ({prc_cut})' 
+        return self.mva_cmb.get_cut(name = 'mva_cmb')
+    # ----------------------
+    @cached_property
+    def prc_cut(self) -> str:
+        '''
+        Returns
+        -------------
+        Cut used for part-reco MVA
+        '''
+        return self.mva_prc.get_cut(name = 'mva_prc')
     # ----------------------
     @cached_property
     def block_cut(self) -> str:
@@ -372,7 +378,8 @@ class RXFitConfig(BaseModel):
         return {
             'block' : self.block_cut,
             'brem'  : self.brem_cut,
-            'bdt'   : self.mva_cut,
+            'cmb'   : self.cmb_cut,
+            'prc'   : self.prc_cut,
         }
     # ----------------------
     @cached_property
