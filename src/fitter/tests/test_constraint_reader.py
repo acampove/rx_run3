@@ -330,3 +330,29 @@ def test_only_prec(
 
     assert len(constraints) > 0 
 # --------------------------------------------------------------
+@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+def test_save(
+    tmp_path : Path, 
+    q2bin    : Qsq):
+    '''
+    Tests all the constraints but the combinatorial shape
+
+    Parameters
+    -------------
+    q2bin: q2 bin
+    '''
+
+    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    cfg = _get_fit_config(q2bin = q2bin)
+    nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
+    del cfg.mod_cfg.components[Component.bpkkk  ]
+    del cfg.mod_cfg.components[Component.bpkpipi]
+
+    with Cache.cache_root(path = tmp_path):
+        obj         = ConstraintReader(nll=nll, cfg=cfg)
+        constraints = obj.get_constraints(save_to = tmp_path / 'constraints.yaml')
+
+    print_constraints(constraints = constraints)
+
+    assert len(constraints) > 0 
+# --------------------------------------------------------------
