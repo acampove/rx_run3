@@ -121,9 +121,12 @@ class DataPreprocessor(Cache):
         if Cache._cache_root is None:
             raise ValueError('Cache root directory not defined')
 
-        # overriding only happens for simulation samples
+        # NOTE: Update selection such that category selection
+        # is applied on top of potentially non-default selection
+        # Current selection might contain different cuts, e.g. 
+        # special BDT cut or special brem choice
         with tempfile.TemporaryDirectory() as tmp_dir,\
-            sel.custom_selection(d_sel=selection, force_override=True):
+            sel.update_selection(d_sel=selection):
             rdf_sel = sel.apply_full_selection(
                 rdf     = rdf_raw,
                 uid     = uid,
