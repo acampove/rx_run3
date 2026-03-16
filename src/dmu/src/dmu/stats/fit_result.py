@@ -66,7 +66,7 @@ class GoodnessOfFit(BaseModel):
         # Good computed values
         # ----------------
         if not math.isnan(computed_pval) and math.isclose(computed_pval, 0.0, rel_tol = RTOL):
-            raise ValueError('Comuted p-value is zero')
+            raise ValueError('Computed p-value is zero')
 
         if not math.isnan(computed_chi2) and math.isinf(computed_chi2):
             raise ValueError('Computed chi2 is inf')
