@@ -161,7 +161,7 @@ class SimFitter(BaseFitter, Cache):
         d_data = {}
         prp   = DataPreprocessor(
             wgt_cfg   = wgt_cfg,
-            obs       = self._obs,
+            obs       = cfg.get_obs(obs = self._obs),
             trigger   = self._trigger,
             q2bin     = self._q2bin,
             out_dir   = self._base_path,
@@ -491,25 +491,28 @@ class SimFitter(BaseFitter, Cache):
         - KDE PDF after fit
         - None if there are fewer than _min_kde_entries
         '''
-        data = self._d_data[MAIN_CATEGORY]
 
-        if data.nevents < MIN_KDE_ENTRIES:
+        data = self._d_data[MAIN_CATEGORY]
+        if self._entries_from_data(data = data, obs = self._obs) < MIN_KDE_ENTRIES:
             log.info(f'Not bulding KDE, found too few entries: {data.nevents} < {MIN_KDE_ENTRIES}')
             return 
 
         kde_builder = getattr(zfit.pdf, cfg.fit.kind)
 
         pdf = kde_builder(
-            obs       = self._obs, 
             data      = data, 
             name      = self._component, 
+            obs       = cfg.get_obs(obs = self._obs), 
+            norm      = self._obs,
             bandwidth = cfg.fit.bandwidth,
             padding   = cfg.fit.padding.value)
+
+        data_observed = data.with_obs(obs = self._obs)
 
         self._save_fit(
             cut_cfg  = self._get_cut_config(cfg = cfg, category = None),
             plt_cfg  = cfg.plots,
-            data     = data,
+            data     = data_observed,
             model    = pdf,
             res      = None,
             out_path = self._out_path)
