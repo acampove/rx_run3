@@ -24,11 +24,12 @@ observable:
 components:
   comb       : rare/rkst/mm/comb.yaml
   bdkstkpimm : rare/rkst/mm/bdkstkpimm.yaml
-constraints: {}
+constraints:
+  pre_rare : []
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
   stacked : True
   d_leg :
-    Bd_Kstmumu_eq_btosllball05_DPC : $B^0\to K^0(\to K^+\pi^-)\mu^+\mu^-$ 
-    combinatorial                  : Combinatorial
+    bdkstkpimm : $B^0\to K^0(\to K^+\pi^-)\mu^+\mu^-$ 
+    comb       : Combinatorial
