@@ -1,10 +1,8 @@
 output_directory : rare/rk/electron/signal 
 component : bpkpee
-selection :
-  mass : (1)
-categories:
-  main: 
-    model : KDE1DimFFT
+events_range : 
+  - 4200
+  - 6000
 fit:
   kind      : KDE1DimFFT
   bandwidth : 20
