@@ -63,7 +63,7 @@ class DataPreprocessor(Cache):
         is_sig     : If true (default) it will pick PID weights for signal region.
                  Otherwise it will use misID control region weights.
         selection  : Selection defining this component category, represented by dictionary where the key are labels
-                 and the values are the expressions of the cut
+                     and the values are the expressions of the cut. These cuts will update current (not default!!!) selection0
         wgt_cfg    : Dictionary with:
             key: Representing kind of weight, e.g. pid
             value: Actual configuration for kind of weight, in a pydantic model
@@ -78,6 +78,7 @@ class DataPreprocessor(Cache):
         # Caching will remove all files
         # Need to keep around selection
         # To save it at the end
+        selection            = dict() if selection is None else selection
         rdf , d_sel, df_ctf  = self._get_rdf(selection = selection)
 
         self._rdf    = rdf 
@@ -94,7 +95,7 @@ class DataPreprocessor(Cache):
             wgt_cfg  = '' if self._wgt_cfg is None else {key : val.model_dump() for key, val in self._wgt_cfg.items()}, 
             rdf_uid  = self._rdf.uid)
     # ------------------------
-    def _get_rdf(self, selection : dict[str,str] | None) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
+    def _get_rdf(self, selection : dict[str,str]) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
         Parameters
         -------------------
