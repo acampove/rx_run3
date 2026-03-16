@@ -2,6 +2,7 @@
 Script holding ConstraintReader class
 '''
 
+from pathlib             import Path
 from typing              import Final
 from dmu                 import LogStore
 from dmu.stats           import Constraint, Constraint1D, ConstraintType
@@ -134,8 +135,31 @@ class ConstraintReader:
 
         self._constraints += calc.get_constraints()
     # ----------------------
-    def get_constraints(self) -> list[Constraint]:
+    def _save_constraints(self, path : Path) -> None:
         '''
+        Parameters
+        -------------
+        path: Path to YAML file to save constraints to
+        '''
+        log.info(f'Saving constraints to: {path}')
+
+        if not self._constraints:
+            return
+
+        path.parent.mkdir(parents = True, exist_ok = True)
+
+        yaml_string = ''
+        for cons in self._constraints:
+            yaml_string = cons.string(kind = 'yaml') + '\n'
+
+        path.write_text(yaml_string)
+    # ----------------------
+    def get_constraints(self, save_to : Path | None = None) -> list[Constraint]:
+        '''
+        Parameters
+        ---------------
+        save_to: Path to yaml file where constraints are save, default None
+
         Returns dictionary with constraints, i.e.
 
         Key  : Name of fitting parameter
@@ -145,6 +169,11 @@ class ConstraintReader:
         self._add_prec_constraints()
         self._add_combinatorial_constraints()
         self._add_signal_constraints()
+
+        if save_to is None:
+            return self._constraints
+
+        self._save_constraints(path = save_to)
 
         return self._constraints
 # -------------------------------------------------------------
