@@ -8,12 +8,14 @@ from pathlib     import Path
 from dmu         import LogStore
 from dmu.stats   import FitConf, FitResult, Fitter, ZFitPlotterConf
 from dmu.stats   import utilities  as sut
+from dmu.stats   import zfit
 from zfit.data   import Data       as zdata
 from zfit.pdf    import BasePDF    as zpdf
 from rx_common   import Component, Qsq
 from rx_common   import Trigger
 
-log=LogStore.add_logger('fitter:base_fitter')
+log  = LogStore.add_logger('fitter:base_fitter')
+zobs = zfit.Space
 # ------------------------
 class BaseFitter:
     '''
@@ -165,19 +167,24 @@ class BaseFitter:
 
         return sel_fit, sel_dif, brem_cuts
     # --------------------------
-    def _entries_from_data(self, data : zdata) -> int:
+    def _entries_from_data(
+        self, 
+        data : zdata,
+        obs  : zobs | None = None) -> int:
         '''
         Parameters
         ---------------
         data: Dataset used in the fit
+        obs : Use this observable, if provided, otherwise use the one in data
 
         Returns
         ---------------
         Number of entries in data that were used for the fit,
         which are in the fit observable range
         '''
-        obs          = data.space
-        [minx, maxx] = sut.range_from_obs(obs=obs)
+        used_obs = data.space if obs is None else obs
+
+        [minx, maxx] = sut.range_from_obs(obs=used_obs)
 
         arr_mass = data.to_numpy()
         mask     = (minx < arr_mass) & (arr_mass < maxx)
