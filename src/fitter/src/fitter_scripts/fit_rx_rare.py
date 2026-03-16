@@ -231,7 +231,6 @@ def main(args : DictConfig | None = None):
         stack.enter_context(Cache.cache_root(path=cfg.output_directory))
         stack.enter_context(PL.parameter_schema(cfg=cfg.mod_cfg.yields))
         stack.enter_context(sel.custom_selection(d_sel=cfg.overriding_selection))
-        stack.enter_context(sut.blinded_variables(regex_list=['.*signal.*']))
 
         _fit(cfg=cfg)
 # ----------------------
