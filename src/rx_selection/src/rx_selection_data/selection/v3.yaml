@@ -84,7 +84,10 @@ RKst: &rkst
       <<: *cascade_common
     hop       :
       <<: *hop_common
-    bdt       : (1)
+    cmb       :
+      <<: *cmb_common
+    prc       :
+      <<: *prc_common
     mass:
       <<: *mass_ee
   MM:
@@ -114,7 +117,10 @@ RKst: &rkst
       high    : (1) 
     hop       :
       <<: *hop_common
-    bdt       : (1)
+    cmb       :
+      <<: *cmb_common
+    prc       :
+      <<: *prc_common
     mass:
       <<: *mass_mm
 RK: &rk
