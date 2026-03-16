@@ -44,7 +44,11 @@ class Project(StrEnum):
         match self:
             case Project.rk:
                 return f'yld_{Component.bpkpee}'
+            case Project.rk_no_pid:
+                return f'yld_{Component.bpkpee}'
             case Project.rkst:
+                return f'yld_{Component.bdkstkpiee}'
+            case Project.rkst_no_pid:
                 return f'yld_{Component.bdkstkpiee}'
             case _:
                 raise ValueError(f'Invalid project: {self}')
