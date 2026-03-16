@@ -187,9 +187,9 @@ class FitResult(BaseModel):
 
     valid      : bool
     status     : int
-    covariance : list[list[float]] 
-    parameters : tuple[FitParameter,...]
     gof        : GoodnessOfFit | None = None
+    parameters : tuple[FitParameter,...]
+    covariance : list[list[float]] 
     # ----------------------
     @classmethod
     def merge(cls, results : list[Self]) -> Self:
