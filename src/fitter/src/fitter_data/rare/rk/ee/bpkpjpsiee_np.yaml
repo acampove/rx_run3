@@ -1,7 +1,8 @@
 output_directory : rare/rk/electron/jpsi_leakage
 component        : bpkpjpsiee
-selection        :
-  mass : (1)
+events_range : 
+  - 4000
+  - 7200
 fit:
   kind      : KDE1DimFFT
   bandwidth : 20
