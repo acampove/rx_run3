@@ -38,6 +38,13 @@ class GoodnessOfFit(BaseModel):
     @model_validator(mode='before')
     @classmethod
     def compute_or_validate(cls, data):
+        '''
+        Validates:
+
+        - NODF is between bounds
+        - Chi2 or Pvalue needs to exist 
+        - If both chi2 and pvalue exist, check consistency 
+        '''
         chi2 = data.get('chi2', math.nan) 
         pval = data.get('pval', math.nan) 
         ndof = data['ndof']
@@ -50,6 +57,19 @@ class GoodnessOfFit(BaseModel):
 
         computed_pval = float(1 - chi2_dist.cdf(chi2, ndof))
         computed_chi2 = float(chi2_dist.isf(pval, ndof))
+        # ----------------
+        # Good input values
+        # ----------------
+        if not math.isnan(pval) and math.isclose(pval, 0.0, rel_tol = RTOL):
+            raise ValueError('Input pvalue is zero')
+        # ----------------
+        # Good computed values
+        # ----------------
+        if not math.isnan(computed_pval) and math.isclose(computed_pval, 0.0, rel_tol = RTOL):
+            raise ValueError('Comuted p-value is zero')
+
+        if not math.isnan(computed_chi2) and math.isinf(computed_chi2):
+            raise ValueError('Computed chi2 is inf')
         # ----------------
         # Got pvalue, not chi2, assign chi2
         # ----------------
@@ -70,10 +90,10 @@ class GoodnessOfFit(BaseModel):
         # Got chi2 and pvalue, validate
         # ----------------
         if not math.isnan(chi2) and not numpy.isclose(chi2, computed_chi2, rtol = RTOL):
-            raise ValueError(f'Inconsistent input values: {data}')
+            raise ValueError(f'Inconsistent chi2 values: {chi2:.0} vs {computed_chi2:.0}')
 
         if not math.isnan(pval) and not numpy.isclose(pval, computed_pval, rtol = RTOL):
-            raise ValueError(f'Inconsistent input values: {data}')
+            raise ValueError(f'Inconsistent pvalue values: {pval:.7} vs {computed_pval:.7}')
         # ----------------
 
         return data 
