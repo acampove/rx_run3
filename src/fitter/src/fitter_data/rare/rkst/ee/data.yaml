@@ -28,7 +28,8 @@ components:
   bdkstkpijpsiee : rare/rkst/ee/bdkstkpijpsiee_np.yaml
   bdkstkpipsi2ee : rare/rkst/ee/bdkstkpipsi2ee_np.yaml
   bdkstkpiee     : rare/rkst/ee/bdkstkpiee.yaml
-constraints : {}
+constraints :
+  pre_rare : []
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 78
