@@ -2,6 +2,9 @@ output_directory : rare/rk/electron/misid/hdpipi
 component        : bpkpipi
 trigger          : Hlt2RD_BuToKpEE_MVA_noPID
 project          : rk_nopid
+events_range     :
+  - 4200
+  - 6000
 selection: 
   pid_l : (1)  # Built removing PID on leptons
 weights : model/weights/weights.yaml
