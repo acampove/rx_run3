@@ -76,19 +76,14 @@ class DataFitter(BaseFitter, Cache):
 
         return nll
     # ----------------------
-    def _save_constraints(self, out_dir : Path) -> None:
+    def _save_config(self, out_dir : Path) -> None:
         '''
         Parameters
         -------------
         out_dir: Path to output directory
         '''
-        if self._cfg.constraints.is_empty:
-            log.info('Constraints not found, not saving them')
-            return
-
-        out_path= out_dir / 'constraints.yaml'
-        log.info(f'Saving constraints to: {out_path}')
-
+        out_path= out_dir / 'conf.yaml'
+        log.info(f'Saving configuration to: {out_path}')
         self._cfg.to_yaml(path = out_path)
     # ----------------------
     def _simple_fit(self, nll : NLL) -> zres:
@@ -147,7 +142,7 @@ class DataFitter(BaseFitter, Cache):
                 res      = fres,
                 out_path = out_path)
 
-            self._save_constraints(out_dir=out_path)
+            self._save_config(out_dir=out_path)
 
         return fres 
 # ----------------------
