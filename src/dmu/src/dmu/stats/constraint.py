@@ -2,12 +2,13 @@
 Module containing constraint classes 
 '''
 
+import yaml
 import json
 import math
 import numpy
 
 from pathlib         import Path
-from typing          import Self, Sequence
+from typing          import Literal, Self, Sequence
 from tabulate        import tabulate
 from functools       import cached_property
 from zfit.constraint import GaussianConstraint as GConstraint
@@ -41,6 +42,22 @@ class Constraint(BaseModel):
         _ = holder
 
         raise NotImplementedError('Cannot extract zfit constraint from base Constraint')
+    # ----------------------
+    def string(self, kind : Literal['yaml', 'json']) -> str:
+        '''
+        Parameters
+        ---------------
+        kind: Type of formatting, e.g. yaml, json
+
+        Returns
+        ---------------
+        String version
+        '''
+        data = self.model_dump_json(indent = 2)
+        if kind == 'json':
+            return data
+
+        return yaml.dump(json.loads(data), indent = 2)
     # ----------------------
     @classmethod
     def from_json(cls, path : Path) -> Self:
