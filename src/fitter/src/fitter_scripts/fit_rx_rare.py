@@ -13,7 +13,6 @@ from contextlib    import ExitStack
 from omegaconf     import DictConfig
 from dmu.stats     import ParameterLibrary as PL
 from dmu.generic   import UnpackerModel, utilities as gut
-from dmu.stats     import utilities as sut
 from dmu.stats     import ConstraintAdder
 from dmu.stats     import Constraint
 from dmu.workflow  import Cache
@@ -167,7 +166,7 @@ def _add_constraints(
     - List of constraints
     '''
     crd  = ConstraintReader(nll=nll, cfg=cfg)
-    cons = crd.get_constraints()
+    cons = crd.get_constraints(save_to = cfg.output_directory / 'constraints.yaml')
 
     if not cons:
         log.warning('Not using any constraints')
