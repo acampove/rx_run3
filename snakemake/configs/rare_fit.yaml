@@ -1,5 +1,6 @@
-ntoys : 0
-# ----------------
+project:
+  - rk
+  - rkst
 qsq_bin:
   - low 
   - central
