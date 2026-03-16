@@ -111,6 +111,10 @@ class ConstraintReader:
         if not isinstance(cmb_cfg, CombinatorialConf):
             raise ValueError(f'Expected combinatorial config, got: {cmb_cfg}')
 
+        if self._cfg.q2bin not in cmb_cfg.constraints:
+            log.info(f'Not constraining the combinatorial shape for: {self._cfg.q2bin}/{self._cfg.mod_cfg.trigger}')
+            return
+
         calc      = CmbConstraints(
             name  = Component.comb,
             trig  = self._cfg.mod_cfg.trigger,
