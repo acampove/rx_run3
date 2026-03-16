@@ -168,7 +168,8 @@ def test_kde_rk(component : Component, tmp_path : Path):
     data = gut.load_data(package='fitter_data', fpath=f'rare/rk/ee/{component}_np.yaml')
     cfg  = NonParametricConf(**data)
 
-    with Cache.cache_root(path = tmp_path):
+    with Cache.cache_root(path = tmp_path),\
+         RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
             name     = 'kde',
             component= component,
@@ -183,16 +184,24 @@ def test_kde_rkst(component : Component, tmp_path : Path):
     '''
     Test fitting with KDE
     '''
-    mass = Mass.bp_bcor_smr
+    mass   = Mass.bp_bcor_smr
+    limits = 4600, 6900
 
-    obs = zfit.Space(
+    obs       = zfit.Space(
         obs   = mass.latex,
         label = mass,
-        limits= mass.limits)
+        limits= limits)
     data = gut.load_data(package='fitter_data', fpath=f'rare/rkst/ee/{component}_np.yaml')
     cfg  = NonParametricConf(**data)
 
-    with Cache.cache_root(path = tmp_path):
+    cuts = {
+        'brem': 'nbrem != 0',
+        'cmb' : 'mva_cmb > 0.9',
+        'prc' : 'mva_prc > 0.5'}
+
+    with Cache.cache_root(path = tmp_path),\
+         RDFGetter.max_entries(value = -1),\
+         sel.custom_selection(d_sel = cuts):
         ftr = SimFitter(
             name     = 'kde',
             component= component,
