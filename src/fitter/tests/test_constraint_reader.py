@@ -19,9 +19,13 @@ from fitter         import ConstraintReader
 from fitter         import CombinatorialConf, FitModelConf
 from fitter         import MVAWp
 
-from fitter.constraint_reader import _PRC_COMPONENTS
-
 log=LogStore.add_logger('fitter:test_constraint_reader')
+
+_PRC_COMPONENTS : Final[list[Component]] = [
+    Component.bsphiee,
+    Component.bpkstkpiee,
+    Component.bdkstkpiee
+]
 
 _CONSTRAINTS : Final[list[str]] = [
     'sig_par', 
