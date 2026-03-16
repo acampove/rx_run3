@@ -1,9 +1,11 @@
 output_directory : rare/rk/electron/bsphiee
 component        : bsphiee
+selection        :
+  mass : (1)
 fit:
-  kind     : KDE1DimFFT
-  bandwidth: 20
-  padding  :
+  kind      : KDE1DimFFT
+  bandwidth : 20
+  padding   :
     flag : False
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 30

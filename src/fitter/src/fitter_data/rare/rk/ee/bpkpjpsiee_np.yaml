@@ -1,9 +1,11 @@
 output_directory : rare/rk/electron/jpsi_leakage
 component        : bpkpjpsiee
+selection        :
+  mass : (1)
 fit:
-  kind     : KDE1DimFFT
-  bandwidth: 20
-  padding  :
+  kind      : KDE1DimFFT
+  bandwidth : 20
+  padding   :
     lowermirror : 0.3
     uppermirror : 0.0
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting

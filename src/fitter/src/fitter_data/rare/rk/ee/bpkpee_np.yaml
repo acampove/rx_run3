@@ -1,5 +1,7 @@
 output_directory : rare/rk/electron/signal 
 component : bpkpee
+selection :
+  mass : (1)
 categories:
   main: 
     model : KDE1DimFFT
