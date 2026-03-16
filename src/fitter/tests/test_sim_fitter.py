@@ -154,8 +154,8 @@ def test_with_cat_constrained(tmp_path : Path):
     for cons in sorted(constraints):
         print(cons)
 # ---------------------------------------------------
-@pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bpkstkpiee, Component.bsphiee])
-def test_kde(component : Component, tmp_path : Path):
+@pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bpkstkpiee, Component.bsphiee, Component.bpkpjpsiee])
+def test_kde_rk(component : Component, tmp_path : Path):
     '''
     Test fitting with KDE
     '''
@@ -175,6 +175,30 @@ def test_kde(component : Component, tmp_path : Path):
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
+            q2bin    = Qsq.central)
+        ftr.get_model()
+# ---------------------------------------------------
+@pytest.mark.parametrize('component', [Component.bpkpipiee, Component.bdkstkpijpsiee])
+def test_kde_rkst(component : Component, tmp_path : Path):
+    '''
+    Test fitting with KDE
+    '''
+    mass = Mass.bp_bcor_smr
+
+    obs = zfit.Space(
+        obs   = mass.latex,
+        label = mass,
+        limits= mass.limits)
+    data = gut.load_data(package='fitter_data', fpath=f'rare/rkst/ee/{component}_np.yaml')
+    cfg  = NonParametricConf(**data)
+
+    with Cache.cache_root(path = tmp_path):
+        ftr = SimFitter(
+            name     = 'kde',
+            component= component,
+            obs      = obs,
+            cfg      = cfg,
+            trigger  = Trigger.rkst_ee_os,
             q2bin    = Qsq.central)
         ftr.get_model()
 # ---------------------------------------------------
