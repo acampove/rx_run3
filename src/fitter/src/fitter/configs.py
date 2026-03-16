@@ -150,16 +150,35 @@ class ParametricConf(ComponentConf):  # Tested
 class NonParametricConf(ComponentConf): # Tested
     '''
     Class mean to control configuration of fit to non parametric models 
+
     Attributes
     -------------------
-    sample : MC sample used to build KDE
-    fit    : Fit configuration for KDE
-    plots  : Configuration for plotting
+    component    : MC sample used to build KDE
+    fit          : Fit configuration for KDE
+    plots        : Configuration for plotting
+    events_range : Range where data will be taken from to build KDE
     '''
-    component : Component
-    fit       : KDEConf
-    plots     : ZFitPlotterConf 
-    selection : dict[str,str]
+    component    : Component
+    fit          : KDEConf
+    plots        : ZFitPlotterConf 
+    events_range : tuple[int,int]
+    # ---------------------------
+    def get_obs(self, obs : zobs) -> zobs:
+        '''
+        Parameters
+        ----------------
+        obs: Original observable, used for full fit
+
+        Returns
+        ----------------
+        Observable used to build KDE
+        '''
+        obs = zfit.Space(
+            obs   = obs.obs, 
+            label = obs.label,
+            limits=self.events_range)
+
+        return obs
 # ------------------------------
 class CombinatorialConf(ComponentConf): # Tested
     '''
