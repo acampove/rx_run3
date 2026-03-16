@@ -25,7 +25,7 @@ components:
   comb   : rare/rk/mm/comb.yaml
   bpkpmm : rare/rk/mm/bpkpmm.yaml.j2
 constraints:
-  yields : []
+  pre_rare : []
 fit: {}
 plots: # These entries should be taken from https://gitlab.cern.ch/rx_run3/dmu#fit-plotting
   nbins   : 50
