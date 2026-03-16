@@ -2,7 +2,7 @@ output_directory : rare/rkst/electron/jpsi_leakage
 component : bdkstkpijpsiee 
 fit:
   kind     : KDE1DimFFT
-  bandwidth: 20
+  bandwidth: 40
   padding:
     lowermirror : 0.3
     uppermirror : 0.0
