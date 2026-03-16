@@ -117,7 +117,7 @@ class DataModel:
             log.warning('Found only one PDF, not using it in SumPDF')
             return l_pdf[0]
 
-        pdf = zfit.pdf.SumPDF(l_pdf)
+        pdf = zfit.pdf.SumPDF(obs = self._obs, pdfs = l_pdf)
 
         return pdf
     # ------------------------
