@@ -61,12 +61,14 @@ class GoodnessOfFit(BaseModel):
         # Good input values
         # ----------------
         if not math.isnan(pval) and math.isclose(pval, 0.0, rel_tol = RTOL):
-            raise ValueError('Input pvalue is zero')
+            log.warning(f'Input pvalue is zero: {pval:.3e}')
+            data['chi2'] = 999
+            return data
         # ----------------
         # Good computed values
         # ----------------
         if not math.isnan(computed_pval) and math.isclose(computed_pval, 0.0, rel_tol = RTOL):
-            raise ValueError('Computed p-value is zero')
+            log.warning(f'Computed p-value is zero: {computed_pval:.3e}')
 
         if not math.isnan(computed_chi2) and math.isinf(computed_chi2):
             raise ValueError('Computed chi2 is inf')
