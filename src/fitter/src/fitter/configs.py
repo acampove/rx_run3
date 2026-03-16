@@ -179,6 +179,7 @@ class MisIDConf(NonParametricConf): # Tested
     project          : Project
     weights          : MisIDSampleWeights 
     data_fit         : FitConf
+    selection        : dict[str,str]
 # ------------------------------
 AnyModelConf = CombinatorialConf | ParametricConf | CCbarConf | MisIDConf | NonParametricConf
 # ------------------------------
