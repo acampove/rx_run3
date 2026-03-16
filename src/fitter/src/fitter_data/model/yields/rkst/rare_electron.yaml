@@ -5,15 +5,15 @@ yields: &yields
   min : 0
   max : 100000
 
-yld_signal:
+yld_bdkstkpiee:
   <<      : *yields
 yld_ccbar:
   <<      : *yields
-yld_Bu_Kpipiee_eq_DPC_LSFLAT:
+yld_bpkpipiee:
   <<      : *yields
-yld_combinatorial:
+yld_comb:
   <<      : *yields
-yld_jpsi_leakage:
+yld_bpjpsiee:
   <<      : *yields
-yld_psi2_leakage: 
+yld_bppsi2ee: 
   <<      : *yields
