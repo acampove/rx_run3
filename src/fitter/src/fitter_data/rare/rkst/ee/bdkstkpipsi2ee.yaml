@@ -1,4 +1,4 @@
-output_directory : rare/rkst/electron/psi2_leakage
+output_directory : rare/rkst/electron
 component : bdkstkpipsi2ee 
 categories:
   main:

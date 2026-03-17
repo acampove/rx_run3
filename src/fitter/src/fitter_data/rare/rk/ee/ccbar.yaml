@@ -1,4 +1,4 @@
-output_directory : rare/rk/electron/ccbar
+output_directory : rare/rk/electron
 samples:
   - bdjpsixee 
   - bpjpsixee 

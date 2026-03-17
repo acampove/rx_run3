@@ -1,4 +1,4 @@
-output_directory : rare/rk/electron/kkk
+output_directory : rare/rk/electron
 component        : bpkkk
 trigger          : Hlt2RD_BuToKpEE_MVA_noPID
 project          : rk_nopid

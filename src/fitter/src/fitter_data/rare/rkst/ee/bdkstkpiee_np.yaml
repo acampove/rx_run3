@@ -1,4 +1,4 @@
-output_directory : rare/rkst/electron/signal 
+output_directory : rare/rkst/electron
 component : bdkstkpiee
 events_range :
   - 4200

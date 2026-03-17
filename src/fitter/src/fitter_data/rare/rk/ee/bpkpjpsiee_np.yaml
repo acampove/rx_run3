@@ -1,4 +1,4 @@
-output_directory : rare/rk/electron/jpsi_leakage
+output_directory : rare/rk/electron
 component        : bpkpjpsiee
 events_range : 
   - 4000

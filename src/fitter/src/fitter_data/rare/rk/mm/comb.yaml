@@ -1,4 +1,4 @@
-output_directory : rare/rk/muon/combinatorial
+output_directory : rare/rk/muon
 # -----------------
 constraints: {}
 # -----------------

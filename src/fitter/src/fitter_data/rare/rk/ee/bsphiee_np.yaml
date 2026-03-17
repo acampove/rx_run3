@@ -1,4 +1,4 @@
-output_directory : rare/rk/electron/bsphiee
+output_directory : rare/rk/electron
 component        : bsphiee
 events_range : 
   - 4200

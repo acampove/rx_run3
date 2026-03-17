@@ -1,4 +1,4 @@
-output_directory : rare/rk/electron/signal 
+output_directory : rare/rk/electron
 component : bpkpee
 events_range : 
   - 4200
