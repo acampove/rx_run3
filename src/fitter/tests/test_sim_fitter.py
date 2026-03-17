@@ -86,7 +86,7 @@ def test_nocat(tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value=30_000):
         ftr = SimFitter(
-            component= Component.bpkpjpsimm,
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_mm_os,
@@ -107,7 +107,7 @@ def test_with_cat(tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
-            component= Component.bpkpee,
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
@@ -129,7 +129,7 @@ def test_with_cat_constrained(tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
-            component= Component.bpkpee,
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
@@ -168,7 +168,7 @@ def test_kde_rk(component : Component, tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
-            component= component,
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
@@ -199,7 +199,7 @@ def test_kde_rkst(component : Component, tmp_path : Path):
          RDFGetter.max_entries(value = -1),\
          sel.custom_selection(d_sel = cuts):
         ftr = SimFitter(
-            component= component,
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rkst_ee_os,
@@ -229,7 +229,7 @@ def test_misid(
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            component= component,
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_nopid,
@@ -307,7 +307,7 @@ def test_reso_rk_ee(
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            component= Component(component),
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
@@ -342,7 +342,7 @@ def test_reso_rkst_mm(
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
-            component= component,
+            component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rkst_mm_os,
