@@ -130,7 +130,7 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> RXFitConfig:
     if   mod_cfg.trigger.is_electron: 
         name     = 'brem_x12'
     elif mod_cfg.trigger.is_muon:
-        name     = 'brem_0xx'
+        name     = 'brem_xx0'
     else:
         raise NotImplementedError(f'Invalid trigger: {mod_cfg.trigger}')
 
