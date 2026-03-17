@@ -1,7 +1,6 @@
 '''
 Module with SimFitter class
 '''
-from pathlib             import Path
 from typing              import overload, Literal, Final
 
 from dmu                 import LogStore
