@@ -49,13 +49,11 @@ class SimFitter(BaseFitter, Cache):
         trigger   : Trigger,
         q2bin     : Qsq,
         cfg       : ModelConf,
-        obs       : zobs,
-        name      : str | None = None):
+        obs       : zobs):
         '''
         Parameters
         --------------------
         obs      : Observable
-        name     : Optional, identifier for fit, used to name directory
         component: Nickname of component, e.g. combinatorial, only used for naming
         trigger  : Hlt2RD...
         q2bin    : E.g. central
@@ -63,36 +61,23 @@ class SimFitter(BaseFitter, Cache):
         '''
         BaseFitter.__init__(self)
         log.info(20 * '-')
-        log.info(f'Fitting {component}/{name}')
+        log.info(f'Fitting {component}')
         log.info(20 * '-')
 
         self._component = component
         self._trigger   = trigger
         self._q2bin     = q2bin
-        self._name      = name
         self._cfg       = cfg
         self._obs       = obs
-        self._base_path = self._get_base_path() 
-
-        log.debug(f'For component {self._component} using output: {self._base_path}')
 
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
 
         Cache.__init__(
             self,
-            out_path = self._base_path,
+            out_path = self._cfg.output_directory / self._q2bin / self._component / 'fit',
             l_rdf_uid= self._l_rdf_uid,
             config   = self._cfg.model_dump())
-    # ------------------------
-    def _get_base_path(self) -> Path:
-        '''
-        Returns directory where outputs will go
-        '''
-        if self._name is None:
-            return self._cfg.output_directory / self._q2bin
-
-        return self._cfg.output_directory / self._name / self._q2bin
     # ------------------------
     # Data getting section
     # ------------------------
@@ -129,11 +114,12 @@ class SimFitter(BaseFitter, Cache):
         d_data = {}
         for cat_name, cat_cfg in cfg.categories.items():
             prp = DataPreprocessor(
+                name      = cat_name,
                 wgt_cfg   = dict(),
                 obs       = self._obs,
                 trigger   = self._trigger,
                 q2bin     = self._q2bin,
-                out_dir   = self._base_path,
+                out_dir   = self._cfg.output_directory,
                 selection = cat_cfg.selection,
                 sample    = cfg.component)
 
@@ -164,7 +150,7 @@ class SimFitter(BaseFitter, Cache):
             obs       = cfg.get_obs(obs = self._obs),
             trigger   = self._trigger,
             q2bin     = self._q2bin,
-            out_dir   = self._base_path,
+            out_dir   = self._cfg.output_directory,
             selection = cut,
             sample    = cfg.component)
 
@@ -193,7 +179,7 @@ class SimFitter(BaseFitter, Cache):
         log.info(f'Building {self._component} for category {category} with: {cfg.pdfs}')
 
         mod         = ModelFactory(
-            preffix = self._get_suffix(category=category),
+            preffix = f'{self._component}_{category}',
             obs     = self._obs,
             l_pdf   = cfg.pdfs,
             l_reuse = cfg.reuse,
@@ -206,21 +192,6 @@ class SimFitter(BaseFitter, Cache):
         pdf = mod.get_pdf()
 
         return pdf
-    # ----------------------
-    def _get_suffix(self, category : str) -> str:
-        '''
-        Parameters
-        -------------
-        category: Name of model category 
-
-        Returns
-        -------------
-        Name of suffix for naming parameters
-        '''
-        if self._name is None:
-            return f'{self._component}_{category}'
-
-        return f'{self._component}_{category}_{self._name}'
     # ------------------------
     def _fix_tails(self, pdf : zpdf, res : FitResult) -> zpdf:
         '''
