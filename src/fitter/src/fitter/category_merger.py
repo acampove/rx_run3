@@ -5,7 +5,7 @@ import zfit
 
 from typing      import Literal, Sequence
 from dmu         import LogStore
-from rx_common   import Brem, Block, Correction
+from rx_common   import Brem, Block, Correction, Component
 from dmu.stats   import FitResult, Model, ModelFactory
 from .category   import Category, FitCategory
 
@@ -22,13 +22,18 @@ class CategoryMerger:
     - Each sample corresponds to a given brem category and block
     '''
     # ----------------------
-    def __init__(self, categories : list[Category]):
+    def __init__(
+        self, 
+        categories : list[Category],
+        comp       : Component):
         '''
         Parameters
         -------------
         categories: List of Category objects, representing fits to MC datasets 
+        comp      : Fitting component
         '''
         self._categories = categories
+        self._comp       = comp
     # ----------------------
     def _enforce(
         self, 
@@ -235,7 +240,7 @@ class CategoryMerger:
         -------------
         Fraction used to form model
         '''
-        suffix = f'{corr.nickname}_{category.brem}_b{category.block}'
+        suffix = f'{self._comp}_{corr.nickname}_{category.brem}_b{category.block}'
 
         # Won't constrain ratio of block fractions between data and MC
         # Will constrain block fractions themselves
@@ -304,13 +309,18 @@ class FitCategoryMerger(CategoryMerger):
     Class meant to merge FitCategoryMerger instances
     '''
     # ----------------------
-    def __init__(self, categories : list[FitCategory]):
+    def __init__(
+        self, 
+        categories : list[FitCategory],
+        comp       : Component):
+
         '''
         Parameters
         -------------
         categories: List of Category objects, representing fits to MC datasets 
         '''
         self._categories = categories
+        self._comp       = comp
     # ----------------------
     def get_category(self) -> FitCategory:
         '''

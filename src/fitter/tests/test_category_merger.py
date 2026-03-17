@@ -4,11 +4,11 @@ Module used to test CategoryMerger class
 import pytest
 
 from dmu         import LogStore
-from dmu.stats   import zfit
+from dmu.stats   import Model, zfit
 from dmu.testing import get_model 
 from fitter      import CategoryMerger
 from fitter      import Category
-from rx_common   import Brem, Block
+from rx_common   import Brem, Block, Component
 
 zpdf = zfit.pdf.BasePDF
 log  = LogStore.add_logger('fitter:test_category_merger')
@@ -47,7 +47,7 @@ def _get_category(name : str) -> Category:
         pdf       = pdf, 
         sumw      = 1000., 
         selection = {'mass' : '(1)'},
-        model     = ['gauss'])
+        model     = [Model.gauss])
 
     return cat
 # ----------------------------------------
@@ -60,7 +60,7 @@ def test_add_brem(brems : list[Brem]):
     names      = [ f'brem_{brem:03}_b1' for brem in brems ]
     categories = [ _get_category(name = name) for name in names ]
 
-    mgr = CategoryMerger(categories = categories)
+    mgr = CategoryMerger(categories = categories, comp = Component.bpkpee)
     cat = mgr.get_category()
 
     assert isinstance(cat, Category)
@@ -74,7 +74,7 @@ def test_add_block():
     names      = [ f'brem_xx1_b{block}' for block in range(1, 4) ]
     categories = [ _get_category(name = name) for name in names ]
 
-    mgr = CategoryMerger(categories = categories)
+    mgr = CategoryMerger(categories = categories, comp = Component.bpkpee)
     cat = mgr.get_category()
 
     assert isinstance(cat, Category)
@@ -88,7 +88,7 @@ def test_add_brem_block():
     names      = [ f'brem_{brem}_b{block}' for block in Block.blocks() for brem in Brem.brems() ]
     categories = [ _get_category(name = name) for name in names ]
 
-    mgr = CategoryMerger(categories = categories)
+    mgr = CategoryMerger(categories = categories, comp = Component.bpkpee)
     cat = mgr.get_category()
 
     assert isinstance(cat, Category)
