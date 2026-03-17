@@ -23,7 +23,7 @@ components:
   bpkpjpsiee : reso/rk/ee/bpkpjpsiee.yaml
   bpkppsi2ee : reso/rk/ee/bpkppsi2ee.yaml
 constraints:
-  yields : []
+  pre_rare : []
 fit: {}
 plots:
   nbins           : 100
