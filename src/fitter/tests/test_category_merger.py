@@ -60,7 +60,10 @@ def test_add_brem(brems : list[Brem]):
     names      = [ f'brem_{brem:03}_b1' for brem in brems ]
     categories = [ _get_category(name = name) for name in names ]
 
-    mgr = CategoryMerger(categories = categories, comp = Component.bpkpee)
+    mgr = CategoryMerger(
+        reparametrize = True,
+        categories    = categories, 
+        comp          = Component.bpkpee)
     cat = mgr.get_category()
 
     assert isinstance(cat, Category)
@@ -74,7 +77,12 @@ def test_add_block():
     names      = [ f'brem_xx1_b{block}' for block in range(1, 4) ]
     categories = [ _get_category(name = name) for name in names ]
 
-    mgr = CategoryMerger(categories = categories, comp = Component.bpkpee)
+    mgr = CategoryMerger(
+        reparametrize = True,
+        categories    = categories, 
+        comp          = Component.bpkpee)
+    cat = mgr.get_category()
+
     cat = mgr.get_category()
 
     assert isinstance(cat, Category)
@@ -88,7 +96,10 @@ def test_add_brem_block():
     names      = [ f'brem_{brem}_b{block}' for block in Block.blocks() for brem in Brem.brems() ]
     categories = [ _get_category(name = name) for name in names ]
 
-    mgr = CategoryMerger(categories = categories, comp = Component.bpkpee)
+    mgr = CategoryMerger(
+        reparametrize = True,
+        categories    = categories, 
+        comp          = Component.bpkpee)
     cat = mgr.get_category()
 
     assert isinstance(cat, Category)
