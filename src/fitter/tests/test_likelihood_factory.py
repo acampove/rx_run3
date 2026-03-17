@@ -15,6 +15,7 @@ from rx_selection    import selection  as sel
 from fitter          import LikelihoodFactory
 from zfit.core.loss  import ExtendedUnbinnedNLL
 from fitter          import FitModelConf
+from fitter          import ParametricConf
 
 # -------------------------------------------
 class Data:
@@ -44,6 +45,26 @@ def initialize():
 
     with RDFGetter.max_entries(value = 100_000):
         yield
+# ----------------------
+def _update_block(cfg : FitModelConf, component : Component) -> FitModelConf:
+    '''
+    Parameters
+    -------------
+    cfg      : Fit config as loaded from YAML file 
+    component: Name of component whose block will be updated
+
+    Returns
+    -------------
+    config with updated category name 
+    '''
+    conf = cfg.components[component]
+    if not isinstance(conf, ParametricConf):
+        raise ValueError('Invalid config')
+
+    block = 1
+    conf.add_category_suffix(suffix = f'b{block}')
+
+    return cfg
 # -------------------------------------------
 def test_simple(tmp_path : Path):
     '''
@@ -155,6 +176,10 @@ def test_reso_electron(tmp_path : Path):
 
     with UnpackerModel.package(name = 'fitter_data'):
         cfg = FitModelConf(**data)
+        
+    cfg = _update_block(cfg = cfg, component = Component.bppijpsiee)
+    cfg = _update_block(cfg = cfg, component = Component.bpkpjpsiee)
+    cfg = _update_block(cfg = cfg, component = Component.bpkppsi2ee)
 
     obs = zfit.Space(Mass.bp_dtf_jpsi, limits=(5100, 5800))
     with PL.parameter_schema(cfg=cfg.yields),\
