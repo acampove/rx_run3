@@ -518,8 +518,8 @@ class Qsq(StrEnum):
     high    = 'high'
     # --------------------------
     @property
-    def is_reso(self) -> bool:
-        if self in [Qsq.jpsi, Qsq.psi2]:
+    def is_rare(self) -> bool:
+        if self in [Qsq.low, Qsq.central, Qsq.high]:
             return True
 
         return False
