@@ -1,4 +1,4 @@
-output_directory : reso/rkst/muon/ccbar
+output_directory : reso/rkst/muon
 samples:
   - bdjpsixmm 
   - bpjpsixmm 
