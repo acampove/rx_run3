@@ -98,7 +98,6 @@ class DataModel:
             log.info(f'Building: {component}')
             with SpecMaker.project(name = trigger.project):
                 ftr  = SimFitter(
-                    name     = self._name,
                     component= component,
                     trigger  = trigger,
                     q2bin    = self._q2bin,
