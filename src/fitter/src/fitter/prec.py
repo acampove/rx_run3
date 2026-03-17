@@ -41,6 +41,10 @@ log=LogStore.add_logger('fitter:prec')
 KDEPDF                       = KDE1DimFFT | KDE1DimISJ
 MIN_ISJ_ENTRIES : Final[int] = 500 # If Fewer entries than this, switch from ISJ to FFT
 MIN_ENTRIES     : Final[int] =  40 # Will not build KDE if fewer entries than this are found
+
+# TODO: Need separate normalization and observable ranges
+# to pick all the dataset in the construction of KDEs and avoid/aliviate
+# problem with edge effects
 #-----------------------------------------------------------
 class CharmoniumComponent(BaseModel):
     '''
@@ -327,8 +331,8 @@ class PRec(Cache):
 
         log.info(f'Saving cutflow to: {self._out_path}')
 
-        df.to_markdown(f'{self._out_path}/{sample}.md')
-        gut.dump_json(data=selection, path=f'{self._out_path}/{sample}.yaml', exists_ok=True)
+        df.to_markdown(self._out_path / f'{sample}.md')
+        gut.dump_json(data=selection, path= self._out_path / f'{sample}.yaml', exists_ok=True)
     #-----------------------------------------------------------
     def __get_samples_rdf(self) -> tuple[dict[CCbarComponent,RDF.RNode],str]:
         '''
