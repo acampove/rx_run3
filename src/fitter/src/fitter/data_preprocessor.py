@@ -89,7 +89,7 @@ class DataPreprocessor(Cache):
         self._is_sig = is_sig
 
         super().__init__(
-            out_path = out_dir / self._q2bin / self._sample / self._name / 'dataset',
+            out_path = out_dir / self._q2bin / self._sample / 'dataset' / self._name,
             obs_name = sut.name_from_obs(obs=obs),
             obs_range= sut.range_from_obs(obs=obs),
             d_sel    = d_sel,
