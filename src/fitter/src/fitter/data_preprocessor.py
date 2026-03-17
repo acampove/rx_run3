@@ -43,14 +43,14 @@ class DataPreprocessor(Cache):
     # ------------------------
     def __init__(
         self,
+        name      : str,
         out_dir   : Path,
         obs       : zobs,
         sample    : Component,
         trigger   : Trigger,
         q2bin     : Qsq,
         wgt_cfg   : dict[Correction,MisIDSampleWeights] | None,
-        is_sig    : bool                        = True,
-        name      : str           | None = None,
+        is_sig    : bool                 = True,
         selection : dict[str,str] | None = None):
         '''
         Parameters
@@ -90,32 +90,13 @@ class DataPreprocessor(Cache):
         self._is_sig = is_sig
 
         super().__init__(
-            out_path = self._get_basedir(out_dir = out_dir),
+            out_path = out_dir / self._q2bin / self._sample / self._name / 'dataset',
             obs_name = sut.name_from_obs(obs=obs),
             obs_range= sut.range_from_obs(obs=obs),
             d_sel    = d_sel,
             is_sig   = is_sig,
             wgt_cfg  = '' if self._wgt_cfg is None else {key : val.model_dump() for key, val in self._wgt_cfg.items()}, 
             rdf_uid  = self._rdf.uid)
-    # ----------------------
-    def _get_basedir(self, out_dir : Path) -> Path:
-        '''
-        Parameters
-        -------------
-        out_dir: Directory where output goes, which should contain q2 directory 
-
-        Returns
-        -------------
-        Actual path where dataset files will be sent
-        '''
-        if self._name is None:
-            path = out_dir / self._q2bin / self._sample / 'dataset'
-        else:
-            path = out_dir / self._q2bin / self._sample / self._name / 'dataset'
-
-        log.debug(f'Sending output to: {path}')
-
-        return path
     # ------------------------
     def _get_rdf(self, selection : dict[str,str]) -> tuple[RDF.RNode, dict[str,str], pnd.DataFrame]:
         '''
