@@ -233,7 +233,7 @@ class PRec(Cache):
         d_hash_match = { slugify.slugify(ltex) : value for ltex, value in self._d_match.items() }
 
         super().__init__(
-            out_path = cfg.output_directory / f'{self._trig}_{self._q2bin}',
+            out_path = cfg.output_directory / self._q2bin,
             uid      = uid,
             conf     = cfg.model_dump(),
             d_match  = d_hash_match)

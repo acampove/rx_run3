@@ -130,7 +130,7 @@ class DataFitter(BaseFitter, Cache):
             fres = min.get_result(loss = nll)
 
         for model, data, cfg, category in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
-            out_path = self._out_path / f'{self._trigger}_{self._q2bin}/{category}'
+            out_path = self._out_path / self._q2bin / category
 
             log.info(f'Saving fit to: {out_path}')
 
