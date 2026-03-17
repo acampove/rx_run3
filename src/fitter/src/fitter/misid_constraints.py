@@ -59,7 +59,7 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory,
+            out_path = self._cfg.output_directory / cfg.trigger.project / cfg.triger.channel / 'misid' / 'constraints',
             q2bin    = self._q2bin,
             d_sel    = d_sel, 
             config   = cfg.model_dump(),
