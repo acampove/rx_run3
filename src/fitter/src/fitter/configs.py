@@ -146,6 +146,26 @@ class ParametricConf(ComponentConf):  # Tested
     fit        : FitConf 
     categories : dict[str, CategoryConf]
     plots      : ZFitPlotterConf 
+    # ------------------------------
+    def add_category_suffix(self, suffix : str) -> None:
+        '''
+        Needed to repurpose generic category, e.g. brem_xx1 -> brem_xx1_b1
+        will allow using brem_xx1 for block 1
+
+        Parameters
+        ---------------
+        suffix: String that will be added as suffix to key of categories, e.g. b1
+        '''
+        old_categories : list[str] = list(self.categories)
+        new_categories : dict[str,CategoryConf] = dict()
+        for name, cat in self.categories.items():
+            new_categories[f'{name}_{suffix}'] = cat
+
+        for name in old_categories:
+            del self.categories[name]
+
+        for key, val in new_categories.items():
+            self.categories[key] = val
 # ------------------------------
 class NonParametricConf(ComponentConf): # Tested
     '''
