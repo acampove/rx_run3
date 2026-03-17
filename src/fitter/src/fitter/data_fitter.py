@@ -7,7 +7,7 @@ from dmu.workflow    import Cache
 from dmu.stats       import AnealingMinimizer, FitConf, FitResult
 from dmu.stats       import zfit
 from dmu.stats       import utilities as sut
-from rx_common       import Qsq
+from rx_common       import Component, Qsq
 from zfit.exception  import ParamNameNotUniqueError
 from zfit.result     import FitResult           as zres
 from zfit.loss       import ExtendedUnbinnedNLL as NLL
@@ -55,7 +55,7 @@ class DataFitter(BaseFitter, Cache):
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / self._q2bin,
+            out_path = self._cfg.output_directory / self._q2bin / Component.data_24,
             cfg      = cfg.model_dump())
     # ----------------------
     def _get_full_nll(self) -> NLL:
@@ -137,7 +137,7 @@ class DataFitter(BaseFitter, Cache):
         # NOTE: Save fit in each signal region
         # assuming this is a simultaneous fit
         for model, data, cfg, category in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
-            out_path = self._out_path / category
+            out_path = self._out_path / 'fit' / category
 
             log.info(f'Saving fit to: {out_path}')
 
