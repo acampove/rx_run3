@@ -303,14 +303,8 @@ def test_reso_rk_ee(
         limits= Mass.bp_dtf_jpsi.limits)
 
     data = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
-
-    block      = 1
-    categories = data['categories']
-
-    categories[f'brem_xx1_b{block}'] = categories.pop('brem_xx1')
-    categories[f'brem_xx2_b{block}'] = categories.pop('brem_xx2')
-
     cfg  = ParametricConf(**data)
+    cfg.add_category_suffix(suffix = 'b1')
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
