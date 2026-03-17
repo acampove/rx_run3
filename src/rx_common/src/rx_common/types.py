@@ -518,6 +518,13 @@ class Qsq(StrEnum):
     high    = 'high'
     # --------------------------
     @property
+    def is_reso(self) -> bool:
+        if self in [Qsq.jpsi, Qsq.psi2]:
+            return True
+
+        return False
+    # --------------------------
+    @property
     def latex(self) -> str:
         '''
         Returns
