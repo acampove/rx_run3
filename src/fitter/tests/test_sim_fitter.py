@@ -5,7 +5,7 @@ import pytest
 
 from pathlib       import Path
 from dmu           import LogStore
-from dmu.stats     import ParsHolder, zfit
+from dmu.stats     import ParsHolder, print_pdf, zfit
 from dmu.generic   import UnpackerModel, utilities as gut
 from dmu.stats     import utilities as sut
 from dmu.workflow  import Cache
@@ -314,7 +314,11 @@ def test_reso_rk_ee(
             trigger  = Trigger.rk_ee_os,
             q2bin    = Qsq.jpsi)
 
-        ftr.get_model()
+        pdf = ftr.get_model()
+
+    assert pdf is not None
+
+    print_pdf(pdf = pdf)
 # ---------------------------------------------------
 @pytest.mark.parametrize('component', [Component.bdkstkpijpsimm, Component.bdkstkpipsi2mm])
 def test_reso_rkst_mm(
