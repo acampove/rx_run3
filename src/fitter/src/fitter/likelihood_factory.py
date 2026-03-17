@@ -87,7 +87,7 @@ class LikelihoodFactory:
         data = dpr.get_data()
 
         log.info(50 * '-')
-        log.info(f'Making likelihood for: {self._sample}/{self._trigger}/{self._q2bin}')
+        log.info(f'Making likelihood for: {self._sample}/{self._trigger}/{self._q2bin}/{self._name}')
         log.info(50 * '-')
 
         nll = zfit.loss.ExtendedUnbinnedNLL(model=model, data=data)
