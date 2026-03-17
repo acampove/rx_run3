@@ -151,6 +151,7 @@ class SimFitter(BaseFitter, Cache):
             q2bin     = self._q2bin,
             out_dir   = self._cfg.output_directory,
             selection = cut,
+            name      = MAIN_CATEGORY,
             sample    = cfg.component)
 
         d_data[MAIN_CATEGORY] = prp.get_data()
@@ -485,7 +486,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data_observed,
             model    = pdf,
             res      = None,
-            out_path = self._out_path)
+            out_path = self._out_path / MAIN_CATEGORY )
 
         return pdf
     # ------------------------
