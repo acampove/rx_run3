@@ -27,7 +27,7 @@ class Category(BaseModel):
 
     Attributes
 
-    name     : Name of component, e.g. brem_001_b1
+    name     : Name of category, e.g. brem_001_b1
     pdf      : Zfit PDF associated to category
     sumw     : Yield in MC sample associated to category
     model    : List of model names used for category
