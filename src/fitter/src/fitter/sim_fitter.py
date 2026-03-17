@@ -438,9 +438,9 @@ class SimFitter(BaseFitter, Cache):
             return None
 
         if skip_fit:
-            mgr = CategoryMerger(categories = cats_raw)
+            mgr = CategoryMerger(categories = cats_raw, comp = self._component)
         else:
-            mgr = FitCategoryMerger(categories = cats_fit)
+            mgr = FitCategoryMerger(categories = cats_fit, comp = self._component)
 
         cat = mgr.get_category()
 
