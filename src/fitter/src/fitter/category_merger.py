@@ -248,17 +248,19 @@ class CategoryMerger:
 
         # Won't constrain ratio of block fractions between data and MC
         # Will constrain block fractions themselves
-        if corr == Correction.blok_fraction:
+        if corr == Correction.blok_fraction or not self._reparametrize:
             return zfit.param.Parameter(
                 name  = f'fr_{suffix}_flt',
                 value = 0.5,
                 lower = 0.0,
                 upper = 1.0)
 
-        value  = category.sumw / totalw
+        value     = category.sumw / totalw
+        frac_name = f'fr_{suffix}'
+        log.debug(f'Reparametrizing: {frac_name}')
         with ModelFactory.correction(fixed = False): # Let correction float for fit to real data
             frac      = ModelFactory.get_reparametrization(
-                name  = f'fr_{suffix}',
+                name  = frac_name, 
                 kind  = corr.kind,
                 value = value,
                 low   = 0.0,
