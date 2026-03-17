@@ -66,6 +66,7 @@ def test_muon_data(
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
+            name   = 'main',
             obs    = obs,
             out_dir= tmp_path,
             sample = component,
@@ -92,6 +93,7 @@ def test_brem_cat_data(
 
     with Cache.cache_root(path = tmp_path):
         prp = DataPreprocessor(
+            name      = 'main',
             obs       = obs,
             out_dir   = tmp_path,
             sample    = component, 
@@ -126,6 +128,7 @@ def test_with_pid_weights(
 
     with Cache.cache_root(path = tmp_path):
         prp  = DataPreprocessor(
+            name      = 'main',
             obs       = region.obs,
             out_dir   = tmp_path,
             sample    = component,
