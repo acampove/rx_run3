@@ -77,7 +77,10 @@ class LikelihoodFactory:
         model= mod.get_model()
 
         log.info('Getting data')
+
+        name = 'main' if self._name is None else self._name
         dpr  = DataPreprocessor(
+            name   = name,
             obs    = self._obs,
             q2bin  = self._q2bin,
             sample = self._sample,
