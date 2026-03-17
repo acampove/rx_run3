@@ -76,7 +76,6 @@ class DataPreprocessor(Cache):
         self._trigger= trigger
         self._q2bin  = q2bin
         self._wgt_cfg= wgt_cfg
-        self._out_dir= out_dir
 
         # Caching will remove all files
         # Need to keep around selection
@@ -213,7 +212,7 @@ class DataPreprocessor(Cache):
         log.info(f'Splitting sample: {self._sample}/{self._q2bin}')
         spl   = SampleSplitter(
             rdf     = self._rdf, 
-            out_dir = self._out_dir,
+            out_dir = self._out_path,
             cfg     = cfg.splitting)
         df    = spl.get_sample()
 
