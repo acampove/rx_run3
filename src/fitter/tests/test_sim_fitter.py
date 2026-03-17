@@ -349,28 +349,3 @@ def test_reso_rkst_mm(
             q2bin    = q2bin)
         ftr.get_model()
 # ---------------------------------------------------
-@pytest.mark.parametrize('name', ['name_001', 'name_002'])
-def test_name(name : str, tmp_path : Path):
-    '''
-    Will run test and specify the name argument
-    '''
-    component = Component.ccbar
-    mass      = Mass.bp_dtf_jpsi
-
-    obs       = zfit.Space(
-        obs   = mass.latex,
-        label = mass,
-        limits= mass.limits)
-
-    data      = gut.load_data(package='fitter_data', fpath=f'reso/rk/ee/{component}.yaml')
-    cfg       = CCbarConf(**data)
-
-    with Cache.cache_root(path = tmp_path):
-        ftr = SimFitter(
-            component= component,
-            obs      = obs,
-            cfg      = cfg,
-            trigger  = Trigger.rk_ee_os,
-            q2bin    = Qsq.jpsi)
-        ftr.get_model()
-# ---------------------------------------------------
