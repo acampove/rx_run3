@@ -32,6 +32,7 @@ def initialize():
     log.info('Disabling caching')
 
     LogStore.set_level('fitter:signal_constraints', 10)
+    LogStore.set_level('fitter:category_merger'   , 10)
     LogStore.set_level('fitter:sim_fitter'        , 10)
 
     with RDFGetter.max_entries(value = 100_000):
@@ -313,7 +314,6 @@ def test_reso_rk_ee(
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
             q2bin    = Qsq.jpsi)
-
         pdf = ftr.get_model()
 
     assert pdf is not None
