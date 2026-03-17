@@ -24,16 +24,20 @@ class CategoryMerger:
     # ----------------------
     def __init__(
         self, 
-        categories : list[Category],
-        comp       : Component):
+        reparametrize : bool,
+        categories    : list[Category],
+        comp          : Component):
         '''
         Parameters
         -------------
-        categories: List of Category objects, representing fits to MC datasets 
-        comp      : Fitting component
+        reparametrize: If true, will reparametrize fractions of categories as 
+                       scales or resolutions
+        categories   : List of Category objects, representing fits to MC datasets 
+        comp         : Fitting component
         '''
-        self._categories = categories
-        self._comp       = comp
+        self._reparametrize = reparametrize
+        self._categories    = categories
+        self._comp          = comp
     # ----------------------
     def _enforce(
         self, 
@@ -311,16 +315,20 @@ class FitCategoryMerger(CategoryMerger):
     # ----------------------
     def __init__(
         self, 
-        categories : list[FitCategory],
-        comp       : Component):
-
+        reparametrize : bool,
+        categories    : list[FitCategory],
+        comp          : Component):
         '''
         Parameters
         -------------
-        categories: List of Category objects, representing fits to MC datasets 
+        reparametrize: If true, will reparametrize fractions of categories as 
+                       scales or resolutions
+        categories   : List of Category objects, representing fits to MC datasets 
+        comp         : Fitting component
         '''
-        self._categories = categories
-        self._comp       = comp
+        self._reparametrize = reparametrize
+        self._categories    = categories
+        self._comp          = comp
     # ----------------------
     def get_category(self) -> FitCategory:
         '''
