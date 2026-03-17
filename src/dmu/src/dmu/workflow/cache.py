@@ -263,28 +263,6 @@ class Cache:
 
         return _context()
     # ---------------------------
-    def cache_dir(self, name : str):
-        '''
-        Context manager used to set caching directory
-
-        Parameters
-        ----------------
-        name: Path to add to _cache_root to update caching path
-        '''
-        if self._cache_root is None:
-            raise ValueError('Cache ROOT directory unset')
-
-        old_val        = self._out_path
-        self._out_path = self._cache_root / name 
-        @contextmanager
-        def _context():
-            try:
-                yield
-            finally:
-                self._out_path = old_val
-
-        return _context()
-    # ---------------------------
     @classmethod
     def set_cache_root(cls, root : Path) -> None:
         '''
