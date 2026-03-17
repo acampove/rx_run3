@@ -55,7 +55,7 @@ class DataFitter(BaseFitter, Cache):
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory,
+            out_path = self._cfg.output_directory / self._q2bin,
             cfg      = cfg.model_dump())
     # ----------------------
     def _get_full_nll(self) -> NLL:
@@ -115,6 +115,11 @@ class DataFitter(BaseFitter, Cache):
         -------------
         Fit result
         '''
+        result_path = self._out_path / 'parameters.yaml'
+        if self._copy_from_cache():
+            fres = FitResult.from_json(path = result_path)
+            return fres
+
         nll    = self._get_full_nll()
         l_cfg  = [ cfg for _, cfg in self._d_nll.values() ]
         l_nam  = list(self._d_nll)
@@ -129,8 +134,10 @@ class DataFitter(BaseFitter, Cache):
             min  = AnealingMinimizer(cfg = fit_cfg)
             fres = min.get_result(loss = nll)
 
+        # NOTE: Save fit in each signal region
+        # assuming this is a simultaneous fit
         for model, data, cfg, category in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
-            out_path = self._out_path / self._q2bin / category
+            out_path = self._out_path / category
 
             log.info(f'Saving fit to: {out_path}')
 
@@ -143,6 +150,9 @@ class DataFitter(BaseFitter, Cache):
                 out_path = out_path)
 
             self._save_config(out_dir=out_path)
+
+        fres.to_json(path = result_path)
+        self._cache()
 
         return fres 
 # ----------------------
