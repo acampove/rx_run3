@@ -1,4 +1,4 @@
-output_directory : reso/rk/electron/bpkppsi2ee
+output_directory : reso/rk/electron
 component : bpkppsi2ee 
 categories:
   brem_xx1:

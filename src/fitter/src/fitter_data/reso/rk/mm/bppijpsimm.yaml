@@ -1,4 +1,4 @@
-output_directory : reso/rk/muon/cabibbo
+output_directory : reso/rk/muon
 component        : bppijpsimm
 categories:
   brem_xx0:

@@ -1,4 +1,4 @@
-output_directory : reso/rk/muon/jpsi
+output_directory : reso/rk/muon
 component        : bpkpjpsimm
 categories:
   brem_xx0:

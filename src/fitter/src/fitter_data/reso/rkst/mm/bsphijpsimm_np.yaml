@@ -1,4 +1,4 @@
-output_directory : reso/rkst/muon/bsjpsiphi
+output_directory : reso/rkst/muon
 component        : bsphijpsimm
 fit:
   kind      : KDE1DimFFT

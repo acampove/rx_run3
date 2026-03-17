@@ -1,4 +1,4 @@
-output_directory : reso/rkst/electron/jpsi
+output_directory : reso/rkst/electron
 component        : bdkstkpijpsiee 
 categories:
   brem_xx1:

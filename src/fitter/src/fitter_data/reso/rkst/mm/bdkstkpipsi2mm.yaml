@@ -1,4 +1,4 @@
-output_directory : reso/rkst/muon/psi2
+output_directory : reso/rkst/muon
 component        : bdkstkpipsi2mm
 categories:
   brem_xx0:

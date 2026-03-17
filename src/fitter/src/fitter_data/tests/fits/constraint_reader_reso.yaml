@@ -2,7 +2,7 @@
 # It illustrates how a fit would run for data
 
 trigger          : Hlt2RD_BuToKpEE_MVA
-output_directory : reso/rk/electron/data
+output_directory : reso/rk/electron
 model:
   yields    : model/yields/rk/reso_electron.yaml
   observable:

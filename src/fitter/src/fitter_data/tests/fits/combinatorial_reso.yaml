@@ -1,7 +1,7 @@
 reso_veto: &reso_veto
   jpsi veto  : "TMath::Abs(B_const_mass_M - 5280) > 100"
 # --------------------------------------
-output_directory : reso/electron/combinatorial
+output_directory : reso/electron
 categories:
   main:
     models : 

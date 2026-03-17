@@ -1,4 +1,4 @@
-output_directory : reso/rkst/electron/bsjpsikst
+output_directory : reso/rkst/electron
 component        : bskstjpsiee 
 fit:
   kind : KDE1DimFFT
