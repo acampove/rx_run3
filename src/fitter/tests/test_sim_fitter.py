@@ -69,6 +69,7 @@ def test_nomc(tmp_path : Path):
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
+            name     = 'main',
             component= Component.comb,
             obs      = obs,
             cfg      = cfg,
@@ -87,6 +88,7 @@ def test_nocat(tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value=30_000):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
@@ -108,6 +110,7 @@ def test_with_cat(tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
@@ -130,6 +133,7 @@ def test_with_cat_constrained(tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
@@ -169,6 +173,7 @@ def test_kde_rk(component : Component, tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value = -1):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
@@ -200,6 +205,7 @@ def test_kde_rkst(component : Component, tmp_path : Path):
          RDFGetter.max_entries(value = -1),\
          sel.custom_selection(d_sel = cuts):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
@@ -230,6 +236,7 @@ def test_misid(
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
@@ -253,6 +260,7 @@ def test_ccbar_reso(mass : Mass, tmp_path : Path):
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
+            name     = 'main',
             component= component,
             obs      = obs,
             cfg      = cfg,
@@ -284,6 +292,7 @@ def test_ccbar_rare(tmp_path : Path):
         sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
 
         ftr = SimFitter(
+            name     = 'main',
             component= component,
             obs      = obs,
             cfg      = cfg,
@@ -309,6 +318,7 @@ def test_reso_rk_ee(
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
@@ -347,6 +357,7 @@ def test_reso_rkst_mm(
 
     with Cache.cache_root(path = tmp_path):
         ftr = SimFitter(
+            name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,

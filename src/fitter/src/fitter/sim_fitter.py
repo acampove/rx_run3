@@ -28,8 +28,6 @@ from .prec               import PRec
 log=LogStore.add_logger('fitter:sim_fitter')
 
 ModelConf = CombinatorialConf | ParametricConf | NonParametricConf | CCbarConf | MisIDConf
-MAIN_CATEGORY   : Final[str] = 'main'
-
 # Will not build (fit) a parametric PDF if fewer than these entries
 # will return None
 MIN_FIT_ENTRIES : Final[int] = 50
@@ -44,6 +42,7 @@ class SimFitter(BaseFitter, Cache):
     # ------------------------
     def __init__(
         self,
+        name      : str,
         component : Component,
         trigger   : Trigger,
         q2bin     : Qsq,
@@ -52,6 +51,7 @@ class SimFitter(BaseFitter, Cache):
         '''
         Parameters
         --------------------
+        name     : Fit identifier, e.g. bkpp, control, signal
         obs      : Observable
         component: Nickname of component, e.g. combinatorial, only used for naming
         trigger  : Hlt2RD...
@@ -68,13 +68,14 @@ class SimFitter(BaseFitter, Cache):
         self._q2bin     = q2bin
         self._cfg       = cfg
         self._obs       = obs
+        self._name      = name
 
         self._l_rdf_uid = []
         self._d_data    = self._get_data()
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / self._q2bin / self._component / 'fit',
+            out_path = self._cfg.output_directory / self._q2bin / self._component / 'fit' / name,
             l_rdf_uid= self._l_rdf_uid,
             config   = self._cfg.model_dump())
     # ------------------------
@@ -151,10 +152,10 @@ class SimFitter(BaseFitter, Cache):
             q2bin     = self._q2bin,
             out_dir   = self._cfg.output_directory,
             selection = cut,
-            name      = MAIN_CATEGORY,
+            name      = self._name,
             sample    = cfg.component)
 
-        d_data[MAIN_CATEGORY] = prp.get_data()
+        d_data[self._name] = prp.get_data()
 
         self._l_rdf_uid.append(prp.rdf_uid)
 
@@ -236,7 +237,7 @@ class SimFitter(BaseFitter, Cache):
         model_cfg = cfg.models[self._q2bin]
         model     = self._get_pdf(
             cfg     = model_cfg,
-            category= 'main')
+            category= self._name)
 
         return model
     # ------------------------
@@ -469,7 +470,7 @@ class SimFitter(BaseFitter, Cache):
         - None if there are fewer than _min_kde_entries
         '''
 
-        data = self._d_data[MAIN_CATEGORY]
+        data = self._d_data[self._name]
         if self._entries_from_data(data = data, obs = self._obs) < MIN_KDE_ENTRIES:
             log.info(f'Not bulding KDE, found too few entries: {data.nevents} < {MIN_KDE_ENTRIES}')
             return 
@@ -492,7 +493,7 @@ class SimFitter(BaseFitter, Cache):
             data     = data_observed,
             model    = pdf,
             res      = None,
-            out_path = self._out_path / MAIN_CATEGORY )
+            out_path = self._out_path)
 
         return pdf
     # ------------------------
