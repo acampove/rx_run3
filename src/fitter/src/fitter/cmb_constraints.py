@@ -58,7 +58,7 @@ class CmbConstraints(BaseFitter, Cache):
         self._model = model
         self._obs   = model.space
 
-        self._base_path = self._cfg.output_directory / self._q2bin
+        self._base_path = self._cfg.output_directory / self._q2bin / Component.comb / 'fit' / self._name
         self._rdf, uid, self._cuts = self._get_rdf()
 
         Cache.__init__(
