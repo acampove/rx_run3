@@ -1,4 +1,4 @@
-output_directory : reso/rkst/muon
+output_directory : reso/rkst/mm
 component        : bskstjpsimm 
 categories:
   brem_xx0:

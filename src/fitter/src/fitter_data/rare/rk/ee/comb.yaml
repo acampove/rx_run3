@@ -43,7 +43,7 @@ constraints_low_central: &cons_lc
 # -------------------------
 # Proper config
 # -------------------------
-output_directory : rare/rk/electron
+output_directory : rare/rk/ee
 # -----------------
 constraints:
   low:

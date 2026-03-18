@@ -1,4 +1,4 @@
-output_directory : rare/rk/electron
+output_directory : rare/rk/ee
 component        : bpkstkpiee
 events_range : 
   - 4200
