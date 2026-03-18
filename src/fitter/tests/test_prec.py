@@ -50,6 +50,7 @@ def test_electron(tmp_path : Path, trig : Trigger):
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -84,6 +85,7 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -113,6 +115,7 @@ def test_electron_by_block(tmp_path : Path, trig : Trigger, block : int):
     with sel.custom_selection(d_sel={'block' : f'block == {block}'}),\
          Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -150,6 +153,7 @@ def test_reso_by_weights(
     with RDFGetter.max_entries(value = 1000_000),\
          Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -174,6 +178,7 @@ def test_fit(tmp_path : Path):
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -228,6 +233,7 @@ def test_bdt(q2bin : str, bdt_cut : str, tmp_path : Path):
          sel.custom_selection(d_sel={'bdt' : bdt_cut}):
 
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -253,6 +259,7 @@ def test_brem(brem_cut : str, tmp_path : Path):
         RDFGetter.max_entries(value = 100_000),\
         Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = Trigger.rk_ee_os, 
@@ -277,6 +284,7 @@ def test_cache(tmp_path : Path):
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -285,6 +293,7 @@ def test_cache(tmp_path : Path):
         obp.get_sum(name = 'ccbar')
 
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -309,6 +318,7 @@ def test_extended(tmp_path : Path):
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
@@ -336,6 +346,7 @@ def test_low_stats(mass : str, tmp_path : Path):
     with Cache.cache_root(path=tmp_path),\
         sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.9 && mva_prc > 0.9'}):
         obp = PRec(
+            name  = 'main',
             cfg   = cfg,
             obs   = obs,
             trig  = trig, 
