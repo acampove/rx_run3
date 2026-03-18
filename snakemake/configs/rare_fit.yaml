@@ -1,8 +1,8 @@
 mva_cmb:
-  - 0.9
+  - 900
 mva_prc:
-  - 0.5
-  - 0.7
+  - 500
+  - 700
 qsq_bin:
   - low
   - central
@@ -11,5 +11,4 @@ project:
   - rk
   - rkst
 channel:
-  - mm
-  - ee
+  - muon
