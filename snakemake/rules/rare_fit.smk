@@ -8,6 +8,7 @@ channel  = config['channel']
 # -------------
 ANADIR   = os.environ['ANADIR']
 out_path = f'{ANADIR}/fits/data'
+out_path = '.' + out_path[1:]
 name     = 'rare'
 # ---------------------------------------
 def _get_path(cmb, prc, prj, chn, qsq):
@@ -62,12 +63,6 @@ rule fits:
                     -P $PRC_WP         \
                     || true
 
-        #REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
-
-        ## Make $REMOTE if not found
-        #rxfitter make-dummy-plot -p $REMOTE  -t {wildcards.cmb}_{wildcards.prc}
-
-        #mkdir -p $(dirname {output})
-        #cp $REMOTE {output}
+        rxfitter post-process -p {output} -t {wildcards.cmb}_{wildcards.prc}
         '''
 # ---------------------
