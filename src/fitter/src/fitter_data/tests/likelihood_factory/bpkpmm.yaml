@@ -1,4 +1,4 @@
-output_directory : rare/rkst/muon
+output_directory : rare/rkst/mm
 component        : bdkstkpimm
 categories:
   brem_xx0:

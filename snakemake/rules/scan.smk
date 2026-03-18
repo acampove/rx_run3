@@ -3,8 +3,8 @@ mva_prc  = config['mva_prc']
 qsq_bin  = config['qsq_bin']
 
 ntoys    = config['ntoys'  ]
-conf_val = 'rare/rkst/electron'
-kind_val = 'rare_rkst_electron'
+conf_val = 'rare/rkst/ee'
+kind_val = 'rare_rkst_ee'
 out_path = '.eos/lhcb/wg/RD/RX_run3/fits/data'
 name     = 'scan_003'
 

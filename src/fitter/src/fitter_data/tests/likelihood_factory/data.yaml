@@ -1,4 +1,4 @@
-output_directory : rare/rkst/muon
+output_directory : rare/rkst/mm
 selection        : {}
 trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
 yields           : tests/likelihood_factory/rare_muon.yaml
