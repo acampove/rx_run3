@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from dmu       import LogStore
 from pathlib   import Path
 from fitter    import FitSummary
-from rx_common import MVA
 from fitter    import MVAConf
 
 app = typer.Typer(help=__doc__)
@@ -58,18 +57,12 @@ def make_dummy_plot(
 # ----------------------
 @app.command()
 def wp_translator(
-    wp   : str = typer.Option(..., '--wp'  , '-w', help='Working point, e.g. 030_020, 030-050_020'),
-    kind : MVA = typer.Option(..., '--kind', '-k', help='Kind of MVA')) -> None:
+    wp   : str = typer.Option(..., '--wp', '-w', help='Working point, e.g. 300')) -> None:
     '''
     This will print the signal probability (i.e. MVA working point) given a string
     '''
-    min, max = MVAConf.str_to_wp(value = wp, kind = kind)
-
-    if max is None:
-        print(f'{min:.3f}')
-        return
-
-    print(f'{min:.3f} {max:.3f}')
+    val = MVAConf.str_to_wp(value = wp)
+    print (val)
 # ----------------------
 if __name__ == '__main__':
     app()

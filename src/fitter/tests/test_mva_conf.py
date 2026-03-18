@@ -4,7 +4,6 @@ Test for MVAConf class
 import pytest
 
 from fitter    import MVAConf
-from rx_common import MVA
 
 # ----------------------------------------
 def test_from_float():
@@ -30,22 +29,9 @@ def test_str_to_wp():
     Test transforming string into floats
     '''
     # Single WP for both
-    assert MVAConf.str_to_wp(value='030_020', kind=MVA.cmb) == (0.30, None)
-    assert MVAConf.str_to_wp(value='030_020', kind=MVA.prc) == (0.20, None)
-
-    # Range for cmb, single for prc
-    assert MVAConf.str_to_wp(value='030-050_020', kind=MVA.cmb) == (0.30, 0.50)
-    assert MVAConf.str_to_wp(value='030-050_020', kind=MVA.prc) == (0.20, None)
-
-    # Single for cmb, range for prc
-    assert MVAConf.str_to_wp(value='030_020-040', kind=MVA.cmb) == (0.30, None)
-    assert MVAConf.str_to_wp(value='030_020-040', kind=MVA.prc) == (0.20, 0.40)
-
-    # Range for both
-    assert MVAConf.str_to_wp(value='030-050_020-040', kind=MVA.cmb) == (0.30, 0.50)
-    assert MVAConf.str_to_wp(value='030-050_020-040', kind=MVA.prc) == (0.20, 0.40)
+    assert MVAConf.str_to_wp(value='300') == 0.3 
 
     # Invalid string raises
     with pytest.raises(ValueError):
-        MVAConf.str_to_wp(value='invalid', kind=MVA.cmb)
+        MVAConf.str_to_wp(value='2000')
 # ----------------------------------------

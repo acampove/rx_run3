@@ -1,13 +1,8 @@
 '''
 Module containing MVAConf class
 '''
-import re
-
-from typing    import Final
 from pydantic  import BaseModel, RootModel, model_validator
-from rx_common import MVA
 
-_MVA_REGEX : Final[str] = r'(\d{3})(-\d{3})?_(\d{3})(-\d{3})?'
 # ---------------------
 class MVAWp(RootModel[float|tuple[float,float]]):
     '''
@@ -96,36 +91,21 @@ class MVAConf(BaseModel):
         return cls(cmb = mva_cmb, prc = mva_prc)
     # ----------------------
     @staticmethod
-    def str_to_wp(value : str, kind : MVA) -> tuple[float,float|None]:
+    def str_to_wp(value : str) -> float:
         '''
         Parameters
         -------------
-        value: String representation of Working point, e.g. 030_020, 030-050_020
-        kind : Either prc or cmb, first element is cmb in string
+        value: String representation of Working point, e.g. 300
 
         Returns
         -------------
         Tuple with low bound and optionally high bound
         '''
-        mtch = re.match(_MVA_REGEX, value)
-        if not mtch:
-            raise ValueError(f'Invalid MVA WP string: {value}')
+        ivalue = int(value)
+        if not (0 < ivalue < 1000):
+            raise ValueError(f'Invalid working point: {value}')
 
-        match kind:
-            case MVA.cmb:
-                low  = mtch.group(1)
-                high = mtch.group(2)
-            case MVA.prc:
-                low  = mtch.group(3)
-                high = mtch.group(4)
-
-        low  = float(low ) / 100.
-
-        if high is not None:
-            high = high.lstrip('-')
-            high = float(high) / 100.
-
-        return low, high
+        return ivalue / 1000.
     # -------------    
     def __str__(self):
         value = f'CMB: {self.cmb}\n'
