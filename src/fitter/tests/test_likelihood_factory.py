@@ -138,6 +138,7 @@ def test_reso_muon(tmp_path : Path):
          RDFGetter.max_entries(value=20_000):
 
         ftr = LikelihoodFactory(
+            name   = 'main',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq.jpsi,
@@ -160,6 +161,7 @@ def test_rare_muon(q2bin : str, tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
          PL.parameter_schema(cfg=cfg.yields):
         ftr = LikelihoodFactory(
+            name   = 'main',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq(value = q2bin),
@@ -187,6 +189,7 @@ def test_reso_electron(tmp_path : Path):
         Cache.cache_root(path = tmp_path):
 
         ftr = LikelihoodFactory(
+            name   = 'main',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq.jpsi,
@@ -212,6 +215,7 @@ def test_rare_electron(q2bin : Qsq, tmp_path : Path):
             'nobr0' : 'nbrem != 0',
             'bdt'   : 'mva_cmb > 0.60 && mva_prc > 0.40'}):
         ftr = LikelihoodFactory(
+            name   = 'main',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = q2bin,
@@ -238,6 +242,7 @@ def test_high_q2_track(tmp_path : Path):
             'q2'    : 'q2_track > 14300000 && q2 < 22000000',
             'bdt'   : 'mva_cmb > 0.8 && mva_prc > 0.8'}):
         ftr = LikelihoodFactory(
+            name   = 'main',
             obs    = obs,
             sample = Component.data_24,
             q2bin  = Qsq.high,

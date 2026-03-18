@@ -1,8 +1,6 @@
 '''
 Module containing DataFitter class
 '''
-from pathlib            import Path
-
 from dmu                import LogStore
 from dmu.stats          import zfit
 from rx_common          import Qsq, Component
@@ -31,7 +29,7 @@ class LikelihoodFactory:
         sample  : Component,
         q2bin   : Qsq,
         cfg     : FitModelConf,
-        name    : str | None = None):
+        name    : str):
         '''
         name   : Identifier for fit, e.g. block. This is optional
         cfg    : configuration for the fit as a DictConfig object
@@ -40,22 +38,12 @@ class LikelihoodFactory:
         q2bin  : E.g. central
         cfg    : Configuration for the fit to data
         '''
+        self._name      = name 
         self._obs       = obs
         self._sample    = sample
         self._trigger   = cfg.trigger
         self._q2bin     = q2bin
         self._cfg       = cfg
-        self._name      = name
-        self._base_path = self._get_base_path()
-    # ------------------------
-    def _get_base_path(self) -> Path:
-        '''
-        Returns directory where outputs will go
-        '''
-        if self._name is None:
-            return self._cfg.output_directory / self._q2bin
-
-        return self._cfg.output_directory / self._q2bin / self._name
     # ------------------------
     def run(self) -> ExtendedUnbinnedNLL:
         '''
@@ -78,14 +66,13 @@ class LikelihoodFactory:
 
         log.info('Getting data')
 
-        name = 'main' if self._name is None else self._name
         dpr  = DataPreprocessor(
-            name   = name,
+            name   = self._name,
             obs    = self._obs,
             q2bin  = self._q2bin,
             sample = self._sample,
             trigger= self._trigger,
-            out_dir= self._base_path,
+            out_dir= self._cfg.output_directory,
             wgt_cfg= None) # Do not need weights for data
         data = dpr.get_data()
 
