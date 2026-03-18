@@ -2,7 +2,7 @@
 # It illustrates how a fit would run for data
 
 trigger          : Hlt2RD_BuToKpEE_MVA
-output_directory : reso/rk/electron
+output_directory : reso/rk/ee
 model:
   yields    : model/yields/rk/reso_electron.yaml
   observable:
@@ -13,15 +13,15 @@ model:
         - 7000
   components:
     combinatorial                     : tests/fits/combinatorial_reso.yaml
-    ccbar                             : rare/rk/electron/ccbar.yaml
-    Bd_Kstee_eq_btosllball05_DPC      : rare/rk/electron/Bd_Kstee_eq_btosllball05_DPC.yaml
-    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/rk/electron/Bu_Kstee_Kpi0_eq_btosllball05_DPC.yaml
-    Bs_phiee_eq_Ball_DPC              : rare/rk/electron/Bs_phiee_eq_Ball_DPC.yaml
-    jpsi_leakage                      : rare/rk/electron/jpsi_leakage.yaml
-    psi2_leakage                      : rare/rk/electron/psi2_leakage.yaml
-    kkk                               : rare/rk/electron/kkk.yaml
-    kpipi                             : rare/rk/electron/kpipi.yaml
-    signal                            : rare/rk/electron/signal_non_parametric.yaml
+    ccbar                             : rare/rk/ee/ccbar.yaml
+    Bd_Kstee_eq_btosllball05_DPC      : rare/rk/ee/Bd_Kstee_eq_btosllball05_DPC.yaml
+    Bu_Kstee_Kpi0_eq_btosllball05_DPC : rare/rk/ee/Bu_Kstee_Kpi0_eq_btosllball05_DPC.yaml
+    Bs_phiee_eq_Ball_DPC              : rare/rk/ee/Bs_phiee_eq_Ball_DPC.yaml
+    jpsi_leakage                      : rare/rk/ee/jpsi_leakage.yaml
+    psi2_leakage                      : rare/rk/ee/psi2_leakage.yaml
+    kkk                               : rare/rk/ee/kkk.yaml
+    kpipi                             : rare/rk/ee/kpipi.yaml
+    signal                            : rare/rk/ee/signal_non_parametric.yaml
   constraints:
     misid     : misid/rk/electron/data_misid.yaml
     prec_rare :
