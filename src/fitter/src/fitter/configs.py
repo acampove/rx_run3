@@ -460,7 +460,8 @@ class RXFitConfig(BaseModel):
         if ana_dir is None:
             raise RuntimeError('ANADIR variable not set')
 
-        out_dir = f'{ana_dir}/fits/data/{self.group}/{self.fit_name}_{block_name}'
+        out_dir = Path(ana_dir) / 'fits/data' / self.group / f'{self.fit_name}_{block_name}'
+        out_dir = out_dir / self.mod_cfg.output_directory / self.q2bin
 
         log.debug(f'Using output directory: {out_dir}')
     
