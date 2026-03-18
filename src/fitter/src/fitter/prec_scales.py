@@ -6,6 +6,7 @@ import math
 import numpy
 import jacobi   as jac
 
+from pathlib         import Path
 from dmu             import LogStore
 from dmu.generic     import hashing
 from dmu.generic     import utilities  as gut
@@ -24,12 +25,15 @@ class PrecScales:
     #------------------------------------------
     def __init__(
         self, 
-        comp  : Component, 
-        q2bin : Qsq):
+        output_directory : Path,
+        comp             : Component, 
+        q2bin            : Qsq):
         '''
-        proc : Nickname of decay process, nicknames are in the DecayNames class
-        q2bin: Needed to apply correct selection to get correct efficiencies and scales
+        output_directory: This is the full path to the directory where outputs will be saved
+        proc            : Nickname of decay process, nicknames are in the DecayNames class
+        q2bin           : Needed to apply correct selection to get correct efficiencies and scales
         '''
+        self._out_dir     = output_directory
         self._comp        = comp 
         self._q2bin       = q2bin
 
@@ -128,7 +132,11 @@ class PrecScales:
         sample = Component[proc]
 
         log.debug(f'Calculating efficiencies for {sample}')
-        obj = EfficiencyCalculator(q2bin=self._q2bin, sample=sample, trigger=self._trigger)
+        obj = EfficiencyCalculator(
+            out_dir= self._out_dir,
+            q2bin  = self._q2bin, 
+            sample = sample, 
+            trigger= self._trigger)
         val = obj.get_efficiency()
 
         return val
