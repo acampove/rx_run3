@@ -166,7 +166,7 @@ def _add_constraints(
     - List of constraints
     '''
     crd  = ConstraintReader(nll=nll, cfg=cfg)
-    cons = crd.get_constraints(save_to = cfg.output_directory / 'constraints.yaml')
+    cons = crd.get_constraints(save_to = cfg.output_directory / 'constraints/all.yaml')
 
     if not cons:
         log.warning('Not using any constraints')
