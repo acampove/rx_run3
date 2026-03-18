@@ -59,8 +59,7 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / cfg.trigger.project / cfg.triger.channel / 'misid' / 'constraints',
-            q2bin    = self._q2bin,
+            out_path = self._cfg.output_directory / cfg.trigger.project / cfg.trigger.channel/ self._q2bin / 'misid' / 'constraints',
             d_sel    = d_sel, 
             config   = cfg.model_dump(),
         )
@@ -128,13 +127,16 @@ class MisIDConstraints(Cache):
             cfg_type = type(cfg)
             raise ValueError(f'Config for hadronic misID components of type: {cfg_type}')
 
+        out_dir = self._cfg.output_directory / cfg.trigger.project / cfg.trigger.channel/ self._q2bin / 'misid' / 'constraints' / region
+
         sig_yld, ctr_yld = 0, 0 
         # Extract yields from weighted (PID) no PID misID MC
         log.info(20 * '-')
         for is_sig in [True, False]:
             prp = DataPreprocessor(
+                name      = region,
                 obs       = region.obs,
-                out_dir   = Path(region),
+                out_dir   = out_dir,
                 sample    = cfg.component,
                 trigger   = self._cfg.trigger,
                 is_sig    = is_sig,
