@@ -1,7 +1,7 @@
 # This config is used to control how the data model
 # is built for the fit to the misID control regions
 
-output_directory : rare/rk/electron/misid
+output_directory : rare/rk/electron
 trigger          : Hlt2RD_BuToKpEE_MVA_noPID
 yields           : model/yields/rk/misid_electron.yaml
 selection:
