@@ -42,7 +42,7 @@ class Cache:
         '''
         Parameters
         ---------------
-        out_path: Relative path to _cache_root where outputs will go
+        out_path: Path where outputs will go, it can be relative to _cache_root or not
         kwargs  : Key word arguments symbolizing identity of inputs, used for hashing
                   If argument `code` is already in kwargs, it will not calculate the
                   code's hash, i.e. Code changes do not invalidate the hash, useful for testing
@@ -56,7 +56,10 @@ class Cache:
         else:
             log.warning('Not using code for hashing')
 
-        self._out_path  = Cache._cache_root / out_path
+        # If _cache_root is not at the beggining of out_path
+        # add it
+        if not out_path.is_relative_to(Cache._cache_root):
+            self._out_path  = Cache._cache_root / out_path
 
         log.debug(f'Using {self._out_path} output path')
         self._out_path.mkdir(parents=True, exist_ok=True)
