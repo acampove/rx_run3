@@ -185,6 +185,7 @@ def _fit(cfg : RXFitConfig) -> None:
     This is where DataFitter is used
     '''
     ftr = LikelihoodFactory(
+        name   = 'rare_ee',
         obs    = cfg.observable,
         q2bin  = cfg.q2bin,
         sample = DATA_SAMPLE,
