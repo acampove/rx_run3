@@ -470,9 +470,10 @@ class SimFitter(BaseFitter, Cache):
         - None if there are fewer than _min_kde_entries
         '''
 
-        data = self._d_data[self._name]
-        if self._entries_from_data(data = data, obs = self._obs) < MIN_KDE_ENTRIES:
-            log.info(f'Not bulding KDE, found too few entries: {data.nevents} < {MIN_KDE_ENTRIES}')
+        data     = self._d_data[self._name]
+        nentries = self._entries_from_data(data = data, obs = self._obs)
+        if nentries < MIN_KDE_ENTRIES:
+            log.info(f'Not bulding KDE, found too few entries: {nentries} < {MIN_KDE_ENTRIES}')
             return 
 
         kde_builder = getattr(zfit.pdf, cfg.fit.kind)
