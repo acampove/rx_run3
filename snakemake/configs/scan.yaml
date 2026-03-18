@@ -1,9 +1,3 @@
-ntoys : 0
-# ----------------
-qsq_bin:
-  - low
-  - central
-  - high
 mva_cmb:
   - '030'
   - '040'
@@ -30,3 +24,13 @@ mva_prc:
   - '080'
   - '085'
   - '090'
+qsq_bin:
+  - low
+  - central
+  - high
+project:
+  - rk
+  - rkst
+channel:
+  - mm
+  - ee 
