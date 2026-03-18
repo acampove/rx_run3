@@ -61,7 +61,10 @@ class ConstraintReader:
 
             log.info(f'Adding part reco constraint for: {par}')
 
-            obj      = PrecScales(comp=scales[par], q2bin=self._cfg.q2bin)
+            obj      = PrecScales(
+                output_directory = self._cfg.output_directory,
+                comp             = scales[par], 
+                q2bin            = self._cfg.q2bin)
             val, err = obj.get_scale(signal=self._signal)
 
             cns = Constraint1D(
