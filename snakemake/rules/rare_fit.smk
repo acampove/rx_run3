@@ -2,7 +2,7 @@ mva_cmb  = config['mva_cmb']
 mva_prc  = config['mva_prc']
 qsq_bin  = config['qsq_bin']
 project  = config['project']
-ntoys    = config['ntoys'  ]
+channel  = config['channel']
 
 conf_val = 'rare/rkst/electron'
 kind_val = 'rare_rkst_electron'
@@ -11,19 +11,19 @@ name     = 'rare'
 
 # ---------------------
 rule all:
-    input: 
+    input:
         expand(
-            out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png',
-            cmb      = mva_cmb,
-            prc      = mva_prc,
-            qsq      = qsq_bin)
+            f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{conf_val}/{{qsq}}/data_24/fit/brem_x12/fit_linear.png',
+            cmb = mva_cmb,
+            prc = mva_prc,
+            qsq = qsq_bin)
 # ---------------------
 rule toys:
-    output: out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png'
+    output: f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{conf_val}/{{qsq}}/data_24/fit/brem_x12/fit_linear.png',
     wildcard_constraints:
-        cmb   = r'\d{3}', 
-        prc   = r'\d{3}', 
-        qsq   = '[a-z]+', 
+        cmb   = r'\d{3}',
+        prc   = r'\d{3}',
+        qsq   = '[a-z]+',
     params:
         name  = name,
         ntoys = ntoys,
@@ -31,7 +31,7 @@ rule toys:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:6d4387847'
     resources:
         kubernetes_memory_limit='5000Mi'
-    shell : 
+    shell :
         '''
         source setup.sh
 
