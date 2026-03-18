@@ -15,5 +15,7 @@ yld_comb:
   <<      : *yields
 yld_bdkstkpijpsiee:
   <<      : *yields
+yld_bdkstkpipsi2ee:
+  <<      : *yields
 yld_bppsi2ee: 
   <<      : *yields
