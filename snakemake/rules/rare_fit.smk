@@ -20,14 +20,14 @@ def _get_path(cmb, prc, prj, chn, qsq):
     else:
         raise ValueError(f'Invalid channel: {chn}')
 
-    return f'{out_path}/{name}/{cmb}_{prc}_all/{conf}/{qsq}/data_24/fit/{brem}/fit_linear.png'
+    return f'{out_path}/{name}/{cmb}_{prc}_all/{conf}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
 # ---------------------------------------
 paths = []
-for qsq in qsq_bin[:1]:
-    for cmb in mva_cmb[:1]:
-        for prc in mva_prc[:1]:
-            for prj in project[:1]:
-                for chn in channel[:1]:
+for qsq in qsq_bin:
+    for cmb in mva_cmb:
+        for prc in mva_prc:
+            for prj in project:
+                for chn in channel:
                     path = _get_path(cmb, prc, prj, chn, qsq)
                     paths.append(path)
 # ---------------------------------------
@@ -35,7 +35,7 @@ rule all:
     input: paths
 # ---------------------
 rule fits:
-    output: f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{{conf}}/{{qsq}}/data_24/fit/{{brem}}/fit_linear.png',
+    output: f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{{conf}}/{{qsq}}/data_24/fit/{{brem}}/{{brem}}/fit_linear.png',
     wildcard_constraints:
         cmb   = r'\d{3}',
         prc   = r'\d{3}',
