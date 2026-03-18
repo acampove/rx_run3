@@ -10,7 +10,7 @@ from dmu       import LogStore
 from pathlib   import Path
 from fitter    import FitSummary
 from rx_common import MVA
-from fitter    import MVAConf 
+from fitter    import MVAConf
 
 app = typer.Typer(help=__doc__)
 log = LogStore.add_logger('rx_fitter:cli')
@@ -46,10 +46,10 @@ def make_dummy_plot(
 
     log.info(f'Path not found, making it: {path}')
     plt.figure(figsize=(15, 10))
-    plt.text(0.5, 0.5, text, 
-             fontsize=72, 
-             color='red', 
-             ha='center', 
+    plt.text(0.5, 0.5, text,
+             fontsize=72,
+             color='red',
+             ha='center',
              va='center',
              weight='bold')
     plt.axis('off')
