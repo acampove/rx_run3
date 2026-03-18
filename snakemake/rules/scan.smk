@@ -1,52 +1,79 @@
+import os
+
 mva_cmb  = config['mva_cmb']
 mva_prc  = config['mva_prc']
 qsq_bin  = config['qsq_bin']
+project  = config['project']
+channel  = config['channel']
+# -------------
+ANADIR   = os.environ['ANADIR']
+out_path = f'{ANADIR}/fits/data'
+name     = 'rare'
+ntoys    = 10
+toycfg   = 'toys/maker.yaml'
+# ---------------------------------------
+def _get_path(cmb, prc, prj, chn, qsq):
+    conf     = f'rare/{prj}/{chn}'
 
-ntoys    = config['ntoys'  ]
-conf_val = 'rare/rkst/ee'
-kind_val = 'rare_rkst_ee'
-out_path = '.eos/lhcb/wg/RD/RX_run3/fits/data'
-name     = 'scan_003'
+    if   chn == 'ee':
+        brem = 'brem_x12'
+    elif chn == 'mm':
+        brem = 'brem_xx0'
+    else:
+        raise ValueError(f'Invalid channel: {chn}')
 
-# ---------------------
+    return f'{out_path}/{name}/{cmb}_{prc}_all/{conf}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
+# ---------------------------------------
+paths = []
+for qsq in qsq_bin:
+    for cmb in mva_cmb:
+        for prc in mva_prc:
+            for prj in project:
+                for chn in channel:
+                    path = _get_path(cmb, prc, prj, chn, qsq)
+                    paths.append(path)
+# ---------------------------------------
 rule all:
-    input: 
-        expand(
-            out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png',
-            cmb      = mva_cmb,
-            prc      = mva_prc,
-            qsq      = qsq_bin)
+    input: paths
 # ---------------------
-rule toys:
-    output: out_path + '/' + name + '/' + '{cmb}_{prc}_all/' + conf_val + '/data/{qsq}/brem_x12/fit_linear.png'
+rule fits:
+    output: f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{{conf}}/{{qsq}}/data_24/fit/{{brem}}/{{brem}}/fit_linear.png',
     wildcard_constraints:
-        cmb   = r'\d{3}', 
-        prc   = r'\d{3}', 
-        qsq   = '[a-z]+', 
+        cmb   = r'\d{3}',
+        prc   = r'\d{3}',
+        qsq   = '[a-z]+',
     params:
         name  = name,
         ntoys = ntoys,
-        conf  = conf_val,
+        toycfg= toycfg,
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:6d4387847'
     resources:
         kubernetes_memory_limit='5000Mi'
-    shell : 
+    shell :
         '''
         source setup.sh
 
-        fit_rx_rare -c {params.conf}   \
+        CMB_WP=$(rxfitter wp-translator -w {wildcards.cmb})
+        PRC_WP=$(rxfitter wp-translator -w {wildcards.prc})
+
+        fit_rx_rare \
+                    -b -1              \
+                    -g {params.name}   \
+                    -c {wildcards.conf}\
                     -q {wildcards.qsq} \
-                    -C {wildcards.cmb} \
-                    -P {wildcards.prc} \
-                    -t toys/maker.yaml \
+                    -C $CMB_WP         \
+                    -P $PRC_WP         \
                     -N {params.ntoys}  \
-                    -g {params.name} || true
+                    -t {params.toycfg} \
+                    || true
 
-        REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
+        #REMOTE=$(echo {output} | sed 's/\.eos/\/eos/g')
 
-        rxfitter make-dummy-plot -p $REMOTE  -t {wildcards.cmb}_{wildcards.prc}
+        ## Make $REMOTE if not found
+        #rxfitter make-dummy-plot -p $REMOTE  -t {wildcards.cmb}_{wildcards.prc}
 
-        mkdir -p $(dirname {output})
-        cp $REMOTE {output}
+        #mkdir -p $(dirname {output})
+        #cp $REMOTE {output}
         '''
+# ---------------------
