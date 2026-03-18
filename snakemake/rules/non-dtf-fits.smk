@@ -13,15 +13,15 @@ NAME   = 'reso_non_dtf'
 rule all:
     input: 
         expand(
-            [ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_001/fit_linear.png',
-             ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_002/fit_linear.png'],
+            [ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/ee/data/jpsi/brem_001/fit_linear.png',
+             ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/ee/data/jpsi/brem_002/fit_linear.png'],
             wp    = WP,
             block = BLOCK)
 # ---------------------
 rule fits:
     output   : 
-        ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_001/fit_linear.png',
-        ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/electron/data/jpsi/brem_002/fit_linear.png',
+        ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/ee/data/jpsi/brem_001/fit_linear.png',
+        ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/ee/data/jpsi/brem_002/fit_linear.png',
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:6d4387847'
     params:
@@ -34,7 +34,7 @@ rule fits:
 
         fit_rx_reso -b {wildcards.block}\
                     -g {params.name}\
-                    -c reso/rk/electron/data_non_dtf.yaml \
+                    -c reso/rk/ee/data_non_dtf.yaml \
                     -q jpsi \
                     -C $(rxfitter wp-translator -w {wildcards.wp} -k cmb)\
                     -P $(rxfitter wp-translator -w {wildcards.wp} -k prc) || true
