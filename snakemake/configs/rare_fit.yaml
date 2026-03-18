@@ -1,12 +1,15 @@
+mva_cmb:
+  - 0.9
+mva_prc:
+  - 0.5
+  - 0.7
+qsq_bin:
+  - low
+  - central
+  - high
 project:
   - rk
   - rkst
-qsq_bin:
-  - low 
-  - central
-  - high 
-mva_cmb:
-  - 0.9 
-mva_prc:
-  - 0.5 
-  - 0.7
+channel:
+  - mm
+  - ee
