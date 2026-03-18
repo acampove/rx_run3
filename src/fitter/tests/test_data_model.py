@@ -49,6 +49,7 @@ def test_resonant(kind : str, trigger : Trigger, tmp_path : Path):
     with Cache.cache_root(path = tmp_path),\
         PL.parameter_schema(cfg=cfg.yields):
         dmd = DataModel(
+            name    = 'main',
             cfg     = cfg,
             obs     = obs,
             trigger = trigger, 
@@ -75,6 +76,7 @@ def test_rare_electron(tmp_path : Path):
         Cache.cache_root(path = tmp_path),\
         sel.custom_selection(d_sel = {'mass' : '(1)', 'brmp' : 'nbrem != 0'}):
         dmd = DataModel(
+            name    = 'main',
             cfg     = cfg,
             obs     = obs,
             trigger = Trigger.rk_ee_os,

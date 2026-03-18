@@ -29,7 +29,7 @@ class DataModel:
         obs     : zobs,
         trigger : Trigger,
         q2bin   : Qsq,
-        name    : str | None=None):
+        name    : str):
         '''
         Parameters
         ------------------
@@ -61,7 +61,7 @@ class DataModel:
         -------------------
         PDF with yield
         '''
-        yield_name = f'yld_{component}' if self._name is None else f'yld_{component}_{self._name}'
+        yield_name = f'yld_{component}' if self._name == 'main' else f'yld_{component}_{self._name}'
 
         nevt = PL.get_yield(name=yield_name)
         kdes = zfit.pdf.KDE1DimFFT, zfit.pdf.KDE1DimExact, zfit.pdf.KDE1DimISJ
@@ -99,6 +99,7 @@ class DataModel:
             log.info(f'Building: {component}')
             with SpecMaker.project(name = trigger.project):
                 ftr  = SimFitter(
+                    name     = self._name,
                     component= component,
                     trigger  = trigger,
                     q2bin    = self._q2bin,
