@@ -13,9 +13,9 @@ name     = 'rare'
 def _get_path(cmb, prc, prj, chn, qsq):
     conf     = f'rare/{prj}/{chn}'
 
-    if   chn == 'electron':
+    if   chn == 'ee':
         brem = 'brem_x12'
-    elif chn == 'muon':
+    elif chn == 'mm':
         brem = 'brem_xx0'
     else:
         raise ValueError(f'Invalid channel: {chn}')
