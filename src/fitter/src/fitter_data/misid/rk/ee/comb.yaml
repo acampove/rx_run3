@@ -1,4 +1,4 @@
-output_directory : rare/rk/electron/misid/combinatorial
+output_directory : rare/rk/electron/misid
 # -----------------
 constraints: {}
 # -----------------
