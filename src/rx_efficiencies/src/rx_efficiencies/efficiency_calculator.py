@@ -31,12 +31,14 @@ class EfficiencyCalculator(Cache):
     #------------------------------------------
     def __init__(
         self, 
+        out_dir : Path,
         q2bin   : Qsq, 
         trigger : Trigger,
         sample  : Component):
         '''
         Parameters
         -----------------
+        out_dir : Full path to directory where outputs will go
         q2bin   : Either low, central or high
         trigger : By default
         sample  : MC sample for which the efficiency is calculated
@@ -51,7 +53,7 @@ class EfficiencyCalculator(Cache):
         plt.style.use(mplhep.style.LHCb2)
 
         super().__init__(
-            out_path = Path(trigger.project) / trigger.channel / sample / q2bin / 'efficiency',
+            out_path = out_dir / 'efficiencies',
             d_sel    = self._get_selection_hash(),
             q2bin    = self._q2bin,
             trigger  = self._trigger,
