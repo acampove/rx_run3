@@ -1,8 +1,6 @@
 '''
 Module containing the MisIDConstraints class
 '''
-
-from pathlib             import Path
 from typing              import Final
 from rx_common           import Component, Correction, Qsq, Region
 from rx_selection        import selection as sel
@@ -59,7 +57,7 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / cfg.trigger.project / cfg.trigger.channel/ self._q2bin / 'misid' / 'constraints',
+            out_path = self._cfg.output_directory / self._q2bin / 'constraints',
             d_sel    = d_sel, 
             config   = cfg.model_dump(),
         )
@@ -127,19 +125,17 @@ class MisIDConstraints(Cache):
             cfg_type = type(cfg)
             raise ValueError(f'Config for hadronic misID components of type: {cfg_type}')
 
-        out_dir = self._cfg.output_directory / cfg.trigger.project / cfg.trigger.channel/ self._q2bin / 'misid' / 'constraints' / region
-
         sig_yld, ctr_yld = 0, 0 
         # Extract yields from weighted (PID) no PID misID MC
         log.info(20 * '-')
-        for is_sig in [True, False]:
+        for pid_region in ['signal', 'control']:
             prp = DataPreprocessor(
-                name      = region,
+                name      = f'transfer_factor/{region}_{pid_region}',
                 obs       = region.obs,
-                out_dir   = out_dir,
                 sample    = cfg.component,
+                out_dir   = self._cfg.output_directory,
                 trigger   = self._cfg.trigger,
-                is_sig    = is_sig,
+                is_sig    = pid_region == 'signal',
                 wgt_cfg   = {Correction.pid : cfg.weights},
                 selection = {'pid_l' : '(1)'},
                 q2bin     = self._q2bin)
@@ -147,9 +143,9 @@ class MisIDConstraints(Cache):
             yld = dat.weights.numpy().sum()
             yld = float(yld)
 
-            log.info(f'IsSig {is_sig} MC yield: {yld:.3f}')
+            log.info(f'Region {pid_region} MC yield: {yld:.3f}')
 
-            if is_sig:
+            if pid_region == 'signal':
                 sig_yld = yld
             else:
                 ctr_yld = yld
@@ -218,7 +214,7 @@ class MisIDConstraints(Cache):
         kkk   : (yield, error)
         kpipi : (yield, error)
         '''
-        cons_path = self._out_path / f'{self._cfg.trigger}_{self._q2bin}/constraints.yaml'
+        cons_path = self._out_path / 'constraints.yaml'
         if self._copy_from_cache():
             log.info(f'Found cached: {cons_path}')
 

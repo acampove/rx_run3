@@ -49,13 +49,15 @@ class DataFitter(BaseFitter, Cache):
         self._d_nll   = d_nll
         self._cfg     = cfg
         self._trigger = cfg.trigger
+        
+        regions = '_'.join(d_nll)
 
         BaseFitter.__init__(self)
         # TODO: Is the likelihood hashable?
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / self._q2bin / Component.data_24,
+            out_path = self._cfg.output_directory / self._q2bin / Component.data_24 / 'fit' / regions,
             cfg      = cfg.model_dump())
     # ----------------------
     def _get_full_nll(self) -> NLL:
@@ -137,7 +139,7 @@ class DataFitter(BaseFitter, Cache):
         # NOTE: Save fit in each signal region
         # assuming this is a simultaneous fit
         for model, data, cfg, category in zip(nll.model, nll.data, l_cfg, l_nam, strict = True):
-            out_path = self._out_path / 'fit' / category
+            out_path = self._out_path / category
 
             log.info(f'Saving fit to: {out_path}')
 
