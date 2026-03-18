@@ -3,7 +3,6 @@ Module with CmbConstraints class
 '''
 
 from typing       import cast
-from pathlib      import Path
 from ROOT         import RDF # type: ignore 
 from dmu          import LogStore
 from dmu.stats    import ConstraintType, zfit
@@ -12,7 +11,7 @@ from dmu.stats    import ConstraintND
 from zfit         import Data                as zdat
 from zfit.pdf     import BasePDF             as zpdf
 from zfit.loss    import ExtendedUnbinnedNLL as zlos
-from rx_common    import Qsq, Trigger
+from rx_common    import Qsq, Trigger, Component
 from rx_data      import RDFGetter
 from rx_selection import selection as sel
 from .base_fitter import BaseFitter
