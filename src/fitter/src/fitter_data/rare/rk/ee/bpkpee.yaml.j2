@@ -1,4 +1,3 @@
-output_directory : rare/rk/ee
 component        : bpkpee
 categories:
 {% for block in range(1, 9) %}
@@ -21,7 +20,7 @@ categories:
         sg :
           - 40
           - 30
-          - 50
+          - 80
   brem_xx2_b{{ block }}: 
     selection :
       brem : nbrem == 2
@@ -39,9 +38,9 @@ categories:
       floating      : []
       values :
         sg :
-          - 40
-          - 30
-          - 120
+          - 80
+          - 60
+          - 100
 {% endfor %}
 fit:
   strategy  :
