@@ -45,7 +45,7 @@ def test_electron(tmp_path : Path, trig : Trigger):
         label = mass,
         limits=(4500, 6000))
 
-    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+    cfg = CCbarConf.default(channel = Channel.ee)
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
@@ -76,7 +76,7 @@ def test_muon(tmp_path : Path, trig : Trigger, q2bin : str, mass : str):
         label = mass,
         limits=(4500, 6000))
 
-    cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
+    cfg     = CCbarConf.default(channel = trig.channel)
     fit_cfg = KDEConf.default()
     pad_cfg = PaddingConf(lowermirror=0.5)
     fit_cfg = fit_cfg.model_copy(update = {'padding' : pad_cfg})
@@ -106,7 +106,7 @@ def test_electron_by_block(tmp_path : Path, trig : Trigger, block : int):
         label = mass,
         limits=(4500, 6000))
 
-    cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
+    cfg     = CCbarConf.default(channel = trig.channel)
     fit_cfg = KDEConf.default()
     pad_cfg = PaddingConf(lowermirror=0.5)
     fit_cfg = fit_cfg.model_copy(update = {'padding' : pad_cfg})
@@ -143,7 +143,7 @@ def test_reso_by_weights(
         label = mass,
         limits=(4500, 6000))
 
-    cfg     = CCbarConf.default(channel = trig.channel, out_dir = tmp_path)
+    cfg     = CCbarConf.default(channel = trig.channel)
     fit_cfg = KDEConf.default()
     pad_cfg = PaddingConf(lowermirror=0.2)
     fit_cfg = fit_cfg.model_copy(update = {'padding' : pad_cfg})
@@ -173,7 +173,7 @@ def test_fit(tmp_path : Path):
         label = mass,
         limits=(4500, 6000))
 
-    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+    cfg = CCbarConf.default(channel = Channel.ee)
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
@@ -226,7 +226,7 @@ def test_bdt(q2bin : str, bdt_cut : str, tmp_path : Path):
 
     trig   = Trigger.rk_ee_os 
     q2bin  = Qsq(q2bin)
-    cfg    = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+    cfg    = CCbarConf.default(channel = Channel.ee)
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path),\
@@ -253,7 +253,7 @@ def test_brem(brem_cut : str, tmp_path : Path):
         label = mass,
         limits=(4500, 6000))
 
-    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+    cfg = CCbarConf.default(channel = Channel.ee)
 
     with sel.custom_selection(d_sel={'brem' : brem_cut}),\
         RDFGetter.max_entries(value = 100_000),\
@@ -279,7 +279,7 @@ def test_cache(tmp_path : Path):
         label = mass,
         limits=(4500, 6000))
 
-    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+    cfg = CCbarConf.default(channel = Channel.ee)
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
@@ -313,7 +313,7 @@ def test_extended(tmp_path : Path):
         label = mass,
         limits=(4500, 6000))
 
-    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+    cfg = CCbarConf.default(channel = Channel.ee)
 
     with RDFGetter.max_entries(value = 100_000),\
          Cache.cache_root(tmp_path):
@@ -342,7 +342,7 @@ def test_low_stats(mass : str, tmp_path : Path):
         label = mass,
         limits=(4500, 6000))
 
-    cfg = CCbarConf.default(channel = Channel.ee, out_dir = tmp_path)
+    cfg = CCbarConf.default(channel = Channel.ee)
     with Cache.cache_root(path=tmp_path),\
         sel.custom_selection(d_sel={'bdt' : 'mva_cmb > 0.9 && mva_prc > 0.9'}):
         obp = PRec(
