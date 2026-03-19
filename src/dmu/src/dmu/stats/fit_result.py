@@ -456,12 +456,16 @@ class FitResult(BaseModel):
 
         pars = tuple(l_par)
 
-        covariance = res.covariance().tolist()
+        covariance = res.covariance()
+        valid      = res.valid
+        if numpy.isnan(covariance).any():
+            log.warning('Found at least one NaN in covariance')
+            valid = False
 
         return cls(
-            covariance = covariance,
+            covariance = covariance.tolist(),
             status     = res.status,
-            valid      = res.valid,
+            valid      = valid,
             gof        = gof,
             parameters = pars)
     # ----------------------
