@@ -72,7 +72,6 @@ class LikelihoodFactory:
             q2bin  = self._q2bin,
             sample = self._sample,
             trigger= self._trigger,
-            out_dir= self._cfg.output_directory,
             wgt_cfg= None) # Do not need weights for data
         data = dpr.get_data()
 

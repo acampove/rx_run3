@@ -1,6 +1,7 @@
 '''
 Module containing the MisIDConstraints class
 '''
+from pathlib             import Path
 from typing              import Final
 from rx_common           import Component, Correction, Qsq, Region
 from rx_selection        import selection as sel
@@ -57,7 +58,7 @@ class MisIDConstraints(Cache):
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / self._q2bin / 'constraints',
+            out_path = Path('constraints'),
             d_sel    = d_sel, 
             config   = cfg.model_dump(),
         )
@@ -133,7 +134,6 @@ class MisIDConstraints(Cache):
                 name      = f'transfer_factor/{region}_{pid_region}',
                 obs       = region.obs,
                 sample    = cfg.component,
-                out_dir   = self._cfg.output_directory,
                 trigger   = self._cfg.trigger,
                 is_sig    = pid_region == 'signal',
                 wgt_cfg   = {Correction.pid : cfg.weights},
