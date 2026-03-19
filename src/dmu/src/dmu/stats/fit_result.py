@@ -192,6 +192,7 @@ class FitResult(BaseModel):
 
     valid      : bool
     status     : int
+    cov_status : int
     gof        : GoodnessOfFit | None = None
     parameters : tuple[FitParameter,...]
     covariance : list[list[float]] 
@@ -213,6 +214,7 @@ class FitResult(BaseModel):
         return cls(
             valid      = True,
             status     = 0,
+            cov_status = 0,
             covariance = [],
             parameters = pars,
             gof        = None)
@@ -457,15 +459,16 @@ class FitResult(BaseModel):
         pars = tuple(l_par)
 
         covariance = res.covariance()
-        valid      = res.valid
+        cov_status = 0
         if numpy.isnan(covariance).any():
             log.warning('Found at least one NaN in covariance')
-            valid = False
+            cov_status = 1
 
         return cls(
             covariance = covariance.tolist(),
             status     = res.status,
-            valid      = valid,
+            valid      = res.valid,
+            cov_status = cov_status,
             gof        = gof,
             parameters = pars)
     # ----------------------
