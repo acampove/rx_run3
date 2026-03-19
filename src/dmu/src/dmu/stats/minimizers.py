@@ -388,8 +388,8 @@ def minimize(
     with mes.filter_stderr(banned_substrings=_HIDDEN_TF_LINES):
         try:
             obj = mnm.minimize(loss = nll)
-        except (FailMinimizeNaN, RuntimeError):
-            raise MinimizerFailError('Minimization failed')
+        except (FailMinimizeNaN, RuntimeError) as exc:
+            raise MinimizerFailError('Minimization failed') from exc
 
     gcl = GofCalculator(nll = nll)
     gof = gcl.get_gof()
