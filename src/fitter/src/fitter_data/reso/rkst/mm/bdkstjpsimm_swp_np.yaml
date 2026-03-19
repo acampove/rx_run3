@@ -1,4 +1,4 @@
-output_directory : reso/rkst/mm
+
 component        : bdkstjpsimm_swp
 events_range     :
   - 4200

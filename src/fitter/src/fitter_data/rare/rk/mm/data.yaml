@@ -2,7 +2,7 @@
 # It illustrates how a fit would run for data
 
 trigger          : Hlt2RD_BuToKpMuMu_MVA
-output_directory : rare/rk/mm
+
 yields           : model/yields/rk/rare_muon.yaml
 selection        : {}
 observable:

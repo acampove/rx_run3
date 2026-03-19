@@ -2,7 +2,7 @@
 # It illustrates how a fit would run for data
 
 trigger          : Hlt2RD_B0ToKpPimMuMu_MVA
-output_directory : reso/rkst/mm
+
 yields           : model/yields/rkst/reso_muon.yaml
 selection        : {}
 observable:

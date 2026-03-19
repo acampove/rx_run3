@@ -1,7 +1,7 @@
 # This is a config file used for tests
 # It illustrates how a fit would run for data
 
-output_directory : test/data
+
 trigger   : Hlt2RD_BuToKpEE_MVA
 selection : {}
 yields    : 
@@ -17,7 +17,7 @@ observable:
       - 7000
 components:
   comb   :
-    output_directory : test/comb
+    
     models:
       central : 
         pdfs :
@@ -28,7 +28,7 @@ components:
         floating      : []
     constraints: {}
   bpkpee :
-    output_directory : test/signal
+    
     component : bpkpee
     fit       : {}
     categories: {}

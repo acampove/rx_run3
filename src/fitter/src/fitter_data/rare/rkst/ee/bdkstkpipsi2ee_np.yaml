@@ -1,4 +1,4 @@
-output_directory : rare/rkst/ee
+
 component : bdkstkpipsi2ee 
 events_range :
   - 4000

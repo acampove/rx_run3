@@ -21,7 +21,7 @@ constraints: &cons
     plots:
       nbins : 60
 # --------------------------------------
-output_directory : rare/electron
+
 categories:
   main:
     models : 
