@@ -65,7 +65,7 @@ class LikelihoodFactory:
         model= mod.get_model()
 
         log.info(30 * '-')
-        log.info('Getting data')
+        log.info('Getting real data')
         log.info(30 * '-')
 
         dpr  = DataPreprocessor(
