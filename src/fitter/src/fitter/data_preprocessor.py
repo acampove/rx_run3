@@ -44,7 +44,6 @@ class DataPreprocessor(Cache):
     def __init__(
         self,
         name      : str,
-        out_dir   : Path,
         obs       : zobs,
         sample    : Component,
         trigger   : Trigger,
@@ -56,7 +55,6 @@ class DataPreprocessor(Cache):
         Parameters
         --------------------
         name       : Optional name of dataset, e.g. fit category brem_x12
-        out_dir    : Directory where caching will happen, with respect to the _cache_root directory
         obs        : zfit observable
         sample     : e.g. DATA_24_MagUp...
         trigger    : e.g. Hlt2RD...
@@ -89,7 +87,7 @@ class DataPreprocessor(Cache):
         self._is_sig = is_sig
 
         super().__init__(
-            out_path = out_dir / self._q2bin / self._sample / 'dataset' / self._name,
+            out_path = Path(self._sample) / 'dataset' / self._name,
             obs_name = sut.name_from_obs(obs=obs),
             obs_range= sut.range_from_obs(obs=obs),
             d_sel    = d_sel,
