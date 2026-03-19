@@ -2,6 +2,7 @@
 Module with CmbConstraints class
 '''
 
+from pathlib      import Path
 from typing       import cast
 from ROOT         import RDF # type: ignore 
 from dmu          import LogStore
@@ -29,7 +30,6 @@ class CmbConstraints(BaseFitter, Cache):
         name : str,
         nll  : zlos,
         cfg  : CombinatorialConf,
-        trig : Trigger,
         q2bin: Qsq) -> None:
         '''
         Parameters
@@ -37,7 +37,6 @@ class CmbConstraints(BaseFitter, Cache):
         name : Name of component, i.e. 'combinatorial'. Used to finc component PDF in NLL
         obs  : Zfit observable
         cfg  : fit configuration
-        trig : E.g. Hlt2RD... used for naming of outputs
         q2bin: E.g. central
         '''
         BaseFitter.__init__(self)
@@ -57,7 +56,7 @@ class CmbConstraints(BaseFitter, Cache):
         self._model = model
         self._obs   = model.space
 
-        self._base_path = self._cfg.output_directory / self._q2bin / Component.comb / 'fit' / self._name
+        self._base_path = Path(Component.comb) / 'fit' / self._name
         self._rdf, uid, self._cuts = self._get_rdf()
 
         Cache.__init__(
