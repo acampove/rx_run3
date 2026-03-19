@@ -71,7 +71,6 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
             name  = Component.comb,
             nll   = nll,
             cfg   = cfg,
-            trig  = Trigger.rkst_ee_os,
             q2bin = q2bin)
 
     constraint = calc.get_constraint()

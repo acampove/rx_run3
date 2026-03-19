@@ -68,7 +68,6 @@ def test_muon_data(
         prp = DataPreprocessor(
             name   = 'main',
             obs    = obs,
-            out_dir= tmp_path,
             sample = component,
             trigger= Trigger.rk_mm_os,
             wgt_cfg= None,
@@ -95,7 +94,6 @@ def test_brem_cat_data(
         prp = DataPreprocessor(
             name      = 'main',
             obs       = obs,
-            out_dir   = tmp_path,
             sample    = component, 
             trigger   = Trigger.rk_ee_os,
             wgt_cfg   = None,
@@ -130,7 +128,6 @@ def test_with_pid_weights(
         prp  = DataPreprocessor(
             name      = 'main',
             obs       = region.obs,
-            out_dir   = tmp_path,
             sample    = component,
             trigger   = Trigger.rk_ee_nopid,
             wgt_cfg   = {Correction.pid : cfg},
