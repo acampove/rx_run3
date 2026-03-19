@@ -2,7 +2,6 @@ mva_cmb:
   - 900
 mva_prc:
   - 500
-  - 700
 qsq_bin:
   - low
   - central
