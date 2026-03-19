@@ -109,7 +109,7 @@ def test_parametric_rk(component : Component):
 def test_parametric_rkst(component : Component):
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rkst/{component.channel}/{component}.yaml')
+        fpath   = f'rare/rkst/{component.channel}/{component}.yaml.j2')
 
     ParametricConf(**data)
 # ----------------------
