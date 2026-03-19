@@ -6,12 +6,14 @@ import os
 import re
 import yaml
 import numpy
+import tempfile
 import pandas            as pnd
 import matplotlib.pyplot as plt
 import tensorflow        as tf
 
 import dmu.pdataframe.utilities  as put
 
+from zfit             import dill
 from dmu              import LogStore, LogLevels
 from .imports         import zfit
 from typing           import Union, Any, Literal, overload
@@ -321,6 +323,24 @@ def print_pdf(
             raise ValueError(f'Invalid level: {level}')
 
     return l_msg
+#---------------------------------------------
+def save_nll(loss : Loss) -> Path:
+    '''
+    Parameters
+    -------------
+    loss: NLL
+
+    Returns
+    -------------
+    Path where it was saved
+    '''
+    loss_bytes = dill.dumps(loss)
+    with tempfile.NamedTemporaryFile(mode='w+b', delete=False) as temp:
+        path = Path(temp.name)
+
+        path.write_bytes(data = loss_bytes)
+
+    return path
 #---------------------------------------------
 @overload
 def save_fit(

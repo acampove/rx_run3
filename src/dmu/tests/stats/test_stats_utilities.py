@@ -18,8 +18,10 @@ from dmu.stats    import pdf_to_tex
 from dmu.stats    import is_pdf_usable
 from dmu.stats    import ZFitPlotterConf
 from dmu.generic  import rxran
+from dmu.testing  import get_nll
 from zfit.data    import Data     as zdata
 from zfit.pdf     import BasePDF  as zpdf
+from zfit         import dill
 
 log = LogStore.add_logger('dmu:tests:stats:test_utilities')
 #----------------------------------
@@ -262,4 +264,22 @@ def test_yield_from_zdata(weighted : bool):
     val = sut.yield_from_zdata(data=data)
 
     assert abs(val - target) < 1e-5
+#----------------------------------
+def test_save_nll():
+    '''
+    Saves NLL to temporary path
+    '''
+    nll  = get_nll(kind = 's+b', suffix = '')
+    path = sut.save_nll(loss = nll)
+
+    log.info(f'Saving NLL to: {path}')
+
+    assert path.exists()
+
+    nll_bytes = path.read_bytes()
+    nll       = dill.loads(nll_bytes)
+
+    minimizer = zfit.minimize.Minuit()
+    res = minimizer.minimize(loss = nll)
+    print(res)
 #----------------------------------
