@@ -1,4 +1,3 @@
-output_directory : rare/rk/mm
 component        : bpkpmm
 categories:
   brem_xx0:
