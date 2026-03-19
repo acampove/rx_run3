@@ -231,6 +231,10 @@ class AnealingMinimizer:
             gof = gcl.get_gof()
             res = FitResult.from_zfit(res = obj, gof = gof)
 
+            if res.cov_status != 0:
+                log.warning('Found invalid covariance')
+                continue
+
             log.info(f'{i_try:02}/{self._strategy.ntries:02}{gof.chi2:>20.3f}')
             if gof < self._target_gof: 
                 results.append(res)
