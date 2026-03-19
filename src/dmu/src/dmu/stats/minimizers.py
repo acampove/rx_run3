@@ -400,12 +400,12 @@ def minimize(
     else:
         res = obj
 
-    if res.valid:
-        return res
-
     if res.cov_status != 0:
         path = sut.save_nll(loss = nll)
         log.warning(f'Found bad covariance, saving NLL to: {path}')
+
+    if res.valid:
+        return res
 
     log.debug('Found bad fit')
     log.debug(f'{gof.chi2:<10.3f}{gof.pval:<10.3e}{res.status:<10}')
