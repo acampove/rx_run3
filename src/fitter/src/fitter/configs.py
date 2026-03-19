@@ -94,8 +94,6 @@ class ComponentConf(UnpackerModel):         # Tested
     Class meant to configure the fit for different components
     '''
     model_config = ConfigDict(frozen=True)
-
-    output_directory : Path
     # ----------------------------------
     @property
     def component_trigger(self) -> Trigger | None:
@@ -118,7 +116,6 @@ class CCbarConf(ComponentConf):         # Tested
     @classmethod
     def default(
         cls,
-        out_dir : Path,
         channel : Channel) -> Self:
         '''
         Returns
@@ -133,7 +130,6 @@ class CCbarConf(ComponentConf):         # Tested
         }
 
         return cls(
-            output_directory = out_dir,
             samples          = samples,
             weights          = weights,
             fit              = KDEConf.default())
@@ -251,7 +247,6 @@ class FitModelConf(ComponentConf):
         used mainly for fits
         '''
         return cls(
-            output_directory = Path('/tmp/test'),
             trigger          = Trigger.rk_ee_os,
             selection        = {},
             yields           = YieldsConf(root = {}),
