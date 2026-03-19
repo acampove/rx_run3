@@ -518,6 +518,16 @@ class Qsq(StrEnum):
     high    = 'high'
     # --------------------------
     @property
+    def kind(self) -> str:
+        '''
+        E.g. rare or reso
+        '''
+        if self.is_rare:
+            return 'rare'
+        
+        return 'reso'
+    # --------------------------
+    @property
     def is_rare(self) -> bool:
         if self in [Qsq.low, Qsq.central, Qsq.high]:
             return True
