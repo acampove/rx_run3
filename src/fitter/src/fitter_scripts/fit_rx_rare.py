@@ -127,15 +127,8 @@ def _cfg_from_args(args : DictConfig | argparse.Namespace) -> RXFitConfig:
     data_toy= gut.load_data(package='fitter_data', fpath=args.toy_cfg) if args.toy_cfg else None
     toy_cfg = ToyConf(**data_toy) if data_toy else None
 
-    if   mod_cfg.trigger.is_electron: 
-        name     = 'brem_x12'
-    elif mod_cfg.trigger.is_muon:
-        name     = 'brem_xx0'
-    else:
-        raise NotImplementedError(f'Invalid trigger: {mod_cfg.trigger}')
-
     cfg = RXFitConfig(
-        name    = name,
+        name    = 'rare',
         mod_cfg = mod_cfg,
         toy_cfg = toy_cfg,
         group   = args.group,
