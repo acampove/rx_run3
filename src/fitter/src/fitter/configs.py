@@ -290,8 +290,7 @@ class RXFitConfig(BaseModel):
         if self.toy_cfg is None:
             return
 
-        out_dir = self.output_directory / self.q2bin
-        update  = {'output' : out_dir / 'toys', 'ntoys' : self.ntoys}
+        update  = {'output' : self.output_directory / 'toys', 'ntoys' : self.ntoys}
         self.toy_cfg.model_copy(update = update)
 
         log.info(f'Sending toys to: {out_dir}')
@@ -335,10 +334,7 @@ class RXFitConfig(BaseModel):
         '''
         Saves to JSON fit configuration in directory where data fit will be saved
         '''
-        data_fit_directory = self.output_directory / kind / self.q2bin / self.name
-        data_fit_directory.mkdir(parents = True, exist_ok = True)
-
-        path = data_fit_directory / 'config.json'
+        path = self.output_directory / 'config.json'
         log.info(f'Saving fit configuration to: {path}')
 
         string = self.model_dump_json(indent = 2)
