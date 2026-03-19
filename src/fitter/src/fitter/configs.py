@@ -293,7 +293,7 @@ class RXFitConfig(BaseModel):
         update  = {'output' : self.output_directory / 'toys', 'ntoys' : self.ntoys}
         self.toy_cfg.model_copy(update = update)
 
-        log.info(f'Sending toys to: {out_dir}')
+        log.info(f'Sending toys to: {self.output_directory}')
         log.info(f'Setting number of toys to: {self.ntoys}')
     # ----------------------
     def _set_logs(self) -> None:
