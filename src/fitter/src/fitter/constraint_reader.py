@@ -121,7 +121,6 @@ class ConstraintReader:
 
         calc      = CmbConstraints(
             name  = Component.comb,
-            trig  = self._cfg.mod_cfg.trigger,
             nll   = self._nll,
             cfg   = cmb_cfg,
             q2bin = self._cfg.q2bin)
