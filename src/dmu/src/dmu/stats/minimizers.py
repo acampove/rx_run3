@@ -19,6 +19,7 @@ from zfit.minimizers.strategy      import FailMinimizeNaN
 
 from dmu                           import LogStore
 from dmu.logging                   import messages  as mes
+from dmu.logging                   import LogLevels
 
 from .gof_calculator import GofCalculator
 from .fit_result     import FitResult, GoodnessOfFit
@@ -405,7 +406,7 @@ def minimize(
     log.debug('Found bad fit')
     log.debug(f'{gof.chi2:<10.3f}{gof.pval:<10.3e}{res.status:<10}')
 
-    if log.getEffectiveLevel() < 20:
+    if log.getEffectiveLevel() < LogLevels.info:
         log.info(res)
         pdf = nll.model[0] # This class is not meant for simultaneous fits
                          # There should only be one PDF
