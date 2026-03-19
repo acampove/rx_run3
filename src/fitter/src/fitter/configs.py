@@ -455,8 +455,10 @@ class RXFitConfig(BaseModel):
         out_dir = out_dir / self.name / trigger.project / trigger.channel / self.q2bin
 
         log.debug(f'Using output directory: {out_dir}')
+
+        out_dir.mkdir(parents = True, exist_ok = True)
     
-        return Path(out_dir)
+        return out_dir
     # ----------------------
     @cached_property
     def observable(self) -> zobs:
