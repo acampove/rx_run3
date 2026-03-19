@@ -6,10 +6,9 @@ qsq_bin  = config['qsq_bin']
 project  = config['project']
 channel  = config['channel']
 # -------------
-ANADIR   = os.environ['ANADIR']
-out_path = f'{ANADIR}/fits/data'
-out_path = '.' + out_path[1:]
-name     = 'rare'
+ANADIR    = os.environ['ANADIR']
+out_path  = f'{ANADIR}/fits/data'
+group_name= 'rare'
 # ---------------------------------------
 def _get_path(cmb, prc, prj, chn, qsq):
     conf     = f'rare/{prj}/{chn}'
@@ -21,7 +20,7 @@ def _get_path(cmb, prc, prj, chn, qsq):
     else:
         raise ValueError(f'Invalid channel: {chn}')
 
-    return f'{out_path}/{name}/{cmb}_{prc}_all/{conf}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
+    return f'{out_path}/{group_name}/{cmb}_{prc}_all/{conf}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
 # ---------------------------------------
 paths = []
 for qsq in qsq_bin:
@@ -36,13 +35,14 @@ rule all:
     input: paths
 # ---------------------
 rule fits:
-    output: f'{out_path}/{name}/{{cmb}}_{{prc}}_all/{{conf}}/{{qsq}}/data_24/fit/{{brem}}/{{brem}}/fit_linear.png',
+    output: f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{conf}}/{{qsq}}/data_24/fit/{{brem}}/{{brem}}/fit_linear.png',
+    log:     f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{conf}}/logs/{{qsq}}_{{brem}}.log',
     wildcard_constraints:
         cmb   = r'\d{3}',
         prc   = r'\d{3}',
         qsq   = '[a-z]+',
     params:
-        name  = name,
+        group_name = group_name,
     container:
         'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:6d4387847'
     resources:
@@ -50,19 +50,16 @@ rule fits:
     shell :
         '''
         source setup.sh
-
         CMB_WP=$(rxfitter wp-translator -w {wildcards.cmb})
         PRC_WP=$(rxfitter wp-translator -w {wildcards.prc})
-
         fit_rx_rare \
                     -b -1              \
-                    -g {params.name}   \
+                    -g {params.group_name}   \
                     -c {wildcards.conf}\
                     -q {wildcards.qsq} \
                     -C $CMB_WP         \
                     -P $PRC_WP         \
+                    > {log} 2>&1        \
                     || true
-
-        rxfitter post-process -p {output} -t {wildcards.cmb}_{wildcards.prc}
         '''
 # ---------------------
