@@ -209,7 +209,6 @@ class MisIDConf(NonParametricConf): # Tested
     '''
     Configuration needed to build MisID components
     '''
-    output_directory : Path
     trigger          : Trigger
     project          : Project
     weights          : MisIDSampleWeights 
