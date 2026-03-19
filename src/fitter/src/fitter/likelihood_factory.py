@@ -64,7 +64,9 @@ class LikelihoodFactory:
             trigger= self._trigger)
         model= mod.get_model()
 
+        log.info(30 * '-')
         log.info('Getting data')
+        log.info(30 * '-')
 
         dpr  = DataPreprocessor(
             name   = self._name,
