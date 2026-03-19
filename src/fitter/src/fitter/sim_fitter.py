@@ -1,6 +1,7 @@
 '''
 Module with SimFitter class
 '''
+from pathlib             import Path
 from typing              import overload, Literal, Final
 
 from dmu                 import LogStore
@@ -75,7 +76,7 @@ class SimFitter(BaseFitter, Cache):
 
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / self._q2bin / self._component / 'fit' / name,
+            out_path = Path(self._component) / 'fit' / name,
             l_rdf_uid= self._l_rdf_uid,
             config   = self._cfg.model_dump())
     # ------------------------
@@ -119,7 +120,6 @@ class SimFitter(BaseFitter, Cache):
                 obs       = self._obs,
                 trigger   = self._trigger,
                 q2bin     = self._q2bin,
-                out_dir   = self._cfg.output_directory,
                 selection = cat_cfg.selection,
                 sample    = cfg.component)
 
@@ -150,7 +150,6 @@ class SimFitter(BaseFitter, Cache):
             obs       = cfg.get_obs(obs = self._obs),
             trigger   = self._trigger,
             q2bin     = self._q2bin,
-            out_dir   = self._cfg.output_directory,
             selection = cut,
             name      = self._name,
             sample    = cfg.component)
