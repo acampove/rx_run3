@@ -40,7 +40,7 @@ def _get_nll(
     Likelihood with a combinatorial PDF
     '''
     pdfs= cfg.models[q2bin].pdfs
-    obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
+    obs = zfit.Space('B_Mass_smr', limits=(4600, 6900))
     mod = ModelFactory(
         preffix = 'combinatorial',
         obs     = obs,
@@ -53,20 +53,27 @@ def _get_nll(
 
     return zlos(model = pdf, data = data)
 # ----------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
 def test_simple(q2bin : Qsq, tmp_path : Path):
     '''
     Simplest test of CmbConstraints
     '''
     data = gut.load_data(
         package= 'fitter_data', 
-        fpath  = 'rare/rkst/ee/comb.yaml')
+        fpath  = 'rare/rk/ee/comb.yaml')
 
     cfg  = CombinatorialConf(**data)
     nll  = _get_nll(cfg = cfg, q2bin = q2bin)
 
+    d_sel = {
+        'cmb'   : 'mva_cmb > 0.6 && mva_cmb < 0.9',
+        'prc'   : 'mva_prc > 0.5',
+        'brem'  : 'nbrem != 0',
+        'block' : '(1)',
+    }
+
     with Cache.cache_root(path = tmp_path),\
-        sel.custom_selection(d_sel = {'bdt' : 'mva_cmb > 0.8'}):
+        sel.custom_selection(d_sel = d_sel):
         calc      = CmbConstraints(
             name  = Component.comb,
             nll   = nll,
@@ -78,3 +85,4 @@ def test_simple(q2bin : Qsq, tmp_path : Path):
     assert isinstance(constraint, ConstraintND)
 
     print(constraint)
+# ----------------------
