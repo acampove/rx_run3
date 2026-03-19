@@ -14,7 +14,7 @@ from dmu.stats    import ConstraintND
 from dmu.stats    import ModelFactory
 from dmu.stats    import zfit
 
-from rx_common    import Component, Qsq, Trigger
+from rx_common    import Component, Qsq
 from rx_selection import selection           as sel
 
 from fitter       import CmbConstraints
