@@ -103,19 +103,22 @@ def test_with_cat(tmp_path : Path):
     obs  = zfit.Space(
         obs   = Mass.bp_bcor_smr.latex, 
         label = Mass.bp_bcor_smr,
-        limits=(4500, 7000))
+        limits=(4600, 6900))
     data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml.j2')
     cfg  = ParametricConf(**data)
 
+    d_sel = {'cmb' : 'mva_cmb > 0.9', 'prc' : 'mva_prc > 0.5'}
+
     with Cache.cache_root(path = tmp_path),\
-         RDFGetter.max_entries(value = -1):
+         RDFGetter.max_entries(value = -1),\
+        sel.custom_selection(d_sel = d_sel):
         ftr = SimFitter(
             name     = 'main',
             component= cfg.component,
             obs      = obs,
             cfg      = cfg,
             trigger  = Trigger.rk_ee_os,
-            q2bin    = Qsq.jpsi)
+            q2bin    = Qsq.high)
 
         _ = ftr.get_model()
 # ---------------------------------------------------
