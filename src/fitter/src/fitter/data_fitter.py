@@ -57,7 +57,7 @@ class DataFitter(BaseFitter, Cache):
         # If so, it should be here
         Cache.__init__(
             self,
-            out_path = self._cfg.output_directory / self._q2bin / Component.data_24 / 'fit' / regions,
+            out_path = Path(Component.data_24) / 'fit' / regions,
             cfg      = cfg.model_dump())
     # ----------------------
     def _get_full_nll(self) -> NLL:
