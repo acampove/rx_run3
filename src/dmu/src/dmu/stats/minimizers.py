@@ -25,6 +25,7 @@ from .fit_result     import FitResult, GoodnessOfFit
 from .utilities      import print_pdf
 from .fit_conf       import Context, Retries, FitConf
 from .imports        import zfit
+from .               import utilities as sut
 
 log = LogStore.add_logger('dmu:stats:minimizers')
 zlos= ExtendedUnbinnedNLL | UnbinnedNLL
@@ -240,7 +241,8 @@ class AnealingMinimizer:
                 return res
 
         if not results:
-            raise ValueError('No valid results found')
+            path = sut.save_nll(loss = loss)
+            raise ValueError(f'No valid results found, NLL saved to: {path}')
 
         results     = sorted(results)
         best_result = results[-1]
