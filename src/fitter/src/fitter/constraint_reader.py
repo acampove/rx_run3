@@ -2,6 +2,8 @@
 Script holding ConstraintReader class
 '''
 
+import yaml
+
 from pathlib             import Path
 from typing              import Final
 from dmu                 import LogStore
@@ -150,10 +152,9 @@ class ConstraintReader:
 
         path.parent.mkdir(parents = True, exist_ok = True)
 
-        yaml_string = ''
-        for cons in self._constraints:
-            yaml_string = cons.string(kind = 'yaml') + '\n'
+        data = { cons.name : cons.model_dump() for cons in self._constraints }
 
+        yaml_string = yaml.dump(data)
         path.write_text(yaml_string)
     # ----------------------
     def get_constraints(self, save_to : Path | None = None) -> list[Constraint]:
