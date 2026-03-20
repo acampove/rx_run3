@@ -214,7 +214,7 @@ class MisIDConstraints(Cache):
         kkk   : (yield, error)
         kpipi : (yield, error)
         '''
-        cons_path = self._out_path / 'constraints.yaml'
+        cons_path = self._out_path / 'misid.yaml'
         if self._copy_from_cache():
             log.info(f'Found cached: {cons_path}')
 
