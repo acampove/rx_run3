@@ -178,28 +178,29 @@ def test_full_model():
     ncons = len(constraints)
     log.info(f'Found {ncons} constraints')
 # ----------------------
-@pytest.mark.parametrize('fractions', [_FRACTIONS])
-def test_fractions(fractions :  list[str]):
+@pytest.mark.parametrize('component', [Component.bpkpee, Component.bdkstkpiee])
+def test_fractions(component :  Component):
     '''
     Test that we can retrieve constraints
     for all fractions
     '''
+    fractions = _FRACTIONS[component]
+
     nll = ParsHolder(pars = fractions)
-    calc= SignalConstraints(nll = nll, comp = Component.bpkpee)
+    calc= SignalConstraints(nll = nll, comp = component)
     constraints = calc.get_constraints()
 
     for cons in sorted(constraints):
         print(cons)
 
-    assert len(constraints) == len(_FRACTIONS)
+    assert len(constraints) == len(fractions)
 # ----------------------
-@pytest.mark.parametrize('shapes', [_SHAPES])
-def test_shape(shapes : list[str]):
+@pytest.mark.parametrize('shapes', [_RK_SHAPE])
+def test_rk_shape(shapes : list[str]):
     '''
     Test constraints to mu and sg
     '''
     nll   = ParsHolder(pars = shapes)
-
     calc  = SignalConstraints(nll = nll, comp = Component.bpkpee)
     constraints = calc.get_constraints()
 
