@@ -9,10 +9,9 @@ channel  = config['channel']
 ANADIR    = os.environ['ANADIR']
 out_path  = f'{ANADIR}/fits/data'
 group_name= 'rare'
+mode      = 'rare'
 # ---------------------------------------
 def _get_path(cmb, prc, prj, chn, qsq):
-    conf     = f'rare/{prj}/{chn}'
-
     if   chn == 'ee':
         brem = 'brem_x12'
     elif chn == 'mm':
@@ -20,7 +19,7 @@ def _get_path(cmb, prc, prj, chn, qsq):
     else:
         raise ValueError(f'Invalid channel: {chn}')
 
-    return f'{out_path}/{group_name}/{cmb}_{prc}_all/{conf}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
+    return f'{out_path}/{group_name}/{cmb}_{prc}_all/{mode}_{prj}_{chn}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
 # ---------------------------------------
 paths = []
 for qsq in qsq_bin:
@@ -35,8 +34,8 @@ rule all:
     input: paths
 # ---------------------
 rule fits:
-    output: f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{conf}}/{{qsq}}/data_24/fit/{{brem}}/{{brem}}/fit_linear.png',
-    log:     f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{conf}}/logs/{{qsq}}_{{brem}}.log',
+    output: f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{mode}}_{{prj}}_{{chn}}/{{qsq}}/data_24/fit/{{brem}}/{{brem}}/fit_linear.png',
+    log:     f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{mode}}/logs/{{prj}}_{{chn}}_{{qsq}}_{{brem}}.log',
     wildcard_constraints:
         cmb   = r'\d{3}',
         prc   = r'\d{3}',
@@ -55,7 +54,7 @@ rule fits:
         fit_rx_rare \
                     -b -1              \
                     -g {params.group_name}   \
-                    -c {wildcards.conf}\
+                    -c {wildcards.mode}_{wildcards.prj}_{wildcards.chn}\
                     -q {wildcards.qsq} \
                     -C $CMB_WP         \
                     -P $PRC_WP         \
