@@ -127,7 +127,11 @@ def test_with_cat(tmp_path : Path):
             trigger  = Trigger.rk_ee_os,
             q2bin    = Qsq.high)
 
-        _ = ftr.get_model()
+        pdf = ftr.get_model()
+
+    assert pdf is not None
+
+    print_pdf(pdf = pdf)
 # ---------------------------------------------------
 def test_with_cat_constrained(tmp_path : Path):
     '''
