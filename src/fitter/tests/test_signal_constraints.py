@@ -147,7 +147,7 @@ def _get_category(
         pdf       = pdf, 
         sumw      = 1000., 
         selection = {'mass' : '(1)'},
-        model     = ['gauss'])
+        model     = [Model.gauss])
 
     return cat
 # ----------------------
@@ -158,7 +158,10 @@ def test_full_model():
     obs        = zfit.Space('dummy', limits=(4500, 6000))
     categories = [ _get_category(block = block, brem = brem, obs = obs) for block in Block.blocks() for brem in _BREM_CATS ]
 
-    mgr = CategoryMerger(categories = categories)
+    mgr = CategoryMerger(
+        comp          = Component.bpkpee,
+        categories    = categories, 
+        reparametrize = True)
     cat = mgr.get_category()
     nsg = zfit.Parameter('nsig', 1000, 0, 10_000)
     pdf = cat.pdf.create_extended(nsg)
