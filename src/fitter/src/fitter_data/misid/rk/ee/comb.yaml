@@ -4,23 +4,21 @@ constraints: {}
 # -----------------
 models:
   low:
-    pdfs          : [hypexp]
+    pdfs          : [exp]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           : {}
   central:
-    pdfs          : [hypexp]
+    pdfs          : [exp]
     shared        : []
     floating      : []
     reparametrize : {}
     fix           : {}
   high:
-    pdfs          : [suj]
+    pdfs          : [exp]
     shared        : []
     floating      : []
     reparametrize : {}
-    fix           :
-      dl_suj : 2.5
-      gm_suj : -10
+    fix           : {}
 # -----------------
