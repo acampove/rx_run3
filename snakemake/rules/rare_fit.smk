@@ -54,7 +54,7 @@ rule fits:
         fit_rx_rare \
                     -b -1              \
                     -g {params.group_name}   \
-                    -c {wildcards.mode}_{wildcards.prj}_{wildcards.chn}\
+                    -c {wildcards.mode}/{wildcards.prj}/{wildcards.chn}\
                     -q {wildcards.qsq} \
                     -C $CMB_WP         \
                     -P $PRC_WP         \
