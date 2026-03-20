@@ -108,7 +108,10 @@ def test_with_cat(tmp_path : Path):
     cfg  = ParametricConf(**data)
 
     def _filter(name : str) -> bool:
-        return name.endswith('_b1')
+        c1 = name.endswith('_b1')
+        c2 = name.endswith('_b2')
+
+        return c1 or c2
 
     cfg  = cfg.filter_category(func = _filter)
     d_sel= {'cmb' : 'mva_cmb > 0.9', 'prc' : 'mva_prc > 0.5'}
