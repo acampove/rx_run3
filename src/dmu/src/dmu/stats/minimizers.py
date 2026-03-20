@@ -345,7 +345,11 @@ def _calculate_errors(res : zres) -> zres:
     log.debug('Calculating errors')
 
     for method in ['minuit_hesse', 'approx']:
-        res.hesse(name='minuit_hesse', method = method)
+        try:
+            res.hesse(name='minuit_hesse', method = method)
+        except ValueError as exc:
+            log.error(res)
+            raise ValueError('Failed calculating error') from exc
 
         if not res.valid:
             log.warning('Result invalid after error calculation')
