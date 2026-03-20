@@ -534,6 +534,12 @@ class SimFitter(BaseFitter, Cache):
 
         - zfit PDF, not extended yet
         - None, if statistics are too low to build PDF
+
+        Returned PDF needs to have parameters fixed unless
+        their names end on _flt. E.g. 
+
+        - Will fix tails, means and widths
+        - Will float scales and resolutions
         '''
         if isinstance(self._cfg, CCbarConf):
             return self._get_ccbar_component(cfg = self._cfg)
@@ -565,5 +571,5 @@ class SimFitter(BaseFitter, Cache):
         cat.res.to_json(path = result_path)
 
         self._cache()
-        return cat.pdf 
+        return self._fix_tails(pdf=cat.pdf, res=cat.res)
 # ------------------------
