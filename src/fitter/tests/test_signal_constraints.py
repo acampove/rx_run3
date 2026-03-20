@@ -17,17 +17,40 @@ zpdf = zfit.pdf.BasePDF
 zpar = zfit.param.Parameter
 log  = LogStore.add_logger('fitter:test_signal_constraints')
 
-_FRACTIONS = [
-    'fr_bpkpee_brem_xx1_b1',
-    'fr_bpkpee_brem_xx2_b1',
-]
-
-_SHAPES = [
+_RK_SHAPE = [
     'mu_bpkpee_brem_xx1_b1_scale_flt',
     'sg_bpkpee_brem_xx1_b1_reso_flt',
     'mu_bpkpee_brem_xx2_b1_scale_flt',
     'sg_bpkpee_brem_xx2_b1_reso_flt',
 ]
+
+_RK_FRACTIONS = [
+    'fr_bpkpee_brem_xx1_b1_reso_flt',
+    'fr_bpkpee_brem_xx2_b1_reso_flt',
+]
+
+_RKST_FRACTIONS = [
+    'fr_bdkstkpiee_block_x12_b1_flt',
+    'fr_bdkstkpiee_block_x12_b2_flt',
+    'fr_bdkstkpiee_block_x12_b3_flt',
+    'fr_bdkstkpiee_block_x12_b4_flt',
+    'fr_bdkstkpiee_block_x12_b5_flt',
+    'fr_bdkstkpiee_block_x12_b6_flt',
+    'fr_bdkstkpiee_block_x12_b7_flt',
+    'fr_bdkstkpiee_brem_xx1_b1_reso_flt',
+    'fr_bdkstkpiee_brem_xx1_b2_reso_flt',
+    'fr_bdkstkpiee_brem_xx1_b3_reso_flt',
+    'fr_bdkstkpiee_brem_xx1_b4_reso_flt',
+    'fr_bdkstkpiee_brem_xx1_b5_reso_flt',
+    'fr_bdkstkpiee_brem_xx1_b6_reso_flt',
+    'fr_bdkstkpiee_brem_xx1_b7_reso_flt',
+    'fr_bdkstkpiee_brem_xx1_b8_reso_flt',
+]
+
+_FRACTIONS = {
+    Component.bpkpee    :   _RK_FRACTIONS,
+    Component.bdkstkpiee: _RKST_FRACTIONS,
+}
 
 _BREM_CATS = [Brem.one, Brem.two]
 # ----------------------
