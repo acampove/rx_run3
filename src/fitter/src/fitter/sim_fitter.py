@@ -202,17 +202,18 @@ class SimFitter(BaseFitter, Cache):
 
         Returns
         --------------
-        PDF with tails fixed
+        PDF with tails fixed to values in `res` and non-fixed parameters floating
         '''
-        s_par = pdf.get_params()
+        s_par = pdf.get_params(floating = True) | pdf.get_params(floating=False)
         npar  = len(s_par)
-        log.debug(f'Found {npar} floating parameters')
+        log.debug(f'Found {npar} parameters')
 
         for par in s_par:
             # Model builder adds _flt to name
             # of parameters meant to float
             if par.name.endswith('_flt'):
                 log.debug(f'Not fixing: {par.name}')
+                par.floating = True 
                 continue
 
             if par.name in res:
