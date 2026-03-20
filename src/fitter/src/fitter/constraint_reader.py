@@ -137,7 +137,11 @@ class ConstraintReader:
             comp= self._signal,
             nll = self._nll)
 
-        self._constraints += calc.get_constraints()
+        cons = calc.get_constraints()
+
+        log.info(f'Found {len(cons)} signal constraints')
+
+        self._constraints += cons
     # ----------------------
     def _save_constraints(self, path : Path) -> None:
         '''
