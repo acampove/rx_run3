@@ -6,7 +6,7 @@ import os
 from functools   import cached_property
 from pydantic    import BaseModel, ConfigDict
 from pathlib     import Path
-from typing      import Self
+from typing      import Callable, Self
 
 from rx_common   import Channel, Mass, Project, Qsq, MisID, Region
 from rx_common   import Component, Trigger, CCbarComponent
@@ -142,6 +142,20 @@ class ParametricConf(ComponentConf):  # Tested
     fit        : FitConf 
     categories : dict[str, CategoryConf]
     plots      : ZFitPlotterConf 
+    # ----------------------
+    def filter_category(self, func : Callable) -> Self:
+        '''
+        Parameters
+        -------------
+        func: Callable taking category name and returning true or false
+
+        Returns
+        -------------
+        Copy of input config with categories filtered 
+        '''
+        new_categories = { name : cat for name, cat in self.categories.items() if func(name) } 
+
+        return self.model_copy(update = {'categories' : new_categories})
     # ------------------------------
     def add_category_suffix(self, suffix : str) -> None:
         '''
