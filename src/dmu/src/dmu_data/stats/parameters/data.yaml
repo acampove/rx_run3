@@ -67,7 +67,7 @@ suj:
     max : 5000
   gm:
     val : 1
-    min : -10
+    min : -15
     max : 10
   dl:
     val : 1
