@@ -3,6 +3,8 @@ Module containing FitResult class
 '''
 import re
 import math
+import yaml
+import json
 import numpy
 import pprint
 
@@ -492,4 +494,23 @@ class FitResult(BaseModel):
         data = path.read_text()
 
         return cls.model_validate_json(json_data = data)
+    # ----------------------
+    @classmethod
+    def from_yaml(
+        cls,
+        path : Path) -> 'FitResult':
+        '''
+        Parameters
+        --------------
+        path: Path to YAML file
+        '''
+        if not path.exists():
+            raise FileNotFoundError(f'File not found: {path}')
+
+        with open(path) as ifile:
+            data = yaml.safe_load(ifile)
+
+        json_string = json.dumps(data)
+
+        return cls.model_validate_json(json_data = json_string)
 # -------------------------------------
