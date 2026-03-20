@@ -7,7 +7,6 @@ from .types import MisID
 from .types import Brem 
 from .types import Block
 from .types import MVA 
-from .types import Qsq 
 
 from .component import CCbarComponent
 from .component import Component
@@ -16,6 +15,7 @@ from .project   import Project
 from .channel   import Channel 
 from .region    import Region
 from .mass      import Mass
+from .qsq       import Qsq 
 
 __all__ = [
     'CCbarComponent',
