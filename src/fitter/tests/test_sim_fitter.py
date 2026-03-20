@@ -107,7 +107,11 @@ def test_with_cat(tmp_path : Path):
     data = gut.load_data(package='fitter_data', fpath='rare/rk/ee/bpkpee.yaml.j2')
     cfg  = ParametricConf(**data)
 
-    d_sel = {'cmb' : 'mva_cmb > 0.9', 'prc' : 'mva_prc > 0.5'}
+    def _filter(name : str) -> bool:
+        return name.endswith('_b1')
+
+    cfg  = cfg.filter_category(func = _filter)
+    d_sel= {'cmb' : 'mva_cmb > 0.9', 'prc' : 'mva_prc > 0.5'}
 
     with Cache.cache_root(path = tmp_path),\
          RDFGetter.max_entries(value = -1),\
