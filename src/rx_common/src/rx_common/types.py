@@ -408,6 +408,58 @@ class Trigger(StrEnum):
     # -----------
     uninitialized= 'uninitialized'
     # -----------
+    def get_signal_component(
+        self, 
+        qsq : Qsq) -> Component:
+        '''
+        Parameters
+        -------------
+        qsq : q2 bin
+
+        Returns
+        -------------
+        Signal component for given q2 bin 
+        '''
+        # ----------------
+        if qsq == Qsq.jpsi and self == Trigger.rk_ee_os:
+            return Component.bpkpjpsiee
+
+        if qsq == Qsq.jpsi and self == Trigger.rk_mm_os:
+            return Component.bpkpjpsimm
+
+        if qsq == Qsq.psi2 and self == Trigger.rk_ee_os:
+            return Component.bpkppsi2ee
+
+        if qsq == Qsq.psi2 and self == Trigger.rk_mm_os:
+            return Component.bpkppsi2mm
+
+        if self == Trigger.rk_ee_os:
+            return Component.bpkpee
+
+        if self == Trigger.rk_mm_os:
+            return Component.bpkpmm
+        # ----------------
+        if qsq == Qsq.jpsi and self == Trigger.rkst_ee_os:
+            return Component.bdkstkpijpsiee
+
+        if qsq == Qsq.jpsi and self == Trigger.rkst_mm_os:
+            return Component.bdkstkpijpsimm
+
+        if qsq == Qsq.psi2 and self == Trigger.rkst_ee_os:
+            return Component.bdkstkpipsi2ee
+
+        if qsq == Qsq.psi2 and self == Trigger.rkst_mm_os:
+            return Component.bdkstkpipsi2mm
+
+        if self == Trigger.rkst_ee_os:
+            return Component.bdkstkpiee
+
+        if self == Trigger.rkst_mm_os:
+            return Component.bdkstkpimm
+        # ----------------
+
+        raise ValueError(f'Cannot get signal component for: {qsq}/{self}')
+    # -----------
     @property
     def has_pid(self) -> bool:
         '''
