@@ -92,7 +92,7 @@ class SignalConstraints:
         or None, if no correction (through constraint) is possible for parameter
         '''
         name  = par.name
-        REGEX = f'fr_{_RGXFR}' if name.startswith('fr') else f'.*{self._comp}_{_RGXPR}'
+        REGEX = f'fr_{self._comp}_{_RGXFR}' if name.startswith('fr') else f'.*{self._comp}_{_RGXPR}'
 
         mtch = re.match(REGEX, name)
         if not mtch:
