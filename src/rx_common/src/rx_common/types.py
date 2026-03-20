@@ -1,12 +1,14 @@
 '''
 This module contains classes derived from Enum
 '''
-from enum      import StrEnum, Enum, auto
-from dmu.stats import CorrectionImplementation
-from pydantic  import BaseModel, field_validator, ConfigDict
-from .mass     import Mass
-from .project  import Project
-from .channel  import Channel
+from enum        import StrEnum, Enum, auto
+from dmu.stats   import CorrectionImplementation
+from pydantic    import BaseModel, field_validator, ConfigDict
+from .mass       import Mass
+from .project    import Project
+from .channel    import Channel
+from .component  import Component
+from .qsq        import Qsq
 
 ALL_BLOCKS : set[str] = {'1', '2', '3', '4', '5', '6', '7', '8'}
 # ------------------------------
