@@ -30,7 +30,7 @@ class ConstraintReader:
         self, 
         nll   : ExtendedUnbinnedNLL, 
         cfg   : RXFitConfig,
-        signal: Component = Component.bpkpee):
+        signal: Component):
         '''
         Parameters
         -------------------

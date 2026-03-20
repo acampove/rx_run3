@@ -163,7 +163,11 @@ def _add_constraints(
     - Constrained likelihood
     - List of constraints
     '''
-    crd  = ConstraintReader(nll=nll, cfg=cfg)
+    signal = cfg.mod_cfg.trigger.get_signal_component(qsq = cfg.q2bin)
+    crd  = ConstraintReader(
+        signal = signal,
+        nll    = nll, 
+        cfg    = cfg)
     cons = crd.get_constraints(save_to = cfg.output_directory / 'constraints/all.yaml')
 
     if not cons:
