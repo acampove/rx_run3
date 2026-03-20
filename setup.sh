@@ -14,15 +14,11 @@ check_env()
     if ! command -v python &>/dev/null;then
         echo "Failed to find python"
         FAIL=1
-    else
-        echo "Found python at $(which python)"
     fi
 
     if ! command -v root   &>/dev/null;then
         echo "Failed to find ROOT"
         FAIL=1
-    else
-        echo "Found ROOT at $(which root)"
     fi
 
     if [[ $FAIL -ne 0 ]];then
