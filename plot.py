@@ -77,7 +77,7 @@ def _add_entries_1D(
     data            = dict()
     data['par_nam'] = cns.name
     data['pre_val'] = 0
-    data['pre_err'] = cns.sg / err 
+    data['pre_err'] = err / cns.sg
 
     data['pos_val'] = abs(val - cns.mu) / cns.sg
     data['pos_err'] = 1
@@ -96,7 +96,7 @@ def _add_entries_ND(
 
         data['par_nam'] = f'nd_{name}'
         data['pre_val'] = 0 
-        data['pre_err'] = sg / err 
+        data['pre_err'] = err / sg 
 
         data['pos_val'] = abs(val - norm) / err
         data['pos_err'] = 1
@@ -138,22 +138,27 @@ def _plot(regex : str, df : pnd.DataFrame, limits : tuple[float,float]) -> None:
         label = 'Post fit',
         color = 'blue',
     )
+    
+    plt.axvline(x = -1, color = 'red', linestyle = ':', linewidth = 1)
+    plt.axvline(x = +1, color = 'red', linestyle = ':', linewidth = 1)
+
+    plt.axvline(x = -2, color = 'red', linestyle = ':', linewidth = 1)
+    plt.axvline(x = +2, color = 'red', linestyle = ':', linewidth = 1)
 
     ymin, ymax = plt.ylim()
     if len(df) > 4:
         plt.ylim(ymin - 1, ymax + 2)
     else:
         plt.ylim(ymin - 1, ymax + 1)
-    
+
     plt.xlabel(r'$\frac{\hat{\theta}-\theta_0}{\Delta\theta}$')
     plt.xlim(limits)
     plt.legend(loc='upper left')
-    plt.grid()
     plt.show()
 # ---------------------------------------
 adapter = TypeAdapter(Constraint1D | ConstraintND)
-pst_fit = Path('/home/acampove/external_02/fits/data/rare/900_500_all/rare/rk/ee/low/data_24/fit/brem_x12/parameters.yaml')
-pre_fit = Path('/home/acampove/external_02/fits/data/rare/900_500_all/rare/rk/ee/low/constraints/all.yaml')
+pst_fit = Path('/home/acampove/external_02/fits/data/rare/900_500_all/rare/rk/ee/central/data_24/fit/brem_x12/parameters.yaml')
+pre_fit = Path('/home/acampove/external_02/fits/data/rare/900_500_all/rare/rk/ee/central/constraints/all.yaml')
 
 res = FitResult.from_json(path = pst_fit)
 with open(pre_fit) as ifile:
@@ -175,13 +180,10 @@ for name, cons_data in all_cons_data.items():
 df = pnd.DataFrame(data)
 df = df.dropna(subset=['par_nam'])
 
-_plot(regex =        '^nd_.*', df = df, limits = (-5., +5.))
+_plot(regex =        '^nd_.*', df = df, limits = (-7., +7.))
 _plot(regex = '^fr_.*block.*', df = df, limits = (-3., +3.))
 _plot(regex =  '^fr_.*brem.*', df = df, limits = (-3., +3.))
 _plot(regex =        '^mu_.*', df = df, limits = (-3., +3.))
 _plot(regex =        '^sg_.*', df = df, limits = (-3., +3.))
 _plot(regex =       '^yld_.*', df = df, limits = (-3., +3.))
 _plot(regex =         '^s_.*', df = df, limits = (-3., +3.))
-
-
-
