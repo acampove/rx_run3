@@ -1,3 +1,4 @@
+from typing import Any
 import yaml
 import mplhep
 import pandas            as pnd
@@ -5,28 +6,30 @@ import matplotlib.pyplot as plt
 
 from pydantic  import TypeAdapter
 from dmu.stats import Constraint1D, ConstraintND
-from dmu.stats import Constraint
 from dmu.stats import FitResult
 from dmu.stats import ConstraintType
 from pathlib   import Path
 
 plt.style.use(mplhep.style.LHCb2)
 labels = {
-    'fr_bpkpee_block_x12_b1_flt': r'$f_1^{\mathrm{Block}}$',
-    'fr_bpkpee_block_x12_b2_flt': r'$f_2^{\mathrm{Block}}$',
-    'fr_bpkpee_block_x12_b3_flt': r'$f_3^{\mathrm{Block}}$',
-    'fr_bpkpee_block_x12_b4_flt': r'$f_4^{\mathrm{Block}}$',
-    'fr_bpkpee_block_x12_b5_flt': r'$f_5^{\mathrm{Block}}$',
-    'fr_bpkpee_block_x12_b6_flt': r'$f_6^{\mathrm{Block}}$',
-    'fr_bpkpee_block_x12_b7_flt': r'$f_7^{\mathrm{Block}}$',
-    'fr_bpkpee_brem_xx1_b1_reso_flt': r'$f_1^{\mathrm{Brem}_1}$',
-    'fr_bpkpee_brem_xx1_b2_reso_flt': r'$f_2^{\mathrm{Brem}_1}$',
-    'fr_bpkpee_brem_xx1_b3_reso_flt': r'$f_3^{\mathrm{Brem}_1}$',
-    'fr_bpkpee_brem_xx1_b4_reso_flt': r'$f_4^{\mathrm{Brem}_1}$',
-    'fr_bpkpee_brem_xx1_b5_reso_flt': r'$f_5^{\mathrm{Brem}_1}$',
-    'fr_bpkpee_brem_xx1_b6_reso_flt': r'$f_6^{\mathrm{Brem}_1}$',
-    'fr_bpkpee_brem_xx1_b7_reso_flt': r'$f_7^{\mathrm{Brem}_1}$',
-    'fr_bpkpee_brem_xx1_b8_reso_flt': r'$f_8^{\mathrm{Brem}_1}$',
+    'nd_mu_hypexp_comb_main_1'       : r'$\mu_{comb}$',
+    'nd_ap_hypexp_comb_main_1'       : r'$\alpha_{comb}$',
+    'nd_bt_hypexp_comb_main_1'       : r'$\beta_{comb}$',
+    'fr_bpkpee_block_x12_b1_flt'     : r'$f_1^{\mathrm{Block}}$',
+    'fr_bpkpee_block_x12_b2_flt'     : r'$f_2^{\mathrm{Block}}$',
+    'fr_bpkpee_block_x12_b3_flt'     : r'$f_3^{\mathrm{Block}}$',
+    'fr_bpkpee_block_x12_b4_flt'     : r'$f_4^{\mathrm{Block}}$',
+    'fr_bpkpee_block_x12_b5_flt'     : r'$f_5^{\mathrm{Block}}$',
+    'fr_bpkpee_block_x12_b6_flt'     : r'$f_6^{\mathrm{Block}}$',
+    'fr_bpkpee_block_x12_b7_flt'     : r'$f_7^{\mathrm{Block}}$',
+    'fr_bpkpee_brem_xx1_b1_reso_flt' : r'$f_1^{\mathrm{Brem}_1}$',
+    'fr_bpkpee_brem_xx1_b2_reso_flt' : r'$f_2^{\mathrm{Brem}_1}$',
+    'fr_bpkpee_brem_xx1_b3_reso_flt' : r'$f_3^{\mathrm{Brem}_1}$',
+    'fr_bpkpee_brem_xx1_b4_reso_flt' : r'$f_4^{\mathrm{Brem}_1}$',
+    'fr_bpkpee_brem_xx1_b5_reso_flt' : r'$f_5^{\mathrm{Brem}_1}$',
+    'fr_bpkpee_brem_xx1_b6_reso_flt' : r'$f_6^{\mathrm{Brem}_1}$',
+    'fr_bpkpee_brem_xx1_b7_reso_flt' : r'$f_7^{\mathrm{Brem}_1}$',
+    'fr_bpkpee_brem_xx1_b8_reso_flt' : r'$f_8^{\mathrm{Brem}_1}$',
     'mu_bpkpee_brem_xx1_b1_scale_flt': r'$\mu_1^{\mathrm{Brem}_1}$',
     'mu_bpkpee_brem_xx1_b2_scale_flt': r'$\mu_2^{\mathrm{Brem}_1}$',
     'mu_bpkpee_brem_xx1_b3_scale_flt': r'$\mu_3^{\mathrm{Brem}_1}$',
@@ -45,41 +48,62 @@ labels = {
     'mu_bpkpee_brem_xx2_b8_scale_flt': r'$\mu_8^{\mathrm{Brem}_2}$',
     's_bdkstkpiee'                   : r'$s_{B^0}$',
     's_bpkstkpiee'                   : r'$s_{B^+}$',
-    'sg_bpkpee_brem_xx1_b1_reso_flt': r'$\sigma_1^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx1_b2_reso_flt': r'$\sigma_2^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx1_b3_reso_flt': r'$\sigma_3^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx1_b4_reso_flt': r'$\sigma_4^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx1_b5_reso_flt': r'$\sigma_5^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx1_b6_reso_flt': r'$\sigma_6^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx1_b7_reso_flt': r'$\sigma_7^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx1_b8_reso_flt': r'$\sigma_8^{\mathrm{Brem}_1}$',
-    'sg_bpkpee_brem_xx2_b1_reso_flt': r'$\sigma_1^{\mathrm{Brem}_2}$',
-    'sg_bpkpee_brem_xx2_b2_reso_flt': r'$\sigma_2^{\mathrm{Brem}_2}$',
-    'sg_bpkpee_brem_xx2_b3_reso_flt': r'$\sigma_3^{\mathrm{Brem}_2}$',
-    'sg_bpkpee_brem_xx2_b4_reso_flt': r'$\sigma_4^{\mathrm{Brem}_2}$',
-    'sg_bpkpee_brem_xx2_b5_reso_flt': r'$\sigma_5^{\mathrm{Brem}_2}$',
-    'sg_bpkpee_brem_xx2_b6_reso_flt': r'$\sigma_6^{\mathrm{Brem}_2}$',
-    'sg_bpkpee_brem_xx2_b7_reso_flt': r'$\sigma_7^{\mathrm{Brem}_2}$',
-    'sg_bpkpee_brem_xx2_b8_reso_flt': r'$\sigma_8^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx1_b1_reso_flt' : r'$\sigma_1^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx1_b2_reso_flt' : r'$\sigma_2^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx1_b3_reso_flt' : r'$\sigma_3^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx1_b4_reso_flt' : r'$\sigma_4^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx1_b5_reso_flt' : r'$\sigma_5^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx1_b6_reso_flt' : r'$\sigma_6^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx1_b7_reso_flt' : r'$\sigma_7^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx1_b8_reso_flt' : r'$\sigma_8^{\mathrm{Brem}_1}$',
+    'sg_bpkpee_brem_xx2_b1_reso_flt' : r'$\sigma_1^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx2_b2_reso_flt' : r'$\sigma_2^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx2_b3_reso_flt' : r'$\sigma_3^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx2_b4_reso_flt' : r'$\sigma_4^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx2_b5_reso_flt' : r'$\sigma_5^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx2_b6_reso_flt' : r'$\sigma_6^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx2_b7_reso_flt' : r'$\sigma_7^{\mathrm{Brem}_2}$',
+    'sg_bpkpee_brem_xx2_b8_reso_flt' : r'$\sigma_8^{\mathrm{Brem}_2}$',
     'yld_bpkkk'                      : r'$N_{KK}^{\mathrm{misID}}$',
-    'yld_bpkpipi'                     : r'$N_{\pi\pi}^{\mathrm{misID}}$',
+    'yld_bpkpipi'                    : r'$N_{\pi\pi}^{\mathrm{misID}}$',
 }
 # ---------------------------------------
-def _add_entries(
+def _add_entries_1D(
     res : FitResult,
-    cns : Constraint) -> dict:
+    cns : Constraint1D) -> dict[str,Any]:
 
-    data = dict()
-    if isinstance(cns, Constraint1D):
-        data['par_nam'] = cns.name
-        data['pre_val'] = cns.mu
-        data['pre_err'] = cns.sg
+    val, err = res[cns.name]
 
-        val, err = res[cns.name]
-        data['pos_val'] = val
-        data['pos_err'] = err 
+    data            = dict()
+    data['par_nam'] = cns.name
+    data['pre_val'] = 0
+    data['pre_err'] = cns.sg / err 
+
+    data['pos_val'] = abs(val - cns.mu) / cns.sg
+    data['pos_err'] = 1
 
     return data
+# ---------------------------------------
+def _add_entries_ND(
+    res : FitResult,
+    cns : ConstraintND) -> list[dict[str,Any]]:
+
+    values : list[dict[str,Any]] = []
+    for name, mu, sg in zip(cns.parameters, cns.values, cns.errors, strict=True):
+        data            = dict()
+        norm            = abs(mu)
+        val, err        = res[name]
+
+        data['par_nam'] = f'nd_{name}'
+        data['pre_val'] = 0 
+        data['pre_err'] = sg / err 
+
+        data['pos_val'] = abs(val - norm) / err
+        data['pos_err'] = 1
+
+        values.append(data)
+
+    return values 
 # ---------------------------------------
 def constraint_type_constructor(loader, node):
     values = loader.construct_sequence(node)
@@ -103,20 +127,27 @@ def _plot(regex : str, df : pnd.DataFrame, limits : tuple[float,float]) -> None:
         x2    = df['pre_val'] + df['pre_err'],
         label = 'Pre fit',
         alpha = 0.5,
+        color = 'gray',
+    )
+    
+    plt.errorbar(
+        y     = df['par_nam'], 
+        x     = df['pos_val'],
+        xerr  = df['pos_err'],
+        fmt   = 'o',
+        label = 'Post fit',
         color = 'blue',
     )
+
+    ymin, ymax = plt.ylim()
+    if len(df) > 4:
+        plt.ylim(ymin - 1, ymax + 2)
+    else:
+        plt.ylim(ymin - 1, ymax + 1)
     
-    plt.fill_betweenx(
-        y     = df['par_nam'], 
-        x1    = df['pos_val'] - df['pos_err'],
-        x2    = df['pos_val'] + df['pos_err'],
-        label = 'Post fit',
-        alpha = 0.3,
-        color = 'green',
-    )
-    
+    plt.xlabel(r'$\frac{\hat{\theta}-\theta_0}{\Delta\theta}$')
     plt.xlim(limits)
-    plt.legend()
+    plt.legend(loc='upper left')
     plt.grid()
     plt.show()
 # ---------------------------------------
@@ -132,15 +163,25 @@ data : list[dict] = []
 for name, cons_data in all_cons_data.items():
     cns = adapter.validate_python(cons_data)
 
-    val = _add_entries(cns = cns, res = res)
-    data.append(val)
+    if   isinstance(cns, Constraint1D):
+        val = _add_entries_1D(cns = cns, res = res)
+        data.append(val)
+    elif isinstance(cns, ConstraintND):
+        vals = _add_entries_ND(cns = cns, res = res)
+        data+= vals
+    else:
+        raise ValueError(f'Invalid entry for: {name}')
 
 df = pnd.DataFrame(data)
 df = df.dropna(subset=['par_nam'])
 
-_plot(regex = 'fr_.*block.*', df = df, limits = (0.0, 0.2))
-_plot(regex =  'fr_.*brem.*', df = df, limits = (1.0, 1.2))
-_plot(regex =        'mu_.*', df = df, limits = (-30, 30.))
-_plot(regex =        'sg_.*', df = df, limits = (1.0, 1.5))
-_plot(regex =       'yld_.*', df = df, limits = (0.0, 15.))
-_plot(regex =         's_.*', df = df, limits = (0.0, 0.2))
+_plot(regex =        '^nd_.*', df = df, limits = (-5., +5.))
+_plot(regex = '^fr_.*block.*', df = df, limits = (-3., +3.))
+_plot(regex =  '^fr_.*brem.*', df = df, limits = (-3., +3.))
+_plot(regex =        '^mu_.*', df = df, limits = (-3., +3.))
+_plot(regex =        '^sg_.*', df = df, limits = (-3., +3.))
+_plot(regex =       '^yld_.*', df = df, limits = (-3., +3.))
+_plot(regex =         '^s_.*', df = df, limits = (-3., +3.))
+
+
+
