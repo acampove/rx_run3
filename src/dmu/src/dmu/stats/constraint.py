@@ -105,6 +105,16 @@ class ConstraintND(Constraint):
     values     : list[float]
     cov        : list[list[float]]
     # ----------------------
+    @property
+    def errors(self) -> list[float]:
+        '''
+        List of errors
+        '''
+        npar = len(self.parameters)
+        vars = [ self.cov[ipar][ipar] for ipar in range(npar) ]
+
+        return [ math.sqrt(var) for var in vars ]
+    # ----------------------
     def calibrate(self, result : FitResult) -> 'ConstraintND':
         '''
         Re-centers mu values of this constraint to value of parameter in holder.
