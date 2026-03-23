@@ -139,6 +139,12 @@ class ConstraintReader:
 
         cons = calc.get_constraints()
 
+        if self._cfg.mod_cfg.trigger.is_electron and not cons:
+            for par in self._nll.get_params():
+                log.error(par.name)
+
+            raise ValueError(f'No constraints found for {self._signal}')
+
         log.info(f'Found {len(cons)} signal constraints')
 
         self._constraints += cons
