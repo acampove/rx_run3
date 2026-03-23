@@ -1,11 +1,10 @@
 mva_cmb:
-  - 900
+  - 950
 mva_prc:
-  - 500
+  - 700
 qsq_bin:
   - low
   - central
-  - high
 project:
   - rk
   - rkst
