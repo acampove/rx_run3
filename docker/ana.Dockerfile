@@ -1,4 +1,4 @@
-FROM gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v2.2.1
+FROM gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:v3.0.0
 WORKDIR /workspace
 COPY src                ./src
 COPY requirements-dev.txt .
