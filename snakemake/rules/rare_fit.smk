@@ -19,7 +19,10 @@ def _get_path(cmb, prc, prj, chn, qsq):
     else:
         raise ValueError(f'Invalid channel: {chn}')
 
-    return f'{out_path}/{group_name}/{cmb}_{prc}_all/{mode}/{prj}/{chn}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
+    val = f'{out_path}/{group_name}/{cmb}_{prc}_all/{mode}/{prj}/{chn}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png'
+    val = val.replace(' ', '')
+
+    return val
 # ---------------------------------------
 paths = []
 for qsq in qsq_bin:
@@ -34,8 +37,8 @@ rule all:
     input: paths
 # ---------------------
 rule fits:
-    output: f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{mode}}/{{prj}}/{{chn}}/{{qsq}}/data_24/fit/{{brem}}/{{brem}}/fit_linear.png',
-    log:     f'{out_path}/{group_name}/{{cmb}}_{{prc}}_all/{{mode}}/logs/{{prj}}_{{chn}}_{{qsq}}_{{brem}}.log',
+    output: str(f'{out_path}/{group_name}' + '/{cmb}_{prc}_all/{mode}/{prj}/{chn}/{qsq}/data_24/fit/{brem}/{brem}/fit_linear.png').replace(' ', ''),
+    log:    str(f'{out_path}/{group_name}' + '/{cmb}_{prc}_all/{mode}/logs/{prj}_{chn}_{qsq}_{brem}.log').replace(' ', ''),
     wildcard_constraints:
         cmb   = r'\d{3}',
         prc   = r'\d{3}',
@@ -43,7 +46,7 @@ rule fits:
     params:
         group_name = group_name,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:3e88862bc'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:193484995'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell :
