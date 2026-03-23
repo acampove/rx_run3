@@ -284,6 +284,7 @@ def run(update : bool) -> None:
 
         out_path = root_path / 'prefit_postfit'
         if out_path.exists() and not update:
+            log.info(f'Skipping already found: {out_path}')
             continue
 
         out_path.mkdir(parents = True, exist_ok = True)
