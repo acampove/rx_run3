@@ -10,6 +10,7 @@ from dmu       import LogStore
 from pathlib   import Path
 from fitter    import FitSummary
 from fitter    import MVAConf
+from fitter    import plot_prefit_postfit
 
 app = typer.Typer(help=__doc__)
 log = LogStore.add_logger('rx_fitter:cli')
@@ -79,6 +80,14 @@ def wp_translator(
     '''
     val = MVAConf.str_to_wp(value = wp)
     print (val)
+# ----------------------
+@app.command()
+def fit_plots(
+    update : bool = typer.Option(False, '--update', '-u', help='Will remake all plots')) -> None:
+    '''
+    Makes prefit and postfit plots of fit parameters
+    '''
+    plot_prefit_postfit(update = update)
 # ----------------------
 if __name__ == '__main__':
     app()
