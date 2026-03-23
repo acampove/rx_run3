@@ -11,10 +11,10 @@ environment:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:v6.5 -f docker/env.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:v6.5
+    - buildah bud  -t $CI_REGISTRY_IMAGE:v2.2.1 -f docker/env.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:v2.2.1
   only:
-    - update_env 
+    - tags 
 analysis:
   stage: build-analysis
   image: registry.cern.ch/quay.io/buildah/stable
