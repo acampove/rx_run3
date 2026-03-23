@@ -23,10 +23,8 @@ else
 fi
 echo "-----------------"
 
-sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"           snakemake/rules/scan.smk 
-sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"           snakemake/rules/test_code.smk 
-sed -i -E "s|:[a-f0-9]{9}'|:$SHA'|"           snakemake/rules/test_reana.smk 
-sed -i -E "s|_IMAGE:[a-f0-9]{9}|_IMAGE:$SHA|" .gitlab-ci.yml
+sed -i -E "s|_IMAGE:[a-f0-9]{9}|_IMAGE:$SHA|"             .gitlab-ci.yml
+sed -i -E "s|cal-rx-run3:[a-f0-9]{9}'|cal-rx-run3:$SHA'|" snakemake/rules/*.smk 
 
-git add snakemake/rules/*.smk
-git add .gitlab-ci.yml
+git update-index snakemake/rules/*.smk
+git update-index .gitlab-ci.yml

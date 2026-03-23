@@ -23,7 +23,7 @@ rule fits:
         ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/ee/data/jpsi/brem_001/fit_linear.png',
         ANADIR + '/fits/data/' + NAME + '/' + '{wp}_b{block}/reso/rk/ee/data/jpsi/brem_002/fit_linear.png',
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:6d4387847'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:9c48b60bc'
     params:
         name = NAME
     resources:
