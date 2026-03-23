@@ -21,6 +21,7 @@ from .misid_constraints  import MisIDConstraints
 from .types              import CCbarWeight
 from .prec               import PRec
 from .prec_scales        import PrecScales
+from .prefit_postfit     import run as plot_prefit_postfit
 # ----------
 # Configs
 # ----------
@@ -34,6 +35,8 @@ from .configs  import ParametricConf
 from .configs  import RXFitConfig
 
 __all__ = [
+    'plot_prefit_postfit',
+    # ------------------
     'MVAConf',
     'MVAWp',
     'SignalConstraints',
