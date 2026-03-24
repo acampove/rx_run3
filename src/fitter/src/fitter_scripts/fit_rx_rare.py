@@ -39,7 +39,7 @@ def _set_logs() -> None:
     '''
     Silence loggers
     '''
-    LEVEL=10
+    LEVEL=30
 
     LogStore.set_level('rx_data:path_splitter'   , LEVEL)
     LogStore.set_level('rx_data:data_model'      , LEVEL)
