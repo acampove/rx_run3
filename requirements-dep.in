@@ -1,4 +1,7 @@
 ihep-utilities
+htcondor==24.12.18
+snakemake-executor-plugin-ihep
+snakemake
 pytest-cov
 asdf
 cffi
