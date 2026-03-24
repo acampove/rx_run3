@@ -1,6 +1,7 @@
 ihep-utilities
 htcondor==24.12.18
 snakemake-executor-plugin-ihep
+snakemake-executor-plugin-htcondor
 snakemake
 pytest-cov
 asdf
