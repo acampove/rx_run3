@@ -30,7 +30,10 @@ appdirs==1.4.4
 argcomplete==3.6.3
     # via cwltool
 argparse-dataclass==2.0.0
-    # via yte
+    # via
+    #   snakemake-interface-common
+    #   snakemake-interface-executor-plugins
+    #   yte
 asdf==5.1.0
     # via -r requirements-dep.in
 asdf-standard==1.4.0
@@ -123,7 +126,9 @@ colorlog==6.10.1
     #   optuna
     #   zfit
 configargparse==1.7.1
-    # via snakemake
+    # via
+    #   snakemake
+    #   snakemake-interface-common
 connection-pool==0.0.3
     # via snakemake
 contourpy==1.3.3
@@ -230,6 +235,11 @@ hist==2.9.0
     #   zfit
 histoprint==2.6.0
     # via hist
+htcondor==24.12.18
+    # via
+    #   -r requirements-dep.in
+    #   snakemake-executor-plugin-htcondor
+    #   snakemake-executor-plugin-ihep
 humanfriendly==10.0
     # via
     #   coloredlogs
@@ -471,6 +481,7 @@ packaging==25.0
     #   optuna
     #   pytest
     #   snakemake
+    #   snakemake-interface-common
     #   tensorboard
     #   tensorflow
     #   uproot
@@ -699,7 +710,22 @@ smart-open==7.5.0
 smmap==5.0.2
     # via gitdb
 snakemake==7.32.4
-    # via reana-commons
+    # via
+    #   -r requirements-dep.in
+    #   reana-commons
+snakemake-executor-plugin-htcondor==0.2.1
+    # via -r requirements-dep.in
+snakemake-executor-plugin-ihep==0.0.1
+    # via -r requirements-dep.in
+snakemake-interface-common==1.23.0
+    # via
+    #   snakemake-executor-plugin-htcondor
+    #   snakemake-executor-plugin-ihep
+    #   snakemake-interface-executor-plugins
+snakemake-interface-executor-plugins==9.4.0
+    # via
+    #   snakemake-executor-plugin-htcondor
+    #   snakemake-executor-plugin-ihep
 sortedcontainers==2.4.0
     # via distributed
 sqlalchemy==2.0.45
@@ -749,7 +775,9 @@ tf-keras==2.20.1
 threadpoolctl==3.6.0
     # via scikit-learn
 throttler==1.2.2
-    # via snakemake
+    # via
+    #   snakemake
+    #   snakemake-interface-executor-plugins
 toml==0.10.2
     # via -r requirements-dep.in
 toolz==1.1.0
