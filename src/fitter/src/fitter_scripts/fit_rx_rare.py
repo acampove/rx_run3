@@ -39,22 +39,24 @@ def _set_logs() -> None:
     '''
     Silence loggers
     '''
-    LogStore.set_level('rx_data:path_splitter'  , 30)
-    LogStore.set_level('rx_data:data_model'     , 30)
-    LogStore.set_level('rx_data:rdf_getter'     , 30)
-    LogStore.set_level('rx_data:spec_maker'     , 30)
-    LogStore.set_level('rx_data:sample_patcher' , 30)
-    LogStore.set_level('rx_data:sample_emulator', 30)
-    LogStore.set_level('rx_selection:selection' , 30)
+    LEVEL=10
 
-    LogStore.set_level('dmu:workflow:cache'     , 30)
-    LogStore.set_level('dmu:stats:utilities'    , 30)
-    LogStore.set_level('dmu:stats:model_factory', 30)
-    LogStore.set_level('dmu:stats:fitter'       , 30)
-    LogStore.set_level('dmu:stats:minimizers'   , 30)
+    LogStore.set_level('rx_data:path_splitter'   , LEVEL)
+    LogStore.set_level('rx_data:data_model'      , LEVEL)
+    LogStore.set_level('rx_data:rdf_getter'      , LEVEL)
+    LogStore.set_level('rx_data:spec_maker'      , LEVEL)
+    LogStore.set_level('rx_data:sample_patcher'  , LEVEL)
+    LogStore.set_level('rx_data:sample_emulator' , LEVEL)
+    LogStore.set_level('rx_selection:selection'  , LEVEL)
 
-    LogStore.set_level('fitter:data_preprocessor', 30)
-    LogStore.set_level('fitter:base_fitter'      , 30)
+    LogStore.set_level('dmu:workflow:cache'      , LEVEL)
+    LogStore.set_level('dmu:stats:utilities'     , LEVEL)
+    LogStore.set_level('dmu:stats:model_factory' , LEVEL)
+    LogStore.set_level('dmu:stats:fitter'        , LEVEL)
+    LogStore.set_level('dmu:stats:minimizers'    , LEVEL)
+
+    LogStore.set_level('fitter:data_preprocessor', LEVEL)
+    LogStore.set_level('fitter:base_fitter'      , LEVEL)
 # ----------------------
 def _get_client(cfg : RXFitConfig) -> Client | None:
     '''
