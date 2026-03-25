@@ -7,7 +7,9 @@ from typing      import Self
 from pydantic    import BaseModel, RootModel, Field, field_validator
 from dmu.generic import utilities as gut
 from importlib   import util      as iut
+from dmu         import LogStore
 
+log=LogStore.add_logger('rx_tests:test_config')
 # ---------------------------------------------------
 class PackageConf(BaseModel):
     '''
@@ -44,6 +46,8 @@ class PackageConf(BaseModel):
         test_path = fpath.parent.parent.parent / 'tests'
         if not test_path.exists():
             raise ValueError(f'Cannot find: {test_path}')
+
+        log.debug(f'Using tests path: {test_path}')
 
         return str(test_path)
 # ---------------------------------------------------
