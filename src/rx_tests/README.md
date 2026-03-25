@@ -17,6 +17,7 @@ rxtests test-all
 ```
 
 This will send the jobs as specified in `rx_tests_data/config.yaml`
+To run over only one project, use the `-p` argument.
 
 ## Visualize reports
 
