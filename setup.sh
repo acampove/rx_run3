@@ -11,7 +11,9 @@ ENVNAME=$1
 
 activate_env()
 {
+    set +euo pipefail
     source $HOME/.bashrc
+    set -euo pipefail
 
     conda activate $ENVNAME
 }
