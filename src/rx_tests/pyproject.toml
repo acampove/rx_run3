@@ -1,0 +1,16 @@
+[project]
+name            = "rx_tests"
+version         = "0.0.1"
+description     = "Project used to offer testing utilities" 
+readme          = "README.md"
+dependencies    = [
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.package-data]
+'rx_tests_data' = ['**/*.yaml']
+
+[tool.ruff]
+select = ["F", "PL", "B"]
