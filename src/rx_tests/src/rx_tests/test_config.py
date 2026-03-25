@@ -2,9 +2,11 @@
 Module holding classes needed
 to configure tests
 '''
+from pathlib     import Path
 from typing      import Self
-from pydantic    import BaseModel, RootModel, Field
+from pydantic    import BaseModel, RootModel, Field, field_validator
 from dmu.generic import utilities as gut
+from importlib   import util      as iut
 
 # ---------------------------------------------------
 class PackageConf(BaseModel):
