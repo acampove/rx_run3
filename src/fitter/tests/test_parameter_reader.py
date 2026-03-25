@@ -17,6 +17,7 @@ _BREMS = [Brem.one, Brem.two]
 def initialize() -> None:
     LogStore.set_level('fitter:parameter_reader', 10)
 # -----------------------
+@pytest.mark.skip(reason = 'Relies on input file')
 @pytest.mark.parametrize('kind' , ['dat', 'sim'])
 @pytest.mark.parametrize('brem' ,         _BREMS)
 @pytest.mark.parametrize('block', Block.blocks())
