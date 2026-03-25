@@ -47,8 +47,8 @@ rule fits:
         qsq   = '[a-z]+',
     params:
         group_name = group_name,
-        home       = HOME
-        env        = ENV
+        home       = HOME,
+        env        = ENV,
     shell :
         '''
         source setup.sh {params.env} {params.home} 
