@@ -45,7 +45,7 @@ class TestJobs:
         '''
         data : dict[str, list[str]] = dict()
         for test, cfg in self._cfg.items():
-            data[test] = [ self._cmd_from_cfg(cfg = cfg, group = group)  for group in range(cfg.splits) ]
+            data[test] = [ self._cmd_from_cfg(cfg = cfg, group = group)  for group in range(1, cfg.splits + 1) ]
 
         return data
 # --------------------
