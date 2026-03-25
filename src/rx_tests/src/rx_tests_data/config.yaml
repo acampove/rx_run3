@@ -1,8 +1,11 @@
 output  : tests
 projects:
-  aputilities:
+  ap_utilities:
     path   : ap_utilities
     splits : 1
   fitter:
     path   : fitter
     splits : 20
+  rx_data:
+    path   : rx_data 
+    splits : 40
