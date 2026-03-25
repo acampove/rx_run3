@@ -85,6 +85,27 @@ class TestConfig(BaseModel):
     output  : str
     projects: ProjectsConfig
     # --------------------------------
+    def filter(self, project : str) -> Self:
+        '''
+        Parameters
+        --------------
+        project: Name of project to keep, others are dropped
+
+        Returns
+        --------------
+        Config with single project
+        '''
+        if project not in self.projects:
+            for name, _ in self.projects:
+                log.error(name)
+            raise ValueError(f'Project {project} not found')
+
+        proj = self.projects[project]
+
+        new_projects = ProjectsConfig({project : proj})
+
+        return self.model_copy(update = {'projects' : new_projects})
+    # --------------------------------
     @classmethod
     def from_package(cls, file_path : str, package : str) -> Self:
         '''
