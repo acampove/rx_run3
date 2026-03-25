@@ -208,7 +208,7 @@ def _get_fit_config(q2bin : Qsq) -> RXFitConfig:
     )
 # --------------------------------------------------------------
 @pytest.mark.skip(reason = 'Includes misID, too slow')
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
 @pytest.mark.parametrize('kind' , _CONSTRAINTS)
 def test_all_but_cmb(
     tmp_path : Path, 
@@ -239,8 +239,11 @@ def test_all_but_cmb(
         log.info('Running full test')
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(nll=nll, cfg=cfg)
-        constraints = obj.get_constraints()
+        obj        = ConstraintReader(
+            signal = Component.bpkpee,
+            nll    = nll, 
+            cfg    = cfg)
+        constraints= obj.get_constraints()
 
     print_constraints(constraints = constraints)
 
@@ -250,7 +253,7 @@ def test_all_but_cmb(
 
     assert len(constraints) > 0 
 # --------------------------------------------------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
 def test_only_cmb(
     tmp_path : Path, 
     q2bin    : Qsq):
@@ -265,19 +268,23 @@ def test_only_cmb(
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = _get_fit_config(q2bin = q2bin)
     nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
-    del cfg.mod_cfg.components[Component.bpkkk  ]
-    del cfg.mod_cfg.components[Component.bpkpipi]
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(nll=nll, cfg=cfg)
-        constraints = obj.get_constraints()
+        obj         = ConstraintReader(
+            signal  = Component.bpkpee,
+            nll     = nll, cfg=cfg)
+        constraints = obj.get_constraints(
+            skip_misid  = True,
+            skip_signal = True,
+            skip_prec   = True,
+        )
 
     print_constraints(constraints = constraints)
 
     assert len(constraints) > 0 
 # --------------------------------------------------------------
 @pytest.mark.skip(reason = 'Includes misID, too slow')
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
 def test_only_misid(
     tmp_path : Path, 
     q2bin    : Qsq):
@@ -296,12 +303,19 @@ def test_only_misid(
     del cfg.mod_cfg.components[Component.comb]
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(nll=nll, cfg=cfg)
-        constraints = obj.get_constraints()
+        obj         = ConstraintReader(
+            signal  = Component.bpkpee,
+            nll     = nll, cfg=cfg)
+        constraints = obj.get_constraints(
+            skip_comb   = True,
+            skip_signal = True,
+            skip_prec   = True,
+    )
+
 
     print_constraints(constraints = constraints)
 # --------------------------------------------------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
 def test_only_prec(
     tmp_path : Path, 
     q2bin    : Qsq):
@@ -321,8 +335,14 @@ def test_only_prec(
     del cfg.mod_cfg.components[Component.comb]
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(nll=nll, cfg=cfg)
-        constraints = obj.get_constraints()
+        obj         = ConstraintReader(
+            signal  = Component.bpkpee,
+            nll     = nll, cfg=cfg)
+        constraints = obj.get_constraints(
+            skip_comb   = True,
+            skip_signal = True,
+            skip_misid  = True,
+    )
 
     log.error('-------------------------------')
     print_constraints(constraints = constraints)
@@ -330,7 +350,7 @@ def test_only_prec(
 
     assert len(constraints) > 0 
 # --------------------------------------------------------------
-@pytest.mark.parametrize('q2bin', ['low', 'central', 'high'])
+@pytest.mark.parametrize('q2bin', [Qsq.low, Qsq.central, Qsq.high])
 def test_save(
     tmp_path : Path, 
     q2bin    : Qsq):
@@ -345,11 +365,11 @@ def test_save(
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = _get_fit_config(q2bin = q2bin)
     nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
-    del cfg.mod_cfg.components[Component.bpkkk  ]
-    del cfg.mod_cfg.components[Component.bpkpipi]
 
     with Cache.cache_root(path = tmp_path):
-        obj         = ConstraintReader(nll=nll, cfg=cfg)
+        obj         = ConstraintReader(
+            signal  = Component.bpkpee,
+            nll     = nll, cfg=cfg)
         constraints = obj.get_constraints(save_to = tmp_path / 'constraints.yaml')
 
     print_constraints(constraints = constraints)
