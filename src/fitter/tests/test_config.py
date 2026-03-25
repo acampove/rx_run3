@@ -99,17 +99,19 @@ def test_nonparametric_rare_rkst(component : Component):
 # ----------------------
 @pytest.mark.parametrize('component', [Component.bpkpee, Component.bpkpmm])
 def test_parametric_rk(component : Component):
-    data = gut.load_data(
+    suffix = '.j2'if component == Component.bpkpee else ''
+    data   = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rk/{component.channel}/{component}.yaml.j2')
+        fpath   = f'rare/rk/{component.channel}/{component}.yaml{suffix}')
 
     ParametricConf(**data)
 # ----------------------
 @pytest.mark.parametrize('component', [Component.bdkstkpiee, Component.bdkstkpimm])
 def test_parametric_rkst(component : Component):
+    suffix = '.j2'if component == Component.bdkstkpiee else ''
     data = gut.load_data(
         package = 'fitter_data', 
-        fpath   = f'rare/rkst/{component.channel}/{component}.yaml.j2')
+        fpath   = f'rare/rkst/{component.channel}/{component}.yaml{suffix}')
 
     ParametricConf(**data)
 # ----------------------
