@@ -268,14 +268,16 @@ def test_only_cmb(
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = _get_fit_config(q2bin = q2bin)
     nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
-    del cfg.mod_cfg.components[Component.bpkkk  ]
-    del cfg.mod_cfg.components[Component.bpkpipi]
 
     with Cache.cache_root(path = tmp_path):
         obj         = ConstraintReader(
             signal  = Component.bpkpee,
             nll     = nll, cfg=cfg)
-        constraints = obj.get_constraints()
+        constraints = obj.get_constraints(
+            skip_misid  = True,
+            skip_signal = True,
+            skip_prec   = True,
+        )
 
     print_constraints(constraints = constraints)
 
@@ -304,7 +306,12 @@ def test_only_misid(
         obj         = ConstraintReader(
             signal  = Component.bpkpee,
             nll     = nll, cfg=cfg)
-        constraints = obj.get_constraints()
+        constraints = obj.get_constraints(
+            skip_comb   = True,
+            skip_signal = True,
+            skip_prec   = True,
+    )
+
 
     print_constraints(constraints = constraints)
 # --------------------------------------------------------------
@@ -331,7 +338,11 @@ def test_only_prec(
         obj         = ConstraintReader(
             signal  = Component.bpkpee,
             nll     = nll, cfg=cfg)
-        constraints = obj.get_constraints()
+        constraints = obj.get_constraints(
+            skip_comb   = True,
+            skip_signal = True,
+            skip_misid  = True,
+    )
 
     log.error('-------------------------------')
     print_constraints(constraints = constraints)
@@ -354,8 +365,6 @@ def test_save(
     obs = zfit.Space('B_Mass_smr', limits=(4500, 7000))
     cfg = _get_fit_config(q2bin = q2bin)
     nll = _get_nll(obs=obs, cfg=cfg, q2bin = q2bin) 
-    del cfg.mod_cfg.components[Component.bpkkk  ]
-    del cfg.mod_cfg.components[Component.bpkpipi]
 
     with Cache.cache_root(path = tmp_path):
         obj         = ConstraintReader(
