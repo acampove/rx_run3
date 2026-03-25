@@ -35,13 +35,18 @@ def show_report(
     subprocess.run([browser, str(report)], check=True)
 # ----------------------
 @app.command()
-def test_all(dry_run : bool = typer.Option(False, '--dry_run', '-d')) -> None:
+def test_all(
+    project : str | None = typer.Option(None, '--project', '-p'),
+    dry_run : bool       = typer.Option(False, '--dry_run', '-d')) -> None:
     '''
     Runs all tests as configured in rx_tests_data/config.yaml
     '''
     cfg = TestConfig.from_package(
         file_path = 'config.yaml',
         package   = 'rx_tests_data')
+
+    if project:
+        cfg = cfg.filter(project = project)
     
     tjb = TestJobs(cfg = cfg)
     jobs= tjb.get_jobs()
