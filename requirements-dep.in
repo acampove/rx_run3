@@ -1,3 +1,5 @@
+junit2html
+junitparser
 ihep-utilities>=0.0.3
 htcondor==24.12.18
 snakemake-executor-plugin-ihep

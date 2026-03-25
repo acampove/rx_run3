@@ -269,6 +269,7 @@ jinja2==3.1.6
     #   -r requirements-dep.in
     #   bokeh
     #   distributed
+    #   junit2html
     #   snakemake
 jmespath==1.0.1
     # via asdf
@@ -306,6 +307,10 @@ jsonschema==3.2.0
     #   swagger-spec-validator
     #   yadage
     #   yadage-schemas
+junit2html==31.0.5
+    # via -r requirements-dep.in
+junitparser==4.0.2
+    # via -r requirements-dep.in
 jupyter-core==5.9.1
     # via nbformat
 keras==3.13.0
