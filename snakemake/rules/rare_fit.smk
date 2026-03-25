@@ -6,7 +6,9 @@ qsq_bin  = config['qsq_bin']
 project  = config['project']
 channel  = config['channel']
 # -------------
-ANADIR    = os.environ['ANADIR']
+ENV       = 'rx_run3'
+HOME      = '/afs/ihep.ac.cn/users/c/campoverde'
+ANADIR    = '/publicfs/ucas/user/campoverde/Data'
 out_path  = f'{ANADIR}/fits/data'
 group_name= 'rare'
 mode      = 'rare'
@@ -45,13 +47,11 @@ rule fits:
         qsq   = '[a-z]+',
     params:
         group_name = group_name,
-    container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:a74bcb13d'
-    resources:
-        kubernetes_memory_limit='5000Mi'
+        home       = HOME
+        env        = ENV
     shell :
         '''
-        source setup.sh rx_run3
+        source setup.sh {params.env} {params.home} 
 
         CMB_WP=$(rxfitter wp-translator -w {wildcards.cmb})
         PRC_WP=$(rxfitter wp-translator -w {wildcards.prc})
