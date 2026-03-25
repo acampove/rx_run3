@@ -73,8 +73,9 @@ def test_all_datasets(
     signal   = Component.bpkpee
     with Cache.cache_root(path = tmp_path):
         obj    = PrecScales(
-            comp  = component, 
-            q2bin = q2bin)
+            output_directory= tmp_path,
+            comp            = component, 
+            q2bin           = q2bin)
 
         scales = obj.get_scale(signal=signal)
 
@@ -101,8 +102,9 @@ def test_seq_scan_scales(
     with sel.custom_selection(d_sel={'bdt' : mva_cut}),\
          Cache.cache_root(path = tmp_path):
         obj    = PrecScales(
-            comp  = component, 
-            q2bin = q2bin)
+            output_directory= tmp_path,
+            comp            = component, 
+            q2bin           = q2bin)
         scales = obj.get_scale(signal=signal)
 
     _validate_scales(scales = scales)
