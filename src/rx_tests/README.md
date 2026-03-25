@@ -26,3 +26,4 @@ For this run
 rxtests show-report -p /path/to/directory/with/*.xml
 ```
 
+which will show the reports in firefox, by default.
