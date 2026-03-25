@@ -1,4 +1,4 @@
-ihep-utilities
+ihep-utilities>=0.0.3
 htcondor==24.12.18
 snakemake-executor-plugin-ihep
 snakemake-executor-plugin-htcondor
