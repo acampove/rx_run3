@@ -7,6 +7,18 @@
 
 set -euo pipefail
 
+ENVNAME=$1
+export HOME=$2
+
+activate_env()
+{
+    set +euo pipefail
+    source $HOME/.bashrc
+    set -euo pipefail
+
+    conda activate $ENVNAME
+}
+
 check_env()
 {
     FAIL=0
@@ -29,6 +41,7 @@ check_env()
 
 export ZFIT_DISABLE_TF_WARNINGS=1
 export MPLCONFIGDIR=/tmp/rx/mplt
-export USER=rx_run3
+export USER=$ENVNAME
 
+activate_env
 check_env

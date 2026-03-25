@@ -596,7 +596,11 @@ class RDFGetter(SpecMaker):
         aligned = all( numpy.array_equal(array, arrays[0]) for array in arrays)
 
         if not aligned:
-            rdf.Display(f'.*{index}.*').Print()
+            for name, values in data.items():
+                log.info('----------')
+                log.info(name)
+                log.info('----------')
+                log.info(values[:10])
             raise ValueError(f'{index} columns are not aligned')
 
         log.info(f'Checked {index}')
