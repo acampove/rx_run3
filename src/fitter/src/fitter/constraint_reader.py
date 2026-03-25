@@ -50,11 +50,13 @@ class ConstraintReader:
 
         self._constraints : list[Constraint] = []
     # ----------------------
-    def _add_prec_constraints(self) -> None:
+    def _add_prec_constraints(self, skip : bool) -> None:
         '''
         Appends constraints to _constraints list for parameters in parameter holder
         whose names start with `pscale`
         '''
+        if skip:
+            return
 
         scales : dict[str,Component] = { comp.scale : comp for comp in self._cfg.mod_cfg.constraints.pre_rare}
         for par in self._l_par:
@@ -77,10 +79,13 @@ class ConstraintReader:
 
             self._constraints.append(cns)
     # ----------------------
-    def _add_misid_constraints(self) -> None:
+    def _add_misid_constraints(self, skip : bool) -> None:
         '''
         Adds constraints for fully hadronic MisID components
         '''
+        if skip:
+            return
+
         components= self._cfg.mod_cfg.components
         all_found = all(component in components for component in _MISID_COMPONENTS)
         any_found = any(component in components for component in _MISID_COMPONENTS)
@@ -104,10 +109,13 @@ class ConstraintReader:
 
         self._constraints += mrd.get_constraints()
     # ----------------------
-    def _add_combinatorial_constraints(self) -> None:
+    def _add_combinatorial_constraints(self, skip : bool) -> None:
         '''
         Adds combinatorial constraints
         '''
+        if skip:
+            return
+
         components= self._cfg.mod_cfg.components
         if Component.comb not in components:
             log.warning(f'Combinatorial {Component.comb} component not found, not calculating constraints')
@@ -129,10 +137,13 @@ class ConstraintReader:
 
         self._constraints.append( calc.get_constraint() )
     # ----------------------
-    def _add_signal_constraints(self) -> None:
+    def _add_signal_constraints(self, skip : bool) -> None:
         '''
         Update _constraints with constraints to the mass scale, resolution
         '''
+        if skip:
+            return
+
         calc = SignalConstraints(
             comp= self._signal,
             nll = self._nll)
@@ -167,10 +178,17 @@ class ConstraintReader:
         yaml_string = yaml.dump(data)
         path.write_text(yaml_string)
     # ----------------------
-    def get_constraints(self, save_to : Path | None = None) -> list[Constraint]:
+    def get_constraints(
+        self, 
+        skip_misid : bool        = False,
+        skip_prec  : bool        = False,
+        skip_comb  : bool        = False,
+        skip_signal: bool        = False,
+        save_to    : Path | None = None) -> list[Constraint]:
         '''
         Parameters
         ---------------
+        skip_xx: By default false, if true, will skip constraints, meant for tests
         save_to: Path to yaml file where constraints are save, default None
 
         Returns dictionary with constraints, i.e.
@@ -178,10 +196,10 @@ class ConstraintReader:
         Key  : Name of fitting parameter
         Value: Tuple with mu and error
         '''
-        self._add_misid_constraints()
-        self._add_prec_constraints()
-        self._add_combinatorial_constraints()
-        self._add_signal_constraints()
+        self._add_misid_constraints(skip = skip_misid)
+        self._add_prec_constraints(skip = skip_prec)
+        self._add_combinatorial_constraints(skip = skip_comb)
+        self._add_signal_constraints(skip = skip_signal)
 
         if save_to is None:
             return self._constraints

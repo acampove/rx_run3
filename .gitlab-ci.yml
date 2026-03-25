@@ -22,7 +22,7 @@ analysis:
     - sed -i 's/^driver = .*/driver = "vfs"/' /etc/containers/storage.conf
     - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - buildah bud  -t $CI_REGISTRY_IMAGE:5e46cac2d -f docker/ana.Dockerfile
-    - buildah push    $CI_REGISTRY_IMAGE:5e46cac2d
+    - buildah bud  -t $CI_REGISTRY_IMAGE:7cf2ac499 -f docker/ana.Dockerfile
+    - buildah push    $CI_REGISTRY_IMAGE:7cf2ac499
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'

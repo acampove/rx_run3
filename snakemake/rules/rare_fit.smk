@@ -46,7 +46,7 @@ rule fits:
     params:
         group_name = group_name,
     container:
-        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:5e46cac2d'
+        'gitlab-registry.cern.ch/lhcb-rd/cal-rx-run3:7cf2ac499'
     resources:
         kubernetes_memory_limit='5000Mi'
     shell :
