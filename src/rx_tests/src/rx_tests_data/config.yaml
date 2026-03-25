@@ -1,6 +1,8 @@
-aputilities:
-  path   : ap_utilities
-  splits : 1
-fitter:
-  path   : fitter
-  splits : 20
+output  : tests
+projects:
+  aputilities:
+    path   : ap_utilities
+    splits : 1
+  fitter:
+    path   : fitter
+    splits : 20

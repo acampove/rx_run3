@@ -51,7 +51,7 @@ class PackageConf(BaseModel):
 
         return str(test_path)
 # ---------------------------------------------------
-class TestConfig(RootModel[dict[str,PackageConf]]):
+class ProjectsConfig(RootModel[dict[str,PackageConf]]):
     '''
     Class meant to represent testing configurations
     '''
@@ -76,6 +76,14 @@ class TestConfig(RootModel[dict[str,PackageConf]]):
 
     def values(self):
         return self.root.values()
+# ---------------------------------------------------
+class TestConfig(BaseModel):
+    '''
+    Pydantic model meant to model configuration
+    for tests
+    '''
+    output  : str
+    projects: ProjectsConfig
     # --------------------------------
     @classmethod
     def from_package(cls, file_path : str, package : str) -> Self:
