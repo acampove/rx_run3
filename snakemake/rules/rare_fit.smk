@@ -51,7 +51,8 @@ rule fits:
         kubernetes_memory_limit='5000Mi'
     shell :
         '''
-        source setup.sh
+        source setup.sh rx_run3
+
         CMB_WP=$(rxfitter wp-translator -w {wildcards.cmb})
         PRC_WP=$(rxfitter wp-translator -w {wildcards.prc})
         fit_rx_rare \
