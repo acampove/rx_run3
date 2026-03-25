@@ -12,5 +12,8 @@ dev = ["pytest"]
 [tool.setuptools.package-data]
 'rx_tests_data' = ['**/*.yaml']
 
+[project.scripts]
+rxtests = "rx_tests.cli:app"
+
 [tool.ruff]
 select = ["F", "PL", "B"]
