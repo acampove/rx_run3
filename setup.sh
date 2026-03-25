@@ -8,6 +8,7 @@
 set -euo pipefail
 
 ENVNAME=$1
+export HOME=$2
 
 activate_env()
 {
