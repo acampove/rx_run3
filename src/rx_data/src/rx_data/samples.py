@@ -53,11 +53,18 @@ class SamplesPrinter:
         if not paths:
             raise ValueError(f'No ROOT files found in: {vers_path}')
 
-        s_sample_trigger    = { dut.info_from_path(path, sample_lowercase=False) for path in paths }
-        s_component_trigger = { (Component.from_sample(sample), trigger) 
-            for sample, trigger in s_sample_trigger }
+        s_sample_trigger = { dut.info_from_path(path, sample_lowercase=False) for path in paths }
 
-        nsamples            = len(s_component_trigger)
+        s_component_trigger : set[tuple[Component,Trigger]] = set()
+        for sample, trigger in s_sample_trigger:
+            if not Component.has_component(sample = sample):
+                log.warning(f'Did not find component for {sample}, skipping')
+                continue
+
+            elm = Component.from_sample(sample = sample), trigger
+            s_component_trigger.add(elm)
+
+        nsamples = len(s_component_trigger)
 
         log.info(f'Found {nsamples} samples')
 

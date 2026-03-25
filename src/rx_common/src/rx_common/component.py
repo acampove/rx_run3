@@ -127,6 +127,20 @@ class Component(StrEnum):
 
         raise ValueError(f'Cannot find component for: {sample}')
     # --------------------------------------------
+    @classmethod
+    def has_component(cls, sample :  str) -> bool:
+        '''
+        Parameters
+        ----------------
+        sample: String representing MC sample
+
+        Returns
+        ----------------
+        True if this sample is associated to fitting component
+        '''
+
+        return sample in _get_samples()
+    # --------------------------------------------
     @property
     def has_sample(self) -> bool:
         '''
