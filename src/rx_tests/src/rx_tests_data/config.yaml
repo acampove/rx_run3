@@ -1,3 +1,6 @@
 aputilities:
   path   : src/ap/utilities
   splits : 1
+fitter:
+  path   : src/fitter/tests
+  splits : 20

@@ -13,7 +13,7 @@ class PackageConf(BaseModel):
     for single project
     '''
     path   : str
-    splits : int = Field(gt = 0, lt = 20)
+    splits : int = Field(gt = 0, lt = 50)
 # ---------------------------------------------------
 class TestConfig(RootModel[dict[str,PackageConf]]):
     '''
