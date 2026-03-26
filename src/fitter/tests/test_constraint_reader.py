@@ -369,7 +369,8 @@ def test_save(
     with Cache.cache_root(path = tmp_path):
         obj         = ConstraintReader(
             signal  = Component.bpkpee,
-            nll     = nll, cfg=cfg)
+            nll     = nll,
+            cfg     = cfg)
         constraints = obj.get_constraints(save_to = tmp_path / 'constraints.yaml')
 
     print_constraints(constraints = constraints)
