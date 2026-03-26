@@ -82,7 +82,7 @@ def test_nocat(tmp_path : Path):
     Test for components without categories, e.g. muon
     '''
     obs   = zfit.Space('B_Mass_smr', limits=(5000, 5800))
-    data  = gut.load_data(package='fitter_data', fpath='rare/rk/mm/bpkpmm.yaml.j2')
+    data  = gut.load_data(package='fitter_data', fpath='rare/rk/mm/bpkpmm.yaml')
     cfg   = ParametricConf(**data)
 
     with Cache.cache_root(path = tmp_path),\
