@@ -84,9 +84,13 @@ class ScaleReader:
             log.error(df)
             raise ValueError(f'Not found one and only one row for block/brem: {block}/{brem}')
 
-        sr  = df.iloc[0]
-        val = sr[f'{corr}_val']
-        err = sr[f'{corr}_err']
+        try:
+            sr  = df.iloc[0]
+            val = sr[f'{corr}_val']
+            err = sr[f'{corr}_err']
+        except Exception as exc:
+            log.error(df)
+            raise ValueError('Cannot read scale from dataframe') from exc
 
         return val, err 
 # -------------------------------------
