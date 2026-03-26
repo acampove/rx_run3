@@ -15,6 +15,7 @@ from fitter         import RXFitConfig
 from zfit.loss      import ExtendedUnbinnedNLL
 from zfit.param     import Parameter           as zpar
 from zfit           import Space               as zobs
+from zfit.pdf       import BasePDF             as zpdf 
 from fitter         import ConstraintReader
 from fitter         import CombinatorialConf, FitModelConf
 from fitter         import MVAWp
@@ -46,6 +47,22 @@ def initialize():
 
     with UnpackerModel.package(name = 'fitter_data'):
         yield
+# ----------------------
+def _get_signal(
+    obs   : zobs,
+    brem  : int, 
+    block : int) -> zpdf:
+    mu_name = f'mu_bpkpee_brem_xx{brem}_b{block}_scale_flt'
+    sg_name = f'sg_bpkpee_brem_xx{brem}_b{block}_reso_flt'
+
+    mu   = zfit.Parameter(mu_name, 5200, 4500, 6000)
+    sg   = zfit.Parameter(sg_name,  150,   10, 200)
+    pdf  = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+    nev  = zfit.param.Parameter(f'nsig_{brem}_{block}', 1000, 0, 1000_000)
+
+    sig  = pdf.create_extended(nev)
+
+    return sig
 # ----------------------
 class Parameters:
     '''
@@ -163,9 +180,10 @@ def _get_nll(
 
     pdf_names = cfg_cmb.models[q2bin].pdfs
 
-    mu   = zfit.Parameter('mu', 5200, 4500, 6000)
-    sg   = zfit.Parameter('sg',  150,   10, 200)
-    gaus = zfit.pdf.Gauss(obs=obs, mu=mu, sigma=sg)
+    sig_11 = _get_signal(obs = obs, brem = 1, block = 1)
+    sig_21 = _get_signal(obs = obs, brem = 2, block = 1)
+    sig_12 = _get_signal(obs = obs, brem = 1, block = 2)
+    sig_22 = _get_signal(obs = obs, brem = 2, block = 2)
 
     fct  = ModelFactory(
         obs     = obs,
@@ -176,11 +194,9 @@ def _get_nll(
     expo = fct.get_pdf()
 
     nexpo = zfit.param.Parameter('nbkg', 1000, 0, 1000_000)
-    ngaus = zfit.param.Parameter('nsig', 1000, 0, 1000_000)
 
     bkg   = expo.create_extended(nexpo)
-    sig   = gaus.create_extended(ngaus)
-    pdf   = zfit.pdf.SumPDF([bkg, sig])
+    pdf   = zfit.pdf.SumPDF([bkg, sig_11, sig_21, sig_22, sig_12])
     dat   = pdf.create_sampler()
 
     return zfit.loss.ExtendedUnbinnedNLL(model=pdf, data=dat)
