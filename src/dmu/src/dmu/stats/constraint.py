@@ -6,6 +6,7 @@ import yaml
 import json
 import math
 import numpy
+import pprint
 
 from pathlib         import Path
 from typing          import Literal, Self, Sequence
@@ -451,6 +452,7 @@ def build_constraint(data: dict) -> Constraint:
     try:
         return adapter.validate_python(data)
     except Exception as exc:
+        pprint.pprint(data)
         raise ValueError('Cannot build constrain from input') from exc
 # ----------------------------------------
 def print_constraints(constraints : Sequence[Constraint]) -> None:
