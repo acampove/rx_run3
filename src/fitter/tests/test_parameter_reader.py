@@ -42,6 +42,7 @@ def test_simple(
 
     print(ms_sim)
 # -----------------------
+@pytest.mark.skip(reason = 'Relies on input file')
 @pytest.mark.parametrize('brem' , _BREMS)
 @pytest.mark.parametrize('block', Block.blocks())
 def test_pars_path(block : Block, brem : Brem):
