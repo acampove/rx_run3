@@ -147,6 +147,7 @@ class FitSummary:
         -------------
         Dictionary mapping quantity and value, error or name for e.g. channel.
         '''
+        log.debug(f'Using data from: {path}')
         unformatted = gut.load_json(path=path)
         data : dict[str,float] = dict()
 
@@ -183,29 +184,6 @@ class FitSummary:
             raise Exception(f'Cannot build dataframe from {json_path}') from exc
 
         return len(df)
-    # ----------------------
-    def get_df(self, force_update : bool = False) -> pnd.DataFrame:
-        '''
-        Parameters
-        ---------------
-        force_update: If true (default false) will regenerate file, otherwise will reuse file if found 
-        '''
-        output_path  = self._fit_dir / 'parameters.parquet'
-        if output_path.exists() and not force_update:
-            log.info(f'Reading cached files at: {output_path}')
-            return pnd.read_parquet(output_path)
-
-        df_dat = self._get_df(kind = 'dat')
-        df_sim = self._get_df(kind = 'sim')
-        df_sim = self._rename_fractions(dat = df_dat, sim = df_sim)
-
-        df     = pnd.concat([df_dat, df_sim], axis=0)
-        df     = df.reset_index(drop=True)
-        df     = df.astype(dtype = {'block' : int})
-
-        self._save_df(df=df, path = output_path)
-
-        return df
     # ----------------------
     def _get_df(self, kind : str) -> pnd.DataFrame:
         '''
@@ -327,4 +305,27 @@ class FitSummary:
         df.to_markdown(buf = path)
 
         log.info(f'Saving summary to: {path}')
+    # ----------------------
+    def get_df(self, force_update : bool = False) -> pnd.DataFrame:
+        '''
+        Parameters
+        ---------------
+        force_update: If true (default false) will regenerate file, otherwise will reuse file if found 
+        '''
+        output_path  = self._fit_dir / 'parameters.parquet'
+        if output_path.exists() and not force_update:
+            log.info(f'Reading cached files at: {output_path}')
+            return pnd.read_parquet(output_path)
+
+        df_dat = self._get_df(kind = 'dat')
+        df_sim = self._get_df(kind = 'sim')
+        df_sim = self._rename_fractions(dat = df_dat, sim = df_sim)
+
+        df     = pnd.concat([df_dat, df_sim], axis=0)
+        df     = df.reset_index(drop=True)
+        df     = df.astype(dtype = {'block' : int})
+
+        self._save_df(df=df, path = output_path)
+
+        return df
 # -------------------------------
