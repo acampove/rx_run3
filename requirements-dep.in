@@ -4,7 +4,7 @@ ihep-utilities>=0.0.3
 htcondor==24.12.18
 snakemake-executor-plugin-ihep
 snakemake-executor-plugin-htcondor
-snakemake
+snakemake>9
 pytest-cov
 asdf
 cffi
@@ -46,7 +46,6 @@ pytest
 pytest-xdist
 python-slugify
 pyYAML
-reana-client==0.9.4
 root
 scikit-learn
 scipy
