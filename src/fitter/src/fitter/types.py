@@ -32,37 +32,25 @@ class SimFit(StrEnum):
     # ---------------------
     bp_km = auto()
     '''Fit to K(as m)m mass in Kmm final state'''
-
-    bd_km = auto()
-    '''Fit to Km mass from Bd -> Kpimm where K <-> m misID happened'''
-
-    bd_pim= auto()
-    '''Fit to pim mass from Bd -> Kpimm where pi <-> m misID happened'''
     # ---------------------
     # Basic signal fits
     # ---------------------
     bp_ee = auto()
     '''Represents fit to B+ -> K+ ee, not simultaneous'''
 
-    bd_ee = auto()
-    '''Represents fit to Bd -> K* ee, not simultaneous'''
-
     bp_mm = auto()
     '''Represents fit to B+ -> K+ mumu, not simultaneous'''
 
     bd_mm = auto()
-    '''Represents fit to Bd -> K* mumu, not simultaneous'''
+    '''Represents fit to B0 -> K* mumu, not simultaneous'''
+
+    bd_ee = auto()
+    '''Represents fit to B0 -> K* ee, not simultaneous'''
     # ---------------------
     # Composite muon fits
     # ---------------------
     bp_mm_km = auto()
     '''Simultaneous fit between B+ -> Kmm and the Km control region'''
-
-    bd_mm_km = auto()
-    '''Simultaneous fit between B+ -> Kmm and the Km control region'''
-
-    bd_mm_pim = auto()
-    '''Simultaneous fit between B+ -> Kmm and the pim control region'''
     # ---------------------
     # Composite r fits
     # ---------------------
@@ -80,12 +68,6 @@ class SimFit(StrEnum):
     rkst = auto()
     '''
     Simultaneous between rare electron and muon for rkst
-    '''
-
-    rkst_high = auto()
-    '''
-    Simultaneous between rare electron and muon for rkst
-    for high-q2 bin
     '''
 
     rx = auto()
@@ -112,8 +94,6 @@ class SimFit(StrEnum):
         rk_mm   = Region(brem = Brem.zero , trigger = Trigger.rk_mm_os)
 
         rk_km   = Region(brem = Brem.zero , trigger = Trigger.rk_mm_os  , misid = MisID.kmm_mkm)
-        rkst_km = Region(brem = Brem.zero , trigger = Trigger.rkst_mm_os, misid = MisID.kpimm_kmmpi)
-        rkst_pim= Region(brem = Brem.zero , trigger = Trigger.rkst_mm_os, misid = MisID.kpimm_mpikm)
 
         match self:
             # ------------------------------
@@ -125,10 +105,6 @@ class SimFit(StrEnum):
                 return [rk_mm, rk_km]
             case SimFit.bd_mm:
                 return [rkst_mm]
-            case SimFit.bd_mm_km:
-                return [rkst_mm, rkst_km]
-            case SimFit.bd_mm_pim:
-                return [rkst_mm, rkst_pim]
             # ------------------------------
             # Signal electron
             # ------------------------------
@@ -145,21 +121,15 @@ class SimFit(StrEnum):
                 return [rk_ee, rk_mm, rk_km]
             case SimFit.rkst:
                 return [rkst_ee, rkst_mm]
-            case SimFit.rkst_high:
-                return [rkst_ee, rkst_mm, rkst_km]
             case SimFit.rx:
                 return [rkst_ee, rkst_mm, rk_ee, rk_mm]
             case SimFit.rx_high:
-                return [rkst_ee, rkst_mm, rkst_km, rk_ee, rk_mm, rk_km]
+                return [rkst_ee, rkst_mm, rk_ee, rk_mm, rk_km]
             # ------------------------------
             # Control regions
             # ------------------------------
             case SimFit.bp_km:
                 return [rk_km]
-            case SimFit.bd_pim:
-                return [rkst_km]
-            case SimFit.bd_km:
-                return [rkst_pim]
 # ------------------------------
 class Systematic(StrEnum):
     '''
