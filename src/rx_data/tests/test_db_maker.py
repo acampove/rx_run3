@@ -29,6 +29,7 @@ class TestRDFGetter:
         _   = per_file
 
         rdf = RDataFrame(10_000)
+        rdf = rdf.Define('EVENTNUMBER', '1')
         rdf = rdf.Define('mva_cmb', 'gRandom->Uniform(0,   1)')
         rdf = rdf.Define('mva_prc', 'gRandom->Uniform(0,   1)')
         rdf = rdf.Define('mass'   , 'gRandom->Uniform(0, 100)')
@@ -39,8 +40,8 @@ def selector(
     q2bin   : Any,
     trigger : Any,
     process : Any,
-    out_path: Path,
-    rdf     : RDF.RNode):
+    out_path: Path | int,
+    rdf     : RDF.RNode) -> RDF.RNode:
 
     _ = q2bin
     _ = trigger
@@ -58,6 +59,13 @@ def selector(
 
     for name, cut in cuts.items():
         rdf = rdf.Filter(cut, name)
+
+    setattr(rdf, 'sel', cuts) # noqa: B010
+    if out_path == 0:
+        return rdf
+
+    if not isinstance(out_path, Path):
+        raise ValueError(f'Output path not a path: {out_path}')
 
     rep = rdf.Report()
     df  = rut.rdf_report_to_df(rep=rep)
@@ -113,8 +121,8 @@ def test_read_db(
     mkr.run(mode = Mode.write)
 
     rdf = mkr.run(mode = Mode.read)
-    assert hasattr(rdf, 'd_sel')
-    assert hasattr(rdf,   'uid')
+    assert hasattr(rdf, 'sel')
+    assert hasattr(rdf, 'uid')
 
     assert isinstance(rdf.uid, str)
 # -------------------------------------
