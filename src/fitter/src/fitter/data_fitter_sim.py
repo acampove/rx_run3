@@ -152,6 +152,9 @@ class DataFitterSim(BaseFitter):
         log.info(30 * '-')
         for free_par in all_free:
             log.info(free_par)
+
+        ncons = len(all_const)
+        log.info(f'Found {ncons} constrained parameters')
     # ----------------------
     @overload
     def run(self, skip_fit: Literal[True]) -> None: ...
