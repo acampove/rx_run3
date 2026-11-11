@@ -1,3 +1,6 @@
+project:
+  - rk
+  - rkst
 qsq_bin:
   - low
   - central
