@@ -16,7 +16,9 @@ from rx_data      import db_maker
 from dmu.rdataframe import utilities as rut
 from dmu.generic    import utilities as gut
 from dmu.generic    import Mode
+from dmu            import LogStore
 
+log=LogStore.add_logger('rx_data:test_dbmaker')
 # -------------------------
 class TestRDFGetter:
     '''
