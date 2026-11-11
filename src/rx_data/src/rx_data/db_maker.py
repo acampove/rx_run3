@@ -23,8 +23,10 @@ from rx_selection import selection as sel
 
 log=LogStore.add_logger('rx_data:db_maker')
 
-_TREE_NAME : Final[str] = 'DecayTree' # Tree to be processed and saved
-_Q2BIN     : Final[Qsq] = Qsq.central # Needed to select selection block from which to pick cut
+_MCDT_COLS : Final[list[str]] = ['EVENTNUMBER'] # Save only these columns in MCDT
+_MCDT_NAME : Final[str]       = 'MCDecayTree'   # Tree with truth information
+_TREE_NAME : Final[str]       = 'DecayTree'     # Tree to be processed and saved
+_Q2BIN     : Final[Qsq]       = Qsq.central     # Needed to select selection block from which to pick cut
 # ------------------------
 class DBMakerConf(BaseModel, Serializable, frozen = True):
     '''
@@ -84,14 +86,16 @@ class DBMaker:
         self.__cfg      = cfg
         self.__out_path = self.__cfg.out_dir / 'data.root'
     # -----------------------------
-    def __get_rdf(self) -> RDF.RNode:
+    def __get_rdf(self, is_reco : bool) -> RDF.RNode:
         '''
         Returns ROOT dataframe associated to sample
         '''
         log.info('Loading dataframe')
 
+        tree_name = _TREE_NAME if is_reco else _MCDT_NAME
+
         gtr = RDFGetter(
-            tree   = _TREE_NAME,
+            tree   = tree_name,
             trigger= self.__cfg.trigger,
             sample = self.__cfg.component)
 
@@ -141,6 +145,24 @@ class DBMaker:
             treename  = _TREE_NAME,
             filename  = str(self.__out_path),
             columnList= columns)
+    # -----------------------------
+    def __save_truth_rdf(self) -> None:
+        '''
+        Save MCDT in file only for MC samples
+        '''
+        if not self.__cfg.component.is_mc:
+            return
+
+        opts       = RDF.RSnapshotOptions()
+        opts.fMode = 'update'
+
+        rdf = self.__get_rdf(is_reco = False)
+
+        rdf.Snapshot(
+            options   = opts,
+            filename  = str(self.__out_path),
+            treename  = _MCDT_NAME,
+            columnList= _MCDT_COLS)
     # -----------------------------
     def __save_cutflow(self, rdf : RDF.RNode) -> None:
         '''
@@ -198,7 +220,7 @@ class DBMaker:
         if mode == Mode.read:
             return self.__rdf_from_db()
 
-        rdf = self.__get_rdf()
+        rdf = self.__get_rdf(is_reco = True)
         rdf = self.__filter(rdf)
 
         max_size = self.__cfg.max_size
@@ -210,6 +232,7 @@ class DBMaker:
 
         self.__save_rdf(rdf = rdf)
         self.__save_cutflow(rdf = rdf)
+        self.__save_truth_rdf()
 
         return rdf
 # ------------------------
