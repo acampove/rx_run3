@@ -6,6 +6,7 @@ platforms = ['linux-64']
 version   = '3.1.1'
 
 [activation.env]
+CUDA_VISIBLE_DEVICES      = '-1'
 TF_CPP_MIN_LOG_LEVEL      = '2'
 TF_FORCE_GPU_ALLOW_GROWTH = 'true'
 PYTHONWARNINGS            = 'ignore'
